@@ -4,8 +4,6 @@ import { Component, xml, useListener } from "@odoo/owl";
 // -----------------------------------------------------------------------------
 // ActionContainer (Component)
 // -----------------------------------------------------------------------------
-export const actionContainerProps = {};
-
 export class ActionContainer extends Component {
     static template = xml`
         <t t-name="web.ActionContainer">

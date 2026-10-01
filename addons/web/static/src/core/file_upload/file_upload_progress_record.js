@@ -34,7 +34,3 @@ export class FileUploadProgressRecord extends Component {
 export class FileUploadProgressKanbanRecord extends FileUploadProgressRecord {
     static template = "web.FileUploadProgressKanbanRecord";
 }
-
-export class FileUploadProgressDataRow extends FileUploadProgressRecord {
-    static template = "web.FileUploadProgressDataRow";
-}

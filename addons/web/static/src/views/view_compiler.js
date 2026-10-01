@@ -44,32 +44,6 @@ export function toInterpolatedStringExpression(str) {
 }
 
 /**
- * @param {Element} el
- * @param {string} attr
- * @param {string} string
- */
-export function appendAttr(el, attr, string) {
-    const attrKey = `t-att-${attr}`;
-    const attrVal = el.getAttribute(attrKey);
-    el.setAttribute(attrKey, appendToStringifiedObject(attrVal, string));
-}
-
-/**
- * @param {string} originalTattr
- * @param {string} string
- * @returns {string}
- */
-function appendToStringifiedObject(originalTattr, string) {
-    const re = /{(.*)}/;
-    const oldString = re.exec(originalTattr);
-
-    if (oldString) {
-        string = `${oldString[1]},${string}`;
-    }
-    return `{${string}}`;
-}
-
-/**
  * @param {Element} target
  * @param  {...Element} sources
  * @returns {Element}
@@ -115,15 +89,6 @@ export function copyAttributes(el, compiled) {
         }
         compiled.setAttribute("style", att);
     }
-}
-
-/**
- * Decodes a string within an attribute into an Object
- * @param  {string} str
- * @return {Object}
- */
-export function decodeObjectForTemplate(str) {
-    return JSON.parse(decodeURI(str));
 }
 
 /**
@@ -467,7 +432,7 @@ export class ViewCompiler {
 }
 ViewCompiler.OWL_DIRECTIVE_WHITELIST = [];
 
-let templateCache = Object.create(null);
+const templateCache = Object.create(null);
 /**
  * @param {typeof ViewCompiler} ViewCompiler
  * @param {string} key
@@ -487,16 +452,4 @@ export function useViewCompiler(ViewCompiler, templates, params) {
         compiledTemplates[tname] = templateCache[key];
     }
     return compiledTemplates;
-}
-
-/*
- * clear the view compiler's cache.
- * FIXME: that function only purges the compiler's cache and NOT the cache in owl's app.
- * the owl.xml function creates an internal template each time, so the cache is here to prevent
- * creating new owl templates every time. If we clear the cache, new templates WILL be created,
- * even if the arch to compile is the same.
- * This is how a memory leak occurs. :-)
- */
-export function resetViewCompilerCache() {
-    templateCache = Object.create(null);
 }

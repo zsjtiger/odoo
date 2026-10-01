@@ -20,14 +20,4 @@
         </div>
     </t>
 
-    <t t-name="web.FileUploadProgressDataRow">
-        <t t-set="progressTexts" t-value="this.getProgressTexts()"/>
-        <div class="o_data_row o_list_progress_card position-relative align-middle p-0">
-            <span class="o_file_upload_upload_title" t-out="this.props.fileUpload.title"/>
-            <span class="o_file_upload_progress_text_left" t-out="progressTexts.left"/>
-            <span class="o_file_upload_progress_text_right" t-out="progressTexts.right"/>
-            <FileUploadProgressBar fileUpload="this.props.fileUpload"/>
-        </div>
-    </t>
-
 </templates>

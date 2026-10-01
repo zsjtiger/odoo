@@ -209,22 +209,6 @@ export function getStartOfLocalWeek(date) {
 }
 
 /**
- * Get the end of the week for the given date, in the user's locale settings.
- * The end of the week is determined by the `weekStart` setting.
- *
- * Luxon's `.endOf("week")` method uses the ISO week definition, which starts on Monday.
- * Luxon has a `.endOf("week", { useLocaleWeeks: true })` method, but it relies on the
- * Intl API and the `getWeekInfo` method, which is not supported in all browsers.
- * See: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Locale/getWeekInfo#browser_compatibility
- *
- * @param {DateTime} date
- * @returns {DateTime}
- */
-export function getEndOfLocalWeek(date) {
-    return getStartOfLocalWeek(date).plus({ days: 6 }).endOf("day");
-}
-
-/**
  * Formats a bare number with the digits of the active numbering system, so that
  * values interpolated by hand sit correctly next to the ones luxon renders.
  *
