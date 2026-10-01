@@ -1,5 +1,4 @@
 import { registry } from "@web/core/registry";
-import { WORKER_STATE } from "@bus/workers/websocket_worker";
 import { whenReady } from "@odoo/owl";
 
 function logout() {
@@ -9,13 +8,16 @@ function logout() {
             async run() {
                 await whenReady();
                 await new Promise((resolve) => requestAnimationFrame(resolve));
-                await new Promise((resolve) => {
-                    const bus = odoo.__WOWL_DEBUG__.root.env.services.bus_service;
-                    bus.addEventListener("BUS:CONNECT", resolve, { once: true });
-                    if (bus.workerState === WORKER_STATE.CONNECTED) {
-                        resolve();
-                    }
-                });
+                // web does not depend on bus: only wait for it when it is installed
+                const bus = odoo.__WOWL_DEBUG__.root.env.services.bus_service;
+                if (bus) {
+                    await new Promise((resolve) => {
+                        bus.addEventListener("BUS:CONNECT", resolve, { once: true });
+                        if (bus.workerState === "CONNECTED") {
+                            resolve();
+                        }
+                    });
+                }
             },
         },
         {

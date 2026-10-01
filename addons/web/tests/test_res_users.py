@@ -52,7 +52,9 @@ class TestResUsers(TransactionCase):
 @tagged('post_install', '-at_install')
 class TestUserSettings(HttpCaseWithUserDemo):
     def test_user_group_settings(self):
-        self.start_tour('/odoo/settings?debug=assets,tests', 'test_user_group_settings', login='admin')
+        # start in the Settings app through an action of base: the `settings`
+        # path is only defined when base_setup is installed
+        self.start_tour('/odoo/action-base.action_res_users?debug=assets,tests', 'test_user_group_settings', login='admin')
 
 
 @tagged('post_install', '-at_install')
