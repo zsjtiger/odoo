@@ -46,7 +46,7 @@ This module provides the core of the Odoo Web Client.
         'web.assets_backend': [
             ('include', 'web._assets_helpers'),
             ('include', 'web._assets_backend_helpers'),
-            'web/static/src/scss/pre_variables.scss',
+            'web/static/src/scss/variables/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
             'web/static/lib/bootstrap/scss/_variables-dark.scss',
             'web/static/lib/bootstrap/scss/_maps.scss',
@@ -127,7 +127,7 @@ This module provides the core of the Odoo Web Client.
         'web.assets_backend_lazy': [
             ('include', 'web._assets_helpers'),
             ('include', 'web._assets_backend_helpers'),
-            'web/static/src/scss/pre_variables.scss',
+            'web/static/src/scss/variables/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
             'web/static/lib/bootstrap/scss/_variables-dark.scss',
             'web/static/lib/bootstrap/scss/_maps.scss',
@@ -166,7 +166,7 @@ This module provides the core of the Odoo Web Client.
             ('include', 'web._assets_helpers'),
             ('include', 'web._assets_frontend_helpers'),
 
-            'web/static/src/scss/pre_variables.scss',
+            'web/static/src/scss/variables/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
             'web/static/lib/bootstrap/scss/_variables-dark.scss',
             'web/static/lib/bootstrap/scss/_maps.scss',
@@ -252,15 +252,15 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/webclient/actions/reports/bootstrap_overridden_report.scss',
             ('include', 'web._assets_helpers'),
             ('include', 'web._assets_backend_helpers'),
-            'web/static/src/scss/pre_variables.scss',
+            'web/static/src/scss/variables/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
             'web/static/lib/bootstrap/scss/_variables-dark.scss',
             'web/static/lib/bootstrap/scss/_maps.scss',
 
             ('include', 'web._assets_bootstrap_backend'),
-            ('remove', 'web/static/src/scss/utilities_custom_backend.scss'),
-            ('remove', 'web/static/src/scss/bootstrap_review_backend.scss'),
-            ('after', 'web/static/src/scss/utilities_custom.scss', 'web/static/src/webclient/actions/reports/utilities_custom_report.scss'),
+            ('remove', 'web/static/src/scss/bootstrap/utilities_custom_backend.scss'),
+            ('remove', 'web/static/src/scss/bootstrap/bootstrap_review_backend.scss'),
+            ('after', 'web/static/src/scss/bootstrap/utilities_custom.scss', 'web/static/src/webclient/actions/reports/utilities_custom_report.scss'),
 
             'web/static/lib/popper/popper.js',
             'web/static/lib/bootstrap/js/dist/util/index.js',
@@ -322,7 +322,7 @@ This module provides the core of the Odoo Web Client.
         # ---------------------------------------------------------------------
         "web.assets_web_print": [
             'web/static/src/scss/functions.scss',
-            'web/static/src/scss/primary_variables_print.scss',
+            'web/static/src/scss/variables/primary_variables_print.scss',
 
             'web/static/src/**/*.print_variables.scss',
             ('include', 'web.assets_backend'),
@@ -365,44 +365,44 @@ This module provides the core of the Odoo Web Client.
             ('remove', 'web/static/src/core/components/emoji_picker/emoji_data.js'), # always lazy-loaded
         ],
         'web._assets_primary_variables': [
-            'web/static/src/scss/primary_variables.scss',
+            'web/static/src/scss/variables/primary_variables.scss',
             'web/static/src/**/*.variables.scss',
         ],
         'web._assets_secondary_variables': [
-            'web/static/src/scss/secondary_variables.scss',
+            'web/static/src/scss/variables/secondary_variables.scss',
         ],
         'web._assets_helpers': [
             'web/static/lib/bootstrap/scss/_functions.scss',
             'web/static/lib/bootstrap/scss/_mixins.scss',
             'web/static/src/scss/functions.scss',
             'web/static/src/scss/mixins_forwardport.scss',
-            'web/static/src/scss/bs_mixins_overrides.scss',
+            'web/static/src/scss/bootstrap/bs_mixins_overrides.scss',
             'web/static/src/scss/utils.scss',
 
             ('include', 'web._assets_primary_variables'),
             ('include', 'web._assets_secondary_variables'),
         ],
         'web._assets_bootstrap': [
-            'web/static/src/scss/import_bootstrap.scss',
-            'web/static/src/scss/utilities_custom.scss',
+            'web/static/src/scss/bootstrap/import_bootstrap.scss',
+            'web/static/src/scss/bootstrap/utilities_custom.scss',
             'web/static/lib/bootstrap/scss/utilities/_api.scss',
-            'web/static/src/scss/bootstrap_review.scss',
+            'web/static/src/scss/bootstrap/bootstrap_review.scss',
         ],
         'web._assets_bootstrap_backend': [
             ('include', 'web._assets_bootstrap'),
-            ('after', 'web/static/src/scss/utilities_custom.scss', 'web/static/src/scss/utilities_custom_backend.scss'),
-            'web/static/src/scss/bootstrap_review_backend.scss',
+            ('after', 'web/static/src/scss/bootstrap/utilities_custom.scss', 'web/static/src/scss/bootstrap/utilities_custom_backend.scss'),
+            'web/static/src/scss/bootstrap/bootstrap_review_backend.scss',
         ],
         'web._assets_bootstrap_frontend': [
             ('include', 'web._assets_bootstrap'),
-            'web/static/src/scss/bootstrap_review_frontend.scss',
+            'web/static/src/scss/bootstrap/bootstrap_review_frontend.scss',
         ],
         'web._assets_backend_helpers': [
-            'web/static/src/scss/bootstrap_overridden.scss',
-            'web/static/src/scss/bs_mixins_overrides_backend.scss',
+            'web/static/src/scss/bootstrap/bootstrap_overridden.scss',
+            'web/static/src/scss/bootstrap/bs_mixins_overrides_backend.scss',
         ],
         'web._assets_frontend_helpers': [
-            'web/static/src/scss/bootstrap_overridden_frontend.scss',
+            'web/static/src/scss/bootstrap/bootstrap_overridden_frontend.scss',
         ],
 
         # ---------------------------------------------------------------------
