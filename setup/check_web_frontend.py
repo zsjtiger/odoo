@@ -22,15 +22,15 @@ WEB_SRC = REPO / 'addons' / 'web' / 'static' / 'src'
 
 # folders of web/static/src, from the bottom to the top
 LAYERS = [
-    (0, ['libs', 'owl2', 'core']),
+    (0, ['libs', 'core']),
     (1, ['search', 'public']),
     (2, ['model']),
     (3, ['views']),
     (4, ['webclient']),
-    (5, ['boot', 'main', 'start', 'env', 'session', 'module_loader', 'service_worker', 'polyfills']),
+    (5, ['boot']),
 ]
 # leaf modules of the startup that every layer may use
-SHARED = {'boot/session', 'boot/env', 'session', 'env'}
+SHARED = {'boot/session', 'boot/env'}
 # asset paths that are not files of the repository
 VIRTUAL_ASSETS = {
     'web/static/asset_styles_company_report.scss',  # generated from the company settings
