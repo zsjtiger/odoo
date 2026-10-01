@@ -1,4 +1,4 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/core/owl/utils";
 import { registry } from "@web/core/registry";
 import { services } from "@web/core/services";
 import { BlockUI } from "./block_ui";

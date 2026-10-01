@@ -1,6 +1,6 @@
 import { location } from "@web/core/browser/browser";
 import { shallowEqual } from "@web/core/utils/objects";
-import { session } from "@web/session";
+import { session } from "@web/boot/session";
 
 const { DateTime } = luxon;
 

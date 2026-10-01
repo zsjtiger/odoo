@@ -1,4 +1,4 @@
-import { session } from "@web/session";
+import { session } from "@web/boot/session";
 import { utils } from "@web/core/ui/ui_utils";
 import * as hoot from "@odoo/hoot-dom";
 import { pick } from "@web/core/utils/objects";

@@ -1,4 +1,4 @@
-import { render } from "@web/owl2/utils";
+import { render } from "@web/core/owl/utils";
 import { expect, test, describe } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";

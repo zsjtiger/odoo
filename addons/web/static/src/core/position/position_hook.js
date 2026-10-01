@@ -2,7 +2,7 @@ import { EventBus, onMounted, onPatched, onWillDestroy, onWillUnmount } from "@o
 import { reposition } from "@web/core/position/utils";
 import { omit } from "@web/core/utils/objects";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
-import { useEnv, useSubEnv } from "@web/owl2/utils";
+import { useEnv, useSubEnv } from "@web/core/owl/utils";
 
 /**
  * @typedef {import("@web/core/position/utils").ComputePositionOptions} ComputePositionOptions

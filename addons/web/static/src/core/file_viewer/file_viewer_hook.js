@@ -8,7 +8,7 @@ import { FileViewer } from "./file_viewer";
 const fileViewerService = {
     dependencies: ["overlay"],
     /**
-     * @param {import("@web/env").OdooEnv} _env
+     * @param {import("@web/boot/env").OdooEnv} _env
      * @param {import("services").Services} services
      */
     start(_env, { overlay }) {

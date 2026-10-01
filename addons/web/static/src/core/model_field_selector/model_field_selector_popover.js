@@ -1,4 +1,4 @@
-import { onWillRender } from "@web/owl2/utils";
+import { onWillRender } from "@web/core/owl/utils";
 import { Component, onWillStart, proxy, signal, t, useEffect, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { sortBy } from "@web/core/utils/arrays";

@@ -1,4 +1,4 @@
-import { render } from "@web/owl2/utils";
+import { render } from "@web/core/owl/utils";
 import { describe, expect, test } from "@odoo/hoot";
 import { press, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";

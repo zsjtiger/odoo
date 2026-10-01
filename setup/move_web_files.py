@@ -98,8 +98,8 @@ def text_files(roots):
             rel = path.relative_to(REPO).as_posix() if path.is_relative_to(REPO) else str(path)
             if not path.is_file() or path.suffix not in TEXT_SUFFIXES or '/.git/' in f'/{rel}':
                 continue
-            if '/static/lib/' in f'/{rel}' and path.suffix != '.html':
-                continue  # third-party code, but the HTML pages may load web files
+            if '/static/lib/' in f'/{rel}' and path.suffix != '.html' and path.name != 'odoo_module.js':
+                continue  # third-party code, but its HTML pages and Odoo wrappers refer to web files
             if rel in EXCLUDED:
                 continue
             yield rel, path

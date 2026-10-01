@@ -27,7 +27,7 @@ import {
 import { location, browser } from "@web/core/browser/browser";
 import { Dialog } from "@web/core/dialog/dialog";
 import { registry } from "@web/core/registry";
-import { session } from "@web/session";
+import { session } from "@web/boot/session";
 import { WebClient } from "@web/webclient/webclient";
 import { TourInteractive } from "@web_tour/tour_interactive/tour_interactive";
 import { TourPointer } from "@web_tour/tour_pointer/tour_pointer";

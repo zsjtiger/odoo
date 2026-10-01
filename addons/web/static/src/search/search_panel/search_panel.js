@@ -3,7 +3,7 @@ import { browser } from "@web/core/browser/browser";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { exprToBoolean } from "@web/core/utils/strings";
-import { render } from "@web/owl2/utils";
+import { render } from "@web/core/owl/utils";
 import { useSetupAction } from "@web/search/action_hook";
 
 //-------------------------------------------------------------------------

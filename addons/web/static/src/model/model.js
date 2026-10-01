@@ -2,7 +2,7 @@ import { RPCError } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
 import { Race } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
-import { useEnv } from "@web/owl2/utils";
+import { useEnv } from "@web/core/owl/utils";
 import { useSetupAction } from "@web/search/action_hook";
 import { SEARCH_KEYS } from "@web/search/with_search/with_search";
 import { buildSampleORM } from "./sample_server";
@@ -18,7 +18,7 @@ import {
 } from "@odoo/owl";
 
 /**
- * @typedef {import("@web/env").OdooEnv} OdooEnv
+ * @typedef {import("@web/boot/env").OdooEnv} OdooEnv
  * @typedef {import("@web/search/search_model").SearchParams} SearchParams
  * @typedef {import("services").ServiceFactories} Services
  *

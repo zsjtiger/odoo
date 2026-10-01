@@ -1,4 +1,4 @@
-import { onWillRender, render } from "@web/owl2/utils";
+import { onWillRender, render } from "@web/core/owl/utils";
 import { Component, signal, t, onMounted, onPatched, useListener, useProps } from "@odoo/owl";
 import { useCommand } from "@web/core/commands/command_hook";
 import { Domain } from "@web/core/domain";

@@ -12,7 +12,7 @@ import { getResModel } from "@web/core/tree_editor/utils";
 import { areEquivalentTrees } from "@web/core/tree_editor/virtual_operators";
 import { useService } from "@web/core/utils/hooks";
 import { shallowEqual } from "@web/core/utils/objects";
-import { render } from "@web/owl2/utils";
+import { render } from "@web/core/owl/utils";
 
 export class TreeEditor extends Component {
     static template = "web.TreeEditor";

@@ -7,7 +7,7 @@ import { onWillDestroy, onWillStart, Plugin, t, useScope } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { services } from "@web/core/services";
 import { SERVICES_METADATA } from "@web/core/utils/hooks";
-import { useEnv } from "@web/owl2/utils";
+import { useEnv } from "@web/core/owl/utils";
 
 const serviceRegistry = registry.category("services");
 

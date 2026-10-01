@@ -10,7 +10,7 @@ import { setInputFiles } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { FileInput } from "@web/core/file_input/file_input";
 import { Component, signal, xml } from "@odoo/owl";
-import { session } from "@web/session";
+import { session } from "@web/boot/session";
 
 // -----------------------------------------------------------------------------
 // Helpers

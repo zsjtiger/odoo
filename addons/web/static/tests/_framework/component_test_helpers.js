@@ -10,7 +10,7 @@ import { isSmall } from "./ui_test_helpers";
 /**
  * @typedef {import("@odoo/hoot").Target} Target
  * @typedef {import("@odoo/owl").Component} Component
- * @typedef {import("@web/env").OdooEnv} OdooEnv
+ * @typedef {import("@web/boot/env").OdooEnv} OdooEnv
  *
  * @typedef {ConstructorParameters<typeof App>[1]} AppConfig
  */

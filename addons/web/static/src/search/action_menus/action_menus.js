@@ -1,6 +1,6 @@
 import { location } from "@web/core/browser/browser";
 import { makeContext } from "@web/core/context";
-import { session } from "@web/session";
+import { session } from "@web/boot/session";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";

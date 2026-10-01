@@ -1,7 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { makeErrorFromResponse, ConnectionLostError } from "@web/core/network/rpc";
 import { browser, location } from "@web/core/browser/browser";
-import { session } from "@web/session";
+import { session } from "@web/boot/session";
 
 /* eslint-disable */
 /**

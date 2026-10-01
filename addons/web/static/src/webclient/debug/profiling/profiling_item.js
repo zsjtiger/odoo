@@ -1,7 +1,7 @@
 import { Component, EventBus, t, useProps } from "@odoo/owl";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useBus, useService } from "@web/core/utils/hooks";
-import { render } from "@web/owl2/utils";
+import { render } from "@web/core/owl/utils";
 
 export class ProfilingItem extends Component {
     static components = { DropdownItem };

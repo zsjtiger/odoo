@@ -4,7 +4,7 @@ import { isMacOS } from "@web/core/browser/feature_detection";
 import { appTranslateFn } from "@web/core/l10n/translation";
 import { services } from "@web/core/services";
 import { getTemplate } from "@web/core/templates";
-import { session } from "@web/session";
+import { session } from "@web/boot/session";
 
 /**
  * @typedef {{}} OdooEnv

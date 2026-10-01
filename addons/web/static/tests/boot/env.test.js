@@ -11,7 +11,7 @@ import {
 import { LegacyServiceStarterPlugin, startServices } from "@web/core/legacy_service_starter";
 import { registry } from "@web/core/registry";
 import { services } from "@web/core/services";
-import { mountComponent } from "@web/env";
+import { mountComponent } from "@web/boot/env";
 
 describe.current.tags("headless");
 
@@ -34,7 +34,7 @@ afterEach(() => {
 /**
  * @param {string} name
  * @param {string[]} dependencies
- * @param {(env: import("@web/env").OdooEnv, dependencies: Record<string, any>) => any} factory
+ * @param {(env: import("@web/boot/env").OdooEnv, dependencies: Record<string, any>) => any} factory
  */
 function registerService(name, dependencies, factory) {
     servicesRegistry.add(name, {

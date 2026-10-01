@@ -2,7 +2,7 @@ import { Component, markup, usePlugin, t, useProps } from "@odoo/owl";
 import { isDisplayStandalone, isMacOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
-import { session } from "@web/session";
+import { session } from "@web/boot/session";
 import { router } from "@web/core/browser/router";
 import { browser } from "../../core/browser/browser";
 import { registry } from "../../core/registry";

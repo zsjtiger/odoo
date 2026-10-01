@@ -98,7 +98,7 @@ class WebManifest(http.Controller):
     def _get_service_worker_content(self):
         """ Returns a ServiceWorker javascript file scoped for the backend (aka. '/odoo')
         """
-        with file_open('web/static/src/service_worker.js') as f:
+        with file_open('web/static/src/boot/service_worker.js') as f:
             body = f.read()
             return body
 

@@ -1,4 +1,4 @@
-import { useLayoutEffect, useSubEnv } from "@web/owl2/utils";
+import { useLayoutEffect, useSubEnv } from "@web/core/owl/utils";
 import { HighlightText } from "../highlight_text/highlight_text";
 
 import { Component, computed, proxy, signal, t, useProps } from "@odoo/owl";

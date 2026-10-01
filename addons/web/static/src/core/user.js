@@ -2,7 +2,7 @@ import { location, browser } from "@web/core/browser/browser";
 import { pyToJsLocale } from "@web/core/l10n/utils/locales";
 import { rpc } from "@web/core/network/rpc";
 import { Cache } from "@web/core/utils/cache";
-import { session } from "@web/session";
+import { session } from "@web/boot/session";
 import { ensureArray, sortBy } from "./utils/arrays";
 import { cookie } from "@web/core/browser/cookie";
 import { EventBus } from "@odoo/owl";

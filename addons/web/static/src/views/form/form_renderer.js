@@ -1,4 +1,4 @@
-import { render, useSubEnv } from "@web/owl2/utils";
+import { render, useSubEnv } from "@web/core/owl/utils";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { Notebook } from "@web/core/notebook/notebook";
 import { Setting } from "./setting/setting";

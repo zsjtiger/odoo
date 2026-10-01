@@ -24,7 +24,7 @@ import { highlightText, odoomark } from "@web/core/utils/html";
 import { deepEqual } from "@web/core/utils/objects";
 import { createElement, parseXML } from "@web/core/utils/xml";
 import { extractFieldsFromArchInfo, useRecordObserver } from "@web/model/relational_model/utils";
-import { render, useEnv, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
+import { render, useEnv, useLayoutEffect, useSubEnv } from "@web/core/owl/utils";
 import { FormArchParser } from "@web/views/form/form_arch_parser";
 import { loadSubViews, useFormViewInDialog } from "@web/views/form/form_controller";
 import { FormRenderer } from "@web/views/form/form_renderer";

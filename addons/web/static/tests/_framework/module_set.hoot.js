@@ -542,7 +542,7 @@ const MODULE_MOCKS_BY_NAME = new Map([
     ["@web/core/utils/functions", mockFunctionsFactory],
     ["@web/core/utils/indexed_db", mockIndexedDBFactory],
     ["@web/core/utils/patch", mockPatchFactory],
-    ["@web/session", mockSessionFactory],
+    ["@web/boot/session", mockSessionFactory],
 ]);
 const MODULE_MOCKS_BY_REGEX = new Map([
     // Fixed modules

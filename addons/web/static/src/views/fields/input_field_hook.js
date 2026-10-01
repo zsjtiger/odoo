@@ -1,7 +1,7 @@
 import { onMounted, onPatched, untrack, useListener, useProps } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { useBus } from "@web/core/utils/hooks";
-import { onWillRender } from "@web/owl2/utils";
+import { onWillRender } from "@web/core/owl/utils";
 
 /**
  * This hook is meant to be used by field components that use an input or

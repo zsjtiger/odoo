@@ -19,7 +19,7 @@ import { registry } from "@web/core/registry";
 import { services } from "@web/core/services";
 import { IndexedDB } from "@web/core/utils/indexed_db";
 import { hashCode } from "@web/core/utils/strings";
-import { session } from "@web/session";
+import { session } from "@web/boot/session";
 
 const IS_READY = Symbol("ready");
 

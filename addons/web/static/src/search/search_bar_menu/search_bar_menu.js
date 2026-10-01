@@ -15,7 +15,7 @@ import { CustomGroupByItem } from "@web/search/custom_group_by_item/custom_group
 import { CheckboxItem } from "@web/core/dropdown/checkbox_item";
 import { FACET_ICONS, GROUPABLE_TYPES } from "@web/search/utils/misc";
 import { _t } from "@web/core/l10n/translation";
-import { render } from "@web/owl2/utils";
+import { render } from "@web/core/owl/utils";
 import { condition } from "@web/core/tree_editor/condition_tree";
 import { domainFromTree } from "@web/core/tree_editor/domain_from_tree";
 import { constructDateRange } from "@web/search/utils/dates";

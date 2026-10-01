@@ -20,7 +20,7 @@ import { Transition } from "@web/core/transition";
 import { ErrorHandler } from "@web/core/utils/components";
 import { useService } from "@web/core/utils/hooks";
 import { debounce } from "@web/core/utils/timing";
-import { render } from "@web/owl2/utils";
+import { render } from "@web/core/owl/utils";
 
 const systrayRegistry = registry.category("systray");
 

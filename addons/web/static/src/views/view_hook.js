@@ -10,7 +10,7 @@ import { ORM } from "@web/core/orm_plugin";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { DynamicList } from "@web/model/relational_model/dynamic_list";
-import { useEnv } from "@web/owl2/utils";
+import { useEnv } from "@web/core/owl/utils";
 import { ExportDataDialog } from "@web/views/view_dialogs/export_data_dialog";
 
 /**

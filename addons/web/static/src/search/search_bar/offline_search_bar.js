@@ -1,4 +1,4 @@
-import { onWillRender } from "@web/owl2/utils";
+import { onWillRender } from "@web/core/owl/utils";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { Component, onWillStart, usePlugin, proxy, signal, t, useProps } from "@odoo/owl";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";

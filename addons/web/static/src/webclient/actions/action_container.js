@@ -1,4 +1,4 @@
-import { render } from "@web/owl2/utils";
+import { render } from "@web/core/owl/utils";
 import { Component, xml, useListener } from "@odoo/owl";
 
 // -----------------------------------------------------------------------------

@@ -2,7 +2,7 @@ import { Plugin, providePlugins, useConfig, usePlugin, useScope } from "@odoo/ow
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { useService } from "@web/core/utils/hooks";
-import { useEnv } from "@web/owl2/utils";
+import { useEnv } from "@web/core/owl/utils";
 
 export async function executeButtonCallback(el, fct) {
     let btns = [];

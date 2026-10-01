@@ -4,7 +4,7 @@ import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
 import { formatFloat, humanNumber } from "@web/core/utils/numbers";
 import { nbsp } from "@web/core/utils/strings";
-import { session } from "@web/session";
+import { session } from "@web/boot/session";
 
 export const currencies = session.currencies || {};
 // to make sure code is reading currencies from here

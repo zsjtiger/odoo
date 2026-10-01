@@ -85,7 +85,7 @@ import { user } from "@web/core/user";
 import { useBus } from "@web/core/utils/hooks";
 import { omit } from "@web/core/utils/objects";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
-import { session } from "@web/session";
+import { session } from "@web/boot/session";
 import { floatField } from "@web/views/fields/float/float_field";
 import { many2XAutocompleteProps } from "@web/views/fields/relational_utils";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";

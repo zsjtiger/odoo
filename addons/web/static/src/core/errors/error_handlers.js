@@ -16,10 +16,10 @@ import { RequestEntityTooLargeError, RPCError } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
-import { session } from "@web/session";
+import { session } from "@web/boot/session";
 
 /**
- * @typedef {import("../../env").OdooEnv} OdooEnv
+ * @typedef {import("../../boot/env").OdooEnv} OdooEnv
  * @typedef {import("./error_service").UncaughtError} UncaughError
  */
 

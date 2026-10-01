@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { session } from "@web/session";
+import { session } from "@web/boot/session";
 import { Setting } from "@web/views/form/setting/setting";
 
 import { Component, useProps } from "@odoo/owl";

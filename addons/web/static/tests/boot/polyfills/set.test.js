@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@odoo/hoot";
 
-import { difference } from "@web/polyfills/set";
+import { difference } from "@web/boot/polyfills/set";
 
 describe.current.tags("headless");
 

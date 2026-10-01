@@ -1,5 +1,5 @@
 import { onMounted, onPatched, untrack } from "@odoo/owl";
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/core/owl/utils";
 import { memoize } from "@web/core/utils/functions";
 
 // ── Batch infrastructure ─────────────────────────────────────────────────────

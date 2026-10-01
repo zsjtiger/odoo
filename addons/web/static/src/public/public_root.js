@@ -3,7 +3,7 @@ import { browser } from "@web/core/browser/browser";
 import { cookie } from "@web/core/browser/cookie";
 import { jsToPyLocale, pyToJsLocale } from "@web/core/l10n/utils";
 import { MainComponentsContainer } from "@web/core/main_components_container";
-import { mountComponent } from "@web/env";
+import { mountComponent } from "@web/boot/env";
 import lazyloader from "@web/public/lazyloader";
 
 const { Settings } = luxon;

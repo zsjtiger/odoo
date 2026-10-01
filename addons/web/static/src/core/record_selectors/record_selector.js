@@ -1,4 +1,4 @@
-import { render } from "@web/owl2/utils";
+import { render } from "@web/core/owl/utils";
 import { asyncComputed, Component, onWillStart, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { isId } from "@web/core/tree_editor/utils";

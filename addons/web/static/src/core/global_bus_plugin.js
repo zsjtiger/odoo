@@ -1,6 +1,6 @@
 import { EventBus, Plugin, t, useConfig, usePlugin } from "@odoo/owl";
 import { services } from "@web/core/services";
-import { useEnv } from "@web/owl2/utils";
+import { useEnv } from "@web/core/owl/utils";
 
 export class GlobalBusPlugin extends Plugin {
     bus = useConfig(

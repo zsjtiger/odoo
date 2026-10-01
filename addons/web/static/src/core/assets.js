@@ -1,5 +1,5 @@
 import { whenReady } from "@odoo/owl";
-import { session } from "@web/session";
+import { session } from "@web/boot/session";
 
 /**
  * @typedef {{ targetDoc?: Document }} LoadAssetOptions

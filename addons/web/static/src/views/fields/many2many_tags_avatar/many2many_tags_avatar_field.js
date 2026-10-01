@@ -1,5 +1,5 @@
 import { t, useProps } from "@odoo/owl";
-import { render } from "@web/owl2/utils";
+import { render } from "@web/core/owl/utils";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { registry } from "@web/core/registry";

@@ -1,5 +1,5 @@
 import { proxy } from "@odoo/owl";
-import { onWillRender, useEnv, useSubEnv } from "@web/owl2/utils";
+import { onWillRender, useEnv, useSubEnv } from "@web/core/owl/utils";
 
 /**
  * @typedef PagerUpdateParams

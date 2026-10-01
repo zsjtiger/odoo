@@ -128,6 +128,15 @@ def check_imports(problems, verbose):
             rel = name[len('@web/'):] if name.startswith('@web/') else None
             if src is not None and dst is not None and dst > src and rel not in SHARED:
                 problems.append(f'{path.relative_to(REPO)}: {importer} (L{src}) imports {name} (L{dst})')
+    # Odoo wrappers of the libraries declare their dependencies by name
+    for addons_dir in ADDONS_DIRS:
+        for path in addons_dir.glob('*/static/lib/**/odoo_module.js'):
+            for deps in re.findall(r'odoo\.define\(\s*["\'][^"\']+["\']\s*,\s*\[([^\]]*)\]', path.read_text()):
+                for name in re.findall(r'["\']([^"\']+)["\']', deps):
+                    target = module_path(name)
+                    count += 1
+                    if target is not None and not target.is_file():
+                        problems.append(f'{path.relative_to(REPO)}: missing module {name!r}')
     if verbose:
         print(f'{count} imports checked')  # noqa: T201
 

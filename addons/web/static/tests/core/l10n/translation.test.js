@@ -13,8 +13,8 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { _t as basic_t, translatedTerms, translationLoaded } from "@web/core/l10n/translation";
 import { IndexedDB } from "@web/core/utils/indexed_db";
-import { render } from "@web/owl2/utils";
-import { session } from "@web/session";
+import { render } from "@web/core/owl/utils";
+import { session } from "@web/boot/session";
 
 const { DateTime } = luxon;
 

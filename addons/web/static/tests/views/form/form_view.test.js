@@ -62,7 +62,7 @@ import {
     toggleMenuItem,
     toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
-import { render } from "@web/owl2/utils";
+import { render } from "@web/core/owl/utils";
 
 import { browser } from "@web/core/browser/browser";
 import { makeErrorFromResponse } from "@web/core/network/rpc";

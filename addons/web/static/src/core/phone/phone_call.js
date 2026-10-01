@@ -38,7 +38,7 @@ export function openPhoneLink(phoneNumber) {
 }
 
 /**
- * @param {import("@web/env").OdooEnv} env
+ * @param {import("@web/boot/env").OdooEnv} env
  * @param {PhoneCallParams} params
  * @param {MouseEvent} [ev] A potential (click) event on the related `tel:`
  *      link: in that case we always prevent it to handle it ourselves. It could

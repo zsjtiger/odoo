@@ -2,10 +2,10 @@ import { whenReady } from "@odoo/owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { localization } from "@web/core/l10n/localization";
 import { user } from "@web/core/user";
-import { session } from "@web/session";
-import { _t } from "./core/l10n/translation";
-import { rpc } from "./core/network/rpc";
-import { isRPCCacheDisabled, RPCCache } from "./core/network/rpc_cache";
+import { session } from "@web/boot/session";
+import { _t } from "../core/l10n/translation";
+import { rpc } from "../core/network/rpc";
+import { isRPCCacheDisabled, RPCCache } from "../core/network/rpc_cache";
 import { mountComponent } from "./env";
 
 // Chrome iOS wraps some text nodes (like measures, email...)

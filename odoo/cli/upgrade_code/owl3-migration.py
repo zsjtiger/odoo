@@ -7,7 +7,7 @@ EXCLUDED_PATH = (
     'spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js',
     'spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml',
     'iot_drivers/static/src/',
-    'web/static/src/owl2',
+    'web/static/src/core/owl',
     'addons/web/static/lib/owl/owl.js',
     'html_builder/static/tests/custom_tab/builder_components/builder_list.test.js',  # Test has weird string formatting syntax easier to skip
     'html_builder/static/tests/custom_tab/builder_components/builder_row.test.js',  # Test has weird string formatting syntax easier to skip
@@ -612,7 +612,7 @@ def upgrade_useeffect(file_manager, name, log_info, log_error):
                 continue
             file.content = JSTooling.remove_import(file.content, 'useEffect', '@odoo/owl')
             file.content = JSTooling.replace_usage(file.content, 'useEffect', 'useLayoutEffect')
-            file.content = JSTooling.add_import(file.content, 'useLayoutEffect', '@web/owl2/utils')
+            file.content = JSTooling.add_import(file.content, 'useLayoutEffect', '@web/core/owl/utils')
         except Exception as e:  # noqa: BLE001
             log_error(file.path, e)
         file_manager.print_progress(fileno, len(js_files), name)
@@ -627,7 +627,7 @@ def upgrade_onwillrender(file_manager, name, log_info, log_error):
             if not JSTooling.has_active_usage(file.content, 'onWillRender'):
                 continue
             file.content = JSTooling.remove_import(file.content, 'onWillRender', '@odoo/owl')
-            file.content = JSTooling.add_import(file.content, 'onWillRender', '@web/owl2/utils')
+            file.content = JSTooling.add_import(file.content, 'onWillRender', '@web/core/owl/utils')
         except Exception as e:  # noqa: BLE001
             log_error(file.path, e)
         file_manager.print_progress(fileno, len(js_files), name)
@@ -642,7 +642,7 @@ def upgrade_onrendered(file_manager, name, log_info, log_error):
             if not JSTooling.has_active_usage(file.content, 'onRendered'):
                 continue
             file.content = JSTooling.remove_import(file.content, 'onRendered', '@odoo/owl')
-            file.content = JSTooling.add_import(file.content, 'onRendered', '@web/owl2/utils')
+            file.content = JSTooling.add_import(file.content, 'onRendered', '@web/core/owl/utils')
         except Exception as e:  # noqa: BLE001
             log_error(file.path, e)
         file_manager.print_progress(fileno, len(js_files), name)
@@ -657,7 +657,7 @@ def upgrade_usecomponent(file_manager, name, log_info, log_error):
             if not JSTooling.has_active_usage(file.content, 'useComponent'):
                 continue
             file.content = JSTooling.remove_import(file.content, 'useComponent', '@odoo/owl')
-            file.content = JSTooling.add_import(file.content, 'useComponent', '@web/owl2/utils')
+            file.content = JSTooling.add_import(file.content, 'useComponent', '@web/core/owl/utils')
         except Exception as e:  # noqa: BLE001
             log_error(file.path, e)
         file_manager.print_progress(fileno, len(js_files), name)
@@ -672,7 +672,7 @@ def upgrade_useenv(file_manager, name, log_info, log_error):
             if not JSTooling.has_active_usage(file.content, 'useEnv'):
                 continue
             file.content = JSTooling.remove_import(file.content, 'useEnv', '@odoo/owl')
-            file.content = JSTooling.add_import(file.content, 'useEnv', '@web/owl2/utils')
+            file.content = JSTooling.add_import(file.content, 'useEnv', '@web/core/owl/utils')
         except Exception as e:  # noqa: BLE001
             log_error(file.path, e)
         file_manager.print_progress(fileno, len(js_files), name)
@@ -687,7 +687,7 @@ def upgrade_usesubenv(file_manager, name, log_info, log_error):
             if not JSTooling.has_active_usage(file.content, 'useSubEnv'):
                 continue
             file.content = JSTooling.remove_import(file.content, 'useSubEnv', '@odoo/owl')
-            file.content = JSTooling.add_import(file.content, 'useSubEnv', '@web/owl2/utils')
+            file.content = JSTooling.add_import(file.content, 'useSubEnv', '@web/core/owl/utils')
         except Exception as e:  # noqa: BLE001
             log_error(file.path, e)
         file_manager.print_progress(fileno, len(js_files), name)
@@ -702,7 +702,7 @@ def upgrade_usechildsubenv(file_manager, name, log_info, log_error):
             if not JSTooling.has_active_usage(file.content, 'useChildSubEnv'):
                 continue
             file.content = JSTooling.remove_import(file.content, 'useChildSubEnv', '@odoo/owl')
-            file.content = JSTooling.add_import(file.content, 'useChildSubEnv', '@web/owl2/utils')
+            file.content = JSTooling.add_import(file.content, 'useChildSubEnv', '@web/core/owl/utils')
         except Exception as e:  # noqa: BLE001
             log_error(file.path, e)
         file_manager.print_progress(fileno, len(js_files), name)
@@ -717,7 +717,7 @@ def upgrade_useref(file_manager, name, log_info, log_error):
             if not JSTooling.has_active_usage(file.content, 'useRef'):
                 continue
             file.content = JSTooling.remove_import(file.content, 'useRef', '@odoo/owl')
-            file.content = JSTooling.add_import(file.content, 'useRef', '@web/owl2/utils')
+            file.content = JSTooling.add_import(file.content, 'useRef', '@web/core/owl/utils')
         except Exception as e:  # noqa: BLE001
             log_error(file.path, e)
         file_manager.print_progress(fileno, len(js_files), name)
@@ -727,7 +727,7 @@ def upgrade_usestate_from_compatibility(file_manager, name, log_info, log_error)
     """
     Sub-task: Migrate useState, ignoring comments.
     This function migrates useState from the owl2 compatibility layer to owl3.
-    To be used if there are useState calls imported from '@web/owl2/utils'.
+    To be used if there are useState calls imported from '@web/core/owl/utils'.
     """
     js_files = JSTooling.get_js_files(file_manager)
 
@@ -735,7 +735,7 @@ def upgrade_usestate_from_compatibility(file_manager, name, log_info, log_error)
         try:
             if not JSTooling.has_active_usage(file.content, 'useState'):
                 continue
-            file.content = JSTooling.remove_import(file.content, 'useState', '@web/owl2/utils')
+            file.content = JSTooling.remove_import(file.content, 'useState', '@web/core/owl/utils')
             file.content = JSTooling.add_import(file.content, 'proxy', '@odoo/owl')
             file.content = JSTooling.replace_usage(file.content, 'useState', 'proxy')
         except Exception as e:  # noqa: BLE001
@@ -776,7 +776,7 @@ def upgrade_reactive_from_compatibility(file_manager, name, log_info, log_error)
             if result["count_changed"] > 0:
                 file.content = JSTooling.add_import(file.content, 'proxy', '@odoo/owl')
             if result["count_unchanged"] == 0:
-                file.content = JSTooling.remove_import(file.content, 'reactive', '@web/owl2/utils')
+                file.content = JSTooling.remove_import(file.content, 'reactive', '@web/core/owl/utils')
 
         except Exception as e:  # noqa: BLE001
             log_error(file.path, e)
@@ -808,7 +808,7 @@ def upgrade_reactive(file_manager, name, log_info, log_error):
 
 
 def upgrade_use_external_listener(file_manager, name, log_info, log_error):
-    """ Changes the imports from useExternalListeners from "@odoo/owl" to "@web/owl2/utils". """
+    """ Changes the imports from useExternalListeners from "@odoo/owl" to "@web/core/owl/utils". """
     js_files = JSTooling.get_js_files(file_manager)
 
     for fileno, file in enumerate(js_files, start=1):
@@ -816,7 +816,7 @@ def upgrade_use_external_listener(file_manager, name, log_info, log_error):
             if not JSTooling.has_active_usage(file.content, 'useExternalListener'):
                 continue
             file.content = JSTooling.remove_import(file.content, 'useExternalListener', '@odoo/owl')
-            file.content = JSTooling.add_import(file.content, 'useExternalListener', '@web/owl2/utils')
+            file.content = JSTooling.add_import(file.content, 'useExternalListener', '@web/core/owl/utils')
         except Exception as e:  # noqa: BLE001
             log_error(file.path, e)
         file_manager.print_progress(fileno, len(js_files), name)

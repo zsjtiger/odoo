@@ -15,13 +15,13 @@ import { services } from "@web/core/services";
 import { getTemplate } from "@web/core/templates";
 import { pick } from "@web/core/utils/objects";
 import { patch } from "@web/core/utils/patch";
-import { customDirectives, globalValues, makeEnv } from "@web/env";
+import { customDirectives, globalValues, makeEnv } from "@web/boot/env";
 import { MockServer, makeMockServer, onRpc } from "./mock_server/mock_server";
 
 /**
  * @typedef {Record<keyof Services, any>} Dependencies
  *
- * @typedef {import("@web/env").OdooEnv} OdooEnv
+ * @typedef {import("@web/boot/env").OdooEnv} OdooEnv
  *
  * @typedef {import("@web/core/registry").Registry} Registry
  *

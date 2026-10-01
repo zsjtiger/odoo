@@ -7,7 +7,7 @@ import { registry } from "@web/core/registry";
 import { deepCopy } from "@web/core/utils/objects";
 import { parseXML } from "@web/core/utils/xml";
 import { Record } from "@web/model/record";
-import { useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/core/owl/utils";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { FormArchParser } from "@web/views/form/form_arch_parser";
 import { FormRenderer } from "@web/views/form/form_renderer";

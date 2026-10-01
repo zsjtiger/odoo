@@ -9,7 +9,7 @@ import {
     untrack,
 } from "@odoo/owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
-import { onWillRender, useLayoutEffect } from "@web/owl2/utils";
+import { onWillRender, useLayoutEffect } from "@web/core/owl/utils";
 import { areDatesEqual, formatDate, formatDateTime, parseDate, parseDateTime } from "../l10n/dates";
 import { makePopover } from "../popover/popover_hook";
 import { registry } from "../registry";

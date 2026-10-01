@@ -1,4 +1,4 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/core/owl/utils";
 import { Component, useProps, proxy, signal, t } from "@odoo/owl";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { location } from "@web/core/browser/browser";

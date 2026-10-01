@@ -3,7 +3,7 @@ import { loadBundle } from "@web/core/assets";
 import { browser } from "@web/core/browser/browser";
 import { OverlayPlugin } from "@web/core/overlay/overlay_plugin";
 import { services } from "@web/core/services";
-import { session } from "@web/session";
+import { session } from "@web/boot/session";
 import { TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY, tourRecorderState } from "./tour_recorder_state";
 
 export class TourRecorderPlugin extends Plugin {

@@ -1,4 +1,4 @@
-import { render, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
+import { render, useLayoutEffect, useSubEnv } from "@web/core/owl/utils";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
@@ -12,7 +12,7 @@ import { usePager } from "@web/search/pager_hook";
 import { OfflineSearchBar } from "@web/search/search_bar/offline_search_bar";
 import { SearchBar } from "@web/search/search_bar/search_bar";
 import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
-import { session } from "@web/session";
+import { session } from "@web/boot/session";
 import { useModelWithSampleData } from "@web/model/model";
 import { OfflineActionHelper } from "@web/views/offline_action_helper";
 import { standardViewProps } from "@web/views/standard_view_props";

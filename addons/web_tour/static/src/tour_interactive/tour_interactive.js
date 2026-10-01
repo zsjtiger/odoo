@@ -44,7 +44,7 @@ export class TourInteractive {
     }
 
     /**
-     * @param {import("@web/env").OdooEnv} env
+     * @param {import("@web/boot/env").OdooEnv} env
      */
     start(env) {
         TourInteractive.removePointer();

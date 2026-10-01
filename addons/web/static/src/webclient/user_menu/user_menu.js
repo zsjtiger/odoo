@@ -7,7 +7,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 import { imageUrl } from "@web/core/utils/urls";
-import { session } from "@web/session";
+import { session } from "@web/boot/session";
 
 const userMenuRegistry = registry.category("user_menuitems");
 

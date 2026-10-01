@@ -1,4 +1,4 @@
-import { useSubEnv, useEnv } from "@web/owl2/utils";
+import { useSubEnv, useEnv } from "@web/core/owl/utils";
 import { _t } from "@web/core/l10n/translation";
 import { location, browser } from "@web/core/browser/browser";
 import { makeContext } from "@web/core/context";
@@ -46,7 +46,7 @@ import { downloadReport, getReportUrl } from "./reports/utils";
 import { zip } from "@web/core/utils/arrays";
 import { isHtmlEmpty } from "@web/core/utils/html";
 import { omit, pick, shallowEqual } from "@web/core/utils/objects";
-import { session } from "@web/session";
+import { session } from "@web/boot/session";
 import { exprToBoolean } from "@web/core/utils/strings";
 
 class BlankComponent extends Component {

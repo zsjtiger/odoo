@@ -11,7 +11,7 @@ import { registry } from "@web/core/registry";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { useAutofocus, useBus, useService } from "@web/core/utils/hooks";
 import { fuzzyTest } from "@web/core/utils/search";
-import { render } from "@web/owl2/utils";
+import { render } from "@web/core/owl/utils";
 import { SearchBarDropdown } from "@web/search/search_bar_dropdown";
 import { SearchBarMenu } from "@web/search/search_bar_menu/search_bar_menu";
 

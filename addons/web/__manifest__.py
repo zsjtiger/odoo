@@ -60,7 +60,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/scss/mimetypes.scss',
             'web/static/src/scss/ui.scss',
 
-            'web/static/src/polyfills/clipboard.js',
+            'web/static/src/boot/polyfills/clipboard.js',
 
             'web/static/lib/popper/popper.js',
             'web/static/lib/bootstrap/js/dist/util/index.js',
@@ -140,17 +140,17 @@ This module provides the core of the Odoo Web Client.
         ],
         'web.assets_web': [
             ('include', 'web.assets_backend'),
-            'web/static/src/main.js',
-            'web/static/src/start.js',
+            'web/static/src/boot/main.js',
+            'web/static/src/boot/start.js',
         ],
         'web.assets_frontend_minimal': [
-            'web/static/src/polyfills/object.js',
-            'web/static/src/polyfills/array.js',
-            'web/static/src/polyfills/promise.js',
-            'web/static/src/module_loader.js',
-            'web/static/src/polyfills/set.js',
-            'web/static/src/polyfills/map.js',
-            'web/static/src/session.js',
+            'web/static/src/boot/polyfills/object.js',
+            'web/static/src/boot/polyfills/array.js',
+            'web/static/src/boot/polyfills/promise.js',
+            'web/static/src/boot/module_loader.js',
+            'web/static/src/boot/polyfills/set.js',
+            'web/static/src/boot/polyfills/map.js',
+            'web/static/src/boot/session.js',
             'web/static/src/core/browser/cookie.js',
             'web/static/src/core/utils/ui.js',
             'web/static/src/public/utils.js',
@@ -186,8 +186,8 @@ This module provides the core of the Odoo Web Client.
             ('include', 'web.assets_frontend_minimal'),
 
             'web/static/lib/owl/owl.js',
-            'web/static/src/owl2/owl3_compatibility_layer.js',
-            'web/static/src/owl2/utils.js',
+            'web/static/src/core/owl/owl3_compatibility_layer.js',
+            'web/static/src/core/owl/utils.js',
             'web/static/lib/owl/odoo_module.js',
             'web/static/lib/popper/popper.js',
             'web/static/lib/bootstrap/js/dist/util/index.js',
@@ -218,7 +218,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/bootstrap/js/dist/toast.js',
             'web/static/src/libs/bootstrap.js',
 
-            'web/static/src/env.js',
+            'web/static/src/boot/env.js',
             'web/static/src/core/utils/transitions.scss',  # included early because used by other files
             'web/static/src/core/**/*',  # Note that 'web/static/src/core/utils/ui.js' is included in assets_frontend_minimal already
             ('remove', 'web/static/src/core/commands/**/*'),
@@ -234,8 +234,8 @@ This module provides the core of the Odoo Web Client.
         'web.assets_frontend_lazy': [
             ('include', 'web.assets_frontend'),
             # Remove assets_frontend_minimal
-            ('remove', 'web/static/src/module_loader.js'),
-            ('remove', 'web/static/src/session.js'),
+            ('remove', 'web/static/src/boot/module_loader.js'),
+            ('remove', 'web/static/src/boot/session.js'),
             ('remove', 'web/static/src/core/browser/cookie.js'),
             ('remove', 'web/static/src/core/utils/ui.js'),
             ('remove', 'web/static/src/public/utils.js'),
@@ -349,17 +349,17 @@ This module provides the core of the Odoo Web Client.
         # Bare javascript essentials: module loader, core folder and core libs
         'web._assets_core': [
             # module loader
-            'web/static/src/module_loader.js',
+            'web/static/src/boot/module_loader.js',
             # libs
             'web/static/lib/luxon/luxon.js',
             'web/static/src/libs/luxon.js',
             'web/static/lib/owl/owl.js',
-            'web/static/src/owl2/owl3_compatibility_layer.js',
-            'web/static/src/owl2/utils.js',
+            'web/static/src/core/owl/owl3_compatibility_layer.js',
+            'web/static/src/core/owl/utils.js',
             'web/static/lib/owl/odoo_module.js',
             # core
-            'web/static/src/env.js',
-            'web/static/src/session.js',
+            'web/static/src/boot/env.js',
+            'web/static/src/boot/session.js',
             'web/static/src/core/utils/transitions.scss',
             'web/static/src/core/**/*',
             ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'), # always lazy-loaded
@@ -420,11 +420,11 @@ This module provides the core of the Odoo Web Client.
         ],
         # Assets for test framework and setup
         'web.assets_unit_tests_setup': [
-            'web/static/src/module_loader.js',
+            'web/static/src/boot/module_loader.js',
 
             'web/static/lib/owl/owl.js',
-            'web/static/src/owl2/owl3_compatibility_layer.js',
-            'web/static/src/owl2/utils.js',
+            'web/static/src/core/owl/owl3_compatibility_layer.js',
+            'web/static/src/core/owl/utils.js',
             'web/static/lib/owl/odoo_module.js',
 
             'web/static/lib/hoot/**/*',
@@ -440,7 +440,7 @@ This module provides the core of the Odoo Web Client.
             ('include', 'web.assets_backend'),
             ('include', 'web.assets_backend_lazy'),
 
-            'web/static/src/polyfills/set.js',
+            'web/static/src/boot/polyfills/set.js',
             'web/static/src/public/**/*.js',
             ("remove", 'web/static/src/public/public_root.js'),
             ("remove", 'web/static/src/public/public_root_instance.js'),
@@ -463,16 +463,16 @@ This module provides the core of the Odoo Web Client.
             ('remove', 'web/static/tests/ignore_missing_deps/**/*'),
         ],
         'web.tests_assets': [
-            'web/static/src/module_loader.js',
+            'web/static/src/boot/module_loader.js',
 
             'web/static/lib/owl/owl.js',
-            'web/static/src/owl2/owl3_compatibility_layer.js',
-            'web/static/src/owl2/utils.js',
+            'web/static/src/core/owl/owl3_compatibility_layer.js',
+            'web/static/src/core/owl/utils.js',
             'web/static/lib/owl/odoo_module.js',
             'web/static/lib/luxon/luxon.js',
             'web/static/src/libs/luxon.js',
 
-            'web/static/src/session.js',
+            'web/static/src/boot/session.js',
             'web/static/src/core/registry.js',
             'web/static/src/core/assets.js',
             'web/static/src/core/lazy_component.js',
