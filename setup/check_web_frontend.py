@@ -5,7 +5,9 @@
 1. every module imported by the JS code of the repository exists;
 2. the folders of web/static/src only import downwards, see
    addons/web/ARCHITECTURE.md;
-3. every path of the asset bundles of the manifests matches a file.
+3. every path of the asset bundles of the manifests matches a file;
+4. no test file x.test.js sits next to a folder x/ holding tests (Hoot
+   would define the suite twice).
 
 Usage: ``setup/check_web_frontend.py [--verbose]``. Exits with status 1
 when a problem is found.
@@ -166,11 +168,26 @@ def check_assets(problems, verbose):
         print(f'{count} asset paths checked')  # noqa: T201
 
 
+def check_test_suites(problems, verbose):
+    # the suite of x.test.js is named after its path: next to a folder x/
+    # holding tests, it would also be the parent of their suites
+    count = 0
+    for addons_dir in ADDONS_DIRS:
+        for path in addons_dir.glob('*/static/tests/**/*.test.js'):
+            count += 1
+            folder = path.with_name(path.name[: -len('.test.js')])
+            if folder.is_dir() and any(folder.rglob('*.test.js')):
+                problems.append(f'{path.relative_to(REPO)}: its suite clashes with the tests of {folder.name}/')
+    if verbose:
+        print(f'{count} test files checked')  # noqa: T201
+
+
 def main():
     verbose = '--verbose' in sys.argv
     problems = []
     check_imports(problems, verbose)
     check_assets(problems, verbose)
+    check_test_suites(problems, verbose)
     for problem in problems:
         print(problem)  # noqa: T201
     if verbose or problems:
