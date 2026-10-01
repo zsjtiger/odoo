@@ -1,7 +1,7 @@
 import { after, getFixture, queryFirst, queryOne } from "@odoo/hoot";
 import { App, Component, onWillDestroy, xml } from "@odoo/owl";
-import { MainComponentsContainer } from "@web/core/main_components_container";
-import { getPopoverForTarget } from "@web/core/popover/popover";
+import { MainComponentsContainer } from "@web/core/framework/main_components_container";
+import { getPopoverForTarget } from "@web/core/components/popover/popover";
 import { patch } from "@web/core/utils/patch";
 import { getMockEnv, getTestApp, makeTestApp } from "./app_test_helpers";
 import { makeMockServer, MockServer } from "./mock_server/mock_server";

@@ -1,4 +1,4 @@
-import { NameAndSignature } from "@web/core/signature/name_and_signature";
+import { NameAndSignature } from "@web/core/components/signature/name_and_signature";
 
 import { expect, queryOne, test } from "@odoo/hoot";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";

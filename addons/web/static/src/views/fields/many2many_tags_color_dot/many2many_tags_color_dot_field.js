@@ -1,7 +1,7 @@
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { Many2ManyTagsField, many2ManyTagsField } from "../many2many_tags/many2many_tags_field";
-import { BadgeTagDot } from "@web/core/tags_list/badge_tag_dot";
+import { BadgeTagDot } from "@web/core/components/tags_list/badge_tag_dot";
 
 /**
  * Extension of the `many2many_tags` widget in which the color field is a

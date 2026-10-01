@@ -30,7 +30,7 @@ import {
     tick,
 } from "@odoo/hoot";
 import { onMounted, onPatched } from "@odoo/owl";
-import { addNewRule } from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
+import { addNewRule } from "@web/../tests/core/editors/tree_editor/condition_tree_editor_test_helpers";
 import {
     MockServer,
     clickKanbanLoadMore,
@@ -80,11 +80,11 @@ import {
     webModels,
 } from "@web/../tests/web_test_helpers";
 
-import { browser } from "@web/core/browser/browser";
-import { FileInput } from "@web/core/file_input/file_input";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
-import { registry } from "@web/core/registry";
-import { user } from "@web/core/user";
+import { browser } from "@web/core/services/browser/browser";
+import { FileInput } from "@web/core/components/file_input/file_input";
+import { OfflinePlugin } from "@web/core/services/offline/offline_plugin";
+import { registry } from "@web/core/framework/registry";
+import { user } from "@web/core/services/user";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
 import { SampleServer } from "@web/model/sample_server";
 import { KanbanController } from "@web/views/kanban/kanban_controller";

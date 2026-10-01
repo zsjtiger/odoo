@@ -24,7 +24,7 @@ import {
     getCurrentPath,
     getCurrentValue,
     label,
-} from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
+} from "@web/../tests/core/editors/tree_editor/condition_tree_editor_test_helpers";
 import {
     contains,
     defineActions,
@@ -48,7 +48,7 @@ import {
     toggleSearchBarMenu,
     validateSearch,
 } from "@web/../tests/web_test_helpers";
-import { cookie } from "@web/core/browser/cookie";
+import { cookie } from "@web/core/services/browser/cookie";
 import { SearchBar, DROPDOWN_CLOSE_DELAY } from "@web/search/search_bar/search_bar";
 import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
 class Partner extends models.Model {

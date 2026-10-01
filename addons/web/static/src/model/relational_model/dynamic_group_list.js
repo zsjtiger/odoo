@@ -1,6 +1,6 @@
 //@ts-check
 
-import { Domain } from "@web/core/domain";
+import { Domain } from "@web/core/data/domain";
 import { DynamicList } from "./dynamic_list";
 import { getGroupServerValue } from "./utils";
 

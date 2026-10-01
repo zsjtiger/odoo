@@ -1,6 +1,6 @@
-import { _t } from "@web/core/l10n/translation";
-import { evaluateBooleanExpr } from "@web/core/py_js/py";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { evaluateBooleanExpr } from "@web/core/data/py_js/py";
+import { registry } from "@web/core/framework/registry";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 import { Component, t, useProps } from "@odoo/owl";

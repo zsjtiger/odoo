@@ -1,6 +1,6 @@
-import { useCommand } from "@web/core/commands/command_hook";
-import { registry } from "@web/core/registry";
-import { _t } from "@web/core/l10n/translation";
+import { useCommand } from "@web/core/services/commands/command_hook";
+import { registry } from "@web/core/framework/registry";
+import { _t } from "@web/core/data/l10n/translation";
 import { standardFieldProps } from "../standard_field_props";
 
 import { Component, proxy, t, useProps } from "@odoo/owl";

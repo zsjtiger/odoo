@@ -58,8 +58,10 @@ def test_moves(dir_moves):
     for old, new in dir_moves.items():
         if (REPO / TESTS / old).is_dir():
             result[old] = new
-        elif old.endswith('.js') and (REPO / TESTS / f'{old[:-3]}.test.js').is_file():
-            result[f'{old[:-3]}.test.js'] = f'{new[:-3]}.test.js'
+        # the tests of a folder or of a file may be a single test file
+        stem_old, stem_new = strip_js(old), strip_js(new)
+        if (REPO / TESTS / f'{stem_old}.test.js').is_file():
+            result[f'{stem_old}.test.js'] = f'{stem_new}.test.js'
     return result
 
 
@@ -129,9 +131,26 @@ def rewrite_relative_imports(text, old_path, new_path, files):
     return RELATIVE_RE.sub(fix, text)
 
 
+def collisions(files):
+    """Destinations already taken by a file that stays, or by a folder where a
+    file must go (and conversely)."""
+    moved = set(files)
+    problems = []
+    for old, new in files.items():
+        dest = REPO / new
+        if dest.exists() and new not in moved:
+            problems.append(f'{new} already exists')
+        for parent in PurePosixPath(new).parents:
+            if (REPO / parent).is_file() and str(parent) not in moved:
+                problems.append(f'{new}: {parent} is a file')
+    return problems
+
+
 def run_phase(phase):
     dir_moves = web_layout.moves(phase)
     files = file_moves(dir_moves)
+    if problems := collisions(files):
+        sys.exit('nothing done, the destinations collide:\n' + '\n'.join(sorted(set(problems))))
     apply = compile_replacements(replacements(dir_moves))
     changed = 0
     for rel, path in text_files([REPO / 'addons', REPO / 'odoo', REPO / 'setup']):

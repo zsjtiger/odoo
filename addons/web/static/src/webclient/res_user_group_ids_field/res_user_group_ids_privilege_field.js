@@ -1,7 +1,7 @@
 import { Component, usePlugin, useProps } from "@odoo/owl";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
-import { usePopover } from "@web/core/popover/popover_hook";
-import { registry } from "@web/core/registry";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
+import { usePopover } from "@web/core/components/popover/popover_hook";
+import { registry } from "@web/core/framework/registry";
 import { BooleanField } from "@web/views/fields/boolean/boolean_field";
 import { SelectionField } from "@web/views/fields/selection/selection_field";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";

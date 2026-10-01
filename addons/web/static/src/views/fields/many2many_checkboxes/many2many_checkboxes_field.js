@@ -1,14 +1,14 @@
 import { Component, onWillUnmount, t, useProps } from "@odoo/owl";
-import { CheckBox } from "@web/core/checkbox/checkbox";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { CheckBox } from "@web/core/components/checkbox/checkbox";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { useBus } from "@web/core/utils/hooks";
 import { debounce } from "@web/core/utils/timing";
 import { getFieldDomain } from "@web/model/relational_model/utils";
 import { useSpecialData } from "@web/views/fields/relational_utils";
 import { standardFieldProps } from "../standard_field_props";
-import { ConnectionLostError } from "@web/core/network/rpc";
-import { x2ManyCommands } from "@web/core/orm_plugin";
+import { ConnectionLostError } from "@web/core/services/network/rpc";
+import { x2ManyCommands } from "@web/core/services/orm_plugin";
 
 export class Many2ManyCheckboxesField extends Component {
     static template = "web.Many2ManyCheckboxesField";

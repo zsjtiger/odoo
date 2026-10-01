@@ -1,12 +1,12 @@
 import { Component, onWillStart, usePlugin, t, useProps } from "@odoo/owl";
-import { browser } from "@web/core/browser/browser";
-import { Dialog } from "@web/core/dialog/dialog";
-import { _t } from "@web/core/l10n/translation";
-import { localeCompare } from "@web/core/l10n/utils";
-import { rpc } from "@web/core/network/rpc";
-import { ORM } from "@web/core/orm_plugin";
-import { registry } from "@web/core/registry";
-import { user } from "@web/core/user";
+import { browser } from "@web/core/services/browser/browser";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
+import { _t } from "@web/core/data/l10n/translation";
+import { localeCompare } from "@web/core/data/l10n/utils";
+import { rpc } from "@web/core/services/network/rpc";
+import { ORM } from "@web/core/services/orm_plugin";
+import { registry } from "@web/core/framework/registry";
+import { user } from "@web/core/services/user";
 import { useService } from "@web/core/utils/hooks";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 

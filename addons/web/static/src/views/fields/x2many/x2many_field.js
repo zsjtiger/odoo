@@ -1,10 +1,10 @@
 import { render } from "@web/core/owl/utils";
-import { makeContext } from "@web/core/context";
-import { _t } from "@web/core/l10n/translation";
-import { x2ManyCommands } from "@web/core/orm_plugin";
-import { Pager } from "@web/core/pager/pager";
-import { evaluateBooleanExpr } from "@web/core/py_js/py";
-import { registry } from "@web/core/registry";
+import { makeContext } from "@web/core/data/context";
+import { _t } from "@web/core/data/l10n/translation";
+import { x2ManyCommands } from "@web/core/services/orm_plugin";
+import { Pager } from "@web/core/components/pager/pager";
+import { evaluateBooleanExpr } from "@web/core/data/py_js/py";
+import { registry } from "@web/core/framework/registry";
 import { symmetricalDifference } from "@web/core/utils/arrays";
 import { useService } from "@web/core/utils/hooks";
 import { pick } from "@web/core/utils/objects";

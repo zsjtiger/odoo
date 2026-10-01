@@ -1,12 +1,12 @@
-import { hasTouch } from "@web/core/browser/feature_detection";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { makeContext } from "@web/core/context";
-import { useDebugCategory } from "@web/core/debug/debug_context";
-import { _t } from "@web/core/l10n/translation";
-import { evaluateBooleanExpr } from "@web/core/py_js/py";
-import { registry } from "@web/core/registry";
-import { SIZES } from "@web/core/ui/ui_utils";
-import { user } from "@web/core/user";
+import { hasTouch } from "@web/core/services/browser/feature_detection";
+import { ConfirmationDialog } from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
+import { makeContext } from "@web/core/data/context";
+import { useDebugCategory } from "@web/core/services/debug/debug_context";
+import { _t } from "@web/core/data/l10n/translation";
+import { evaluateBooleanExpr } from "@web/core/data/py_js/py";
+import { registry } from "@web/core/framework/registry";
+import { SIZES } from "@web/core/services/ui/ui_utils";
+import { user } from "@web/core/services/user";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { omit } from "@web/core/utils/objects";
 import { createElement, parseXML } from "@web/core/utils/xml";
@@ -49,7 +49,7 @@ import {
     usePlugin,
     useProps,
 } from "@odoo/owl";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
+import { OfflinePlugin } from "@web/core/services/offline/offline_plugin";
 import { FetchRecordError } from "@web/model/relational_model/errors";
 
 const viewRegistry = registry.category("views");

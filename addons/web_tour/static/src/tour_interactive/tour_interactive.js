@@ -1,7 +1,7 @@
 import { markup } from "@odoo/owl";
 import { tourState } from "@web_tour/tour_state";
 import * as hoot from "@odoo/hoot-dom";
-import { utils } from "@web/core/ui/ui_utils";
+import { utils } from "@web/core/services/ui/ui_utils";
 import { TourStepInteractive } from "@web_tour/tour_interactive/tour_step_interactive";
 import { TourInteractiveObserver } from "@web_tour/tour_interactive/tour_interactive_observer";
 import { TourPointer, pointerState } from "@web_tour/tour_pointer/tour_pointer";
@@ -25,9 +25,9 @@ export class TourInteractive {
     /**
      * @param {Tour} data
      * @param {Object} deps
-     * @param {import("@web/core/network/orm_service").ORM} deps.orm
-     * @param {import("@web/core/effects/effect_plugin").EffectPlugin} deps.effect
-     * @param {import("@web/core/overlay/overlay_plugin").OverlayPlugin} deps.overlay
+     * @param {import("@web/core/services/network/orm_service").ORM} deps.orm
+     * @param {import("@web/core/services/effects/effect_plugin").EffectPlugin} deps.effect
+     * @param {import("@web/core/components/overlay/overlay_plugin").OverlayPlugin} deps.overlay
      * @param {(nextTour: Object) => void} deps.onChainNextTour
      */
     constructor(data, { orm, effect, overlay, onChainNextTour }) {

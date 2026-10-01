@@ -20,7 +20,7 @@ import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog
 import { t } from "@odoo/owl";
 import { WebClient } from "@web/webclient/webclient";
 
-import { editTime, getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
+import { editTime, getPickerCell } from "@web/../tests/core/components/datetime/datetime_test_helpers";
 import {
     clickCancel,
     clickSave,

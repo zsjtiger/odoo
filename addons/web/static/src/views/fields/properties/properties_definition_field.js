@@ -1,6 +1,6 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { exprToBoolean } from "@web/core/utils/strings";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { PropertiesField } from "./properties_field";
 
 export class PropertiesDefinitionField extends PropertiesField {

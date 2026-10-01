@@ -1,4 +1,4 @@
-import { location } from "@web/core/browser/browser";
+import { location } from "@web/core/services/browser/browser";
 import { shallowEqual } from "@web/core/utils/objects";
 import { session } from "@web/boot/session";
 

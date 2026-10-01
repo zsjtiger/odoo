@@ -1,4 +1,4 @@
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import {
     getBorderWhite,
     DEFAULT_BG,
@@ -6,8 +6,8 @@ import {
     getCustomColor,
     lightenColor,
     darkenColor,
-} from "@web/core/colors/colors";
-import { registry } from "@web/core/registry";
+} from "@web/core/components/colors/colors";
+import { registry } from "@web/core/framework/registry";
 import { formatFloat, formatMonetary } from "@web/views/fields/formatters";
 import { SEP } from "./graph_model";
 import { sortBy } from "@web/core/utils/arrays";
@@ -16,9 +16,9 @@ import { useChart } from "@web/core/utils/chart_hook";
 import { useService } from "@web/core/utils/hooks";
 
 import { Component, markup, signal, t, useProps } from "@odoo/owl";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { cookie } from "@web/core/browser/cookie";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
+import { cookie } from "@web/core/services/browser/cookie";
 import { createElementWithContent } from "@web/core/utils/html";
 import { ReportViewMeasures } from "@web/views/view_components/report_view_measures";
 import { Widget } from "@web/views/widgets/widget";

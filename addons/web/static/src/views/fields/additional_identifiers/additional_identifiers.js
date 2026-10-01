@@ -1,7 +1,7 @@
 import { Component, proxy, useEffect, useProps } from "@odoo/owl";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { registry } from "@web/core/registry";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
+import { registry } from "@web/core/framework/registry";
 import { debounce } from "@web/core/utils/timing";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 

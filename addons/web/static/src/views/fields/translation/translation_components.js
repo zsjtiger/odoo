@@ -11,14 +11,14 @@ import {
     useEffect,
     useListener,
 } from "@odoo/owl";
-import { Dialog } from "@web/core/dialog/dialog";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
 import { memoize } from "@web/core/utils/functions";
 import { Record } from "@web/model/record";
 import { makeActiveField } from "@web/model/relational_model/utils";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
 
 import { TranslateModel } from "./translation_model";
 

@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, queryAllTexts } from "@odoo/hoot-dom";
-import { followRelation } from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
+import { followRelation } from "@web/../tests/core/editors/tree_editor/condition_tree_editor_test_helpers";
 import { contains, defineModels, fields, models, mountView } from "../../web_test_helpers";
 
 class Contact extends models.Model {

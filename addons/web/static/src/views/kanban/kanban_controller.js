@@ -1,10 +1,10 @@
 import { render, useLayoutEffect, useSubEnv } from "@web/core/owl/utils";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { _t } from "@web/core/l10n/translation";
-import { user } from "@web/core/user";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
+import { _t } from "@web/core/data/l10n/translation";
+import { user } from "@web/core/services/user";
 import { useService } from "@web/core/utils/hooks";
 import { omit } from "@web/core/utils/objects";
-import { evaluateBooleanExpr } from "@web/core/py_js/py";
+import { evaluateBooleanExpr } from "@web/core/data/py_js/py";
 import { useSetupAction } from "@web/search/action_hook";
 import { ActionMenus, STATIC_ACTIONS_GROUP_NUMBER } from "@web/search/action_menus/action_menus";
 import { Layout } from "@web/search/layout";
@@ -36,7 +36,7 @@ import {
     useEffect,
     useProps,
 } from "@odoo/owl";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
+import { OfflinePlugin } from "@web/core/services/offline/offline_plugin";
 import { QuickCreateState } from "./kanban_record_quick_create";
 
 const QUICK_CREATE_FIELD_TYPES = ["char", "boolean", "many2one", "selection", "many2many"];

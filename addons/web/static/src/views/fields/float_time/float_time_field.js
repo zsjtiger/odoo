@@ -1,5 +1,5 @@
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { formatFloatTime } from "../formatters";
 import { useInputField } from "../input_field_hook";
 import { standardFieldProps } from "../standard_field_props";
@@ -8,7 +8,7 @@ import { DurationParseError, InvalidNumberError, parseFloatTime } from "../parse
 import { Operation } from "@web/model/relational_model/operation";
 
 import { Component, proxy, signal, t, useProps } from "@odoo/owl";
-import { usePopover } from "@web/core/popover/popover_hook";
+import { usePopover } from "@web/core/components/popover/popover_hook";
 
 export const floatTimeFieldProps = {
     ...standardFieldProps,

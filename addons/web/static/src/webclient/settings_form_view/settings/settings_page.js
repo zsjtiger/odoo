@@ -1,7 +1,7 @@
 import { Component, computed, proxy, signal, t, useProps } from "@odoo/owl";
-import { location } from "@web/core/browser/browser";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { location } from "@web/core/services/browser/browser";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
 import { useService } from "@web/core/utils/hooks";
 import { useLayoutEffect } from "@web/core/owl/utils";
 

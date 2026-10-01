@@ -1,5 +1,5 @@
 import { Plugin } from "@odoo/owl";
-import { services } from "@web/core/services";
+import { services } from "@web/core/framework/services";
 
 /**
  * OWL-native Plugin exposing Bootstrap 5's `getOrCreateInstance` as a shared,

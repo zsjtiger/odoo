@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 
-import { location } from "@web/core/browser/browser";
+import { location } from "@web/core/services/browser/browser";
 import { getDataURLFromFile, getOrigin, redirect, url } from "@web/core/utils/urls";
 
 describe.current.tags("headless");

@@ -37,9 +37,9 @@ import {
     webModels,
 } from "@web/../tests/web_test_helpers";
 
-import { location, browser } from "@web/core/browser/browser";
-import { router, routerBus } from "@web/core/browser/router";
-import { registry } from "@web/core/registry";
+import { location, browser } from "@web/core/services/browser/browser";
+import { router, routerBus } from "@web/core/services/browser/router";
+import { registry } from "@web/core/framework/registry";
 import { redirect } from "@web/core/utils/urls";
 import { useSetupAction } from "@web/search/action_hook";
 import { listView } from "@web/views/list/list_view";

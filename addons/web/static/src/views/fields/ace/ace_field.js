@@ -1,8 +1,8 @@
 import { Component, proxy, t, useEffect, useProps } from "@odoo/owl";
-import { cookie } from "@web/core/browser/cookie";
-import { CodeEditor } from "@web/core/code_editor/code_editor";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { cookie } from "@web/core/services/browser/cookie";
+import { CodeEditor } from "@web/core/components/code_editor/code_editor";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { useBus } from "@web/core/utils/hooks";
 import { formatText } from "@web/views/fields/formatters";
 import { standardFieldProps } from "../standard_field_props";

@@ -11,7 +11,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { Component, useProps, xml } from "@odoo/owl";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 class Partner extends models.Model {
     float_field = fields.Float({ string: "Float field" });

@@ -6,8 +6,8 @@ import {
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 
-import { Domain } from "@web/core/domain";
-import { localization } from "@web/core/l10n/localization";
+import { Domain } from "@web/core/data/domain";
+import { localization } from "@web/core/data/l10n/localization";
 import {
     constructDateDomain,
     constructRelativeDateDomain,

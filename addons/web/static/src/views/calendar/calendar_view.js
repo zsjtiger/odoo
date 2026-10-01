@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { CalendarRenderer } from "./calendar_renderer";
 import { CalendarArchParser } from "./calendar_arch_parser";
 import { CalendarModel } from "./calendar_model";

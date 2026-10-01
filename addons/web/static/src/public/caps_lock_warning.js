@@ -1,5 +1,5 @@
 import { Interaction } from "@web/public/interaction";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 export class CapsLockWarning extends Interaction {
     static selector = ".o_caps_lock_warning";

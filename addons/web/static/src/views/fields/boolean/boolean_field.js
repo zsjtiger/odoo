@@ -1,7 +1,7 @@
 import { Component, proxy, useEffect, useProps } from "@odoo/owl";
-import { CheckBox } from "@web/core/checkbox/checkbox";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { CheckBox } from "@web/core/components/checkbox/checkbox";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
 import { standardFieldProps } from "../standard_field_props";
 

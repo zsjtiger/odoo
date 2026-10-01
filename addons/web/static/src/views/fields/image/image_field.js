@@ -4,9 +4,9 @@ import {
     isBrowserFirefox,
     isBrowserSafari,
     isMobileOS,
-} from "@web/core/browser/feature_detection";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+} from "@web/core/services/browser/feature_detection";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
 import { imageUrl } from "@web/core/utils/urls";
 import { generateImageVariants } from "@web/core/utils/image_library";

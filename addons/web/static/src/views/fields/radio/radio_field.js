@@ -1,11 +1,11 @@
 import { Component, t, useProps } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { getFieldDomain } from "@web/model/relational_model/utils";
 import { useSpecialData } from "@web/views/fields/relational_utils";
 import { standardFieldProps } from "../standard_field_props";
-import { ConnectionLostError } from "@web/core/network/rpc";
-import { hasTouch } from "@web/core/browser/feature_detection";
+import { ConnectionLostError } from "@web/core/services/network/rpc";
+import { hasTouch } from "@web/core/services/browser/feature_detection";
 
 let nextId = 0;
 

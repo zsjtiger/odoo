@@ -1,7 +1,7 @@
 import { Component, props, asyncComputed, computed } from "@odoo/owl";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
 export class PropertySelectionField extends Component {

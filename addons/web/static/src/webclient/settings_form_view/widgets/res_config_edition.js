@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { session } from "@web/boot/session";
 import { Setting } from "@web/views/form/setting/setting";
 

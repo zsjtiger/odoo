@@ -1,9 +1,9 @@
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { computeAppsAndMenuItems } from "@web/webclient/menus/menu_helpers";
-import { defaultCommandItemProps } from "@web/core/commands/command_palette";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
+import { defaultCommandItemProps } from "@web/core/services/commands/command_palette";
+import { OfflinePlugin } from "@web/core/services/offline/offline_plugin";
 import { Component, usePlugin, t, useProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 

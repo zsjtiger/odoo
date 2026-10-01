@@ -11,8 +11,8 @@ import {
     tick,
 } from "@odoo/hoot";
 import { Component, onMounted, t, useProps, xml } from "@odoo/owl";
-import { Dialog } from "@web/core/dialog/dialog";
-import { MainComponentsContainer } from "@web/core/main_components_container";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
+import { MainComponentsContainer } from "@web/core/framework/main_components_container";
 import { useSubEnv } from "@web/core/owl/utils";
 import { View } from "@web/views/view";
 import { getService } from "./app_test_helpers";

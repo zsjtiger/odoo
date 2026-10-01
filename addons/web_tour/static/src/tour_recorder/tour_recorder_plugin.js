@@ -1,8 +1,8 @@
 import { onWillStart, Plugin, usePlugin, whenReady } from "@odoo/owl";
-import { loadBundle } from "@web/core/assets";
-import { browser } from "@web/core/browser/browser";
-import { OverlayPlugin } from "@web/core/overlay/overlay_plugin";
-import { services } from "@web/core/services";
+import { loadBundle } from "@web/core/framework/assets";
+import { browser } from "@web/core/services/browser/browser";
+import { OverlayPlugin } from "@web/core/components/overlay/overlay_plugin";
+import { services } from "@web/core/framework/services";
 import { session } from "@web/boot/session";
 import { TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY, tourRecorderState } from "./tour_recorder_state";
 

@@ -1,9 +1,9 @@
 import { t, useProps } from "@odoo/owl";
 import { render } from "@web/core/owl/utils";
-import { _t } from "@web/core/l10n/translation";
-import { usePopover } from "@web/core/popover/popover_hook";
-import { registry } from "@web/core/registry";
-import { AvatarTag } from "@web/core/tags_list/avatar_tag";
+import { _t } from "@web/core/data/l10n/translation";
+import { usePopover } from "@web/core/components/popover/popover_hook";
+import { registry } from "@web/core/framework/registry";
+import { AvatarTag } from "@web/core/components/tags_list/avatar_tag";
 import { imageUrl } from "@web/core/utils/urls";
 import {
     many2ManyTagsField,

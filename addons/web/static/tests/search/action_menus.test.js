@@ -10,7 +10,7 @@ import {
 } from "../web_test_helpers";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 /** Foo is dummy model to test `action.report` with domain of its field `value`. **/
 class Foo extends models.Model {

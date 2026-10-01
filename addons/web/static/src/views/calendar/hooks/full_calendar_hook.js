@@ -1,5 +1,5 @@
 import { onMounted, onPatched, onWillStart, onWillUnmount, signal, useProps } from "@odoo/owl";
-import { loadBundle } from "@web/core/assets";
+import { loadBundle } from "@web/core/framework/assets";
 
 /**
  * @param {import("@odoo/owl").Signal<HTMLElement>} ref

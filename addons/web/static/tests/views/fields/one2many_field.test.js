@@ -11,7 +11,7 @@ import {
 import { animationFrame, mockTimeZone, runAllTimers } from "@odoo/hoot-mock";
 
 import { Component, onWillDestroy, onWillStart, proxy, useProps, xml } from "@odoo/owl";
-import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
+import { getPickerCell } from "@web/../tests/core/components/datetime/datetime_test_helpers";
 import {
     clickFieldDropdown,
     clickFieldDropdownItem,
@@ -32,8 +32,8 @@ import {
     selectFieldDropdownItem,
     serverState,
 } from "@web/../tests/web_test_helpers";
-import { browser } from "@web/core/browser/browser";
-import { registry } from "@web/core/registry";
+import { browser } from "@web/core/services/browser/browser";
+import { registry } from "@web/core/framework/registry";
 import { pick } from "@web/core/utils/objects";
 import { Record } from "@web/model/relational_model/record";
 import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";

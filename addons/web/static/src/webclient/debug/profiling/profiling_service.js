@@ -1,6 +1,6 @@
 import { effect, EventBus, proxy, usePlugin } from "@odoo/owl";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
-import { registry } from "@web/core/registry";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
+import { registry } from "@web/core/framework/registry";
 import { session } from "@web/boot/session";
 import { ProfilingItem } from "@web/webclient/debug/profiling/profiling_item";
 import { profilingSystrayItem } from "@web/webclient/debug/profiling/profiling_systray_item";

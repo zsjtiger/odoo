@@ -21,14 +21,14 @@ import {
     webModels,
 } from "@web/../tests/web_test_helpers";
 
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { redirect } from "@web/core/utils/urls";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { SearchBar } from "@web/search/search_bar/search_bar";
 import { useSetupAction } from "@web/search/action_hook";
 import { WebClient } from "@web/webclient/webclient";
-import { browser } from "@web/core/browser/browser";
-import { router } from "@web/core/browser/router";
+import { browser } from "@web/core/services/browser/browser";
+import { router } from "@web/core/services/browser/router";
 
 const { ResCompany, ResPartner, ResUsers } = webModels;
 const actionRegistry = registry.category("actions");

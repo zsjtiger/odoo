@@ -1,7 +1,7 @@
 import { Component, computed, useProps, signal, types } from "@odoo/owl";
-import { localization } from "@web/core/l10n/localization";
-import { _t } from "@web/core/l10n/translation";
-import { user } from "@web/core/user";
+import { localization } from "@web/core/data/l10n/localization";
+import { _t } from "@web/core/data/l10n/translation";
+import { user } from "@web/core/services/user";
 import { useOwnedDialogs } from "@web/core/utils/hooks";
 
 import { TranslationDialog } from "./translation_components";

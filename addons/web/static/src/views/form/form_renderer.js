@@ -1,10 +1,10 @@
 import { render, useSubEnv } from "@web/core/owl/utils";
-import { evaluateBooleanExpr } from "@web/core/py_js/py";
-import { Notebook } from "@web/core/notebook/notebook";
+import { evaluateBooleanExpr } from "@web/core/data/py_js/py";
+import { Notebook } from "@web/core/components/notebook/notebook";
 import { Setting } from "./setting/setting";
 import { Field } from "@web/views/fields/field";
-import { browser } from "@web/core/browser/browser";
-import { hasTouch } from "@web/core/browser/feature_detection";
+import { browser } from "@web/core/services/browser/browser";
+import { hasTouch } from "@web/core/services/browser/feature_detection";
 import { useService } from "@web/core/utils/hooks";
 import { useDebounced, useThrottleForAnimation } from "@web/core/utils/timing";
 import { ButtonBox } from "@web/views/form/button_box/button_box";

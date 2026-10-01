@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { BinaryField, binaryField } from "@web/views/fields/binary/binary_field";
 
 export class SettingsBinaryField extends BinaryField {

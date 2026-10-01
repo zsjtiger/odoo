@@ -9,15 +9,15 @@ import {
     useProps,
     useScope,
 } from "@odoo/owl";
-import { AutoComplete } from "@web/core/autocomplete/autocomplete";
-import { makeContext } from "@web/core/context";
-import { Dialog } from "@web/core/dialog/dialog";
-import { _t } from "@web/core/l10n/translation";
-import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
-import { ORM } from "@web/core/orm_plugin";
-import { evaluateBooleanExpr } from "@web/core/py_js/py";
-import { SIZES } from "@web/core/ui/ui_utils";
+import { AutoComplete } from "@web/core/components/autocomplete/autocomplete";
+import { makeContext } from "@web/core/data/context";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
+import { _t } from "@web/core/data/l10n/translation";
+import { ConnectionLostError, RPCError } from "@web/core/services/network/rpc";
+import { OfflinePlugin } from "@web/core/services/offline/offline_plugin";
+import { ORM } from "@web/core/services/orm_plugin";
+import { evaluateBooleanExpr } from "@web/core/data/py_js/py";
+import { SIZES } from "@web/core/services/ui/ui_utils";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { useBus, useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { highlightText, odoomark } from "@web/core/utils/html";

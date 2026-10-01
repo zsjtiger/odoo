@@ -1,7 +1,7 @@
 import { Component, proxy, usePlugin, useProps } from "@odoo/owl";
-import { router } from "@web/core/browser/router";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
-import { registry } from "@web/core/registry";
+import { router } from "@web/core/services/browser/router";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
 import { Setting } from "@web/views/form/setting/setting";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";

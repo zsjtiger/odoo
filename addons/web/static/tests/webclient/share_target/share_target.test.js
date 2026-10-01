@@ -10,7 +10,7 @@ import {
     serverState,
     webModels,
 } from "@web/../tests/web_test_helpers";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { onMounted, xml } from "@odoo/owl";
 import { ShareTargetItem } from "@web/webclient/share_target/share_target_item";
 import { WebClient } from "@web/webclient/webclient";

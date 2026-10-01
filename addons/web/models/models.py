@@ -35,7 +35,7 @@ PENDING_ATTACHMENTS_KEY = "pending_attachment_ids"
 class UnlinkBlockedError(ValidationError):
     """ Raised by :meth:`~.Base.web_unlink`. Its dotted name is what makes the
     web client show `UnlinkBlockedErrorDialog` (see
-    `@web/core/errors/error_dialogs`), which reads the ``context`` below, so
+    `@web/core/services/errors/error_dialogs`), which reads the ``context`` below, so
     no delete flow has to handle this error itself. """
 
 

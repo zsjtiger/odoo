@@ -1,5 +1,5 @@
-import { registry } from "@web/core/registry";
-import { _t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/framework/registry";
+import { _t } from "@web/core/data/l10n/translation";
 import { formatMonetary } from "../formatters";
 import { parseFloat } from "../parsers";
 import { useInputField } from "../input_field_hook";
@@ -8,7 +8,7 @@ import { standardFieldProps } from "../standard_field_props";
 import { nbsp } from "@web/core/utils/strings";
 
 import { Component, proxy, signal, t, onMounted, onPatched, useProps } from "@odoo/owl";
-import { getCurrency } from "@web/core/currency";
+import { getCurrency } from "@web/core/data/currency";
 
 export const monetaryFieldProps = {
     ...standardFieldProps,

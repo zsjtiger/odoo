@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { booleanField, BooleanField } from "@web/views/fields/boolean/boolean_field";
 import { useService } from "@web/core/utils/hooks";
 import { UpgradeDialog } from "./upgrade_dialog";

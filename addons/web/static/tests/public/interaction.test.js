@@ -22,8 +22,8 @@ import {
     xml,
 } from "@odoo/owl";
 import { clearRegistry, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { registry } from "@web/core/registry";
-import { services } from "@web/core/services";
+import { registry } from "@web/core/framework/registry";
+import { services } from "@web/core/framework/services";
 import { patch } from "@web/core/utils/patch";
 import { Colibri } from "@web/public/colibri";
 import { Interaction } from "@web/public/interaction";

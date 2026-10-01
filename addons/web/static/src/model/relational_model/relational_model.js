@@ -1,10 +1,10 @@
 // @ts-check
 
 import { EventBus, markRaw, usePlugin, toRaw } from "@odoo/owl";
-import { makeContext } from "@web/core/context";
-import { Domain } from "@web/core/domain";
-import { WarningDialog } from "@web/core/errors/error_dialogs";
-import { ConnectionLostError } from "@web/core/network/rpc";
+import { makeContext } from "@web/core/data/context";
+import { Domain } from "@web/core/data/domain";
+import { WarningDialog } from "@web/core/services/errors/error_dialogs";
+import { ConnectionLostError } from "@web/core/services/network/rpc";
 import { shallowEqual } from "@web/core/utils/arrays";
 import { KeepLast, Mutex } from "@web/core/utils/concurrency";
 import { deepCopy, pick } from "@web/core/utils/objects";
@@ -25,12 +25,12 @@ import {
     getId,
     makeActiveField,
 } from "./utils";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
+import { OfflinePlugin } from "@web/core/services/offline/offline_plugin";
 
 /**
- * @typedef {import("@web/core/context").Context} Context
+ * @typedef {import("@web/core/data/context").Context} Context
  * @typedef {import("./datapoint").DataPoint} DataPoint
- * @typedef {import("@web/core/domain").DomainListRepr} DomainListRepr
+ * @typedef {import("@web/core/data/domain").DomainListRepr} DomainListRepr
  * @typedef {import("@web/search/search_model").Field} Field
  * @typedef {import("@web/search/search_model").FieldInfo} FieldInfo
  * @typedef {import("@web/search/search_model").SearchParams} SearchParams

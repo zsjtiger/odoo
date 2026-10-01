@@ -1,7 +1,7 @@
 /** @odoo-module **/
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { aceField, AceField } from "@web/views/fields/ace/ace_field";
-import { IrUiViewCodeEditor } from "@web/core/ir_ui_view_code_editor/code_editor";
+import { IrUiViewCodeEditor } from "@web/core/editors/ir_ui_view_code_editor/code_editor";
 
 export class IrUiViewAceField extends AceField {
     static template = "web.IrUIViewAceField";

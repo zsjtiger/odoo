@@ -1,8 +1,8 @@
 import { Component, t, useProps } from "@odoo/owl";
-import { evaluateExpr } from "@web/core/py_js/py";
+import { evaluateExpr } from "@web/core/data/py_js/py";
 import { getClassNameFromDecoration } from "@web/views/utils";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { DateTimeField } from "../datetime/datetime_field";
 import { standardFieldProps } from "../standard_field_props";
 import { capitalize } from "@web/core/utils/strings";

@@ -1,7 +1,7 @@
-import { _t } from "@web/core/l10n/translation";
-import { loadBundle } from "@web/core/assets";
-import { registry } from "@web/core/registry";
-import { browser } from "@web/core/browser/browser";
+import { _t } from "@web/core/data/l10n/translation";
+import { loadBundle } from "@web/core/framework/assets";
+import { registry } from "@web/core/framework/registry";
+import { browser } from "@web/core/services/browser/browser";
 
 async function _waitForEnv() {
     while (!odoo.__WOWL_DEBUG__?.root?.env) {

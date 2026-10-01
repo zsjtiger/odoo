@@ -1,12 +1,12 @@
 import { onMounted, onPatched, proxy, signal } from "@odoo/owl";
 import { useLayoutEffect, useSubEnv } from "@web/core/owl/utils";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { pick } from "@web/core/utils/objects";
 import { formView } from "@web/views/form/form_view";
 import { SettingsConfirmationDialog } from "./settings_confirmation_dialog";
 import { SettingsFormRenderer } from "./settings_form_renderer";
-import { normalize } from "@web/core/l10n/utils";
+import { normalize } from "@web/core/data/l10n/utils";
 import { useDebounced } from "@web/core/utils/timing";
 import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
 import { useViewButtonHandler } from "@web/views/view_button/view_button_hook";

@@ -1,13 +1,13 @@
 import { Component, proxy, signal, status, t, usePlugin, useProps } from "@odoo/owl";
-import { hasTouch } from "@web/core/browser/feature_detection";
-import { Domain } from "@web/core/domain";
-import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
-import { _t } from "@web/core/l10n/translation";
-import { useNavigation } from "@web/core/navigation/navigation";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
-import { registry } from "@web/core/registry";
+import { hasTouch } from "@web/core/services/browser/feature_detection";
+import { Domain } from "@web/core/data/domain";
+import { useDropdownState } from "@web/core/components/dropdown/dropdown_hooks";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
+import { serializeDate, serializeDateTime } from "@web/core/data/l10n/dates";
+import { _t } from "@web/core/data/l10n/translation";
+import { useNavigation } from "@web/core/components/navigation/navigation";
+import { OfflinePlugin } from "@web/core/services/offline/offline_plugin";
+import { registry } from "@web/core/framework/registry";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { useAutofocus, useBus, useService } from "@web/core/utils/hooks";
 import { fuzzyTest } from "@web/core/utils/search";
@@ -544,7 +544,7 @@ export class SearchBar extends Component {
     }
 
     /**
-     * @returns {import("@web/core/navigation/navigation").NavigationOptions}
+     * @returns {import("@web/core/components/navigation/navigation").NavigationOptions}
      */
     getDropdownNavigation() {
         const isExpansible = (index) => {

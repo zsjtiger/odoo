@@ -1,9 +1,9 @@
-import { location } from "@web/core/browser/browser";
-import { makeContext } from "@web/core/context";
+import { location } from "@web/core/services/browser/browser";
+import { makeContext } from "@web/core/data/context";
 import { session } from "@web/boot/session";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { _t } from "@web/core/l10n/translation";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
+import { _t } from "@web/core/data/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
 import {
@@ -15,8 +15,8 @@ import {
     t,
     useProps,
 } from "@odoo/owl";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
-import { ConnectionLostError } from "@web/core/network/rpc";
+import { OfflinePlugin } from "@web/core/services/offline/offline_plugin";
+import { ConnectionLostError } from "@web/core/services/network/rpc";
 
 export const STATIC_ACTIONS_GROUP_NUMBER = 1;
 export const ACTIONS_GROUP_NUMBER = 100;

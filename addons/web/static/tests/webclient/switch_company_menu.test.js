@@ -8,8 +8,8 @@ import {
     serverState,
 } from "@web/../tests/web_test_helpers";
 
-import { cookie } from "@web/core/browser/cookie";
-import { user } from "@web/core/user";
+import { cookie } from "@web/core/services/browser/cookie";
+import { user } from "@web/core/services/user";
 import { SwitchCompanyMenu } from "@web/webclient/switch_company_menu/switch_company_menu";
 
 const ORIGINAL_TOGGLE_DELAY = SwitchCompanyMenu.toggleDelay;

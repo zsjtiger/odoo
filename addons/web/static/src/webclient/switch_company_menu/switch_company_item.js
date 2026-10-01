@@ -1,8 +1,8 @@
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
 import { Component, proxy, t, useProps } from "@odoo/owl";
-import { user } from "@web/core/user";
-import { CheckBox } from "@web/core/checkbox/checkbox";
-import { _t } from "@web/core/l10n/translation";
+import { user } from "@web/core/services/user";
+import { CheckBox } from "@web/core/components/checkbox/checkbox";
+import { _t } from "@web/core/data/l10n/translation";
 
 export class SwitchCompanyItem extends Component {
     static template = "web.SwitchCompanyItem";

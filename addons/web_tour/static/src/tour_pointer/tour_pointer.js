@@ -1,10 +1,10 @@
 import { useLayoutEffect } from "@web/core/owl/utils";
 import { Component, useProps, proxy, signal, t } from "@odoo/owl";
 import { useBus, useService } from "@web/core/utils/hooks";
-import { location } from "@web/core/browser/browser";
-import { usePosition } from "@web/core/position/position_hook";
-import { _t } from "@web/core/l10n/translation";
-import { usePopover } from "@web/core/popover/popover_hook";
+import { location } from "@web/core/services/browser/browser";
+import { usePosition } from "@web/core/components/position/position_hook";
+import { _t } from "@web/core/data/l10n/translation";
+import { usePopover } from "@web/core/components/popover/popover_hook";
 
 const oppositeSides = {
     left: "right",

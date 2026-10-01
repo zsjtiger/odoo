@@ -1,9 +1,9 @@
 import { getFieldDomain } from "@web/model/relational_model/utils";
 import { useSelectCreate, useSpecialData } from "@web/views/fields/relational_utils";
-import { ConnectionLostError } from "@web/core/network/rpc";
+import { ConnectionLostError } from "@web/core/services/network/rpc";
 import { BaseBadgesField, extractStandardFieldProps } from "../badges_selection/base_badges_field";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { Component, t, useProps } from "@odoo/owl";
 import { standardFieldProps } from "../standard_field_props";
 

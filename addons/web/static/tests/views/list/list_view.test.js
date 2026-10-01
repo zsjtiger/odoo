@@ -30,7 +30,7 @@ import {
 } from "@odoo/hoot";
 import { Component, markup, onPatched, onWillStart, signal, t, useProps, xml } from "@odoo/owl";
 import { buildSelector } from "@web/../tests/_framework/view_test_helpers";
-import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
+import { getPickerCell } from "@web/../tests/core/components/datetime/datetime_test_helpers";
 import {
     clickFieldDropdown,
     clickModalButton,
@@ -76,12 +76,12 @@ import {
     validateSearch,
     webModels,
 } from "@web/../tests/web_test_helpers";
-import { currencies } from "@web/core/currency";
-import { Domain } from "@web/core/domain";
-import { localization } from "@web/core/l10n/localization";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
-import { registry } from "@web/core/registry";
-import { user } from "@web/core/user";
+import { currencies } from "@web/core/data/currency";
+import { Domain } from "@web/core/data/domain";
+import { localization } from "@web/core/data/l10n/localization";
+import { OfflinePlugin } from "@web/core/services/offline/offline_plugin";
+import { registry } from "@web/core/framework/registry";
+import { user } from "@web/core/services/user";
 import { useBus } from "@web/core/utils/hooks";
 import { omit } from "@web/core/utils/objects";
 import { RelationalModel } from "@web/model/relational_model/relational_model";

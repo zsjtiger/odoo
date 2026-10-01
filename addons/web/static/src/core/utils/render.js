@@ -1,6 +1,6 @@
 import { blockDom, markup, TemplateSet } from "@odoo/owl";
-import { appTranslateFn } from "@web/core/l10n/translation";
-import { getTemplate } from "@web/core/templates";
+import { appTranslateFn } from "@web/core/data/l10n/translation";
+import { getTemplate } from "@web/core/framework/templates";
 
 const templateSet = new TemplateSet({
     getTemplate,

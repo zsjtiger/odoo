@@ -20,7 +20,7 @@ import {
     tick,
     waitFor,
 } from "@odoo/hoot";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
+import { OfflinePlugin } from "@web/core/services/offline/offline_plugin";
 import {
     Component,
     EventBus,
@@ -64,11 +64,11 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { render } from "@web/core/owl/utils";
 
-import { browser } from "@web/core/browser/browser";
-import { makeErrorFromResponse } from "@web/core/network/rpc";
-import { registry } from "@web/core/registry";
-import { config as transitionConfig } from "@web/core/transition";
-import { SIZES } from "@web/core/ui/ui_utils";
+import { browser } from "@web/core/services/browser/browser";
+import { makeErrorFromResponse } from "@web/core/services/network/rpc";
+import { registry } from "@web/core/framework/registry";
+import { config as transitionConfig } from "@web/core/framework/transition";
+import { SIZES } from "@web/core/services/ui/ui_utils";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { redirect } from "@web/core/utils/urls";
 import { CharField } from "@web/views/fields/char/char_field";

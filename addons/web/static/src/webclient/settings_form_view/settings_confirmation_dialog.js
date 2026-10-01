@@ -2,8 +2,8 @@ import { t, useProps } from "@odoo/owl";
 import {
     ConfirmationDialog,
     confirmationDialogProps,
-} from "@web/core/confirmation_dialog/confirmation_dialog";
-import { _t } from "@web/core/l10n/translation";
+} from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
+import { _t } from "@web/core/data/l10n/translation";
 
 export class SettingsConfirmationDialog extends ConfirmationDialog {
     static template = "web.SettingsConfirmationDialog";

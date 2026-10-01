@@ -21,12 +21,12 @@ import {
     stepAllNetworkCalls,
     mockService,
 } from "@web/../tests/web_test_helpers";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { registry } from "@web/core/registry";
+import { ConfirmationDialog } from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
 import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
 import { Many2XAutocomplete, many2XAutocompleteProps } from "@web/views/fields/relational_utils";
-import { cookie } from "@web/core/browser/cookie";
+import { cookie } from "@web/core/services/browser/cookie";
 import { t } from "@odoo/owl";
 import { ListRenderer } from "@web/views/list/list_renderer";
 

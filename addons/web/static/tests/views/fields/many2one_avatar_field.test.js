@@ -14,7 +14,7 @@ import {
     patchWithCleanup,
     stepAllNetworkCalls,
 } from "@web/../tests/web_test_helpers";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 class Partner extends models.Model {
     int_field = fields.Integer();

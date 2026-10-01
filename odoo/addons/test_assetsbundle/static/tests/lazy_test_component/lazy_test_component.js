@@ -1,5 +1,5 @@
 import { Component, t, useProps } from "@odoo/owl";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 export class LazyTestComponent extends Component {
     static template = "test_assetsbundle.LazyTestComponent";

@@ -1,11 +1,11 @@
 import { Component, usePlugin, useProps, useScope } from "@odoo/owl";
-import { CheckBox } from "@web/core/checkbox/checkbox";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownGroup } from "@web/core/dropdown/dropdown_group";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { registry } from "@web/core/registry";
-import { user } from "@web/core/user";
+import { CheckBox } from "@web/core/components/checkbox/checkbox";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownGroup } from "@web/core/components/dropdown/dropdown_group";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
+import { registry } from "@web/core/framework/registry";
+import { user } from "@web/core/services/user";
 import { imageUrl } from "@web/core/utils/urls";
 import { session } from "@web/boot/session";
 

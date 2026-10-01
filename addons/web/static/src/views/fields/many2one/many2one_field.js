@@ -1,9 +1,9 @@
 import { Component, t, useProps } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { computeM2OProps, Many2One } from "./many2one";
 import { standardFieldProps } from "../standard_field_props";
-import { evaluateBooleanExpr } from "@web/core/py_js/py";
+import { evaluateBooleanExpr } from "@web/core/data/py_js/py";
 
 /** @type {import("registries").FieldsRegistryItemShape["supportedOptions"]} */
 export const m2oSupportedOptions = [

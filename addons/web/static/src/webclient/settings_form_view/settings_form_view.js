@@ -1,5 +1,5 @@
-import { registry } from "@web/core/registry";
-import { evaluateExpr } from "@web/core/py_js/py";
+import { registry } from "@web/core/framework/registry";
+import { evaluateExpr } from "@web/core/data/py_js/py";
 import { intersection } from "@web/core/utils/arrays";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { formView } from "@web/views/form/form_view";

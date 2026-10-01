@@ -10,12 +10,12 @@ import {
     useProps,
     useEffect,
 } from "@odoo/owl";
-import { useDateTimePicker } from "@web/core/datetime/datetime_picker_hook";
-import { areDatesEqual, deserializeDate, deserializeDateTime, today } from "@web/core/l10n/dates";
-import { localization } from "@web/core/l10n/localization";
-import { _t } from "@web/core/l10n/translation";
-import { evaluateBooleanExpr } from "@web/core/py_js/py";
-import { registry } from "@web/core/registry";
+import { useDateTimePicker } from "@web/core/components/datetime/datetime_picker_hook";
+import { areDatesEqual, deserializeDate, deserializeDateTime, today } from "@web/core/data/l10n/dates";
+import { localization } from "@web/core/data/l10n/localization";
+import { _t } from "@web/core/data/l10n/translation";
+import { evaluateBooleanExpr } from "@web/core/data/py_js/py";
+import { registry } from "@web/core/framework/registry";
 import { ensureArray } from "@web/core/utils/arrays";
 import { FIELD_WIDTHS } from "@web/views/list/column_width_hook";
 import { formatDate, formatDateTime } from "../formatters";
@@ -43,7 +43,7 @@ const { DateTime } = luxon;
  *  warning?: string;
  * }} DateTimeFieldProps
  *
- * @typedef {import("@web/core/datetime/datetime_picker").DateTimePickerProps} DateTimePickerProps
+ * @typedef {import("@web/core/components/datetime/datetime_picker").DateTimePickerProps} DateTimePickerProps
  */
 
 export const dateTimeFieldProps = {

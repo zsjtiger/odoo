@@ -1,6 +1,6 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { standardFieldProps } from "../standard_field_props";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { Component, useProps } from "@odoo/owl";
 
 export class ContactStatisticsField extends Component {

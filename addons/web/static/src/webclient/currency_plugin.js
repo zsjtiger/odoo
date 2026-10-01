@@ -1,9 +1,9 @@
-import { rpcBus } from "@web/core/network/rpc";
-import { registry } from "@web/core/registry";
-import { currencies } from "@web/core/currency";
-import { ORM, UPDATE_METHODS } from "@web/core/orm_plugin";
+import { rpcBus } from "@web/core/services/network/rpc";
+import { registry } from "@web/core/framework/registry";
+import { currencies } from "@web/core/data/currency";
+import { ORM, UPDATE_METHODS } from "@web/core/services/orm_plugin";
 import { Plugin, useListener, usePlugin } from "@odoo/owl";
-import { services } from "@web/core/services";
+import { services } from "@web/core/framework/services";
 
 export class CurrencyPlugin extends Plugin {
     orm = usePlugin(ORM);

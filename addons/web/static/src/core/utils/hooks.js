@@ -8,8 +8,8 @@ import {
     useOnChange,
     useScope,
 } from "@odoo/owl";
-import { hasTouch, isMobileOS } from "@web/core/browser/feature_detection";
-import { router } from "@web/core/browser/router";
+import { hasTouch, isMobileOS } from "@web/core/services/browser/feature_detection";
+import { router } from "@web/core/services/browser/router";
 import { useEnv } from "@web/core/owl/utils";
 
 /**
@@ -227,7 +227,7 @@ export function useSpellCheck({ ref } = {}) {
  * Use the dialog service while also automatically closing the dialogs opened
  * by the current component when it is unmounted.
  *
- * @returns {import("@web/core/dialog/dialog_plugin").DialogPlugin["add"]}
+ * @returns {import("@web/core/dialogs/dialog/dialog_plugin").DialogPlugin["add"]}
  */
 export function useOwnedDialogs(options = {}) {
     const scope = useScope();

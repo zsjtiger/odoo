@@ -1,16 +1,16 @@
 import { markup, onWillStart, t, useEffect, useProps } from "@odoo/owl";
-import { evalPartialContext, makeContext } from "@web/core/context";
-import { Domain } from "@web/core/domain";
+import { evalPartialContext, makeContext } from "@web/core/data/context";
+import { Domain } from "@web/core/data/domain";
 import {
     deserializeDate,
     deserializeDateTime,
     serializeDate,
     serializeDateTime,
-} from "@web/core/l10n/dates";
-import { _t } from "@web/core/l10n/translation";
-import { x2ManyCommands } from "@web/core/orm_plugin";
-import { evaluateExpr } from "@web/core/py_js/py";
-import { user } from "@web/core/user";
+} from "@web/core/data/l10n/dates";
+import { _t } from "@web/core/data/l10n/translation";
+import { x2ManyCommands } from "@web/core/services/orm_plugin";
+import { evaluateExpr } from "@web/core/data/py_js/py";
+import { user } from "@web/core/services/user";
 import { unique } from "@web/core/utils/arrays";
 import { omit } from "@web/core/utils/objects";
 import { orderByToString } from "@web/search/utils/order_by";

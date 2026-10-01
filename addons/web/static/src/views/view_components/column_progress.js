@@ -1,5 +1,5 @@
 import { Component, usePlugin, t, useProps } from "@odoo/owl";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
+import { OfflinePlugin } from "@web/core/services/offline/offline_plugin";
 import { AnimatedNumber } from "./animated_number";
 
 export const columnProgressProps = {

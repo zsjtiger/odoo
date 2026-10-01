@@ -1,5 +1,5 @@
 import { describe, expect, getFixture, test } from "@odoo/hoot";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
+import { OfflinePlugin } from "@web/core/services/offline/offline_plugin";
 import {
     click,
     middleClick,
@@ -37,9 +37,9 @@ import {
     toggleSearchBarMenu,
     validateSearch,
 } from "@web/../tests/web_test_helpers";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
-import { user } from "@web/core/user";
+import { user } from "@web/core/services/user";
 import { range } from "@web/core/utils/numbers";
 import { Record } from "@web/model/record";
 import { Field } from "@web/views/fields/field";

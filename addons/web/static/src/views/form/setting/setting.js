@@ -1,7 +1,7 @@
 import { Component, t, useProps } from "@odoo/owl";
 import { FormLabel } from "../form_label";
 import { DocumentationLink } from "@web/views/widgets/documentation_link/documentation_link";
-import { user } from "@web/core/user";
+import { user } from "@web/core/services/user";
 
 export const settingProps = {
     id: t.string().optional(),

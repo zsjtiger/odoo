@@ -1,6 +1,6 @@
 import { onMounted, proxy, signal, t, useProps } from "@odoo/owl";
-import { location } from "@web/core/browser/browser";
-import { normalize } from "@web/core/l10n/utils";
+import { location } from "@web/core/services/browser/browser";
+import { normalize } from "@web/core/data/l10n/utils";
 import { Setting, settingProps } from "@web/views/form/setting/setting";
 import { FormLabelHighlightText } from "../highlight_text/form_label_highlight_text";
 import { HighlightText } from "../highlight_text/highlight_text";

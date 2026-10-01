@@ -8,9 +8,9 @@ import {
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 
-import { LegacyServiceStarterPlugin, startServices } from "@web/core/legacy_service_starter";
-import { registry } from "@web/core/registry";
-import { services } from "@web/core/services";
+import { LegacyServiceStarterPlugin, startServices } from "@web/core/framework/legacy_service_starter";
+import { registry } from "@web/core/framework/registry";
+import { services } from "@web/core/framework/services";
 import { mountComponent } from "@web/boot/env";
 
 describe.current.tags("headless");

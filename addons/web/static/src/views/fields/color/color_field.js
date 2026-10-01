@@ -1,5 +1,5 @@
 import { Component, useProps } from "@odoo/owl";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { standardFieldProps } from "../standard_field_props";
 
 export class ColorField extends Component {

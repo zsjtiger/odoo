@@ -12,7 +12,7 @@ import {
     test,
     waitFor,
 } from "@odoo/hoot";
-import { getPickerCell, zoomOut } from "@web/../tests/core/datetime/datetime_test_helpers";
+import { getPickerCell, zoomOut } from "@web/../tests/core/components/datetime/datetime_test_helpers";
 import {
     clickSave,
     contains,
@@ -26,7 +26,7 @@ import {
     patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
-import { localization } from "@web/core/l10n/localization";
+import { localization } from "@web/core/data/l10n/localization";
 
 class Partner extends models.Model {
     _name = "res.partner";

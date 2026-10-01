@@ -6,8 +6,8 @@ import {
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 
-import { rpcBus } from "@web/core/network/rpc";
-import { config as transitionConfig } from "@web/core/transition";
+import { rpcBus } from "@web/core/services/network/rpc";
+import { config as transitionConfig } from "@web/core/framework/transition";
 import { LoadingIndicator } from "@web/webclient/loading_indicator/loading_indicator";
 
 const payload = (id) => ({ data: { id, params: { model: "", method: "" } }, settings: {} });

@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
 import { FormRenderer } from "./form_renderer";
 import { FormArchParser } from "./form_arch_parser";

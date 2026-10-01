@@ -14,7 +14,7 @@ import {
     patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { pick } from "@web/core/utils/objects";
 import { CallbackRecorder } from "@web/search/action_hook";
 import { View } from "@web/views/view";

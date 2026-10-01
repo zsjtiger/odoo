@@ -1,9 +1,9 @@
-import { Dialog } from "@web/core/dialog/dialog";
-import { _t } from "@web/core/l10n/translation";
-import { smartDateUnits } from "@web/core/l10n/dates";
-import { registry } from "@web/core/registry";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
+import { _t } from "@web/core/data/l10n/translation";
+import { smartDateUnits } from "@web/core/data/l10n/dates";
+import { registry } from "@web/core/framework/registry";
 import { useAutofocus } from "@web/core/utils/hooks";
-import { BadgeTag } from "@web/core/tags_list/badge_tag";
+import { BadgeTag } from "@web/core/components/tags_list/badge_tag";
 import { Operation } from "@web/model/relational_model/operation";
 import { Field, fieldVisualFeedback } from "@web/views/fields/field";
 import { formatDate } from "@web/views/fields/formatters";

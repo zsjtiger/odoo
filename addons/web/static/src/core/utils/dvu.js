@@ -27,9 +27,9 @@
  */
 
 import { onWillDestroy, Plugin, useListener, usePlugin } from "@odoo/owl";
-import { browser } from "@web/core/browser/browser";
-import { isVirtualKeyboardSupported } from "@web/core/browser/feature_detection";
-import { services } from "@web/core/services";
+import { browser } from "@web/core/services/browser/browser";
+import { isVirtualKeyboardSupported } from "@web/core/services/browser/feature_detection";
+import { services } from "@web/core/framework/services";
 import { throttleForAnimation } from "@web/core/utils/timing";
 
 export class DvuPlugin extends Plugin {

@@ -10,7 +10,7 @@ import {
     mountView,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 class Partner extends models.Model {
     _name = "res.partner";

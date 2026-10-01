@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { getService, makeTestApp, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { location, browser } from "@web/core/browser/browser";
+import { location, browser } from "@web/core/services/browser/browser";
 
 test("execute an 'ir.actions.act_url' action with target 'self'", async () => {
     patchWithCleanup(location, {

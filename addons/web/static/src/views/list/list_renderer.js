@@ -1,13 +1,13 @@
-import { browser } from "@web/core/browser/browser";
-import { CheckBox } from "@web/core/checkbox/checkbox";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
-import { localization } from "@web/core/l10n/localization";
-import { Pager } from "@web/core/pager/pager";
-import { evaluateBooleanExpr } from "@web/core/py_js/py";
-import { registry } from "@web/core/registry";
+import { browser } from "@web/core/services/browser/browser";
+import { CheckBox } from "@web/core/components/checkbox/checkbox";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
+import { useHotkey } from "@web/core/services/hotkeys/hotkey_hook";
+import { getActiveHotkey } from "@web/core/services/hotkeys/hotkey_utils";
+import { localization } from "@web/core/data/l10n/localization";
+import { Pager } from "@web/core/components/pager/pager";
+import { evaluateBooleanExpr } from "@web/core/data/py_js/py";
+import { registry } from "@web/core/framework/registry";
 import { useAutofocus, useBus, useService } from "@web/core/utils/hooks";
 import { useSortable } from "@web/core/utils/sortable_owl";
 import { getTabableElements } from "@web/core/utils/ui";
@@ -43,12 +43,12 @@ import {
     usePlugin,
     useProps,
 } from "@odoo/owl";
-import { getCurrencyRates } from "@web/core/currency";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
-import { _t } from "@web/core/l10n/translation";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
-import { usePopover } from "@web/core/popover/popover_hook";
-import { user } from "@web/core/user";
+import { getCurrencyRates } from "@web/core/data/currency";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
+import { _t } from "@web/core/data/l10n/translation";
+import { OfflinePlugin } from "@web/core/services/offline/offline_plugin";
+import { usePopover } from "@web/core/components/popover/popover_hook";
+import { user } from "@web/core/services/user";
 import { odoomark } from "@web/core/utils/html";
 import { exprToBoolean } from "@web/core/utils/strings";
 import { MOVABLE_RECORD_TYPES } from "@web/model/relational_model/dynamic_group_list";

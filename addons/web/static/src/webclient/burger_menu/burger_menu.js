@@ -1,9 +1,9 @@
-import { registry } from "@web/core/registry";
-import { Transition } from "@web/core/transition";
-import { user } from "@web/core/user";
+import { registry } from "@web/core/framework/registry";
+import { Transition } from "@web/core/framework/transition";
+import { user } from "@web/core/services/user";
 import { useBus } from "@web/core/utils/hooks";
-import { isAndroidApp, isDisplayStandalone, isIosApp } from "@web/core/browser/feature_detection";
-import { router } from "@web/core/browser/router";
+import { isAndroidApp, isDisplayStandalone, isIosApp } from "@web/core/services/browser/feature_detection";
+import { router } from "@web/core/services/browser/router";
 import { BurgerUserMenu } from "./burger_user_menu/burger_user_menu";
 import { MobileSwitchCompanyMenu } from "./mobile_switch_company_menu/mobile_switch_company_menu";
 

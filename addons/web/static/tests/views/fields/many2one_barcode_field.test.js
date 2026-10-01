@@ -13,7 +13,7 @@ import {
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 
-import * as BarcodeScanner from "@web/core/barcode/barcode_dialog";
+import * as BarcodeScanner from "@web/core/components/barcode/barcode_dialog";
 
 class Product extends models.Model {
     _name = "product.product";

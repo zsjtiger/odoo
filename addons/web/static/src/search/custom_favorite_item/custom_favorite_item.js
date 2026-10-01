@@ -1,7 +1,7 @@
-import { _t } from "@web/core/l10n/translation";
-import { AccordionItem } from "@web/core/dropdown/accordion_item";
-import { CheckBox } from "@web/core/checkbox/checkbox";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { AccordionItem } from "@web/core/components/dropdown/accordion_item";
+import { CheckBox } from "@web/core/components/checkbox/checkbox";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
 
 import { Component, proxy, signal } from "@odoo/owl";

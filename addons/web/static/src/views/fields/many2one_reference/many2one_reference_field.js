@@ -1,6 +1,6 @@
 import { Component, useProps } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { computeM2OProps, Many2One } from "../many2one/many2one";
 import { extractM2OFieldProps, many2OneFieldProps } from "../many2one/many2one_field";
 

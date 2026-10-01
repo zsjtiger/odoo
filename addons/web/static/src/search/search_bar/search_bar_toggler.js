@@ -8,8 +8,8 @@ import {
     t,
     useProps,
 } from "@odoo/owl";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
-import { browser } from "@web/core/browser/browser";
+import { OfflinePlugin } from "@web/core/services/offline/offline_plugin";
+import { browser } from "@web/core/services/browser/browser";
 import { useService } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
 

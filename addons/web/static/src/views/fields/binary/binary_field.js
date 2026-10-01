@@ -1,9 +1,9 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
-import { download } from "@web/core/network/download";
+import { download } from "@web/core/services/network/download";
 import { standardFieldProps } from "../standard_field_props";
 import { FileUploader } from "../file_handler";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 
 import { Component, t, useProps } from "@odoo/owl";
 

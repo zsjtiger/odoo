@@ -1,7 +1,7 @@
 import { humanNumber } from "@web/core/utils/numbers";
 import { useService } from "@web/core/utils/hooks";
 import { session } from "@web/boot/session";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 
 export const DEFAULT_MAX_FILE_SIZE = 128 * 1024 * 1024;
 

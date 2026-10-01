@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { formatX2many } from "../formatters";
 import { standardFieldProps } from "../standard_field_props";
 

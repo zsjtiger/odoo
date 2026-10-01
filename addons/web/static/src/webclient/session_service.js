@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { deepCopy } from "@web/core/utils/objects";
 
 export const lazySession = {

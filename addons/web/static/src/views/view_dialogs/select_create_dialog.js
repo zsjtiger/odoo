@@ -1,4 +1,4 @@
-import { Dialog } from "@web/core/dialog/dialog";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
 import { renderToMarkup } from "@web/core/utils/render";
 import { View } from "@web/views/view";
@@ -6,7 +6,7 @@ import { View } from "@web/views/view";
 import { FormViewDialog } from "./form_view_dialog";
 
 import { Component, proxy, t, useProps } from "@odoo/owl";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 let _defaultNoContentHelp;
 function getDefaultNoContentHelp() {

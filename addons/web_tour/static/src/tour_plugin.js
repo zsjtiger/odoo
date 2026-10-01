@@ -1,11 +1,11 @@
 import { assertType, onWillStart, Plugin, t, usePlugin, whenReady } from "@odoo/owl";
-import { loadBundle } from "@web/core/assets";
-import { location } from "@web/core/browser/browser";
-import { EffectPlugin } from "@web/core/effects/effect_plugin";
-import { ORM } from "@web/core/orm_plugin";
-import { OverlayPlugin } from "@web/core/overlay/overlay_plugin";
-import { registry } from "@web/core/registry";
-import { services } from "@web/core/services";
+import { loadBundle } from "@web/core/framework/assets";
+import { location } from "@web/core/services/browser/browser";
+import { EffectPlugin } from "@web/core/services/effects/effect_plugin";
+import { ORM } from "@web/core/services/orm_plugin";
+import { OverlayPlugin } from "@web/core/components/overlay/overlay_plugin";
+import { registry } from "@web/core/framework/registry";
+import { services } from "@web/core/framework/services";
 import { redirect } from "@web/core/utils/urls";
 import { useEnv } from "@web/core/owl/utils";
 import { session } from "@web/boot/session";

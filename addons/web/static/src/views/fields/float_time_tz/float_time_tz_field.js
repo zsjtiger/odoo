@@ -1,6 +1,6 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { FloatTimeField, floatTimeField } from "@web/views/fields/float_time/float_time_field";
-import { user } from "@web/core/user";
+import { user } from "@web/core/services/user";
 import { formatFloatTime } from "../formatters";
 
 const { DateTime } = luxon;

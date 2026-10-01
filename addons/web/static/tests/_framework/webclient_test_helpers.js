@@ -1,6 +1,6 @@
 import { animationFrame } from "@odoo/hoot";
 import { Component, useProps, xml } from "@odoo/owl";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { WebClient } from "@web/webclient/webclient";
 import { mountWithCleanup } from "./component_test_helpers";
 

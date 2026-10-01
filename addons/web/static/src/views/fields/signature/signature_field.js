@@ -1,7 +1,7 @@
 import { Component, t, useProps } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
-import { SignatureViewer } from "@web/core/signature/signature_viewer";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
+import { SignatureViewer } from "@web/core/components/signature/signature_viewer";
 import { imageUrl } from "@web/core/utils/urls";
 import { fileTypeMagicWordMap } from "@web/views/fields/image/image_field";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";

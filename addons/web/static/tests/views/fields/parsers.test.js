@@ -2,7 +2,7 @@ import { beforeEach, expect, test } from "@odoo/hoot";
 import { clearMemoizeCaches } from "@web/core/utils/functions";
 import { makeTestApp, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
-import { localization } from "@web/core/l10n/localization";
+import { localization } from "@web/core/data/l10n/localization";
 import { nbsp } from "@web/core/utils/strings";
 import {
     parseFloat,

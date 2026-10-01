@@ -1,7 +1,7 @@
 import { after, expect, test } from "@odoo/hoot";
 import { Component, signal, xml } from "@odoo/owl";
 import { mountWithCleanup, patchTranslations } from "@web/../tests/web_test_helpers";
-import { registerTemplate, registerTemplateExtension, setUrlFilters } from "@web/core/templates";
+import { registerTemplate, registerTemplateExtension, setUrlFilters } from "@web/core/framework/templates";
 
 function makeTemplate({ name, content, inheritFrom }) {
     return `<t t-name="${name}" ${inheritFrom ? `t-inherit="${inheritFrom}"` : ``}>${content}</t>`;

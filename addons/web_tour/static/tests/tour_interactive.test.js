@@ -24,9 +24,9 @@ import {
     onRpc,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-import { location, browser } from "@web/core/browser/browser";
-import { Dialog } from "@web/core/dialog/dialog";
-import { registry } from "@web/core/registry";
+import { location, browser } from "@web/core/services/browser/browser";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
+import { registry } from "@web/core/framework/registry";
 import { session } from "@web/boot/session";
 import { WebClient } from "@web/webclient/webclient";
 import { TourInteractive } from "@web_tour/tour_interactive/tour_interactive";

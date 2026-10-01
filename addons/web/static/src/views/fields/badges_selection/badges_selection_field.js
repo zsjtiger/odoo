@@ -1,6 +1,6 @@
 import { BaseBadgesField, extractStandardFieldProps } from "./base_badges_field";
-import { registry } from "@web/core/registry";
-import { _t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/framework/registry";
+import { _t } from "@web/core/data/l10n/translation";
 import { Component, t, useProps } from "@odoo/owl";
 import { standardFieldProps } from "../standard_field_props";
 

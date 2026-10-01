@@ -1,8 +1,8 @@
 import { Component, t, usePlugin, useProps } from "@odoo/owl";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
-import { _t } from "@web/core/l10n/translation";
-import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
-import { registry } from "@web/core/registry";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
+import { _t } from "@web/core/data/l10n/translation";
+import { ModelFieldSelector } from "@web/core/editors/model_field_selector/model_field_selector";
+import { registry } from "@web/core/framework/registry";
 import { formatChar } from "../formatters";
 import { standardFieldProps } from "../standard_field_props";
 

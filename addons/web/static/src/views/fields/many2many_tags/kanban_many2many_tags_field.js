@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { Many2ManyTagsField, many2ManyTagsField } from "./many2many_tags_field";
 
 export class KanbanMany2ManyTagsField extends Many2ManyTagsField {

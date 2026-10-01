@@ -22,7 +22,7 @@ import {
     mountWithCleanup,
     onRpc,
 } from "@web/../tests/web_test_helpers";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
+import { OfflinePlugin } from "@web/core/services/offline/offline_plugin";
 import { WebClient } from "@web/webclient/webclient";
 
 class Partner extends models.Model {

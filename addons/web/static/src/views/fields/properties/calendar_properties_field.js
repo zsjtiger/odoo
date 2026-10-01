@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { propertiesField, PropertiesField } from "./properties_field";
 
 export class CalendarPropertiesField extends PropertiesField {

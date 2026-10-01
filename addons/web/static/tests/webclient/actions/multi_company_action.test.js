@@ -1,5 +1,5 @@
 import { beforeEach, expect, test } from "@odoo/hoot";
-import { cookie } from "@web/core/browser/cookie";
+import { cookie } from "@web/core/services/browser/cookie";
 import { redirect } from "@web/core/utils/urls";
 import {
     contains,
@@ -14,9 +14,9 @@ import {
     serverState,
 } from "@web/../tests/web_test_helpers";
 import { animationFrame } from "@odoo/hoot-dom";
-import { location } from "@web/core/browser/browser";
+import { location } from "@web/core/services/browser/browser";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
-import { router } from "@web/core/browser/router";
+import { router } from "@web/core/services/browser/router";
 
 class Partner extends models.Model {
     _name = "res.partner";

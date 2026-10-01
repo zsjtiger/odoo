@@ -8,16 +8,16 @@ import {
     usePlugin,
     useProps,
 } from "@odoo/owl";
-import { CheckBox } from "@web/core/checkbox/checkbox";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
-import { Domain } from "@web/core/domain";
-import { DomainSelector } from "@web/core/domain_selector/domain_selector";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
-import { _t } from "@web/core/l10n/translation";
-import { ModelSelector } from "@web/core/model_selector/model_selector";
-import { SelectMenu } from "@web/core/select_menu/select_menu";
+import { CheckBox } from "@web/core/components/checkbox/checkbox";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
+import { Domain } from "@web/core/data/domain";
+import { DomainSelector } from "@web/core/editors/domain_selector/domain_selector";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
+import { useHotkey } from "@web/core/services/hotkeys/hotkey_hook";
+import { _t } from "@web/core/data/l10n/translation";
+import { ModelSelector } from "@web/core/editors/model_selector/model_selector";
+import { SelectMenu } from "@web/core/components/select_menu/select_menu";
 import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { uuid } from "@web/core/utils/strings";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";

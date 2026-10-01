@@ -4,9 +4,9 @@ import {
     assertDateTimePicker,
     editTime,
     getPickerCell,
-} from "../../datetime/datetime_test_helpers";
+} from "./datetime_test_helpers";
 import { animationFrame } from "@odoo/hoot-mock";
-import { DateTimeInput } from "@web/core/datetime/datetime_input";
+import { DateTimeInput } from "@web/core/components/datetime/datetime_input";
 import {
     contains,
     defineParams,

@@ -16,8 +16,8 @@ import {
     waitFor,
 } from "@odoo/hoot-dom";
 import { disableAnimations, mockDate, mockTimeZone } from "@odoo/hoot-mock";
-import { editTime } from "@web/../tests/core/datetime/datetime_test_helpers";
-import { _makeUser, user } from "@web/core/user";
+import { editTime } from "@web/../tests/core/components/datetime/datetime_test_helpers";
+import { _makeUser, user } from "@web/core/services/user";
 import { resetDateFieldWidths } from "@web/views/list/column_width_hook";
 import {
     clickSave,

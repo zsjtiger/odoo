@@ -3,10 +3,10 @@ import { Component, xml } from "@odoo/owl";
 import { getService, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { click, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { location } from "@web/core/browser/browser";
+import { location } from "@web/core/services/browser/browser";
 import { scrollTo } from "@web/core/utils/scrolling";
 import { WebClient } from "@web/webclient/webclient";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { redirect } from "@web/core/utils/urls";
 
 test("Ignore empty hrefs", async () => {

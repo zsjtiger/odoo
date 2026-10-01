@@ -1,12 +1,12 @@
-import { AutoComplete } from "@web/core/autocomplete/autocomplete";
-import { ColorList } from "@web/core/colorlist/colorlist";
-import { _t } from "@web/core/l10n/translation";
-import { usePopover } from "@web/core/popover/popover_hook";
-import { registry } from "@web/core/registry";
+import { AutoComplete } from "@web/core/components/autocomplete/autocomplete";
+import { ColorList } from "@web/core/components/colorlist/colorlist";
+import { _t } from "@web/core/data/l10n/translation";
+import { usePopover } from "@web/core/components/popover/popover_hook";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
-import { BadgeTag } from "@web/core/tags_list/badge_tag";
+import { BadgeTag } from "@web/core/components/tags_list/badge_tag";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
-import { useTagNavigation } from "@web/core/record_selectors/tag_navigation_hook";
+import { useTagNavigation } from "@web/core/editors/record_selectors/tag_navigation_hook";
 
 import { Component, signal, t, useProps } from "@odoo/owl";
 import { range } from "@web/core/utils/numbers";

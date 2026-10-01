@@ -1,7 +1,7 @@
 import { useSubEnv } from "@web/core/owl/utils";
-import { AccordionItem, ACCORDION } from "@web/core/dropdown/accordion_item";
-import { CheckboxItem } from "@web/core/dropdown/checkbox_item";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { AccordionItem, ACCORDION } from "@web/core/components/dropdown/accordion_item";
+import { CheckboxItem } from "@web/core/components/dropdown/checkbox_item";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
 import { Component, proxy, t, useProps } from "@odoo/owl";
 
 export class PropertiesGroupByItem extends Component {

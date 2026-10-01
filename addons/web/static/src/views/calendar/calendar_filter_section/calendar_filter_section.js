@@ -1,7 +1,7 @@
 import { render } from "@web/core/owl/utils";
-import { _t } from "@web/core/l10n/translation";
-import { AutoComplete } from "@web/core/autocomplete/autocomplete";
-import { Transition } from "@web/core/transition";
+import { _t } from "@web/core/data/l10n/translation";
+import { AutoComplete } from "@web/core/components/autocomplete/autocomplete";
+import { Transition } from "@web/core/framework/transition";
 import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 import { getColor } from "../utils";

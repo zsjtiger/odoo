@@ -2,7 +2,7 @@ import { useLayoutEffect, useSubEnv } from "@web/core/owl/utils";
 import { HighlightText } from "../highlight_text/highlight_text";
 
 import { Component, computed, proxy, signal, t, useProps } from "@odoo/owl";
-import { normalize } from "@web/core/l10n/utils";
+import { normalize } from "@web/core/data/l10n/utils";
 
 export class SettingsBlock extends Component {
     static template = "web.SettingsBlock";

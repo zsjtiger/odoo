@@ -1,9 +1,9 @@
 import { Component, t, useProps } from "@odoo/owl";
-import { useCommand } from "@web/core/commands/command_hook";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { CheckboxItem } from "@web/core/dropdown/checkbox_item";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { useCommand } from "@web/core/services/commands/command_hook";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { CheckboxItem } from "@web/core/components/dropdown/checkbox_item";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { formatSelection } from "../formatters";
 import { standardFieldProps } from "../standard_field_props";
 

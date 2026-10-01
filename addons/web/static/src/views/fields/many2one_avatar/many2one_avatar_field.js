@@ -1,5 +1,5 @@
 import { Component, useProps } from "@odoo/owl";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { computeM2OProps, Many2One } from "../many2one/many2one";
 import {
     buildM2OFieldDescription,

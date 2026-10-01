@@ -1,8 +1,8 @@
 import * as hootDom from "@odoo/hoot-dom";
 import { enableEventLogs, setupEventActions } from "@web/../lib/hoot-dom/helpers/events";
-import { browser } from "@web/core/browser/browser";
-import { Macro } from "@web/core/macro";
-import { config as transitionConfig } from "@web/core/transition";
+import { browser } from "@web/core/services/browser/browser";
+import { Macro } from "@web/core/framework/macro";
+import { config as transitionConfig } from "@web/core/framework/transition";
 import { TourStepAutomatic } from "@web_tour/tour_automatic/tour_step_automatic";
 import { tourState } from "@web_tour/tour_state";
 

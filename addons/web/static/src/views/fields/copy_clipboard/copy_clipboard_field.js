@@ -1,9 +1,9 @@
-import { _t } from "@web/core/l10n/translation";
-import { evaluateBooleanExpr } from "@web/core/py_js/py";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { evaluateBooleanExpr } from "@web/core/data/py_js/py";
+import { registry } from "@web/core/framework/registry";
 import { omit } from "@web/core/utils/objects";
 
-import { CopyButton } from "@web/core/copy_button/copy_button";
+import { CopyButton } from "@web/core/components/copy_button/copy_button";
 import { CharField } from "../char/char_field";
 import { standardFieldProps } from "../standard_field_props";
 import { UrlField } from "../url/url_field";

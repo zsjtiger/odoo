@@ -531,14 +531,14 @@ const CSRF_TOKEN = odoo.csrf_token;
 const DEFAULT_ADDONS = ["base", "web"];
 const MODULE_MOCKS_BY_NAME = new Map([
     // Fixed modules
-    ["@web/core/emoji_picker/emoji_loader", mockFixedFactory],
-    ["@web/core/template_inheritance", mockFixedFactory],
+    ["@web/core/components/emoji_picker/emoji_loader", mockFixedFactory],
+    ["@web/core/framework/template_inheritance", mockFixedFactory],
     // Other mocks
-    ["@web/core/assets", mockAssetsFactory],
-    ["@web/core/browser/browser", mockBrowserFactory],
-    ["@web/core/currency", mockCurrencyFactory],
-    ["@web/core/templates", mockTemplatesFactory],
-    ["@web/core/user", mockUserFactory],
+    ["@web/core/framework/assets", mockAssetsFactory],
+    ["@web/core/services/browser/browser", mockBrowserFactory],
+    ["@web/core/data/currency", mockCurrencyFactory],
+    ["@web/core/framework/templates", mockTemplatesFactory],
+    ["@web/core/services/user", mockUserFactory],
     ["@web/core/utils/functions", mockFunctionsFactory],
     ["@web/core/utils/indexed_db", mockIndexedDBFactory],
     ["@web/core/utils/patch", mockPatchFactory],
@@ -550,7 +550,7 @@ const MODULE_MOCKS_BY_REGEX = new Map([
 ]);
 const R_DEFAULT_MODULE = /^@odoo\/(owl|hoot)/;
 const R_PATH_ADDON = /^[@/]?(\w+)/;
-const TEMPLATE_MODULE_NAME = "@web/core/templates";
+const TEMPLATE_MODULE_NAME = "@web/core/framework/templates";
 
 /** @type {Record<string, string[]} */
 const dependencies = {};

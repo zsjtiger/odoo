@@ -224,7 +224,7 @@ GETTEXT_RE = re.compile(r"""
     (?:\s*\w*\s*,)*
     \s*(_t)\s*
     (?:,\s*\w*\s*)*,?\s*
-    }\s*=\s*require\("@web/core/l10n/translation"\);$
+    }\s*=\s*require\("@web/core/data/l10n/translation"\);$
 """, re.MULTILINE | re.VERBOSE)
 
 
@@ -234,7 +234,7 @@ T_FN_RE = re.compile(r"""
     (?:\s*\w*\s*,)*
     \s*(appTranslateFn)\s*
     (?:,\s*\w*\s*)*,?\s*
-    }\s*=\s*require\("@web/core/l10n/translation"\);$
+    }\s*=\s*require\("@web/core/data/l10n/translation"\);$
 """, re.MULTILINE | re.VERBOSE)
 
 

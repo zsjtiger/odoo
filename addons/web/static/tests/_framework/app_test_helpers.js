@@ -7,12 +7,12 @@ import {
     registerDebugInfo,
 } from "@odoo/hoot";
 import { App, Scope } from "@odoo/owl";
-import { startRouter } from "@web/core/browser/router";
-import { appTranslateFn } from "@web/core/l10n/translation";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
-import { registry } from "@web/core/registry";
-import { services } from "@web/core/services";
-import { getTemplate } from "@web/core/templates";
+import { startRouter } from "@web/core/services/browser/router";
+import { appTranslateFn } from "@web/core/data/l10n/translation";
+import { OfflinePlugin } from "@web/core/services/offline/offline_plugin";
+import { registry } from "@web/core/framework/registry";
+import { services } from "@web/core/framework/services";
+import { getTemplate } from "@web/core/framework/templates";
 import { pick } from "@web/core/utils/objects";
 import { patch } from "@web/core/utils/patch";
 import { customDirectives, globalValues, makeEnv } from "@web/boot/env";
@@ -23,7 +23,7 @@ import { MockServer, makeMockServer, onRpc } from "./mock_server/mock_server";
  *
  * @typedef {import("@web/boot/env").OdooEnv} OdooEnv
  *
- * @typedef {import("@web/core/registry").Registry} Registry
+ * @typedef {import("@web/core/framework/registry").Registry} Registry
  *
  * @typedef {import("services").ServiceFactories} Services
  */

@@ -1,5 +1,5 @@
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { PivotArchParser } from "@web/views/pivot/pivot_arch_parser";
 import { PivotController } from "./pivot_controller";
 import { PivotModel } from "@web/views/pivot/pivot_model";

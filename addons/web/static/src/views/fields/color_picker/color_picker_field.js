@@ -1,7 +1,7 @@
-import { ColorList } from "@web/core/colorlist/colorlist";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
-import { registry } from "@web/core/registry";
+import { ColorList } from "@web/core/components/colorlist/colorlist";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { useDropdownState } from "@web/core/components/dropdown/dropdown_hooks";
+import { registry } from "@web/core/framework/registry";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 import { Component, useProps } from "@odoo/owl";

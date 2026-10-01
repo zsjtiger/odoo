@@ -8,8 +8,8 @@ import {
     onRpc,
 } from "@web/../tests/web_test_helpers";
 
-import { currencies } from "@web/core/currency";
-import { rpcBus } from "@web/core/network/rpc";
+import { currencies } from "@web/core/data/currency";
+import { rpcBus } from "@web/core/services/network/rpc";
 
 class Currency extends models.Model {
     _name = "res.currency";

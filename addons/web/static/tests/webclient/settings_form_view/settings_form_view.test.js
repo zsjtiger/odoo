@@ -33,10 +33,10 @@ import {
     stepAllNetworkCalls,
 } from "@web/../tests/web_test_helpers";
 
-import { location } from "@web/core/browser/browser";
-import { router } from "@web/core/browser/router";
-import { rpc } from "@web/core/network/rpc";
-import { RPCCache } from "@web/core/network/rpc_cache";
+import { location } from "@web/core/services/browser/browser";
+import { router } from "@web/core/services/browser/router";
+import { rpc } from "@web/core/services/network/rpc";
+import { RPCCache } from "@web/core/services/network/rpc_cache";
 import { pick } from "@web/core/utils/objects";
 import { redirect } from "@web/core/utils/urls";
 import { SettingsFormCompiler } from "@web/webclient/settings_form_view/settings_form_compiler";

@@ -4,7 +4,7 @@ import {
     translatedTerms,
     translatedTermsGlobal,
     translationLoaded,
-} from "@web/core/l10n/translation";
+} from "@web/core/data/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 import { serverState } from "./mock_server_state.hoot";
 

@@ -9,14 +9,14 @@ import {
     mountWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
-import { DateTimePicker } from "@web/core/datetime/datetime_picker";
+import { DateTimePicker } from "@web/core/components/datetime/datetime_picker";
 import { ensureArray } from "@web/core/utils/arrays";
 import { range } from "@web/core/utils/numbers";
 import {
     assertDateTimePicker,
     editTime,
     getPickerCell,
-} from "../../datetime/datetime_test_helpers";
+} from "./datetime_test_helpers";
 
 const { DateTime } = luxon;
 

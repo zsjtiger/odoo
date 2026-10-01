@@ -10,13 +10,13 @@ import {
     usePlugin,
     useScope,
 } from "@odoo/owl";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownGroup } from "@web/core/dropdown/dropdown_group";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
-import { registry } from "@web/core/registry";
-import { Transition } from "@web/core/transition";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownGroup } from "@web/core/components/dropdown/dropdown_group";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
+import { OfflinePlugin } from "@web/core/services/offline/offline_plugin";
+import { registry } from "@web/core/framework/registry";
+import { Transition } from "@web/core/framework/transition";
 import { ErrorHandler } from "@web/core/utils/components";
 import { useService } from "@web/core/utils/hooks";
 import { debounce } from "@web/core/utils/timing";

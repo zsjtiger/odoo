@@ -1,6 +1,6 @@
 import { Component, t, useProps } from "@odoo/owl";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
 
 export class ReportViewMeasures extends Component {
     static template = "web.ReportViewMeasures";

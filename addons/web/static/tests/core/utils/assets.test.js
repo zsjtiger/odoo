@@ -10,7 +10,7 @@ import {
 } from "@odoo/hoot";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 
-import { assets, loadBundle, loadCSS, loadJS } from "@web/core/assets";
+import { assets, loadBundle, loadCSS, loadJS } from "@web/core/framework/assets";
 
 describe.current.tags("headless");
 

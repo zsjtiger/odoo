@@ -1,6 +1,6 @@
-import { _t } from "@web/core/l10n/translation";
-import { ColorList } from "@web/core/colorlist/colorlist";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { ColorList } from "@web/core/components/colorlist/colorlist";
+import { registry } from "@web/core/framework/registry";
 import { standardFieldProps } from "../standard_field_props";
 
 import { Component, useProps } from "@odoo/owl";

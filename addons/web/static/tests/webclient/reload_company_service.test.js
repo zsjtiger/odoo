@@ -7,7 +7,7 @@ import {
     models,
 } from "@web/../tests/web_test_helpers";
 
-import { rpcBus } from "@web/core/network/rpc";
+import { rpcBus } from "@web/core/services/network/rpc";
 
 class Company extends models.Model {
     _name = "res.company";

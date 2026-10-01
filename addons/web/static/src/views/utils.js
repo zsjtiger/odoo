@@ -1,6 +1,6 @@
-import { _t } from "@web/core/l10n/translation";
-import { localeCompare } from "@web/core/l10n/utils";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { localeCompare } from "@web/core/data/l10n/utils";
+import { registry } from "@web/core/framework/registry";
 import { unique } from "@web/core/utils/arrays";
 import { exprToBoolean } from "@web/core/utils/strings";
 import { combineModifiers } from "@web/model/relational_model/utils";

@@ -12,9 +12,9 @@ import { afterEach, beforeEach, expect, test } from "@odoo/hoot";
 import { click, edit, pointerDown, queryFirst, queryOne } from "@odoo/hoot-dom";
 import { getNextTabableElement } from "@web/core/utils/ui";
 import { animationFrame } from "@odoo/hoot-mock";
-import { browser } from "@web/core/browser/browser";
-import { callPhoneNumber, phoneCallHandlerRegistry } from "@web/core/phone/phone_call";
-import { user } from "@web/core/user";
+import { browser } from "@web/core/services/browser/browser";
+import { callPhoneNumber, phoneCallHandlerRegistry } from "@web/core/components/phone/phone_call";
+import { user } from "@web/core/services/user";
 
 class Partner extends models.Model {
     foo = fields.Char({ default: "My little Foo Value", trim: true });

@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { useAutoresize } from "@web/core/utils/autoresize";
 import { DateTimeField, dateField, dateRangeField, dateTimeField } from "./datetime_field";
 

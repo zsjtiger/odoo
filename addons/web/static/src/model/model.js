@@ -1,5 +1,5 @@
-import { RPCError } from "@web/core/network/rpc";
-import { user } from "@web/core/user";
+import { RPCError } from "@web/core/services/network/rpc";
+import { user } from "@web/core/services/user";
 import { Race } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
 import { useEnv } from "@web/core/owl/utils";

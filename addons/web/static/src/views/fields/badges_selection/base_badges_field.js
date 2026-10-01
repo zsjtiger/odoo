@@ -1,9 +1,9 @@
 import { Component, signal, t, useProps } from "@odoo/owl";
 import { standardFieldProps } from "../standard_field_props";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { hasTouch } from "@web/core/browser/feature_detection";
-import { useNavigation } from "@web/core/navigation/navigation";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
+import { hasTouch } from "@web/core/services/browser/feature_detection";
+import { useNavigation } from "@web/core/components/navigation/navigation";
 
 const DROPDOWN_ITEM_LIMIT = 8;
 export const baseBadgesFieldProps = {

@@ -1,7 +1,7 @@
 import { computed, useConfig, onWillStart, Plugin, Resource, signal, types } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
-import { user } from "@web/core/user";
+import { _t } from "@web/core/data/l10n/translation";
+import { rpc } from "@web/core/services/network/rpc";
+import { user } from "@web/core/services/user";
 
 const LOCAL_STORAGE_PREFERRED_LANG_KEY = "web.translate.field.preferred.lang.to";
 const _refreshStorage = signal(0);

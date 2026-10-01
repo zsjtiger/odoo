@@ -26,7 +26,7 @@ import {
     uncheck,
     waitFor,
 } from "@odoo/hoot";
-import { hasTouch } from "@web/core/browser/feature_detection";
+import { hasTouch } from "@web/core/services/browser/feature_detection";
 
 /**
  * @typedef {import("@odoo/hoot").DragHelpers} DragHelpers

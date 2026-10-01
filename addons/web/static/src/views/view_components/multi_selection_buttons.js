@@ -1,11 +1,11 @@
 import { onWillRender } from "@web/core/owl/utils";
 import { Component, proxy, signal, t, toRaw, useOnChange, useProps } from "@odoo/owl";
-import { browser } from "@web/core/browser/browser";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
-import { Time } from "@web/core/l10n/time";
-import { _t } from "@web/core/l10n/translation";
-import { usePopover } from "@web/core/popover/popover_hook";
+import { browser } from "@web/core/services/browser/browser";
+import { ConfirmationDialog } from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
+import { useHotkey } from "@web/core/services/hotkeys/hotkey_hook";
+import { Time } from "@web/core/data/l10n/time";
+import { _t } from "@web/core/data/l10n/translation";
+import { usePopover } from "@web/core/components/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 import { parseXML } from "@web/core/utils/xml";
 import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";

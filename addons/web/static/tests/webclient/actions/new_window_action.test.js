@@ -1,5 +1,5 @@
 import { animationFrame, beforeEach, expect, test } from "@odoo/hoot";
-import { browser } from "@web/core/browser/browser";
+import { browser } from "@web/core/services/browser/browser";
 import { WebClient } from "@web/webclient/webclient";
 import {
     defineActions,
@@ -12,7 +12,7 @@ import {
     serverState,
 } from "@web/../tests/web_test_helpers";
 import { Component, xml } from "@odoo/owl";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 class TestClientAction extends Component {
     static template = xml`

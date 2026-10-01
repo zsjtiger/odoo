@@ -1,23 +1,23 @@
-import { _t } from "@web/core/l10n/translation";
-import { hasTouch } from "@web/core/browser/feature_detection";
-import { CheckBox } from "@web/core/checkbox/checkbox";
-import { ColorList } from "@web/core/colorlist/colorlist";
-import { Domain } from "@web/core/domain";
-import { evaluateBooleanExpr } from "@web/core/py_js/py";
+import { _t } from "@web/core/data/l10n/translation";
+import { hasTouch } from "@web/core/services/browser/feature_detection";
+import { CheckBox } from "@web/core/components/checkbox/checkbox";
+import { ColorList } from "@web/core/components/colorlist/colorlist";
+import { Domain } from "@web/core/data/domain";
+import { evaluateBooleanExpr } from "@web/core/data/py_js/py";
 import {
     Many2XAutocomplete,
     useActiveActions,
     useX2ManyCrud,
     useOpenMany2XRecord,
 } from "@web/views/fields/relational_utils";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { Mutex } from "@web/core/utils/concurrency";
 import { standardFieldProps } from "../standard_field_props";
-import { BadgeTag } from "@web/core/tags_list/badge_tag";
-import { TagsList } from "@web/core/tags_list/tags_list";
-import { usePopover } from "@web/core/popover/popover_hook";
+import { BadgeTag } from "@web/core/components/tags_list/badge_tag";
+import { TagsList } from "@web/core/components/tags_list/tags_list";
+import { usePopover } from "@web/core/components/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
-import { useTagNavigation } from "@web/core/record_selectors/tag_navigation_hook";
+import { useTagNavigation } from "@web/core/editors/record_selectors/tag_navigation_hook";
 
 import { Component, proxy, signal, t, useProps } from "@odoo/owl";
 import { getFieldDomain } from "@web/model/relational_model/utils";

@@ -1,6 +1,6 @@
 import { Plugin, providePlugins, useConfig, usePlugin, useScope } from "@odoo/owl";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { evaluateExpr } from "@web/core/py_js/py";
+import { ConfirmationDialog } from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
+import { evaluateExpr } from "@web/core/data/py_js/py";
 import { useService } from "@web/core/utils/hooks";
 import { useEnv } from "@web/core/owl/utils";
 

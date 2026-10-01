@@ -10,7 +10,7 @@ import {
     patchWithCleanup,
     webModels,
 } from "@web/../tests/web_test_helpers";
-import { user } from "@web/core/user";
+import { user } from "@web/core/services/user";
 
 const { ResCompany, ResUsers, ResPartner } = webModels;
 

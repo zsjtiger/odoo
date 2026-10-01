@@ -1,6 +1,6 @@
-import { _t } from "@web/core/l10n/translation";
-import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { NotificationPlugin } from "@web/core/services/notifications/notification_plugin";
+import { registry } from "@web/core/framework/registry";
 import { Many2XBinary } from "../many2x_binary/many2x_binary";
 import { standardFieldProps } from "../standard_field_props";
 

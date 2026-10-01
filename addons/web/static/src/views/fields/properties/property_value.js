@@ -1,10 +1,10 @@
 import { Component, t, useProps } from "@odoo/owl";
-import { CheckBox } from "@web/core/checkbox/checkbox";
-import { getCurrency } from "@web/core/currency";
-import { DateTimeInput } from "@web/core/datetime/datetime_input";
-import { Domain } from "@web/core/domain";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { CheckBox } from "@web/core/components/checkbox/checkbox";
+import { getCurrency } from "@web/core/data/currency";
+import { DateTimeInput } from "@web/core/components/datetime/datetime_input";
+import { Domain } from "@web/core/data/domain";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
 import {
     deserializeDate,
     deserializeDateTime,
@@ -12,11 +12,11 @@ import {
     formatDateTime,
     serializeDate,
     serializeDateTime,
-} from "@web/core/l10n/dates";
-import { _t } from "@web/core/l10n/translation";
-import { SignatureViewer } from "@web/core/signature/signature_viewer";
-import { AvatarTag } from "@web/core/tags_list/avatar_tag";
-import { BadgeTag } from "@web/core/tags_list/badge_tag";
+} from "@web/core/data/l10n/dates";
+import { _t } from "@web/core/data/l10n/translation";
+import { SignatureViewer } from "@web/core/components/signature/signature_viewer";
+import { AvatarTag } from "@web/core/components/tags_list/avatar_tag";
+import { BadgeTag } from "@web/core/components/tags_list/badge_tag";
 import { useService } from "@web/core/utils/hooks";
 import { formatFloat } from "@web/core/utils/numbers";
 import { nbsp } from "@web/core/utils/strings";

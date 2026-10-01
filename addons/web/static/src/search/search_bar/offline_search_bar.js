@@ -1,12 +1,12 @@
 import { onWillRender } from "@web/core/owl/utils";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { Component, onWillStart, usePlugin, proxy, signal, t, useProps } from "@odoo/owl";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { OfflinePlugin } from "@web/core/services/offline/offline_plugin";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { useDropdownState } from "@web/core/components/dropdown/dropdown_hooks";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
 import { fuzzyLookup } from "@web/core/utils/search";
-import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+import { useHotkey } from "@web/core/services/hotkeys/hotkey_hook";
 
 const INITIAL_SEARCH_LIMIT = 8;
 

@@ -1,7 +1,7 @@
 import { useSubEnv } from "@web/core/owl/utils";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { parseXML } from "@web/core/utils/xml";
-import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+import { useHotkey } from "@web/core/services/hotkeys/hotkey_hook";
 import { useBus, useOwnedDialogs, useService } from "@web/core/utils/hooks";
 
 import {
@@ -16,8 +16,8 @@ import {
     useListener,
     useProps,
 } from "@odoo/owl";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
-import { RPCError } from "@web/core/network/rpc";
+import { OfflinePlugin } from "@web/core/services/offline/offline_plugin";
+import { RPCError } from "@web/core/services/network/rpc";
 import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
 import { useSetupAction } from "@web/search/action_hook";
 import { formView } from "../form/form_view";

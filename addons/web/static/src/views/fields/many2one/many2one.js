@@ -1,11 +1,11 @@
 import { Component, useProps, toRaw, proxy, signal, t } from "@odoo/owl";
-import * as BarcodeScanner from "@web/core/barcode/barcode_dialog";
-import { isBarcodeScannerSupported } from "@web/core/barcode/barcode_video_scanner";
-import { isMobileOS } from "@web/core/browser/feature_detection";
-import { makeContext } from "@web/core/context";
-import { _t } from "@web/core/l10n/translation";
-import { usePopover } from "@web/core/popover/popover_hook";
-import { evaluateBooleanExpr } from "@web/core/py_js/py";
+import * as BarcodeScanner from "@web/core/components/barcode/barcode_dialog";
+import { isBarcodeScannerSupported } from "@web/core/components/barcode/barcode_video_scanner";
+import { isMobileOS } from "@web/core/services/browser/feature_detection";
+import { makeContext } from "@web/core/data/context";
+import { _t } from "@web/core/data/l10n/translation";
+import { usePopover } from "@web/core/components/popover/popover_hook";
+import { evaluateBooleanExpr } from "@web/core/data/py_js/py";
 import { useService } from "@web/core/utils/hooks";
 import { getFieldDomain } from "@web/model/relational_model/utils";
 import { Many2XAutocomplete, useOpenMany2XRecord } from "@web/views/fields/relational_utils";

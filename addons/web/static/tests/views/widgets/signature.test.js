@@ -1,4 +1,4 @@
-import { NameAndSignature } from "@web/core/signature/name_and_signature";
+import { NameAndSignature } from "@web/core/components/signature/name_and_signature";
 import { SignatureWidget } from "@web/views/widgets/signature/signature";
 
 import {

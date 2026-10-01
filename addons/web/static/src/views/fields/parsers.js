@@ -1,8 +1,8 @@
-import { parseDate, parseDateTime } from "@web/core/l10n/dates";
-import { evaluateExpr } from "@web/core/py_js/py";
-import { registry } from "@web/core/registry";
+import { parseDate, parseDateTime } from "@web/core/data/l10n/dates";
+import { evaluateExpr } from "@web/core/data/py_js/py";
+import { registry } from "@web/core/framework/registry";
 import { ArithmeticOperation } from "@web/model/relational_model/operation";
-import { durationUnitsRegex, normalizeTimeStr } from "@web/core/l10n/time";
+import { durationUnitsRegex, normalizeTimeStr } from "@web/core/data/l10n/time";
 
 /**
  * @typedef Duration

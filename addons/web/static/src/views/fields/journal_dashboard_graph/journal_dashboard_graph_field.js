@@ -1,10 +1,10 @@
 import { useChart } from "@web/core/utils/chart_hook";
-import { registry } from "@web/core/registry";
-import { getColor, hexToRGBA, getCustomColor } from "@web/core/colors/colors";
+import { registry } from "@web/core/framework/registry";
+import { getColor, hexToRGBA, getCustomColor } from "@web/core/components/colors/colors";
 import { standardFieldProps } from "../standard_field_props";
 
 import { Component, t, useProps } from "@odoo/owl";
-import { cookie } from "@web/core/browser/cookie";
+import { cookie } from "@web/core/services/browser/cookie";
 
 const colorScheme = cookie.get("color_scheme");
 const GRAPH_GRID_COLOR = getCustomColor(colorScheme, "#d8dadd", "#3A3B41");

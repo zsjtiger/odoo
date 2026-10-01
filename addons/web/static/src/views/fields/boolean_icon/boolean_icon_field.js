@@ -1,6 +1,6 @@
 import { Component, t, useProps } from "@odoo/owl";
-import { registry } from "@web/core/registry";
-import { _t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/framework/registry";
+import { _t } from "@web/core/data/l10n/translation";
 import { standardFieldProps } from "../standard_field_props";
 
 export class BooleanIconField extends Component {

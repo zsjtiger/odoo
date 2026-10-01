@@ -1,9 +1,9 @@
-import { registry } from "@web/core/registry";
-import { _t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/framework/registry";
+import { _t } from "@web/core/data/l10n/translation";
 import { useInputField } from "../input_field_hook";
 import { standardFieldProps } from "../standard_field_props";
 import { Component, signal, t, useProps } from "@odoo/owl";
-import { callPhoneNumber, getPhoneHref } from "@web/core/phone/phone_call";
+import { callPhoneNumber, getPhoneHref } from "@web/core/components/phone/phone_call";
 
 export const phoneFieldProps = {
     ...standardFieldProps,

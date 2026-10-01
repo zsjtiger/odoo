@@ -30,11 +30,11 @@ import {
     mountWithCleanup,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-import { browser } from "@web/core/browser/browser";
-import { CommandPalette } from "@web/core/commands/command_palette";
-import { Dialog } from "@web/core/dialog/dialog";
-import { MainComponentsContainer } from "@web/core/main_components_container";
-import { registry } from "@web/core/registry";
+import { browser } from "@web/core/services/browser/browser";
+import { CommandPalette } from "@web/core/services/commands/command_palette";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
+import { MainComponentsContainer } from "@web/core/framework/main_components_container";
+import { registry } from "@web/core/framework/registry";
 import {
     useAutofocus,
     useBackButton,

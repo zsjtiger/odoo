@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
 import { ListArchParser } from "./list_arch_parser";
 import { ListController } from "./list_controller";

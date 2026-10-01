@@ -8,11 +8,11 @@ import {
     t,
     useProps,
 } from "@odoo/owl";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { _t } from "@web/core/l10n/translation";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
-import { evaluateBooleanExpr, evaluateExpr } from "@web/core/py_js/py";
-import { user } from "@web/core/user";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
+import { _t } from "@web/core/data/l10n/translation";
+import { OfflinePlugin } from "@web/core/services/offline/offline_plugin";
+import { evaluateBooleanExpr, evaluateExpr } from "@web/core/data/py_js/py";
+import { user } from "@web/core/services/user";
 import { useService } from "@web/core/utils/hooks";
 import { omit } from "@web/core/utils/objects";
 import { useModelWithSampleData } from "@web/model/model";

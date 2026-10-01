@@ -1,7 +1,7 @@
 import { beforeEach, expect, test, waitFor } from "@odoo/hoot";
 import { click, edit, queryAll, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { animationFrame, mockDate } from "@odoo/hoot-mock";
-import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
+import { getPickerCell } from "@web/../tests/core/components/datetime/datetime_test_helpers";
 import {
     contains,
     defineModels,

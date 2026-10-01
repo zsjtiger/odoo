@@ -11,8 +11,8 @@ import {
     patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
-import { location } from "@web/core/browser/browser";
-import { router } from "@web/core/browser/router";
+import { location } from "@web/core/services/browser/browser";
+import { router } from "@web/core/services/browser/router";
 import { redirect } from "@web/core/utils/urls";
 
 class ResConfigSettings extends models.Model {

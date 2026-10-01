@@ -1,7 +1,7 @@
 import { t, useProps } from "@odoo/owl";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { floatField, FloatField, floatFieldProps } from "../float/float_field";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 
 export class FloatFactorField extends FloatField {
     props = useProps({

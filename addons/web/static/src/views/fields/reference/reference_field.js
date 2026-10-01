@@ -1,8 +1,8 @@
 import { Component, computed, proxy, t, untrack, useEffect, useProps } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { useRecordObserver } from "@web/model/relational_model/utils";
-import { SelectMenu } from "@web/core/select_menu/select_menu";
+import { SelectMenu } from "@web/core/components/select_menu/select_menu";
 import { computeM2OProps, Many2One } from "../many2one/many2one";
 import { extractM2OFieldProps, many2OneFieldProps } from "../many2one/many2one_field";
 

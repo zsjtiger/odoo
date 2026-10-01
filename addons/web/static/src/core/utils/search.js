@@ -1,4 +1,4 @@
-import { normalize } from "@web/core/l10n/utils";
+import { normalize } from "@web/core/data/l10n/utils";
 import { isIterable } from "./arrays";
 
 /**

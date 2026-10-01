@@ -1,5 +1,5 @@
-import { evaluateExpr, evaluateBooleanExpr } from "@web/core/py_js/py";
-import { registry } from "@web/core/registry";
+import { evaluateExpr, evaluateBooleanExpr } from "@web/core/data/py_js/py";
+import { registry } from "@web/core/framework/registry";
 
 import { Component, t, useProps, xml } from "@odoo/owl";
 const viewWidgetRegistry = registry.category("view_widgets");

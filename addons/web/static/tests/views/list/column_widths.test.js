@@ -17,7 +17,7 @@ import {
     webModels,
 } from "@web/../tests/web_test_helpers";
 
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { parseWidthAttribute, resetDateFieldWidths } from "@web/views/list/column_width_hook";
 
 describe.current.tags("desktop");
