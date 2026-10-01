@@ -10,6 +10,7 @@ from pathlib import Path
 
 from odoo.cli.command import commands, load_addons_commands, load_internal_commands
 from odoo.cli.i18n import I18n
+from odoo.modules.module import get_module_path
 from odoo.tests import BaseCase, TransactionCase, tagged
 from odoo.tests.common import Like
 from odoo.tools import config, file_path
@@ -70,13 +71,14 @@ class TestCommand(BaseCase):
             'help',
             'neutralize',
             'obfuscate',
-            'populate',
             'scaffold',
             'server',
             'shell',
             'start',
             'upgrade_code',
         }
+        if get_module_path('populate', display_warning=False):
+            expected.add('populate')  # provided by the populate addon
         for option in ('help', '-h', '--help'):
             with self.subTest(option=option):
                 actual = set()
