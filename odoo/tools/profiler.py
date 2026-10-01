@@ -566,7 +566,7 @@ class Profiler:
 
             if self.db:
                 # pylint: disable=import-outside-toplevel
-                from odoo.sql_db import db_connect  # only import from odoo if/when needed.
+                from odoo.orm.sql_db import db_connect  # only import from odoo if/when needed.
                 with db_connect(self.db).cursor() as cr:
                     values = {
                         "name": self.description,

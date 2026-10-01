@@ -5,7 +5,7 @@
 
 import gc
 import sys
-from .release import MIN_PY_VERSION
+from odoo.release import MIN_PY_VERSION
 
 
 if sys.flags.optimize:
@@ -29,22 +29,8 @@ if gc.get_threshold()[0] in (700, 2000):
 # Import tools to patch code and libraries
 # required to do as early as possible for evented and timezone
 # ----------------------------------------------------------
-from . import _monkeypatches
-_monkeypatches.patch_init()
+from odoo.core import patches
+patches.patch_init()
 
-from .tools.gc import gc_set_timing
+from odoo.tools.gc import gc_set_timing
 gc_set_timing(enable=True)
-
-# ----------------------------------------------------------
-# Shortcuts
-# Expose them at the `odoo` namespace level
-# ----------------------------------------------------------
-import odoo
-from .orm.commands import Command
-from .orm.utils import SUPERUSER_ID
-from .tools.translate import _, _lt
-
-odoo.SUPERUSER_ID = SUPERUSER_ID
-odoo._ = _
-odoo._lt = _lt
-odoo.Command = Command

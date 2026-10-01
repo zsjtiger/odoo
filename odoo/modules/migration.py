@@ -23,7 +23,7 @@ from odoo.tools.parse_version import parse_version
 
 if typing.TYPE_CHECKING:
     from collections.abc import Iterator
-    from odoo.sql_db import Cursor
+    from odoo.orm.sql_db import Cursor
     from . import module_graph
 
 _logger = logging.getLogger(__name__)

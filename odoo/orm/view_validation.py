@@ -10,7 +10,8 @@ import odoo.orm.domains as domains
 from lxml import etree
 from odoo import tools
 
-_logger = logging.getLogger(__name__)
+# keep the logger name of the former module, used in logging configurations
+_logger = logging.getLogger('odoo.tools.view_validation')
 
 
 _validators = collections.defaultdict(list)

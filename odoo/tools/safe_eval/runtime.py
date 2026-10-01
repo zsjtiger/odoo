@@ -757,8 +757,8 @@ def _initialize_safe_whitelist():
     safe_whitelist.add_function('time.strftime')
     safe_whitelist.add_function('time.sleep')
     # Monkey patches
-    safe_whitelist.add_class('odoo._monkeypatches.zoneinfo.ZoneInfo')
-    safe_whitelist.add_function('odoo._monkeypatches.*')
+    safe_whitelist.add_class('odoo.core.patches.zoneinfo.ZoneInfo')
+    safe_whitelist.add_function('odoo.core.patches.*')
     # Core
     safe_whitelist.add_class('odoo.addons.*')  # TODO: Restrict addons
     safe_whitelist.add_function('odoo.addons.*')  # TODO: remove with restrict addons
@@ -788,7 +788,7 @@ def _initialize_safe_whitelist():
     safe_whitelist.add_instance('odoo.http.response.Response')
     safe_whitelist.add_instance('odoo.http.session.Session')
     # Database
-    safe_whitelist.add_instance('odoo.sql_db.Cursor')
+    safe_whitelist.add_instance('odoo.orm.sql_db.Cursor')
     # Tools
     safe_whitelist.add_class('odoo.tools.binary.*')
     safe_whitelist.add_class('odoo.tools.convert.xml_import')

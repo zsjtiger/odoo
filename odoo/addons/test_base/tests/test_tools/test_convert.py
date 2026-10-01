@@ -319,7 +319,7 @@ class TestEnv(common.TransactionCase):
     def importer(self, doc):
         ET.RelaxNG(
             ET.parse(
-                os.path.join(config.root_path, 'import_xml.rng'),
+                os.path.join(config.root_path, 'tools', 'import_xml.rng'),
             ),
         ).assert_(doc)
         self._importer.parse(doc)

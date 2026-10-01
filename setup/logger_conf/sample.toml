@@ -1,12 +1,12 @@
 version = 1
 
 [formatters.singledb]
-class = "odoo.logging.ColoredFormatter"
+class = "odoo.core.logging.ColoredFormatter"
 format = "%(asctime)s\t%(levelname)s\t%(dbname)s\t%(message)s"
 datefmt = "%Y-%m-%dT%H:%M:%S"
 
 [formatters.json]
-class = "odoo.logging.JSONFormatter"
+class = "odoo.core.logging.JSONFormatter"
 
 [handlers.console]
 class = "logging.StreamHandler"
@@ -25,7 +25,7 @@ target = "json"
 capacity = 10000
 
 [handlers.db]
-class = "odoo.logging.PostgreSQLHandler"
+class = "odoo.core.logging.PostgreSQLHandler"
 log_db = "%d"
 level = "RUNBOT"
 

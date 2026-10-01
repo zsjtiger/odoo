@@ -10,7 +10,7 @@ from odoo.tools.misc import file_open
 if typing.TYPE_CHECKING:
     from collections.abc import Iterable, Iterator
 
-    from odoo.sql_db import Cursor
+    from odoo.orm.sql_db import Cursor
 
 _logger = logging.getLogger(__name__)
 

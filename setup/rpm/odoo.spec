@@ -107,7 +107,6 @@ EOF
 %{python3_sitelib}/%{name}
 %pycached %exclude %{python3_sitelib}/doc/cla/stats.py
 %pycached %exclude %{python3_sitelib}/setup/*.py
-%exclude %{python3_sitelib}/setup/odoo
 %exclude %{python3_sitelib}/setup/iot_box_builder/
 
 %changelog

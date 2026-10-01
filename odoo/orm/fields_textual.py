@@ -11,7 +11,7 @@ from markupsafe import escape as markup_escape
 from psycopg2.extras import Json as PsycopgJson
 
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.logging import COLOR_PATTERN, DEFAULT, GREEN, RED
+from odoo.core.logging import COLOR_PATTERN, DEFAULT, GREEN, RED
 from odoo.tools import SQL, config, html_normalize, html_sanitize, html2plaintext, is_html_empty, plaintext2html, sql
 from odoo.tools.misc import OrderedSet, SENTINEL, Sentinel
 from odoo.tools.sql import pattern_to_translated_trigram_pattern, value_to_translated_trigram_pattern

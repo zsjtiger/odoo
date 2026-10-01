@@ -10,7 +10,7 @@ from wsgiref.handlers import format_date_time
 
 import h11
 
-from odoo.logging import (
+from odoo.core.logging import (
     BOLD_SEQ,
     COLOR_PATTERN,
     CYAN,

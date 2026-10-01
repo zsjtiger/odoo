@@ -17,7 +17,7 @@ from weakref import ref as weakref
 from zoneinfo import ZoneInfo
 
 from odoo.exceptions import AccessError, UserError, CacheMiss
-from odoo.sql_db import BaseCursor
+from odoo.orm.sql_db import BaseCursor
 from odoo.tools import clean_context, frozendict, reset_cached_properties, OrderedSet, SQL
 from odoo.tools.func import deprecated
 from odoo.tools.lru import LRU
@@ -133,7 +133,7 @@ class Environment(Mapping[str, "BaseModel"]):
         """ Return an environment based on ``self`` with modified parameters.
 
         :param cr: optional database cursor to change the current cursor
-        :type cursor: :class:`~odoo.sql_db.Cursor`
+        :type cursor: :class:`~odoo.orm.sql_db.Cursor`
         :param user: optional user/user id to change the current user
         :type user: int or :class:`res.users record<~odoo.addons.base.models.res_users.ResUsers>`
         :param dict context: optional context dictionary to change the current context

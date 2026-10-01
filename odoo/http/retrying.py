@@ -9,7 +9,7 @@ import psycopg2
 import psycopg2.errorcodes
 
 from odoo.exceptions import ConcurrencyError, ValidationError
-from odoo.sql_db import PG_CONCURRENCY_EXCEPTIONS_TO_RETRY
+from odoo.orm.sql_db import PG_CONCURRENCY_EXCEPTIONS_TO_RETRY
 
 from . import request
 

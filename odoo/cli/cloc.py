@@ -1,6 +1,7 @@
 import sys
 
-from odoo.tools import cloc, config
+from odoo.modules import cloc
+from odoo.tools import config
 from . import Command
 
 

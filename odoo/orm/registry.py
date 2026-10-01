@@ -20,7 +20,7 @@ from operator import attrgetter
 
 import psycopg2.sql
 
-from odoo import sql_db
+from odoo.orm import sql_db
 from odoo.exceptions import ConcurrencyError
 from odoo.tools import (
     SQL,
@@ -42,7 +42,7 @@ if typing.TYPE_CHECKING:
     from collections.abc import Callable, Collection, Iterable, Iterator, MutableMapping
     from odoo.fields import Field
     from odoo.models import BaseModel
-    from odoo.sql_db import BaseCursor, Connection, Cursor
+    from odoo.orm.sql_db import BaseCursor, Connection, Cursor
     from odoo.modules import module_graph
 
 

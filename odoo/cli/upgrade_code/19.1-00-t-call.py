@@ -6,7 +6,7 @@ import typing
 
 from lxml import etree
 
-from odoo.upgrade_code.tools_etree import get_indentation, update_etree
+from odoo.cli.upgrade_code.tools_etree import get_indentation, update_etree
 from odoo.tools import config
 
 if typing.TYPE_CHECKING:
