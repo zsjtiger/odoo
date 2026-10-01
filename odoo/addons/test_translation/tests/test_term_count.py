@@ -5,6 +5,7 @@ from odoo.tools.misc import mute_logger, file_path
 from odoo.tools.translate import TranslationModuleReader, TranslationRecordReader, code_translations, CodeTranslations, PYTHON_TRANSLATION_COMMENT, JAVASCRIPT_TRANSLATION_COMMENT, translation_file_reader
 from odoo import Command
 from odoo.addons.base.models.ir_fields import BOOLEAN_TRANSLATIONS
+from odoo.addons.base.tests.common import patch_code_translations
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -185,7 +186,8 @@ class TestImport(common.TransactionCase):
         context = {'lang': 'en_US'}  # noqa: F841
         self.assertEqual(str(BOOLEAN_TRANSLATIONS[0]), 'yes')
         context = {'lang': 'fr_FR'}  # noqa: F841
-        self.assertEqual(str(BOOLEAN_TRANSLATIONS[0]), 'oui')
+        with patch_code_translations('base', 'fr_FR', {'yes': 'oui'}):
+            self.assertEqual(str(BOOLEAN_TRANSLATIONS[0]), 'oui')
 
     def test_import_from_csv_file(self):
         """Test the import from a single CSV file works"""

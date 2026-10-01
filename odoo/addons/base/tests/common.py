@@ -5,7 +5,21 @@ from unittest.mock import patch, Mock
 
 from odoo import Command, models
 from odoo.tests.common import new_test_user, TransactionCase, HttpCase
+from odoo.tools import frozendict
 from odoo.tools.mail import email_split_and_format
+from odoo.tools.translate import code_translations
+
+@contextmanager
+def patch_code_translations(module, lang, translations):
+    """ Add the code translations ``{source: value}`` of ``module`` in
+    ``lang``, as if they were in its ``.po`` file, for the duration of the
+    context. It makes tests independent of the shipped translation files.
+    """
+    current = code_translations.get_python_translations(module, lang)
+    patched = frozendict({**current, **translations})
+    with patch.dict(code_translations.python_translations, {(module, lang): patched}):
+        yield
+
 
 DISABLED_MAIL_CREATE_CONTEXT = {
     'mail_create_nolog': True,

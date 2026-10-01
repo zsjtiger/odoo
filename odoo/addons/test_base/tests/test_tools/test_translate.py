@@ -11,6 +11,7 @@ from markupsafe import Markup
 from psycopg2.extras import Json
 
 from odoo import fields
+from odoo.addons.base.tests.common import patch_code_translations
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests.common import BaseCase, TransactionCase, tagged
 from odoo.tools import sql
@@ -534,6 +535,12 @@ class TestTranslation(TransactionCase):
             translation_importer = TranslationImporter(cls.env.cr, verbose=True)
             translation_importer.load(f, 'po', 'fr_FR')
             translation_importer.save(overwrite=True)
+
+    def setUp(self):
+        super().setUp()
+        # suffix of duplicated records, translated in base
+        self.enterContext(patch_code_translations('base', 'fr_FR', {'%s (copy)': '%s (copie)'}))
+        self.enterContext(patch_code_translations('base', 'nl_NL', {'%s (copy)': '%s (kopie)'}))
 
     def test_101_translation_read(self):
         """ Check the record env.lang behavior """

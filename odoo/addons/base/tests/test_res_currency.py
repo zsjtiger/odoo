@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import Command
+from odoo.addons.base.tests.common import patch_code_translations
 from odoo.tests.common import tagged, TransactionCase
 
 
@@ -152,7 +153,9 @@ class TestResCurrency(TransactionCase):
 
         self.assertEqual(eur.amount_to_text(1.0), "un euro")
         self.assertEqual(eur.amount_to_text(2.0), "deux euros")
-        self.assertEqual(eur.amount_to_text(21.56), "vingt et un euros et cinquante-six centimes")
+        and_term = "%(integral_amount)s %(currency_unit)s and %(fractional_amount)s %(currency_subunit)s"
+        with patch_code_translations('base', 'fr_FR', {and_term: and_term.replace(' and ', ' et ')}):
+            self.assertEqual(eur.amount_to_text(21.56), "vingt et un euros et cinquante-six centimes")
 
     def test_amount_to_text_currency_aware_inflection_vi_vn(self):
         """Convert Vietnamese currency amounts to text without currency forms."""
