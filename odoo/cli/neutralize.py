@@ -3,7 +3,7 @@ import optparse
 import sys
 
 import odoo.modules.neutralize
-import odoo.sql_db
+import odoo.orm.sql_db
 import odoo.tools.config
 
 from . import Command
@@ -35,7 +35,7 @@ class Neutralize(Command):
             _logger.info("Starting %s database neutralization", dbname)
 
         try:
-            with odoo.sql_db.db_connect(dbname).cursor() as cursor:
+            with odoo.orm.sql_db.db_connect(dbname).cursor() as cursor:
                 if opt.to_stdout:
                     installed_modules = odoo.modules.neutralize.get_installed_modules(cursor)
                     queries = odoo.modules.neutralize.get_neutralization_queries(installed_modules)

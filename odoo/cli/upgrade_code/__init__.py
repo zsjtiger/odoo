@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Rewrite the entire source code using the scripts found at
-/odoo/upgrade_code
+/odoo/cli/upgrade_code
 
 Each script is named {version}-{name}.py and exposes an upgrade function
 that takes a single argument, the file_manager, and returns nothing.
@@ -38,14 +38,14 @@ from importlib.machinery import SourceFileLoader
 from pathlib import Path
 from types import ModuleType
 
-ROOT = Path(__file__).parent.parent
-UPGRADE = ROOT / 'upgrade_code'
+UPGRADE = Path(__file__).parent
+ROOT = UPGRADE.parent.parent  # the odoo directory
 AVAILABLE_EXT = ('.py', '.js', '.css', '.scss', '.xml', '.csv', '.po', '.pot')
 
 
 try:
     import odoo.addons
-    from . import Command
+    from .. import Command
     from odoo import release
     from odoo.modules import initialize_sys_path
     from odoo.tools import config, parse_version
@@ -64,7 +64,7 @@ except ImportError:
         def __init__(self):
             self.parser = argparse.ArgumentParser(
                 prog=Path(sys.argv[0]).name,
-                description=__doc__.replace('/odoo/upgrade_code', str(UPGRADE)),
+                description=__doc__.replace('/odoo/cli/upgrade_code', str(UPGRADE)),
                 formatter_class=argparse.RawDescriptionHelpFormatter,
             )
     config = None
@@ -175,9 +175,14 @@ class FileManager:
             pass
 
 
+def _scripts(paths: Iterator[Path]) -> Iterator[Path]:
+    """ Filter out the python modules of this package that are not scripts """
+    return (path for path in paths if not path.name.startswith('_'))
+
+
 def get_upgrade_code_scripts(from_version: tuple[int, ...], to_version: tuple[int, ...]) -> list[tuple[str, ModuleType]]:
     modules: list[tuple[str, ModuleType]] = []
-    for script_path in sorted(UPGRADE.glob('*.py')):
+    for script_path in sorted(_scripts(UPGRADE.glob('*.py'))):
         version = parse_version(script_path.name.partition('-')[0])
         if from_version <= version <= to_version:
             module = SourceFileLoader(script_path.name, str(script_path)).load_module()
@@ -196,7 +201,7 @@ def migrate(
     if script:
         script_path = Path(script).absolute()
         if not script_path.is_file():
-            candidate_paths = list(UPGRADE.glob(f'*{script.removesuffix(".py")}*.py'))
+            candidate_paths = list(_scripts(UPGRADE.glob(f'*{script.removesuffix(".py")}*.py')))
             if len(candidate_paths) == 1:
                 script_path = candidate_paths[0]
             else:
@@ -225,7 +230,7 @@ def migrate(
 
 
 class UpgradeCode(Command):
-    """ Rewrite the entire source code using the scripts found at /odoo/upgrade_code """
+    """ Rewrite the entire source code using the scripts found at /odoo/cli/upgrade_code """
     name = 'upgrade_code'
 
     def __init__(self):

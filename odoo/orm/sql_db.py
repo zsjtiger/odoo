@@ -32,12 +32,12 @@ from werkzeug import urls
 
 import odoo
 
-from . import tools
-from .release import MIN_PG_VERSION
-from .tools import SQL, config
-from .tools.constants import IN_MAX as IN_MAX_CONST
-from .tools.func import frame_codeinfo, locked
-from .tools.misc import Callbacks, real_time
+from odoo import tools
+from odoo.release import MIN_PG_VERSION
+from odoo.tools import SQL, config
+from odoo.tools.constants import IN_MAX as IN_MAX_CONST
+from odoo.tools.func import frame_codeinfo, locked
+from odoo.tools.misc import Callbacks, real_time
 
 if typing.TYPE_CHECKING:
     from odoo.orm.environments import Transaction
@@ -78,7 +78,8 @@ DECIMAL_TO_FLOAT_TYPE = psycopg2.extensions.new_type((1700,), 'float', undecimal
 psycopg2.extensions.register_type(DECIMAL_TO_FLOAT_TYPE)
 psycopg2.extensions.register_type(psycopg2.extensions.new_array_type((1231,), 'float[]', DECIMAL_TO_FLOAT_TYPE))
 
-_logger = logging.getLogger(__name__)
+# keep the logger name of the former module, used in logging configurations
+_logger = logging.getLogger('odoo.sql_db')
 _logger_conn = _logger.getChild("connection")
 
 re_from = re.compile(r'\bfrom\s+"?([a-zA-Z_0-9]+)\b', re.IGNORECASE)

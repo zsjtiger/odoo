@@ -1,4 +1,4 @@
-from odoo.upgrade_code.tools_etree import get_indentation, update_etree
+from odoo.cli.upgrade_code.tools_etree import get_indentation, update_etree
 from lxml import etree
 from collections import defaultdict
 

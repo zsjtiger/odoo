@@ -611,10 +611,11 @@ class configmanager:
 
             odoo.tools.config.parse_config(sys.argv[1:])
         """
-        from odoo import modules, netsvc  # noqa: PLC0415
+        from odoo import modules  # noqa: PLC0415
+        from odoo.core.logging import init_logger  # noqa: PLC0415
         opt = self._parse_config(args)
         if setup_logging is not False:
-            netsvc.init_logger()
+            init_logger()
             self.load_color_options()
             # warn after having done setup, so it has a chance to show up
             # (mostly once this warning is bumped to DeprecationWarning proper)

@@ -14,7 +14,7 @@ if typing.TYPE_CHECKING:
     from collections.abc import Iterable
 
     from odoo.fields import Field
-    from odoo.sql_db import Cursor
+    from odoo.orm.sql_db import Cursor
 
 import psycopg2
 from psycopg2.extensions import quote_ident

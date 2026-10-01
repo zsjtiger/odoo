@@ -5,7 +5,8 @@ import traceback
 from inspect import cleandoc
 from pathlib import Path
 
-import odoo.init  # import first for core setup
+import odoo.core.bootstrap  # noqa: F401  # import first for core setup
+import odoo.orm  # noqa: F401
 import odoo.cli
 from odoo.modules import initialize_sys_path, load_script
 from odoo.tools import config
@@ -59,9 +60,8 @@ def load_internal_commands():
     """ Load ``commands`` from ``odoo.cli`` """
     for path in odoo.cli.__path__:
         for module in Path(path).iterdir():
-            if module.suffix != '.py':
-                continue
-            __import__(f'odoo.cli.{module.stem}')
+            if module.suffix == '.py' or (module / '__init__.py').is_file():
+                __import__(f'odoo.cli.{module.stem}')
 
 
 def load_addons_commands(command=None):

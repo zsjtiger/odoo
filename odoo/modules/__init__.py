@@ -4,7 +4,8 @@
 """ Modules (also called addons) management.
 
 """
-import odoo.init  # import first for core setup
+import odoo.core.bootstrap  # import first for core setup
+import odoo.orm  # noqa: F401
 
 from . import db  # used directly during some migration scripts
 

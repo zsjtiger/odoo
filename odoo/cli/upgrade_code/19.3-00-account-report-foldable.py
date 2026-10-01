@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 import typing
 
-from odoo.upgrade_code.tools_etree import update_etree
+from odoo.cli.upgrade_code.tools_etree import update_etree
 
 if typing.TYPE_CHECKING:
     from odoo.cli.upgrade_code import FileManager

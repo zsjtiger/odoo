@@ -5,7 +5,7 @@ import datetime
 import hashlib
 import io
 import uuid
-from typing import Any
+from typing import TYPE_CHECKING, Any
 from asn1crypto import cms, algos, core, pem, tsp, x509
 import logging
 
@@ -30,7 +30,9 @@ except ImportError:
     load_der_x509_certificate = None
     load_pem_x509_certificate = None
 
-from odoo.addons.base.models.res_company import ResCompany
+if TYPE_CHECKING:
+    from odoo.addons.base.models.res_company import ResCompany
+
 from odoo.tools.pdf import (
     PdfFileReader,
     IndirectObject,
@@ -534,7 +536,7 @@ class PdfSigner:
                          Defaults to ``datetime.now()``.
     """
 
-    def __init__(self, pdf_raw: bytes, company: ResCompany | None = None, signing_time: datetime.datetime | None = None) -> None:
+    def __init__(self, pdf_raw: bytes, company: 'ResCompany | None' = None, signing_time: datetime.datetime | None = None) -> None:
         self.pdf_raw = pdf_raw
         self.pdf_reader = PdfFileReader(io.BytesIO(pdf_raw), strict=False)
         self.company = company

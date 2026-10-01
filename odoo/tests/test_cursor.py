@@ -6,11 +6,11 @@ from datetime import datetime
 import psycopg2
 
 import odoo.modules
-from odoo.sql_db import Cursor, Savepoint, _logger
+from odoo.orm.sql_db import Cursor, Savepoint, _logger
 
 if typing.TYPE_CHECKING:
     import threading
-    from odoo.sql_db import PsycoConnection as _base_PsycoConnection
+    from odoo.orm.sql_db import PsycoConnection as _base_PsycoConnection
 else:
     _base_PsycoConnection = object
 

@@ -38,8 +38,6 @@ import babel.dates
 import markupsafe
 from lxml import etree, objectify
 
-from odoo.loglevels import exception_to_unicode
-
 from .config import config
 from .float_utils import float_round
 from .which import which
@@ -120,6 +118,15 @@ ROUNDING_UNIT_CHARS = {
 
 # ensure we have a non patched time for query times when using freezegun
 real_time = time.time.__call__  # type: ignore
+
+
+def exception_to_unicode(e):
+    if getattr(e, 'args', ()):
+        return "\n".join(map(str, e.args))
+    try:
+        return str(e)
+    except Exception:
+        return "Unknown message"
 
 
 class Sentinel(enum.Enum):

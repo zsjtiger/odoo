@@ -790,7 +790,7 @@ def convert_xml_import(
         report=None,
 ):
     doc = etree.parse(xmlfile)
-    schema = os.path.join(config.root_path, 'import_xml.rng')
+    schema = os.path.join(os.path.dirname(__file__), 'import_xml.rng')
     relaxng = etree.RelaxNG(etree.parse(schema))
     try:
         relaxng.assert_(doc)

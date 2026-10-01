@@ -28,7 +28,7 @@ import odoo.api
 import odoo.modules
 import odoo.modules.neutralize
 import odoo.release
-import odoo.sql_db
+import odoo.orm.sql_db
 import odoo.tools
 from odoo.exceptions import AccessDenied, UserError
 from odoo.tools import SQL, config, osutil
@@ -37,7 +37,7 @@ from odoo.tools.misc import exec_pg_environ, find_pg_tool
 from odoo.tools.sql import quoted_identifier
 
 if typing.TYPE_CHECKING:
-    from odoo.sql_db import BaseCursor, Cursor
+    from odoo.orm.sql_db import BaseCursor, Cursor
 
 _logger = logging.getLogger(__name__)
 
@@ -302,7 +302,7 @@ def _check_faketime_mode(db_name: str) -> None:
     if db_name not in odoo.tools.config['db_name']:
         return
     try:
-        db = odoo.sql_db.db_connect(db_name)
+        db = odoo.orm.sql_db.db_connect(db_name)
         with db.cursor() as cursor:
             cursor.execute("SELECT (pg_catalog.now() AT TIME ZONE 'UTC');")
             server_now = cursor.fetchone()[0]
@@ -329,14 +329,14 @@ class DatabaseExists(UserError, ValueError):
 def _create_empty_database(db_name: str) -> None:
     db_system_name = config['db_system']
     try:
-        sys_cr = odoo.sql_db.db_connect(db_system_name).cursor()
+        sys_cr = odoo.orm.sql_db.db_connect(db_system_name).cursor()
     except psycopg2.errors.OperationalError:
         # If we use the `db_name` as the system database and we are trying to
         # create it, try to use postgres as the system database.
         if db_system_name == 'postgres' or db_system_name != db_name:
             raise
         _logger.info("Defaulting to 'postgres' system database for database creation")
-        sys_cr = odoo.sql_db.db_connect('postgres').cursor()
+        sys_cr = odoo.orm.sql_db.db_connect('postgres').cursor()
     with closing(sys_cr) as cr:
         cr.execute("SELECT datname FROM pg_database WHERE datname = %s",
                    (db_name,), log_exceptions=False)
@@ -359,7 +359,7 @@ def _create_empty_database(db_name: str) -> None:
 
     # TODO: add --extension=trigram,unaccent
     try:
-        db = odoo.sql_db.db_connect(db_name)
+        db = odoo.orm.sql_db.db_connect(db_name)
         with db.cursor() as cr:
             cr.execute("CREATE EXTENSION IF NOT EXISTS pg_trgm")
             if odoo.tools.config['unaccent']:
@@ -377,7 +377,7 @@ def _create_empty_database(db_name: str) -> None:
 
     # restore legacy behaviour on pg15+
     try:
-        db = odoo.sql_db.db_connect(db_name)
+        db = odoo.orm.sql_db.db_connect(db_name)
         with db.cursor() as cr:
             cr.execute("GRANT CREATE ON SCHEMA PUBLIC TO PUBLIC")
     except psycopg2.Error as e:
@@ -479,8 +479,8 @@ def duplicate(
         e = f"Invalid {db_name=!r}"
         raise ValueError(e)
     _logger.info("Duplicate database `%s` to `%s`.", db_original_name, db_name)
-    odoo.sql_db.close_db(db_original_name)
-    db = odoo.sql_db.db_connect(config['db_system'])
+    odoo.orm.sql_db.close_db(db_original_name)
+    db = odoo.orm.sql_db.db_connect(config['db_system'])
     with closing(db.cursor()) as cr:
         # database-altering operations cannot be executed inside a transaction
         cr._cnx.autocommit = True
@@ -493,7 +493,7 @@ def duplicate(
 
     if neutralize_database:
         # Neutralize the database before it becomes visible to the cron workers
-        with odoo.sql_db.db_connect(db_name).cursor() as cr:
+        with odoo.orm.sql_db.db_connect(db_name).cursor() as cr:
             odoo.modules.neutralize.neutralize_database(cr)
 
     registry = odoo.modules.registry.Registry.new(db_name)
@@ -527,9 +527,9 @@ def _drop_conn(cr: Cursor, db_name: str) -> None:
 def drop(db_name: str) -> None:
     """ Drop the database ``db_name`` and remove its filestore. """
     odoo.modules.registry.Registry.delete(db_name)
-    odoo.sql_db.close_db(db_name)
+    odoo.orm.sql_db.close_db(db_name)
 
-    db = odoo.sql_db.db_connect(config['db_system'])
+    db = odoo.orm.sql_db.db_connect(config['db_system'])
     with closing(db.cursor()) as cr:
         # database-altering operations cannot be executed inside a transaction
         cr._cnx.autocommit = True
@@ -591,7 +591,7 @@ def dump(
                     shutil.copytree(filestore, os.path.join(dump_dir, 'filestore'))
             manifest_path = os.path.join(dump_dir, 'manifest.json')
             with open(manifest_path, 'w', encoding='utf-8') as manifest_file:
-                with odoo.sql_db.db_connect(db_name).cursor() as cr:
+                with odoo.orm.sql_db.db_connect(db_name).cursor() as cr:
                     json.dump(_dump_db_manifest(cr), manifest_file, indent=4)
             cmd.insert(-1, '--file=' + os.path.join(dump_dir, 'dump.sql'))
             subprocess.run(
@@ -652,7 +652,7 @@ def restore(
 
         if neutralize_database:
             # Neutralize the database before it becomes visible to the cron workers
-            with odoo.sql_db.db_connect(db_name).cursor() as cr:
+            with odoo.orm.sql_db.db_connect(db_name).cursor() as cr:
                 odoo.modules.neutralize.neutralize_database(cr)
 
         registry = odoo.modules.registry.Registry.new(db_name)
@@ -674,9 +674,9 @@ def rename(
     new_name: str,
 ) -> None:
     odoo.modules.registry.Registry.delete(old_name)
-    odoo.sql_db.close_db(old_name)
+    odoo.orm.sql_db.close_db(old_name)
 
-    db = odoo.sql_db.db_connect(config['db_system'])
+    db = odoo.orm.sql_db.db_connect(config['db_system'])
     with closing(db.cursor()) as cr:
         # database-altering operations cannot be executed inside a transaction
         cr._cnx.autocommit = True
@@ -710,7 +710,7 @@ def list_dbs(*, force=False):
 
     chosen_template = odoo.tools.config['db_template']
     ignore_templates_list = tuple({'postgres', chosen_template})
-    db = odoo.sql_db.db_connect(config['db_system'])
+    db = odoo.orm.sql_db.db_connect(config['db_system'])
     with closing(db.cursor()) as cr:
         try:
             cr.execute("""
@@ -734,7 +734,7 @@ def list_dbs(*, force=False):
 
 def exist(db_name):
     try:
-        odoo.sql_db.db_connect(db_name).cursor().close()
+        odoo.orm.sql_db.db_connect(db_name).cursor().close()
     except psycopg2.OperationalError:
         return False
     else:

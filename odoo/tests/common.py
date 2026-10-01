@@ -70,7 +70,7 @@ from odoo.http.session import (
 from odoo.http.session import Session as OdooHttpSession
 from odoo.orm.environments import CacheLayer
 from odoo.modules.registry import Registry
-from odoo.sql_db import Cursor
+from odoo.orm.sql_db import Cursor
 from odoo.tools import SQL, DotDict, config, file_open, float_compare, mute_logger, profiler
 from odoo.tools.binary import BinaryBytes
 from odoo.tools.lru import LRU
@@ -840,7 +840,7 @@ class BaseCase(case.TestCase):
             self.env.cr.flush()
 
         with (
-            patch('odoo.sql_db.Cursor.execute', execute),
+            patch('odoo.orm.sql_db.Cursor.execute', execute),
             patch.object(self.env.registry, 'unaccent', lambda x: x),
         ):
             yield actual_queries
@@ -3198,7 +3198,7 @@ safe_whitelist.add_class('freezegun.api.FakeDate')
 safe_whitelist.add_class('freezegun.api.FakeDatetime')
 safe_whitelist.add_function('FakeDate.*')
 safe_whitelist.add_function('FakeDatetime.*')
-safe_whitelist.add_instance('odoo.sql_db.TestCursor')
+safe_whitelist.add_instance('odoo.orm.sql_db.TestCursor')
 safe_whitelist.add_instance('odoo.tests.*')
 safe_whitelist.add_instance('unittest.mock.MagicMock')
 safe_whitelist.add_instance('unittest.mock.Mock')

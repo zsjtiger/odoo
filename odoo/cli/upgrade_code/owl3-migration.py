@@ -1,6 +1,6 @@
 import re
-from odoo.upgrade_code.tools_etree import update_etree
-from odoo.upgrade_code.tools_js_expressions import update_template, VariableAggregator
+from odoo.cli.upgrade_code.tools_etree import update_etree
+from odoo.cli.upgrade_code.tools_js_expressions import update_template, VariableAggregator
 
 EXCLUDED_PATH = (
     'web/static/lib/hoot',

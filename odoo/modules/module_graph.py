@@ -16,7 +16,7 @@ from .module import Manifest
 if typing.TYPE_CHECKING:
     from collections.abc import Collection, Iterable, Iterator, Mapping
     from typing import Literal
-    from odoo.sql_db import BaseCursor
+    from odoo.orm.sql_db import BaseCursor
 
     STATES = Literal[
         'uninstallable',

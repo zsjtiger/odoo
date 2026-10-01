@@ -17,4 +17,15 @@ We export the needed features in various packages and developers should not
 import directly from here.
 """
 # import first for core setup
-import odoo.init  # noqa: F401
+import odoo.core.bootstrap  # noqa: F401
+
+# shortcuts exposed at the `odoo` namespace level
+import odoo
+from odoo.orm.commands import Command
+from odoo.orm.utils import SUPERUSER_ID
+from odoo.tools.translate import _, _lt
+
+odoo.SUPERUSER_ID = SUPERUSER_ID
+odoo._ = _
+odoo._lt = _lt
+odoo.Command = Command

@@ -14,7 +14,7 @@ from odoo import api
 from odoo.modules.db import _check_faketime_mode
 from odoo.modules.module import initialize_sys_path
 from odoo.modules.registry import Registry
-from odoo.netsvc import init_logger
+from odoo.core.logging import init_logger
 from odoo.tests import standalone_tests, loader
 from odoo.tools import config, profiler, topological_sort, unique
 

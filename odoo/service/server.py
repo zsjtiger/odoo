@@ -54,7 +54,8 @@ except ImportError:
     def setproctitle(x):
         return None
 
-from odoo import api, sql_db
+from odoo import api
+from odoo.orm import sql_db
 from odoo.http.server import HTTPSocket
 from odoo.modules.registry import Registry
 from odoo.orm.cache import log_ormcache_stats
