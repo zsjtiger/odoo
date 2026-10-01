@@ -13,9 +13,6 @@ from odoo.tools.urls import urljoin as url_join
 
 
 @contextlib.contextmanager
-
-
-@contextlib.contextmanager
 def MockRequest(
     env, *, path='/mockrequest', routing=True, multilang=True,
     context=frozendict(), cookies=frozendict(), country_code=None, city_name=None,
