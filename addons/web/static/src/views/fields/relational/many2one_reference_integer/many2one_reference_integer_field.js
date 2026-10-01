@@ -1,0 +1,18 @@
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
+import { IntegerField } from "@web/views/fields/numeric/integer/integer_field";
+
+export class Many2OneReferenceIntegerField extends IntegerField {
+    get value() {
+        const value = this.props.record.data[this.props.name];
+        return value ? value.resId : false;
+    }
+}
+
+const many2oneReferenceIntegerField = {
+    component: Many2OneReferenceIntegerField,
+    displayName: _t("Many2OneReferenceInteger"),
+    supportedTypes: ["many2one_reference"],
+};
+
+registry.category("fields").add("many2one_reference_integer", many2oneReferenceIntegerField);

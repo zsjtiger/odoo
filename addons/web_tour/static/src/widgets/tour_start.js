@@ -1,5 +1,5 @@
 import { useProps, t, usePlugin } from "@odoo/owl";
-import { charField, CharField, charFieldProps } from "@web/views/fields/char/char_field";
+import { charField, CharField, charFieldProps } from "@web/views/fields/text/char/char_field";
 import { registry } from "@web/core/framework/registry";
 import { TourPlugin } from "@web_tour/tour_plugin";
 

@@ -19,7 +19,7 @@ import {
 
 import { Dialog } from "@web/core/dialogs/dialog/dialog";
 import { registry } from "@web/core/framework/registry";
-import { BooleanField } from "@web/views/fields/boolean/boolean_field";
+import { BooleanField } from "@web/views/fields/boolean/boolean/boolean_field";
 import { FormController } from "@web/views/form/form_controller";
 import { WebClient } from "@web/webclient/webclient";
 
