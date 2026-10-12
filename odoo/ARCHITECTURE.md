@@ -58,7 +58,10 @@ are named after their responsibility:
   (`search`, `read`, `create`, `write`, `grouping`, `export`, `recompute`...).
 - `orm/fields/`: `Field` (`__init__`) and one module per field family.
 - `orm/database/`: the SQL cursors, the queries, the table objects and the schema.
-- `orm/core/`: access rights, domains, commands, decorators, identifiers and utils.
+- `orm/core/`: access rights, commands, decorators, identifiers and utils. `domains/`
+  is a package: `constants` (operators and levels), `registry` (the optimization
+  decorators), `classes` (the `Domain` classes), and `optimizations/` (one module per
+  topic; importing them registers them, in a fixed order).
 - `tools/`: the shared helpers at the top level; `text`, `files`, `numeric`,
   `sql`, `xml`, `loading`, `js`, `profiling` and `system` group the others. The
   modules moved there are not aliased: import them from their new path.
