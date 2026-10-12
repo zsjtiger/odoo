@@ -69,6 +69,20 @@ are named after their responsibility:
   `odoo.tests.common` re-exports the same names as before.
 - `core/patches/`: one module per patched library; `_werkzeug_urls` holds the
   URL backport that werkzeug 3.0 needs.
+- `tests/form/`: `Form` and its proxies, the values of the x2many fields and the
+  helpers. `tests/common/screencast` holds the screencast classes.
+- `orm/database/sql_db/`: `cursor`, `pool` and `types` (the connection type and
+  the decimal conversion).
+- `tools/sql/`: `builder` (the SQL objects), `tables`, `columns`, `constraints`,
+  `indexes`, `views` and `rows`.
+- `tools/mail/`: `html` (sanitizing and conversions), `links` and `addresses`.
+- `tools/loading/convert/`: `common`, `xml`, `csv` and `file`.
+- `tools/js/js_transpiler/`: `paths`, `imports`, `exports` and `transpile`.
+- `tools/profiling/profiler/`: `stack`, `collectors`, `qweb` and `profiler`.
+- `tools/safe_eval/runtime/`: `errors`, `transformer` and `whitelist`, which also
+  holds the checker, the generator and the monitoring (they depend on each other).
+- `modules/db/`: `queries`, `init` and `manage`.
+- `tools/misc/` and `tools/config/`: the former flat modules, split by concern.
 
 ## Moved modules
 
