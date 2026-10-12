@@ -548,7 +548,7 @@ class configmanager:
             appdirs.user_data_dir(release.product_name, release.author)
             if os.path.isdir(os.path.expanduser('~')) else
             appdirs.site_data_dir(release.product_name, release.author)
-            if sys.platform in ['win32', 'darwin'] else
+            if sys.platform == 'darwin' else
             f'/var/lib/{release.product_name}'
         )
 
@@ -561,8 +561,6 @@ class configmanager:
 
         if os.path.isfile(default_config_file):
             rcfilepath = default_config_file
-        elif os.name == 'nt':
-            rcfilepath = os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), 'odoo.conf')
         elif os.path.isfile(rcfilepath := os.path.expanduser('~/.odoorc')):
             pass
         elif os.path.isfile(rcfilepath := os.path.expanduser('~/.openerp_serverrc')):

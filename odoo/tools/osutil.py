@@ -85,29 +85,3 @@ def memory_info(process):
     if system_name == 'Darwin':
         return pmem.rss
     return pmem.vms
-
-
-if os.name != 'nt':
-    is_running_as_nt_service = lambda: False
-else:
-    import win32service as ws
-    import win32serviceutil as wsu
-
-    from contextlib import contextmanager
-    from odoo.release import nt_service_name
-
-    def is_running_as_nt_service():
-        @contextmanager
-        def close_srv(srv):
-            try:
-                yield srv
-            finally:
-                ws.CloseServiceHandle(srv)
-
-        try:
-            with close_srv(ws.OpenSCManager(None, None, ws.SC_MANAGER_ALL_ACCESS)) as hscm:
-                with close_srv(wsu.SmartOpenService(hscm, nt_service_name, ws.SERVICE_ALL_ACCESS)) as hs:
-                    info = ws.QueryServiceStatusEx(hs)
-                    return info['ProcessId'] == os.getppid()
-        except Exception:
-            return False

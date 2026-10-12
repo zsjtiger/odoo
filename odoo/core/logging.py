@@ -316,9 +316,7 @@ def init_logger():
 
     if tools.config['syslog']:
         # SysLog Handler
-        if os.name == 'nt':
-            handler = logging.handlers.NTEventLogHandler(f"{release.description} {release.version}")
-        elif platform.system() == 'Darwin':
+        if platform.system() == 'Darwin':
             handler = logging.handlers.SysLogHandler('/var/run/log')
         else:
             handler = logging.handlers.SysLogHandler('/dev/log')
@@ -332,10 +330,7 @@ def init_logger():
             dirname = os.path.dirname(logf)
             if dirname and not os.path.isdir(dirname):
                 os.makedirs(dirname)
-            if os.name == 'posix':
-                handler = logging.handlers.WatchedFileHandler(logf)
-            else:
-                handler = logging.FileHandler(logf)
+            handler = logging.handlers.WatchedFileHandler(logf)
         except Exception:
             sys.stderr.write("ERROR: couldn't create the logfile directory. Logging to the standard output.\n")
 

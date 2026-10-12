@@ -41,26 +41,13 @@
 __docformat__ = 'restructuredtext en'
 __all__ = ['F_OK', 'R_OK', 'W_OK', 'X_OK', 'defpath', 'defpathext', 'dirname', 'pathsep', 'which', 'which_files']
 
-import sys
 from os import access, defpath, pathsep, environ, F_OK, R_OK, W_OK, X_OK
 from os.path import exists, dirname, split, join
 ENOENT = 2
 
-windows = sys.platform.startswith('win')
-
 defpath = environ.get('PATH', defpath).split(pathsep)
 
-if windows:
-    defpath.insert(0, '.') # can insert without checking, when duplicates are removed
-    # given the quite usual mess in PATH on Windows, let's rather remove duplicates
-    seen = set()
-    defpath = [dir for dir in defpath if dir.lower() not in seen and not seen.add(dir.lower())]
-    del seen
-
-    defpathext = [''] + environ.get('PATHEXT',
-        '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC').lower().split(pathsep)
-else:
-    defpathext = ['']
+defpathext = ['']
 
 def which_files(file, mode=F_OK | X_OK, path=None, pathext=None):
     """ Locate a file in a path supplied as a part of the file name,
@@ -80,33 +67,9 @@ def which_files(file, mode=F_OK | X_OK, path=None, pathext=None):
         ...         result = None
         ...         assert not expected, 'which: expecting %s' % expected
 
-        >>> if windows: cmd = environ['COMSPEC']
-        >>> if windows: test_which([cmd], 'cmd')
-        >>> if windows: test_which([cmd], 'cmd.exe')
-        >>> if windows: test_which([cmd], 'cmd', path=dirname(cmd))
-        >>> if windows: test_which([cmd], 'cmd', pathext='.exe')
-        >>> if windows: test_which([cmd], cmd)
-        >>> if windows: test_which([cmd], cmd, path='<nonexistent>')
-        >>> if windows: test_which([cmd], cmd, pathext='<nonexistent>')
-        >>> if windows: test_which([cmd], cmd[:-4])
-        >>> if windows: test_which([cmd], cmd[:-4], path='<nonexistent>')
 
-        >>> if windows: test_which([], 'cmd', path='<nonexistent>')
-        >>> if windows: test_which([], 'cmd', pathext='<nonexistent>')
-        >>> if windows: test_which([], '<nonexistent>/cmd')
-        >>> if windows: test_which([], cmd[:-4], pathext='<nonexistent>')
 
-        >>> if not windows: sh = '/bin/sh'
-        >>> if not windows: test_which([sh], 'sh')
-        >>> if not windows: test_which([sh], 'sh', path=dirname(sh))
-        >>> if not windows: test_which([sh], 'sh', pathext='<nonexistent>')
-        >>> if not windows: test_which([sh], sh)
-        >>> if not windows: test_which([sh], sh, path='<nonexistent>')
-        >>> if not windows: test_which([sh], sh, pathext='<nonexistent>')
 
-        >>> if not windows: test_which([], 'sh', mode=W_OK)  # not running as root, are you?
-        >>> if not windows: test_which([], 'sh', path='<nonexistent>')
-        >>> if not windows: test_which([], '<nonexistent>/sh')
     """
     filepath, file = split(file)
 

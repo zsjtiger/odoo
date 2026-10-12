@@ -10,11 +10,11 @@ docutils==0.20.1 ; python_version >= '3.11'
 freezegun==1.2.1 ; python_version >= '3.11' and python_version < '3.13'
 freezegun==1.5.1 ; python_version >= '3.13'
 geoip2==2.9.0
-gevent==24.2.1 ; sys_platform != 'win32' and python_version >= '3.12' and python_version < '3.13'  # (Noble)
-gevent==24.11.1 ; sys_platform != 'win32' and python_version >= '3.13'  # (Trixie)
-greenlet==3.0.3 ; sys_platform != 'win32' and python_version >= '3.12' and python_version < '3.13' # (Noble)
-greenlet==3.1.1 ; sys_platform != 'win32' and python_version >= '3.13' and python_version < '3.14'  # (Trixie)
-greenlet==3.3.2 ; sys_platform != 'win32' and python_version >= '3.14'  # (Resolute)
+gevent==24.2.1 ; python_version >= '3.12' and python_version < '3.13'  # (Noble)
+gevent==24.11.1 ; python_version >= '3.13'  # (Trixie)
+greenlet==3.0.3 ; python_version >= '3.12' and python_version < '3.13' # (Noble)
+greenlet==3.1.1 ; python_version >= '3.13' and python_version < '3.14'  # (Trixie)
+greenlet==3.3.2 ; python_version >= '3.14'  # (Resolute)
 h11==0.16.0  # packaged as 0.14.0~1 on debian/ubuntu, ~1 is a CVE patch, 0.16.0 has the patch.
 idna==3.6 ; python_version >= '3.12'
 Jinja2==3.1.2 ; python_version > '3.10'
@@ -38,11 +38,10 @@ psycopg2==2.9.10 ; python_version >= '3.13' # (Trixie)
 pyopenssl==24.1.0 ; python_version >= '3.12' # (Noble) min 23.2.0, pinned for compatibility with cryptography==42.0.8 and security patches
 PyPDF2==2.12.1 ; python_version < '3.13' # (Noble and below)
 PyPDF==5.4.0 ; python_version >= '3.13' # (Trixie)
-pypiwin32 ; sys_platform == 'win32'
 pyserial==3.5
 python-dateutil==2.8.2 ; python_version >= '3.11'
-python-magic==0.4.27; sys_platform != 'win32' and python_version >= '3.12'  # (noble)
-python-ldap==3.4.4 ; sys_platform != 'win32' and python_version >= '3.12'  # (Noble) Mostly to have a wheel package
+python-magic==0.4.27; python_version >= '3.12'  # (noble)
+python-ldap==3.4.4 ; python_version >= '3.12'  # (Noble) Mostly to have a wheel package
 python-stdnum==1.19 ; python_version >= '3.11' and python_version < '3.14'
 python-stdnum==2.2 ; python_version >= '3.14'  # (Resolute)
 pyusb==1.2.1
@@ -50,8 +49,6 @@ qrcode==7.4.2 ; python_version >= '3.11'
 reportlab==4.1.0 ; python_version >= '3.12' # (Noble) Mostly to have a wheel package
 requests==2.31.0 ; python_version >= '3.11' # (Noble)
 rjsmin==1.2.0 ; python_version >= '3.11'
-rl-renderPM==4.0.3 ; sys_platform == 'win32' and python_version >= '3.12'  # Needed by reportlab 4.1.0 but included in deb package
-tzdata; sys_platform == 'win32'  # no version pinning to keep it updated, assume *nix have tzdata (it's a dep of python on debian, fedora, and arch)
 urllib3==2.0.7  ; python_version >= '3.12'  # (Noble) Compatibility with cryptography
 vobject==0.9.6.1 ; python_version < '3.14'
 vobject==0.9.9 ; python_version >= '3.14'  # (Resolute)

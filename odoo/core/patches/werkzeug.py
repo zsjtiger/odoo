@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import contextlib
 import operator
-import os
 import re
 import sys
 import typing as t
@@ -294,10 +293,7 @@ class BaseURL(_URLTuple):
         host = self.netloc or None
 
         if pathformat is None:
-            if os.name == "nt":
-                pathformat = "windows"
-            else:
-                pathformat = "posix"
+            pathformat = "posix"
 
         if pathformat == "windows":
             if path[:1] == "/" and path[1:2].isalpha() and path[2:3] in "|:":

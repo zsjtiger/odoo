@@ -59,8 +59,7 @@ from odoo.orm import sql_db
 from odoo.http.server import HTTPSocket
 from odoo.modules.registry import Registry
 from odoo.orm.cache import log_ormcache_stats
-from odoo.release import nt_service_name
-from odoo.tools import OrderedSet, config, gc, osutil, profiler
+from odoo.tools import OrderedSet, config, gc, profiler
 from odoo.tools.misc import dumpstacks, mute_logger, stripped_sys_argv
 from odoo.tools.osutil import memory_info
 
@@ -239,7 +238,7 @@ class CommonServer:
             # of the other side (or something), see
             # http://bugs.python.org/issue4397
             # note: stdlib fixed test, not behavior
-            if e.errno != errno.ENOTCONN or platform.system() not in ['Darwin', 'Windows']:
+            if e.errno != errno.ENOTCONN or platform.system() != 'Darwin':
                 raise
         sock.close()
 
@@ -523,9 +522,6 @@ class ThreadedServer(CommonServer):
             signal.signal(signal.SIGQUIT, dumpstacks)
             signal.signal(signal.SIGUSR1, log_ormcache_stats)
             signal.signal(signal.SIGUSR2, log_ormcache_stats)
-        elif os.name == 'nt':
-            import win32api  # noqa: PLC0415
-            win32api.SetConsoleCtrlHandler(lambda sig: self.signal_handler(sig, None), 1)
 
         if config['test_enable'] or (config['http_enable'] and not stop):
             # some tests need the http daemon to be available...
@@ -1442,8 +1438,6 @@ def _reexec(updated_modules=None):
     environments, use a supervisor/subprocess design to respawn the server
     as a subprocess on each reload which matches debugpy's requirements.
     """
-    if osutil.is_running_as_nt_service():
-        subprocess.call(f'net stop {nt_service_name} && net start {nt_service_name}', shell=True)
     exe = os.path.basename(sys.executable)
     args = stripped_sys_argv()
     if updated_modules:
@@ -1623,8 +1617,4 @@ def start(preload=None, stop=False):
 def restart():
     """ Restart the server
     """
-    if os.name == 'nt':
-        # run in a thread to let the current thread return response to the caller.
-        threading.Thread(target=_reexec).start()
-    else:
-        os.kill(server.pid, signal.SIGHUP)
+    os.kill(server.pid, signal.SIGHUP)
