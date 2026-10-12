@@ -43,19 +43,20 @@ import psycopg2.extensions
 
 from odoo.exceptions import AccessError, LockError, MissingError, ValidationError, UserError
 from odoo.tools import (
-    clean_context, format_list,
-    frozendict, get_lang, OrderedSet,
+    clean_context, frozendict, get_lang, OrderedSet,
     partition, split_every, unique,
     SQL, sql, groupby,
 )
 from odoo.tools.constants import BIG_RECORDSET_SIZE, IN_MAX
 from odoo.tools.func import deprecated
 from odoo.tools.lru import LRU
-from odoo.tools.misc import ReversedIterable, exception_to_unicode, unquote
+from odoo.tools.misc import ReversedIterable, unquote
 from odoo.tools.safe_eval import _UNSAFE_ATTRIBUTES, safe_checker
 from odoo.tools.translate import _, LazyTranslate
 
 from . import access as orm_access
+from . import schema as orm_schema
+
 from . import decorators as api
 from .commands import Command
 from .domains import Domain
@@ -67,7 +68,7 @@ from .fields_textual import Char, StoredTranslations
 from .identifiers import NewId
 from .query import Query, TableSQL
 from .utils import (
-    OriginIds, Prefetch, ReversibleComparator, check_object_name, parse_field_expr,
+    OriginIds, Prefetch, ReversibleComparator, parse_field_expr,
     COLLECTION_TYPES, SQL_OPERATORS,
     SUPERUSER_ID,
 )
@@ -127,12 +128,6 @@ def parse_read_group_spec(spec: str) -> tuple:
 
     groups = res_match.groups()
     return groups[0], groups[2], groups[3]
-
-
-def raise_on_invalid_object_name(name):
-    if not check_object_name(name):
-        msg = "The _name attribute %s is not valid." % name
-        raise ValueError(msg)
 
 
 def fix_import_export_id_paths(fieldname):
@@ -1047,7 +1042,7 @@ class BaseModel(metaclass=MetaModel):
                     info = rec_data['info']
                     pg_error_info = {'message': self._sql_error_to_message(e)}
                     if e.diag.table_name == self._table:
-                        e_fields = get_columns_from_sql_diagnostics(self.env.cr, e.diag, check_registry=True)
+                        e_fields = orm_schema.get_columns_from_sql_diagnostics(self.env.cr, e.diag, check_registry=True)
                         if len(e_fields) == 1:
                             pg_error_info['field'] = e_fields[0]
                     messages.append(dict(info, type='error', **pg_error_info))
@@ -2460,32 +2455,7 @@ class BaseModel(metaclass=MetaModel):
         self.invalidate_model(['parent_path'])
 
     def _check_removed_columns(self, log=False):
-        if self._abstract:
-            return
-        # iterate on the database columns to drop the NOT NULL constraints of
-        # fields which were required but have been removed (or will be added by
-        # another module)
-        cr = self.env.cr
-        cols = [name for name, field in self._fields.items()
-                     if field.store and field.column_type]
-        cr.execute(SQL(
-            """ SELECT a.attname, a.attnotnull
-                  FROM pg_class c, pg_attribute a
-                 WHERE c.relname=%s
-                   AND c.relnamespace = current_schema::regnamespace
-                   AND c.oid=a.attrelid
-                   AND a.attisdropped=%s
-                   AND pg_catalog.format_type(a.atttypid, a.atttypmod) NOT IN ('cid', 'tid', 'oid', 'xid')
-                   AND a.attname NOT IN %s """,
-            self._table, False, tuple(cols),
-        ))
-
-        for row in cr.dictfetchall():
-            if log:
-                _logger.debug("column %s is in the table %s but not in the corresponding object %s",
-                              row['attname'], self._table, self._name)
-            if row['attnotnull']:
-                sql.drop_not_null(cr, self._table, row['attname'])
+        return orm_schema.check_removed_columns(self, log=log)
 
     @deprecated("Since 20.0, field initialization is defined in Field.init_storage")
     def _init_column(self, column_name):
@@ -2520,68 +2490,7 @@ class BaseModel(metaclass=MetaModel):
             the model's database schema by overriding method :meth:`~.init`,
             which is called right after this one.
         """
-        raise_on_invalid_object_name(self._name)
-
-        # This prevents anything called by this method (in particular default
-        # values) from prefetching a field for which the corresponding column
-        # has not been added in database yet!
-        self = self.with_context(prefetch_fields=False)
-
-        cr = self.env.cr
-        update_custom_fields = self.env.context.get('update_custom_fields', False)
-        must_create_table = not sql.table_exists(cr, self._table)
-        parent_path_compute = False
-
-        if self._auto:
-            if must_create_table:
-                def make_type(field):
-                    typ = field.stored_sql_column_type
-                    if field.required:
-                        typ = SQL("%s NOT NULL", typ)
-                    return typ
-
-                sql.create_model_table(cr, self._table, self._description, [
-                    (field.name, make_type(field), field.string)
-                    for field in sorted(self._fields.values(), key=lambda f: f.column_order)
-                    if field.name != 'id' and field.store and field.column_type
-                ])
-                from odoo.modules.db import RANDOM_SERIAL  # noqa: PLC0415
-                if RANDOM_SERIAL and not self._name.startswith('test'):
-                    # Randomize first sequence number to avoid having records
-                    # with similar ids when testing. For example, avoid having
-                    # first res_users and res_partner sharing the same id.
-                    # Just using the number of existing tables multiplied by a
-                    # prime.
-                    cr.execute("""
-                        SELECT setval(
-                            pg_get_serial_sequence(%s, 'id'),
-                            abs(hashtext(%s)) %% 97 + 103)""",
-                        (self._table, self._table))
-
-            if self._parent_store:
-                if not sql.column_exists(cr, self._table, 'parent_path'):
-                    sql.create_column(self.env.cr, self._table, 'parent_path', 'varchar')
-                    parent_path_compute = True
-                self._check_parent_path()
-
-            if not must_create_table:
-                self._check_removed_columns(log=False)
-
-            # update the database schema for fields
-            columns = sql.table_columns(cr, self._table)
-
-            for field in sorted(self._fields.values(), key=lambda f: f.column_order):
-                if not field.store:
-                    continue
-                if field.manual and not update_custom_fields:
-                    continue            # don't update custom fields
-                field.update_db(self, columns)
-
-        if self._auto:
-            self._add_sql_constraints()
-
-        if parent_path_compute:
-            self._parent_store_compute()
+        return orm_schema.auto_init(self)
 
     @api.private
     def init(self) -> None:
@@ -2590,18 +2499,13 @@ class BaseModel(metaclass=MetaModel):
         """
 
     def _check_parent_path(self):
-        field = self._fields.get('parent_path')
-        if field is None:
-            _logger.error("add a field parent_path on model %r: `parent_path = fields.Char(index=True)`.", self._name)
-        elif not field.index:
-            _logger.error('parent_path field on model %r should be indexed! Add index=True to the field definition.', self._name)
+        return orm_schema.check_parent_path(self)
 
     def _add_sql_constraints(self):
         """ Modify this model's database table objects so they match the one
         in _table_objects.
         """
-        for obj in self._table_objects.values():
-            obj.apply_to_database(self)
+        return orm_schema.add_sql_constraints(self)
 
     @api.model
     def _sql_error_to_message(self, exc: psycopg2.Error) -> str:
@@ -2609,69 +2513,12 @@ class BaseModel(metaclass=MetaModel):
 
         Note that the cursor on self has to be in a valid state.
         """
-        if (constraint_name := exc.diag.constraint_name) and (cons := self._table_objects.get(constraint_name)):
-            cons_rec = self.env['ir.model.constraint'].sudo().search_fetch([
-                ('name', '=', constraint_name),
-                ('model.model', '=', self._name),
-            ], ['message'], limit=1)
-            if message := cons_rec.message:
-                return message
-            # get the message from the object
-            if message := cons.get_error_message(self, exc.diag):
-                return message
-        return self._sql_error_to_message_generic(exc)
+        return orm_schema.sql_error_to_message(self, exc=exc)
 
     @api.model
     def _sql_error_to_message_generic(self, exc: psycopg2.Error) -> str:
         """ Convert a database exception to a generic user error message. """
-        diag = exc.diag
-        unknown = self.env._('Unknown')
-        model_string = self.env['ir.model']._get(self._name).name or self._description
-        info = {
-            'model_display': f"'{model_string}' ({self._name})",
-            'table_name': diag.table_name,
-            'constraint_name': diag.constraint_name,
-        }
-        if self._table == diag.table_name:
-            columns = get_columns_from_sql_diagnostics(self.env.cr, diag, check_registry=True)
-        else:
-            columns = get_columns_from_sql_diagnostics(self.env.cr, diag)
-            info['model_display'] = unknown
-        if not columns:
-            info['field_display'] = unknown
-        elif len(columns) == 1 and (field := self._fields.get(columns[0])):
-            field_string = field._description_string(self.env)
-            info['field_display'] = f"'{field_string}' ({field.name})"
-        else:
-            info['field_display'] = f"'{format_list(self.env, columns)}'"
-
-        if isinstance(exc, psycopg2.errors.NotNullViolation):
-            return self.env._(
-                "Missing required field %(field_display)s for model %(model_display)s",
-                **info,
-            )
-
-        if isinstance(exc, psycopg2.errors.ForeignKeyViolation):
-            if len(columns) != 1:
-                info['field_display'] = info['constraint_name']
-            return self.env._(
-                "Another model is using the record you are trying to delete.\n\n"
-                "The troublemaker is: %(model_display)s\n"
-                "Thanks to the following constraint: %(field_display)s\n"
-                "How about archiving the record instead?",
-                **info,
-            )
-
-        if isinstance(exc, psycopg2.errors.UniqueViolation) and columns:
-            column_names = [self._fields[f].string if f in self._fields else f for f in columns]
-            info['field_display'] = f"'{', '.join(columns)}' ({format_list(self.env, column_names)})"
-            info['detail'] = diag.message_detail  # contains conflicting key and value
-            return self.env._("The value for %(field_display)s already exists.\n\nDetail: %(detail)s\n", **info)
-
-        # No good message can be created for psycopg2.errors.CheckViolation
-
-        # fallback
-        return exception_to_unicode(exc)
+        return orm_schema.sql_error_to_message_generic(self, exc=exc)
 
     @api.model
     def fields_get(self, allfields: Collection[str] | None = None, attributes: Collection[str] | None = None) -> dict[str, ValuesType]:
@@ -6401,28 +6248,3 @@ def itemgetter_tuple(items):
     if len(items) == 1:
         return lambda gettable: (gettable[items[0]],)
     return itemgetter(*items)
-
-
-def get_columns_from_sql_diagnostics(cr, diagnostics, *, check_registry=False) -> list[str]:
-    """Given the diagnostics of an error, return the affected column names by the constraint.
-    Return an empty list if we cannot determine the columns.
-    """
-    if column := diagnostics.column_name:
-        return [column]
-    if not check_registry:
-        return []
-    cr.execute(SQL("""
-        SELECT
-            ARRAY(
-                SELECT attname FROM pg_attribute
-                WHERE attrelid = conrelid
-                AND attnum = ANY(conkey)
-            ) as "columns"
-        FROM pg_constraint
-        JOIN pg_class t ON t.oid = conrelid
-        WHERE conname = %s
-            AND t.relname = %s
-            AND t.relnamespace = current_schema::regnamespace
-    """, diagnostics.constraint_name, diagnostics.table_name))
-    columns = cr.fetchone()
-    return columns[0] if columns else []
