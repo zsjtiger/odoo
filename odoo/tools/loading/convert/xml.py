@@ -1,65 +1,29 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+"""Import of the XML data files: the records, the evaluation of their fields and the XML documents."""
 
-__all__ = [
-    'convert_file',
-]
-import csv
-import io
 import logging
 import os.path
 import pprint
 import re
 import subprocess
-import typing
 import warnings
-import zoneinfo
-from datetime import datetime, timedelta, UTC, tzinfo
-
-from dateutil.relativedelta import relativedelta
 from lxml import etree, builder
-try:
-    import jingtrang
-except ImportError:
-    jingtrang = None
-
 from odoo.tools.files.binary import BinaryBytes
 from odoo.tools.config import config
 from odoo.tools.misc import file_open, file_path, SKIPPED_ELEMENT_TYPES
 from odoo.tools.safe_eval import _UNSAFE_ATTRIBUTES
 from odoo.exceptions import ValidationError
+from odoo.tools.safe_eval import safe_eval
 
-from odoo.tools.safe_eval import safe_eval, time
+from .common import ConvertMode, IdRef, ParseError, _get_eval_context, nodeattr2bool, str2bool
 
-_logger = logging.getLogger(__name__)
+_logger = logging.getLogger('odoo.tools.loading.convert')
 
-ConvertMode = typing.Literal['init', 'update']
-IdRef = dict[str, int | typing.Literal[False]]
-
-
-class Pytz(typing.NamedTuple):
-    timezone: typing.Callable[[str], zoneinfo.ZoneInfo]
-    utc: tzinfo
-    UTC: tzinfo
+try:
+    import jingtrang
+except ImportError:
+    jingtrang = None
 
 
-class ParseError(Exception):
-    ...
-
-
-def _get_eval_context(self, env, model_str):
-    from odoo import fields, release  # noqa: PLC0415
-    context = dict(Command=fields.Command,
-                  time=time,
-                  DateTime=datetime,
-                  datetime=datetime,
-                  timedelta=timedelta,
-                  relativedelta=relativedelta,
-                  version=release.major_version,
-                  ref=self.id_get,
-                  pytz=Pytz(zoneinfo.ZoneInfo, UTC, UTC))
-    if model_str:
-        context['obj'] = env[model_str].browse
-    return context
 
 def _fix_multiple_roots(node):
     """
@@ -78,6 +42,7 @@ def _fix_multiple_roots(node):
         for child in node:
             data_node.append(child)
         node.append(data_node)
+
 
 def _eval_xml(self, node, env):
     if node.tag in ('field','value'):
@@ -222,17 +187,6 @@ def _eval_xml(self, node, env):
     elif node.tag == "test":
         return node.text
 
-
-def str2bool(value):
-    return value.lower() not in ('0', 'false', 'off')
-
-def nodeattr2bool(node, attr, default=False):
-    if not node.get(attr):
-        return default
-    val = node.get(attr).strip()
-    if not val:
-        return default
-    return str2bool(val)
 
 class xml_import(object):
     def get_env(self, node, eval_context=None):
@@ -687,97 +641,6 @@ form: module.record_id""" % (xml_id,)
         assert de.tag in self.DATA_ROOTS, "Root xml tag must be <openerp>, <odoo> or <data>."
         self._tag_root(de)
     DATA_ROOTS = ['odoo', 'data', 'openerp']
-
-
-def convert_file(
-        env,
-        module,
-        filename,
-        idref: IdRef | None,
-        mode: ConvertMode = 'update',
-        noupdate=False,
-        kind=None,
-        pathname=None,
-):
-    if kind is not None:
-        warnings.warn(
-            "The `kind` argument is deprecated in Odoo 19.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-    if pathname is None:
-        pathname = os.path.join(module, filename)
-    ext = os.path.splitext(filename)[1].lower()
-
-    with file_open(pathname, 'rb', env=env) as fp:
-        if ext == '.csv':
-            convert_csv_import(env, module, pathname, fp.read(), idref, mode, noupdate)
-        elif ext == '.sql':
-            env.cr.execute(fp.read())  # pylint: disable=sql-injection
-        elif ext == '.xml':
-            convert_xml_import(env, module, fp, idref, mode, noupdate)
-        elif ext == '.js':
-            pass # .js files are valid but ignored here.
-        else:
-            raise ValueError("Can't load unknown file type %s.", filename)
-
-
-def convert_csv_import(
-        env,
-        module,
-        fname,
-        csvcontent,
-        idref: IdRef | None = None,
-        mode: ConvertMode = 'init',
-        noupdate=False,
-):
-    '''Import csv file :
-        quote: "
-        delimiter: ,
-        encoding: utf-8'''
-    env = env(context=dict(env.context, lang=None))
-    filename, _ext = os.path.splitext(os.path.basename(fname))
-    model = filename.split('-')[0]
-    reader = csv.reader(io.StringIO(csvcontent.decode()), quotechar='"', delimiter=',')
-    fields = next(reader)
-
-    if not (mode == 'init' or 'id' in fields):
-        _logger.error("Import specification does not contain 'id' and we are in init mode, Cannot continue.")
-        return
-
-    translate_indexes = {i for i, field in enumerate(fields) if '@' in field}
-    def remove_translations(row):
-        return [cell for i, cell in enumerate(row) if i not in translate_indexes]
-
-    fields = remove_translations(fields)
-    if not fields:
-        return
-
-    # clean the data from translations (treated during translation import), then
-    # filter out empty lines (any([]) == False) and lines containing only empty cells
-    datas = [
-        data_line for line in reader
-        if any(data_line := remove_translations(line))
-    ]
-
-    context = {
-        'mode': mode,
-        'module': module,
-        'install_mode': True,
-        'install_module': module,
-        'install_filename': fname,
-        'noupdate': noupdate,
-    }
-    result = env[model].with_context(**context).load(fields, datas)
-    if any(msg['type'] == 'error' for msg in result['messages']):
-        # Report failed import and abort module install
-        warning_msg = "\n".join(msg['message'] for msg in result['messages'])
-        raise Exception(env._(
-            "Module loading %(module)s failed: file %(file)s could not be processed:\n%(message)s",
-            module=module,
-            file=fname,
-            message=warning_msg,
-        ))
 
 
 def convert_xml_import(

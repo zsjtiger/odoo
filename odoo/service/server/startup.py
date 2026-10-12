@@ -129,7 +129,7 @@ def preload_registries(dbnames):
                 if config['test_enable']:
                     from odoo.tests import loader  # noqa: PLC0415
                     t0 = time.time()
-                    t0_sql = sql_db.sql_counter
+                    t0_sql = sql_db.cursor.sql_counter
                     module_names = sorted(registry.updated_modules if update_module else
                                     registry._init_modules)
                     _logger.info("Starting post tests")
@@ -145,7 +145,7 @@ def preload_registries(dbnames):
                     _logger.info("%d post-tests in %.2fs, %s queries",
                                 registry._assertion_report.testsRun - tests_before,
                                 time.time() - t0,
-                                sql_db.sql_counter - t0_sql)
+                                sql_db.cursor.sql_counter - t0_sql)
 
                     registry._assertion_report.log_stats()
                 if registry._assertion_report and not registry._assertion_report.wasSuccessful():

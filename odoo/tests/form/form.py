@@ -1,27 +1,23 @@
-# -*- coding: utf-8 -*-
-"""
-The module :mod:`odoo.tests.form` provides an implementation of a client form
-view for server-side unit tests.
-"""
+"""The form of the tests: it simulates the onchanges and the view of a record."""
+
 from __future__ import annotations
 
 import ast
 import collections
 import collections.abc
-import itertools
 import logging
-from datetime import datetime, date
-
+from datetime import date
 from lxml import etree
-
-from odoo import api, fields
+from odoo import api
 from odoo.models import BaseModel
 from odoo.fields import Command
 from odoo.tools.safe_eval import safe_eval
 
-_logger = logging.getLogger(__name__)
+from .proxies import M2MProxy, X2MProxy
+from .utils import Dotter, MODIFIER_ALIASES, _cleanup_from_default, convert_read_to_form, get_static_context
+from .values import UpdateDict
 
-MODIFIER_ALIASES = {'1': 'True', '0': 'False'}
+_logger = logging.getLogger('odoo.tests.form')
 
 
 class Form:
@@ -715,163 +711,6 @@ class O2MForm(Form):
         return values
 
 
-class UpdateDict(dict):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self._changed = set()
-        if args and isinstance(args[0], UpdateDict):
-            self._changed.update(args[0]._changed)
-
-    def __repr__(self):
-        items = [
-            f"{key!r}{'*' if key in self._changed else ''}: {val!r}"
-            for key, val in self.items()
-        ]
-        return f"{{{', '.join(items)}}}"
-
-    def changed_items(self):
-        return (
-            (k, v) for k, v in self.items()
-            if k in self._changed
-        )
-
-    def update(self, *args, **kw):
-        super().update(*args, **kw)
-        if args and isinstance(args[0], UpdateDict):
-            self._changed.update(args[0]._changed)
-
-    def clear(self):
-        super().clear()
-        self._changed.clear()
-
-
-class X2MValue(collections.abc.Sequence):
-    """ The value of a one2many field, with the API of a sequence of record ids. """
-    _virtual_seq = itertools.count()
-
-    def __init__(self, iterable_of_vals=()):
-        self._data = {vals['id']: UpdateDict(vals) for vals in iterable_of_vals}
-
-    def __repr__(self):
-        return repr(self._data)
-
-    def __contains__(self, id_):
-        return id_ in self._data
-
-    def __getitem__(self, index):
-        return list(self._data)[index]
-
-    def __iter__(self):
-        return iter(self._data)
-
-    def __len__(self):
-        return len(self._data)
-
-    def __eq__(self, other):
-        # this enables to compare self with a list
-        return list(self) == other
-
-    def get_vals(self, id_):
-        return self._data[id_]
-
-    def add(self, id_, vals):
-        assert id_ not in self._data
-        self._data[id_] = UpdateDict(vals)
-
-    def remove(self, id_):
-        self._data.pop(id_)
-
-    def clear(self):
-        self._data.clear()
-
-    def create(self, vals):
-        id_ = f'virtual_{next(self._virtual_seq)}'
-        create_vals = UpdateDict(vals)
-        create_vals._changed.update(vals)
-        self._data[id_] = create_vals
-
-    def update(self, id_, changes, changed=()):
-        vals = self._data[id_]
-        vals.update(changes)
-        vals._changed.update(changed)
-
-    def to_list_of_vals(self):
-        return list(self._data.values())
-
-
-class O2MValue(X2MValue):
-    def __init__(self, iterable_of_vals=()):
-        super().__init__(iterable_of_vals)
-        self._given = list(self._data)
-
-    def to_commands(self, convert_values=lambda vals: vals):
-        given = set(self._given)
-        result = []
-        for id_, vals in self._data.items():
-            if isinstance(id_, str) and id_.startswith('virtual_'):
-                result.append((Command.CREATE, id_, convert_values(vals)))
-                continue
-            if id_ not in given:
-                result.append(Command.link(id_))
-            if vals._changed:
-                result.append(Command.update(id_, convert_values(vals)))
-        for id_ in self._given:
-            if id_ not in self._data:
-                result.append(Command.delete(id_))
-        return result
-
-
-class M2MValue(X2MValue):
-    def __init__(self, iterable_of_vals=()):
-        super().__init__(iterable_of_vals)
-        self._given = list(self._data)
-
-    def to_commands(self):
-        given = set(self._given)
-        result = []
-        for id_, vals in self._data.items():
-            if isinstance(id_, str) and id_.startswith('virtual_'):
-                result.append((Command.CREATE, id_, {
-                    key: val.to_commands() if isinstance(val, X2MValue) else val
-                    for key, val in vals.changed_items()
-                }))
-                continue
-            if id_ not in given:
-                result.append(Command.link(id_))
-            if vals._changed:
-                result.append(Command.update(id_, {
-                    key: val.to_commands() if isinstance(val, X2MValue) else val
-                    for key, val in vals.changed_items()
-                }))
-        for id_ in self._given:
-            if id_ not in self._data:
-                result.append(Command.unlink(id_))
-        return result
-
-
-class X2MProxy:
-    """ A proxy represents the value of an x2many field, but not directly.
-    Instead, it provides an API to add, remove or edit records in the value.
-    """
-    _form = None        # Form containing the corresponding x2many field
-    _field = None       # name of the x2many field
-    _field_info = None  # field info
-
-    def __init__(self, form, field_name):
-        self._form = form
-        self._field = field_name
-        self._field_info = form._view['fields'][field_name]
-        self._field_value = form._values[field_name]
-
-    @property
-    def ids(self):
-        return list(self._field_value)
-
-    def _assert_editable(self):
-        assert not self._form._get_modifier(self._field, 'readonly'), f'field {self._field!r} is not editable'
-        assert not self._form._get_modifier(self._field, 'invisible'), f'field {self._field!r} is not visible'
-
-
 class O2MProxy(X2MProxy):
     """ Proxy object for editing the value of a one2many field. """
     def __len__(self):
@@ -921,141 +760,3 @@ class O2MProxy(X2MProxy):
         self._assert_editable()
         self._field_value.remove(self._field_value[index])
         self._form._perform_onchange(self._field)
-
-
-class M2MProxy(X2MProxy, collections.abc.Sequence):
-    """ Proxy object for editing the value of a many2many field.
-
-    Behaves as a :class:`~collection.Sequence` of recordsets, can be
-    indexed or sliced to get actual underlying recordsets.
-    """
-    def __getitem__(self, index):
-        comodel_name = self._field_info['relation']
-        return self._form._env[comodel_name].browse(self._field_value[index])
-
-    def __len__(self):
-        return len(self._field_value)
-
-    def __iter__(self):
-        comodel_name = self._field_info['relation']
-        records = self._form._env[comodel_name].browse(self._field_value)
-        return iter(records)
-
-    def __contains__(self, record):
-        comodel_name = self._field_info['relation']
-        assert isinstance(record, BaseModel) and record._name == comodel_name
-        return record.id in self._field_value
-
-    def add(self, record):
-        """ Adds ``record`` to the field, the record must already exist.
-
-        The addition will only be finalized when the parent record is saved.
-        """
-        self._assert_editable()
-        parent = self._form
-        comodel_name = self._field_info['relation']
-        assert isinstance(record, BaseModel) and record._name == comodel_name, \
-            f"trying to assign a {record._name!r} object to a {comodel_name!r} field"
-
-        if record.id not in self._field_value:
-            self._field_value.add(record.id, {'id': record.id})
-            parent._perform_onchange(self._field)
-
-    # pylint: disable=redefined-builtin
-    def remove(self, id=None, index=None):
-        """ Removes a record at a certain index or with a provided id from
-        the field.
-        """
-        self._assert_editable()
-        assert (id is None) ^ (index is None), "can remove by either id or index"
-        if id is None:
-            id = self._field_value[index]
-        self._field_value.remove(id)
-        self._form._perform_onchange(self._field)
-
-    def set(self, records):
-        """ Set the field value to be ``records``. """
-        self._assert_editable()
-        comodel_name = self._field_info['relation']
-        assert isinstance(records, BaseModel) and records._name == comodel_name, \
-            f"trying to assign a {records._name!r} object to a {comodel_name!r} field"
-
-        if set(records.ids) != set(self._field_value):
-            self._field_value.clear()
-            for id_ in records.ids:
-                self._field_value.add(id_, {'id': id_})
-            self._form._perform_onchange(self._field)
-
-    def clear(self):
-        """ Removes all existing records in the m2m
-        """
-        self._assert_editable()
-        self._field_value.clear()
-        self._form._perform_onchange(self._field)
-
-
-def convert_read_to_form(values, model_fields):
-    result = {}
-    for fname, value in values.items():
-        field_info = {'type': 'id'} if fname == 'id' else model_fields[fname]
-        if field_info['type'] == 'one2many':
-            if 'edition_view' in field_info:
-                subfields = field_info['edition_view']['fields']
-                value = O2MValue(convert_read_to_form(vals, subfields) for vals in (value or ()))
-            else:
-                value = O2MValue({'id': id_} for id_ in (value or ()))
-        elif field_info['type'] == 'many2many':
-            value = M2MValue({'id': id_} for id_ in (value or ()))
-        elif field_info['type'] == 'datetime' and isinstance(value, datetime):
-            value = fields.Datetime.to_string(value)
-        elif field_info['type'] == 'date' and isinstance(value, date):
-            value = fields.Date.to_string(value)
-        result[fname] = value
-    return result
-
-
-def _cleanup_from_default(type_, value):
-    if not value:
-        if type_ == 'one2many':
-            return O2MValue()
-        elif type_ == 'many2many':
-            return M2MValue()
-        elif type_ in ('integer', 'float'):
-            return 0
-        return value
-
-    if type_ == 'one2many':
-        raise NotImplementedError()
-    elif type_ == 'datetime' and isinstance(value, datetime):
-        return fields.Datetime.to_string(value)
-    elif type_ == 'date' and isinstance(value, date):
-        return fields.Date.to_string(value)
-    return value
-
-
-def get_static_context(context_str):
-    """ Parse the given context string, and return the literal part of it. """
-    context_ast = ast.parse(context_str.strip(), mode='eval').body
-    assert isinstance(context_ast, ast.Dict)
-    result = {}
-    for key_ast, val_ast in zip(context_ast.keys, context_ast.values):
-        try:
-            key = ast.literal_eval(key_ast)
-            val = ast.literal_eval(val_ast)
-            result[key] = val
-        except ValueError:
-            pass
-    return result
-
-
-class Dotter:
-    """ Simple wrapper for a dict where keys are accessed as readonly attributes. """
-    __slots__ = ['__values']
-
-    def __init__(self, values):
-        self.__values = values
-
-    def __getattr__(self, key):
-        val = self.__values[key]
-        return Dotter(val) if isinstance(val, dict) else val
-

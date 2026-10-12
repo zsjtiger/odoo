@@ -1,25 +1,11 @@
-"""
-Runtime analysis for arbitrary code evaluated with the `evaluation.py` module.
+"""Whitelist of the objects, the classes and the functions that the safe evaluation trusts."""
 
-- `safe_transformer`:
-    A specialized `ast.NodeTransformer` that rewrites the source.
-
-- `safe_checker`:
-    The logic engine responsible for inspecting objects at runtime.
-
-- `safe_whitelist`:
-    A collection of trusted objects (defined as regex and object references).
-"""
-import ast
 import functools
-import logging
 import os
 import re
 import sys
 import typing
 from collections import OrderedDict, defaultdict
-from contextvars import ContextVar
-from enum import IntEnum, auto
 from json.encoder import c_make_encoder  # noqa: OLS02001
 from types import (
     BuiltinMethodType,
@@ -38,67 +24,12 @@ from types import (
     _GeneratorWrapper,  # noqa: OLS02001
 )
 from weakref import WeakKeyDictionary
+from ...config import config
+from ...func import lazy
+from ...misc import OrderedSet
 
-from ..config import config
-from ..func import lazy
-from ..misc import OrderedSet
-
-__all__ = [
-    'safe_checker',
-    'safe_transform',
-    'safe_whitelist',
-    'unsafe_policy',
-]
-
-_logger_runtime = logging.getLogger(__name__)
-
-
-class UnsafePolicy(IntEnum):
-    DISABLE = 0
-    LOG = auto()
-    RAISE = auto()
-    TERMINATE = auto()
-
-
-@functools.cache
-def unsafe_policy():
-    policy = UnsafePolicy[config['unsafe_policy'].upper()]
-
-    if policy and c_make_encoder is None:
-        _logger_runtime.warning(
-            "Unsafe object policy '%s' is configured, but it is not supported on this runtime "
-            "(missing native encoder). The policy will be ignored.",
-            policy.name,
-        )
-        policy = UnsafePolicy.DISABLE
-
-    return policy
-
-
-class UnsafeError(BaseException):
-    """
-    Base class for exceptions triggered by unsafe operations.
-
-    Ideally used as a high-level handler to catch exceptions related
-    to unsafe errors.
-    Since this inherits from `BaseException`, it will bypass standard
-    `except Exception:` blocks.
-    """
-
-
-class UnsafeContextError(UnsafeError):
-    """ Exception raised when the evaluation context is unsafe. """
-
-
-class UnsafeObjectError(UnsafeError):
-    """ Exception raised when an object is unsafe. """
-
-
-class UnsafeModuleError(UnsafeObjectError):
-
-    def __init__(self, obj):
-        super().__init__(f'Unsafe module access: {obj!r}')
-
+from .errors import UnsafeContextError, UnsafeError, UnsafeModuleError, UnsafeObjectError, _logger_runtime, handle_unsafe_error
+from .transformer import encoder_ctx, safe_transformer
 
 class UnsafeClassError(UnsafeObjectError):
 
@@ -123,165 +54,6 @@ class UnsafeFunctionError(UnsafeObjectError):
         super().__init__(
             f'Unsafe function access: {obj!r} (type: {type(obj)!r}, path: {obj_path})',
         )
-
-
-def handle_unsafe_error(error):
-    _logger_runtime.warning(error)
-    if unsafe_policy() is UnsafePolicy.RAISE:
-        raise error
-    if unsafe_policy() is UnsafePolicy.TERMINATE:
-        os._exit(1)
-
-
-is_gen_ctx: ContextVar[bool] = ContextVar('is_gen_ctx', default=False)
-
-
-class _SafeTransformer(ast.NodeTransformer):
-    """
-    Code transformer that wraps calls with :func:`_safe_eval_call` in
-    order to check that the arguments are "safe".
-    """
-
-    # In Qweb, we use the transformer to modify the python expression.
-    # The ast will not be compiled, but instead "unparsed" in the transpiled template.
-    # The expression will be used later and therefore re-parsed.
-    # It is therefore necessary for the identifiers to be valid.
-
-    CALL_ID = '_safe_eval_call'
-    DECO_ID = '_safe_eval_deco'
-    GEN_FUNC_ID = '_safe_eval_gen_func'
-    GEN_ITER_ID = '_safe_eval_gen_iter'
-
-    def visit_Call(self, node):
-        """
-        Transforms:
-            func(*args, **kwargs)
-
-        Into:
-            _safe_eval_call(func, *args, **kwargs)
-        """
-        self.generic_visit(node)
-        call = ast.Call(
-            func=ast.Name(id=self.CALL_ID, ctx=ast.Load()),
-            args=[node.func, *node.args],
-            keywords=node.keywords)
-        ast.copy_location(call, node)
-        ast.copy_location(call.func, node)
-        return call
-
-    def visit_FunctionDef(self, node):
-        """
-        Transforms:
-            @decorator_A
-            @decorator_B
-            def func():
-                pass
-
-        Into:
-            @_safe_eval_deco(decorator_A)
-            @_safe_eval_deco(decorator_B)
-            def func():
-                pass
-
-        Note:
-            If the function produces a generator, a decorator is added to wrap
-            the result with `_safe_eval_gen_func`.
-        """
-        token = is_gen_ctx.set(False)
-        try:
-            self.generic_visit(node)
-            is_gen = is_gen_ctx.get()
-        finally:
-            is_gen_ctx.reset(token)
-
-        if not node.decorator_list and not is_gen:
-            return node
-
-        new_decorators = []
-
-        for decorator in node.decorator_list:
-            wrapped_decorator = ast.Call(
-                func=ast.Name(id=self.DECO_ID, ctx=ast.Load()),
-                args=[decorator],
-                keywords=[],
-            )
-            ast.copy_location(wrapped_decorator, decorator)
-            ast.copy_location(wrapped_decorator.func, decorator)
-            new_decorators.append(wrapped_decorator)
-
-        if is_gen:
-            gen_func_wrapper = ast.Name(id=self.GEN_FUNC_ID, ctx=ast.Load())
-            ast.copy_location(gen_func_wrapper, node)
-            new_decorators.append(gen_func_wrapper)
-
-        node.decorator_list = new_decorators
-
-        return node
-
-    def visit_Yield(self, node):
-        """ Set parent function definition as a generator function """
-        is_gen_ctx.set(True)
-        return self.generic_visit(node)
-
-    visit_YieldFrom = visit_Yield
-
-    def visit_GeneratorExp(self, node):
-        """
-        Transforms:
-            (_ for _ in [])
-
-        Into:
-            _safe_eval_gen_iter((_ for _ in []))
-        """
-        self.generic_visit(node)
-        call = ast.Call(
-            func=ast.Name(id=self.GEN_ITER_ID, ctx=ast.Load()),
-            args=[node],
-            keywords=[],
-        )
-        ast.copy_location(call, node)
-        ast.copy_location(call.func, node)
-        return call
-
-    def visit_Try(self, node):
-        """ Ensure no bare except is used """
-        self.generic_visit(node)
-
-        for handler in node.handlers:
-            if not handler.type:
-                _logger_runtime.warning(
-                    'Use blind except (`except Exception:`) instead of bare except',
-                )
-                if unsafe_policy() >= UnsafePolicy.RAISE:
-                    raise SyntaxError('You cannot use bare except, use `except Exception:`')
-
-        return node
-
-    def visit_AsyncFunctionDef(self, node):
-        # Prevent the use of `AsyncFor` node
-        _logger_runtime.warning(
-            'Asynchronous function should not be used',
-        )
-        if unsafe_policy() >= UnsafePolicy.RAISE:
-            raise SyntaxError('You cannot use asynchronous function')
-
-        return self.visit_FunctionDef(node)
-
-    def visit_comprehension(self, node):
-        """ Ensure async is not used """
-        self.generic_visit(node)
-
-        if node.is_async:
-            _logger_runtime.warning(
-                'Asynchronous comprehension should not be used',
-            )
-            if unsafe_policy() >= UnsafePolicy.RAISE:
-                raise SyntaxError('You cannot use asynchronous comprehension')
-
-        return node
-
-
-encoder_ctx = ContextVar('encoder_ctx')
 
 
 class _SafeChecker:
@@ -664,17 +436,16 @@ def safe_call_deco(func):
     return lambda *args, **kwargs: safe_call(func, *args, **kwargs)
 
 
-safe_transformer = _SafeTransformer()
-safe_transform = safe_transformer.visit
 safe_whitelist = _SafeWhitelist()
+
+
 safe_checker = _SafeChecker()
 
-safe_whitelist.TRUSTED_CLASSES |= {_SafeGenerator}
-safe_whitelist.TRUSTED_FUNCTIONS |= {safe_call, safe_call_deco, safe_gen_wrapper}
 
-# ==========
-# Monitoring
-# ==========
+safe_whitelist.TRUSTED_CLASSES |= {_SafeGenerator}
+
+
+safe_whitelist.TRUSTED_FUNCTIONS |= {safe_call, safe_call_deco, safe_gen_wrapper}
 
 
 def monitoring_call(code, instruction_offset, callee, arg0):
@@ -716,9 +487,16 @@ _MONITORING_BUILTINS = {
     safe_transformer.GEN_ITER_ID: _SafeGenerator,
 }
 
+
 EVENTS = sys.monitoring.events
+
+
 TOOL_ID = 4  # Not prevent other tools from using "official IDs"
+
+
 sys.monitoring.use_tool_id(TOOL_ID, 'ODOO_UNSAFE_POLICY_TOOL')
+
+
 sys.monitoring.register_callback(TOOL_ID, EVENTS.CALL, monitoring_call)
 
 
@@ -735,7 +513,7 @@ def _initialize_safe_whitelist():
     # Custom functions
     safe_whitelist.add_function('odoo.tools.safe_eval.evaluation.<evaluated_code>.*')
     # Generators wrapper
-    safe_whitelist.add_function('odoo.tools.safe_eval.runtime.safe_gen_wrapper.<locals>._wrapper')
+    safe_whitelist.add_function('odoo.tools.safe_eval.runtime.whitelist.safe_gen_wrapper.<locals>._wrapper')
     # Wrapped modules
     safe_whitelist.add_class('datetime.date')
     safe_whitelist.add_class('datetime.datetime')
@@ -795,7 +573,7 @@ def _initialize_safe_whitelist():
     safe_whitelist.add_class('odoo.tools.func.lazy')
     safe_whitelist.add_class('odoo.tools.json._ScriptSafe')
     safe_whitelist.add_class('odoo.tools.json.JSON')
-    safe_whitelist.add_class('odoo.tools.profiling.profiler.QwebTracker')
+    safe_whitelist.add_class('odoo.tools.profiling.profiler.qweb.QwebTracker')
     safe_whitelist.add_instance('odoo.tools.misc.containers.ReversedIterable')
     safe_whitelist.add_instance('odoo.tools.query.Query')
     safe_whitelist.add_instance('odoo.tools.text.translate.LazyGettext')
@@ -803,9 +581,9 @@ def _initialize_safe_whitelist():
     safe_whitelist.add_function('odoo.tools.numeric.float_utils.float_is_zero')
     safe_whitelist.add_function('odoo.tools.numeric.float_utils.float_repr')
     safe_whitelist.add_function('odoo.tools.numeric.float_utils.float_round')
-    safe_whitelist.add_function('odoo.tools.mail.formataddr')
-    safe_whitelist.add_function('odoo.tools.mail.html2plaintext')
-    safe_whitelist.add_function('odoo.tools.mail.is_html_empty')
+    safe_whitelist.add_function('odoo.tools.mail.addresses.formataddr')
+    safe_whitelist.add_function('odoo.tools.mail.html.html2plaintext')
+    safe_whitelist.add_function('odoo.tools.mail.html.is_html_empty')
     safe_whitelist.add_function('odoo.tools.misc.formatting.format_amount')
     safe_whitelist.add_function('odoo.tools.misc.formatting.format_date')
     safe_whitelist.add_function('odoo.tools.misc.formatting.format_duration')
