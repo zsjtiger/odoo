@@ -56,8 +56,10 @@ are named after their responsibility:
 - `orm/models/`: `BaseModel` (`__init__`), the registry, the environments and
   the caches; the methods of `BaseModel` delegate to one module per concern
   (`search`, `read`, `create`, `write`, `grouping`, `export`, `recompute`...).
-- `orm/fields/`: `Field` (`__init__`) and one module per field family.
 - `orm/database/`: the SQL cursors, the queries, the table objects and the schema.
+- `orm/fields/`: `base` (the `Field` class and its attributes) and the methods of
+  the field split by concern: `setup`, `related`, `description`, `conversion`,
+  `schema`, `query`, `cache` and `records`. The field types are in their own modules.
 - `orm/core/`: access rights, commands, decorators, identifiers and utils. `domains/`
   is a package: `constants` (operators and levels), `registry` (the optimization
   decorators), `classes` (the `Domain` classes), and `optimizations/` (one module per
