@@ -115,6 +115,12 @@ def find_command(name: str) -> Command | None:
     return commands.get(name)
 
 
+# commands that were merged into another command, with their new invocation
+MOVED_COMMANDS = {
+    'neutralize': 'db neutralize',
+    'obfuscate': 'db obfuscate',
+}
+
 HELP_TEMPLATE = textwrap.dedent("""\
     usage: {prog_name} [--addons-path=PATH,...] <command> [...]
 
@@ -171,6 +177,8 @@ def main():
         show_help()
         return
 
+    if command_name in MOVED_COMMANDS:
+        sys.exit(f"'{command_name}' moved to '{PROG_NAME} {MOVED_COMMANDS[command_name]}'.")
     if command := find_command(command_name):
         odoo.cli.COMMAND = command_name
         command().run(args)

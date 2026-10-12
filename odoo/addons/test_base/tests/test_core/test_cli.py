@@ -66,8 +66,6 @@ class TestCommand(BaseCase):
     def test_help(self):
         expected = {
             'db',
-            'neutralize',
-            'obfuscate',
             'server',
             'shell',
         }

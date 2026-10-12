@@ -4,7 +4,6 @@ import optparse
 import os
 import signal
 import sys
-import threading
 
 import odoo  # to expose in the shell
 from odoo import api

@@ -1,4 +1,5 @@
 import io
+import logging
 import sys
 import textwrap
 import urllib.parse
@@ -9,10 +10,16 @@ from pathlib import Path
 
 import requests
 
+import odoo.modules.neutralize
+import odoo.orm.sql_db
+
 from ..modules import db
 from ..tools import config
 from . import Command
+from .obfuscate import Obfuscator
 from .server import report_configuration
+
+_logger = logging.getLogger(__name__)
 
 eprint = partial(print, file=sys.stderr, flush=True)
 
@@ -186,6 +193,50 @@ class Db(Command):
         drop.set_defaults(func=self.drop)
         drop.add_argument("database", help="database to delete")
 
+        neutralize = subs.add_parser(
+            "neutralize",
+            help="Neutralize a database for testing: no emails sent, etc.",
+        )
+        neutralize.set_defaults(func=self.neutralize)
+        neutralize.add_argument("database", help="database to neutralize")
+        neutralize.add_argument(
+            "--stdout", action="store_true",
+            help="Output the neutralization SQL instead of applying it",
+        )
+
+        obfuscate = subs.add_parser(
+            "obfuscate",
+            help="Obfuscate (or unobfuscate) data of a database",
+        )
+        obfuscate.set_defaults(func=self.obfuscate)
+        obfuscate.add_argument("database", help="database to obfuscate")
+        obfuscate.add_argument("--pwd", required=True, help="Cypher password")
+        obfuscate.add_argument(
+            "--fields",
+            help="List of table.columns to obfuscate/unobfuscate: table1.column1,table2.column1,table2.column2",
+        )
+        obfuscate.add_argument(
+            "--exclude",
+            help="List of table.columns to exclude from obfuscate/unobfuscate: table1.column1,table2.column1,table2.column2",
+        )
+        obfuscate.add_argument("--file", help="File containing the list of table.columns to obfuscate/unobfuscate")
+        obfuscate.add_argument("--unobfuscate", action="store_true", help="Unobfuscate the data instead")
+        obfuscate.add_argument(
+            "--allfields", action="store_true",
+            help="Used in unobfuscate mode, try to unobfuscate all fields. Cannot be used in obfuscate mode. "
+                 "Slower than specifying fields.",
+        )
+        obfuscate.add_argument("--vacuum", action="store_true", help="Vacuum database after unobfuscating")
+        obfuscate.add_argument(
+            "--pertablecommit", action="store_true",
+            help="Commit after each table instead of a big transaction",
+        )
+        obfuscate.add_argument(
+            "-y", "--yes", action="store_true",
+            help="Don't ask for manual confirmation. Use it carefully as the obfuscate method is not considered "
+                 "as safe to transfer anonymous datas to a third party.",
+        )
+
         args = parser.parse_args(cmdargs)
 
         config.parse_config([
@@ -203,6 +254,29 @@ class Db(Command):
         report_configuration()
 
         args.func(args)
+
+    def neutralize(self, args):
+        try:
+            with odoo.orm.sql_db.db_connect(args.database).cursor() as cursor:
+                if args.stdout:
+                    installed_modules = odoo.modules.neutralize.get_installed_modules(cursor)
+                    queries = odoo.modules.neutralize.get_neutralization_queries(installed_modules)
+                    # pylint: disable=bad-builtin
+                    print('BEGIN;')
+                    for query in queries:
+                        # pylint: disable=bad-builtin
+                        print(query.rstrip(";") + ";")
+                    # pylint: disable=bad-builtin
+                    print("COMMIT;")
+                else:
+                    _logger.info("Starting %s database neutralization", args.database)
+                    odoo.modules.neutralize.neutralize_database(cursor)
+        except Exception:
+            _logger.critical("An error occurred during the neutralization. THE DATABASE IS NOT NEUTRALIZED!")
+            sys.exit(1)
+
+    def obfuscate(self, args):
+        Obfuscator().run(args)
 
     def init(self, args):
         _exit_if_exists(args.database, drop_instead=args.force)
