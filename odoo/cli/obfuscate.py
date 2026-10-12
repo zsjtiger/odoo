@@ -131,6 +131,17 @@ class Obfuscator:
             sys.exit(0)
         return True
 
+    def vacuum(self, tables):
+        _logger.info("Vacuuming obfuscated tables")
+        with self.registry.cursor() as cr:
+            cr._cnx.autocommit = True
+            try:
+                for table in tables:
+                    _logger.debug("Vacuuming table %s", table)
+                    cr.execute(SQL("VACUUM FULL %s", SQL.identifier(table)))
+            finally:
+                cr._cnx.autocommit = False
+
     def run(self, args):
         """Obfuscate or unobfuscate the database ``args.database``."""
         if args.allfields and not args.unobfuscate:
@@ -138,6 +149,7 @@ class Obfuscator:
             sys.exit("ERROR: --allfields can only be used in unobfuscate mode")
         try:
             self.dbname = args.database
+            vacuum_tables = []
             self.registry = Registry(self.dbname)
             with self.registry.cursor() as cr:
                 self.cr = cr
@@ -213,10 +225,7 @@ class Obfuscator:
                             self.convert_table(table, tables[table], args.pwd, args.pertablecommit, True)
 
                         if args.vacuum:
-                            _logger.info("Vacuuming obfuscated tables")
-                            for table in tables:
-                                _logger.debug("Vacuuming table %s", table)
-                                self.cr.execute(SQL("VACUUM FULL %s", SQL.identifier(table)))
+                            vacuum_tables = list(tables)
                         self.clear_pwd()
                     else:
                         _logger.info("Obfuscating datas")
@@ -228,6 +237,9 @@ class Obfuscator:
                     self.commit()
                 else:
                     self.rollback()
+            # VACUUM cannot run inside a transaction: only after the commit above
+            if vacuum_tables:
+                self.vacuum(vacuum_tables)
 
         except Exception as e:  # noqa: BLE001
             sys.exit("ERROR: %s" % e)
