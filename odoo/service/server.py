@@ -23,20 +23,15 @@ from concurrent.futures import ThreadPoolExecutor
 
 import psutil
 
-if os.name == 'posix':
-    # Unix only for workers
-    import fcntl
-    import resource
-    try:
-        import inotify
-        from inotify.adapters import InotifyTrees
-        from inotify.constants import IN_CREATE, IN_MODIFY, IN_MOVED_TO
-        INOTIFY_LISTEN_EVENTS = IN_MODIFY | IN_CREATE | IN_MOVED_TO
-    except ImportError:
-        inotify = None
-else:
-    # Windows shim
-    signal.SIGHUP = -1
+# Unix only for workers
+import fcntl
+import resource
+try:
+    import inotify
+    from inotify.adapters import InotifyTrees
+    from inotify.constants import IN_CREATE, IN_MODIFY, IN_MOVED_TO
+    INOTIFY_LISTEN_EVENTS = IN_MODIFY | IN_CREATE | IN_MOVED_TO
+except ImportError:
     inotify = None
 
 if not inotify:

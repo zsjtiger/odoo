@@ -166,10 +166,9 @@ def exec_pg_environ():
     Force the database PostgreSQL environment variables to the database
     configuration of Odoo.
 
-    Note: On systems where pg_restore/pg_dump require an explicit password
-    (i.e.  on Windows where TCP sockets are used), it is necessary to pass the
-    postgres user password in the PGPASSWORD environment variable or in a
-    special .pgpass file.
+    Note: When pg_restore/pg_dump require an explicit password, it is necessary
+    to pass the postgres user password in the PGPASSWORD environment variable or
+    in a special .pgpass file.
 
     See also https://www.postgresql.org/docs/current/libpq-envars.html
     """

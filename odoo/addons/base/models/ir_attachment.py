@@ -139,7 +139,7 @@ class IrAttachment(models.Model):
     @api.model
     def _file_fname(self, sha: str) -> str:
         # scatter files across 256 dirs
-        # we use '/' in the db (even on windows)
+        # we use '/' in the db
         return sha[:2] + '/' + sha
 
     def _file_read(self) -> BinaryValue:
