@@ -241,7 +241,7 @@ class _SafeWhitelist:
 
     .. code-block:: python
         safe_whitelist.add_class('odoo.orm.models.*')
-        safe_whitelist.add_instance('odoo.orm.models.environments.Environment')
+        safe_whitelist.add_instance('odoo.orm.models.environments.environment.Environment')
         safe_whitelist.add_function('odoo.tools.numeric.float_utils.float_compare')
     """
 
@@ -549,8 +549,8 @@ def _initialize_safe_whitelist():
     safe_whitelist.add_class('odoo.orm.fields.selection.*')
     safe_whitelist.add_class('odoo.orm.models.*')
     safe_whitelist.add_class('odoo.orm.core.commands.Command')
-    safe_whitelist.add_instance('odoo.orm.models.environments.Environment')
-    safe_whitelist.add_instance('odoo.orm.models.environments.Transaction')
+    safe_whitelist.add_instance('odoo.orm.models.environments.environment.Environment')
+    safe_whitelist.add_instance('odoo.orm.models.environments.transaction.Transaction')
     safe_whitelist.add_instance('odoo.orm.core.identifiers.NewId')
     safe_whitelist.add_instance('odoo.orm.models.registry.Registry')
     safe_whitelist.add_class('odoo.exceptions.AccessDenied')

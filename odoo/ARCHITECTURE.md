@@ -57,6 +57,9 @@ are named after their responsibility:
   the caches; the methods of `BaseModel` delegate to one module per concern
   (`search`, `read`, `create`, `write`, `grouping`, `export`, `recompute`...).
 - `orm/database/`: the SQL cursors, the queries, the table objects and the schema.
+- `orm/models/environments/`: `environment` (the `Environment`), `transaction` (the
+  `Transaction` and its state), and `caches` (the cache layers and the field cache).
+  `environment` and `transaction` import each other at the end of their modules.
 - `orm/fields/`: `base` (the `Field` class and its attributes) and the methods of
   the field split by concern: `setup`, `related`, `description`, `conversion`,
   `schema`, `query`, `cache` and `records`. The field types are in their own modules.
