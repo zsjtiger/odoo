@@ -73,6 +73,8 @@ are named after their responsibility:
   `properties/` is a package: `base` (the `Properties` class), `setup`, `conversion`,
   `values` (the helpers of the values), `query` (the SQL and the predicates),
   `mapping` (the `Property` mapping) and `definition` (`PropertiesDefinition`).
+  `textual/` is a package: `base` (the `BaseString` class), `cache` (the translated values
+  and the `LangProxyDict`), `write`, `query`, `char` (`Char` and `Text`) and `html`.
 - `orm/core/`: access rights, commands, decorators, identifiers and utils. `domains/`
   is a package: `constants` (operators and levels), `registry` (the optimization
   decorators), `classes` (the `Domain` classes), and `optimizations/` (one module per
@@ -99,7 +101,7 @@ are named after their responsibility:
 - `tools/sql/`: `builder` (the SQL objects), `tables`, `columns`, `constraints`,
   `indexes`, `views` and `rows`.
 - `tools/mail/`: `html` (`sanitize`, `plaintext` and `content`), `links` and `addresses`.
-- `tools/loading/convert/`: `common`, `xml`, `csv` and `file`.
+- `tools/loading/convert/`: `common`, `xml` (`base`, `records`, `templates` and `values`), `csv` and `file`.
 - `tools/js/js_transpiler/`: `paths`, `imports`, `exports` and `transpile`.
 - `tools/profiling/profiler/`: `stack`, `collectors`, `qweb` and `profiler`.
 - `tools/safe_eval/runtime/`: `errors`, `transformer` and `whitelist`, which also

@@ -3987,7 +3987,7 @@ class TestHtmlField(TransactionCase):
         new_record.invalidate_recordset()
         new_record.with_user(internal_user).html_sanitize_override
 
-    @patch('odoo.orm.fields.textual.html_sanitize', return_value='<p>comment</p>')
+    @patch('odoo.orm.fields.textual.html.html_sanitize', return_value='<p>comment</p>')
     def test_onchange_sanitize(self, patch):
         self.assertTrue(self.registry['test_orm.mixed'].html.sanitize)
 
