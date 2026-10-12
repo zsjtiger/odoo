@@ -131,6 +131,10 @@ are named after their responsibility:
   `paths` (the addons path and the lookups), `loader`, `versions` and `dependencies`.
   `current_test` stays in the package init: the test suite sets it there.
 - `tools/misc/` and `tools/config/`: the former flat modules, split by concern.
+  `tools/misc/formatting/` is a package: `languages` (the lang data and the babel
+  locales), `dates` (the dates, times, datetimes and durations) and `numbers` (the
+  sizes, the decimals, the amounts and `formatLang`). The safe-eval whitelist names
+  these functions by their new modules.
 
 ## Moved modules
 

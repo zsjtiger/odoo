@@ -584,9 +584,9 @@ def _initialize_safe_whitelist():
     safe_whitelist.add_function('odoo.tools.mail.addresses.formataddr')
     safe_whitelist.add_function('odoo.tools.mail.html.plaintext.html2plaintext')
     safe_whitelist.add_function('odoo.tools.mail.html.plaintext.is_html_empty')
-    safe_whitelist.add_function('odoo.tools.misc.formatting.format_amount')
-    safe_whitelist.add_function('odoo.tools.misc.formatting.format_date')
-    safe_whitelist.add_function('odoo.tools.misc.formatting.format_duration')
+    safe_whitelist.add_function('odoo.tools.misc.formatting.numbers.format_amount')
+    safe_whitelist.add_function('odoo.tools.misc.formatting.dates.format_date')
+    safe_whitelist.add_function('odoo.tools.misc.formatting.dates.format_duration')
     safe_whitelist.add_function('odoo.tools.business_data.street_split')
     safe_whitelist.add_function('odoo.tools.text.translate.html_translate')
     # Psycopg2
