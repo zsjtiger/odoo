@@ -552,7 +552,7 @@ def _initialize_safe_whitelist():
     safe_whitelist.add_instance('odoo.orm.models.environments.environment.Environment')
     safe_whitelist.add_instance('odoo.orm.models.environments.transaction.Transaction')
     safe_whitelist.add_instance('odoo.orm.core.identifiers.NewId')
-    safe_whitelist.add_instance('odoo.orm.models.registry.Registry')
+    safe_whitelist.add_instance('odoo.orm.models.registry.base.Registry')
     safe_whitelist.add_class('odoo.exceptions.AccessDenied')
     safe_whitelist.add_class('odoo.exceptions.AccessError')
     safe_whitelist.add_class('odoo.exceptions.MissingError')

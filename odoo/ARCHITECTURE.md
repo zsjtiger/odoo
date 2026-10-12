@@ -60,6 +60,11 @@ are named after their responsibility:
 - `orm/models/environments/`: `environment` (the `Environment`), `transaction` (the
   `Transaction` and its state), and `caches` (the cache layers and the field cache).
   `environment` and `transaction` import each other at the end of their modules.
+- `orm/models/registry/`: `base` (the `Registry` and its lifecycle), `setup` (the setup of the
+  models), `triggers` (the trigger trees of the recomputation), `schema` (the constraints,
+  the indexes and the hooks) and `signaling`.
+- `modules/loading/`: `data` (the data and the demo files), `graph` (the loading of a module
+  graph) and `loader` (the loading of the modules of a database and the reset of their state).
 - `orm/fields/`: `base` (the `Field` class and its attributes) and the methods of
   the field split by concern: `setup`, `related`, `description`, `conversion`,
   `schema`, `query`, `cache` and `records`. The field types are in their own modules.
