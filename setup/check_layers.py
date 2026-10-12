@@ -30,10 +30,7 @@ LAYERS = [
 NAMESPACES = {'odoo.addons', 'odoo.upgrade'}
 
 # known exceptions, as (importing module, imported module)
-ALLOWED = {
-    # the country groups used by the validators are defined in the base addon
-    ('odoo.tools.partner_identifiers', 'odoo.addons.base.models.res_country'),
-}
+ALLOWED = set()
 
 
 def layer_of(name):

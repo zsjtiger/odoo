@@ -20,7 +20,7 @@ from stdnum.ro import cui as ro_cui
 from stdnum.se import orgnr as se_en
 
 from odoo.tools.translate import LazyGettext, LazyTranslate
-from odoo.tools.partner_identifier_validation import (
+from .partner_identifier_validation import (
     nl_kvk_validate,
     nl_oin_validate,
     pk_cn_validate,
@@ -28,7 +28,7 @@ from odoo.tools.partner_identifier_validation import (
     th_branch_code_validate,
 )
 
-from odoo.addons.base.models.res_country import (
+from .res_country import (
     FR_AND_OVERSEAS_TERRITORIES,
     SEPA_COUNTRIES,
 )
