@@ -786,7 +786,7 @@ def _initialize_safe_whitelist():
     safe_whitelist.add_instance('odoo.http.geoip.GeoIP')
     safe_whitelist.add_instance('odoo.http.requestlib.Request')
     safe_whitelist.add_instance('odoo.http.response.Response')
-    safe_whitelist.add_instance('odoo.http.session.Session')
+    safe_whitelist.add_instance('odoo.http.session.session.Session')
     # Database
     safe_whitelist.add_instance('odoo.orm.database.sql_db.Cursor')
     # Tools
