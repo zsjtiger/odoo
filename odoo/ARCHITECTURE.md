@@ -82,6 +82,9 @@ are named after their responsibility:
 - `tools/safe_eval/runtime/`: `errors`, `transformer` and `whitelist`, which also
   holds the checker, the generator and the monitoring (they depend on each other).
 - `modules/db/`: `queries`, `init` and `manage`.
+- `tools/text/translate/`: `base` (lazy and stored translations), `html` (XML and
+  HTML fields), `extract` (term extraction), `files` (PO, CSV, XML and tar files) and
+  `modules` (the readers and the importer of the modules).
 - `tools/misc/` and `tools/config/`: the former flat modules, split by concern.
 
 ## Moved modules
