@@ -18,10 +18,10 @@ ALIASES = {
     'odoo.logging': 'odoo.core.logging',
     'odoo.loglevels': 'odoo.core.logging',
     'odoo.netsvc': 'odoo.core.logging',
-    'odoo.sql_db': 'odoo.orm.sql_db',
-    'odoo.tools.cache': 'odoo.orm.cache',  # deprecated since 20.0
+    'odoo.sql_db': 'odoo.orm.database.sql_db',
+    'odoo.tools.cache': 'odoo.orm.models.cache',  # deprecated since 20.0
     'odoo.tools.cloc': 'odoo.modules.cloc',
-    'odoo.tools.view_validation': 'odoo.orm.view_validation',
+    'odoo.tools.view_validation': 'odoo.orm.core.view_validation',
 }
 
 

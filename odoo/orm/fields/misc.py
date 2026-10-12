@@ -8,14 +8,14 @@ from psycopg2.extras import Json as PsycopgJson
 
 from odoo.tools import SQL, json_default
 
-from .fields import Field
-from .identifiers import IdType
+from odoo.orm.fields import Field
+from odoo.orm.core.identifiers import IdType
 
 if typing.TYPE_CHECKING:
-    from .query import TableSQL
+    from odoo.orm.database.query import TableSQL
 
 # integer needs to be imported before Id because of `type` attribute clash
-from . import fields_numeric  # noqa: F401
+from odoo.orm.fields import numeric  # noqa: F401
 
 
 class Boolean(Field[bool]):

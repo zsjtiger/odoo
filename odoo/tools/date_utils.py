@@ -17,7 +17,7 @@ from .float_utils import float_round
 
 if typing.TYPE_CHECKING:
     from collections.abc import Callable, Iterable, Iterator
-    from odoo.orm.types import Environment
+    from odoo.orm.core.types import Environment
     D = typing.TypeVar('D', date, datetime)
 
 
@@ -170,7 +170,7 @@ def parse_date(value: str, env: Environment) -> date | datetime:
         raise ValueError("Empty date value")
 
     # Find the starting point
-    from odoo.orm.fields_temporal import Date, Datetime  # noqa: PLC0415
+    from odoo.orm.fields.temporal import Date, Datetime  # noqa: PLC0415
 
     dt: datetime | date = Datetime.now()
     term = terms.pop(0) if terms[0] in ('today', 'now') else 'now'

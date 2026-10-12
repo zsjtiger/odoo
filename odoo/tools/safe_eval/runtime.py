@@ -469,7 +469,7 @@ class _SafeWhitelist:
 
     .. code-block:: python
         safe_whitelist.add_class('odoo.orm.models.*')
-        safe_whitelist.add_instance('odoo.orm.environments.Environment')
+        safe_whitelist.add_instance('odoo.orm.models.environments.Environment')
         safe_whitelist.add_function('odoo.tools.float_utils.float_compare')
     """
 
@@ -764,17 +764,17 @@ def _initialize_safe_whitelist():
     safe_whitelist.add_function('odoo.addons.*')  # TODO: remove with restrict addons
     safe_whitelist.add_class('odoo.upgrade.*')
     safe_whitelist.add_function('odoo.upgrade.*')
-    safe_whitelist.add_class('odoo.orm.domains.*')
+    safe_whitelist.add_class('odoo.orm.core.domains.*')
     safe_whitelist.add_class('odoo.orm.fields.*')
-    safe_whitelist.add_class('odoo.orm.fields_binary.*')
-    safe_whitelist.add_class('odoo.orm.fields_properties.*')
-    safe_whitelist.add_class('odoo.orm.fields_selection.*')
+    safe_whitelist.add_class('odoo.orm.fields.binary.*')
+    safe_whitelist.add_class('odoo.orm.fields.properties.*')
+    safe_whitelist.add_class('odoo.orm.fields.selection.*')
     safe_whitelist.add_class('odoo.orm.models.*')
-    safe_whitelist.add_class('odoo.orm.commands.Command')
-    safe_whitelist.add_instance('odoo.orm.environments.Environment')
-    safe_whitelist.add_instance('odoo.orm.environments.Transaction')
-    safe_whitelist.add_instance('odoo.orm.identifiers.NewId')
-    safe_whitelist.add_instance('odoo.orm.registry.Registry')
+    safe_whitelist.add_class('odoo.orm.core.commands.Command')
+    safe_whitelist.add_instance('odoo.orm.models.environments.Environment')
+    safe_whitelist.add_instance('odoo.orm.models.environments.Transaction')
+    safe_whitelist.add_instance('odoo.orm.core.identifiers.NewId')
+    safe_whitelist.add_instance('odoo.orm.models.registry.Registry')
     safe_whitelist.add_class('odoo.exceptions.AccessDenied')
     safe_whitelist.add_class('odoo.exceptions.AccessError')
     safe_whitelist.add_class('odoo.exceptions.MissingError')
@@ -788,7 +788,7 @@ def _initialize_safe_whitelist():
     safe_whitelist.add_instance('odoo.http.response.Response')
     safe_whitelist.add_instance('odoo.http.session.Session')
     # Database
-    safe_whitelist.add_instance('odoo.orm.sql_db.Cursor')
+    safe_whitelist.add_instance('odoo.orm.database.sql_db.Cursor')
     # Tools
     safe_whitelist.add_class('odoo.tools.binary.*')
     safe_whitelist.add_class('odoo.tools.convert.xml_import')

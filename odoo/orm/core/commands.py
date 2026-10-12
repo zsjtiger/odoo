@@ -5,7 +5,7 @@ import typing
 
 if typing.TYPE_CHECKING:
     from collections.abc import Collection
-    from .types import CommandValue, ValuesType
+    from odoo.orm.core.types import CommandValue, ValuesType
 
 
 class Command(enum.IntEnum):

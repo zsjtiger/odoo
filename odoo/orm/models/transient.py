@@ -3,8 +3,8 @@ import datetime
 from odoo.tools import SQL, config, lazy_classproperty
 from odoo.tools.constants import GC_UNLINK_LIMIT
 
-from . import decorators as api
-from .models import Model
+from odoo.orm.core import decorators as api
+from odoo.orm.models import Model
 
 
 class TransientModel(Model):

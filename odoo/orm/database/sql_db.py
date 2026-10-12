@@ -40,7 +40,7 @@ from odoo.tools.func import frame_codeinfo, locked
 from odoo.tools.misc import Callbacks, real_time
 
 if typing.TYPE_CHECKING:
-    from odoo.orm.environments import Transaction
+    from odoo.orm.models.environments import Transaction
 
     # when type checking, the Cursor exposes methods of the psycopg cursor
     _CursorProtocol = psycopg2.extensions.cursor

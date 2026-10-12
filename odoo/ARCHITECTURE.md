@@ -61,7 +61,7 @@ their former names.
 | `odoo.netsvc`                | `odoo.core.logging`         |
 | `odoo.logging`               | `odoo.core.logging`         |
 | `odoo.loglevels`             | `odoo.core.logging`         |
-| `odoo.sql_db`                | `odoo.orm.sql_db`           |
-| `odoo.tools.cache`           | `odoo.orm.cache`            |
-| `odoo.tools.view_validation` | `odoo.orm.view_validation`  |
+| `odoo.sql_db`                | `odoo.orm.database.sql_db`           |
+| `odoo.tools.cache`           | `odoo.orm.models.cache`            |
+| `odoo.tools.view_validation` | `odoo.orm.core.view_validation`  |
 | `odoo.tools.cloc`            | `odoo.modules.cloc`         |

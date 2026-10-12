@@ -321,7 +321,7 @@ class TestViewInheritance(ViewCase):
             self.view_ids['A'].get_combined_arch()
 
     def test_view_validate_button_action_query_count(self):
-        from odoo.orm.cache import get_cache_key_counter  # noqa: PLC0415
+        from odoo.orm.models.cache import get_cache_key_counter  # noqa: PLC0415
         _, _, counter = get_cache_key_counter(self.env['ir.model.data']._xmlid_lookup, 'base.action_ui_view')
         hit, miss = counter.hit, counter.miss
 
@@ -347,7 +347,7 @@ class TestViewInheritance(ViewCase):
         self.assertEqual(counter.miss, miss + 2)
 
     def test_view_validate_attrs_groups_query_count(self):
-        from odoo.orm.cache import get_cache_key_counter  # noqa: PLC0415
+        from odoo.orm.models.cache import get_cache_key_counter  # noqa: PLC0415
         _, _, counter = get_cache_key_counter(self.env['ir.model.data']._xmlid_lookup, 'base.group_system')
         hit, miss = counter.hit, counter.miss
 

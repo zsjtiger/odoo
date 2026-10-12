@@ -215,7 +215,7 @@ class JSONFormatter(logging.Formatter):
 
 
 def _db_connect(dbname):
-    from odoo.orm.sql_db import db_connect  # noqa: PLC0415
+    from odoo.orm.database.sql_db import db_connect  # noqa: PLC0415
     return db_connect(dbname, allow_uri=True)
 
 

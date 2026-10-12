@@ -15,9 +15,9 @@ from odoo.tools import unique
 from odoo.tools.safe_eval import safe_eval
 from odoo.tools.translate import _
 
-from .domains import Domain
-from .fields import Field
-from .identifiers import IdType
+from odoo.orm.core.domains import Domain
+from odoo.orm.fields import Field
+from odoo.orm.core.identifiers import IdType
 
 # the logger keeps the name of the former location, so the configuration of the logs is unchanged
 _logger = logging.getLogger('odoo.orm.models')

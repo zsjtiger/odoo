@@ -12,7 +12,7 @@ import traceback
 from typing import NamedTuple
 
 from . import case
-from ..orm import sql_db
+from ..orm.database import sql_db
 
 __unittest = True
 

@@ -11,7 +11,7 @@ from pathlib import Path
 import requests
 
 import odoo.modules.neutralize
-import odoo.orm.sql_db
+import odoo.orm.database.sql_db
 
 from ...modules import db
 from ...tools import config
@@ -257,7 +257,7 @@ class Db(Command):
 
     def neutralize(self, args):
         try:
-            with odoo.orm.sql_db.db_connect(args.database).cursor() as cursor:
+            with odoo.orm.database.sql_db.db_connect(args.database).cursor() as cursor:
                 if args.stdout:
                     installed_modules = odoo.modules.neutralize.get_installed_modules(cursor)
                     queries = odoo.modules.neutralize.get_neutralization_queries(installed_modules)

@@ -23,6 +23,6 @@ def __getattr__(name):
     import warnings  # noqa: PLC0415
     if name in ('cache', 'ormcache'):
         warnings.warn("Since 20.0 import ormcache from odoo.api", DeprecationWarning, stacklevel=2)
-        from odoo.orm import cache  # noqa: PLC0415
+        from odoo.orm.models import cache  # noqa: PLC0415
         return cache if name == 'cache' else cache.ormcache
     raise AttributeError(name=name)

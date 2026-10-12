@@ -17,23 +17,23 @@ from weakref import ref as weakref
 from zoneinfo import ZoneInfo
 
 from odoo.exceptions import AccessError, UserError, CacheMiss
-from odoo.orm.sql_db import BaseCursor
+from odoo.orm.database.sql_db import BaseCursor
 from odoo.tools import clean_context, frozendict, reset_cached_properties, OrderedSet, SQL
 from odoo.tools.func import deprecated
 from odoo.tools.lru import LRU
 from odoo.tools.translate import get_translation, get_translated_module, LazyGettext
 from odoo.tools.misc import StackMap, SENTINEL
 
-from .registry import _CACHES_BY_KEY, _REGISTRY_CACHES, Registry
-from .query import Query
-from .utils import SUPERUSER_ID
+from odoo.orm.models.registry import _CACHES_BY_KEY, _REGISTRY_CACHES, Registry
+from odoo.orm.database.query import Query
+from odoo.orm.core.utils import SUPERUSER_ID
 
 if typing.TYPE_CHECKING:
     from collections.abc import Collection, Iterable, Iterator
     from datetime import tzinfo
     from weakref import ReferenceType
-    from .identifiers import IdType
-    from .types import BaseModel, Field
+    from odoo.orm.core.identifiers import IdType
+    from odoo.orm.core.types import BaseModel, Field
 
 _logger = logging.getLogger('odoo.api')
 _logger_signaling = logging.getLogger('odoo.registry')
@@ -133,7 +133,7 @@ class Environment(Mapping[str, "BaseModel"]):
         """ Return an environment based on ``self`` with modified parameters.
 
         :param cr: optional database cursor to change the current cursor
-        :type cursor: :class:`~odoo.orm.sql_db.Cursor`
+        :type cursor: :class:`~odoo.orm.database.sql_db.Cursor`
         :param user: optional user/user id to change the current user
         :type user: int or :class:`res.users record<~odoo.addons.base.models.res_users.ResUsers>`
         :param dict context: optional context dictionary to change the current context
@@ -215,7 +215,7 @@ class Environment(Mapping[str, "BaseModel"]):
 
         Storing True means that we have access to the record.
         We store False to avoid worst case complexity when re-checking all
-        records in the prefetch: see `odoo.orm.access.fill_access_cache`.
+        records in the prefetch: see `odoo.orm.core.access.fill_access_cache`.
         """
         return self.transaction.access_read[self._access_context]
 

@@ -8,10 +8,10 @@ from odoo.exceptions import AccessError
 from odoo.tools import float_compare, float_is_zero, float_repr, float_round
 from odoo.tools.misc import SENTINEL, Sentinel
 
-from .fields import Field
+from odoo.orm.fields import Field
 
 if typing.TYPE_CHECKING:
-    from .types import BaseModel, Environment
+    from odoo.orm.core.types import BaseModel, Environment
 
 
 class Integer(Field[int]):

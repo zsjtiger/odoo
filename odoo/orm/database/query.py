@@ -7,8 +7,8 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from collections.abc import Iterable, Iterator
     from typing import LiteralString
-    from .fields import Field
-    from .models import BaseModel
+    from odoo.orm.fields import Field
+    from odoo.orm.models import BaseModel
 
 from odoo.tools.sql import SQL, make_identifier
 

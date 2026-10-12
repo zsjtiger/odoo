@@ -11,18 +11,18 @@ from odoo.exceptions import AccessError, MissingError, UserError
 from odoo.tools import SQL, OrderedSet, sql, unique
 from odoo.tools.misc import SENTINEL, Sentinel, unquote
 
-from .commands import Command
-from .domains import Domain
-from .fields import IR_MODELS, Field, _logger, determine
-from .fields_reference import Many2oneReference
-from .identifiers import NewId
-from .models import BaseModel
-from .query import FieldSQL, Query, TableSQL
-from .utils import COLLECTION_TYPES, Prefetch, SQL_OPERATORS, check_pg_name
+from odoo.orm.core.commands import Command
+from odoo.orm.core.domains import Domain
+from odoo.orm.fields import IR_MODELS, Field, _logger, determine
+from odoo.orm.fields.reference import Many2oneReference
+from odoo.orm.core.identifiers import NewId
+from odoo.orm.models import BaseModel
+from odoo.orm.database.query import FieldSQL, Query, TableSQL
+from odoo.orm.core.utils import COLLECTION_TYPES, Prefetch, SQL_OPERATORS, check_pg_name
 
 if typing.TYPE_CHECKING:
     from odoo.tools.misc import Collector
-    from .types import CommandValue, ContextType, DomainType, Environment, Registry
+    from odoo.orm.core.types import CommandValue, ContextType, DomainType, Environment, Registry
 
     OnDelete = typing.Literal['cascade', 'set null', 'restrict']
 

@@ -17,12 +17,12 @@ from odoo.tools.misc import OrderedSet, SENTINEL, Sentinel
 from odoo.tools.sql import pattern_to_translated_trigram_pattern, value_to_translated_trigram_pattern
 from odoo.tools.translate import StoredTranslations, ParsedTranslation, html_translate, mark_as_copy
 
-from .fields import Field, _logger
-from .utils import COLLECTION_TYPES, SQL_OPERATORS, expand_ids
+from odoo.orm.fields import Field, _logger
+from odoo.orm.core.utils import COLLECTION_TYPES, SQL_OPERATORS, expand_ids
 
 if typing.TYPE_CHECKING:
     from collections.abc import Callable, Collection
-    from .query import TableSQL
+    from odoo.orm.database.query import TableSQL
 
 
 class BaseString(Field[str | typing.Literal[False]]):

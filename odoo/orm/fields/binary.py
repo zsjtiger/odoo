@@ -12,12 +12,12 @@ from odoo.exceptions import UserError
 from odoo.tools import SQL
 from odoo.tools.binary import EMPTY_BINARY, BinaryBytes, BinaryValue
 
-from .fields import Field
-from .utils import parse_field_expr
+from odoo.orm.fields import Field
+from odoo.orm.core.utils import parse_field_expr
 
 if typing.TYPE_CHECKING:
-    from .environments import Environment
-    from .query import TableSQL
+    from odoo.orm.models.environments import Environment
+    from odoo.orm.database.query import TableSQL
     from odoo.addons.base.models.ir_attachment import IrAttachment
 
 # http://initd.org/psycopg/docs/usage.html#binary-adaptation

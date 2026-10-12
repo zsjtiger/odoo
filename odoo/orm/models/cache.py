@@ -16,7 +16,7 @@ import typing
 if typing.TYPE_CHECKING:
     from collections.abc import Callable, Iterable
     from odoo.models import BaseModel
-    from .environments import CacheLayer
+    from odoo.orm.models.environments import CacheLayer
 
 unsafe_eval = eval
 

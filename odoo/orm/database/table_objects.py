@@ -10,9 +10,9 @@ if typing.TYPE_CHECKING:
 
     import psycopg2.extensions
 
-    from .environments import Environment
-    from .models import BaseModel
-    from .registry import Registry
+    from odoo.orm.models.environments import Environment
+    from odoo.orm.models import BaseModel
+    from odoo.orm.models.registry import Registry
 
     ConstraintMessageType = (
         str

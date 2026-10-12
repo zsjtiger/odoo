@@ -54,7 +54,7 @@ from werkzeug.exceptions import BadRequest
 
 import odoo.cli
 import odoo.models
-import odoo.orm.registry
+import odoo.orm.models.registry
 from odoo import api, fields
 from odoo.exceptions import AccessError
 from odoo.fields import Command
@@ -68,9 +68,9 @@ from odoo.http.session import (
     session_store,
 )
 from odoo.http.session import Session as OdooHttpSession
-from odoo.orm.environments import CacheLayer
+from odoo.orm.models.environments import CacheLayer
 from odoo.modules.registry import Registry
-from odoo.orm.sql_db import Cursor
+from odoo.orm.database.sql_db import Cursor
 from odoo.tools import SQL, DotDict, config, file_open, float_compare, mute_logger, profiler
 from odoo.tools.binary import BinaryBytes
 from odoo.tools.lru import LRU
@@ -840,7 +840,7 @@ class BaseCase(case.TestCase):
             self.env.cr.flush()
 
         with (
-            patch('odoo.orm.sql_db.Cursor.execute', execute),
+            patch('odoo.orm.database.sql_db.Cursor.execute', execute),
             patch.object(self.env.registry, 'unaccent', lambda x: x),
         ):
             yield actual_queries
@@ -1317,7 +1317,7 @@ class TransactionCase(BaseCase):
     fields. If a test modifies the registry (custom models and/or fields), it
     should prepare the necessary cleanup (`self.env.transaction.will_change_registry()`).
     """
-    muted_registry_logger = mute_logger(odoo.orm.registry._logger.name)
+    muted_registry_logger = mute_logger(odoo.orm.models.registry._logger.name)
     freeze_time = None
     savepoint = None
 
@@ -3198,7 +3198,7 @@ safe_whitelist.add_class('freezegun.api.FakeDate')
 safe_whitelist.add_class('freezegun.api.FakeDatetime')
 safe_whitelist.add_function('FakeDate.*')
 safe_whitelist.add_function('FakeDatetime.*')
-safe_whitelist.add_instance('odoo.orm.sql_db.TestCursor')
+safe_whitelist.add_instance('odoo.orm.database.sql_db.TestCursor')
 safe_whitelist.add_instance('odoo.tests.*')
 safe_whitelist.add_instance('unittest.mock.MagicMock')
 safe_whitelist.add_instance('unittest.mock.Mock')

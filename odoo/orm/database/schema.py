@@ -11,7 +11,7 @@ import psycopg2.errors
 from odoo.tools import SQL, format_list, sql
 from odoo.tools.misc import exception_to_unicode
 
-from .utils import check_object_name
+from odoo.orm.core.utils import check_object_name
 
 _logger = logging.getLogger('odoo.orm.models')
 

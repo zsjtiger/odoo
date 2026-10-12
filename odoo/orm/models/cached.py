@@ -4,7 +4,7 @@ from typing import Self
 
 from odoo.tools import frozendict
 
-from .models import api, Model
+from odoo.orm.models import api, Model
 
 
 class CachedModel(Model):

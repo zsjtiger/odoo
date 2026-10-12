@@ -6,7 +6,7 @@ import logging
 import os
 import re
 
-import odoo.orm.domains as domains
+import odoo.orm.core.domains as domains
 from lxml import etree
 from odoo import tools
 

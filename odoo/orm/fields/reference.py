@@ -4,10 +4,10 @@ from operator import attrgetter
 
 from odoo.tools import OrderedSet, unique
 
-from .fields import Field
-from .fields_numeric import Integer
-from .fields_selection import Selection
-from .models import BaseModel
+from odoo.orm.fields import Field
+from odoo.orm.fields.numeric import Integer
+from odoo.orm.fields.selection import Selection
+from odoo.orm.models import BaseModel
 
 
 class Reference(Selection):

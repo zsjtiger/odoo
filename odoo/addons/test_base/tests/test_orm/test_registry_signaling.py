@@ -31,7 +31,7 @@ class TestOrmCache(TransactionCase):
         XMLID = 'base.group_no_one'
 
         # retrieve the cache, its key and stat counter
-        from odoo.orm.cache import get_cache_key_counter  # noqa: PLC0415
+        from odoo.orm.models.cache import get_cache_key_counter  # noqa: PLC0415
         self.env.transaction.invalidate_ormcache()
         cache, key, counter = get_cache_key_counter(IMD._xmlid_lookup, XMLID)
         hit = counter.hit

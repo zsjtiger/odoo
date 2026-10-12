@@ -20,7 +20,7 @@ from operator import attrgetter
 
 import psycopg2.sql
 
-from odoo.orm import sql_db
+from odoo.orm.database import sql_db
 from odoo.exceptions import ConcurrencyError
 from odoo.tools import (
     SQL,
@@ -35,14 +35,14 @@ from odoo.tools.lru import LRU
 from odoo.tools.misc import Collector
 from odoo.tools.version_tag_reset import reset_classes_tp_versions_used
 
-from .utils import SUPERUSER_ID
-from . import model_classes
+from odoo.orm.core.utils import SUPERUSER_ID
+from odoo.orm.models import classes as model_classes
 
 if typing.TYPE_CHECKING:
     from collections.abc import Callable, Collection, Iterable, Iterator, MutableMapping
     from odoo.fields import Field
     from odoo.models import BaseModel
-    from odoo.orm.sql_db import BaseCursor, Connection, Cursor
+    from odoo.orm.database.sql_db import BaseCursor, Connection, Cursor
     from odoo.modules import module_graph
 
 
@@ -425,7 +425,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
         In order to determine all the impacted models, one should invoke method
         :meth:`descendants` with `'_inherit'` and `'_inherits'`.
         """
-        from . import models  # noqa: PLC0415
+        from odoo.orm import models  # noqa: PLC0415
 
         # clear cache to ensure consistency, but do not signal it
         assert not self.ready, "Cannot load() when registry is ready"
@@ -453,7 +453,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
         models impacted by the given ``model_names`` and all the already-marked
         models will be set up. Otherwise, all models are set up.
         """
-        from .environments import Environment  # noqa: PLC0415
+        from odoo.orm.models.environments import Environment  # noqa: PLC0415
         env = Environment(cr, SUPERUSER_ID, {})
         env.invalidate_all()
         transaction = env.transaction
@@ -818,7 +818,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
         elif context.get('models_to_check', False):
             _logger.info("verifying fields for every extended model")
 
-        from .environments import Environment  # noqa: PLC0415
+        from odoo.orm.models.environments import Environment  # noqa: PLC0415
         env = Environment(cr, SUPERUSER_ID, context)
         models = [env[model_name] for model_name in model_names]
         env.transaction.will_change_registry()
@@ -1035,8 +1035,8 @@ class Registry(Mapping[str, type["BaseModel"]]):
         """
         Verify that all tables are present and try to initialize those that are missing.
         """
-        from .environments import Environment  # noqa: PLC0415
-        from .models import BaseModel  # noqa: PLC0415
+        from odoo.orm.models.environments import Environment  # noqa: PLC0415
+        from odoo.orm.models import BaseModel  # noqa: PLC0415
         env = Environment(cr, SUPERUSER_ID, {})
         table2model = {
             model._table: name

@@ -11,12 +11,12 @@ from functools import wraps
 
 if typing.TYPE_CHECKING:
     from collections.abc import Callable, Collection
-    from .types import BaseModel, ValuesType
+    from odoo.orm.core.types import BaseModel, ValuesType
 
     type Decorator[C: Callable] = Callable[[C], C]
 
 # re-export here as well
-from .cache import ormcache  # noqa: F401
+from odoo.orm.models.cache import ormcache  # noqa: F401
 
 _logger = logging.getLogger('odoo.api')
 

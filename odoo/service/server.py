@@ -55,10 +55,10 @@ except ImportError:
         return None
 
 from odoo import api
-from odoo.orm import sql_db
+from odoo.orm.database import sql_db
 from odoo.http.server import HTTPSocket
 from odoo.modules.registry import Registry
-from odoo.orm.cache import log_ormcache_stats
+from odoo.orm.models.cache import log_ormcache_stats
 from odoo.tools import OrderedSet, config, gc, profiler
 from odoo.tools.misc import dumpstacks, mute_logger, stripped_sys_argv
 from odoo.tools.osutil import memory_info

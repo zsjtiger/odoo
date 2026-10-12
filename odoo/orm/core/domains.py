@@ -66,14 +66,14 @@ from datetime import date, datetime, time, timedelta, timezone, UTC
 from odoo.exceptions import AccessError, MissingError, UserError
 from odoo.tools import SQL, OrderedSet, classproperty, partition, str2bool
 from odoo.tools.date_utils import parse_date, parse_iso_date
-from .identifiers import NewId
-from .query import Query, TableSQL
-from .utils import COLLECTION_TYPES, parse_field_expr
+from odoo.orm.core.identifiers import NewId
+from odoo.orm.database.query import Query, TableSQL
+from odoo.orm.core.utils import COLLECTION_TYPES, parse_field_expr
 
 if typing.TYPE_CHECKING:
     from collections.abc import Callable, Collection, Iterable
-    from .fields import Field
-    from .models import BaseModel
+    from odoo.orm.fields import Field
+    from odoo.orm.models import BaseModel
 
 _logger = logging.getLogger('odoo.domains')
 
@@ -868,7 +868,7 @@ class DomainCondition(Domain):
         # - NewId is not a value
         # - records are not accepted, use values
         # - Query and Domain values should be using a relational operator
-        from .models import BaseModel  # noqa: PLC0415
+        from odoo.orm.models import BaseModel  # noqa: PLC0415
         value = self.value
         if value is None:
             value = False

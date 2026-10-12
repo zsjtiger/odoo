@@ -5,12 +5,12 @@ from collections import defaultdict
 
 from odoo.tools.misc import SENTINEL, Sentinel, merge_sequences
 
-from .fields import Field, _logger, determine, resolve_mro
+from odoo.orm.fields import Field, _logger, determine, resolve_mro
 
 if typing.TYPE_CHECKING:
     from collections.abc import Callable
 
-    from .types import BaseModel
+    from odoo.orm.core.types import BaseModel
 
     SelectValue = tuple[str, str]  # (value, string)
     OnDeletePolicy = str | Callable[[BaseModel], None]

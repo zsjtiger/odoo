@@ -8,8 +8,8 @@ from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 from odoo.tools import SQL, date_utils, get_lang
 
-from .fields import Field, _logger
-from .utils import (
+from odoo.orm.fields import Field, _logger
+from odoo.orm.core.utils import (
     READ_GROUP_ALL_TIME_GRANULARITY,
     READ_GROUP_NUMBER_GRANULARITY,
     READ_GROUP_TIME_GRANULARITY,
@@ -19,8 +19,8 @@ from .utils import (
 if typing.TYPE_CHECKING:
     from collections.abc import Callable
 
-    from .models import BaseModel
-    from .query import FieldSQL
+    from odoo.orm.models import BaseModel
+    from odoo.orm.database.query import FieldSQL
 
 DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
 DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))

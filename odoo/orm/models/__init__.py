@@ -54,20 +54,20 @@ from odoo.tools.misc import ReversedIterable, unquote
 from odoo.tools.safe_eval import _UNSAFE_ATTRIBUTES, safe_checker
 from odoo.tools.translate import _, LazyTranslate
 
-from . import access as orm_access
-from . import schema as orm_schema
+from odoo.orm.core import access as orm_access
+from odoo.orm.database import schema as orm_schema
 
-from . import decorators as api
-from .commands import Command
-from .domains import Domain
-from .fields import Field, determine
-from .fields_misc import Id
-from .fields_temporal import Datetime
-from .fields_textual import Char, StoredTranslations
+from odoo.orm.core import decorators as api
+from odoo.orm.core.commands import Command
+from odoo.orm.core.domains import Domain
+from odoo.orm.fields import Field, determine
+from odoo.orm.fields.misc import Id
+from odoo.orm.fields.temporal import Datetime
+from odoo.orm.fields.textual import Char, StoredTranslations
 
-from .identifiers import NewId
-from .query import Query, TableSQL
-from .utils import (
+from odoo.orm.core.identifiers import NewId
+from odoo.orm.database.query import Query, TableSQL
+from odoo.orm.core.utils import (
     OriginIds, Prefetch, ReversibleComparator, parse_field_expr,
     COLLECTION_TYPES, SQL_OPERATORS,
     SUPERUSER_ID,
@@ -77,10 +77,10 @@ if typing.TYPE_CHECKING:
     from collections.abc import Collection, Iterator, Reversible, Sequence
     from types import MappingProxyType
     from typing import Self
-    from .table_objects import TableObject
-    from .environments import Environment
-    from .registry import Registry, TriggerTree
-    from .types import DomainType, IdType, ModelType, ValuesType
+    from odoo.orm.database.table_objects import TableObject
+    from odoo.orm.models.environments import Environment
+    from odoo.orm.models.registry import Registry, TriggerTree
+    from odoo.orm.core.types import DomainType, IdType, ModelType, ValuesType
 
 
 _lt = LazyTranslate('base')
@@ -113,7 +113,7 @@ INSERT_BATCH_SIZE = 100
 UPDATE_BATCH_SIZE = 100
 SQL_DEFAULT = psycopg2.extensions.AsIs("DEFAULT")
 
-from .access import NO_ACCESS
+from odoo.orm.core.access import NO_ACCESS
 
 
 def parse_read_group_spec(spec: str) -> tuple:
@@ -297,7 +297,7 @@ class MetaModel(type):
                 raise TypeError(f"Field {self.id} is not an instance of fields.Id")
 
             if attrs.get('_log_access', self._auto):
-                from .fields_relational import Many2one  # noqa: PLC0415
+                from odoo.orm.fields.relational import Many2one  # noqa: PLC0415
                 add_default('create_uid', Many2one(
                     'res.users', string='Created by', readonly=True))
                 add_default('create_date', Datetime(
@@ -951,7 +951,7 @@ class BaseModel(metaclass=MetaModel):
         :type data: list(list(str))
         :returns: {ids: list(int)|False, messages: [Message][, lastrow: int]}
         """
-        from .fields_relational import One2many  # noqa: PLC0415
+        from odoo.orm.fields.relational import One2many  # noqa: PLC0415
 
         # determine values of mode, current_module and noupdate
         mode = self.env.context.get('mode', 'init')
@@ -2399,7 +2399,7 @@ class BaseModel(metaclass=MetaModel):
         field = self._fields.get(field_name)
         if not field:
             raise ValueError(f"Invalid field {field_name!r} on model {self._name!r}")
-        from .fields_properties import check_property_field_value_name  # noqa: PLC0415
+        from odoo.orm.fields.properties import check_property_field_value_name  # noqa: PLC0415
         check_property_field_value_name(property_name)
 
         target_model = self.env[self._fields[field.definition_record].comodel_name]

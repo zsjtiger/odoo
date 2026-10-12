@@ -9,9 +9,9 @@ import weakref
 from collections import defaultdict
 from types import MappingProxyType
 
-from . import models
-from . import fields  # must be imported after models
-from .utils import check_pg_name
+from odoo.orm import models
+from odoo.orm import fields  # must be imported after models
+from odoo.orm.core.utils import check_pg_name
 from odoo.exceptions import ValidationError
 from odoo.tools import (
     OrderedSet,

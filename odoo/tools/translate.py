@@ -48,7 +48,7 @@ if typing.TYPE_CHECKING:
     from collections.abc import Callable
     from typing import Any, Literal
     from odoo.api import Environment
-    from odoo.orm.fields_textual import BaseString
+    from odoo.orm.fields.textual import BaseString
     from odoo.orm.models import BaseModel
 
 __all__ = [

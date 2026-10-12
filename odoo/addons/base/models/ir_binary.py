@@ -79,7 +79,7 @@ class IrBinary(models.AbstractModel):
         value = record[field_name]
 
         if value and record._fields[field_name].attachment:
-            from odoo.orm.fields_binary import BinaryValueAttachment  # noqa: PLC0415
+            from odoo.orm.fields.binary import BinaryValueAttachment  # noqa: PLC0415
             if isinstance(value, BinaryValueAttachment):
                 field_attachment = value._BinaryValueAttachment__attachment
             else:

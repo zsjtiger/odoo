@@ -21,19 +21,19 @@ from odoo.tools.constants import IN_MAX
 from odoo.tools.misc import frozendict, SENTINEL, Sentinel, unique
 
 
-from .domains import Domain
-from .query import Query
-from .utils import COLLECTION_TYPES, SQL_OPERATORS, SUPERUSER_ID, expand_ids, parse_field_expr
+from odoo.orm.core.domains import Domain
+from odoo.orm.database.query import Query
+from odoo.orm.core.utils import COLLECTION_TYPES, SQL_OPERATORS, SUPERUSER_ID, expand_ids, parse_field_expr
 
 if typing.TYPE_CHECKING:
     from collections.abc import Callable, Collection, Iterable, Iterator, MutableMapping, Sequence
     from typing import Self
 
-    from .environments import Environment
-    from .identifiers import IdType
-    from .query import FieldSQL, TableSQL
-    from .registry import Registry
-    from .types import BaseModel, DomainType, ModelType, ValuesType
+    from odoo.orm.models.environments import Environment
+    from odoo.orm.core.identifiers import IdType
+    from odoo.orm.database.query import FieldSQL, TableSQL
+    from odoo.orm.models.registry import Registry
+    from odoo.orm.core.types import BaseModel, DomainType, ModelType, ValuesType
 
 IR_MODELS = (
     'ir.model', 'ir.model.data', 'ir.model.fields', 'ir.model.fields.selection',
@@ -1053,7 +1053,7 @@ class Field[T]:
         if self.inherited_field and self.inherited_field._description_groupable(env):
             # avoid compuation for inherited field
             return True
-        from .models import BaseModel  # noqa: PLC0415
+        from odoo.orm.models import BaseModel  # noqa: PLC0415
         if self.type != 'many2many' and env.registry[self.model_name]._read_group_groupby is BaseModel._read_group_groupby:
             # the default implementation has an edge case for many2many
             return False
@@ -1074,7 +1074,7 @@ class Field[T]:
         if self.inherited_field and self.inherited_field._description_aggregator(env):
             # avoid compuation for inherited field
             return self.inherited_field.aggregator
-        from .models import BaseModel  # noqa: PLC0415
+        from odoo.orm.models import BaseModel  # noqa: PLC0415
         if env.registry[self.model_name]._read_group_select is BaseModel._read_group_select:
             # the default implementation does not handle additional fields
             return False
@@ -2110,4 +2110,4 @@ class Field[T]:
 
 # forward-reference to models because we have this last cyclic dependency
 # it is used in this file only for asserts
-from . import models as _models  # noqa: E402
+from odoo.orm import models as _models  # noqa: E402

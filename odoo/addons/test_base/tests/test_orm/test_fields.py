@@ -3987,7 +3987,7 @@ class TestHtmlField(TransactionCase):
         new_record.invalidate_recordset()
         new_record.with_user(internal_user).html_sanitize_override
 
-    @patch('odoo.orm.fields_textual.html_sanitize', return_value='<p>comment</p>')
+    @patch('odoo.orm.fields.textual.html_sanitize', return_value='<p>comment</p>')
     def test_onchange_sanitize(self, patch):
         self.assertTrue(self.registry['test_orm.mixed'].html.sanitize)
 
@@ -4726,7 +4726,7 @@ class TestSelectionOndeleteAdvanced(TransactionCase):
             self.addCleanup(setattr, Model, '_base_classes__', Model._base_classes__)
 
     def test_ondelete_unexisting_policy(self):
-        from odoo.orm.model_classes import add_to_registry  # noqa: PLC0415
+        from odoo.orm.models.classes import add_to_registry  # noqa: PLC0415
 
         class Foo(models.Model):
             _module = None
@@ -4743,7 +4743,7 @@ class TestSelectionOndeleteAdvanced(TransactionCase):
             self.registry._setup_models__(self.env.cr, [])  # incremental setup
 
     def test_ondelete_default_no_default(self):
-        from odoo.orm.model_classes import add_to_registry  # noqa: PLC0415
+        from odoo.orm.models.classes import add_to_registry  # noqa: PLC0415
 
         class Foo(models.Model):
             _module = None
@@ -4760,7 +4760,7 @@ class TestSelectionOndeleteAdvanced(TransactionCase):
             self.registry._setup_models__(self.env.cr, [])  # incremental setup
 
     def test_ondelete_value_no_valid(self):
-        from odoo.orm.model_classes import add_to_registry  # noqa: PLC0415
+        from odoo.orm.models.classes import add_to_registry  # noqa: PLC0415
 
         class Foo(models.Model):
             _module = None
@@ -4777,7 +4777,7 @@ class TestSelectionOndeleteAdvanced(TransactionCase):
             self.registry._setup_models__(self.env.cr, [])  # incremental setup
 
     def test_ondelete_required_null_explicit(self):
-        from odoo.orm.model_classes import add_to_registry  # noqa: PLC0415
+        from odoo.orm.models.classes import add_to_registry  # noqa: PLC0415
 
         class Foo(models.Model):
             _module = None
@@ -4794,7 +4794,7 @@ class TestSelectionOndeleteAdvanced(TransactionCase):
             self.registry._setup_models__(self.env.cr, [])  # incremental setup
 
     def test_ondelete_required_null_implicit(self):
-        from odoo.orm.model_classes import add_to_registry  # noqa: PLC0415
+        from odoo.orm.models.classes import add_to_registry  # noqa: PLC0415
 
         class Foo(models.Model):
             _module = None
@@ -4814,7 +4814,7 @@ class TestSelectionOndeleteAdvanced(TransactionCase):
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestFieldParametersValidation(TransactionCase):
     def test_invalid_parameter(self):
-        from odoo.orm.model_classes import add_to_registry  # noqa: PLC0415
+        from odoo.orm.models.classes import add_to_registry  # noqa: PLC0415
 
         class Foo(models.Model):
             _module = None
@@ -5116,7 +5116,7 @@ class TestUnlinkConstraints(TransactionCase):
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestWrongRelatedError(TransactionCase):
     def test_wrong_related_path(self):
-        from odoo.orm.model_classes import add_to_registry  # noqa: PLC0415
+        from odoo.orm.models.classes import add_to_registry  # noqa: PLC0415
 
         class Foo(models.Model):
             _module = None

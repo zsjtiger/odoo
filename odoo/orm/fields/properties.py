@@ -13,15 +13,15 @@ from odoo.exceptions import AccessError, UserError, MissingError
 from odoo.tools import SQL, OrderedSet, is_list_of, html_sanitize, sql
 from odoo.tools.misc import frozendict, has_list_types
 
-from .domains import Domain
-from .fields import Field, _logger
-from .fields_temporal import BaseDate
-from .models import BaseModel
-from .query import Query
-from .utils import COLLECTION_TYPES, SQL_OPERATORS, parse_field_expr, regex_alphanumeric
+from odoo.orm.core.domains import Domain
+from odoo.orm.fields import Field, _logger
+from odoo.orm.fields.temporal import BaseDate
+from odoo.orm.models import BaseModel
+from odoo.orm.database.query import Query
+from odoo.orm.core.utils import COLLECTION_TYPES, SQL_OPERATORS, parse_field_expr, regex_alphanumeric
 
 if typing.TYPE_CHECKING:
-    from .query import FieldSQL, TableSQL
+    from odoo.orm.database.query import FieldSQL, TableSQL
 
 NoneType = type(None)
 
