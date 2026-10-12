@@ -96,6 +96,11 @@ are named after their responsibility:
   `transport` (devtools HTTP and websocket), `events` (console and exceptions),
   `executable`, `files` and `exceptions`. `odoo.tests.common` re-exports the same
   names as before.
+- `http/router/`: `application` (the `Application` WSGI class and `root`), `serve`
+  (the static, no-database and database requests), `ir_http` (the routes of `ir.http`
+  and their fallback), `setup` (the profiler, the session and the request dispatcher),
+  `databases` (the database lists, their filters and `RegistryError`) and `rpc`.
+  `application` imports `serve` at its end, since the serving functions use `root`.
 - `core/patches/`: one module per patched library; `_werkzeug_urls` holds the
   URL backport that werkzeug 3.0 needs.
 - `tests/form/`: `Form` (`form`, its methods split into `view`, `modifiers`, `onchange`

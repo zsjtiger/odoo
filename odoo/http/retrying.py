@@ -69,7 +69,7 @@ def retrying[T](func: Callable[[], T], env: Environment, *, close_on_commit: boo
                 # We need to reset the `session` attribute of `request`
                 # which may have been modified during the transaction.
                 # The `dbname` remains the same (consistent with the session).
-                from .router import _set_session_and_dbname  # noqa: PLC0415
+                from .router.setup import _set_session_and_dbname  # noqa: PLC0415
                 _set_session_and_dbname(request)
                 # Rewind files in case of failure
                 for filename, file in request.httprequest.files.items():
