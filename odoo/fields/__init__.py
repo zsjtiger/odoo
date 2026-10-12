@@ -18,5 +18,5 @@ from odoo.orm.fields.binary import Binary, Image
 
 from odoo.orm.core.commands import Command
 from odoo.orm.core.domains import Domain
-from odoo.orm.models import NO_ACCESS
+from odoo.orm.core.access import NO_ACCESS
 from odoo.orm.core.utils import parse_field_expr

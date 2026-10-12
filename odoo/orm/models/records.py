@@ -19,8 +19,10 @@ from odoo.orm.core.utils import (
 )
 
 from odoo.orm.models import BaseModel
+from odoo.orm.core.utils import OriginIds
 if typing.TYPE_CHECKING:
     from collections.abc import Collection, Reversible, Sequence
+    from odoo.orm.models.environments import Environment
     from typing import Self
     from odoo.orm.core.types import IdType, ValuesType
 
@@ -235,3 +237,26 @@ def _invalidate_cache(self, fnames: Collection[str] | None=None, ids: Sequence[I
             self.env[invf.model_name].flush_model([invf.name])
             invf._invalidate_cache(env)
     self.env.transaction.invalidate_access_cache(self._name)
+
+
+def with_env(self, env: Environment) -> Self:
+    return self.__class__(env, self._ids, self._prefetch_ids)
+
+
+def _origin(self) -> Self:
+    if all(self._ids):
+        return self  # already real records
+    ids = tuple(OriginIds(self._ids))
+    prefetch_ids = OriginIds(self._prefetch_ids)
+    return self.__class__(self.env, ids, prefetch_ids)
+
+
+def ids(self) -> list[int]:
+    if all(self._ids):
+        return list(self._ids)  # already real records
+    return list(OriginIds(self._ids))
+
+
+def update(self, values: ValuesType) -> None:
+    for name, value in values.items():
+        self[name] = value

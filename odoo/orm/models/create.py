@@ -549,3 +549,10 @@ def _add_missing_default_values(self, values: ValuesType) -> ValuesType:
             defaults[field.name] = field._add_default_values(self.env, defaults)
 
     return defaults
+
+
+def _load_records_create(self, vals_list):
+    records = self.create(vals_list)
+    if any(field.type == 'properties' for field in self._fields.values()):
+        records._clean_properties()
+    return records

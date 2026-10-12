@@ -22,12 +22,10 @@
 from __future__ import annotations
 
 import collections
-import functools
 import inspect
 import logging
 import re
 import typing
-import warnings
 from collections import defaultdict
 from collections.abc import Callable, Iterable, Mapping
 from operator import itemgetter
@@ -38,7 +36,6 @@ import psycopg2.extensions
 from odoo.exceptions import AccessError
 from odoo.tools import frozendict, OrderedSet, SQL, sql
 from odoo.tools.func import deprecated
-from odoo.tools.misc import ReversedIterable
 from odoo.tools.safe_eval import _UNSAFE_ATTRIBUTES, safe_checker
 from odoo.tools.text.translate import LazyTranslate
 
@@ -53,7 +50,6 @@ from odoo.orm.fields.temporal import Datetime
 from odoo.orm.fields.textual import Char, StoredTranslations
 
 from odoo.orm.database.query import Query, TableSQL
-from odoo.orm.core.utils import OriginIds, Prefetch
 
 if typing.TYPE_CHECKING:
     from collections.abc import Collection, Iterator, Reversible, Sequence
@@ -95,7 +91,6 @@ INSERT_BATCH_SIZE = 100
 UPDATE_BATCH_SIZE = 100
 SQL_DEFAULT = psycopg2.extensions.AsIs("DEFAULT")
 
-from odoo.orm.core.access import NO_ACCESS
 
 
 def parse_read_group_spec(spec: str) -> tuple:
@@ -1102,11 +1097,7 @@ class BaseModel(metaclass=MetaModel):
         :param operation: one of ``read``, ``write``
         :return: whether the field is accessible
         """
-        if not field.groups or self.env.su:
-            return True
-        if field.groups == NO_ACCESS:
-            return False
-        return self.env.user.has_groups(field.groups)
+        return orm_rights._has_field_access(self, field, operation)
 
     @api.model
     def check_field_access(self, field: Field, operation: typing.Literal['read', 'write']) -> None:
@@ -1121,7 +1112,7 @@ class BaseModel(metaclass=MetaModel):
     @api.model
     @deprecated("Since 20.0, use check_field_access()")
     def _check_field_access(self, field: Field, operation: typing.Literal['read', 'write']) -> None:
-        return self.check_field_access(field, operation)
+        return orm_rights._check_field_access(self, field, operation)
 
     @api.readonly
     def read(self, fields: Sequence[str] | None = None, load: str = '_classic_read') -> list[ValuesType]:
@@ -1388,19 +1379,7 @@ class BaseModel(metaclass=MetaModel):
         and :meth:`_filtered_access`. The method may be overridden in order to
         restrict the access to ``self``.
         """
-        domain = self._access_domain(operation)
-        if domain.is_false():
-            return self, functools.partial(self._make_access_error_message, operation, domain)
-
-        origin = self._origin
-        if (
-            origin
-            and domain
-            and (forbidden := origin - origin.with_context(active_test=False).sudo().filtered_domain(domain))
-        ):
-            return forbidden, functools.partial(forbidden._make_access_error_message, operation, domain)
-
-        return None
+        return orm_rights._check_access(self, operation)
 
     @api.model
     @api.ormcache('operation', 'self.env._access_context')
@@ -1418,9 +1397,7 @@ class BaseModel(metaclass=MetaModel):
         :param operation: operation performed
         :param domain: security domain from :meth:`_access_domain`
         """
-        if domain.is_false():
-            return self.env['ir.access']._make_model_access_error(self._name, operation)
-        return self.env['ir.access']._make_record_access_error(self, operation)
+        return orm_rights._make_access_error_message(self, operation, domain)
 
     def unlink(self) -> typing.Literal[True]:
         """ Delete the records in ``self``.
@@ -1475,7 +1452,7 @@ class BaseModel(metaclass=MetaModel):
 
     def _write(self, vals: ValuesType) -> None:
         """ Low-level implementation of write() """
-        self._write_multi([vals] * len(self))
+        return orm_write._write(self, vals)
 
     def _write_multi(self, vals_list: list[ValuesType]) -> None:
         """ Low-level implementation of write() """
@@ -1572,10 +1549,7 @@ class BaseModel(metaclass=MetaModel):
         return orm_create._load_records_write(self, values)
 
     def _load_records_create(self, vals_list):
-        records = self.create(vals_list)
-        if any(field.type == 'properties' for field in self._fields.values()):
-            records._clean_properties()
-        return records
+        return orm_create._load_records_create(self, vals_list)
 
     def _load_records(self, data_list, update=False):
         """ Create or update records of this model, and assign XMLIDs.
@@ -1801,10 +1775,7 @@ class BaseModel(metaclass=MetaModel):
         Note, you probably want to override `write()` method if you want to take
         action once the active field changes.
         """
-        field_name = self._active_name
-        assert field_name, f"No 'active' field on model {self._name}"
-        active_recs = self.filtered(lambda record: record[field_name])
-        active_recs[field_name] = False
+        return orm_write.action_archive(self)
 
     def action_unarchive(self):
         """Set :attr:`active` to ``True`` on a recordset for inactive records.
@@ -1812,10 +1783,7 @@ class BaseModel(metaclass=MetaModel):
         Note, you probably want to override `write()` method if you want to take
         action once the active field changes.
         """
-        field_name = self._active_name
-        assert field_name, f"No 'active' field on model {self._name}"
-        inactive_recs = self.filtered(lambda record: not record[field_name])
-        inactive_recs[field_name] = True
+        return orm_write.action_unarchive(self)
 
     def _register_hook(self) -> None:
         """ stuff to do right after the registry is built """
@@ -1894,9 +1862,7 @@ class BaseModel(metaclass=MetaModel):
     @property
     def ids(self) -> list[int]:
         """ Return the list of actual record ids corresponding to ``self``. """
-        if all(self._ids):
-            return list(self._ids)  # already real records
-        return list(OriginIds(self._ids))
+        return orm_records.ids(self)
 
     @property
     @deprecated("Deprecated since 19.0, use self.env.cr directly")
@@ -1932,7 +1898,7 @@ class BaseModel(metaclass=MetaModel):
         .. note::
             The returned recordset has the same prefetch object as ``self``.
         """
-        return self.__class__(env, self._ids, self._prefetch_ids)
+        return orm_records.with_env(self, env)
 
     @api.private
     def sudo(self, flag: bool = True) -> Self:
@@ -2152,8 +2118,7 @@ class BaseModel(metaclass=MetaModel):
     @api.private
     def update(self, values: ValuesType) -> None:
         """ Update the records in ``self`` with ``values``. """
-        for name, value in values.items():
-            self[name] = value
+        return orm_records.update(self, values)
 
     @api.private
     def flush_model(self, fnames: Collection[str] | None = None) -> None:
@@ -2205,11 +2170,7 @@ class BaseModel(metaclass=MetaModel):
     @property
     def _origin(self) -> Self:
         """ Return the actual records corresponding to ``self``. """
-        if all(self._ids):
-            return self  # already real records
-        ids = tuple(OriginIds(self._ids))
-        prefetch_ids = OriginIds(self._prefetch_ids)
-        return self.__class__(self.env, ids, prefetch_ids)
+        return orm_records._origin(self)
 
     #
     # "Dunder" methods
@@ -2217,42 +2178,19 @@ class BaseModel(metaclass=MetaModel):
 
     def __bool__(self) -> bool:
         """ Test whether ``self`` is nonempty. """
-        return True if self._ids else False  # fast version of bool(self._ids)
+        return orm_sequence.truth(self)
 
     def __len__(self) -> int:
         """ Return the size of ``self``. """
-        return len(self._ids)
+        return orm_sequence.length(self)
 
     def __iter__(self) -> Iterator[Self]:
         """ Return an iterator over ``self``. """
-        ids = self._ids
-        size = len(ids)
-        if size <= 1:
-            # detect and handle small recordsets (single `1f`)
-            # early return if no records and avoid allocation if we have a one
-            if size == 1:
-                yield self
-            return
-        cls = self.__class__
-        env = self.env
-        prefetch_ids = self._prefetch_ids
-        for id_ in ids:
-            yield cls(env, (id_,), prefetch_ids)
+        return orm_sequence.iterate(self)
 
     def __reversed__(self) -> Iterator[Self]:
         """ Return an reversed iterator over ``self``. """
-        # same as __iter__ but reversed
-        ids = self._ids
-        size = len(ids)
-        if size <= 1:
-            if size == 1:
-                yield self
-            return
-        cls = self.__class__
-        env = self.env
-        prefetch_ids = ReversedIterable(self._prefetch_ids)
-        for id_ in reversed(ids):
-            yield cls(env, (id_,), prefetch_ids)
+        return orm_sequence.reversed_records(self)
 
     def __contains__(self, item: BaseModel | str) -> bool:
         """ Test whether ``item`` (record or field name) is an element of ``self``.
@@ -2264,26 +2202,11 @@ class BaseModel(metaclass=MetaModel):
             In the second case, we check whether the model has a field named
             ``item``.
         """
-        try:
-            if self._name == item._name:
-                return len(item) == 1 and item.id in self._ids
-            raise TypeError(f"inconsistent models in: {item} in {self}")
-        except AttributeError:
-            if isinstance(item, str):
-                return item in self._fields
-            raise TypeError(f"unsupported operand types in: {item!r} in {self}")
+        return orm_sequence.contains(self, item)
 
     def __add__(self, other) -> Self:
         """ Return the concatenation of two recordsets. """
-        try:
-            if other._name != self._name:
-                raise TypeError(f"inconsistent models in: {self} + {other}")
-            if other:
-                ids = self._ids + other._ids
-                return self.__class__(self.env, ids, Prefetch.union(ids, self._prefetch_ids, other._prefetch_ids))
-        except AttributeError:
-            raise TypeError(f"unsupported operand types in: {self} + {other!r}")
-        return self
+        return orm_operators.add(self, other)
 
     @api.private
     def concat(self, it: Iterable[Self] = (), /, *args: Self) -> Self:
@@ -2296,41 +2219,19 @@ class BaseModel(metaclass=MetaModel):
         """ Return the recordset of all the records in ``self`` that are not in
             ``other``. Note that recordset order is preserved.
         """
-        try:
-            if self._name != other._name:
-                raise TypeError(f"inconsistent models in: {self} - {other}")
-            other_ids = set(other._ids)
-            ids = tuple(id_ for id_ in self._ids if id_ not in other_ids)
-            return self.__class__(self.env, ids, Prefetch.union(ids, self._prefetch_ids))
-        except AttributeError:
-            raise TypeError(f"unsupported operand types in: {self} - {other!r}")
+        return orm_operators.sub(self, other)
 
     def __and__(self, other) -> Self:
         """ Return the intersection of two recordsets.
             Note that first occurrence order is preserved.
         """
-        try:
-            if self._name != other._name:
-                raise TypeError(f"inconsistent models in: {self} & {other}")
-            other_ids = set(other._ids)
-            ids = tuple({id_: None for id_ in self._ids if id_ in other_ids})
-            return self.__class__(self.env, ids, Prefetch.union(ids, self._prefetch_ids))
-        except AttributeError:
-            raise TypeError(f"unsupported operand types in: {self} & {other!r}")
+        return orm_operators.and_(self, other)
 
     def __or__(self, other) -> Self:
         """ Return the union of two recordsets.
             Note that first occurrence order is preserved.
         """
-        try:
-            if other._name != self._name:
-                raise TypeError(f"inconsistent models in: {self} | {other}")
-            if other:
-                ids = tuple(dict.fromkeys(self._ids + other._ids))
-                return self.__class__(self.env, ids, Prefetch.union(ids, self._prefetch_ids, other._prefetch_ids))
-        except AttributeError:
-            raise TypeError(f"unsupported operand types in: {self} | {other!r}")
-        return self
+        return orm_operators.or_(self, other)
 
     @api.private
     def union(self, it: Iterable[Self] = (), /, *args: Self) -> Self:
@@ -2341,63 +2242,31 @@ class BaseModel(metaclass=MetaModel):
 
     def __eq__(self, other):
         """ Test whether two recordsets are equivalent (up to reordering). """
-        try:
-            return self._name == other._name and set(self._ids) == set(other._ids)
-        except AttributeError:
-            if other:
-                warnings.warn(f"unsupported operand type(s) for \"==\": '{self._name}()' == '{other!r}'", stacklevel=2)
-        return NotImplemented
+        return orm_operators.eq(self, other)
 
     def __lt__(self, other):
-        try:
-            if self._name == other._name:
-                return set(self._ids) < set(other._ids)
-        except AttributeError:
-            pass
-        return NotImplemented
+        return orm_operators.lt(self, other)
 
     def __le__(self, other):
-        try:
-            if self._name == other._name:
-                # these are much cheaper checks than a proper subset check, so
-                # optimise for checking if a null or singleton are subsets of a
-                # recordset
-                if not self or self in other:
-                    return True
-                return set(self._ids) <= set(other._ids)
-        except AttributeError:
-            pass
-        return NotImplemented
+        return orm_operators.le(self, other)
 
     def __gt__(self, other):
-        try:
-            if self._name == other._name:
-                return set(self._ids) > set(other._ids)
-        except AttributeError:
-            pass
-        return NotImplemented
+        return orm_operators.gt(self, other)
 
     def __ge__(self, other):
-        try:
-            if self._name == other._name:
-                if not other or other in self:
-                    return True
-                return set(self._ids) >= set(other._ids)
-        except AttributeError:
-            pass
-        return NotImplemented
+        return orm_operators.ge(self, other)
 
     def __int__(self) -> int:
-        return self.id or 0
+        return orm_sequence.to_int(self)
 
     def __repr__(self):
-        return f"{self._name}{self._ids!r}"
+        return orm_sequence.repr_records(self)
 
     def __hash__(self):
-        return hash((self._name, frozenset(self._ids)))
+        return orm_sequence.hash_ids(self)
 
     def __deepcopy__(self, memo):
-        return self
+        return orm_sequence.deepcopy_records(self, memo)
 
     @typing.overload
     def __getitem__(self, key: int | slice) -> Self: ...
@@ -2417,21 +2286,11 @@ class BaseModel(metaclass=MetaModel):
                 rs = inst[10:20]            # subset of inst
                 nm = rs['name']             # name of first record in inst
         """
-        if isinstance(key, str):
-            # important: one must call the field's getter
-            return self._fields[key].__get__(self)
-        if isinstance(key, slice):
-            ids = self._ids[key]
-            prefetch_ids = Prefetch.union(ids, self._prefetch_ids)
-        else:
-            ids = (self._ids[key],)
-            prefetch_ids = self._prefetch_ids
-        return self.__class__(self.env, ids, prefetch_ids)
+        return orm_sequence.getitem(self, key)
 
     def __setitem__(self, key: str, value: typing.Any):
         """ Assign the field ``key`` to ``value`` in record ``self``. """
-        # important: one must call the field's setter
-        return self._fields[key].__set__(self, value)
+        return orm_sequence.setitem(self, key, value)
 
     #
     # Cache and recomputation management
@@ -2630,3 +2489,6 @@ from odoo.orm.models import metadata as orm_metadata
 from odoo.orm.models import companies as orm_companies
 from odoo.orm.models import records as orm_records
 from odoo.orm.models import hooks as orm_hooks
+from odoo.orm.models import operators as orm_operators
+from odoo.orm.models import sequence as orm_sequence
+from odoo.orm.models import rights as orm_rights

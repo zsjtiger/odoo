@@ -509,3 +509,21 @@ def unlink(self) -> typing.Literal[True]:
     _unlink.info('User #%s deleted %s records with IDs: %r', self.env.uid, self._name, self.ids)
 
     return True
+
+
+def _write(self, vals: ValuesType) -> None:
+    self._write_multi([vals] * len(self))
+
+
+def action_archive(self):
+    field_name = self._active_name
+    assert field_name, f"No 'active' field on model {self._name}"
+    active_recs = self.filtered(lambda record: record[field_name])
+    active_recs[field_name] = False
+
+
+def action_unarchive(self):
+    field_name = self._active_name
+    assert field_name, f"No 'active' field on model {self._name}"
+    inactive_recs = self.filtered(lambda record: not record[field_name])
+    inactive_recs[field_name] = True
