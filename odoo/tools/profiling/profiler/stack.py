@@ -1,6 +1,7 @@
 """The stacks and the clocks of the profiler: the frames, the traces and the time functions."""
 
 import logging
+import os
 import sys
 import threading
 import time
@@ -23,12 +24,16 @@ def _format_stack(stack):
     return [list(frame) for frame in stack]
 
 
+# the frames of the profiler itself are skipped, whatever module of the package they are in
+_PROFILER_DIR = os.path.dirname(__file__) + os.sep
+
+
 def get_current_frame(thread=None):
     if thread is not None:
         frame = sys._current_frames()[thread.ident]
     else:
         frame = sys._getframe()
-    while frame.f_code.co_filename == __file__:
+    while frame.f_code.co_filename.startswith(_PROFILER_DIR):
         frame = frame.f_back
     return frame
 

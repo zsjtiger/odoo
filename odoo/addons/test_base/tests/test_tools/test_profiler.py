@@ -582,7 +582,7 @@ class TestProfiling(TransactionCase):
 
         self.assertGreater(first_query['time'], 0)
         self.assertEqual(first_query['stack'][-1][2], 'execute')
-        self.assertEqual(first_query['stack'][-1][0].split('/')[-1], 'sql_db.py')
+        self.assertEqual(first_query['stack'][-1][0].split('/')[-1], 'cursor.py')
 
     def test_profiler_return(self):
         # Enter test mode to avoid the profiler to commit the result
