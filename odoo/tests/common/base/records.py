@@ -58,7 +58,7 @@ def new_test_user(env, login='', groups='base.group_user', context=None, **kwarg
 
 
 def loaded_demo_data(env):
-    return bool(env.ref('base.user_demo', raise_if_not_found=False))
+    return bool(env.ref('base.partner_demo', raise_if_not_found=False))
 
 
 class RecordCapturer:
