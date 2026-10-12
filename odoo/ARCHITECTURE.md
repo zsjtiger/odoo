@@ -62,6 +62,9 @@ are named after their responsibility:
   `schema`, `query`, `cache` and `records`. The field types are in their own modules.
   `relational/` is a package: `base` (the `_Relational` base), `many2one`, `multi`
   (the x2many base), `one2many` and `many2many`.
+  `properties/` is a package: `base` (the `Properties` class), `setup`, `conversion`,
+  `values` (the helpers of the values), `query` (the SQL and the predicates),
+  `mapping` (the `Property` mapping) and `definition` (`PropertiesDefinition`).
 - `orm/core/`: access rights, commands, decorators, identifiers and utils. `domains/`
   is a package: `constants` (operators and levels), `registry` (the optimization
   decorators), `classes` (the `Domain` classes), and `optimizations/` (one module per
