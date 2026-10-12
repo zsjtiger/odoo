@@ -16,6 +16,7 @@ from .mocks import *  # noqa: F403
 from .base import *  # noqa: F403
 from .transaction import *  # noqa: F403
 from .browser import *  # noqa: F403
+from .screencast import NoScreencast, Screencaster
 from .http_case import *  # noqa: F403
 
 

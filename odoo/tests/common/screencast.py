@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import binascii
-import datetime
+from datetime import datetime
 import logging
 import os
 import pathlib

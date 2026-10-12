@@ -65,8 +65,11 @@ are named after their responsibility:
 - `service/server/`: `start`/`restart` (`__init__`), `threaded`, `gevent_server`,
   `prefork`, `worker`, `reloader` and the shared base in `common`.
 - `tests/common/`: the test framework, one module per concern (`base`,
-  `transaction`, `http_case`, `browser`, `decorators`, `mocks`, `locks`, `utils`).
-  `odoo.tests.common` re-exports the same names as before.
+  `transaction`, `http_case`, `decorators`, `mocks`, `locks`, `utils`). `browser/`
+  is a package: `browser` (the `ChromeBrowser` class), `process` (starting Chrome),
+  `transport` (devtools HTTP and websocket), `events` (console and exceptions),
+  `executable`, `files` and `exceptions`. `odoo.tests.common` re-exports the same
+  names as before.
 - `core/patches/`: one module per patched library; `_werkzeug_urls` holds the
   URL backport that werkzeug 3.0 needs.
 - `tests/form/`: `Form` and its proxies, the values of the x2many fields and the
@@ -75,7 +78,7 @@ are named after their responsibility:
   the decimal conversion).
 - `tools/sql/`: `builder` (the SQL objects), `tables`, `columns`, `constraints`,
   `indexes`, `views` and `rows`.
-- `tools/mail/`: `html` (sanitizing and conversions), `links` and `addresses`.
+- `tools/mail/`: `html` (`sanitize`, `plaintext` and `content`), `links` and `addresses`.
 - `tools/loading/convert/`: `common`, `xml`, `csv` and `file`.
 - `tools/js/js_transpiler/`: `paths`, `imports`, `exports` and `transpile`.
 - `tools/profiling/profiler/`: `stack`, `collectors`, `qweb` and `profiler`.
