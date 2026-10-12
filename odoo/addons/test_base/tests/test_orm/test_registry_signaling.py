@@ -13,7 +13,7 @@ from odoo.sql_db import db_connect
 from odoo.tests import common, tagged
 from odoo.tests.common import BaseCase, HttpCase, TransactionCase
 from odoo.tests.test_cursor import TestCursor
-from odoo.tools.misc import config
+from odoo.tools.config import config
 
 ADMIN_USER_ID = common.ADMIN_USER_ID
 
