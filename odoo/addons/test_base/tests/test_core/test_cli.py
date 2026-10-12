@@ -8,8 +8,9 @@ from contextlib import redirect_stdout
 from io import BytesIO, TextIOWrapper
 from pathlib import Path
 
-from odoo.cli.command import commands, load_addons_commands, load_internal_commands
-from odoo.cli.i18n import I18n
+from odoo.cli.base import commands
+from odoo.cli.commands.i18n import I18n
+from odoo.cli.registry import load_addons_commands, load_internal_commands
 from odoo.modules.module import get_module_path
 from odoo.tests import BaseCase, TransactionCase, tagged
 from odoo.tests.common import Like

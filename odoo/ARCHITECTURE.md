@@ -39,7 +39,7 @@ loaded. Imports of upper layers are allowed inside functions and inside
      └─ odoo.cli.main()
          ├─ odoo.core.bootstrap      python checks, gc tuning, library patches
          ├─ odoo.orm                 shortcuts on the `odoo` namespace
-         └─ odoo.cli.server          configuration, logging, database checks
+         └─ odoo.cli.commands.server  configuration, logging, database checks
              └─ odoo.service.server.start()
                  ├─ load the server-wide modules
                  ├─ pick the server: gevent, prefork or threaded

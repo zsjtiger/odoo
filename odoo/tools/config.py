@@ -673,7 +673,7 @@ class configmanager:
             self._warn("Since ages ago, the OPENERP_SERVER environment variable has been replaced by ODOO_RC", DeprecationWarning)
 
     def _load_cli_options(self, opt):
-        # odoo.cli.command.main parses the config twice, the second time
+        # odoo.cli.main.main parses the config twice, the second time
         # without --addons-path but expect the value to be persisted
         addons_path = self._cli_options.pop('addons_path', None)
         self._cli_options.clear()

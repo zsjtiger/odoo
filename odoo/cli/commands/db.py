@@ -13,11 +13,11 @@ import requests
 import odoo.modules.neutralize
 import odoo.orm.sql_db
 
-from ..modules import db
-from ..tools import config
-from . import Command
-from .obfuscate import Obfuscator
-from .server import report_configuration
+from ...modules import db
+from ...tools import config
+from ..base import Command
+from ..utils import report_configuration
+from ._obfuscate import Obfuscator
 
 _logger = logging.getLogger(__name__)
 

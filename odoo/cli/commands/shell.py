@@ -10,7 +10,8 @@ from odoo import api
 from odoo.modules.registry import Registry
 from odoo.service import server
 from odoo.tools import config
-from . import Command, server as cli_server
+from .. import utils as cli_utils
+from ..base import Command
 
 _logger = logging.getLogger(__name__)
 
@@ -71,7 +72,7 @@ class Shell(Command):
         )
         config.parser.add_option_group(group)
         config.parse_config(args, setup_logging=True)
-        cli_server.report_configuration()
+        cli_utils.report_configuration()
         server.start(preload=[], stop=True)
         signal.signal(signal.SIGINT, raise_keyboard_interrupt)
 

@@ -6,7 +6,7 @@ from pathlib import Path
 
 from odoo import SUPERUSER_ID
 from odoo.api import Environment
-from odoo.cli.command import Command
+from odoo.cli.base import Command
 from odoo.modules.loading import force_demo
 from odoo.modules.module import get_module_path, initialize_sys_path
 from odoo.modules.registry import Registry
