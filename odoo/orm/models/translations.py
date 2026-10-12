@@ -3,7 +3,6 @@
 
 from __future__ import annotations
 
-import logging
 import re
 import typing
 
@@ -11,10 +10,12 @@ import psycopg2.errors
 import psycopg2.extensions
 
 from odoo.exceptions import MissingError
-from odoo.tools.translate import LazyTranslate
 
 
 from odoo.orm.fields.textual import StoredTranslations
+from collections.abc import Callable
+from odoo.exceptions import UserError
+from odoo.tools.translate import _
 
 
 if typing.TYPE_CHECKING:
@@ -22,22 +23,6 @@ if typing.TYPE_CHECKING:
     from odoo.orm.core.types import ValuesType
 
 
-_lt = LazyTranslate('base')
-_logger = logging.getLogger('odoo.models')
-_unlink = logging.getLogger('odoo.models.unlink')
-
-regex_order = re.compile(r'''
-    ^
-    (\s*
-        (?P<term>((?P<field>[a-z0-9_]+)(\.(?P<property>[a-z0-9_]+))?(:(?P<func>[a-z_]+))?))
-        (\s+(?P<direction>desc|asc))?
-        (\s+(?P<nulls>nulls\ first|nulls\ last))?
-        \s*
-        (,|$)
-    )+
-    (?<!,)
-    $
-''', re.IGNORECASE | re.VERBOSE)
 regex_order_part_read_group = re.compile(r"""
     \s*
     (?P<term>(?P<field>[a-z0-9_]+)(\.([\w\.]+))?(:(?P<func>[a-z_]+))?)
@@ -51,7 +36,6 @@ regex_read_group_spec = re.compile(r'(\w+)(\.([\w\.]+))?(?::(\w+))?$')  # For _r
 INSERT_BATCH_SIZE = 100
 UPDATE_BATCH_SIZE = 100
 SQL_DEFAULT = psycopg2.extensions.AsIs("DEFAULT")
-
 
 
 def get_field_translations(self, field_name: str, langs: Collection[str] | None=None) -> tuple[list[dict[str, str]], dict[str, typing.Any]]:
@@ -145,3 +129,92 @@ def _read_format(self, fnames: Sequence[str], load: str='_classic_read') -> list
 
 def update_field_translations(self, field_name: str, translations: dict[str, str | typing.Literal[False] | dict[str, str]], source_lang: str='') -> bool:
     return self._update_field_translations(field_name, translations, source_lang=source_lang)
+
+
+def _update_field_translations(self, field_name: str, translations: dict[str, str | typing.Literal[False] | dict[str, str]], digest: Callable[[str], str] | None=None, source_lang: str='') -> bool:
+    self.ensure_one()
+
+    self.check_access('write')
+    field = self._fields[field_name]
+    self.check_field_access(field, 'write')
+
+    valid_langs = set(code for code, _ in self.env['res.lang'].get_installed()) | {'en_US'}
+    source_lang = source_lang or 'en_US'
+    missing_langs = (set(translations) | {source_lang}) - valid_langs
+    if missing_langs:
+        raise UserError(
+            _("The following languages are not activated: %(missing_names)s",
+            missing_names=', '.join(missing_langs))
+        )
+
+    if not field.translate:
+        return False  # or raise error
+
+    if not field.store and not field.related and field.compute:
+        # a non-related non-stored computed field cannot be translated, even if it has inverse function
+        return False
+
+    # Strictly speaking, a translated related/computed field cannot be stored
+    # because the compute function only support one language
+    # `not field.store` is a redundant logic.
+    # But some developers store translated related fields.
+    # In these cases, only all translations of the first stored translation field will be updated
+    # For other stored related translated field, the translation for the flush language will be updated
+    if field.related and not field.store:
+        related_path, field_name = field.related.rsplit(".", 1)
+        return self.mapped(related_path)._update_field_translations(field_name, translations, digest)
+
+    if field.translate is True:
+        # falsy values (except emtpy str) are used to void the corresponding translation
+        if any(translation and not isinstance(translation, str) for translation in translations.values()):
+            raise UserError(_("Translations for model translated fields only accept falsy values and str"))
+        value_en = translations.get('en_US', True)
+        if not value_en and value_en != '':
+            translations.pop('en_US')
+        if not translations:
+            return False
+
+        drop_langs = {lang for lang, value in translations.items() if not isinstance(value, str)}
+        translations = {lang: value for lang, value in translations.items() if lang not in drop_langs}
+        if drop_langs:
+            stored_translations = self._get_stored_translations(field_name)
+            if field.type == 'html':
+                translations = {lang: field._validated_cache_value(value, self.env) for lang, value in translations.items()}
+            if stored_translations is None:
+                if not translations:
+                    return False
+                write_value = StoredTranslations({
+                    'en_US': translations.get(self.env.lang or 'en_US', next(iter(translations.values()))),
+                    **translations,
+                })
+            else:
+                write_value = StoredTranslations({
+                    **{lang: value for lang, value in stored_translations.items() if lang not in drop_langs},
+                    **translations,
+                })
+        else:
+            write_value = translations
+        self[field_name] = write_value
+        return True
+    else:
+        stored_translations = self._get_stored_translations(field_name)
+        if not stored_translations:
+            return False
+        write_value = stored_translations.translated(
+            self.env, field, source_lang, translations, digest=digest,
+            delay_translations=bool(self.env.context.get('delay_translations')),
+        )
+        self[field_name] = write_value
+    return True
+
+
+def _get_stored_translations(self, field_name: str) -> StoredTranslations | None:
+    self.ensure_one()
+    field = self._fields[field_name]
+    record = self
+    while field.related and not field.store:
+        record = record.mapped(field.related.rsplit('.', 1)[0])[:1]
+        if not record:
+            return None
+        field = field.related_field
+    return field._get_stored_translations(record)

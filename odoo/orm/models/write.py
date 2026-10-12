@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import json
 import logging
 import re
 import typing
@@ -11,38 +12,20 @@ from collections import defaultdict
 import psycopg2.errors
 import psycopg2.extensions
 
-from odoo.tools import (
-    split_every, SQL,
-)
-from odoo.tools.translate import LazyTranslate
+from odoo.exceptions import AccessError, UserError
+from odoo.tools import split_every, SQL
+from odoo.tools.constants import IN_MAX
+from odoo.tools.translate import _
 
-
+from odoo.orm.core.utils import SUPERUSER_ID
 from odoo.orm.fields import Field, determine
-
-from odoo.orm.core.utils import (
-    SUPERUSER_ID,
-)
 
 if typing.TYPE_CHECKING:
     from odoo.orm.core.types import ValuesType
 
 
-_lt = LazyTranslate('base')
-_logger = logging.getLogger('odoo.models')
 _unlink = logging.getLogger('odoo.models.unlink')
 
-regex_order = re.compile(r'''
-    ^
-    (\s*
-        (?P<term>((?P<field>[a-z0-9_]+)(\.(?P<property>[a-z0-9_]+))?(:(?P<func>[a-z_]+))?))
-        (\s+(?P<direction>desc|asc))?
-        (\s+(?P<nulls>nulls\ first|nulls\ last))?
-        \s*
-        (,|$)
-    )+
-    (?<!,)
-    $
-''', re.IGNORECASE | re.VERBOSE)
 regex_order_part_read_group = re.compile(r"""
     \s*
     (?P<term>(?P<field>[a-z0-9_]+)(\.([\w\.]+))?(:(?P<func>[a-z_]+))?)
@@ -234,3 +217,295 @@ def _write_multi(self, vals_list: list[ValuesType]) -> None:
     # update parent_path
     if parent_records:
         parent_records._parent_store_update()
+
+
+def write(self, vals: ValuesType) -> typing.Literal[True]:
+    if not self:
+        return True
+
+    self.check_access('write')
+    for field_name in vals:
+        try:
+            self.check_field_access(self._fields[field_name], 'write')
+        except KeyError as e:
+            raise ValueError(f"Invalid field {field_name!r} in {self._name!r}") from e
+    env = self.env
+
+    bad_names = {'id', 'parent_path'}
+    if self._log_access:
+        # the superuser can set log_access fields while loading registry
+        if not (self.env.uid == SUPERUSER_ID and not self.pool.ready):
+            bad_names.update(LOG_ACCESS_COLUMNS)
+
+    # set magic fields
+    vals = {key: val for key, val in vals.items() if key not in bad_names}
+    if self._log_access:
+        vals.setdefault('write_uid', self.env.uid)
+        vals.setdefault('write_date', self.env.cr.now())
+
+    field_values = sorted(
+        [(self._fields[key], val) for key, val in vals.items()],
+        key=lambda item: self._fields_update_order__[item[0]]
+    )                                           # [(field, value)]
+    determine_inverses = defaultdict(list)      # {inverse: fields}
+    fnames_modifying_relations = []
+    protected = set()
+    for field, value in field_values:
+        if field.inverse:
+            if field.type in ('one2many', 'many2many'):
+                # The written value is a list of commands that must applied
+                # on the field's current value. Because the field is
+                # protected while being written, the field's current value
+                # will not be computed and default to an empty recordset. So
+                # make sure the field's value is in cache before writing, in
+                # order to avoid an inconsistent update.
+                self[field.name]
+            determine_inverses[field.inverse].append(field)
+        if self.pool.is_modifying_relations(field):
+            fnames_modifying_relations.append(field.name)
+        if field.inverse or (field.compute and not field.readonly):
+            if field.store or field.type not in ('one2many', 'many2many'):
+                # Protect the field from being recomputed while being
+                # inversed. In the case of non-stored x2many fields, the
+                # field's value may contain unexpeced new records (created
+                # by command 0). Those new records are necessary for
+                # inversing the field, but should no longer appear if the
+                # field is recomputed afterwards. Not protecting the field
+                # will automatically invalidate the field from the cache,
+                # forcing its value to be recomputed once dependencies are
+                # up-to-date.
+                protected.update(self.pool.field_computed.get(field, [field]))
+
+    # force the computation of fields that are computed with some assigned
+    # fields, but are not assigned themselves
+    to_compute = [field.name
+                  for field in protected
+                  if field.compute and field.name not in vals]
+    if to_compute:
+        self._recompute_recordset(to_compute)
+
+    # protect fields being written against recomputation
+    with env.protecting(protected, self):
+        # Determine records depending on values. When modifying a relational
+        # field, you have to recompute what depends on the field's values
+        # before and after modification.  This is because the modification
+        # has an impact on the "data path" between a computed field and its
+        # dependency.  Note that this double call to modified() is only
+        # necessary for relational fields.
+        #
+        # It is best explained with a simple example: consider two sales
+        # orders SO1 and SO2.  The computed total amount on sales orders
+        # indirectly depends on the many2one field 'order_id' linking lines
+        # to their sales order.  Now consider the following code:
+        #
+        #   line = so1.line_ids[0]      # pick a line from SO1
+        #   line.order_id = so2         # move the line to SO2
+        #
+        # In this situation, the total amount must be recomputed on *both*
+        # sales order: the line's order before the modification, and the
+        # line's order after the modification.
+        self.modified(fnames_modifying_relations, before=True)
+
+        real_recs = self.filtered('id')
+
+        for field, value in field_values:
+            field.write(self, value)
+
+        # determine records depending on new values
+        #
+        # Call modified after write, because the modified can trigger a
+        # search which can trigger a flush which can trigger a recompute
+        # which remove the field from the recompute list while all the
+        # values required for the computation could not be yet in cache.
+        # e.g. Write on `name` of `res.partner` trigger the recompute of
+        # `display_name`, which triggers a search on child_ids to find the
+        # childs to which the display_name must be recomputed, which
+        # triggers the flush of `display_name` because the _order of
+        # res.partner includes display_name. The computation of display_name
+        # is then done too soon because the parent_id was not yet written.
+        # (`test_01_website_reset_password_tour`)
+        self.modified(vals)
+
+        if self._parent_store and self._parent_name in vals:
+            self.flush_model([self._parent_name])
+
+        # validate non-inversed fields first
+        inverse_fields = [f.name for fs in determine_inverses.values() for f in fs]
+        real_recs._validate_fields(vals, inverse_fields)
+
+        for fields in determine_inverses.values():
+            # write again on non-stored fields that have been invalidated from cache
+            for field in fields:
+                if not field.store and (not field.inherited or field.type not in ('one2many', 'many2many')) and any(field._cache_missing_ids(real_recs)):
+                    field.write(real_recs, vals[field.name])
+
+            # inverse records that are not being computed
+            try:
+                fields[0].determine_inverse(real_recs)
+            except AccessError as e:
+                if fields[0].inherited:
+                    description = self.env['ir.model']._get(self._name).name
+                    raise AccessError(_(
+                        "%(previous_message)s\n\nImplicitly accessed through '%(document_kind)s' (%(document_model)s).",
+                        previous_message=e.args[0],
+                        document_kind=description,
+                        document_model=self._name,
+                    ))
+                raise
+
+        # invalidate the cache
+        if real_recs and (cache_name := self._clear_cache_name) and (
+            self._clear_cache_on_fields is None
+            or not vals.keys().isdisjoint(self._clear_cache_on_fields)
+        ):
+            self.env.transaction.invalidate_ormcache(cache_name)
+
+        # validate inversed fields
+        real_recs._validate_fields(inverse_fields)
+
+    if self._check_company_auto:
+        self._check_company(list(vals))
+    return True
+
+
+def unlink(self) -> typing.Literal[True]:
+    if not self:
+        return True
+
+    self.check_access('unlink')
+    self.env.transaction._wrote__ = True
+
+    for func in self._ondelete_methods:
+        # func._ondelete is True => should be called during uninstallation
+        # func._ondelete is False => should be called unless its module is being uninstalled
+        if (
+            func._ondelete
+            or not self.pool.uninstalling_modules
+            or func.__module__.split('.')[2] not in self.pool.uninstalling_modules
+        ):
+            func(self)
+
+    # TOFIX: this avoids an infinite loop when trying to recompute a
+    # field, which triggers the recomputation of another field using the
+    # same compute function, which then triggers again the computation
+    # of those two fields
+    for field in self._fields.values():
+        self.env.remove_to_compute(field, self)
+
+    self.env.flush_all()
+
+    cr = self.env.cr
+    Data = self.env['ir.model.data'].sudo().with_context({})
+    Defaults = self.env['ir.default'].sudo()
+    Attachment = self.env['ir.attachment'].sudo()
+    ir_model_data_unlink = Data
+    ir_attachment_unlink = Attachment
+
+    # mark fields that depend on 'self' to recompute them after 'self' has
+    # been deleted (like updating a sum of lines after deleting one line)
+    with self.env.protecting(self._fields.values(), self):
+        self.modified(self._fields, before=True)
+
+    for sub_ids in split_every(IN_MAX, self.ids):
+        records = self.browse(sub_ids)
+
+        cr.execute(SQL(
+            "DELETE FROM %s WHERE id IN %s",
+            SQL.identifier(self._table), sub_ids,
+        ))
+
+        # Removing the ir_model_data reference if the record being deleted
+        # is a record created by xml/csv file, as these are not connected
+        # with real database foreign keys, and would be dangling references.
+        #
+        # Note: the following steps are performed as superuser to avoid
+        # access rights restrictions, and with no context to avoid possible
+        # side-effects during admin calls.
+        data = Data.search([('model', '=', self._name), ('res_id', 'in', sub_ids)])
+        ir_model_data_unlink |= data
+
+        # For the same reason, remove the relevant records in ir_attachment
+        # (the search is performed with sql as the search method of
+        # ir_attachment is overridden to hide attachments of deleted
+        # records)
+        cr.execute(SQL(
+            "SELECT id FROM ir_attachment WHERE res_model=%s AND res_id IN %s",
+            self._name, sub_ids,
+        ))
+        ir_attachment_unlink |= Attachment.browse(row[0] for row in cr.fetchall())
+
+        # don't allow fallback value in ir.default for many2one company dependent fields to be deleted
+        # Exception: when 'force_delete', these fallbacks can be deleted by Defaults.discard_records(records)
+        if (many2one_fields := self.env.registry.many2one_company_dependents[self._name]) and not self.env.context.get('force_delete'):
+            IrModelFields = self.env["ir.model.fields"]
+            field_ids = tuple(IrModelFields._get_ids(field.model_name).get(field.name) for field in many2one_fields)
+            sub_ids_json_text = tuple(json.dumps(id_) for id_ in sub_ids)
+            if default := Defaults.search([('field_id', 'in', field_ids), ('json_value', 'in', sub_ids_json_text)], limit=1, order='id desc'):
+                ir_field = default.field_id.sudo()
+                field = self.env[ir_field.model]._fields[ir_field.name]
+                record = self.browse(json.loads(default.json_value))
+                raise UserError(_('Unable to delete %(record)s because it is used as the default value of %(field)s', record=record, field=field))
+
+        # on delete set null/restrict for jsonb company dependent many2one
+        for field in many2one_fields:
+            model = self.env[field.model_name]
+            if field.ondelete == 'restrict' and not self.env.context.get('force_delete'):
+                if res := self.env.execute_query(SQL(
+                    """
+                    SELECT id, %(field)s
+                    FROM %(table)s
+                    WHERE %(field)s IS NOT NULL
+                    AND %(field)s @? %(jsonpath)s
+                    ORDER BY id
+                    LIMIT 1
+                    """,
+                    table=SQL.identifier(model._table),
+                    field=SQL.identifier(field.name),
+                    jsonpath=f"$.* ? ({' || '.join(f'@ == {id_}' for id_ in sub_ids)})",
+                )):
+                    on_restrict_id, field_json = res[0]
+                    to_delete_id = next(iter(id_ for id_ in field_json.values()))
+                    on_restrict_record = model.browse(on_restrict_id)
+                    to_delete_record = self.browse(to_delete_id)
+                    raise UserError(_('You cannot delete %(to_delete_record)s, as it is used by %(on_restrict_record)s',
+                                      to_delete_record=to_delete_record, on_restrict_record=on_restrict_record))
+            else:
+                self.env.execute_query(SQL(
+                    """
+                    UPDATE %(table)s
+                    SET %(field)s = (
+                        SELECT jsonb_object_agg(
+                            key,
+                            CASE
+                                WHEN value::int4 in %(ids)s THEN NULL
+                                ELSE value::int4
+                            END)
+                        FROM jsonb_each_text(%(field)s)
+                    )
+                    WHERE %(field)s IS NOT NULL
+                    AND %(field)s @? %(jsonpath)s
+                    """,
+                    table=SQL.identifier(model._table),
+                    field=SQL.identifier(field.name),
+                    ids=sub_ids,
+                    jsonpath=f"$.* ? ({' || '.join(f'@ == {id_}' for id_ in sub_ids)})",
+                ))
+
+        # For the same reason, remove the defaults having some of the
+        # records as value
+        Defaults.discard_records(records)
+
+    # invalidate the *whole* cache, since the orm does not handle all
+    # changes made in the database, like cascading delete!
+    self.env.invalidate_all(flush=False)
+    if ir_model_data_unlink:
+        ir_model_data_unlink.unlink()
+    if ir_attachment_unlink:
+        ir_attachment_unlink.unlink()
+    if cache_name := self._clear_cache_name:
+        self.env.transaction.invalidate_ormcache(cache_name)
+
+    # auditing: deletions are infrequent and leave no trace in the database
+    _unlink.info('User #%s deleted %s records with IDs: %r', self.env.uid, self._name, self.ids)
+
+    return True

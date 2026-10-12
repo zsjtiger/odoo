@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import functools
-import logging
 import re
 import typing
 from collections.abc import Callable
@@ -12,7 +11,6 @@ from collections.abc import Callable
 import psycopg2.errors
 import psycopg2.extensions
 
-from odoo.tools.translate import LazyTranslate
 
 
 from odoo.orm.core.domains import Domain
@@ -21,14 +19,12 @@ from odoo.orm.core.utils import (
     ReversibleComparator,
 )
 
+from collections import defaultdict
+from operator import itemgetter
 if typing.TYPE_CHECKING:
     from typing import Self
     from odoo.orm.core.types import DomainType
 
-
-_lt = LazyTranslate('base')
-_logger = logging.getLogger('odoo.models')
-_unlink = logging.getLogger('odoo.models.unlink')
 
 regex_order = re.compile(r'''
     ^
@@ -153,3 +149,44 @@ def filtered_domain(self, domain: DomainType) -> Self:
     predicate = Domain(domain)._as_predicate(self)
     ids = tuple(id_ for id_, rec in zip(self._ids, self) if predicate(rec))
     return self.__class__(self.env, ids, self._prefetch_ids)
+
+
+def mapped[T](self, func: str | Callable[[Self], T]) -> list | BaseModel:
+    if not func:
+        return self                 # support for an empty path of fields
+
+    if isinstance(func, str):
+        # special case: sequence of field names
+        *rel_field_names, field_name = func.split('.')
+        records = self
+        for rel_field_name in rel_field_names:
+            records = records[rel_field_name]
+        field = records._fields[field_name]
+        getter = field.__get__
+        if field.relational:
+            # union of records
+            return getter(records)
+        return [getter(record) for record in records]
+
+    if self:
+        vals = [func(rec) for rec in self]
+        if isinstance(vals[0], BaseModel):
+            return vals[0].browse().union(vals)
+        return vals
+    else:
+        # we want to follow-up the comodel from the function
+        # so we pass an empty recordset
+        vals = func(self)
+        return vals if isinstance(vals, BaseModel) else []
+
+
+def grouped[T](self, key: str | Callable[[Self], T]) -> dict[typing.Any, Self]:
+    if isinstance(key, str):
+        key = itemgetter(key)
+
+    collator = defaultdict(list)
+    for record in self:
+        collator[key(record)].extend(record._ids)
+
+    browse = functools.partial(type(self), self.env, prefetch_ids=self._prefetch_ids)
+    return {key: browse(tuple(ids)) for key, ids in collator.items()}

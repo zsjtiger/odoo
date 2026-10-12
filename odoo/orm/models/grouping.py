@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import itertools
-import logging
 import re
 import typing
 from collections import defaultdict
@@ -17,8 +16,6 @@ from odoo.tools import (
     get_lang, unique,
     SQL,
 )
-from odoo.tools.translate import LazyTranslate
-
 
 
 from odoo.orm.database.query import Query, TableSQL
@@ -32,22 +29,6 @@ if typing.TYPE_CHECKING:
     from odoo.orm.core.types import DomainType, ModelType
 
 
-_lt = LazyTranslate('base')
-_logger = logging.getLogger('odoo.models')
-_unlink = logging.getLogger('odoo.models.unlink')
-
-regex_order = re.compile(r'''
-    ^
-    (\s*
-        (?P<term>((?P<field>[a-z0-9_]+)(\.(?P<property>[a-z0-9_]+))?(:(?P<func>[a-z_]+))?))
-        (\s+(?P<direction>desc|asc))?
-        (\s+(?P<nulls>nulls\ first|nulls\ last))?
-        \s*
-        (,|$)
-    )+
-    (?<!,)
-    $
-''', re.IGNORECASE | re.VERBOSE)
 regex_order_part_read_group = re.compile(r"""
     \s*
     (?P<term>(?P<field>[a-z0-9_]+)(\.([\w\.]+))?(:(?P<func>[a-z_]+))?)
