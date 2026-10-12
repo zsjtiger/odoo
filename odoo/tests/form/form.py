@@ -1,23 +1,14 @@
-"""The form of the tests: it simulates the onchanges and the view of a record."""
+"""The form: the simulation of the user editing a record in the tests."""
 
 from __future__ import annotations
 
 import ast
-import collections
-import collections.abc
 import logging
-from datetime import date
 from lxml import etree
 from odoo import api
 from odoo.models import BaseModel
-from odoo.fields import Command
-from odoo.tools.safe_eval import safe_eval
-
-from .proxies import M2MProxy, X2MProxy
-from .utils import Dotter, MODIFIER_ALIASES, _cleanup_from_default, convert_read_to_form, get_static_context
+from .proxies import M2MProxy
 from .values import UpdateDict
-
-_logger = logging.getLogger('odoo.tests.form')
 
 
 class Form:
@@ -137,7 +128,6 @@ class Form:
             self._init_from_record()
         else:
             self._init_from_defaults()
-
     @classmethod
     def from_action(cls, env: api.Environment, action: dict) -> Form:
         assert action['type'] == 'ir.actions.act_window', \
@@ -162,184 +152,19 @@ class Form:
             .browse(action.get('res_id'))
 
         return cls(record, view_id)
-
     def _process_view(self, tree, model, level=2):
-        """ Post-processes to augment the view_get with:
-        * an id field (may not be present if not in the view but needed)
-        * pre-processed modifiers
-        * pre-processed onchanges list
-        """
-        fields = {'id': {'type': 'id'}}
-        fields_spec = {}
-        modifiers = {'id': {'required': 'False', 'readonly': 'True'}}
-        contexts = {}
-        # retrieve <field> nodes at the current level
-        flevel = tree.xpath('count(ancestor::field)')
-        daterange_field_names = {}
-        field_infos = self._models_info.get(model._name, {}).get("fields", {})
-
-        for node in tree.xpath(f'.//field[count(ancestor::field) = {flevel}]'):
-            field_name = node.get('name')
-
-            # add field_info into fields
-            field_info = field_infos.get(field_name) or {'type': None}
-            fields[field_name] = field_info
-            fields_spec[field_name] = field_spec = {}
-
-            # determine modifiers
-            field_modifiers = {}
-            for attr in ('required', 'readonly', 'invisible', 'column_invisible'):
-                # use python field attribute as default value
-                default = attr in ('required', 'readonly') and field_info.get(attr, False)
-                expr = node.get(attr) or str(default)
-                field_modifiers[attr] = MODIFIER_ALIASES.get(expr, expr)
-
-            # Combine the field modifiers with its ancestor modifiers with an
-            # OR: A field is invisible if its own invisible modifier is True OR
-            # if one of its ancestor invisible modifier is True
-            for ancestor in node.xpath(f'ancestor::*[@invisible][count(ancestor::field) = {flevel}]'):
-                modifier = 'invisible'
-                expr = ancestor.get(modifier)
-                if expr == 'True' or field_modifiers[modifier] == 'True':
-                    field_modifiers[modifier] = 'True'
-                if expr == 'False':
-                    field_modifiers[modifier] = field_modifiers[modifier]
-                elif field_modifiers[modifier] == 'False':
-                    field_modifiers[modifier] = expr
-                else:
-                    field_modifiers[modifier] = f'({expr}) or ({field_modifiers[modifier]})'
-
-            # merge field_modifiers into modifiers[field_name]
-            if field_name in modifiers:
-                # The field is several times in the view, combine the modifier
-                # expression with an AND: a field is X if all occurences of the
-                # field in the view are X.
-                for modifier, expr in modifiers[field_name].items():
-                    if expr == 'False' or field_modifiers[modifier] == 'False':
-                        field_modifiers[modifier] = 'False'
-                    if expr == 'True':
-                        field_modifiers[modifier] = field_modifiers[modifier]
-                    elif field_modifiers[modifier] == 'True':
-                        field_modifiers[modifier] = expr
-                    else:
-                        field_modifiers[modifier] = f'({expr}) and ({field_modifiers[modifier]})'
-
-            modifiers[field_name] = field_modifiers
-
-            # determine context
-            ctx = node.get('context')
-            if ctx:
-                contexts[field_name] = ctx
-                field_spec['context'] = get_static_context(ctx)
-
-            # FIXME: better widgets support
-            # NOTE: selection breaks because of m2o widget=selection
-            if node.get('widget') in ['many2many']:
-                field_info['type'] = node.get('widget')
-            elif node.get('widget') == 'daterange':
-                options = ast.literal_eval(node.get('options', '{}'))
-                related_field = options.get('start_date_field') or options.get('end_date_field')
-                daterange_field_names[related_field] = field_name
-
-            # determine subview to use for edition
-            if field_info['type'] == 'one2many':
-                if level:
-                    field_info['invisible'] = field_modifiers.get('invisible')
-                    edition_view = self._get_one2many_edition_view(field_info, node, level)
-                    field_info['edition_view'] = edition_view
-                    field_spec['fields'] = edition_view['fields_spec']
-                else:
-                    # this trick enables the following invariant: every one2many
-                    # field has some 'edition_view' in its info dict
-                    field_info['type'] = 'many2many'
-
-        for related_field, start_field in daterange_field_names.items():
-            # If the field doesn't exist in the view add it implicitly
-            if related_field not in modifiers:
-                field_info = field_infos.get(related_field) or {'type': None}
-                fields[related_field] = field_info
-                fields_spec[related_field] = {}
-                modifiers[related_field] = {
-                    'required': field_info.get('required', False),
-                    'readonly': field_info.get('readonly', False),
-                }
-            modifiers[related_field]['invisible'] = modifiers[start_field].get('invisible', False)
-
-        return {
-            'tree': tree,
-            'fields': fields,
-            'fields_spec': fields_spec,
-            'modifiers': modifiers,
-            'contexts': contexts,
-            'onchange': model._onchange_spec({'arch': etree.tostring(tree)}),
-        }
-
+        return _view._process_view(self, tree, model, level)
     def _get_one2many_edition_view(self, field_info, node, level):
-        """ Return a suitable view for editing records into a one2many field. """
-        submodel = self._env[field_info['relation']]
-
-        # by simplicity, ensure we always have tree and form views
-        views = {
-            view.tag: view for view in node.xpath('./*[descendant::field]')
-        }
-        for view_type in ['list', 'form']:
-            if view_type in views:
-                continue
-            if field_info['invisible'] == 'True':
-                # add an empty view
-                views[view_type] = etree.Element(view_type)
-                continue
-            refs = self._env['ir.ui.view']._get_view_refs(node)
-            subviews = submodel.with_context(**refs).get_views([(None, view_type)])
-            subnode = etree.fromstring(subviews['views'][view_type]['arch'])
-            views[view_type] = subnode
-            node.append(subnode)
-            for model_name, value in subviews['models'].items():
-                model_info = self._models_info.setdefault(model_name, {})
-                if "fields" not in model_info:
-                    model_info["fields"] = {}
-                model_info["fields"].update(value["fields"])
-
-        # pick the first editable subview
-        view_type = next(
-            vtype for vtype in node.get('mode', 'list').split(',') if vtype != 'form'
-        )
-        if not (view_type == 'list' and views['list'].get('editable')):
-            view_type = 'form'
-
-        # don't recursively process o2ms in o2ms
-        return self._process_view(views[view_type], submodel, level=level-1)
-
+        return _view._get_one2many_edition_view(self, field_info, node, level)
     def __str__(self):
         return f"<{type(self).__name__} {self._record}>"
-
     def _init_from_record(self):
-        """ Initialize the form for an existing record. """
-        assert self._record.id, "editing unstored records is not supported"
-        self._values.clear()
-
-        [record_values] = self._record.web_read(self._view['fields_spec'])
-        self._env.flush_all()
-        self._env.transaction.clear()
-
-        values = convert_read_to_form(record_values, self._view['fields'])
-        self._values.update(values)
-
+        return _save._init_from_record(self)
     def _init_from_defaults(self):
-        """ Initialize the form for a new record. """
-        vals = self._values
-        vals['id'] = False
-
-        # call onchange with no field; this retrieves default values, applies
-        # onchanges and return the result
-        self._perform_onchange()
-        # mark all fields as modified
-        self._values._changed.update(self._view['fields'])
-
+        return _save._init_from_defaults(self)
     def __getattr__(self, field_name):
         """ Return the current value of the given field. """
         return self[field_name]
-
     def __getitem__(self, field_name):
         """ Return the current value of the given field. """
         field_info = self._view['fields'].get(field_name)
@@ -354,11 +179,9 @@ class Form:
         elif field_info['type'] == 'many2many':
             return M2MProxy(self, field_name)
         return value
-
     def __setattr__(self, field_name, value):
         """ Set the given field to the given value, and proceed with the expected onchanges. """
         self[field_name] = value
-
     def __setitem__(self, field_name, value):
         """ Set the given field to the given value, and proceed with the expected onchanges. """
         field_info = self._view['fields'].get(field_name)
@@ -376,91 +199,22 @@ class Form:
 
         self._values[field_name] = value
         self._perform_onchange(field_name)
-
     def _get_modifier(self, field_name, modifier, *, view=None, vals=None):
-        if view is None:
-            view = self._view
-
-        expr = view['modifiers'][field_name].get(modifier, False)
-        if isinstance(expr, bool):
-            return expr
-        if expr in ('True', 'False'):
-            return expr == 'True'
-
-        if vals is None:
-            vals = self._values
-
-        eval_context = self._get_eval_context(vals)
-
-        return bool(safe_eval(expr, eval_context))
-
+        return _modifiers._get_modifier(self, field_name, modifier, view=view, vals=vals)
     def _get_context(self, field_name):
-        """ Return the context of a given field. """
-        context_str = self._view['contexts'].get(field_name)
-        if not context_str:
-            return {}
-        eval_context = self._get_eval_context()
-        return safe_eval(context_str, eval_context)
-
+        return _modifiers._get_context(self, field_name)
     def _get_eval_context(self, values=None):
-        """ Return the context dict to eval something. """
-        context = {
-            'id': self._record.id,
-            'active_id': self._record.id,
-            'active_ids': self._record.ids,
-            'active_model': self._record._name,
-            'current_date': date.today().strftime("%Y-%m-%d"),
-            **self._env.context,
-        }
-        if values is None:
-            values = self._get_all_values()
-        return {
-            **context,
-            'context': context,
-            **values,
-        }
-
+        return _modifiers._get_eval_context(self, values)
     def _get_all_values(self):
-        """ Return the values of all fields. """
-        return self._get_values('all')
-
+        return _modifiers._get_all_values(self)
     def __enter__(self):
         """ This makes the Form usable as a context manager. """
         return self
-
     def __exit__(self, exc_type, exc_value, traceback):
         if not exc_type:
             self.save()
-
     def save(self):
-        """ Save the form (if necessary) and return the current record:
-
-        * does not save ``readonly`` fields;
-        * does not save unmodified fields (during edition) — any assignment
-          or onchange return marks the field as modified, even if set to its
-          current value.
-
-        When nothing must be saved, it simply returns the current record.
-
-        :raises AssertionError: if the form has any unfilled required field
-        """
-        values = self._get_save_values()
-        if not self._record or values:
-            # save and reload
-            [record_values] = self._record.web_save(values, self._view['fields_spec'])
-            self._env.flush_all()
-            self._env.transaction.clear()  # discard cache and pending recomputations
-
-            if not self._record:
-                record = self._record.browse(record_values['id'])
-                object.__setattr__(self, '_record', record)
-
-            values = convert_read_to_form(record_values, self._view['fields'])
-            self._values.clear()
-            self._values.update(values)
-
-        return self._record
-
+        return _save.save(self)
     @property
     def record(self):
         """ Return the record being edited by the form. This attribute is
@@ -468,295 +222,23 @@ class Form:
         """
         assert not self._values._changed
         return self._record
-
     def _get_save_values(self):
-        """ Validate and return field values modified since load/save. """
-        return self._get_values('save')
-
+        return _save._get_save_values(self)
     def _get_values(self, mode, values=None, view=None, modifiers_values=None, parent_link=None):
-        """ Validate & extract values, recursively in order to handle o2ms properly.
-
-        :param mode: can be ``"save"`` (validate and return non-readonly modified fields),
-            ``"onchange"`` (return modified fields) or ``"all"`` (return all field values)
-        :param UpdateDict values: values of the record to extract
-        :param view: view info
-        :param dict modifiers_values: defaults to ``values``, but o2ms need some additional massaging
-        :param parent_link: optional field representing "parent"
-        """
-        assert mode in ('save', 'onchange', 'all')
-
-        if values is None:
-            values = self._values
-        if view is None:
-            view = self._view
-        assert isinstance(values, UpdateDict)
-
-        modifiers_values = modifiers_values or values
-
-        result = {}
-        for field_name, field_info in view['fields'].items():
-            if field_name == 'id' or field_name not in values:
-                continue
-
-            value = values[field_name]
-
-            # note: maybe `invisible` should not skip `required` if model attribute
-            if (
-                mode == 'save'
-                and value is False
-                and field_name != parent_link
-                and field_info['type'] != 'boolean'
-                and not self._get_modifier(field_name, 'invisible', view=view, vals=modifiers_values)
-                and not self._get_modifier(field_name, 'column_invisible', view=view, vals=modifiers_values)
-                and self._get_modifier(field_name, 'required', view=view, vals=modifiers_values)
-            ):
-                raise AssertionError(f"{field_name} is a required field ({view['modifiers'][field_name]})")
-
-            # skip unmodified fields unless all_fields
-            if mode in ('save', 'onchange') and field_name not in values._changed:
-                continue
-
-            if mode == 'save' and self._get_modifier(field_name, 'readonly', view=view, vals=modifiers_values):
-                field_node = next(
-                    node
-                    for node in view['tree'].iter('field')
-                    if node.get('name') == field_name
-                )
-                if not field_node.get('force_save'):
-                    continue
-
-            if field_info['type'] == 'one2many':
-                if mode == 'all':
-                    # in the context of an eval, format it as a list of ids
-                    value = list(value)
-                else:
-                    subview = field_info['edition_view']
-                    value = value.to_commands(lambda vals: self._get_values(
-                        mode, vals, subview,
-                        modifiers_values={'id': False, **vals, 'parent': Dotter(values)},
-                        # related o2m don't have a relation_field
-                        parent_link=field_info.get('relation_field'),
-                    ))
-
-            elif field_info['type'] == 'many2many':
-                if mode == 'all':
-                    # in the context of an eval, format it as a list of ids
-                    value = list(value)
-                else:
-                    value = value.to_commands()
-
-            elif field_info['type'] == 'binary':
-                if isinstance(value, dict) and 'content' not in value:
-                    # field is just read and not modified
-                    continue
-
-            result[field_name] = value
-
-        return result
-
+        return _save._get_values(self, mode, values, view, modifiers_values, parent_link)
     def _perform_onchange(self, field_name=None):
-        assert field_name is None or isinstance(field_name, str)
-
-        # marks onchange source as changed
-        if field_name:
-            field_names = [field_name]
-            self._values._changed.add(field_name)
-        else:
-            field_names = []
-
-        # skip calling onchange() if there's no on_change on the field
-        if field_name and not self._view['onchange'][field_name]:
-            return
-
-        record = self._record
-
-        # if the onchange is triggered by a field, add the context of that field
-        if field_name:
-            context = self._get_context(field_name)
-            if context:
-                record = record.with_context(**context)
-
-        values = self._get_onchange_values()
-        result = record.onchange(values, field_names, self._view['fields_spec'])
-        self._env.flush_all()
-        self._env.transaction.clear()  # discard cache and pending recomputations
-
-        if w := result.get('warning'):
-            if isinstance(w, collections.abc.Mapping) and w.keys() >= {'title', 'message'}:
-                _logger.getChild('onchange').warning("%(title)s %(message)s", w)
-            else:
-                _logger.getChild('onchange').error(
-                    "received invalid warning %r from onchange on %r (should be a dict with keys `title` and `message`)",
-                    w,
-                    field_names,
-                )
-
-        if not field_name:
-            # fill in whatever fields are still missing with falsy values
-            self._values.update({
-                field_name: _cleanup_from_default(field_info['type'], False)
-                for field_name, field_info in self._view['fields'].items()
-                if field_name not in self._values
-            })
-
-        if result.get('value'):
-            self._apply_onchange(result['value'])
-
-        return result
-
+        return _onchange._perform_onchange(self, field_name)
     def _get_onchange_values(self):
-        """ Return modified field values for onchange. """
-        return self._get_values('onchange')
-
+        return _onchange._get_onchange_values(self)
     def _apply_onchange(self, values):
-        self._apply_onchange_(self._values, self._view['fields'], values)
-
+        return _onchange._apply_onchange(self, values)
     def _apply_onchange_(self, values, fields, onchange_values):
-        assert isinstance(values, UpdateDict)
-        for fname, value in onchange_values.items():
-            field_info = fields[fname]
-            if field_info['type'] in ('one2many', 'many2many'):
-                subfields = {}
-                if field_info['type'] == 'one2many':
-                    subfields = field_info['edition_view']['fields']
-                field_value = values[fname]
-                for cmd in value:
-                    match cmd[0]:
-                        case Command.CREATE:
-                            vals = UpdateDict(convert_read_to_form(dict.fromkeys(subfields, False), subfields))
-                            self._apply_onchange_(vals, subfields, cmd[2])
-                            field_value.create(vals)
-                        case Command.UPDATE:
-                            vals = field_value.get_vals(cmd[1])
-                            self._apply_onchange_(vals, subfields, cmd[2])
-                        case Command.DELETE | Command.UNLINK:
-                            field_value.remove(cmd[1])
-                        case Command.LINK:
-                            field_value.add(cmd[1], convert_read_to_form(cmd[2], subfields))
-                        case c:
-                            raise ValueError(f"Unexpected onchange() o2m command {c!r}")
-            else:
-                values[fname] = value
-            values._changed.add(fname)
+        return _onchange._apply_onchange_(self, values, fields, onchange_values)
 
 
-class O2MForm(Form):
-    # noinspection PyMissingConstructor
-    # pylint: disable=super-init-not-called
-    def __init__(self, proxy, index=None):
-        model = proxy._model
-        object.__setattr__(self, '_proxy', proxy)
-        object.__setattr__(self, '_index', index)
-
-        object.__setattr__(self, '_record', model)
-        object.__setattr__(self, '_env', model.env)
-
-        object.__setattr__(self, '_models_info', proxy._form._models_info)
-        object.__setattr__(self, '_view', proxy._field_info['edition_view'])
-
-        object.__setattr__(self, '_values', UpdateDict())
-        if index is None:
-            self._init_from_defaults()
-        else:
-            vals = proxy._records[index]
-            self._values.update(vals)
-            if vals.get('id'):
-                object.__setattr__(self, '_record', model.browse(vals['id']))
-
-    def _get_modifier(self, field_name, modifier, *, view=None, vals=None):
-        if modifier != 'required' and self._proxy._form._get_modifier(self._proxy._field, modifier):
-            return True
-        return super()._get_modifier(field_name, modifier, view=view, vals=vals)
-
-    def _get_eval_context(self, values=None):
-        eval_context = super()._get_eval_context(values)
-        eval_context['parent'] = Dotter(self._proxy._form._values)
-        return eval_context
-
-    def _get_onchange_values(self):
-        values = super()._get_onchange_values()
-        # computed o2m may not have a relation_field(?)
-        field_info = self._proxy._field_info
-        if 'relation_field' in field_info:  # note: should be fine because not recursive
-            parent_form = self._proxy._form
-            parent_values = parent_form._get_onchange_values()
-            if parent_form._record.id:
-                parent_values['id'] = parent_form._record.id
-            values[field_info['relation_field']] = parent_values
-        return values
-
-    def save(self):
-        proxy = self._proxy
-        field_value = proxy._form._values[proxy._field]
-        values = self._get_save_values()
-        if self._index is None:
-            field_value.create(values)
-        else:
-            id_ = field_value[self._index]
-            field_value.update(id_, values)
-
-        proxy._form._perform_onchange(proxy._field)
-
-    def _get_save_values(self):
-        """ Validate and return field values modified since load/save. """
-        values = UpdateDict(self._values)
-
-        for field_name in self._view['fields']:
-            if self._get_modifier(field_name, 'required') and not (
-                self._get_modifier(field_name, 'column_invisible')
-                or self._get_modifier(field_name, 'invisible')
-            ):
-                assert values[field_name] is not False, f"{field_name!r} is a required field"
-
-        return values
+_logger = logging.getLogger('odoo.tests.form')
 
 
-class O2MProxy(X2MProxy):
-    """ Proxy object for editing the value of a one2many field. """
-    def __len__(self):
-        return len(self._field_value)
-
-    @property
-    def _model(self):
-        model = self._form._env[self._field_info['relation']]
-        context = self._form._get_context(self._field)
-        if context:
-            model = model.with_context(**context)
-        return model
-
-    @property
-    def _records(self):
-        return self._field_value.to_list_of_vals()
-
-    def new(self):
-        """ Returns a :class:`Form` for a new
-        :class:`~odoo.fields.One2many` record, properly initialised.
-
-        The form is created from the list view if editable, or the field's
-        form view otherwise.
-
-        :raises AssertionError: if the field is not editable
-        """
-        self._assert_editable()
-        return O2MForm(self)
-
-    def edit(self, index):
-        """ Returns a :class:`Form` to edit the pre-existing
-        :class:`~odoo.fields.One2many` record.
-
-        The form is created from the list view if editable, or the field's
-        form view otherwise.
-
-        :raises AssertionError: if the field is not editable
-        """
-        self._assert_editable()
-        return O2MForm(self, index)
-
-    def remove(self, index):
-        """ Removes the record at ``index`` from the parent form.
-
-        :raises AssertionError: if the field is not editable
-        """
-        self._assert_editable()
-        self._field_value.remove(self._field_value[index])
-        self._form._perform_onchange(self._field)
+# the delegated methods of the class, and the modules that use the class: at the end, they import this module
+from .o2m import O2MProxy  # noqa: E402
+from . import view as _view, modifiers as _modifiers, onchange as _onchange, save as _save  # noqa: E402

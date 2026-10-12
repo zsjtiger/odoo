@@ -335,7 +335,7 @@ Traceback (most recent call last):
     with self.assertQueryCount(system=0):
   File "/usr/lib/python/contextlib.py", line $line, in __exit__
     next(self.gen)
-  File "/root_path/odoo/odoo/tests/common/base.py", line $line, in assertQueryCount
+  File "/root_path/odoo/odoo/tests/common/base/asserts.py", line $line, in assertQueryCount
     self.fail(msg % (login, count, expected, funcname, filename, linenum))
 AssertionError: Query count more than expected for user __system__: 1 > 0 in test_assertQueryCount at test_tests/tests/test_test_suite.py:$line
 ''')
