@@ -1922,7 +1922,7 @@ class TranslationRecordReader(TranslationReader):
         if not any(fields[field_name].translate and fields[field_name].store for field_name in field_names):
             return
 
-        records._BaseModel__ensure_xml_id()
+        records._ensure_xml_id()
 
         model_name = records._name
         query = """SELECT min(concat(module, '.', name)), res_id

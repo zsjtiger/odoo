@@ -36,16 +36,16 @@ import warnings
 from collections import defaultdict, deque
 from collections.abc import Callable, Iterable, Mapping
 from inspect import getmembers
-from operator import call, itemgetter
+from operator import itemgetter
 
 import psycopg2.errors
 import psycopg2.extensions
 
 from odoo.exceptions import AccessError, LockError, MissingError, ValidationError, UserError
 from odoo.tools import (
-    clean_context, frozendict, get_lang, OrderedSet,
-    partition, split_every, unique,
-    SQL, sql, groupby,
+    clean_context, frozendict, OrderedSet,
+    partition, split_every,
+    SQL, sql,
 )
 from odoo.tools.constants import BIG_RECORDSET_SIZE, IN_MAX
 from odoo.tools.func import deprecated
@@ -60,7 +60,7 @@ from odoo.orm.database import schema as orm_schema
 from odoo.orm.core import decorators as api
 from odoo.orm.core.commands import Command
 from odoo.orm.core.domains import Domain
-from odoo.orm.fields import Field, determine
+from odoo.orm.fields import Field
 from odoo.orm.fields.misc import Id
 from odoo.orm.fields.temporal import Datetime
 from odoo.orm.fields.textual import Char, StoredTranslations
@@ -68,8 +68,8 @@ from odoo.orm.fields.textual import Char, StoredTranslations
 from odoo.orm.core.identifiers import NewId
 from odoo.orm.database.query import Query, TableSQL
 from odoo.orm.core.utils import (
-    OriginIds, Prefetch, ReversibleComparator, parse_field_expr,
-    COLLECTION_TYPES, SQL_OPERATORS,
+    OriginIds, Prefetch, parse_field_expr,
+    COLLECTION_TYPES,
     SUPERUSER_ID,
 )
 
@@ -624,7 +624,7 @@ class BaseModel(metaclass=MetaModel):
     def _is_an_ordinary_table(self):
         return self.pool.is_an_ordinary_table(self)
 
-    def __ensure_xml_id(self, skip=False):
+    def _ensure_xml_id(self, skip=False):
         """ Create missing external ids for records in ``self``, and return an
             iterator of pairs ``(record, xmlid)`` for the records in ``self``.
 
@@ -711,210 +711,7 @@ class BaseModel(metaclass=MetaModel):
             used when recursing, avoid using when calling from outside
         :return: list of lists of corresponding values
         """
-        import_compatible = self.env.context.get('import_compat', True)
-        lines = []
-
-
-        if not _is_toplevel_call:
-            # {properties_field: {property_name: [property_type, {record_id: value}]}}
-            cache_properties = self.env.cr.cache['export_properties_cache']
-        else:
-            cache_properties = self.env.cr.cache['export_properties_cache'] = defaultdict(dict)
-
-            def fill_properties_cache(records, fnames_by_path, fname):
-                """ Fill the cache for the ``fname`` properties field and return it """
-                cache_properties_field = cache_properties[records._fields[fname]]
-
-                # read properties to have all the logic of Properties.convert_to_read_multi
-                for row in records.read([fname]):
-                    properties = row[fname]
-                    if not properties:
-                        continue
-                    rec_id = row['id']
-
-                    for property in properties:
-                        current_prop_name = property['name']
-                        if f"{fname}.{current_prop_name}" not in fnames_by_path:
-                            continue
-                        property_type = property['type']
-                        if current_prop_name not in cache_properties_field:
-                            cache_properties_field[current_prop_name] = [property_type, {}]
-
-                        __, cache_by_id = cache_properties_field[current_prop_name]
-                        if rec_id in cache_by_id:
-                            continue
-
-                        value = property.get('value')
-                        if property_type in ('many2one', 'many2many'):
-                            if not isinstance(value, list):
-                                value = [value] if value else []
-                            value = self.env[property['comodel']].browse([val[0] for val in value])
-                        elif property_type == 'tags' and value:
-                            value = ",".join(
-                                next(iter(tag[1] for tag in property['tags'] if tag[0] == v), '')
-                                for v in value
-                            )
-                        elif property_type == 'selection':
-                            value = dict(property['selection']).get(value, '')
-                        cache_by_id[rec_id] = value
-
-            def fetch_fields(records, field_paths):
-                """ Fill the cache of ``records`` for all ``field_paths`` recursively included properties"""
-                if not records:
-                    return
-
-                fnames_by_path = dict(groupby(
-                    [path for path in field_paths if path and path[0] not in ('id', '.id')],
-                    # strip the language part of translated paths ('name@fr_FR')
-                    lambda path: path[0].split('@')[0],
-                ))
-
-                # Fetch needed fields (remove '.property_name' part)
-                fnames = list(unique(fname.split('.')[0] for fname in fnames_by_path))
-                if translated_fnames := [fname for fname in fnames if records._fields[fname].translate]:
-                    # fetch all the languages at once instead of one query each
-                    records.with_context(prefetch_langs=True).fetch(translated_fnames)
-                records.fetch(fnames)
-                # Fill the cache of the properties field
-                for fname in fnames:
-                    field = records._fields[fname]
-                    if field.type == 'properties':
-                        fill_properties_cache(records, fnames_by_path, fname)
-
-                # Call it recursively for relational field (included property relational field)
-                for fname, paths in fnames_by_path.items():
-                    if '.' in fname:  # Properties field
-                        fname, prop_name = fname.split('.')
-                        field = records._fields[fname]
-                        assert field.type == 'properties' and prop_name
-
-                        property_type, property_cache = cache_properties[field].get(prop_name, ('char', None))
-                        if property_type not in ('many2one', 'many2many') or not property_cache:
-                            continue
-                        model = next(iter(property_cache.values())).browse()
-                        subrecords = model.union(property_cache[rec_id] for rec_id in records.ids if rec_id in property_cache)
-                    else:  # Normal field
-                        field = records._fields[fname]
-                        if not field.relational:
-                            continue
-                        subrecords = records[fname]
-
-                    paths = [path[1:] or ['display_name'] for path in paths]
-                    fetch_fields(subrecords, paths)
-
-            fetch_fields(self, fields)
-
-        for record in self:
-            # main line of record, initially empty
-            current = [''] * len(fields)
-            lines.append(current)
-
-            # list of primary fields followed by secondary field(s)
-            primary_done = []
-
-            # process column by column
-            for i, path in enumerate(fields):
-                if not path:
-                    continue
-
-                name = path[0]
-                if name in primary_done:
-                    continue
-
-                if name == '.id':
-                    current[i] = str(record.id)
-                elif name == 'id':
-                    current[i] = (record._name, record.id)
-                else:
-                    prop_name = None
-                    fname, __, lang = name.partition('@')
-                    if '.' in fname:  # Properties field
-                        fname, prop_name = fname.split('.')
-                        field = record._fields[fname]
-                        field_type, cache_value = cache_properties[field].get(prop_name, ('char', None))
-                        value = cache_value.get(record.id, '') if cache_value else ''
-                    else:  # Normal field
-                        field = record._fields[fname]
-                        field_type = field.type
-                        if field.translate:
-                            # 'check_translations' skips the delayed translations,
-                            # which are not reimportable next to their source
-                            translated = record.with_context(check_translations=True)
-                            value = (translated.with_context(lang=lang) if lang else translated)[fname]
-                        else:
-                            value = record[fname]
-
-                    # this part could be simpler, but it has to be done this way
-                    # in order to reproduce the former behavior
-                    if not isinstance(value, BaseModel):
-                        current[i] = field.convert_to_export(value, record)
-
-                    elif import_compatible and field_type == 'reference':
-                        current[i] = f"{value._name},{value.id}"
-
-                    else:
-                        primary_done.append(name)
-                        # recursively export the fields that follow name; use
-                        # 'display_name' where no subfield is exported
-                        fields2 = [(p[1:] or ['display_name'] if p and p[0] == name else [])
-                                   for p in fields]
-
-                        # in import_compat mode, m2m should always be exported as
-                        # a comma-separated list of xids or names in a single cell
-                        if import_compatible and field_type == 'many2many':
-                            index = None
-                            # find out which subfield the user wants & its
-                            # location as we might not get it as the first
-                            # column we encounter
-                            for name in ['id', 'name', 'display_name']:
-                                with contextlib.suppress(ValueError):
-                                    index = fields2.index([name])
-                                    break
-                            if index is None:
-                                # not found anything, assume we just want the
-                                # display_name in the first column
-                                name = None
-                                index = i
-
-                            if name == 'id':
-                                xml_ids = [xid for _, xid in value.__ensure_xml_id()]
-                                current[index] = ','.join(xml_ids)
-                            else:
-                                current[index] = ','.join(value.mapped('display_name')) if value else ''
-                            continue
-
-                        lines2 = value._export_rows(fields2, _is_toplevel_call=False)
-                        if lines2:
-                            # merge first line with record's main line
-                            for j, val in enumerate(lines2[0]):
-                                if val or isinstance(val, (int, float)):
-                                    current[j] = val
-                            # append the other lines at the end
-                            lines += lines2[1:]
-                        else:
-                            current[i] = ''
-
-        # if any xid should be exported, only do so at toplevel
-        if _is_toplevel_call and any(f[-1] == 'id' for f in fields):
-            bymodels = collections.defaultdict(set)
-            xidmap = collections.defaultdict(list)
-            # collect all the tuples in "lines" (along with their coordinates)
-            for i, line in enumerate(lines):
-                for j, cell in enumerate(line):
-                    if isinstance(cell, tuple):
-                        bymodels[cell[0]].add(cell[1])
-                        xidmap[cell].append((i, j))
-            # for each model, xid-export everything and inject in matrix
-            for model, ids in bymodels.items():
-                for record, xid in self.env[model].browse(ids).__ensure_xml_id():
-                    for i, j in xidmap.pop((record._name, record.id)):
-                        lines[i][j] = xid
-            assert not xidmap, "failed to export xids for %s" % ', '.join('%s:%s' % it for it in xidmap.items())
-
-        if _is_toplevel_call:
-            self.env.cr.cache.pop('export_properties_cache', None)
-
-        return lines
+        return orm_export._export_rows(self, fields, _is_toplevel_call=_is_toplevel_call)
 
     def export_data(self, fields_to_export):
         """ Export fields for selected objects
@@ -929,10 +726,7 @@ class BaseModel(metaclass=MetaModel):
         :returns: dictionary with a *datas* matrix
         :rtype: dict
         """
-        if not (self.env.is_admin() or self.env.user.has_group('base.group_allow_export')):
-            raise UserError(_("You don't have the rights to export data. Please contact an Administrator."))
-        fields_to_export = [fix_import_export_id_paths(f) for f in fields_to_export]
-        return {'datas': self._export_rows(fields_to_export)}
+        return orm_export.export_data(self, fields_to_export)
 
     @api.model
     def load(self, fields, data):
@@ -1128,112 +922,7 @@ class BaseModel(metaclass=MetaModel):
         * "id" is the External ID for the record
         * ".id" is the Database ID for the record
         """
-        fields = self._fields
-
-        get_o2m_values = itemgetter_tuple([
-            index
-            for index, fnames in enumerate(field_paths)
-            if fnames[0] in fields and fields[fnames[0]].type == 'one2many'
-        ])
-        get_nono2m_values = itemgetter_tuple([
-            index
-            for index, fnames in enumerate(field_paths)
-            if fnames[0] not in fields or fields[fnames[0]].type != 'one2many'
-        ])
-        # Checks if the provided row has any non-empty one2many fields
-        def only_o2m_values(row):
-            return any(get_o2m_values(row)) and not any(get_nono2m_values(row))
-
-        property_definitions = {}
-        property_columns = defaultdict(list)
-        for fname, *__ in field_paths:
-            if not fname:
-                continue
-            if '.' not in fname:
-                if fname not in fields:
-                    raise ValueError(f'Invalid field name {fname!r}')
-                continue
-
-            f_prop_name, property_name = fname.split('.')
-            if f_prop_name not in fields or fields[f_prop_name].type != 'properties':
-                # Can be .id
-                continue
-
-            definition = self.get_property_definition(fname)
-            if not definition:
-                # Can happen if someone remove the property, UserError ?
-                raise ValueError(f"Property {property_name!r} doesn't have any definition on {fname!r} field")
-
-            property_definitions[fname] = definition
-            property_columns[f_prop_name].append(fname)
-
-        # m2o fields can't be on multiple lines so don't take it in account
-        # for only_o2m_values rows filter, but special-case it later on to
-        # be handled with relational fields (as it can have subfields).
-        def is_relational(fname):
-            return (
-                fname in fields and
-                fields[fname].relational
-            ) or (
-                fname in property_definitions and
-                property_definitions[fname].get('type') in ('many2one', 'many2many')
-            )
-
-        index = 0
-        while index < len(data) and index < limit:
-            row = data[index]
-
-            # copy non-relational fields to record dict
-            record = {
-                fnames[0]: value
-                for fnames, value in zip(field_paths, row)
-                if not is_relational(fnames[0])
-            }
-
-            # Get all following rows which have relational values attached to
-            # the current record (no non-relational values)
-            record_span = itertools.takewhile(
-                only_o2m_values,
-                (data[j] for j in range(index + 1, len(data))),
-            )
-            # stitch record row back on for relational fields
-            record_span = list(itertools.chain([row], record_span))
-
-            for relfield, *__ in field_paths:
-                if not is_relational(relfield):
-                    continue
-
-                if relfield not in property_definitions:
-                    comodel = self.env[fields[relfield].comodel_name]
-                else:
-                    comodel = self.env[property_definitions[relfield]['comodel']]
-
-                # get only cells for this sub-field, should be strictly
-                # non-empty, field path [None] is for display_name field
-                indices, subfields = zip(*((index, fnames[1:] or [None])
-                                           for index, fnames in enumerate(field_paths)
-                                           if fnames[0] == relfield))
-
-                # return all rows which have at least one value for the
-                # subfields of relfield
-                relfield_data = [it for it in map(itemgetter_tuple(indices), record_span) if any(it)]
-                record[relfield] = [
-                    subrecord
-                    for subrecord, _subinfo in comodel._extract_records(subfields, relfield_data, log=log)
-                ]
-
-            for properties_fname, property_indexes_names in property_columns.items():
-                properties = []
-                for property_name in property_indexes_names:
-                    value = record.pop(property_name)
-                    properties.append(dict(**property_definitions[property_name], value=value))
-                record[properties_fname] = properties
-
-            yield record, {'rows': {
-                'from': index,
-                'to': index + len(record_span) - 1,
-            }}
-            index += len(record_span)
+        return orm_export._extract_records(self, field_paths, data, log, limit)
 
     @api.model
     def _convert_records(self, records, *, log=lambda a: None, savepoint):
@@ -1244,69 +933,13 @@ class BaseModel(metaclass=MetaModel):
         :returns: a list of triplets of (id, xid, record)
         :rtype: list[(int|None, str|None, dict)]
         """
-        field_names = {name: field.string for name, field in self._fields.items()}
-        if self.env.lang:
-            field_names.update(self.env['ir.model.fields'].get_field_string(self._name))
-
-        convert = self.env['ir.fields.converter'].for_model(self, savepoint=savepoint)
-
-        def _log(base, record, field, exception):
-            type = 'warning' if isinstance(exception, Warning) else 'error'
-            # logs the logical (not human-readable) field name for automated
-            # processing of response, but injects human readable in message
-            field_name = field_names[field]
-            exc_vals = dict(base, record=record, field=field_name)
-            record = dict(base, type=type, record=record, field=field,
-                          message=str(exception.args[0]) % exc_vals)
-            if len(exception.args) > 1:
-                info = {}
-                if exception.args[1] and isinstance(exception.args[1], dict):
-                    info = exception.args[1]
-                # ensure field_name is added to the exception. Used in import to
-                # concatenate multiple errors in the same block
-                info['field_name'] = field_name
-                record.update(info)
-            log(record)
-
-        for stream_index, (record, extras) in enumerate(records):
-            # xid
-            xid = record.get('id', False)
-            # dbid
-            dbid = False
-            if record.get('.id'):
-                try:
-                    dbid = int(record['.id'])
-                except ValueError:
-                    # in case of overridden id column
-                    dbid = record['.id']
-                if not self.search([('id', '=', dbid)]):
-                    log(dict(extras,
-                        type='error',
-                        record=stream_index,
-                        field='.id',
-                        message=_(u"Unknown database identifier '%s'", dbid)))
-                    dbid = False
-
-            converted = convert(record, functools.partial(_log, extras, stream_index))
-
-            yield dbid, xid, converted, dict(extras, record=stream_index)
+        return orm_export._convert_records(self, records, log=log, savepoint=savepoint)
 
     def _validate_fields(self, field_names: Iterable[str], excluded_names: Iterable[str] = ()) -> None:
         """ Invoke the constraint methods for which at least one field name is
         in ``field_names`` and none is in ``excluded_names``.
         """
-        methods = self._constraint_methods
-        if not methods:
-            return
-        # run constrains just as sudoed computed-stored fields
-        # see Field.compute_value()
-        records = self.sudo()
-        field_names = set(field_names)
-        excluded_names = set(excluded_names)
-        for check in methods:
-            if (not field_names.isdisjoint(check._constrains)
-                    and excluded_names.isdisjoint(check._constrains)):
-                check(records)
+        return orm_export._validate_fields(self, field_names, excluded_names)
 
     @api.model
     def default_get(self, fields: Sequence[str]) -> ValuesType:
@@ -1720,207 +1353,7 @@ class BaseModel(metaclass=MetaModel):
 
         :raise AccessError: if user is not allowed to access requested information
         """
-        if not grouping_sets:
-            raise ValueError("The 'grouping_sets' parameter cannot be empty.")
-
-        query = self._search(domain)
-        result = [[] for __ in grouping_sets]
-        if query.is_empty():
-            return result
-
-        # grouping_sets: [(a, b), (a), ()]
-        # all_groupby_specs: (a, b)
-        all_groupby_specs = tuple(unique(spec for groupby in grouping_sets for spec in groupby))
-
-        # --- Many2many Special Handling ---
-        many2many_groupby_specs = []
-        if len(grouping_sets) > 1:  # many2many logic only applies if we have multiple groupings
-
-            def might_duplicate_rows(model, spec) -> bool:
-                fname, property_name, __ = parse_read_group_spec(spec)
-                field = model._fields[fname]
-                if field.type == 'properties':
-                    definition = self.get_property_definition(f"{fname}.{property_name}")
-                    property_type = definition.get('type')
-                    return property_type in ('tags', 'many2many')
-
-                if property_name:
-                    assert field.type == 'many2one'
-                    return might_duplicate_rows(self.env[field.comodel_name], property_name)
-
-                return field.type == 'many2many'
-
-            for spec in all_groupby_specs:
-                if might_duplicate_rows(self, spec):
-                    many2many_groupby_specs.append(spec)
-
-        if (
-            many2many_groupby_specs and
-            # If aggregates are sensitive to row duplication (like sum, avg), we must isolate M2M groupings.
-            any(
-                not aggregate.endswith(
-                    (':max', ':min', ':bool_and', ':bool_or', ':array_agg_distinct', ':recordset', ':count_distinct'),
-                )
-                for aggregate in aggregates if aggregate != '__count'
-            )
-        ):
-            # The following logic is a recursive decomposition strategy. It's complex
-            # but necessary to prevent M2M joins from corrupting aggregates in other grouping sets.
-            # We find all combinations of M2M fields and create a sub-call for grouping sets
-            # that share that exact combination of M2M fields.
-
-            # ['A', 'B', 'C'] => [('A', 'B', 'C'), ('A', 'B'), ('A', 'C'), ('B', 'C'), ('A',), ('B',), ('C',), ()]
-            m2m_combinaisons = (
-                groupby for i in range(len(many2many_groupby_specs), -1, -1)
-                for groupby in itertools.combinations(many2many_groupby_specs, i)
-            )
-
-            grouping_sets_to_process = dict(enumerate(grouping_sets))
-            batched_calls = []  # [([groupby, ...], [index_result, ...])]
-
-            for m2m_comb in m2m_combinaisons:
-                if not grouping_sets_to_process:
-                    break
-                sub_grouping_sets = []
-                sub_result_indexes = []
-                for i, groupby in list(grouping_sets_to_process.items()):
-                    if all(m2m in groupby for m2m in m2m_comb):
-                        sub_grouping_sets.append(groupby)
-                        sub_result_indexes.append(i)
-                        grouping_sets_to_process.pop(i)
-
-                if sub_grouping_sets:
-                    batched_calls.append((sub_result_indexes, sub_grouping_sets))
-
-            assert not grouping_sets_to_process
-            # If the problem was decomposed, make recursive calls and assemble results.
-            if len(batched_calls) > 1:
-                for indexes, sub_grouping_sets in batched_calls:
-
-                    sub_order_parts = []
-                    all_sub_groupby = {spec for groupby in sub_grouping_sets for spec in groupby}
-                    for order_part in (order or '').split(','):
-                        order_part = order_part.strip()
-                        if not any(
-                            order_part.startswith(spec)
-                            for spec in all_groupby_specs if spec not in all_sub_groupby
-                        ):
-                            sub_order_parts.append(order_part)
-
-                    sub_results = self._read_grouping_sets(
-                        domain, sub_grouping_sets, aggregates=aggregates, order=",".join(sub_order_parts),
-                    )
-                    for index, subresult in zip(indexes, sub_results):
-                        result[index] = subresult
-                return result
-
-        elif many2many_groupby_specs and '__count' in aggregates:
-            # Efficiently handle '__count' with M2M fields by using a distinct count on 'id'
-            # without making another _read_grouping_sets (this is the very common case).
-            aggregates = tuple(
-                aggregate if aggregate != '__count' else 'id:count_distinct'
-                for aggregate in aggregates
-            )
-            if order:
-                order = order.replace('__count', 'id:count_distinct')
-
-        # --- SQL Query Construction ---
-        groupby_terms: dict[str, SQL] = {
-            spec: self._read_group_groupby(query.table, spec) for spec in all_groupby_specs
-        }
-        aggregates_terms: list[SQL] = [
-            self._read_group_select(query.table, spec) for spec in aggregates
-        ]
-        if groupby_terms:
-            # grouping_select_sql: GROUPING(a, b)
-            grouping_select_sql = SQL("GROUPING(%s)", SQL(", ").join(unique(groupby_terms.values())))
-        else:
-            # GROUPING() is invalid SQL, so we use the 0 as literal
-            grouping_select_sql = SQL("0")
-
-        select_args = [grouping_select_sql, *groupby_terms.values(), *aggregates_terms]
-
-        # _read_group_orderby may change groupby_terms then it is necessary to be call before
-        query.order = self._read_group_orderby(query.table, order, groupby_terms)
-        # GROUPING SET ((a, b), (a), ())
-        grouping_sets_sql = [
-            SQL("(%s)", SQL(", ").join(unique(groupby_terms[groupby_spec] for groupby_spec in grouping_set)))
-            for grouping_set in grouping_sets
-        ]
-        query.groupby = SQL("GROUPING SETS (%s)", SQL(", ").join(unique(grouping_sets_sql)))
-
-        # This handles the case where `order` adds columns that must also be in `GROUP BY`.
-        # Rebuild the grouping sets to include these extra terms.
-
-        # row_values: [(GROUPING(...), a1, b1, aggregates...), (GROUPING(...), a2, b2, aggregates...), ...]
-        row_values = self.env.execute_query(query.select(*select_args))
-
-        if not row_values:  # shortcut
-            return result
-
-        # --- Result Post-Processing ---
-        # This is the core of the result dispatching logic. It uses the integer
-        # returned by GROUPING() as a key to map each result row to the correct
-        # grouping set defined by the user.
-        aggregates_indexes = tuple(range(len(all_groupby_specs), len(all_groupby_specs) + len(aggregates)))
-
-        # Map each possible GROUPING() bitmask to the corresponding result lists and value
-        # extractors: several grouping sets can share the same bitmask (either because
-        # they are literally the same groupby list: [['foo'], ['foo']], or because one of them
-        # repeats a term [['foo'], ['foo', 'foo']], so a single SQL result row may need to
-        # be dispatched to more than one of them.
-        # {GROUPING(...): [(append_method, extractor_method), ...]}
-        mask_grouping_mapping = defaultdict(list)
-
-        # Create a mapping from each unique SQL GROUP BY term to its bitmask value.
-        # The terms are reversed to match the PostgreSQL logic where the bitmask was
-        # calculated from right to left (LSB first).
-        # See PostgreSQL Doc: https://www.postgresql.org/docs/17/functions-aggregate.html#Grouping-Operations
-        mask_sql_mapping = {
-            sql_groupby: 1 << i
-            for i, sql_groupby in enumerate(unique(reversed(groupby_terms.values())))
-        }
-
-        for result_index, groupby in enumerate(grouping_sets):
-            # E.g. GROUPING SET ((a, b), (a), ())
-            # GROUPING(a, b): a and b included = 0, a included = 1, b included = 2, none included = 3
-            sql_terms = {groupby_terms[groupby_spec] for groupby_spec in groupby}
-            groupby_mask = sum(
-                mask for sql_term, mask in mask_sql_mapping.items()
-                # each bit is 0 if the corresponding expression is included in the grouping criteria
-                # of the grouping set generating the current result row, and 1 if it is not included.
-                if sql_term not in sql_terms
-            )
-
-            mask_grouping_mapping[groupby_mask].append((
-                result[result_index].append,
-                itemgetter_tuple(list(itertools.chain(
-                    (all_groupby_specs.index(groupby_spec) for groupby_spec in groupby),
-                    aggregates_indexes,
-                ))),
-            ))
-
-        aggregates_start_index = len(all_groupby_specs) + 1
-        # Transpose rows to columns for efficient, column-wise post-processing.
-        columns = list(zip(*row_values))
-        # The first column is the grouping mask
-        dispatch_info = map(mask_grouping_mapping.__getitem__, columns[0])
-        # Post-process values column by column
-        columns = [
-            *map(self._read_group_postprocess_groupby, all_groupby_specs, columns[1:aggregates_start_index]),
-            *map(self._read_group_postprocess_aggregate, aggregates, columns[aggregates_start_index:]),
-        ]
-
-        # result: [
-        #   [(a1, b1, <aggregates>), (a2, b2, <aggregates>), ...],
-        #   [(a1, <aggregates>), (a2, <aggregates>), ...],
-        #   [(<aggregates>)],
-        # ]
-        for append_extractors, *row in zip(dispatch_info, *columns, strict=True):
-            for append_method, extractor in append_extractors:
-                append_method(extractor(row))
-
-        return result
+        return orm_grouping._read_grouping_sets(self, domain, grouping_sets, aggregates, order)
 
     @typing.final
     @api.model
@@ -1964,28 +1397,7 @@ class BaseModel(metaclass=MetaModel):
 
         :raise AccessError: if user is not allowed to access requested information
         """
-        groups = self._read_group(domain, groupby, aggregates, having=having, offset=offset, limit=limit, order=order)
-        if not groups:
-            return groups
-        # check the first line for data types, transform records into ids (id for groupby, ids for aggregates)
-        decoders = []
-        for i, value in enumerate(groups[0]):
-            if isinstance(value, BaseModel):
-                if i < len(groupby):
-                    decoders.append(lambda v: v.id)
-                else:
-                    decoders.append(lambda v: v.ids)
-            else:
-                decoders.append(None)
-        if any(decoders):
-            decoders = [d or (lambda x: x) for d in decoders]
-            groups = [
-                # much faster version of :
-                # tuple(dec(val) for dec, val in zip(decoders, group))
-                tuple(map(call, decoders, group))
-                for group in groups
-            ]
-        return groups
+        return orm_grouping.read_group(self, domain, groupby, aggregates, having, offset, limit, order)
 
     @api.model
     def _read_group(
@@ -2028,171 +1440,26 @@ class BaseModel(metaclass=MetaModel):
 
         :raise AccessError: if user is not allowed to access requested information
         """
-        query = self._search(domain)
-        if query.is_empty():
-            if not groupby:
-                # when there is no group, postgresql always return a row
-                return [tuple(
-                    self._read_group_empty_value(spec)
-                    for spec in itertools.chain(groupby, aggregates)
-                )]
-            return []
-
-        query.limit = limit
-        query.offset = offset
-
-        groupby_terms: dict[str, SQL] = {
-            spec: self._read_group_groupby(query.table, spec)
-            for spec in groupby
-        }
-        aggregates_terms: list[SQL] = [
-            self._read_group_select(query.table, spec)
-            for spec in aggregates
-        ]
-        select_args = [*[groupby_terms[spec] for spec in groupby], *aggregates_terms]
-        if groupby_terms:
-            query.order = self._read_group_orderby(query.table, order, groupby_terms)
-            query.groupby = SQL(", ").join(groupby_terms.values())
-            query.having = self._read_group_having(query.table, list(having))
-        elif not select_args:
-            raise ValueError(self.env._("Need groupby or aggregates."))
-
-        # row_values: [(a1, b1, c1), (a2, b2, c2), ...]
-        row_values = self.env.execute_query(query.select(*select_args))
-
-        if not row_values:
-            return row_values
-
-        # post-process values column by column
-        column_iterator = zip(*row_values)
-
-        # column_result: [(a1, a2, ...), (b1, b2, ...), (c1, c2, ...)]
-        column_result = []
-        for spec in groupby:
-            column = self._read_group_postprocess_groupby(spec, next(column_iterator))
-            column_result.append(column)
-        for spec in aggregates:
-            column = self._read_group_postprocess_aggregate(spec, next(column_iterator))
-            column_result.append(column)
-        assert next(column_iterator, None) is None
-
-        # return [(a1, b1, c1), (a2, b2, c2), ...]
-        return list(zip(*column_result))
+        return orm_grouping._read_group(self, domain, groupby, aggregates, having, offset, limit, order)
 
     def _read_group_select(self, table: TableSQL, aggregate_spec: str) -> SQL:
         """ Return <SQL expression> corresponding to the given aggregation.
         The method also checks whether the fields used in the aggregate are
         accessible for reading.
         """
-        if aggregate_spec == '__count':
-            return SQL("COUNT(*)")
-
-        fname, property_name, func = parse_read_group_spec(aggregate_spec)
-
-        if property_name:
-            raise ValueError(f"Invalid {aggregate_spec!r}, this dot notation is not supported")
-
-        if fname not in self._fields:
-            raise ValueError(f"Invalid field {fname!r} on model {self._name!r} for {aggregate_spec!r}.")
-        if not func:
-            raise ValueError(f"Aggregate method is mandatory for {fname!r}")
-
-        table = table._with_model(table._model.with_context(_generating_sql_for_fields=True))
-        field = self._fields[fname]
-        if func == 'sum_currency':
-            if field.type != 'monetary':
-                raise ValueError(f'Aggregator "sum_currency" only works on currency field for {fname!r}')
-
-            currency_field_name = field.get_currency_field(self)
-            rate_sql = self.env['res.currency']._current_rate_sql(table, currency_field_name)
-            return SQL("SUM(%s / %s)", table[fname], rate_sql)
-
-        if func not in READ_GROUP_AGGREGATE:
-            raise ValueError(f"Invalid aggregate method {func!r} for {aggregate_spec!r}.")
-
-        if func == 'recordset' and not (field.relational or fname == 'id'):
-            raise ValueError(f"Aggregate method {func!r} can be only used on relational field (or id) (for {aggregate_spec!r}).")
-
-        sql_field = table[fname]
-        return READ_GROUP_AGGREGATE[func](table, sql_field)
+        return orm_grouping._read_group_select(self, table, aggregate_spec)
 
     def _read_group_groupby(self, table: TableSQL, groupby_spec: str) -> SQL:
         """ Return <SQL expression> corresponding to the given groupby element.
         The method also checks whether the fields used in the groupby are
         accessible for reading.
         """
-        fname, seq_fnames, granularity = parse_read_group_spec(groupby_spec)
-
-        assert table._model._name == self._name
-        if fname not in self._fields:
-            raise ValueError(f"Invalid field {fname!r} on model {self._name!r}")
-        field = self._fields[fname]
-        table = table._with_model(table._model.with_context(_generating_sql_for_fields=True))
-
-        if field.type == 'properties':
-            sql_expr = table[fname][seq_fnames]
-            if granularity:
-                try:
-                    sql_expr = sql_expr[granularity]
-                except (TypeError, AttributeError, ValueError):
-                    raise ValueError(f"Invalid granularity in {groupby_spec!r}")
-
-            return sql_expr
-
-        elif seq_fnames:
-            if field.type != 'many2one':
-                raise ValueError(f"Only many2one path is accepted for the {groupby_spec!r} groupby spec")
-
-            cotable = field.join(table)
-            return cotable._model._read_group_groupby(cotable, f"{seq_fnames}:{granularity}" if granularity else seq_fnames)
-
-        elif field.type == 'many2many':
-            sql_expr = field.join(table, only_ids=True).id
-
-        elif field.type in ('datetime', 'date'):
-            if not granularity:
-                raise ValueError(f"Granularity not set on a date(time) field: {groupby_spec!r}")
-            sql_expr = table[fname][granularity]
-            granularity = None
-
-        elif field.type == 'boolean':
-            sql_expr = SQL("COALESCE(%s, FALSE)", table[fname])
-
-        else:
-            sql_expr = table[fname]
-
-        if granularity:
-            raise ValueError(f"Granularity set on a no-datetime field or property: {groupby_spec!r}")
-        return sql_expr
+        return orm_grouping._read_group_groupby(self, table, groupby_spec)
 
     def _read_group_having(self, table: TableSQL, having_domain: list) -> SQL:
         """ Return <SQL expression> corresponding to the having domain.
         """
-        if not having_domain:
-            return SQL()
-
-        stack: list[SQL] = []
-        SUPPORTED = ('in', 'not in', '<', '>', '<=', '>=', '=', '!=')
-        for item in reversed(having_domain):
-            if item == '!':
-                stack.append(SQL("(NOT %s)", stack.pop()))
-            elif item == '&':
-                stack.append(SQL("(%s AND %s)", stack.pop(), stack.pop()))
-            elif item == '|':
-                stack.append(SQL("(%s OR %s)", stack.pop(), stack.pop()))
-            elif isinstance(item, (list, tuple)) and len(item) == 3:
-                left, operator, right = item
-                if operator not in SUPPORTED:
-                    raise ValueError(f"Invalid having clause {item!r}: supported comparators are {SUPPORTED}")
-                sql_left = self._read_group_select(table, left)
-                stack.append(SQL("%s%s%s", sql_left, SQL_OPERATORS[operator], right))
-            else:
-                raise ValueError(f"Invalid having clause {item!r}: it should be a domain-like clause")
-
-        while len(stack) > 1:
-            stack.append(SQL("(%s AND %s)", stack.pop(), stack.pop()))
-
-        return stack[0]
+        return orm_grouping._read_group_having(self, table, having_domain)
 
     def _read_group_orderby(self, table: TableSQL, order: str, groupby_terms: dict[str, SQL]) -> SQL:
         """ Return (<SQL expression>, <SQL expression>)
@@ -2204,105 +1471,12 @@ class BaseModel(metaclass=MetaModel):
         :param order: the order specification
         :param groupby_terms: the group by terms mapping ({spec: sql_expression})
         """
-        if order:
-            traverse_many2one = True
-        else:
-            order = ','.join(groupby_terms)
-            traverse_many2one = False
-
-        if not order:
-            return SQL()
-
-        orderby_terms = []
-
-        for order_part in order.split(','):
-            order_match = regex_order_part_read_group.fullmatch(order_part)
-            if not order_match:
-                raise ValueError(f"Invalid order {order!r} for _read_group()")
-            term = order_match['term']
-            direction = (order_match['direction'] or 'ASC').upper()
-            nulls = (order_match['nulls'] or '').upper()
-
-            sql_direction = (
-                SQL('ASC') if direction == 'ASC'
-                else SQL('DESC') if direction == 'DESC'
-                else SQL()
-            )
-            sql_nulls = (
-                SQL('NULLS FIRST') if nulls == 'NULLS FIRST'
-                else SQL('NULLS LAST') if nulls == 'NULLS LAST'
-                else SQL()
-            )
-
-            if term not in groupby_terms:
-                try:
-                    sql_expr = self._read_group_select(table, term)
-                except ValueError as e:
-                    raise ValueError(f"Order term {order_part!r} is not a valid aggregate nor valid groupby") from e
-                orderby_terms.append(SQL("%s %s %s", sql_expr, sql_direction, sql_nulls))
-                continue
-
-            field = self._fields.get(term)
-            __, __, granularity = parse_read_group_spec(term)
-            if (
-                traverse_many2one and field and field.type == 'many2one'
-                and self.env[field.comodel_name]._order != 'id'
-            ):
-                if sql_order := self._order_to_sql(table, f'{term} {direction} {nulls}'):
-                    orderby_terms.append(sql_order)
-                    query = table._query
-                    if query._order_groupby:
-                        query._order_groupby.insert(0, groupby_terms[term])
-                        groupby_terms[term] = SQL(", ").join(query._order_groupby)
-                        query._order_groupby.clear()
-            elif field and field.type == 'selection':
-                sql_keys = list(field.get_values(self.env))
-                sql_expr = SQL("array_position(%s::text[], %s::text)", sql_keys, groupby_terms[term])
-                orderby_terms.append(SQL("%s %s %s", sql_expr, sql_direction, sql_nulls))
-            elif granularity == 'day_of_week':
-                """
-                Day offset relative to the first day of week in the user lang
-                formula: ((7 - first_week_day) + day_in_SQL) % 7
-
-                               | week starts on
-                           SQL | mon   sun   sat
-                               |  1  |  7  |  6   <-- first_week_day (in odoo)
-                          -----|-----------------
-                    mon     1  |  0  |  1  |  2
-                    tue     2  |  1  |  2  |  3
-                    wed     3  |  2  |  3  |  4
-                    thu     4  |  3  |  4  |  5
-                    fri     5  |  4  |  5  |  6
-                    sat     6  |  5  |  6  |  0
-                    sun     0  |  6  |  0  |  1
-                """
-                first_week_day = int(get_lang(self.env).week_start)
-                sql_expr = SQL("mod(7 - %s + %s::int, 7)", first_week_day, groupby_terms[term])
-                orderby_terms.append(SQL("%s %s %s", sql_expr, sql_direction, sql_nulls))
-            else:
-                sql_expr = groupby_terms[term]
-                orderby_terms.append(SQL("%s %s %s", sql_expr, sql_direction, sql_nulls))
-
-        return SQL(", ").join(orderby_terms)
+        return orm_grouping._read_group_orderby(self, table, order, groupby_terms)
 
     @api.model
     def _read_group_empty_value(self, spec):
         """ Return the empty value corresponding to the given groupby spec or aggregate spec. """
-        if spec == '__count':
-            return 0
-        fname, chain_fnames, func = parse_read_group_spec(spec)  # func is either None, granularity or an aggregate
-        if func in ('count', 'count_distinct'):
-            return 0
-        if func in ('array_agg', 'array_agg_distinct'):
-            return []
-        field = self._fields[fname]
-        if (not func or func == 'recordset') and (field.relational or fname == 'id'):
-            if chain_fnames and field.type == 'many2one':
-                groupby_seq = f"{chain_fnames}:{func}" if func else chain_fnames
-                model = self.env[field.comodel_name]
-                return model._read_group_empty_value(groupby_seq)
-            return self.env[field.comodel_name] if field.relational else self.env[self._name]
-        return False
+        return orm_grouping._read_group_empty_value(self, spec)
 
     def _read_group_postprocess_groupby(self, groupby_spec, raw_values):
         """ Convert the given values of ``groupby_spec``
@@ -2312,26 +1486,7 @@ class BaseModel(metaclass=MetaModel):
         - groupby values of relational fields are converted to recordsets with a correct prefetch set;
         - NULL values are converted to empty values corresponding to the given aggregate.
         """
-        empty_value = self._read_group_empty_value(groupby_spec)
-
-        fname, chain_fnames, granularity = parse_read_group_spec(groupby_spec)
-        field = self._fields[fname]
-
-        if field.relational or fname == 'id':
-            if chain_fnames and field.relational:
-                groupby_seq = f"{chain_fnames}:{granularity}" if granularity else chain_fnames
-                model = self.env[field.comodel_name]
-                return model._read_group_postprocess_groupby(groupby_seq, raw_values)
-
-            Model = self.pool[field.comodel_name] if field.relational else self.pool[self._name]
-            prefetch_ids = tuple(raw_value for raw_value in raw_values if raw_value)
-
-            def recordset(value):
-                return Model(self.env, (value,), prefetch_ids) if value else empty_value
-
-            return (recordset(value) for value in raw_values)
-
-        return ((value if value is not None else empty_value) for value in raw_values)
+        return orm_grouping._read_group_postprocess_groupby(self, groupby_spec, raw_values)
 
     def _read_group_postprocess_aggregate(self, aggregate_spec, raw_values):
         """ Convert the given values of ``aggregate_spec``
@@ -2341,35 +1496,12 @@ class BaseModel(metaclass=MetaModel):
         - 'recordset' aggregates are turned into recordsets with a correct prefetch set;
         - NULL values are converted to empty values corresponding to the given aggregate.
         """
-        empty_value = self._read_group_empty_value(aggregate_spec)
-
-        if aggregate_spec == '__count':
-            return ((value if value is not None else empty_value) for value in raw_values)
-
-        fname, __, func = parse_read_group_spec(aggregate_spec)
-        if func == 'recordset':
-            field = self._fields[fname]
-            Model = self.pool[field.comodel_name] if field.relational else self.pool[self._name]
-            prefetch_ids = tuple(unique(
-                id_
-                for array_values in raw_values if array_values
-                for id_ in array_values if id_
-            ))
-
-            def recordset(value):
-                if not value:
-                    return empty_value
-                ids = tuple(unique(id_ for id_ in value if id_))
-                return Model(self.env, ids, prefetch_ids)
-
-            return (recordset(value) for value in raw_values)
-
-        return ((value if value is not None else empty_value) for value in raw_values)
+        return orm_grouping._read_group_postprocess_aggregate(self, aggregate_spec, raw_values)
 
     @api.model
     def _read_group_expand_full(self, groups: ModelType, domain: DomainType) -> ModelType:
         """Extend the group to include all target records by default."""
-        return groups.search([])
+        return orm_grouping._read_group_expand_full(self, groups, domain)
 
     @typing.final
     def _field_to_sql(self, alias: str, field_expr: str, query: (Query | None) = None) -> SQL:
@@ -2380,12 +1512,7 @@ class BaseModel(metaclass=MetaModel):
         The query object is necessary for inherited fields, many2one fields and
         properties fields, where joins are added to the query.
         """
-        fname, property_name = parse_field_expr(field_expr)
-        table = TableSQL(alias, self, query)
-        sql = table[fname]
-        if property_name:
-            sql = sql[property_name]
-        return sql
+        return orm_grouping._field_to_sql(self, alias, field_expr, query)
 
     @api.model
     def get_property_definition(self, full_name: str) -> dict:
@@ -2394,65 +1521,11 @@ class BaseModel(metaclass=MetaModel):
         :param full_name: Name of the field / property
             (e.g. "property.integer")
         """
-        self.browse().check_access("read")
-        field_name, property_name = parse_field_expr(full_name)
-        field = self._fields.get(field_name)
-        if not field:
-            raise ValueError(f"Invalid field {field_name!r} on model {self._name!r}")
-        from odoo.orm.fields.properties import check_property_field_value_name  # noqa: PLC0415
-        check_property_field_value_name(property_name)
-
-        target_model = self.env[self._fields[field.definition_record].comodel_name]
-        field_definition = target_model._fields[field.definition_record_field]
-        result = self.env.execute_query_dict(SQL(
-            """ SELECT definition
-                  FROM %(table)s, jsonb_array_elements(%(field)s) definition
-                 WHERE %(field)s IS NOT NULL AND definition->>'name' = %(name)s
-                 LIMIT 1 """,
-            table=SQL.identifier(target_model._table),
-            field=SQL.identifier(field.definition_record_field, to_flush=field_definition),
-            name=property_name,
-        ))
-        return result[0]["definition"] if result else {}
+        return orm_properties.get_property_definition(self, full_name)
 
     def _parent_store_compute(self) -> None:
         """ Compute parent_path field from scratch. """
-        if not self._parent_store:
-            return
-
-        # Each record is associated to a string 'parent_path', that represents
-        # the path from the record's root node to the record. The path is made
-        # of the node ids suffixed with a slash (see example below). The nodes
-        # in the subtree of record are the ones where 'parent_path' starts with
-        # the 'parent_path' of record.
-        #
-        #               a                 node | id | parent_path
-        #              / \                  a  | 42 | 42/
-        #            ...  b                 b  | 63 | 42/63/
-        #                / \                c  | 84 | 42/63/84/
-        #               c   d               d  | 85 | 42/63/85/
-        #
-        # Note: the final '/' is necessary to match subtrees correctly: '42/63'
-        # is a prefix of '42/630', but '42/63/' is not a prefix of '42/630/'.
-        _logger.info('Computing parent_path for table %s...', self._table)
-        query = SQL(
-            """ WITH RECURSIVE __parent_store_compute(id, parent_path) AS (
-                    SELECT row.id, concat(row.id, '/')
-                    FROM %(table)s row
-                    WHERE row.%(parent)s IS NULL
-                UNION
-                    SELECT row.id, concat(comp.parent_path, row.id, '/')
-                    FROM %(table)s row, __parent_store_compute comp
-                    WHERE row.%(parent)s = comp.id
-                )
-                UPDATE %(table)s row SET parent_path = comp.parent_path
-                FROM __parent_store_compute comp
-                WHERE row.id = comp.id """,
-            table=SQL.identifier(self._table),
-            parent=SQL.identifier(self._parent_name),
-        )
-        self.env.cr.execute(query)
-        self.invalidate_model(['parent_path'])
+        return orm_parent_store._parent_store_compute(self)
 
     def _check_removed_columns(self, log=False):
         return orm_schema.check_removed_columns(self, log=log)
@@ -2620,7 +1693,7 @@ class BaseModel(metaclass=MetaModel):
 
         See 'self._update_field_translations' docstring for details.
         """
-        return self._update_field_translations(field_name, translations, source_lang=source_lang)
+        return orm_translations.update_field_translations(self, field_name, translations, source_lang)
 
     def _update_field_translations(
         self,
@@ -2752,35 +1825,7 @@ class BaseModel(metaclass=MetaModel):
             translations: list of dicts like [{"lang": lang, "source": source_term, "value": value_term}]
             context: {"translation_type": "text"/"char", "translation_show_source": True/False}
         """
-        self.ensure_one()
-        field = self._fields[field_name]
-        # We don't forbid reading inactive/non-existing languages,
-        langs = set(langs or [l[0] for l in self.env['res.lang'].get_installed()])
-        self_lang = self.with_context(check_translations=True, prefetch_langs=True)
-        val_en = self_lang.with_context(lang='en_US')[field_name]
-        if not field.translate:
-            translations = []
-        elif field.translate is True:
-            translations = [{
-                'lang': lang,
-                'source': val_en,
-                'value': self_lang.with_context(lang=lang)[field_name]
-            } for lang in langs]
-        else:
-            translation_dictionary = StoredTranslations._get_translation_dictionary(
-                field, val_en, {lang: self_lang.with_context(lang=lang)[field_name] for lang in langs}
-            )
-            translations = [{
-                'lang': lang,
-                'source': term_en,
-                'value': term_lang if term_lang != term_en else ''
-            } for term_en, translations in translation_dictionary.items()
-                for lang, term_lang in translations.items()]
-        context = {}
-        context['translation_type'] = 'text' if field.type in ['text', 'html'] else 'char'
-        context['translation_show_source'] = callable(field.translate)
-
-        return translations, context
+        return orm_translations.get_field_translations(self, field_name, langs)
 
     def _get_stored_translations(self, field_name: str) -> StoredTranslations | None:
         """Return the cached StoredTranslations for ``field_name``, or ``None`` if the column is NULL.
@@ -2800,8 +1845,7 @@ class BaseModel(metaclass=MetaModel):
 
     def _get_base_lang(self) -> str:
         """ Return the base language of the record. """
-        self.ensure_one()
-        return 'en_US'
+        return orm_translations._get_base_lang(self)
 
     def _read_format(self, fnames: Sequence[str], load: str = '_classic_read') -> list[ValuesType]:
         """Return a list of dictionaries mapping field names to their values,
@@ -2816,55 +1860,7 @@ class BaseModel(metaclass=MetaModel):
         The current method is different from `read` because it retrieves its
         values from the cache without doing a query when it is avoidable.
         """
-        data = [(record, {'id': record.id}) for record in self]
-        use_display_name = (load == '_classic_read')
-        for name in fnames:
-            field = self._fields[name]
-            if field.type == 'properties':
-                values_list = []
-                records = []
-                for record, vals in data:
-                    try:
-                        values_list.append(record[name])
-                        records.append(record.id)
-                    except MissingError:
-                        vals.clear()
-
-                results = field.convert_to_read_multi(values_list, self.browse(records))
-                for record_read_vals, convert_result in zip(data, results):
-                    record_read_vals[1][name] = convert_result
-                continue
-
-            convert = field.convert_to_read
-            if field.type == 'binary' and load == 'web':
-                def binary_convert(value, record, use_display_name):
-                    if not value:
-                        return False
-                    res = {}
-                    # Include the file name
-                    filename = value.filename
-                    if filename and filename != field.name:
-                        res['filename'] = filename
-                    # For NewIds, always include the content
-                    include_content = not any(record._ids)
-                    if include_content:
-                        res['content'] = value.to_base64()
-                    res['size'] = value.size
-                    res['checksum'] = value.checksum
-                    return res
-                convert = binary_convert
-
-            for record, vals in data:
-                # missing records have their vals empty
-                if not vals:
-                    continue
-                try:
-                    vals[name] = convert(record[name], record, use_display_name)
-                except MissingError:
-                    vals.clear()
-        result = [vals for record, vals in data if vals]
-
-        return result
+        return orm_translations._read_format(self, fnames, load)
 
     def _fetch_field(self, field: Field) -> None:
         """ Read from the database in order to fetch ``field`` (:class:`Field`
@@ -3654,93 +2650,7 @@ class BaseModel(metaclass=MetaModel):
 
     def _write_multi(self, vals_list: list[ValuesType]) -> None:
         """ Low-level implementation of write() """
-        assert len(self) == len(vals_list)
-
-        if not self:
-            return
-        self.env.transaction._wrote__ = True
-
-        # determine records that require updating parent_path
-        parent_records = self._parent_store_update_prepare(vals_list)
-
-        if self._log_access:
-            # set magic fields (already done by write(), but not for computed fields)
-            log_vals = {'write_uid': self.env.uid, 'write_date': self.env.cr.now()}
-            vals_list = [(log_vals | vals) for vals in vals_list]
-
-        # determine SQL updates, grouped by set of updated fields:
-        # {(col1, col2, col3): [(id, val1, val2, val3)]}
-        updates = defaultdict(list)
-        for record, vals in zip(self, vals_list):
-            # sort vals.items() by key, then retrieve its keys and values
-            fnames, row = zip(*sorted(vals.items()))
-            updates[fnames].append(record._ids + row)
-
-        # perform updates (fnames, rows) in batches
-        updates_list = [
-            (fnames, sub_rows)
-            for fnames, rows in updates.items()
-            for sub_rows in split_every(UPDATE_BATCH_SIZE, rows)
-        ]
-
-        # update columns by group of updated fields
-        for fnames, rows in updates_list:
-            columns = []
-            assignments = []
-            for fname in fnames:
-                field = self._fields[fname]
-                assert field.store and field.column_type
-                column = SQL.identifier(fname)
-                # the type cast is necessary for some values, like NULLs
-                expr = SQL('"__tmp".%s::%s', column, SQL.identifier(field.column_type[0]))
-                if field.translate is True:
-                    # this is the SQL equivalent of:
-                    # None if expr is None else (
-                    #     (column or {'en_US': next(iter(expr.values()))}) | expr
-                    # )
-                    expr = SQL(
-                        """CASE
-                            WHEN (%(expr)s -> 0)::boolean THEN
-                                COALESCE(
-                                    %(table)s.%(column)s,
-                                    jsonb_build_object('en_US', jsonb_path_query_first(%(expr)s -> 1, '$.*'))
-                                ) || (%(expr)s -> 1)
-                            ELSE (%(expr)s -> 1)
-                        END""",
-                        table=SQL.identifier(self._table),
-                        column=column,
-                        expr=expr,
-                    )
-                if field.company_dependent:
-                    fallbacks = self.env['ir.default']._get_field_column_fallbacks(self._name, fname)
-                    expr = SQL(
-                        """(SELECT jsonb_object_agg(d.key, d.value)
-                        FROM jsonb_each(COALESCE(%(table)s.%(column)s, '{}'::jsonb) || %(expr)s) d
-                        JOIN jsonb_each(%(fallbacks)s) f
-                        ON d.key = f.key AND d.value != f.value)""",
-                        table=SQL.identifier(self._table),
-                        column=column,
-                        expr=expr,
-                        fallbacks=fallbacks
-                    )
-                columns.append(column)
-                assignments.append(SQL("%s = %s", column, expr))
-
-            self.env.execute_query(SQL(
-                """ UPDATE %(table)s
-                    SET %(assignments)s
-                    FROM (VALUES %(values)s) AS "__tmp"("id", %(columns)s)
-                    WHERE %(table)s."id" = "__tmp"."id"
-                """,
-                table=SQL.identifier(self._table),
-                assignments=SQL(", ").join(assignments),
-                values=SQL(", ").join(rows),
-                columns=SQL(", ").join(columns),
-            ))
-
-        # update parent_path
-        if parent_records:
-            parent_records._parent_store_update()
+        return orm_write._write_multi(self, vals_list)
 
     @api.model_create_multi
     def create(self, vals_list: list[ValuesType]) -> Self:
@@ -3924,82 +2834,13 @@ class BaseModel(metaclass=MetaModel):
         :param vals_list: List of create values
         :returns: new list of completed create values
         """
-        bad_names = ['id', 'parent_path']
-        if self._log_access:
-            # the superuser can set log_access fields while loading registry
-            if not (self.env.uid == SUPERUSER_ID and not self.pool.ready):
-                bad_names.extend(LOG_ACCESS_COLUMNS)
-
-        # also discard precomputed readonly fields (to force their computation)
-        bad_names.extend(
-            fname
-            for fname, field in self._fields.items()
-            if field.precompute and field.readonly
-        )
-
-        result_vals_list = []
-        for vals in vals_list:
-            # add default values
-            vals = self._add_missing_default_values(vals)
-
-            # add magic fields
-            for fname in bad_names:
-                vals.pop(fname, None)
-            if self._log_access:
-                vals.setdefault('create_uid', self.env.uid)
-                vals.setdefault('create_date', self.env.cr.now())
-                vals.setdefault('write_uid', self.env.uid)
-                vals.setdefault('write_date', self.env.cr.now())
-
-            result_vals_list.append(vals)
-
-        # add precomputed fields
-        self._add_precomputed_values(result_vals_list)
-
-        return result_vals_list
+        return orm_write._prepare_create_values(self, vals_list)
 
     def _add_precomputed_values(self, vals_list: list[ValuesType]) -> None:
         """ Add missing precomputed fields to ``vals_list`` values.
         Only applies for precompute=True fields.
         """
-        precomputable = {
-            fname: field
-            for fname, field in self._fields.items()
-            if field.precompute
-        }
-        if not precomputable:
-            return
-
-        # when several fields have the same compute, setting any of them should
-        # not compute the others (and leave them to False)
-        for vals in vals_list:
-            given_fnames = [fname for fname in vals if fname in precomputable]
-            for fname in given_fnames:
-                for field in self.pool.field_computed[self._fields[fname]]:
-                    vals.setdefault(field.name, False)
-
-        # determine which vals must be completed
-        vals_list_todo = [
-            vals
-            for vals in vals_list
-            if any(fname not in vals for fname in precomputable)
-        ]
-        if not vals_list_todo:
-            return
-
-        # create new records for the vals that must be completed
-        records = self.browse().concat(self.new(vals) for vals in vals_list_todo)
-
-        for record, vals in zip(records, vals_list_todo):
-            vals['__precomputed__'] = precomputed = set()
-            for fname, field in precomputable.items():
-                if fname not in vals:
-                    # computed stored fields with a column
-                    # have to be computed before create
-                    # s.t. required and constraints can be applied on those fields.
-                    field_value = record.sudo()[fname] if field.compute_sudo else record[fname]
-                    vals[fname] = field.convert_to_write(field_value, self)
-                    precomputed.add(field)
+        return orm_write._add_precomputed_values(self, vals_list)
 
     @api.model
     def _create(self, data_list: list[ValuesType]) -> Self:
@@ -4108,148 +2949,40 @@ class BaseModel(metaclass=MetaModel):
         return records
 
     def _compute_field_value(self, field: Field) -> None:
-        determine(field.compute, self)
-
-        if field.store and any(self._ids):
-            # check constraints of the fields that have been computed
-            fnames = [f.name for f in self.pool.field_computed[field]]
-            self.filtered('id')._validate_fields(fnames)
+        return orm_write._compute_field_value(self, field)
 
     def _parent_store_create(self) -> None:
         """ Set the parent_path field on ``self`` after its creation. """
-        if not self._parent_store:
-            return
-
-        updated = self.env.execute_query(SQL(
-            """ UPDATE %(table)s node
-                SET parent_path=concat((
-                        SELECT parent.parent_path
-                        FROM %(table)s parent
-                        WHERE parent.id=node.%(parent)s
-                    ), node.id, '/')
-                WHERE node.id IN %(ids)s
-                RETURNING node.id, node.parent_path """,
-            table=SQL.identifier(self._table),
-            parent=SQL.identifier(self._parent_name),
-            ids=tuple(self.ids),
-        ))
-
-        # update the cache of updated nodes, and determine what to recompute
-        field = self._fields['parent_path']
-        for id_, path in updated:
-            field._update_cache(self.browse(id_), path)
+        return orm_parent_store._parent_store_create(self)
 
     def _parent_store_update_prepare(self, vals_list: list[ValuesType]) -> Self:
         """ Return the records in ``self`` that must update their parent_path
             field. This must be called before updating the parent field.
         """
-        if not self._parent_store:
-            return self.browse()
-
-        # associate each new parent_id to its corresponding record ids
-        parent_to_ids = defaultdict(list)
-        for id_, vals in zip(self._ids, vals_list):
-            if self._parent_name in vals:
-                parent_to_ids[vals[self._parent_name]].append(id_)
-
-        if not parent_to_ids:
-            return self.browse()
-
-        self.flush_recordset([self._parent_name])
-
-        # return the records for which the parent field will change
-        sql_parent = SQL.identifier(self._parent_name)
-        conditions = []
-        for parent_id, ids in parent_to_ids.items():
-            if parent_id:
-                condition = SQL('(%s != %s OR %s IS NULL)', sql_parent, parent_id, sql_parent)
-            else:
-                condition = SQL('%s IS NOT NULL', sql_parent)
-            conditions.append(SQL('("id" IN %s AND %s)', tuple(ids), condition))
-
-        rows = self.env.execute_query(SQL(
-            "SELECT id FROM %s WHERE %s ORDER BY id",
-            SQL.identifier(self._table),
-            SQL(" OR ").join(conditions),
-        ))
-        return self.browse(row[0] for row in rows)
+        return orm_parent_store._parent_store_update_prepare(self, vals_list)
 
     def _parent_store_update(self) -> None:
         """ Update the parent_path field of ``self``. """
-        for parent, records in self.grouped(self._parent_name).items():
-            # determine new prefix of parent_path of records
-            prefix = parent.parent_path or ""
-
-            # check for recursion
-            if prefix:
-                parent_ids = {int(label) for label in prefix.split('/')[:-1]}
-                if not parent_ids.isdisjoint(records._ids):
-                    ir_model = self.env['ir.model']._get(self._name)
-                    raise UserError(_(
-                        "You are creating a loop in your '%s' records. "
-                        "A record cannot be a child of itself or one of its own sub-items. "
-                        "Please select a different parent.",
-                        ir_model.name,
-                    ))
-
-            # update parent_path of all records and their descendants. The
-            # descendants were matched with
-            #     AND child.parent_path LIKE concat(node.parent_path, '%')
-            # whose pattern comes from a column, so PostgreSQL gets no index
-            # bounds and scans the table. The range below selects the same rows
-            # from the index: parent_path ends with '/' and '0' is the next
-            # character, so left(parent_path, -1) || '0' closes the range.
-            updated = dict(self.env.execute_query(SQL(
-                """ UPDATE %(table)s child
-                    SET parent_path = concat(%(prefix)s, substr(child.parent_path,
-                            length(node.parent_path) - length(node.id || '/') + 1))
-                    FROM %(table)s node
-                    WHERE node.id IN %(ids)s
-                    AND child.parent_path >= node.parent_path
-                    AND child.parent_path < left(node.parent_path, -1) || '0'
-                    RETURNING child.id, child.parent_path """,
-                table=SQL.identifier(self._table),
-                prefix=prefix,
-                ids=tuple(records.ids),
-            )))
-
-            # update the cache of updated nodes, and determine what to recompute
-            field = self._fields['parent_path']
-            for id_, path in updated.items():
-                field._update_cache(self.browse(id_), path)
-            records = self.browse(updated)
-            records.modified(['parent_path'])
+        return orm_parent_store._parent_store_update(self)
 
     def _clean_properties(self) -> None:
         """ Remove all properties of ``self`` that are no longer in the related definition """
-        for fname, field in self._fields.items():
-            if field.type != 'properties':
-                continue
-            for record in self:
-                old_value = record[fname]._values
-                if not old_value:
-                    continue
-
-                definitions = field._get_properties_definition(record)
-                all_names = {definition['name'] for definition in definitions}
-                new_values = {name: value for name, value in old_value.items() if name in all_names}
-                if len(new_values) != len(old_value):
-                    record[fname] = new_values
+        return orm_properties._clean_properties(self)
 
     def _validate_properties_definition(self, properties_definition, field):
         """Allow to validate additional properties attributes."""
 
     def _additional_allowed_keys_properties_definition(self):
         """Allow to add more allowed key for properties."""
-        return ()
+        return orm_properties._additional_allowed_keys_properties_definition(self)
 
     def _convert_to_cache_properties_definition(self, value):
         """Allow to patch `convert_to_cache` of the properties definition."""
-        return value
+        return orm_properties._convert_to_cache_properties_definition(self, value)
 
     def _convert_to_column_properties_definition(self, value):
         """Allow to patch `convert_to_column` of the properties definition."""
-        return value
+        return orm_properties._convert_to_column_properties_definition(self, value)
 
     def _load_records_write(self, values):
         self.ensure_one()
@@ -4783,56 +3516,7 @@ class BaseModel(metaclass=MetaModel):
         :param field_name: optional field name (default: ``self._parent_name``)
         :return: **True** if a loop was found, **False** otherwise.
         """
-        if not field_name:
-            field_name = self._parent_name
-
-        field = self._fields.get(field_name)
-        if not field:
-            raise ValueError(f'Invalid field_name: {field_name!r}')
-
-        if not (
-            field.type in ('many2many', 'many2one')
-            and field.comodel_name == self._name
-            and field.store
-        ):
-            raise ValueError(f'Field must be a many2one or many2many relation on itself: {field_name!r}')
-
-        if not self.ids or not self[field_name]:
-            return False
-
-        # must ignore 'active' flag, ir.rules, etc.
-        # direct recursive SQL query with cycle detection for performance
-        self.flush_model([field_name])
-        if field.type == 'many2many':
-            relation = field.relation
-            column1 = field.column1
-            column2 = field.column2
-        else:
-            relation = self._table
-            column1 = 'id'
-            column2 = field_name
-        cr = self.env.cr
-        cr.execute(SQL(
-            """
-            WITH RECURSIVE __reachability AS (
-                SELECT %(col1)s AS source, %(col2)s AS destination
-                FROM %(rel)s
-                WHERE %(col1)s IN %(ids)s AND %(col2)s IS NOT NULL
-            UNION
-                SELECT r.source, t.%(col2)s
-                FROM __reachability r
-                JOIN %(rel)s t ON r.destination = t.%(col1)s AND t.%(col2)s IS NOT NULL
-            )
-            SELECT 1 FROM __reachability
-            WHERE source = destination
-            LIMIT 1
-            """,
-            ids=tuple(self.ids),
-            rel=SQL.identifier(relation),
-            col1=SQL.identifier(column1),
-            col2=SQL.identifier(column2),
-        ))
-        return bool(cr.fetchone())
+        return orm_parent_store._has_cycle(self, field_name)
 
     def _get_external_ids(self) -> dict[IdType, list[str]]:
         """Retrieve the External ID(s) of any database record.
@@ -5321,27 +4005,7 @@ class BaseModel(metaclass=MetaModel):
             # only keep records whose partner has VAT
             records.filtered("partner_id.vat")
         """
-        if not func:
-            # align with mapped()
-            return self
-
-        if callable(func):
-            # normal function
-            pass
-        elif isinstance(func, str):
-            if '.' in func:
-                seq_fnames = func
-                func = lambda record: any(record.mapped(seq_fnames))  # noqa: E731
-            else:
-                # avoid costly mapped
-                func = self._fields[func].__get__
-        elif isinstance(func, Domain):
-            return self.filtered_domain(func)
-        else:
-            raise TypeError(f"Invalid function {func!r} to filter on {self._name}")
-
-        ids = tuple(id_ for id_, rec in zip(self._ids, self) if func(rec))
-        return self.__class__(self.env, ids, self._prefetch_ids)
+        return orm_recordset.filtered(self, func)
 
     @typing.overload
     def grouped(self, key: str) -> dict[typing.Any, Self]:
@@ -5383,11 +4047,7 @@ class BaseModel(metaclass=MetaModel):
 
         :param domain: :ref:`A search domain <reference/orm/domains>`.
         """
-        if not self or not domain:
-            return self
-        predicate = Domain(domain)._as_predicate(self)
-        ids = tuple(id_ for id_, rec in zip(self._ids, self) if predicate(rec))
-        return self.__class__(self.env, ids, self._prefetch_ids)
+        return orm_recordset.filtered_domain(self, domain)
 
     @api.private
     def sorted(self, key: Callable[[Self], typing.Any] | str | None = None, reverse: bool = False) -> Self:
@@ -5411,67 +4071,11 @@ class BaseModel(metaclass=MetaModel):
             # sort records using default order
             records.sorted()
         """
-        if len(self) < 2:
-            return self
-        if isinstance(key, str):
-            key = self._sorted_order_to_function(key)
-        elif key is None:
-            key = self._sorted_order_to_function(self._order)
-        ids = tuple(item.id for item in sorted(self, key=key, reverse=reverse))
-        return self.__class__(self.env, ids, self._prefetch_ids)
+        return orm_recordset.sort(self, key, reverse)
 
     @api.model
     def _sorted_order_to_function(self, order: str) -> Callable[[BaseModel], tuple]:
-        def order_to_function(order_part):
-            order_match = regex_order.match(order_part)
-            if not order_match:
-                raise ValueError(f"Invalid order {order!r} to sort")
-            field_name = order_match['field']
-            property_name = order_match['property']
-            reverse = (order_match['direction'] or '').upper() == 'DESC'
-            nulls = (order_match['nulls'] or '').upper()
-            if nulls:
-                nulls_first = nulls == 'NULLS FIRST'
-            else:
-                nulls_first = reverse
-
-            field = self._fields[field_name]
-            field_expr = f'{field_name}.{property_name}' if property_name else field_name
-            if field.type == 'many2one' and (not property_name or property_name == 'id'):
-                seen = self.env.context.get('__m2o_order_seen_sorted', ())
-                if field in seen:
-                    return lambda _: None
-                comodel = self.env[field.comodel_name].with_context(__m2o_order_seen_sorted=frozenset((field, *seen)))
-                func_comodel = comodel._sorted_order_to_function(property_name or comodel._order)
-
-                def getter(rec):
-                    value = rec[field_name]
-                    if not value:
-                        return None
-                    return func_comodel(value)
-            elif field.relational:
-                raise ValueError(f"Invalid order on relational field {order_part!r} to sort")
-            elif field.type == 'boolean':
-                getter = field.expression_getter(field_expr)
-            else:
-                raw_getter = field.expression_getter(field_expr)
-
-                def getter(rec):
-                    value = raw_getter(rec)
-                    return value if value is not False else None
-
-            comparator = functools.partial(
-                ReversibleComparator,
-                reverse=reverse,
-                none_first=nulls_first,
-            )
-            return lambda rec: comparator(getter(rec))
-
-        item_makers = [
-            order_to_function(order_part)
-            for order_part in order.split(',')
-        ]
-        return lambda rec: tuple(fn(rec) for fn in item_makers)
+        return orm_recordset._sorted_order_to_function(self, order)
 
     @api.private
     def update(self, values: ValuesType) -> None:
@@ -5488,10 +4092,7 @@ class BaseModel(metaclass=MetaModel):
 
         :param fnames: optional iterable of field names to flush
         """
-        self._recompute_model(fnames)
-        dirty_fields = self.env._field_dirty
-        if fnames is None or any(self._fields[fname] in dirty_fields for fname in fnames):
-            self._flush()
+        return orm_recompute.flush_model(self, fnames)
 
     @api.private
     def flush_recordset(self, fnames: Collection[str] | None = None) -> None:
@@ -5502,64 +4103,11 @@ class BaseModel(metaclass=MetaModel):
 
         :param fnames: optional iterable of field names to flush
         """
-        if not self:
-            return
-        self._recompute_recordset(fnames)
-        if fnames is None:
-            fields = self._fields.values()
-        else:
-            fields = [self._fields[fname] for fname in fnames]
-        ids = set(self._ids)
-        dirty_fields = self.env._field_dirty
-        if not all(ids.isdisjoint(dirty_fields.get(field, ())) for field in fields):
-            self._flush()
+        return orm_recompute.flush_recordset(self, fnames)
 
     def _flush(self) -> None:
         # pop dirty fields and their corresponding record ids from cache
-        dirty_fields = self.env._field_dirty
-        dirty_field_ids = {
-            field: ids
-            for field in self._fields.values()
-            if (ids := dirty_fields.pop(field, None))
-        }
-        if not dirty_field_ids:
-            return
-
-        # for context-dependent fields, `get_column_update` contains the
-        # logic to find which value to flush
-        model = self
-
-        # sort dirty record ids so that records with the same set of modified
-        # fields are grouped together; for that purpose, map each dirty id to
-        # an integer that represents its subset of dirty fields (bitmask)
-        dirty_ids = sorted(
-            OrderedSet(id_ for ids in dirty_field_ids.values() for id_ in ids),
-            key=lambda id_: sum(
-                1 << field_index
-                for field_index, ids in enumerate(dirty_field_ids.values())
-                if id_ in ids
-            ),
-        )
-
-        # perform updates in batches in order to limit memory footprint
-        BATCH_SIZE = 1000
-        for some_ids in split_every(BATCH_SIZE, dirty_ids):
-            vals_list = []
-            try:
-                for id_ in some_ids:
-                    record = model.browse((id_,))
-                    vals_list.append({
-                        f.name: f.get_column_update(record)
-                        for f, ids in dirty_field_ids.items()
-                        if id_ in ids
-                    })
-            except KeyError:
-                raise AssertionError(
-                    f"Could not find all values of {record} to flush them\n"
-                    f"    Context: {self.env.context}\n"
-                    f"    Cache: {dict(record._cache)!r}"
-                )
-            model.browse(some_ids)._write_multi(vals_list)
+        return orm_recompute._flush(self)
 
     #
     # New records - represent records that do not exist in the database yet;
@@ -5883,9 +4431,7 @@ class BaseModel(metaclass=MetaModel):
             It is ``True`` by default, which ensures cache consistency.
             Do not use this parameter unless you know what you are doing.
         """
-        if flush:
-            self.flush_model(fnames)
-        self._invalidate_cache(fnames)
+        return orm_recompute.invalidate_model(self, fnames, flush)
 
     @api.private
     def invalidate_recordset(self, fnames: Collection[str] | None = None, flush: bool = True) -> None:
@@ -5898,9 +4444,7 @@ class BaseModel(metaclass=MetaModel):
             It is ``True`` by default, which ensures cache consistency.
             Do not use this parameter unless you know what you are doing.
         """
-        if flush:
-            self.flush_recordset(fnames)
-        self._invalidate_cache(fnames, self._ids)
+        return orm_recompute.invalidate_recordset(self, fnames, flush)
 
     def _invalidate_cache(self, fnames: Collection[str] | None = None, ids: Sequence[IdType] | None = None) -> None:
         if ids is not None and not ids:  # Avoid invalidating field_inverses for no reason
@@ -6013,128 +4557,31 @@ class BaseModel(metaclass=MetaModel):
         traversing backwards field dependencies along the way, and yielding
         tuple ``(field, records, created)`` to recompute.
         """
-
-        # The fields' trigger trees are merged in order to evaluate all triggers
-        # at once. For non-stored computed fields, `_modified_triggers` might
-        # traverse the tree (at the cost of extra queries) only to know which
-        # records to invalidate in cache. But in many cases, most of these
-        # fields have no data in cache, so they can be ignored from the start.
-        # This allows us to discard subtrees from the merged tree when they
-        # only contain such fields.
-        def select(field):
-            return (field.compute and field.store) or bool(field._get_all_cache_ids(self.env))
-
-        tree = self.pool.get_trigger_tree(fields, select=select)
-        if not tree:
-            return ()
-
-        return self.sudo().with_context(active_test=False)._modified_triggers(tree, create)
+        return orm_recompute._modified(self, fields, create)
 
     def _modified_triggers(self, tree: TriggerTree, create: bool = False) -> Iterable[tuple[Field, BaseModel, bool]]:
         """ Return an iterator traversing a tree of field triggers on ``self``,
         traversing backwards field dependencies along the way, and yielding
         tuple ``(field, records, created)`` to recompute.
         """
-        if not self:
-            return
-
-        # first yield what to compute
-        for field in tree.root:
-            yield field, self, create
-
-        # then traverse dependencies backwards, and proceed recursively
-        for field, subtree in tree.items():
-            if create and field.type in ('many2one', 'many2one_reference'):
-                # upon creation, no other record has a reference to self
-                continue
-
-            inverses = self.pool.field_inverses[field]
-            if create and field.type == 'many2many' and field.store and not inverses:
-                # upon creation, no other record has a reference to self
-                # for this M2M because no inverse has been able to use commands.
-                continue
-
-            # subtree is another tree of dependencies
-            model = self.env[field.model_name]
-            for invf in inverses:
-                # use an inverse of field without domain
-                if not (invf.type in ('one2many', 'many2many') and invf.domain):
-                    if invf.type == 'many2one_reference':
-                        rec_ids = OrderedSet()
-                        for rec in self:
-                            try:
-                                if rec[invf.model_field] == field.model_name and (rec_id := rec[invf.name]):
-                                    rec_ids.add(rec_id)
-                            except MissingError:
-                                continue
-                        records = model.browse(rec_ids)
-                    else:
-                        try:
-                            records = self[invf.name]
-                        except MissingError:
-                            records = self.exists()[invf.name]
-
-                    # TODO: find a better fix
-                    if field.model_name == records._name:
-                        if not any(self._ids):
-                            # if self are new, records should be new as well
-                            records = records.browse(it and NewId(it) for it in records._ids)
-                        break
-            else:
-                new_records = self.filtered(lambda r: not r.id)
-                real_records = self - new_records
-                records = model.browse()
-                if real_records:
-                    records = model.search([(field.name, 'in', real_records.ids)], order='id')
-                if new_records:
-                    field_cache = field._get_cache(model.env)
-                    cache_records = model.browse(field_cache)
-                    new_ids = set(self._ids)
-                    records |= cache_records.filtered(lambda r: not set(r[field.name]._ids).isdisjoint(new_ids))
-
-            yield from records._modified_triggers(subtree)
+        return orm_recompute._modified_triggers(self, tree, create)
 
     def _recompute_model(self, fnames: Collection[str] | None = None) -> None:
         """ Process the pending computations of the fields of ``self``'s model.
 
         :param fnames: optional iterable of field names to compute
         """
-        if fnames is None:
-            fields = self._fields.values()
-        else:
-            fields = [self._fields[fname] for fname in fnames]
-
-        for field in fields:
-            if field.compute and field.store:
-                self._recompute_field(field)
+        return orm_recompute._recompute_model(self, fnames)
 
     def _recompute_recordset(self, fnames: Collection[str] | None = None) -> None:
         """ Process the pending computations of the fields of the records in ``self``.
 
         :param fnames: optional iterable of field names to compute
         """
-        if fnames is None:
-            fields = self._fields.values()
-        else:
-            fields = [self._fields[fname] for fname in fnames]
-
-        for field in fields:
-            if field.compute and field.store:
-                self._recompute_field(field, self._ids)
+        return orm_recompute._recompute_recordset(self, fnames)
 
     def _recompute_field(self, field: Field, ids: Sequence[IdType] | None = None) -> None:
-        ids_to_compute = self.env.transaction.tocompute.get(field, ())
-        if ids is None:
-            ids = ids_to_compute
-        else:
-            ids = [id_ for id_ in ids if id_ in ids_to_compute]
-        if not ids:
-            return
-
-        # do not force recomputation on new records; those will be
-        # recomputed by accessing the field on the records
-        records = self.browse(tuple(id_ for id_ in ids if id_))
-        field.recompute(records)
+        return orm_recompute._recompute_field(self, field, ids)
 
     #
     # Generic onchange method
@@ -6144,31 +4591,13 @@ class BaseModel(metaclass=MetaModel):
         """ Return whether ``field`` should trigger an onchange event in the
             presence of ``other_fields``.
         """
-        return (field.name in self._onchange_methods) or any(
-            dep in other_fields
-            for dep in self.pool.get_dependent_fields(field.base_field)
-        )
+        return orm_onchange._has_onchange(self, field, other_fields)
 
     def _apply_onchange_methods(self, field_name: str, result: dict, excluded_methods=()) -> None:
         """ Apply onchange method(s) (not in ``excluded_methods``) for field ``field_name`` on ``self``.
         Value assignments are applied on ``self``, while warning messages are put in dictionary ``result``.
         """
-        for method in self._onchange_methods.get(field_name, ()):
-            if method in excluded_methods:
-                continue
-            res = method(self)
-            if not res:
-                continue
-            if res.get('value'):
-                for key, val in res['value'].items():
-                    if key in self._fields and key != 'id':
-                        self[key] = val
-            if res.get('warning'):
-                result['warnings'].add((
-                    res['warning'].get('title') or _("Warning"),
-                    res['warning'].get('message') or "",
-                    res['warning'].get('type') or "",
-                ))
+        return orm_onchange._apply_onchange_methods(self, field_name, result, excluded_methods)
 
     def onchange(self, values: dict, field_names: list[str], fields_spec: dict) -> dict:
         raise NotImplementedError("onchange() is implemented in module 'web'")
@@ -6248,3 +4677,15 @@ def itemgetter_tuple(items):
     if len(items) == 1:
         return lambda gettable: (gettable[items[0]],)
     return itemgetter(*items)
+
+
+# delegation targets, imported last since they import helpers of this module
+from odoo.orm.models import grouping as orm_grouping
+from odoo.orm.models import export as orm_export
+from odoo.orm.models import translations as orm_translations
+from odoo.orm.models import properties as orm_properties
+from odoo.orm.models import write as orm_write
+from odoo.orm.models import parent_store as orm_parent_store
+from odoo.orm.models import recompute as orm_recompute
+from odoo.orm.models import recordset as orm_recordset
+from odoo.orm.models import onchange as orm_onchange
