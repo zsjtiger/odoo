@@ -159,6 +159,17 @@ class _FileOnlyOption(_OdooOption):
         return
 
 
+class _PosixOnlyOption(_OdooOption):
+    def __init__(self, *opts, **attrs):
+        if os.name != 'posix':
+            attrs['help'] = optparse.SUPPRESS_HELP
+            attrs['cli_loadable'] = False
+            attrs['env_name'] = ''
+            attrs['file_loadable'] = False
+            attrs['file_exportable'] = False
+        super().__init__(*opts, **attrs)
+
+
 def _deduplicate_loggers(loggers):
     """ Avoid saving multiple logging levels for the same loggers to a save
     file, that just takes space and the list can potentially grow unbounded
@@ -211,6 +222,7 @@ class configmanager:
     def _build_cli(self):
         OdooOption = type('OdooOption', (_OdooOption,), {'config': self})
         FileOnlyOption = type('FileOnlyOption', (_FileOnlyOption, OdooOption), {})
+        PosixOnlyOption = type('PosixOnlyOption', (_PosixOnlyOption, OdooOption), {})
 
         version = "%s %s" % (release.description, release.version)
         parser = OdooOptionParser(version=version, option_class=OdooOption)
@@ -479,11 +491,11 @@ class configmanager:
 
         group = optparse.OptionGroup(parser, "Multiprocessing options")
         # TODO sensible default for the three following limits.
-        group.add_option(OdooOption(
+        group.add_option(PosixOnlyOption(
                          "--workers", dest="workers", my_default=0,
                          help="Specify the number of workers, 0 disable prefork mode.",
                          type="int"))
-        group.add_option(OdooOption(
+        group.add_option(PosixOnlyOption(
                          "--gevent-workers", dest="gevent_workers", my_default=1,
                          help="Specify the number of gevent workers in prefork mode. (requires SO_REUSEPORT)",
                          type="int"))
@@ -491,22 +503,22 @@ class configmanager:
                          help="Maximum allowed virtual memory per worker (in bytes), when reached the worker be "
                          "reset after the current request (default 2048MiB).",
                          type="int")
-        group.add_option(OdooOption(
+        group.add_option(PosixOnlyOption(
                          "--limit-memory-soft-gevent", dest="limit_memory_soft_gevent", my_default=None,
                          help="Maximum allowed virtual memory per gevent worker (in bytes), when reached the worker will be "
                          "reset after the current request. Defaults to `--limit-memory-soft`.",
                          type="int"))
-        group.add_option(OdooOption(
+        group.add_option(PosixOnlyOption(
                          "--limit-memory-hard", dest="limit_memory_hard", my_default=2560 * 1024 * 1024,
                          help="Maximum allowed virtual memory per worker (in bytes), when reached, any memory "
                          "allocation will fail (default 2560MiB).",
                          type="int"))
-        group.add_option(OdooOption(
+        group.add_option(PosixOnlyOption(
                          "--limit-memory-hard-gevent", dest="limit_memory_hard_gevent", my_default=None,
                          help="Maximum allowed virtual memory per gevent worker (in bytes), when reached, any memory "
                          "allocation will fail. Defaults to `--limit-memory-hard`.",
                          type="int"))
-        group.add_option(OdooOption(
+        group.add_option(PosixOnlyOption(
                          "--limit-time-cpu", dest="limit_time_cpu", my_default=60,
                          help="Maximum allowed CPU time per request (default 60).",
                          type="int"))
@@ -517,7 +529,7 @@ class configmanager:
                          help="Maximum allowed Real time per cron job. (default: --limit-time-real). "
                               "Set to 0 for no limit. ",
                          type="int")
-        group.add_option(OdooOption(
+        group.add_option(PosixOnlyOption(
                          "--limit-request", dest="limit_request", my_default=2**16,
                          help="Maximum number of request to be processed per worker (default 65536).",
                          type="int"))
@@ -536,7 +548,7 @@ class configmanager:
             appdirs.user_data_dir(release.product_name, release.author)
             if os.path.isdir(os.path.expanduser('~')) else
             appdirs.site_data_dir(release.product_name, release.author)
-            if sys.platform == 'darwin' else
+            if sys.platform in ['win32', 'darwin'] else
             f'/var/lib/{release.product_name}'
         )
 
@@ -549,6 +561,8 @@ class configmanager:
 
         if os.path.isfile(default_config_file):
             rcfilepath = default_config_file
+        elif os.name == 'nt':
+            rcfilepath = os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), 'odoo.conf')
         elif os.path.isfile(rcfilepath := os.path.expanduser('~/.odoorc')):
             pass
         elif os.path.isfile(rcfilepath := os.path.expanduser('~/.openerp_serverrc')):

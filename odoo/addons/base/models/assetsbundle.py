@@ -691,6 +691,11 @@ css_error_message {
 
     def run_rtlcss(self, source):
         rtlcss = 'rtlcss'
+        if os.name == 'nt':
+            try:
+                rtlcss = misc.find_in_path('rtlcss.cmd')
+            except IOError:
+                rtlcss = 'rtlcss'
 
         cmd = [rtlcss, '-c', file_path("base/data/rtlcss.json"), '-']
 
@@ -1146,7 +1151,10 @@ class ScssStylesheetAsset(PreprocessedCSS):
 class LessStylesheetAsset(PreprocessedCSS):
     def get_command(self):
         try:
-            lessc = misc.find_in_path('lessc')
+            if os.name == 'nt':
+                lessc = misc.find_in_path('lessc.cmd')
+            else:
+                lessc = misc.find_in_path('lessc')
         except IOError:
             lessc = 'lessc'
         return [lessc, '-', '--no-js', '--no-color']

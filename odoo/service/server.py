@@ -23,15 +23,20 @@ from concurrent.futures import ThreadPoolExecutor
 
 import psutil
 
-# Unix only for workers
-import fcntl
-import resource
-try:
-    import inotify
-    from inotify.adapters import InotifyTrees
-    from inotify.constants import IN_CREATE, IN_MODIFY, IN_MOVED_TO
-    INOTIFY_LISTEN_EVENTS = IN_MODIFY | IN_CREATE | IN_MOVED_TO
-except ImportError:
+if os.name == 'posix':
+    # Unix only for workers
+    import fcntl
+    import resource
+    try:
+        import inotify
+        from inotify.adapters import InotifyTrees
+        from inotify.constants import IN_CREATE, IN_MODIFY, IN_MOVED_TO
+        INOTIFY_LISTEN_EVENTS = IN_MODIFY | IN_CREATE | IN_MOVED_TO
+    except ImportError:
+        inotify = None
+else:
+    # Windows shim
+    signal.SIGHUP = -1
     inotify = None
 
 if not inotify:
@@ -233,7 +238,7 @@ class CommonServer:
             # of the other side (or something), see
             # http://bugs.python.org/issue4397
             # note: stdlib fixed test, not behavior
-            if e.errno != errno.ENOTCONN or platform.system() != 'Darwin':
+            if e.errno != errno.ENOTCONN or platform.system() not in ['Darwin', 'Windows']:
                 raise
         sock.close()
 
@@ -1612,4 +1617,8 @@ def start(preload=None, stop=False):
 def restart():
     """ Restart the server
     """
-    os.kill(server.pid, signal.SIGHUP)
+    if os.name == 'nt':
+        # run in a thread to let the current thread return response to the caller.
+        threading.Thread(target=_reexec).start()
+    else:
+        os.kill(server.pid, signal.SIGHUP)
