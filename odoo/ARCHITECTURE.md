@@ -100,6 +100,11 @@ are named after their responsibility:
 - `tools/text/translate/`: `base` (lazy and stored translations), `html` (XML and
   HTML fields), `extract` (term extraction), `files` (PO, CSV, XML and tar files) and
   `modules` (the readers and the importer of the modules).
+- `tools/pdf/`: `compat` (the pypdf loading and its fixes), `reader`, `writer` (the branded
+  writer and the PDF/A writer), `operations` (merge, fill, rotate, banner) and `text`.
+- `modules/module/`: `manifest` (the `Manifest`, its validation and the discovery),
+  `paths` (the addons path and the lookups), `loader`, `versions` and `dependencies`.
+  `current_test` stays in the package init: the test suite sets it there.
 - `tools/misc/` and `tools/config/`: the former flat modules, split by concern.
 
 ## Moved modules
