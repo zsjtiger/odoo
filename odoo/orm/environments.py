@@ -215,7 +215,7 @@ class Environment(Mapping[str, "BaseModel"]):
 
         Storing True means that we have access to the record.
         We store False to avoid worst case complexity when re-checking all
-        records in the prefetch: see `Model.__check_access_fill_cache`.
+        records in the prefetch: see `odoo.orm.access.fill_access_cache`.
         """
         return self.transaction.access_read[self._access_context]
 

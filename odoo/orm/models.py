@@ -52,9 +52,10 @@ from odoo.tools.constants import BIG_RECORDSET_SIZE, IN_MAX
 from odoo.tools.func import deprecated
 from odoo.tools.lru import LRU
 from odoo.tools.misc import ReversedIterable, exception_to_unicode, unquote
-from odoo.tools.safe_eval import _UNSAFE_ATTRIBUTES, safe_checker, safe_eval
+from odoo.tools.safe_eval import _UNSAFE_ATTRIBUTES, safe_checker
 from odoo.tools.translate import _, LazyTranslate
 
+from . import access as orm_access
 from . import decorators as api
 from .commands import Command
 from .domains import Domain
@@ -111,8 +112,7 @@ INSERT_BATCH_SIZE = 100
 UPDATE_BATCH_SIZE = 100
 SQL_DEFAULT = psycopg2.extensions.AsIs("DEFAULT")
 
-# hacky-ish way to prevent access to a field through the ORM (except for sudo mode)
-NO_ACCESS = '.'
+from .access import NO_ACCESS
 
 
 def parse_read_group_spec(spec: str) -> tuple:
@@ -2707,16 +2707,7 @@ class BaseModel(metaclass=MetaModel):
         :param operation: one of ``read``, ``write``
         :return: whether the field is accessible
         """
-        if operation == 'read':
-            env = self.env
-            memo = env._field_access_memo
-            if env.su or field in memo:
-                return True
-            if self._has_field_access(field, 'read'):
-                memo.add(field)
-                return True
-            return False
-        return self._has_field_access(field, operation)
+        return orm_access.has_field_access(self, field, operation)
 
     @api.model
     def _has_field_access(self, field: Field, operation: typing.Literal['read', 'write']) -> bool:
@@ -2741,53 +2732,7 @@ class BaseModel(metaclass=MetaModel):
         :param operation: one of ``read``, ``write``
         :raise AccessError: if the user is not allowed to access the provided field
         """
-        if operation == 'read':
-            env = self.env
-            memo = env._field_access_memo
-            if env.su or field in memo:
-                return
-            if self._has_field_access(field, 'read'):
-                memo.add(field)
-                return
-        elif self._has_field_access(field, operation):
-            return
-
-        _logger.info('Access Denied by ACLs for operation: %s, uid: %s, model: %s, field: %s',
-            operation, self.env.uid, self._name, field.name)
-
-        description = self.env['ir.model']._get(self._name).name
-
-        error_msg = _(
-            "You do not have enough rights to access the field \"%(field)s\""
-            " on %(document_kind)s (%(document_model)s). "
-            "Please contact your system administrator."
-            "\n\nOperation: %(operation)s",
-            field=field.name,
-            document_kind=description,
-            document_model=self._name,
-            operation=operation,
-        )
-
-        if self.env.user._has_group('base.group_no_one'):
-            if field.groups == NO_ACCESS:
-                allowed_groups_msg = _("always forbidden")
-            elif not field.groups:
-                allowed_groups_msg = _("custom field access rules")
-            else:
-                groups_list = [self.env.ref(g) for g in field.groups.split(',')]
-                groups = self.env['res.groups'].union(groups_list).sorted('id')
-                allowed_groups_msg = _(
-                    "allowed for groups %s",
-                    ', '.join(repr(g.display_name) for g in groups),
-                )
-            error_msg += _(
-                "\nUser: %(user)s"
-                "\nGroups: %(allowed_groups_msg)s",
-                user=self.env.uid,
-                allowed_groups_msg=allowed_groups_msg,
-            )
-
-        raise AccessError(error_msg)
+        return orm_access.check_field_access(self, field, operation)
 
     @api.model
     @deprecated("Since 20.0, use check_field_access()")
@@ -3454,11 +3399,7 @@ class BaseModel(metaclass=MetaModel):
             records.browse().check_access(operation)
 
         """
-        if self.has_access(operation):
-            return
-        inaccessible = self - self._filtered_access(operation)
-        domain = self._access_domain(operation)
-        raise inaccessible._make_access_error_message(operation, domain)
+        return orm_access.check_access(self, operation)
 
     @typing.final
     def has_access(self, operation: str) -> bool:
@@ -3466,41 +3407,7 @@ class BaseModel(metaclass=MetaModel):
         on all the records in ``self``. The method is fully consistent with
         method :meth:`check_access` but returns a boolean instead.
         """
-        if self.env.su:
-            return True
-
-        origin = self._origin
-        # check the records for read access
-        if operation == 'read' and origin:
-            access = self.env._access_cache[self._name]
-            if all(map(access.get, origin._ids)):
-                return True
-            domain = self._access_domain(operation)
-            origin.__check_access_fill_cache(access, domain)
-            return all(map(access.__getitem__, origin._ids))
-
-        # resolve the 'access' operator if just checking model access
-        # so that a rule `('order_id', 'access', 'read')` may become false
-        if not origin:
-            if operation == 'read':
-                access = self.env._access_cache[self._name]
-                if isinstance(result := access.get(0), bool):
-                    return result
-            domain = self._access_domain(operation)
-            domain = domain.map_conditions(
-                lambda cond: cond.optimize_dynamic(self.sudo()) if cond.operator == 'access' else cond)
-            result = not domain.is_false()
-            if operation == 'read':
-                access[0] = result
-            return result
-
-        # check the records for other access
-        domain = self._access_domain(operation)
-        if domain.is_false():
-            return False
-        if domain.is_true():
-            return True
-        return origin == origin.sudo().with_context(active_test=False).filtered_domain(domain)
+        return orm_access.has_access(self, operation)
 
     @typing.final
     def _filtered_access(self, operation: str) -> typing.Self:
@@ -3510,67 +3417,8 @@ class BaseModel(metaclass=MetaModel):
             self.filtered(lambda record: record.has_access(operation))
 
         """
-        if self.env.su or not self:  # su or empty
-            return self
+        return orm_access.filtered_access(self, operation)
 
-        origin = self._origin
-        if operation == 'read' and origin:
-            access = self.env._access_cache[self._name]
-            if all(map(access.get, origin._ids)):
-                return self
-            domain = self._access_domain(operation)
-            origin.__check_access_fill_cache(access, domain)
-            if domain.is_true():
-                return self
-            if domain.is_false():
-                return self.browse()
-            if origin is not self:  # we have some new ids
-                return self.filtered(lambda rec: not (id_ := rec._origin.id) or access.get(id_))
-            return self.filtered(lambda rec: access[rec._ids[0]])
-
-        domain = self._access_domain(operation)
-        if domain.is_false():
-            return self.browse()
-        if not origin or domain.is_true():
-            return self
-        accessible = origin.sudo().with_context(active_test=False).filtered_domain(domain).with_env(self.env)
-        if origin is not self:  # we have some new ids
-            accessible_ids = {False, *accessible._ids}
-            return self.filtered(lambda rec: rec._origin.id in accessible_ids)
-        return accessible
-
-    def __check_access_fill_cache(self, access: dict[IdType, bool], domain: Domain) -> None:
-        """ Fill the access cache for records in self. """
-        ids = self._ids
-
-        # Select records:
-        # We get unknown ids and recheck forbidden ids.  If we have a small
-        # number of ids, we only add unknown records from the prefetch to check
-        # access in batch.
-        # We want to avoid rechecking *all* the prefetch every time we have an
-        # inaccessible record.
-        ids_to_check = tuple(id_ for id_ in unique(itertools.chain(ids, self._prefetch_ids)) if not access.get(id_))
-        records = self.browse(ids_to_check).sudo().with_context(active_test=False)
-
-        # Check access
-        try:
-            accessible = records.filtered_domain(domain)
-        except MissingError:
-            existing = records.exists()
-            missing_ids = set(records._ids) - set(existing._ids)
-            if not missing_ids.isdisjoint(ids):
-                # raise if initial ids intersect with missing ids
-                raise
-            records = existing
-            accessible = records.filtered_domain(domain)
-
-        # Update the cache
-        if len(accessible) == len(records):
-            access.update(dict.fromkeys(records._ids, True))
-        else:
-            accessible_ids = set(accessible._ids)
-            for id_ in records._ids:
-                access[id_] = id_ in accessible_ids
 
     @deprecated("Since 20.0, use Model._access_domain instead")
     def _check_access(self, operation: str) -> tuple[Self, Callable] | None:
@@ -3607,44 +3455,7 @@ class BaseModel(metaclass=MetaModel):
         the current user is allowed to perform ``operation``.  The domain comes
         from the permissions and restrictions that apply to the current user.
         """
-        from odoo.addons.base.models.ir_access import IN_SELECTION  # noqa: PLC0415
-
-        assert operation in IN_SELECTION, (
-            f"Invalid access operation {operation!r} "
-            f"(expected {', '.join(map(repr, IN_SELECTION))})"
-        )
-        operations = IN_SELECTION[operation]
-
-        # collect permissions and restrictions
-        permissions = []
-        restrictions = []
-
-        # add access for parent models as restrictions
-        if self._check_inherits_access:
-            for parent_model_name, parent_field_name in self._inherits.items():
-                domain = self.env[parent_model_name]._access_domain(operation)
-                if domain.is_false():
-                    return Domain.FALSE
-                restrictions.append(Domain(parent_field_name, 'any', domain))
-
-        IrAccess = self.env['ir.access']
-        # include False in user groups to catch global rules
-        group_ids = {*self.env.user._get_group_ids(), False}
-        # some domains have been pre-evaluated, evaluate only if needed
-        eval_context = None
-        for access in IrAccess._get_all_access().get(self._name, ()):
-            if access.operation in operations and access.group_id in group_ids:
-                domain = access.domain
-                if not isinstance(domain, Domain):
-                    if eval_context is None:
-                        eval_context = IrAccess._eval_context()
-                    domain = Domain(safe_eval(domain, eval_context))
-                if access.group_id:
-                    permissions.append(domain)
-                else:
-                    restrictions.append(domain)
-
-        return Domain.OR(permissions) & Domain.AND(restrictions)
+        return orm_access.access_domain(self, operation)
 
     def _make_access_error_message(self, operation: str, domain: Domain) -> AccessError:
         """Create the access error for the given operation.
