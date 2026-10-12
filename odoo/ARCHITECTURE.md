@@ -48,6 +48,28 @@ loaded. Imports of upper layers are allowed inside functions and inside
 Importing `odoo.orm`, `odoo.modules`, `odoo.http` or `odoo.cli` runs the
 bootstrap, so the framework also works when used as a library.
 
+## Layout of the packages
+
+Packages that were split by concern keep their import path; the modules inside
+are named after their responsibility:
+
+- `orm/models/`: `BaseModel` (`__init__`), the registry, the environments and
+  the caches; the methods of `BaseModel` delegate to one module per concern
+  (`search`, `read`, `create`, `write`, `grouping`, `export`, `recompute`...).
+- `orm/fields/`: `Field` (`__init__`) and one module per field family.
+- `orm/database/`: the SQL cursors, the queries, the table objects and the schema.
+- `orm/core/`: access rights, domains, commands, decorators, identifiers and utils.
+- `tools/`: the shared helpers at the top level; `text`, `files`, `numeric`,
+  `sql`, `xml`, `loading`, `js`, `profiling` and `system` group the others. The
+  modules moved there are not aliased: import them from their new path.
+- `service/server/`: `start`/`restart` (`__init__`), `threaded`, `gevent_server`,
+  `prefork`, `worker`, `reloader` and the shared base in `common`.
+- `tests/common/`: the test framework, one module per concern (`base`,
+  `transaction`, `http_case`, `browser`, `decorators`, `mocks`, `locks`, `utils`).
+  `odoo.tests.common` re-exports the same names as before.
+- `core/patches/`: one module per patched library; `_werkzeug_urls` holds the
+  URL backport that werkzeug 3.0 needs.
+
 ## Moved modules
 
 The modules below have been moved. Their former names remain importable once
