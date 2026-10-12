@@ -106,8 +106,11 @@ are named after their responsibility:
   holds the checker, the generator and the monitoring (they depend on each other).
 - `modules/db/`: `queries`, `init` and `manage`.
 - `tools/text/translate/`: `base` (lazy and stored translations), `html` (XML and
-  HTML fields), `extract` (term extraction), `files` (PO, CSV, XML and tar files) and
-  `modules` (the readers and the importer of the modules).
+  HTML fields), `extract` (term extraction), `files` (PO, CSV, XML and tar files),
+  `readers` (the readers of the module and record translations), `importer` (the import
+  into the database), `export` (the export of the translations), `po` (the PO paths and
+  the reference lookups), `languages` (the locales and the language loading) and `code`
+  (the translations of the Python and JavaScript code).
 - `tools/pdf/`: `compat` (the pypdf loading and its fixes), `reader`, `writer` (the branded
   writer and the PDF/A writer), `operations` (merge, fill, rotate, banner) and `text`.
 - `modules/module/`: `manifest` (the `Manifest`, its validation and the discovery),

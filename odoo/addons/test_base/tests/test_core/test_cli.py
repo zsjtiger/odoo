@@ -156,7 +156,7 @@ class TestCommandUsingDb(TestCommand, TransactionCase):
                 return reader_mock_result
             return inner
 
-        with unittest.mock.patch('odoo.tools.text.translate.modules.TranslationModuleReader', new_callable=mock_result):
+        with unittest.mock.patch('odoo.tools.text.translate.export.TranslationModuleReader', new_callable=mock_result):
             output_buffer = BytesIO()
             output_wrapper = TextIOWrapper(output_buffer, encoding="utf-8")
             with redirect_stdout(output_wrapper):

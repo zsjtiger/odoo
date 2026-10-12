@@ -586,8 +586,8 @@ def get_translation(module: str, lang: str, source: str, args: tuple | dict) -> 
     else:
         assert module, "missing module name for translation"
         # imported here: the module of the code translations depends on this one
-        from odoo.tools.text.translate import modules as _translate_modules  # noqa: PLC0415
-        translation = _translate_modules.code_translations.get_python_translations(module, lang).get(source, source)
+        from odoo.tools.text.translate.code import code_translations  # noqa: PLC0415
+        translation = code_translations.get_python_translations(module, lang).get(source, source)
     # skip formatting if we have no args
     if not args:
         return translation
