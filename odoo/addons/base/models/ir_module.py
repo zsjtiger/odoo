@@ -26,7 +26,7 @@ from odoo.tools import SQL, BinaryBytes, config
 from odoo.tools.business_data import get_flag
 from odoo.tools.misc import file_open, topological_sort
 from odoo.tools.parse_version import parse_version
-from odoo.tools.translate import (
+from odoo.tools.text.translate import (
     TranslationImporter,
     get_datafile_translation_path,
     get_po_paths,

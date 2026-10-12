@@ -30,7 +30,7 @@ class BinaryValue(Buffer):
     @property
     def mimetype(self) -> str:
         """Guessed mimetype."""
-        from .mimetypes import guess_mimetype  # noqa: PLC0415
+        from odoo.tools.files.mimetypes import guess_mimetype  # noqa: PLC0415
         return guess_mimetype(self.content, '')
 
     @property

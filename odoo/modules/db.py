@@ -31,7 +31,8 @@ import odoo.release
 import odoo.orm.database.sql_db
 import odoo.tools
 from odoo.exceptions import AccessDenied, UserError
-from odoo.tools import SQL, config, osutil
+from odoo.tools import SQL, config
+from odoo.tools.system import osutil
 from odoo.tools.date_utils import all_timezones
 from odoo.tools.misc import exec_pg_environ, find_pg_tool
 from odoo.tools.sql import quoted_identifier

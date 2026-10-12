@@ -4,7 +4,7 @@ from pathlib import Path
 
 from odoo.tests import BaseCase, tagged
 from odoo.tools import file_path
-from odoo.tools.mimetypes import (
+from odoo.tools.files.mimetypes import (
     _odoo_guess_file_mimetype,
     _odoo_guess_mimetype,
     fix_filename_extension,
@@ -210,13 +210,13 @@ class TestMimeGuessingOdoo(BaseCase, MimeGuessingCases):
         self.assertEqual(fix('sheet.xlsx', 'application/zip'), 'sheet.xlsx')
 
         # Invalid
-        with self.assertLogs('odoo.tools.mimetypes', 'WARNING') as capture:
+        with self.assertLogs('odoo.tools.files.mimetypes', 'WARNING') as capture:
             self.assertEqual(fix('image.txt', 'image/jpeg'), 'image.txt.jpg')
             self.assertEqual(fix('words.jpg', 'text/plain'), 'words.jpg.txt')
 
         self.assertEqual(capture.output, [
-            "WARNING:odoo.tools.mimetypes:File 'image.txt' has an invalid extension for mimetype 'image/jpeg', adding '.jpg'",
-            "WARNING:odoo.tools.mimetypes:File 'words.jpg' has an invalid extension for mimetype 'text/plain', adding '.txt'",
+            "WARNING:odoo.tools.files.mimetypes:File 'image.txt' has an invalid extension for mimetype 'image/jpeg', adding '.jpg'",
+            "WARNING:odoo.tools.files.mimetypes:File 'words.jpg' has an invalid extension for mimetype 'text/plain', adding '.txt'",
         ])
 
 

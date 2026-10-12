@@ -18,7 +18,7 @@ from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import AccessError, RedirectWarning, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import frozendict, is_html_empty
-from odoo.tools.barcode import (
+from odoo.tools.files.barcode import (
     check_barcode_encoding,
     createBarcodeDrawing,
     get_barcode_font,

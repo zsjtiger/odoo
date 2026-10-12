@@ -40,7 +40,7 @@ from odoo.tools import frozendict, OrderedSet, SQL, sql
 from odoo.tools.func import deprecated
 from odoo.tools.misc import ReversedIterable
 from odoo.tools.safe_eval import _UNSAFE_ATTRIBUTES, safe_checker
-from odoo.tools.translate import LazyTranslate
+from odoo.tools.text.translate import LazyTranslate
 
 from odoo.orm.core import access as orm_access
 from odoo.orm.database import schema as orm_schema

@@ -9,8 +9,8 @@ from odoo.exceptions import MissingError, UserError
 from odoo.http import request
 from odoo.http.stream import Stream
 from odoo.tools import file_open
-from odoo.tools.image import image_guess_size_from_field_name, image_process
-from odoo.tools.mimetypes import get_extension, guess_file_mimetype, guess_mimetype
+from odoo.tools.files.image import image_guess_size_from_field_name, image_process
+from odoo.tools.files.mimetypes import get_extension, guess_file_mimetype, guess_mimetype
 from odoo.tools.misc import verify_limited_field_access_token
 
 DEFAULT_PLACEHOLDER_PATH = 'web/static/img/placeholder.png'
@@ -198,7 +198,7 @@ class IrBinary(models.AbstractModel):
         In case the arguments ``width``, ``height``, ``crop`` or
         ``quality`` are given, the image will be post-processed and the
         ETags (the unique cache http header) will be updated
-        accordingly. See also :func:`odoo.tools.image.image_process`.
+        accordingly. See also :func:`odoo.tools.files.image.image_process`.
 
         :param record: the record where to load the data from.
         :param field_name: the binary field where to load the data from.

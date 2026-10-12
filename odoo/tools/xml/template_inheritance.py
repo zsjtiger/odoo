@@ -6,9 +6,9 @@ import re
 from lxml import etree
 from lxml.builder import E
 
-from odoo.tools.translate import LazyTranslate
+from odoo.tools.text.translate import LazyTranslate
 from odoo.exceptions import ValidationError
-from .misc import SKIPPED_ELEMENT_TYPES, html_escape
+from odoo.tools.misc import SKIPPED_ELEMENT_TYPES, html_escape
 
 __all__ = []
 

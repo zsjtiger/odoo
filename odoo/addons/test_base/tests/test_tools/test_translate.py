@@ -15,7 +15,7 @@ from odoo.addons.base.tests.common import patch_code_translations
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests.common import BaseCase, TransactionCase, tagged
 from odoo.tools import sql
-from odoo.tools.translate import (
+from odoo.tools.text.translate import (
     ParsedTranslation,
     StoredTranslations,
     TranslationImporter,
@@ -494,7 +494,7 @@ class TestTranslationExport(TransactionCase):
 
     def test_export_translatable_resources(self):
         """Read files of installed modules and export translatable terms"""
-        with self.assertNoLogs('odoo.tools.translate', "ERROR"):
+        with self.assertNoLogs('odoo.tools.text.translate', "ERROR"):
             TranslationModuleReader(self.env.cr)
 
     def test_push_translation_filters_no_letter_strings(self):
@@ -2268,7 +2268,7 @@ class TestStoredTranslations(TransactionCase):
     # illegal data: pin current best-effort behavior (not a contract; may change)
     def test_read_missing_en(self):
         st = StoredTranslations({'fr_FR': 'French'})  # illegal: en_US is missing
-        with self.assertLogs('odoo.tools.translate', level='WARNING') as cm:
+        with self.assertLogs('odoo.tools.text.translate', level='WARNING') as cm:
             result = st['en_US']
         self.assertIsNone(result)
         self.assertTrue(any("no translation for 'en_US'" in m for m in cm.output))

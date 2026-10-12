@@ -399,11 +399,11 @@ from odoo.tools.safe_eval import (
 )
 from odoo.tools.lru import LRU
 from odoo.tools.misc import str2bool, file_open, file_path
-from odoo.tools.image import image_data_uri
-from odoo.tools.profiler import ExecutionContext
-from odoo.tools.translate import FORMAT_REGEX
+from odoo.tools.files.image import image_data_uri
+from odoo.tools.profiling.profiler import ExecutionContext
+from odoo.tools.text.translate import FORMAT_REGEX
 from odoo.http import request
-from odoo.tools.profiler import QwebTracker
+from odoo.tools.profiling.profiler import QwebTracker
 from odoo.exceptions import UserError, MissingError
 
 from odoo.addons.base.models.assetsbundle import AssetsBundle

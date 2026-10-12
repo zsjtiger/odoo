@@ -470,7 +470,7 @@ class _SafeWhitelist:
     .. code-block:: python
         safe_whitelist.add_class('odoo.orm.models.*')
         safe_whitelist.add_instance('odoo.orm.models.environments.Environment')
-        safe_whitelist.add_function('odoo.tools.float_utils.float_compare')
+        safe_whitelist.add_function('odoo.tools.numeric.float_utils.float_compare')
     """
 
     RE_NOTHING = re.compile(r'(?!)')
@@ -790,19 +790,19 @@ def _initialize_safe_whitelist():
     # Database
     safe_whitelist.add_instance('odoo.orm.database.sql_db.Cursor')
     # Tools
-    safe_whitelist.add_class('odoo.tools.binary.*')
-    safe_whitelist.add_class('odoo.tools.convert.xml_import')
+    safe_whitelist.add_class('odoo.tools.files.binary.*')
+    safe_whitelist.add_class('odoo.tools.loading.convert.xml_import')
     safe_whitelist.add_class('odoo.tools.func.lazy')
     safe_whitelist.add_class('odoo.tools.json._ScriptSafe')
     safe_whitelist.add_class('odoo.tools.json.JSON')
-    safe_whitelist.add_class('odoo.tools.profiler.QwebTracker')
+    safe_whitelist.add_class('odoo.tools.profiling.profiler.QwebTracker')
     safe_whitelist.add_instance('odoo.tools.misc.ReversedIterable')
     safe_whitelist.add_instance('odoo.tools.query.Query')
-    safe_whitelist.add_instance('odoo.tools.translate.LazyGettext')
-    safe_whitelist.add_function('odoo.tools.float_utils.float_compare')
-    safe_whitelist.add_function('odoo.tools.float_utils.float_is_zero')
-    safe_whitelist.add_function('odoo.tools.float_utils.float_repr')
-    safe_whitelist.add_function('odoo.tools.float_utils.float_round')
+    safe_whitelist.add_instance('odoo.tools.text.translate.LazyGettext')
+    safe_whitelist.add_function('odoo.tools.numeric.float_utils.float_compare')
+    safe_whitelist.add_function('odoo.tools.numeric.float_utils.float_is_zero')
+    safe_whitelist.add_function('odoo.tools.numeric.float_utils.float_repr')
+    safe_whitelist.add_function('odoo.tools.numeric.float_utils.float_round')
     safe_whitelist.add_function('odoo.tools.mail.formataddr')
     safe_whitelist.add_function('odoo.tools.mail.html2plaintext')
     safe_whitelist.add_function('odoo.tools.mail.is_html_empty')
@@ -810,7 +810,7 @@ def _initialize_safe_whitelist():
     safe_whitelist.add_function('odoo.tools.misc.format_date')
     safe_whitelist.add_function('odoo.tools.misc.format_duration')
     safe_whitelist.add_function('odoo.tools.business_data.street_split')
-    safe_whitelist.add_function('odoo.tools.translate.html_translate')
+    safe_whitelist.add_function('odoo.tools.text.translate.html_translate')
     # Psycopg2
     safe_whitelist.add_class('psycopg2.InterfaceError')
     safe_whitelist.add_class('psycopg2.OperationalError')

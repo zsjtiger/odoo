@@ -18,7 +18,7 @@ from odoo.tools import (
     split_every,
     SQL,
 )
-from odoo.tools.translate import _
+from odoo.tools.text.translate import _
 
 
 from odoo.orm.core.commands import Command

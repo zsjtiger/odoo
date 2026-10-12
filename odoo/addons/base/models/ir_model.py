@@ -20,7 +20,7 @@ from odoo.fields import Command, Domain
 from odoo.tools import BinaryBytes, frozendict, reset_cached_properties, split_every, sql, unique, OrderedSet, SQL
 from odoo.tools.constants import IN_MAX
 from odoo.tools.safe_eval import expr_eval, safe_eval, datetime, dateutil, time
-from odoo.tools.translate import FIELD_TRANSLATE, LazyTranslate, _
+from odoo.tools.text.translate import FIELD_TRANSLATE, LazyTranslate, _
 
 
 _lt = LazyTranslate(__name__)

@@ -15,7 +15,7 @@ import psycopg2.extensions
 from odoo.exceptions import AccessError, UserError
 from odoo.tools import split_every, SQL
 from odoo.tools.constants import IN_MAX
-from odoo.tools.translate import _
+from odoo.tools.text.translate import _
 
 from odoo.orm.core.utils import SUPERUSER_ID
 from odoo.orm.fields import Field, determine

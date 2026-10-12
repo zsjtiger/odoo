@@ -71,13 +71,14 @@ from odoo.http.session import Session as OdooHttpSession
 from odoo.orm.models.environments import CacheLayer
 from odoo.modules.registry import Registry
 from odoo.orm.database.sql_db import Cursor
-from odoo.tools import SQL, DotDict, config, file_open, float_compare, mute_logger, profiler
-from odoo.tools.binary import BinaryBytes
+from odoo.tools import SQL, DotDict, config, file_open, float_compare, mute_logger
+from odoo.tools.profiling import profiler
+from odoo.tools.files.binary import BinaryBytes
 from odoo.tools.lru import LRU
 from odoo.tools.mail import single_email_re
 from odoo.tools.misc import diff_zip, find_in_path, real_time, str2bool
 from odoo.tools.safe_eval import safe_whitelist
-from odoo.tools.xml_utils import _validate_xml
+from odoo.tools.xml.xml_utils import _validate_xml
 
 import odoo.addons.base
 from . import case, test_cursor

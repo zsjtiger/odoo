@@ -15,7 +15,7 @@ from odoo.core.logging import COLOR_PATTERN, DEFAULT, GREEN, RED
 from odoo.tools import SQL, config, html_normalize, html_sanitize, html2plaintext, is_html_empty, plaintext2html, sql
 from odoo.tools.misc import OrderedSet, SENTINEL, Sentinel
 from odoo.tools.sql import pattern_to_translated_trigram_pattern, value_to_translated_trigram_pattern
-from odoo.tools.translate import StoredTranslations, ParsedTranslation, html_translate, mark_as_copy
+from odoo.tools.text.translate import StoredTranslations, ParsedTranslation, html_translate, mark_as_copy
 
 from odoo.orm.fields import Field, _logger
 from odoo.orm.core.utils import COLLECTION_TYPES, SQL_OPERATORS, expand_ids

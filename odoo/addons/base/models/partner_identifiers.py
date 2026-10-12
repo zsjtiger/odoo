@@ -19,7 +19,7 @@ from stdnum.no import orgnr as no_en
 from stdnum.ro import cui as ro_cui
 from stdnum.se import orgnr as se_en
 
-from odoo.tools.translate import LazyGettext, LazyTranslate
+from odoo.tools.text.translate import LazyGettext, LazyTranslate
 from .partner_identifier_validation import (
     nl_kvk_validate,
     nl_oin_validate,

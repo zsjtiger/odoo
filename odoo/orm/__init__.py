@@ -18,7 +18,7 @@ import odoo.core.bootstrap  # noqa: F401
 import odoo
 from odoo.orm.core.commands import Command
 from odoo.orm.core.utils import SUPERUSER_ID
-from odoo.tools.translate import _, _lt
+from odoo.tools.text.translate import _, _lt
 
 odoo.SUPERUSER_ID = SUPERUSER_ID
 odoo._ = _

@@ -276,7 +276,7 @@ def init_logger():
     # rsjmin triggers this with Python 3.10+ (that warning comes from the C code and has no `module`)
     warnings.filterwarnings('ignore', r'^PyUnicode_FromUnicode\(NULL, size\) is deprecated', category=DeprecationWarning)
     # the SVG guesser thing always compares str and bytes, ignore it
-    warnings.filterwarnings('ignore', category=BytesWarning, module='odoo.tools.image')
+    warnings.filterwarnings('ignore', category=BytesWarning, module='odoo.tools.files.image')
     # reportlab does a bunch of bytes/str mixing in a hashmap
     warnings.filterwarnings('ignore', category=BytesWarning, module='reportlab.platypus.paraparser')
 
@@ -293,7 +293,7 @@ def init_logger():
     # This warning is triggered library only during the python precompilation which does not occur on readonly filesystem
     warnings.filterwarnings("ignore", r'invalid escape sequence', category=DeprecationWarning, module=".*vobject")
     warnings.filterwarnings("ignore", r'invalid escape sequence', category=SyntaxWarning, module=".*vobject")
-    from odoo.tools.translate import resetlocale  # noqa: PLC0415
+    from odoo.tools.text.translate import resetlocale  # noqa: PLC0415
     resetlocale()
 
     if conf := tools.config['log_config']:

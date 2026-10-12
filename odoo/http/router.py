@@ -38,7 +38,8 @@ from odoo.modules.module import (
     initialize_sys_path,
 )
 from odoo.modules.registry import Registry
-from odoo.tools import config, file_open, file_path, profiler
+from odoo.tools import config, file_open, file_path
+from odoo.tools.profiling import profiler
 from odoo.tools.misc import submap
 
 from . import request, request_var

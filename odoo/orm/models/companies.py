@@ -12,7 +12,7 @@ import psycopg2.extensions
 
 from odoo.exceptions import UserError
 from odoo.tools.misc import unquote
-from odoo.tools.translate import _, LazyTranslate
+from odoo.tools.text.translate import _, LazyTranslate
 
 
 from odoo.orm.core.domains import Domain

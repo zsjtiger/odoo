@@ -48,11 +48,11 @@ from odoo.http.session import (
 )
 from odoo.tools.json import json_default
 from odoo.tools.misc import get_lang, submap
-from odoo.tools.translate import code_translations
+from odoo.tools.text.translate import code_translations
 
 _logger = logging.getLogger(__name__)
 
-# see also mimetypes module: https://docs.python.org/3/library/mimetypes.html and odoo.tools.mimetypes
+# see also mimetypes module: https://docs.python.org/3/library/mimetypes.html and odoo.tools.files.mimetypes
 EXTENSION_TO_WEB_MIMETYPES = {
     '.css': 'text/css',
     '.less': 'text/less',

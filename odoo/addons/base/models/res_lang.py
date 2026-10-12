@@ -9,7 +9,7 @@ from typing import Any, Literal
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools.translate import mark_as_copy
+from odoo.tools.text.translate import mark_as_copy
 
 _logger = logging.getLogger(__name__)
 
@@ -216,8 +216,8 @@ class ResLang(models.CachedModel):
         """ Create the given language and make it active. """
         # create the language with locale information
         fail = True
-        iso_lang = tools.translate.get_iso_codes(lang)
-        for ln in tools.translate.get_locales(lang):
+        iso_lang = tools.text.translate.get_iso_codes(lang)
+        for ln in tools.text.translate.get_locales(lang):
             try:
                 locale.setlocale(locale.LC_ALL, str(ln))
                 fail = False
@@ -276,7 +276,7 @@ class ResLang(models.CachedModel):
         try:
             return self.sudo().create(lang_info)
         finally:
-            tools.translate.resetlocale()
+            tools.text.translate.resetlocale()
 
     @api.model
     def install_lang(self):

@@ -2,7 +2,7 @@ from markupsafe import Markup
 
 from odoo.tests import common, tagged
 from odoo.tools.misc import mute_logger, file_path
-from odoo.tools.translate import TranslationModuleReader, TranslationRecordReader, code_translations, CodeTranslations, PYTHON_TRANSLATION_COMMENT, JAVASCRIPT_TRANSLATION_COMMENT, translation_file_reader
+from odoo.tools.text.translate import TranslationModuleReader, TranslationRecordReader, code_translations, CodeTranslations, PYTHON_TRANSLATION_COMMENT, JAVASCRIPT_TRANSLATION_COMMENT, translation_file_reader
 from odoo import Command
 from odoo.addons.base.models.ir_fields import BOOLEAN_TRANSLATIONS
 from odoo.addons.base.tests.common import patch_code_translations

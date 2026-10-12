@@ -11,7 +11,7 @@ from odoo.fields import Domain
 from odoo.modules import get_module_path
 from odoo.modules.registry import Registry
 from odoo.tools import OrderedSet, config
-from odoo.tools.translate import TranslationImporter, load_language, trans_export
+from odoo.tools.text.translate import TranslationImporter, load_language, trans_export
 
 _logger = logging.getLogger(__name__)
 

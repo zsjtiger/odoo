@@ -21,18 +21,11 @@ from odoo import _, api, fields, models
 from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.http.stream import Stream
-from odoo.tools import (
-    OrderedSet,
-    SQL,
-    config,
-    consteq,
-    image,
-    split_every,
-    str2bool,
-)
-from odoo.tools.binary import EMPTY_BINARY, BinaryBytes, BinaryValue
+from odoo.tools import OrderedSet, SQL, config, consteq, split_every, str2bool
+from odoo.tools.files import image
+from odoo.tools.files.binary import EMPTY_BINARY, BinaryBytes, BinaryValue
 from odoo.tools.constants import IN_MAX
-from odoo.tools.mimetypes import guess_file_mimetype, guess_mimetype
+from odoo.tools.files.mimetypes import guess_file_mimetype, guess_mimetype
 from odoo.tools.misc import limited_field_access_token
 
 if typing.TYPE_CHECKING:

@@ -38,9 +38,9 @@ import babel.dates
 import markupsafe
 from lxml import etree, objectify
 
-from .config import config
-from .float_utils import float_round
-from .which import which
+from odoo.tools.config import config
+from odoo.tools.numeric.float_utils import float_round
+from odoo.tools.system.which import which
 
 if typing.TYPE_CHECKING:
     from collections.abc import Callable, Collection, Sequence

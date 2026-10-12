@@ -21,7 +21,7 @@ from odoo.orm.database.sql_db import BaseCursor
 from odoo.tools import clean_context, frozendict, reset_cached_properties, OrderedSet, SQL
 from odoo.tools.func import deprecated
 from odoo.tools.lru import LRU
-from odoo.tools.translate import get_translation, get_translated_module, LazyGettext
+from odoo.tools.text.translate import get_translation, get_translated_module, LazyGettext
 from odoo.tools.misc import StackMap, SENTINEL
 
 from odoo.orm.models.registry import _CACHES_BY_KEY, _REGISTRY_CACHES, Registry

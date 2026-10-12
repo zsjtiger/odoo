@@ -15,7 +15,7 @@ from odoo.exceptions import UserError
 from odoo.tools import (
     SQL,
 )
-from odoo.tools.translate import _
+from odoo.tools.text.translate import _
 
 
 if typing.TYPE_CHECKING:

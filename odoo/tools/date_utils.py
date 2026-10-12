@@ -12,8 +12,8 @@ from operator import methodcaller
 
 from dateutil.relativedelta import relativedelta, weekdays
 
-from .func import lazy
-from .float_utils import float_round
+from odoo.tools.func import lazy
+from odoo.tools.numeric.float_utils import float_round
 
 if typing.TYPE_CHECKING:
     from collections.abc import Callable, Iterable, Iterator

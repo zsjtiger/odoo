@@ -22,13 +22,13 @@ try:
 except ImportError:
     jingtrang = None
 
-from .binary import BinaryBytes
-from .config import config
-from .misc import file_open, file_path, SKIPPED_ELEMENT_TYPES
-from .safe_eval import _UNSAFE_ATTRIBUTES
+from odoo.tools.files.binary import BinaryBytes
+from odoo.tools.config import config
+from odoo.tools.misc import file_open, file_path, SKIPPED_ELEMENT_TYPES
+from odoo.tools.safe_eval import _UNSAFE_ATTRIBUTES
 from odoo.exceptions import ValidationError
 
-from .safe_eval import safe_eval, time
+from odoo.tools.safe_eval import safe_eval, time
 
 _logger = logging.getLogger(__name__)
 
@@ -105,7 +105,7 @@ def _eval_xml(self, node, env):
             try:
                 return safe_eval(a_eval, context)
             except Exception:
-                logging.getLogger('odoo.tools.convert.init').error(
+                logging.getLogger('odoo.tools.loading.convert.init').error(
                     'Could not eval(%s) for %s in %s', a_eval, node.get('name'), env.context)
                 raise
         def _process(s):
@@ -638,7 +638,7 @@ form: module.record_id""" % (xml_id,)
                     err=err.args[0],
                 )
                 _logger.debug(msg, exc_info=True)
-                raise ParseError(msg) from None  # Restart with "--log-handler odoo.tools.convert:DEBUG" for complete traceback
+                raise ParseError(msg) from None  # Restart with "--log-handler odoo.tools.loading.convert:DEBUG" for complete traceback
             except Exception as e:
                 raise ParseError('while parsing %s:%s, somewhere inside\n%s' % (
                     rec.getroottree().docinfo.URL,

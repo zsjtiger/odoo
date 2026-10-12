@@ -8,7 +8,7 @@ from typing import NamedTuple
 
 from odoo import api, Command, fields, models
 from odoo.tools import OrderedSet, SQL
-from odoo.tools.translate import _, code_translations, LazyTranslate
+from odoo.tools.text.translate import _, code_translations, LazyTranslate
 
 _lt = LazyTranslate(__name__)
 

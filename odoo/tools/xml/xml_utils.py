@@ -320,7 +320,7 @@ def validate_xml_from_attachment(env, xml_content, xsd_name, reload_files_functi
     :param xml_content: the XML content to validate
     :param xsd_name: the XSD file name in database
     :param reload_files_function: Deprecated.
-    :return: the result of the function :func:`odoo.tools.xml_utils._check_with_xsd`
+    :return: the result of the function :func:`odoo.tools.xml.xml_utils._check_with_xsd`
     """
 
     prefixed_xsd_name = f"{prefix}.{xsd_name}" if prefix else xsd_name

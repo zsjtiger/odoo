@@ -20,7 +20,7 @@ from os.path import join as opj
 import odoo.release as release
 import odoo.tools as tools
 import odoo.upgrade
-from odoo.tools.translate import get_po_paths, get_translations_for_references
+from odoo.tools.text.translate import get_po_paths, get_translations_for_references
 
 import odoo.addons
 

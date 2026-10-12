@@ -13,7 +13,7 @@ import typing
 from odoo.exceptions import AccessError, MissingError
 from odoo.tools import unique
 from odoo.tools.safe_eval import safe_eval
-from odoo.tools.translate import _
+from odoo.tools.text.translate import _
 
 from odoo.orm.core.domains import Domain
 from odoo.orm.fields import Field

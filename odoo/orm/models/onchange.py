@@ -9,7 +9,7 @@ import typing
 import psycopg2.errors
 import psycopg2.extensions
 
-from odoo.tools.translate import _
+from odoo.tools.text.translate import _
 
 
 from odoo.orm.fields import Field

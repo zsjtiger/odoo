@@ -36,10 +36,10 @@ from psycopg2.extras import Json
 
 import odoo
 from odoo.exceptions import UserError, ValidationError
-from .config import config
-from .i18n import format_list
-from .misc import file_open, file_path, frozendict, split_every, OrderedSet, SKIPPED_ELEMENT_TYPES
-from .sql import SQL
+from odoo.tools.config import config
+from odoo.tools.text.i18n import format_list
+from odoo.tools.misc import file_open, file_path, frozendict, split_every, OrderedSet, SKIPPED_ELEMENT_TYPES
+from odoo.tools.sql import SQL
 from odoo.tools.constants import IN_MAX
 
 if typing.TYPE_CHECKING:
@@ -2090,11 +2090,11 @@ class TranslationModuleReader(TranslationReader):
                                                   extract_keywords={'_t': None})
                     # QWeb template files
                     for fname in fnmatch.filter(files, '*.xml'):
-                        self._babel_extract_terms(fname, path, root, 'odoo.tools.translate:babel_extract_qweb',
+                        self._babel_extract_terms(fname, path, root, 'odoo.tools.text.translate:babel_extract_qweb',
                                                   extra_comments=[JAVASCRIPT_TRANSLATION_COMMENT])
                 if fnmatch.fnmatch(root, '*/data/*'):
                     for fname in filter(spreadsheet_files_regex.match, files):
-                        self._babel_extract_terms(fname, path, root, 'odoo.tools.translate:extract_spreadsheet_terms',
+                        self._babel_extract_terms(fname, path, root, 'odoo.tools.text.translate:extract_spreadsheet_terms',
                                                   extra_comments=[JAVASCRIPT_TRANSLATION_COMMENT])
                 if not recursive:
                     # due to topdown, first iteration is in first level

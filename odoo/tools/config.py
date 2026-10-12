@@ -18,7 +18,7 @@ from passlib.context import CryptContext
 from odoo import release
 from odoo.tools.func import classproperty
 
-from . import appdirs
+from odoo.tools.system import appdirs
 
 crypt_context = CryptContext(schemes=['pbkdf2_sha512', 'plaintext'],
                              deprecated=['plaintext'],

@@ -7,7 +7,7 @@ from odoo import Command, models
 from odoo.tests.common import new_test_user, TransactionCase, HttpCase
 from odoo.tools import frozendict
 from odoo.tools.mail import email_split_and_format
-from odoo.tools.translate import code_translations
+from odoo.tools.text.translate import code_translations
 
 @contextmanager
 def patch_code_translations(module, lang, translations):

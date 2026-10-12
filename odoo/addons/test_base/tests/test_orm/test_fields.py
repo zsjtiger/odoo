@@ -13,7 +13,7 @@ from odoo.exceptions import AccessError, MissingError, UserError, ValidationErro
 from odoo.fields import Domain
 from odoo.tests import TransactionCase, tagged, users
 from odoo.tools import BinaryBytes, float_repr, mute_logger
-from odoo.tools.image import binary_to_image, image_data_uri
+from odoo.tools.files.image import binary_to_image, image_data_uri
 
 from .test_domain_expression import TransactionExpressionCase
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo

@@ -21,7 +21,7 @@ from odoo.tools import (
     unique,
     groupby,
 )
-from odoo.tools.translate import _
+from odoo.tools.text.translate import _
 from odoo.tools.lru import LRU
 from odoo.orm.database import schema as orm_schema
 

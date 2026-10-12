@@ -15,7 +15,7 @@ from psycopg2 import OperationalError
 from odoo import tools
 from odoo.tools import SQL
 
-from .gc import disabling_gc
+from odoo.tools.profiling.gc import disabling_gc
 
 _logger = logging.getLogger(__name__)
 
@@ -326,7 +326,7 @@ class QwebTracker:
             elif ('t-' + directive) not in attrib:
                 directive_info['t-' + directive] = None
 
-            execution_context = tools.profiler.ExecutionContext(**directive_info, xpath=xpath)
+            execution_context = tools.profiling.profiler.ExecutionContext(**directive_info, xpath=xpath)
             execution_context.__enter__()
             self.context_stack.append(execution_context)
 

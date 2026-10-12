@@ -19,8 +19,8 @@ if typing.TYPE_CHECKING:
 import psycopg2
 from psycopg2.extensions import quote_ident
 
-from .func import deprecated
-from .misc import freehash, named_to_positional_printf
+from odoo.tools.func import deprecated
+from odoo.tools.misc import freehash, named_to_positional_printf
 
 _schema = logging.getLogger('odoo.schema')
 

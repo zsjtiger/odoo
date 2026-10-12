@@ -20,7 +20,7 @@ from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMA
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools.date_utils import all_timezones
 from odoo.tools.misc import LazyDict
-from odoo.tools.translate import LazyTranslate
+from odoo.tools.text.translate import LazyTranslate
 
 if typing.TYPE_CHECKING:
     from collections.abc import Sequence

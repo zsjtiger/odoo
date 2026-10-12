@@ -17,7 +17,7 @@ from odoo.exceptions import AccessError, MissingError, UserError, ValidationErro
 from odoo.fields import Command, Domain
 from odoo.http import request
 from odoo.tools import BinaryBytes, _, frozendict, get_lang
-from odoo.tools.float_utils import float_compare
+from odoo.tools.numeric.float_utils import float_compare
 from odoo.tools.misc import get_diff, unquote
 from odoo.tools.safe_eval import expr_eval, safe_eval, test_python_expr
 from odoo.tools.json import stringify_keys

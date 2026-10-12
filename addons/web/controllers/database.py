@@ -22,7 +22,7 @@ from odoo.http.router import db_list
 from odoo.http.session import authenticate, logout, save_session
 from odoo.sql_db import db_connect
 from odoo.tools.misc import file_open, str2bool
-from odoo.tools.translate import _
+from odoo.tools.text.translate import _
 
 from odoo.addons.base.models.ir_qweb import render as qweb_render
 

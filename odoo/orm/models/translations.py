@@ -15,7 +15,7 @@ from odoo.exceptions import MissingError
 from odoo.orm.fields.textual import StoredTranslations
 from collections.abc import Callable
 from odoo.exceptions import UserError
-from odoo.tools.translate import _
+from odoo.tools.text.translate import _
 
 
 if typing.TYPE_CHECKING:

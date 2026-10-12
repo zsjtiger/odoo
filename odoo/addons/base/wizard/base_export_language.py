@@ -5,7 +5,7 @@ import io
 
 from odoo import api, fields, models, tools
 from odoo.tools import BinaryBytes
-from odoo.tools.translate import trans_export, trans_export_records
+from odoo.tools.text.translate import trans_export, trans_export_records
 
 NEW_LANG_KEY = '__new__'
 
@@ -50,7 +50,7 @@ class BaseLanguageExport(models.TransientModel):
 
         filename = 'new'
         if lang:
-            filename = tools.translate.get_iso_codes(lang)
+            filename = tools.text.translate.get_iso_codes(lang)
         elif self.export_type == 'model':
             filename = self.model_name.replace('.', '_')
         elif len(mods) == 1:

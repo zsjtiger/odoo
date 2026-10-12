@@ -9,7 +9,7 @@ from odoo.exceptions import AccessError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import SQL, frozendict
 from odoo.tools.safe_eval import safe_eval, time
-from odoo.tools.translate import _lt
+from odoo.tools.text.translate import _lt
 
 _logger = logging.getLogger(__name__)
 

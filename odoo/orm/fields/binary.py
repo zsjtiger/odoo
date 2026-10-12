@@ -10,7 +10,7 @@ import psycopg2
 
 from odoo.exceptions import UserError
 from odoo.tools import SQL
-from odoo.tools.binary import EMPTY_BINARY, BinaryBytes, BinaryValue
+from odoo.tools.files.binary import EMPTY_BINARY, BinaryBytes, BinaryValue
 
 from odoo.orm.fields import Field
 from odoo.orm.core.utils import parse_field_expr
@@ -286,7 +286,7 @@ class Image(Binary):
     :param int max_height: the maximum height of the image (default: ``0``, no limit)
     :param bool verify_resolution: whether the image resolution should be verified
         to ensure it doesn't go over the maximum image resolution (default: ``True``).
-        See :class:`odoo.tools.image.ImageProcess` for maximum image resolution (default: ``50e6``).
+        See :class:`odoo.tools.files.image.ImageProcess` for maximum image resolution (default: ``50e6``).
 
     .. note::
 
@@ -380,7 +380,7 @@ class Image(Binary):
             return data
 
         # delay import of image_process until this point
-        from odoo.tools.image import image_process  # noqa: PLC0415
+        from odoo.tools.files.image import image_process  # noqa: PLC0415
         return BinaryBytes(image_process(img,
             size=(self.max_width, self.max_height),
             verify_resolution=self.verify_resolution,

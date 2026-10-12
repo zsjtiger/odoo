@@ -21,7 +21,7 @@ from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.tools import SQL, LazyTranslate
 from odoo.tools.business_data import street_split, split_vat
 from odoo.tools.date_utils import all_timezones
-from odoo.tools.translate import LazyGettext
+from odoo.tools.text.translate import LazyGettext
 from .partner_identifiers import (
     ADDITIONAL_IDENTIFIERS_METADATA,
     COMPANY_CATEGORIES,

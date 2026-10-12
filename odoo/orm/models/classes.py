@@ -20,7 +20,7 @@ from odoo.tools import (
     sql,
 )
 from odoo.tools.safe_eval import safe_checker
-from odoo.tools.translate import FIELD_TRANSLATE
+from odoo.tools.text.translate import FIELD_TRANSLATE
 
 if typing.TYPE_CHECKING:
     from odoo.api import Environment

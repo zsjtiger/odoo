@@ -18,7 +18,7 @@ from random import randrange
 
 from odoo.exceptions import UserError
 from odoo.tools.misc import DotDict
-from odoo.tools.translate import LazyTranslate
+from odoo.tools.text.translate import LazyTranslate
 
 
 __all__ = ["image_process"]

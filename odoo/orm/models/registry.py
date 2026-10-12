@@ -22,18 +22,12 @@ import psycopg2.sql
 
 from odoo.orm.database import sql_db
 from odoo.exceptions import ConcurrencyError
-from odoo.tools import (
-    SQL,
-    OrderedSet,
-    config,
-    gc,
-    remove_accents,
-    sql,
-)
+from odoo.tools import SQL, OrderedSet, config, remove_accents, sql
+from odoo.tools.profiling import gc
 from odoo.tools.func import locked, reset_cached_properties
 from odoo.tools.lru import LRU
 from odoo.tools.misc import Collector
-from odoo.tools.version_tag_reset import reset_classes_tp_versions_used
+from odoo.tools.system.version_tag_reset import reset_classes_tp_versions_used
 
 from odoo.orm.core.utils import SUPERUSER_ID
 from odoo.orm.models import classes as model_classes

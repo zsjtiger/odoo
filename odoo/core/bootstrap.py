@@ -16,7 +16,7 @@ if sys.flags.optimize:
 assert sys.version_info > MIN_PY_VERSION, f"Outdated python version detected, Odoo requires Python >= {'.'.join(map(str, MIN_PY_VERSION))} to run."
 
 # ----------------------------------------------------------
-# Set gc thresolds if they are default, see `odoo.tools.gc`.
+# Set gc thresolds if they are default, see `odoo.tools.profiling.gc`.
 # Defaults changed from (700, 10, 10) to (2000, 10, 10) in 3.13
 # and the last generation was removed in 3.14.
 # ----------------------------------------------------------
@@ -32,5 +32,5 @@ if gc.get_threshold()[0] in (700, 2000):
 from odoo.core import patches
 patches.patch_init()
 
-from odoo.tools.gc import gc_set_timing
+from odoo.tools.profiling.gc import gc_set_timing
 gc_set_timing(enable=True)

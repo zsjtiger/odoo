@@ -7,7 +7,7 @@ from os.path import splitext
 
 from odoo import fields, models, tools
 from odoo.exceptions import UserError
-from odoo.tools.translate import TranslationImporter
+from odoo.tools.text.translate import TranslationImporter
 
 _logger = logging.getLogger(__name__)
 

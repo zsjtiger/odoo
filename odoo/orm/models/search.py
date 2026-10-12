@@ -16,7 +16,7 @@ from odoo.tools import (
     OrderedSet,
     SQL,
 )
-from odoo.tools.translate import _
+from odoo.tools.text.translate import _
 
 
 from odoo.orm.core.domains import Domain

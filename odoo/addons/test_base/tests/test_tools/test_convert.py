@@ -7,7 +7,7 @@ from lxml.builder import E
 
 from odoo.tests import common, tagged
 from odoo.tools import config
-from odoo.tools.convert import _eval_xml, convert_file, xml_import
+from odoo.tools.loading.convert import _eval_xml, convert_file, xml_import
 from odoo.tools.misc import file_path
 
 Data = E.data

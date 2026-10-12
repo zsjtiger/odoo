@@ -17,7 +17,7 @@ import odoo.orm.database.sql_db
 import odoo.tools.sql
 from odoo import api, tools
 from odoo.tools import OrderedSet
-from odoo.tools.convert import convert_file, IdRef, ConvertMode as LoadMode
+from odoo.tools.loading.convert import convert_file, IdRef, ConvertMode as LoadMode
 
 from . import db as modules_db
 from .migration import MigrationManager
@@ -394,7 +394,7 @@ def load_modules(
 
     if load_lang:
         for lang in load_lang.split(','):
-            tools.translate.load_language(cr, lang)
+            tools.text.translate.load_language(cr, lang)
 
     # STEP 2: Mark other modules to be loaded/updated
     if update_module:

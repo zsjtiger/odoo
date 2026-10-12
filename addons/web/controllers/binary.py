@@ -13,7 +13,7 @@ from odoo.exceptions import AccessError, UserError
 from odoo.http import Controller, request, route
 from odoo.http.stream import STATIC_CACHE_LONG, Stream
 from odoo.tools import SQL, file_open, file_path, replace_exceptions, str2bool
-from odoo.tools.image import image_guess_size_from_field_name
+from odoo.tools.files.image import image_guess_size_from_field_name
 
 from odoo.addons.base.models.assetsbundle import ANY_UNIQUE
 
