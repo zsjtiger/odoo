@@ -9,7 +9,9 @@ if typing.TYPE_CHECKING:
     from collections.abc import Callable, Collection
     from odoo.orm.models import BaseModel
 
-from ..classes import Domain, DomainAnd, DomainCondition, DomainNary, DomainOr, intersection, union
+from ..base import Domain
+from ..nary import DomainAnd, DomainNary, DomainOr, intersection, union
+from ..condition import DomainCondition
 from ..registry import nary_optimization
 
 def nary_condition_optimization(operators: Collection[str], field_types: Collection[str] | None = None):

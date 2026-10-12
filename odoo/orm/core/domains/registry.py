@@ -8,7 +8,9 @@ import typing
 if typing.TYPE_CHECKING:
     from collections.abc import Callable, Collection
     from odoo.orm.models import BaseModel
-    from .classes import Domain, DomainCondition, DomainNary
+    from .base import Domain
+    from .nary import DomainNary
+    from .condition import DomainCondition
     ConditionOptimization = Callable[[DomainCondition, BaseModel], Domain]
     MergeOptimization = Callable[[type[DomainNary], list[Domain], BaseModel], list[Domain]]
 

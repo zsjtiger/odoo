@@ -12,7 +12,10 @@ from odoo.orm.core.utils import COLLECTION_TYPES
 if typing.TYPE_CHECKING:
     from odoo.orm.models import BaseModel
 
-from ..classes import ANY_TYPES, Domain, DomainCondition, DomainCustom, _FALSE_DOMAIN, _TRUE_DOMAIN
+from ..base import ANY_TYPES, Domain
+from ..boolean import _FALSE_DOMAIN, _TRUE_DOMAIN
+from ..condition import DomainCondition
+from ..custom import DomainCustom
 from ..constants import NEGATIVE_CONDITION_OPERATORS, OptimizationLevel
 from ..registry import field_type_optimization, operator_optimization
 

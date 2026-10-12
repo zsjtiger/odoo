@@ -8,7 +8,8 @@ from odoo.tools import SQL
 if typing.TYPE_CHECKING:
     pass
 
-from ..classes import Domain, DomainCondition
+from ..base import Domain
+from ..condition import DomainCondition
 from ..constants import CONDITION_OPERATORS, NEGATIVE_CONDITION_OPERATORS
 from ..registry import operator_optimization
 
