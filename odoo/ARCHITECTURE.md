@@ -56,6 +56,9 @@ are named after their responsibility:
 - `orm/models/`: `BaseModel` (`__init__`), the registry, the environments and
   the caches; the methods of `BaseModel` delegate to one module per concern
   (`search`, `read`, `create`, `write`, `grouping`, `export`, `recompute`...).
+- `orm/models/classes/`: `base` (the helpers and the shared field cache), `registration`
+  (the registration of the model definitions), `setup` (the setup of the model classes),
+  `manual` (the manual models and fields) and `fields` (the addition and removal of fields).
 - `orm/database/`: the SQL cursors, the queries, the table objects and the schema.
 - `orm/models/environments/`: `environment` (the `Environment`), `transaction` (the
   `Transaction` and its state), and `caches` (the cache layers and the field cache).
