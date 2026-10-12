@@ -88,11 +88,11 @@ class Module(Command):
             Before installing modules, an Odoo database needs to be created and initialized
             on your PostgreSQL instance, using the `db init` command:
 
-            $ odoo-bin db init <db_name>
+            $ cross-cli.py db init <db_name>
 
             To get help on its parameters, see:
 
-            $ odoo-bin db init --help
+            $ cross-cli.py db init --help
         """)
         uninstall_parser.add_argument(
             'modules', nargs='+', metavar='MODULE',

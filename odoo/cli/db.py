@@ -99,7 +99,7 @@ class Db(Command):
                 To install more modules, use the `module install` command.
                 For more info:
 
-                $ odoo-bin module install --help
+                $ cross-cli.py module install --help
         """)
 
         # LOAD ----------------------------------

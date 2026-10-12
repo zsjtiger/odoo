@@ -366,9 +366,9 @@ class IrMail_Server(models.Model):
                The 'strict' variants verify the remote server's certificate against the operating system trust store.
            :param smtp_from: FROM SMTP envelop, used to find the best mail server
            :param ssl_certificate: filename of the SSL certificate used for authentication
-               Used when no mail server is given and overwrite  the odoo-bin argument "smtp_ssl_certificate"
+               Used when no mail server is given and overwrite  the command-line argument "smtp_ssl_certificate"
            :param ssl_private_key: filename of the SSL private key used for authentication
-               Used when no mail server is given and overwrite  the odoo-bin argument "smtp_ssl_private_key"
+               Used when no mail server is given and overwrite  the command-line argument "smtp_ssl_private_key"
            :param bool smtp_debug: toggle debugging of SMTP sessions (all i/o
                               will be output in logs)
            :param mail_server_id: ID of specific mail server to use (overrides other parameters)
@@ -497,7 +497,7 @@ class IrMail_Server(models.Model):
         # Anyway, as it may have been sent by login(), all subsequent usages should consider this command as sent.
         connection.ehlo_or_helo_if_needed()
 
-        # Store the "from_filter" of the mail server / odoo-bin argument to  know if we
+        # Store the "from_filter" of the mail server / command-line argument to  know if we
         # need to change the FROM headers or not when we will prepare the mail message
         connection.from_filter = from_filter
         connection.smtp_from = smtp_from
@@ -851,7 +851,7 @@ class IrMail_Server(models.Model):
         :rtype: tuple[IrMail_Server | None, str]
         :returns: A two-elements tuple: ``(Record<ir.mail_server>, email_from)``
 
-          1. Mail server to use to send the email (``None`` if we use the odoo-bin arguments)
+          1. Mail server to use to send the email (``None`` if we use the command-line arguments)
           2. Email FROM to use to send the email (in some case, it might be impossible
              to use the given email address directly if no mail server is configured for)
         """
@@ -906,7 +906,7 @@ class IrMail_Server(models.Model):
                 notifications_email or email_from)
             return mail_servers[0], notifications_email or email_from
 
-        # 5: SMTP config in odoo-bin arguments
+        # 5: SMTP config in command-line arguments
         from_filter = self.env['ir.mail_server']._get_default_from_filter()
 
         if self._match_from_filter(email_from, from_filter):

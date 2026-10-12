@@ -13,7 +13,7 @@ under `addons/` and `odoo/addons/`; they only use the public API below.
 | L3    | `modules`  | Module system: manifests, loading, migrations, registry         |
 | L4    | `http`     | Web framework: routing, requests, sessions, responses           |
 | L4    | `service`  | RPC services and server processes (threaded, prefork, gevent)   |
-| L5    | `cli`      | Command line: `odoo-bin` sub-commands and developer tools       |
+| L5    | `cli`      | Command line: `cross-cli.py` sub-commands and developer tools       |
 | L5    | `tests`    | Test framework                                                  |
 
 `release` and `exceptions` belong to L0. `api`, `fields` and `models` are
@@ -35,7 +35,7 @@ loaded. Imports of upper layers are allowed inside functions and inside
 
 ## Startup
 
-    odoo-bin | python -m odoo | odoo (console script)
+    cross-cli.py | python -m odoo
      └─ odoo.cli.main()
          ├─ odoo.core.bootstrap      python checks, gc tuning, library patches
          ├─ odoo.orm                 shortcuts on the `odoo` namespace

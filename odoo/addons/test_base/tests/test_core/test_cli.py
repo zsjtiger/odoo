@@ -22,7 +22,7 @@ class TestCommand(BaseCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.odoo_bin = Path(__file__).parents[5].resolve() / 'odoo-bin'
+        cls.odoo_bin = Path(__file__).parents[5].resolve() / 'cross-cli.py'
         addons_path = config.format('addons_path', config['addons_path'])
         cls.run_args = (sys.executable, cls.odoo_bin, f'--addons-path={addons_path}')
 
@@ -49,9 +49,9 @@ class TestCommand(BaseCase):
         load_addons_commands()
         for name, cmd in commands.items():
             self.assertTrue(cmd.__doc__,
-                msg=f"Command {name} needs a docstring to be displayed with 'odoo-bin help'")
+                msg=f"Command {name} needs a docstring to be displayed with 'cross-cli.py help'")
             self.assertFalse('\n' in cmd.__doc__ or len(cmd.__doc__) > 120,
-                msg=f"Command {name}'s docstring format is invalid for 'odoo-bin help'")
+                msg=f"Command {name}'s docstring format is invalid for 'cross-cli.py help'")
 
     def test_unknown_command(self):
         for name in ('bonbon', 'café'):
@@ -60,7 +60,7 @@ class TestCommand(BaseCase):
                 self.assertEqual(
                     command_output,
                     f"Unknown command '{name}'.\n"
-                    "Use 'odoo-bin --help' to see the list of available commands.",
+                    "Use 'cross-cli.py --help' to see the list of available commands.",
                 )
 
     def test_help(self):
