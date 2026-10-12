@@ -12,7 +12,8 @@ from babel.messages import extract
 from odoo.tools.config import config
 from odoo.tools.misc import file_open
 from odoo.tools.sql import SQL
-from .base import JAVASCRIPT_TRANSLATION_COMMENT, PYTHON_TRANSLATION_COMMENT, StoredTranslations
+from .base import JAVASCRIPT_TRANSLATION_COMMENT, PYTHON_TRANSLATION_COMMENT
+from .stored import StoredTranslations
 from .extract import is_meaningful_term
 from .files import translation_file_reader
 

@@ -13,7 +13,8 @@ if typing.TYPE_CHECKING:
 
     pass
 
-from .base import _, get_text_content, is_text
+from .base import get_text_content, is_text
+from .lazy import _
 
 _logger = logging.getLogger('odoo.tools.text.translate')
 

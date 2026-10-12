@@ -10,7 +10,8 @@ from psycopg2.extras import Json
 from odoo.tools.misc import file_open, split_every
 from odoo.tools.sql import SQL
 from odoo.tools.constants import IN_MAX
-from .base import ParsedTranslation, StoredTranslations, get_iso_codes
+from .base import get_iso_codes
+from .stored import ParsedTranslation, StoredTranslations
 from .files import translation_file_reader
 
 from .languages import get_base_langs

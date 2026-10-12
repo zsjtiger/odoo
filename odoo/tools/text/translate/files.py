@@ -22,7 +22,8 @@ if typing.TYPE_CHECKING:
 
     pass
 
-from .base import _, parse_xmlid
+from .base import parse_xmlid
+from .lazy import _
 
 _logger = logging.getLogger('odoo.tools.text.translate')
 

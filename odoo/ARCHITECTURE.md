@@ -107,7 +107,9 @@ are named after their responsibility:
 - `tools/safe_eval/runtime/`: `errors`, `transformer` and `whitelist`, which also
   holds the checker, the generator and the monitoring (they depend on each other).
 - `modules/db/`: `queries`, `init` and `manage`.
-- `tools/text/translate/`: `base` (lazy and stored translations), `html` (XML and
+- `tools/text/translate/`: `base` (the shared helpers: languages, terms, quoting and XML ids),
+  `stored` (the stored translations), `frames` (the lookup of the translation context in the
+  calling frames), `lazy` (the lazy translations and the aliases), `html` (XML and
   HTML fields), `extract` (term extraction), `files` (PO, CSV, XML and tar files),
   `readers` (the readers of the module and record translations), `importer` (the import
   into the database), `export` (the export of the translations), `po` (the PO paths and
