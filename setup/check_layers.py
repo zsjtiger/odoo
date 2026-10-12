@@ -95,7 +95,7 @@ def main():
     violations = []
     for path in sorted(ROOT.rglob('*.py')):
         rel = path.relative_to(ROOT).parts
-        if rel[0] == 'addons' or 'upgrade_code' in rel:
+        if rel[0] == 'addons':
             continue
         current = module_name(path)
         src_layer = layer_of(current)

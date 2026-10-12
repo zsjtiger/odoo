@@ -21,9 +21,7 @@ ALIASES = {
     'odoo.sql_db': 'odoo.orm.sql_db',
     'odoo.tools.cache': 'odoo.orm.cache',  # deprecated since 20.0
     'odoo.tools.cloc': 'odoo.modules.cloc',
-    'odoo.tools.duplicate': 'odoo.cli.duplicate',
     'odoo.tools.view_validation': 'odoo.orm.view_validation',
-    'odoo.upgrade_code': 'odoo.cli.upgrade_code',
 }
 
 

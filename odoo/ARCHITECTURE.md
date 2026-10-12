@@ -65,5 +65,3 @@ their former names.
 | `odoo.tools.cache`           | `odoo.orm.cache`            |
 | `odoo.tools.view_validation` | `odoo.orm.view_validation`  |
 | `odoo.tools.cloc`            | `odoo.modules.cloc`         |
-| `odoo.tools.duplicate`       | `odoo.cli.duplicate`        |
-| `odoo.upgrade_code`          | `odoo.cli.upgrade_code`     |

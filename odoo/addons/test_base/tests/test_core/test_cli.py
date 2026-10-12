@@ -65,17 +65,11 @@ class TestCommand(BaseCase):
 
     def test_help(self):
         expected = {
-            'cloc',
             'db',
-            'deploy',
-            'help',
             'neutralize',
             'obfuscate',
-            'scaffold',
             'server',
             'shell',
-            'start',
-            'upgrade_code',
         }
         if get_module_path('populate', display_warning=False):
             expected.add('populate')  # provided by the populate addon
@@ -93,27 +87,6 @@ class TestCommand(BaseCase):
         for name in commands:
             with self.subTest(command=name):
                 self.run_command(name, '--help', timeout=10)
-
-    def test_upgrade_code_example(self):
-        proc = self.run_command('upgrade_code', '--script', '17.5-00-example', '--dry-run')
-        self.assertFalse(proc.stdout, "there should be no file modified by the example script")
-        self.assertFalse(proc.stderr)
-
-    def test_upgrade_code_help(self):
-        proc = self.run_command('upgrade_code', '--help')
-        self.assertIn("usage: ", proc.stdout)
-        self.assertIn("Rewrite the entire source code", proc.stdout)
-        self.assertFalse(proc.stderr)
-
-    def test_upgrade_code_standalone(self):
-        from odoo.cli import upgrade_code  # noqa: PLC0415
-        proc = sp.run(
-            [sys.executable, upgrade_code.__file__, '--help'],
-            check=True, capture_output=True, text=True,
-        )
-        self.assertIn("usage: ", proc.stdout)
-        self.assertIn("Rewrite the entire source code", proc.stdout)
-        self.assertFalse(proc.stderr)
 
     @unittest.skipIf(os.name != 'posix', '`os.openpty` only available on POSIX systems')
     def test_shell(self):

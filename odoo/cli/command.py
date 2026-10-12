@@ -1,13 +1,16 @@
 import argparse
 import re
 import sys
+import textwrap
 import traceback
 from inspect import cleandoc
 from pathlib import Path
 
 import odoo.core.bootstrap  # noqa: F401  # import first for core setup
 import odoo.orm  # noqa: F401
+import odoo.addons
 import odoo.cli
+import odoo.release
 from odoo.modules import initialize_sys_path, load_script
 from odoo.tools import config
 
@@ -112,6 +115,36 @@ def find_command(name: str) -> Command | None:
     return commands.get(name)
 
 
+HELP_TEMPLATE = textwrap.dedent("""\
+    usage: {prog_name} [--addons-path=PATH,...] <command> [...]
+
+    Odoo {version}
+    Available commands:
+
+    {command_list}
+
+    Use '{prog_name} server --help' for regular server options.
+    Use '{prog_name} <command> --help' for other individual commands options.
+""")
+
+
+def show_help():
+    """ Print the list of available commands """
+    load_internal_commands()
+    load_addons_commands()
+
+    padding = max(len(cmd_name) for cmd_name in commands) + 2
+    command_list = "\n".join(
+        f"    {name:<{padding}}{(cmd.__doc__ or '').strip()}"
+        for name, cmd in sorted(commands.items())
+    )
+    print(HELP_TEMPLATE.format(  # noqa: T201
+        prog_name=PROG_NAME,
+        version=odoo.release.version,
+        command_list=command_list,
+    ))
+
+
 def main():
     args = sys.argv[1:]
 
@@ -128,11 +161,15 @@ def main():
         args = args[1:]
     elif '-h' in args or '--help' in args:
         # No command specified, but help is requested
-        command_name = 'help'
-        args = [x for x in args if x not in ('-h', '--help')]
+        show_help()
+        return
     else:
         # No command specified, default command used
         command_name = 'server'
+
+    if command_name == 'help':
+        show_help()
+        return
 
     if command := find_command(command_name):
         odoo.cli.COMMAND = command_name
