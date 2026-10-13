@@ -1,37 +1,25 @@
-"""The users (res.users): their accounts, their groups, their companies and their sessions."""
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+"""The users (res.users): the model, its fields, the authentication that reads the request, and the login. The methods are split by concern in the other modules of this package."""
 
 from __future__ import annotations
 
 import collections
 import contextlib
 import datetime
-import hmac
 import ipaddress
 import logging
 import time
-from hashlib import sha256
 from zoneinfo import ZoneInfo
-from markupsafe import Markup
-from odoo import _, api, fields, models, tools
+from odoo import _, api, fields, models
 from odoo.api import SUPERUSER_ID
-from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
-from odoo.fields import Domain
+from odoo.exceptions import AccessDenied, AccessError
 from odoo.http import request
 from odoo.http.session import DEFAULT_LANG
 from odoo.tools import (
-    SQL,
-    email_domain_extract,
     frozendict,
-    is_html_empty,
-    reset_cached_properties,
 )
 from odoo.tools.date_utils import all_timezones
-from odoo.tools.sql import escape_like_value
-
-from .crypt import CryptContext, MIN_ROUNDS
-from .helpers import NO_GROUP_CHANGE_LOG, check_identity
-
-_logger = logging.getLogger('odoo.addons.base.models.res_users')
+from .helpers import check_identity
 
 
 class ResUsers(models.Model):
@@ -48,28 +36,12 @@ class ResUsers(models.Model):
     _inherits = {'res.partner': 'partner_id'}
     _order = 'name, login'
     _allow_sudo_commands = False
-
     def _check_company_domain(self, companies):
-        if not companies:
-            return Domain.TRUE
-        company_ids = companies if isinstance(companies, str) else models.to_record_ids(companies)
-        return Domain('company_ids', 'in', company_ids)
-
+        return _user_fields._check_company_domain(self, companies)
     def _valid_field_parameter(self, field, name):
-        # see `_has_field_access``
-        return name == 'user_writeable' or super()._valid_field_parameter(field, name)
-
+        return _user_fields._valid_field_parameter(self, field, name)
     def _default_groups(self):
-        """Default groups for employees
-
-        All the groups of the Default User Group
-        """
-        groups = self.env.ref('base.group_user')
-        default_group = self.env.ref('base.default_user_group', raise_if_not_found=False)
-        if default_group:
-            groups += default_group.implied_ids
-        return groups
-
+        return _user_groups._default_groups(self)
     partner_id = fields.Many2one('res.partner', required=True, ondelete='restrict', bypass_search_access=True, index=True,
         string='Related Partner', help='Partner-related data of the user')
     login = fields.Char(required=True, help="Used to log into the system")
@@ -96,21 +68,13 @@ class ResUsers(models.Model):
     companies_count = fields.Integer(compute='_compute_companies_count', string="Number of Companies")
     tz_offset = fields.Char(compute='_compute_tz_offset', string='Timezone offset')
     res_users_settings_ids = fields.One2many('res.users.settings', 'user_id')
-    # Provide a target for relateds that is not a x2Many field.
     res_users_settings_id = fields.Many2one('res.users.settings', string="Settings", compute='_compute_res_users_settings_id', search='_search_res_users_settings_id')
-
-    # Special behavior for this field: res.company.search() will only return the companies
-    # available to the current user (should be the user's companies?), when the user_preference
-    # context is set.
     company_id = fields.Many2one('res.company', string='Company', required=True,
         user_writeable=True,
         default=lambda self: self.env.company.id,
         help='The default company for this user.', context={'user_preference': True})
     company_ids = fields.Many2many('res.company', 'res_company_users_rel', 'user_id', 'cid',
         string='Companies', default=lambda self: self.env.company.ids)
-
-    # overridden inherited fields to bypass access rights, in case you have
-    # access to the user but not its corresponding partner
     name = fields.Char(related='partner_id.name', inherited=True, readonly=False, copy=True, user_writeable=True)
     email = fields.Char(related='partner_id.email', inherited=True, readonly=False, user_writeable=True)
     email_domain_placeholder = fields.Char(compute="_compute_email_domain_placeholder")
@@ -118,70 +82,30 @@ class ResUsers(models.Model):
     image_1920 = fields.Binary(related='partner_id.image_1920', inherited=True, readonly=False, user_writeable=True)
     lang = fields.Selection(related='partner_id.lang', inherited=True, readonly=False, user_writeable=True)
     tz = fields.Selection(related='partner_id.tz', inherited=True, readonly=False, user_writeable=True)
-
     group_ids = fields.Many2many('res.groups', 'res_groups_users_rel', 'uid', 'gid', string='Groups', default=lambda s: s._default_groups(), help="Groups explicitly assigned to the user")
     all_group_ids = fields.Many2many('res.groups', string="Groups and implied groups",
         compute='_compute_all_group_ids', compute_sudo=True, search='_search_all_group_ids')
-
     accesses_count = fields.Integer('# Access Rights', help='Number of access rights that apply to the current user',
                                     compute='_compute_accesses_count', compute_sudo=True)
     groups_count = fields.Integer('# Groups', help='Number of groups that apply to the current user',
                                   compute='_compute_accesses_count', compute_sudo=True)
-
     def _default_view_group_hierarchy(self):
-        return self.env['res.groups']._get_view_group_hierarchy()
-
+        return _user_groups._default_view_group_hierarchy(self)
     view_group_hierarchy = fields.Json(string='Technical field for user group setting', store=False, copy=False, default=_default_view_group_hierarchy)
     role = fields.Selection([('light_user', 'Light'), ('regular_user', 'User'), ('group_system', 'Administrator')],
         compute='_compute_role', search='_search_role', readonly=False, string="Role")
-
     _login_key = models.Constraint("UNIQUE (login)",
         'You can not have two users with the same login!')
-
     def init(self):
-        cr = self.env.cr
-
-        # allow setting plaintext passwords via SQL and have them
-        # automatically encrypted at startup: look for passwords which don't
-        # match the "extended" MCF and pass those through passlib.
-        # Alternative: iterate on *all* passwords and use CryptContext.identify
-        cr.execute(r"""
-        SELECT id, password FROM res_users
-        WHERE password IS NOT NULL
-          AND password !~ '^\$[^$]+\$[^$]+\$.'
-        """)
-        if self.env.cr.rowcount:
-            ResUsers = self.sudo()
-            for uid, pw in cr.fetchall():
-                ResUsers.browse(uid).password = pw
-
+        return _user_records.init(self)
     def _set_password(self):
-        ctx = self._crypt_context()
-        for user in self:
-            self._set_encrypted_password(user.id, ctx.hash(user.password))
-
+        return _user_passwords._set_password(self)
     def _set_encrypted_password(self, uid, pw):
-        assert self._crypt_context().identify(pw) != 'plaintext'
-
-        self.env.cr.execute(
-            'UPDATE res_users SET password=%s WHERE id=%s',
-            (pw, uid)
-        )
-        self.browse(uid).invalidate_recordset(['password'])
-
+        return _user_fields._set_encrypted_password(self, uid, pw)
     def _rpc_api_keys_only(self):
-        """ To be overridden if RPC access needs to be restricted to API keys, e.g. for 2FA """
-        return False
-
+        return _user_sessions._rpc_api_keys_only(self)
     def _get_auth_methods(self):
-        """ Return a list of authentication methods available to the user. """
-        self.ensure_one()
-        auth_methods = []
-        if mfa_type := self._mfa_type():
-            auth_methods.append(mfa_type)
-        auth_methods.append('password')
-        return auth_methods
-
+        return _user_sessions._get_auth_methods(self)
     def _check_credentials(self, credential, env):
         """ Validates the current user's password.
 
@@ -273,392 +197,89 @@ class ResUsers(models.Model):
                 )
 
         raise AccessDenied()
-
     @api.depends_context('uid')
     def _compute_email_domain_placeholder(self):
-        domain = email_domain_extract(self.env.user.email)
-        self.email_domain_placeholder = _('e.g. %(placeholder)s', placeholder=f'email@{domain}') if domain else _('Email')
-
+        return _user_fields._compute_email_domain_placeholder(self)
     def _compute_password(self):
-        for user in self:
-            user.password = ''
-            user.new_password = ''
-
+        return _user_passwords._compute_password(self)
     def _set_new_password(self):
-        for user in self:
-            if not user.new_password:
-                # Do not update the password if no value is provided, ignore silently.
-                # For example web client submits False values for all empty fields.
-                continue
-            if user == self.env.user:
-                # To change their own password, users must use the client-specific change password wizard,
-                # so that the new password is immediately used for further RPC requests, otherwise the user
-                # will face unexpected 'Access Denied' exceptions.
-                raise UserError(_('Please use the change password wizard (in User Preferences or User menu) to change your own password.'))
-            else:
-                user.password = user.new_password
-
+        return _user_passwords._set_new_password(self)
     @api.depends('all_group_ids')
     def _compute_role(self):
-        group_system = self.env.ref('base.group_system', raise_if_not_found=False)
-        group_user = self.env.ref('base.group_user', raise_if_not_found=False)
-
-        for user in self:
-            # A group is almost never held directly: ``base.group_user`` and the
-            # light/regular tier both come from the application groups the user
-            # is given, so the role is determined on the implied groups.
-            all_groups = user.group_ids._origin.all_implied_ids
-            user.role = (
-                'group_system' if group_system and group_system in all_groups else
-                'light_user' if group_user and group_user in all_groups and all_groups._is_light_groups() else
-                'regular_user' if group_user and group_user in all_groups else
-                False
-            )
-
+        return _user_groups._compute_role(self)
     @api.onchange('role')
     def _onchange_role(self):
-        group_admin = self.env['res.groups'].new(origin=self.env.ref('base.group_system'))
-        group_regular = self.env['res.groups'].new(origin=self.env.ref('base.group_user_regular'))
-        group_user = self.env['res.groups'].new(origin=self.env.ref('base.group_user'))
-
-        if self.role == 'regular_user':
-            if group_regular not in self.all_group_ids:
-                self.group_ids += group_regular
-            self.group_ids -= group_admin
-        elif self.role == 'group_system':
-            self.group_ids += group_admin + group_user
-        elif self.role == 'light_user':
-            # If set to light user from portal or public user then add default groups
-            if group_user not in self.all_group_ids:
-                self.group_ids += self._default_groups()
-            # Reduce all access to light user.
-            self.group_ids = group_user + self.group_ids._origin._reduce_to_light_groups()
-
+        return _user_groups._onchange_role(self)
     def _search_role(self, operator, value):
-        if operator != 'in':
-            return NotImplemented
-
-        group_definitions = self.env['res.groups']._get_group_definitions()
-        light_group_ids = {group_definitions.get_id(xid) for xid in self.env['res.groups']._get_light_group_xmlids()}
-        regular_group_ids = set(group_definitions.get_all_ids()) - light_group_ids
-
-        is_system = Domain('all_group_ids', 'in', [self.env.ref('base.group_system').id])
-        is_user_regular = Domain('all_group_ids', 'in', regular_group_ids)
-        is_user = Domain('all_group_ids', 'in', [self.env.ref('base.group_user').id])
-        domains_by_role = {
-            'light_user': is_user & ~is_user_regular,
-            'regular_user': is_user & is_user_regular & ~is_system,
-            'group_system': is_system,
-            False: ~is_user,
-        }
-        return Domain.OR([domains_by_role[v] for v in value if v in domains_by_role])
-
+        return _user_groups._search_role(self, operator, value)
     @api.depends('group_ids.all_implied_ids')
     def _compute_all_group_ids(self):
-        for user in self:
-            user.all_group_ids = user.group_ids.all_implied_ids
-
+        return _user_groups._compute_all_group_ids(self)
     def _search_all_group_ids(self, operator, value):
-        if operator in Domain.NEGATIVE_OPERATORS:
-            return NotImplemented
-        domain = Domain('group_ids.all_implied_ids', operator, value)
-        if operator == 'in' and False in value:  # relation may be falsy
-            domain |= Domain('group_ids', '=', False)
-        return domain
-
+        return _user_groups._search_all_group_ids(self, operator, value)
     @api.depends('name')
     def _compute_signature(self):
-        for user in self.filtered(lambda user: user.name and is_html_empty(user.signature)):
-            user.signature = Markup('<div>%s</div>') % user['name']
-
-    # To avoid a cache memory error, we do not use @api.depends('all_group_ids').
-    # This update is made manually during group implying updates.
+        return _user_fields._compute_signature(self)
     @api.depends('group_ids')
     def _compute_share(self):
-        user_group_id = self.env['ir.model.data']._xmlid_to_res_id('base.group_user')
-        internal_users = self.filtered_domain([('all_group_ids', 'in', [user_group_id])])
-        internal_users.share = False
-        (self - internal_users).share = True
-
+        return _user_fields._compute_share(self)
     @api.model
     def _recompute_user_share(self):
-        """ Recalculate ``res.users.share`` and ``res.partner.partner_share`` in bulk via SQL.
-
-        Changes in group relations or group hierarchy invalidate the share status of users
-        and their associated partners. Resolving this dependency through standard ORM
-        recordsets requires loading every user of every modified group, which causes
-        memory overhead and poor performance O(N).
-
-        This method executes a direct bulk SQL update in set-based queries, followed
-        by ORM cache invalidation to ensure consistency across the environment.
-        """
-        internal_group_ids = list(self.env['res.groups']._get_internal_group_ids())
-
-        # Invalidating the ORM cache to force reloading of SQL data
-        self.env['res.users'].invalidate_model(['share'])
-        self.env['res.partner'].invalidate_model(['partner_share'])
-
-        # Update res_users: share = False if the user belongs to at least one internal group
-        self.env.cr.execute("""
-            WITH _share AS (
-                SELECT u.id, any_value(r.gid) is null as share
-                FROM res_users u
-                LEFT JOIN res_groups_users_rel r
-                    ON r.uid = u.id AND r.gid = ANY(%s)
-                GROUP BY u.id
-            )
-            UPDATE res_users u
-            SET share = s.share
-            FROM _share s
-            WHERE s.id = u.id AND s.share IS DISTINCT FROM u.share
-        """, [internal_group_ids])
-
-        # Update res_partner: partner_share IS NOT TRUE if the partner is linked to at least one internal user.
-        self.env.cr.execute("""
-            WITH _share AS (
-                SELECT p.id, any_value(u.id) IS NULL as partner_share
-                    FROM res_partner p
-                LEFT JOIN res_users u
-                    ON u.partner_id = p.id
-                    AND u.share IS NOT TRUE
-                GROUP BY p.id
-            )
-            UPDATE res_partner p
-            SET partner_share = s.partner_share
-            FROM _share s
-            WHERE s.id = p.id AND s.partner_share IS DISTINCT FROM p.partner_share
-        """)
-
+        return _user_fields._recompute_user_share(self)
     @api.depends('company_id')
     def _compute_companies_count(self):
-        self.companies_count = self.env['res.company'].sudo().search_count([])
-
+        return _user_fields._compute_companies_count(self)
     @api.depends('tz')
     def _compute_tz_offset(self):
-        for user in self:
-            user.tz_offset = datetime.datetime.now(ZoneInfo(user.tz or 'UTC')).strftime('%z')
-
+        return _user_fields._compute_tz_offset(self)
     @api.depends('all_group_ids')
     def _compute_accesses_count(self):
-        for user in self:
-            groups = user.all_group_ids
-            user.accesses_count = len(groups.access_ids)
-            user.groups_count = len(groups)
-
+        return _user_fields._compute_accesses_count(self)
     @api.depends('res_users_settings_ids')
     def _compute_res_users_settings_id(self):
-        for user in self:
-            user.res_users_settings_id = user.res_users_settings_ids and user.res_users_settings_ids[0]
-
+        return _user_fields._compute_res_users_settings_id(self)
     @api.model
     def _search_res_users_settings_id(self, operator, operand):
-        return Domain('res_users_settings_ids', operator, operand)
-
+        return _user_fields._search_res_users_settings_id(self, operator, operand)
     @api.onchange('login')
     def on_change_login(self):
-        if self.login and tools.single_email_re.match(self.login):
-            self.email = self.login
-
+        return _user_fields.on_change_login(self)
     @api.onchange('parent_id')
     def onchange_parent_id(self):
-        return self.partner_id.onchange_parent_id()
-
+        return _user_fields.onchange_parent_id(self)
     @api.constrains('company_id', 'company_ids', 'active')
     def _check_user_company(self):
-        for user in self.filtered(lambda u: u.active):
-            if user.company_id not in user.company_ids:
-                raise ValidationError(
-                    _('Company %(company_name)s is not in the allowed companies for user %(user_name)s (%(company_allowed)s).',
-                      company_name=user.company_id.name,
-                      user_name=user.name,
-                      company_allowed=', '.join(user.mapped('company_ids.name')))
-                )
-
+        return _user_fields._check_user_company(self)
     @api.constrains('action_id')
     def _check_action_id(self):
-        action_open_website = self.env.ref('base.action_open_website', raise_if_not_found=False)
-        if action_open_website and any(user.action_id.id == action_open_website.id for user in self):
-            raise ValidationError(_('The "App Switcher" action cannot be selected as home action.'))
-        # We use sudo() because  "Access rights" admins can't read action models
-        for user in self.sudo():
-            if user.action_id.type == "ir.actions.client":
-                # Prevent using reload actions.
-                action = self.env["ir.actions.client"].browse(user.action_id.id)  # magic
-                if action.tag == "reload":
-                    raise ValidationError(_('The "%s" action cannot be selected as home action.', action.name))
-
-            elif user.action_id.type == "ir.actions.act_window":
-                # Restrict actions that include 'active_id' in their context.
-                action = self.env["ir.actions.act_window"].browse(user.action_id.id)  # magic
-                if not action.context:
-                    continue
-                if "active_id" in action.context:
-                    raise ValidationError(
-                        _('The action "%s" cannot be set as the home action because it requires a record to be selected beforehand.', action.name)
-                    )
-
+        return _user_fields._check_action_id(self)
     @api.constrains('group_ids')
     def _check_disjoint_groups(self):
-        """We check that no users are both portal and users (same with public).
-           This could typically happen because of implied groups.
-        """
-        user_type_groups = self.env['res.groups']._get_user_type_groups()
-        for user in self:
-            disjoint_groups = user.all_group_ids & user_type_groups
-            if len(disjoint_groups) > 1:
-                raise ValidationError(_(
-                    "User %(user)s cannot be at the same time in exclusive groups %(groups)s.",
-                    user=repr(user.name),
-                    groups=", ".join(repr(g.display_name) for g in disjoint_groups),
-                ))
-
+        return _user_fields._check_disjoint_groups(self)
     @api.constrains('group_ids')
     def _check_at_least_one_administrator(self):
-        if not self.env.registry._init_modules:
-            return  # ignore the constraint when updating the module 'base'
-        if not self.env.ref('base.group_system').user_ids:
-            raise ValidationError(_("You must have at least an administrator user."))
-
+        return _user_fields._check_at_least_one_administrator(self)
     @api.model
     def _has_field_access(self, field, operation):
-        # For writing a field, the user has elevated privileges (sudo or manager
-        # group) or the field is marked as user_writeable. The records which the
-        # user can change are protected by record rules.
-        return super()._has_field_access(field, operation) and (
-            operation != 'write'
-            or getattr(field, 'user_writeable', False)
-            or self.env.su
-            or self.env.user.has_group('base.group_erp_manager')
-        )
-
+        return _user_records._has_field_access(self, field, operation)
     @api.model_create_multi
     def create(self, vals_list):
-        users = super().create(vals_list)
-        setting_vals = []
-        for user in users:
-            if not user.sudo().res_users_settings_ids and user._is_internal():
-                setting_vals.append({'user_id': user.id})
-            # if partner is global we keep it that way
-            if user.partner_id.company_id:
-                user.partner_id.company_id = user.company_id
-            user.partner_id.active = user.active
-            # Generate employee initals as avatar for internal users without image
-            if not user.image_1920 and not user.share and user.name:
-                user.image_1920 = user.partner_id._avatar_generate_svg()
-
-        if setting_vals:
-            self.env['res.users.settings'].sudo().create(setting_vals)
-        return users
-
+        return _user_records.create(self, vals_list)
     def write(self, vals):
-        if vals.get('active') and SUPERUSER_ID in self._ids:
-            raise UserError(_("You cannot activate the superuser."))
-        if vals.get('active') == False and self.env.uid in self._ids:  # noqa: E712
-            raise UserError(_("You cannot deactivate the user you're currently logged in as."))
-
-        if vals.get('active'):
-            # unarchive partners before unarchiving the users
-            self.partner_id.action_unarchive()
-
-        if 'company_id' in vals or 'company_ids' in vals:
-            # Access cache depends on the company, clear it
-            self.env.transaction.invalidate_access_cache()
-            # reset before the call to super to ensure `_check_company` sees the right company
-            self._reset_cached_properties()
-
-        if 'group_ids' in vals:
-            old_group_ids = {user.id: user.group_ids.ids for user in self.sudo()}
-
-        res = super().write(vals)
-
-        if 'group_ids' in vals and self.env.context.get('no_group_change_log') is not NO_GROUP_CHANGE_LOG:
-            # After write to make sure permission check passes
-            self._log_group_changes(vals, old_group_ids)
-
-        if 'company_id' in vals:
-            for user in self:
-                # if partner is global we keep it that way
-                if user.partner_id.company_id and user.partner_id.company_id.id != vals['company_id']:
-                    user.partner_id.write({'company_id': user.company_id.id})
-
-        if 'company_id' in vals or 'company_ids' in vals:
-            # reset after the call to super to ensure the wrong value wasn't cached because of automations or hooks
-            self.env.transaction.invalidate_access_cache()
-            self._reset_cached_properties()
-        elif 'tz' in vals:
-            # also reset for changes of the time zone
-            self._reset_cached_properties()
-
-        if 'group_ids' in vals and any(self._ids):
-            # clear caches linked to the users
-            self.env.invalidate_all()
-            self.env.transaction.invalidate_ormcache()
-
-        # per-method / per-model caches have been removed so the various
-        # clear_cache/clear_caches methods pretty much just end up calling
-        # Transaction.invalidate_ormcache
-        invalidation_fields = self._get_invalidation_fields()
-        if not invalidation_fields.isdisjoint(vals) and any(self._ids):
-            self.env.transaction.invalidate_ormcache()
-
-        return res
-
+        return _user_records.write(self, vals)
     def _reset_cached_properties(self):
-        # Reset lazy properties `company` & `companies` on all envs,
-        # This is unlikely in a business code to change the company of a user and then do business stuff
-        # but in case it happens this is handled.
-        # e.g. `account_test_savepoint.py` `setup_company_data`, triggered by `test_account_invoice_report.py`
-        for env in list(self.env.transaction.envs):
-            if env.user in self:
-                reset_cached_properties(env)
-
+        return _user_records._reset_cached_properties(self)
     @api.ondelete(at_uninstall=True)
     def _unlink_except_master_data(self):
-        portal_user_template = self.env.ref('base.template_portal_user_id', False)
-        public_user = self.env.ref('base.public_user', False)
-        if SUPERUSER_ID in self.ids:
-            raise UserError(_('You can not remove the admin user as it is used internally for resources created by Odoo (updates, module installation, ...)'))
-        user_admin = self.env.ref('base.user_admin', raise_if_not_found=False)
-        if user_admin and user_admin in self:
-            raise UserError(_('You cannot delete the admin user because it is utilized in various places (such as security configurations,...). Instead, archive it.'))
-        self.env.transaction.invalidate_ormcache()
-        if portal_user_template and portal_user_template in self:
-            raise UserError(_('Deleting the template users is not allowed. Deleting this profile will compromise critical functionalities.'))
-        if public_user and public_user in self:
-            raise UserError(_("Deleting the public user is not allowed. Deleting this profile will compromise critical functionalities."))
-
+        return _user_records._unlink_except_master_data(self)
     @api.model
     def name_search(self, name='', domain=None, operator='ilike', limit=100):
-        domain = Domain(domain or Domain.TRUE)
-        # first search only by login, then the normal search
-        if (
-            name and not operator in Domain.NEGATIVE_OPERATORS
-            and (user := self.search_fetch(Domain('login', '=', name) & domain, ['display_name']))
-        ):
-            return [(user.id, user.display_name)]
-        return super().name_search(name, domain, operator, limit)
-
+        return _user_records.name_search(self, name, domain, operator, limit)
     @api.model
     def _search_display_name(self, operator, value):
-        domain = super()._search_display_name(operator, value)
-        if operator in ('in', 'ilike') and value:
-            name_domain = [('login', 'in', [value] if isinstance(value, str) else value)]
-            # avoid searching both by login and name because they reside in two different tables
-            # doing so prevents from using indexes and introduces a performance issue
-            if users := self.search(name_domain):
-                domain = [('id', 'in', users.ids)]
-        return domain
-
+        return _user_records._search_display_name(self, operator, value)
     def copy_data(self, default=None):
-        default = dict(default or {})
-        vals_list = super().copy_data(default=default)
-        for user, vals in zip(self, vals_list):
-            if ('name' not in default) and ('partner_id' not in default):
-                vals['name'] = _("%s (copy)", user.name)
-            if 'login' not in default:
-                vals['login'] = _("%s (copy)", user.login)
-        return vals_list
-
+        return _user_records.copy_data(self, default)
     @api.model
     @api.ormcache('self.env.uid')
     def context_get(self):
@@ -689,42 +310,27 @@ class ResUsers(models.Model):
         context['uid'] = self.env.uid
 
         return frozendict(context)
-
     @api.ormcache('self.id')
     def _get_company_ids(self):
-        # use search() instead of `self.company_ids` to avoid extra query for `active_test`
-        domain = [('active', '=', True), ('user_ids', 'in', self.id)]
-        return (self.company_id | self.env['res.company'].search(domain))._ids
-
+        return _user_records._get_company_ids(self)
     @api.model
     def action_get(self):
-        return self.sudo().env.ref('base.action_res_users_my').read()[0]
-
+        return _user_records.action_get(self)
     @api.model
     def _get_invalidation_fields(self):
-        return {
-            'group_ids', 'active', 'lang', 'tz', 'company_id', 'company_ids',
-            *self._get_session_token_fields()
-        }
-
+        return _user_records._get_invalidation_fields(self)
     @api.model
     def _update_last_login(self):
-        # only create new records to avoid any side-effect on concurrent transactions
-        # extra records will be deleted by the periodical garbage collection
-        self.env['res.users.log'].sudo().create({}) # populated by defaults
-
+        return _user_sessions._update_last_login(self)
     @api.model
     def _get_login_domain(self, login):
-        return Domain('login', '=', login)
-
+        return _user_sessions._get_login_domain(self, login)
     @api.model
     def _get_email_domain(self, email):
-        return Domain('email', '=ilike', escape_like_value(email or ''))
-
+        return _user_sessions._get_email_domain(self, email)
     @api.model
     def _get_login_order(self):
-        return self._order
-
+        return _user_sessions._get_login_order(self)
     def _login(self, credential, user_agent_env):
         login = credential['login']
         ip = request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
@@ -753,7 +359,6 @@ class ResUsers(models.Model):
         _logger.info("Login successful for login:%s from %s", login, ip)
 
         return auth_info
-
     def _log_group_changes(self, vals, old_group_ids, editing_groups=None):
         ip_addr = request.httprequest.remote_addr if request else 'n/a'
         for user in self:
@@ -767,155 +372,32 @@ class ResUsers(models.Model):
                     "Group change: user %d with IP %s changed groups of user %d who belonged to %s with changes %s",
                     self.env.user.id, ip_addr, user.id, old_group_ids[user.id], vals['group_ids'],
                 )
-
     def authenticate(self, credential, user_agent_env):
-        """Verifies and returns the user ID corresponding to the given
-        ``credential``, or False if there was no matching user.
-
-        :param dict credential: a dictionary where the `type` key defines the authentication method and
-            additional keys are passed as required per authentication method.
-            For example:
-            - { 'type': 'password', 'login': 'username', 'password': '123456' }
-            - { 'type': 'webauthn', 'webauthn_response': '{json data}' }
-        :param dict user_agent_env: environment dictionary describing any
-            relevant environment attributes
-        :return: auth_info
-        :rtype: dict
-        """
-        auth_info = self._login(credential, user_agent_env=user_agent_env)
-        if user_agent_env and user_agent_env.get('base_location'):
-            env = self.env(user=auth_info['uid'])
-            if env.user.has_group('base.group_system'):
-                # Successfully logged in as system user!
-                # Attempt to guess the web base url...
-                try:
-                    base = user_agent_env['base_location']
-                    ICP = env['ir.config_parameter']
-                    if not ICP.get_bool('web.base.url.freeze'):
-                        ICP.set_str('web.base.url', base)
-                        _logger.info("web.base.url set to %s", base)
-                except Exception:
-                    _logger.exception("Failed to update web.base.url configuration parameter")
-        return auth_info
-
+        return _user_sessions.authenticate(self, credential, user_agent_env)
     def _after_session_login(self):
-        """Hook called after the user's HTTP session is fully authenticated."""
-
+        return _user_sessions._after_session_login(self)
     @api.model
     @api.ormcache('uid', 'passwd')
     def _check_uid_passwd(self, uid, passwd):
-        """Verifies that the given (uid, password) is authorized and
-           raise an exception if it is not."""
-        if not passwd:
-            # empty passwords disallowed for obvious security reasons
-            raise AccessDenied()
-
-        with self._assert_can_auth(user=uid):
-            user = self.with_user(uid).env.user
-            if not user.active:
-                raise AccessDenied()
-            credential = {'login': user.login, 'password': passwd, 'type': 'password'}
-            user._check_credentials(credential, {'interactive': False})
-
+        return _user_passwords._check_uid_passwd(self, uid, passwd)
     def _get_session_token_fields(self):
-        return {'id', 'login', 'password', 'active'}
-
+        return _user_sessions._get_session_token_fields(self)
     def _get_session_token_query_params(self):
-        database_secret = SQL("SELECT value FROM ir_config_parameter WHERE key='database.secret'")
-        fields = SQL(", ").join(
-            SQL.identifier(self._table, fname)
-            for fname in sorted(self._get_session_token_fields())
-            # To handle `auth_passkey_key_ids`,
-            # which we want in the `_get_session_token_fields` list for the cache invalidation mechanism
-            # but which we do not want here as it isn't an actual column in the res_users table.
-            # Instead, the left join to that table is done with an override of `_get_session_token_query_params`.
-            if not self._fields[fname].relational
-        )
-        return {
-            "select": SQL("(%s) as database_secret, %s", database_secret, fields),
-            "from": SQL("res_users"),
-            "joins": SQL(""),
-            "where": SQL("res_users.id = %s", self.id),
-            "group_by": SQL("res_users.id"),
-        }
-
+        return _user_sessions._get_session_token_query_params(self)
     @api.ormcache('sid')
     def _compute_session_token(self, sid):
-        """ Compute a session token given a session id and a user id """
-        # retrieve the fields used to generate the session token
-        field_values = self._session_token_get_values()
-        return self._session_token_hash_compute(sid, field_values)
-
+        return _user_sessions._compute_session_token(self, sid)
     def _session_token_get_values(self):
-        self.env.cr.execute(SQL(
-            "SELECT %(select)s FROM %(from)s %(joins)s WHERE %(where)s GROUP BY %(group_by)s",
-            **self._get_session_token_query_params(),
-        ))
-        if self.env.cr.rowcount != 1:
-            self.env.transaction.invalidate_ormcache()
-            return False
-        data_fields = self.env.cr.fetchone()
-        # create tuple with column name and value, allowing for overrides to manipulate the values
-        cr_description = self.env.cr.description
-        return tuple((column.name, data_fields[index]) for index, column in enumerate(cr_description))
-
+        return _user_sessions._session_token_get_values(self)
     def _session_token_hash_compute(self, sid, field_values):
-        if not field_values:
-            return False
-        # Generate hmac key using the column name and its value, only if the value is not None
-        # To avoid invalidating sessions when installing a new feature modifying the session token computation
-        # while not still being used.
-        key_tuple = tuple((k, v) for k, v in field_values if v is not None)
-        # encode the key tuple to a bytestring
-        key = str(key_tuple).encode()
-        # hmac the session id
-        data = sid.encode()
-        h = hmac.new(key, data, sha256)
-        # return the session token with a prefix version
-        return h.hexdigest()
-
+        return _user_sessions._session_token_hash_compute(self, sid, field_values)
     def _legacy_session_token_hash_compute(self, sid):
-        field_values = self._session_token_get_values()
-        if not field_values:
-            return False
-        # generate hmac key
-        key = ('%s' % (tuple(f[1] for f in field_values),)).encode()
-        # hmac the session id
-        data = sid.encode()
-        h = hmac.new(key, data, sha256)
-        # keep in the cache the token
-        return h.hexdigest()
-
+        return _user_sessions._legacy_session_token_hash_compute(self, sid)
     @api.model
     def change_password(self, old_passwd, new_passwd):
-        """Change current user password. Old password must be provided explicitly
-        to prevent hijacking an existing user session, or for cases where the cleartext
-        password is not used to authenticate requests.
-
-        :return: True
-        :raise: odoo.exceptions.AccessDenied when old password is wrong
-        :raise: odoo.exceptions.UserError when new password is not set or empty
-        """
-        if not old_passwd:
-            raise AccessDenied()
-
-        # alternatively: use identitycheck wizard?
-        credential = {'login': self.env.user.login, 'password': old_passwd, 'type': 'password'}
-        self._check_credentials(credential, {'interactive': True})
-
-        # use self.env.user here, because it has uid=SUPERUSER_ID
-        self.env.user._change_password(new_passwd)
-        return True
-
+        return _user_passwords.change_password(self, old_passwd, new_passwd)
     def _change_password(self, new_passwd):
-        new_passwd = new_passwd.strip()
-        if not new_passwd:
-            raise UserError(_("Setting empty passwords is not allowed for security reasons!"))
-
-        self._log_change_password("Password")
-
-        self.password = new_passwd
-
+        return _user_passwords._change_password(self, new_passwd)
     def _log_change_password(self, description):
         ip = request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
         _logger.info(
@@ -927,7 +409,6 @@ class ResUsers(models.Model):
             self.env.user.id,
             ip,
         )
-
     def _deactivate_portal_user(self, **post):
         """Try to remove the current portal user.
 
@@ -982,86 +463,25 @@ class ResUsers(models.Model):
             pass
         # Add users in the deletion queue
         self.env['res.users.deletion'].create(res_users_deletion_values)
-
     def preference_save(self):
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'reload_context',
-        }
-
+        return _user_sessions.preference_save(self)
     @check_identity
     def action_change_password_wizard(self):
-        return {
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-            'res_model': 'change.password.wizard',
-            'view_mode': 'form',
-            'name': 'Change Password',
-            'context': {'active_ids': self.ids, 'active_model': 'res.users'}
-        }
-
+        return _user_passwords.action_change_password_wizard(self)
     @check_identity
     def preference_change_password(self):
-        return {
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-            'res_model': 'change.password.own',
-            'view_mode': 'form',
-        }
-
+        return _user_passwords.preference_change_password(self)
     @check_identity
     def api_key_wizard(self):
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': 'res.users.apikeys.description',
-            'name': 'Create API Key',
-            'target': 'new',
-            'views': [(False, 'form')],
-        }
-
+        return _user_sessions.api_key_wizard(self)
     @check_identity
     def action_revoke_all_devices(self):
-        # self.env.user is sudo by default
-        # Need sudo to bypass access error for removing the devices of portal user
-        return (self.env.user if self.id == self.env.uid else self)._action_revoke_all_devices()
-
+        return _user_sessions.action_revoke_all_devices(self)
     def _action_revoke_all_devices(self):
-        sessions = self.env["res.session"].search([("user_id", "=", self.id)])
-        sessions.filtered(lambda d: not d.is_current)._revoke()
-        return {'type': 'ir.actions.client', 'tag': 'reload'}
-
+        return _user_sessions._action_revoke_all_devices(self)
     @api.readonly
     def has_groups(self, group_spec: str) -> bool:
-        """ Return whether user ``self`` satisfies the given group restrictions
-        ``group_spec``, i.e., whether it is member of at least one of the groups,
-        and is not a member of any of the groups preceded by ``!``.
-
-        Note that the group ``"base.group_no_one"`` is only effective in debug
-        mode, just like method :meth:`~.has_group` does.
-
-        :param str group_spec: comma-separated list of fully-qualified group
-            external IDs, optionally preceded by ``!``.
-            Example:``"base.group_user,base.group_portal,!base.group_system"``.
-        """
-        if group_spec == '.':
-            return False
-
-        positives = []
-        negatives = []
-        for group_ext_id in group_spec.split(','):
-            group_ext_id = group_ext_id.strip()
-            if group_ext_id.startswith('!'):
-                negatives.append(group_ext_id[1:])
-            else:
-                positives.append(group_ext_id)
-
-        # for the sake of performance, check negatives first
-        if any(self.has_group(ext_id) for ext_id in negatives):
-            return False
-        if any(self.has_group(ext_id) for ext_id in positives):
-            return True
-        return not positives
-
+        return _user_groups.has_groups(self, group_spec)
     @api.readonly
     def has_group(self, group_ext_id: str) -> bool:
         """ Return whether user ``self`` belongs to the given group (given by its
@@ -1081,118 +501,37 @@ class ResUsers(models.Model):
         if group_ext_id == 'base.group_no_one':
             result = result and bool(request and request.session.debug)
         return result
-
     def _has_group(self, group_ext_id: str) -> bool:
-        """ Return whether user ``self`` belongs to the given group.
-
-        :param str group_ext_id: external ID (XML ID) of the group.
-           Must be provided in fully-qualified form (``module.ext_id``), as there
-           is no implicit module to use..
-        :return: True if user ``self`` is a member of the group with the
-           given external ID (XML ID), else False.
-        """
-        group_id = self.env['res.groups']._get_group_definitions().get_id(group_ext_id)
-        # for new record don't fill the ormcache
-        return group_id in (self._get_group_ids() if self.id else self.all_group_ids._origin._ids)
-
+        return _user_groups._has_group(self, group_ext_id)
     @api.ormcache('self.id')
     def _get_group_ids(self):
-        """ Return ``self``'s group ids (as a tuple)."""
-        self.ensure_one()
-        # `with_context({})` because this method is decorated with `@ormcache('self._ids')`,
-        # it cannot depend on the context (e.g. `active_test`, `lang`, ...)
-        return self.with_context({}).all_group_ids._ids
-
+        return _user_groups._get_group_ids(self)
     def _action_show(self):
-        """Directly access the form view"""
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': 'res.users',
-            'context': {'create': False},
-            'name': _('Users'),
-            'view_mode': 'form',
-            'views': [[self.env.ref('base.view_users_form').id, 'form']],
-            'domain': [('id', 'in', self.ids)],
-        }
-
+        return _user_groups._action_show(self)
     def action_show_groups(self):
-        self.ensure_one()
-        return {
-            'name': _('Groups'),
-            'view_mode': 'list,form',
-            'res_model': 'res.groups',
-            'type': 'ir.actions.act_window',
-            'context': {'create': False, 'delete': False},
-            'domain': [('id', 'in', self.all_group_ids.ids)],
-            'target': 'current',
-        }
-
+        return _user_groups.action_show_groups(self)
     def action_show_accesses(self):
-        self.ensure_one()
-        return {
-            'name': _('Access Rights'),
-            'view_mode': 'list,form',
-            'res_model': 'ir.access',
-            'type': 'ir.actions.act_window',
-            'context': {'create': False, 'delete': False},
-            'domain': [('group_id', 'in', self.all_group_ids.ids)],
-            'target': 'current',
-        }
-
+        return _user_groups.action_show_accesses(self)
     def _is_internal(self):
-        self.ensure_one()
-        return self.sudo().has_group('base.group_user')
-
+        return _user_sessions._is_internal(self)
     def _is_regular(self):
-        """ An internal user that is not a light one. """
-        self.ensure_one()
-        return self.sudo().role in ('regular_user', 'group_system')
-
+        return _user_sessions._is_regular(self)
     def _is_portal(self):
-        self.ensure_one()
-        return self.sudo().has_group('base.group_portal')
-
+        return _user_sessions._is_portal(self)
     def _is_public(self):
-        self.ensure_one()
-        return self.sudo().has_group('base.group_public')
-
+        return _user_sessions._is_public(self)
     def _is_system(self):
-        self.ensure_one()
-        return self.sudo().has_group('base.group_system')
-
+        return _user_sessions._is_system(self)
     def _is_admin(self):
-        self.ensure_one()
-        return self._is_superuser() or self.sudo().has_group('base.group_erp_manager')
-
+        return _user_sessions._is_admin(self)
     def _is_superuser(self):
-        self.ensure_one()
-        return self.id == SUPERUSER_ID
-
+        return _user_sessions._is_superuser(self)
     @api.model
     def get_company_currency_id(self):
-        return self.env.company.currency_id.id
-
+        return _user_records.get_company_currency_id(self)
     @api.ormcache(cache='stable')
     def _crypt_context(self):
-        """ Passlib CryptContext instance used to encrypt and verify
-        passwords. Can be overridden if technical, legal or political matters
-        require different kdfs than the provided default.
-
-        The work factor of the default KDF can be configured using the
-        ``password.hashing.rounds`` ICP.
-        """
-        cfg = self.env['ir.config_parameter'].sudo()
-        return CryptContext(
-            # kdf which can be verified by the context. The default encryption
-            # kdf is the first of the list
-            ['pbkdf2_sha512', 'plaintext'],
-            # deprecated algorithms are still verified as usual, but
-            # ``needs_update`` will indicate that the stored hash should be
-            # replaced by a more recent algorithm.
-            deprecated=['auto'],
-            pbkdf2_sha512__rounds=max(MIN_ROUNDS, cfg.get_int('password.hashing.rounds')),
-        )
-
+        return _user_passwords._crypt_context(self)
     @contextlib.contextmanager
     def _assert_can_auth(self, user=None):
         """ Checks that the current environment even allows the current auth
@@ -1261,44 +600,21 @@ class ResUsers(models.Model):
             raise
         else:
             reg._login_failures.pop(source, None)
-
     def _on_login_cooldown(self, failures, previous):
-        """ Decides whether the user trying to log in is currently
-        "on cooldown" and not even allowed to attempt logging in.
-
-        The default cooldown function simply puts the user on cooldown for
-        <login_cooldown_duration> seconds after each failure following the
-        <login_cooldown_after>th (0 to disable).
-
-        Can be overridden to implement more complex backoff strategies, or
-        e.g. wind down or reset the cooldown period as the previous failure
-        recedes into the far past.
-
-        :param int failures: number of recorded failures (since last success)
-        :param previous: timestamp of previous failure
-        :type previous:  datetime.datetime
-        :returns: whether the user is currently in cooldown phase (true if cooldown, false if no cooldown and login can continue)
-        :rtype: bool
-        """
-        cfg = self.env['ir.config_parameter'].sudo()
-        min_failures = cfg.get_int('base.login_cooldown_after', 5)
-        if min_failures == 0:
-            return False
-
-        delay = cfg.get_int('base.login_cooldown_duration') or 60
-        return failures >= min_failures and (datetime.datetime.now() - previous) < datetime.timedelta(seconds=delay)
-
+        return _user_sessions._on_login_cooldown(self, failures, previous)
     def _register_hook(self):
-        if hasattr(self, 'check_credentials'):
-            _logger.warning("The check_credentials method of res.users has been renamed _check_credentials. One of your installed modules defines one, but it will not be called anymore.")
-
+        return _user_records._register_hook(self)
     def _mfa_type(self):
-        """ If an MFA method is enabled, returns its type as a string. """
-        return
-
+        return _user_sessions._mfa_type(self)
     def _mfa_url(self):
-        """ If an MFA method is enabled, returns the URL for its second step. """
-        return
+        return _user_sessions._mfa_url(self)
+
+
+_logger = logging.getLogger('odoo.addons.base.models.res_users')
 
 
 ResUsersPatchedInTest = ResUsers
+
+
+# the delegated methods of the class, and the modules that use the class: at the end, they import this module
+from . import user_fields as _user_fields, user_groups as _user_groups, user_records as _user_records, user_passwords as _user_passwords, user_sessions as _user_sessions  # noqa: E402
