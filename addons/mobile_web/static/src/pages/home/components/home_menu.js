@@ -1,85 +1,80 @@
-import { Component, xml, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, proxy, xml } from "@odoo/owl";
 import { browser } from "@web/core/services/browser/browser";
 import { session } from "@web/boot/session";
 import { useService } from "@web/core/utils/hooks";
 
 
-/** 
+/**
  * @typedef {Object} MenuData
  * @property {number|false} id
  * @property {string|false} name
- * @property {number[]} children
- * @property {number|false} appID
- * @property {string|false} xmlid
  * @property {number|false} actionID
- * @property {string|false} actionModel
- * @property {string|false} actionPath
  * @property {string|null|false} webIcon
  * @property {Base64URLString|null} webIconData base64
- * @property {string|null} webIconDataMimetype
- * @property {string|null} [backgroundImage] only root menu
  */
-
 
 const loadMenusUrl = `/mobile_web/webclient/load_menus`;
 
+// 5 列 x 3 行, 每页 15 个, 超出时左右滑动翻页
+const COLUMNS = 5;
+const ROWS_PER_PAGE = 3;
+const MENUS_PER_PAGE = COLUMNS * ROWS_PER_PAGE;
 
-// TODO: 这里仅是展示, 如果要涉及到排序等等，考虑创建一个menuService进行管理
+// 没有图标的应用使用的底色, 按 id 取色, 保证同一个应用颜色固定
+const FALLBACK_COLORS = ["#03a09c", "#f0a030", "#5a7bd8", "#e0624f", "#8a6fd1", "#3aa86b"];
+
+
+/**
+ * 首页应用网格: 图标 + 文字, 没有图标时用首字母色块代替, 超过一页时左右滑动
+ */
 export class HomeMenu extends Component {
     static template = xml`
         <t t-name="mobile_web.HomePage.HomeMenu">
-            <div class="m_home_page_menu card">
-                <t t-foreach="this.menus" t-as="menu" t-key="menu.id">
-                    <t t-if="menu.isPlaceHolder">
-                        <div class="menu_item menu_item_placeholder"></div>
-                    </t>
-                    <t t-else="">
-                        <div class="menu_item card" t-att="{'data-action-id': menu.actionID}" t-on-click="this.onMenuItemClick">
-                            <div t-if="menu.webIconData">
-                                <img t-att-src="menu.webIconData" class="menu_item_icon"/>
-                            </div>
-
-                            <div class="menu_item_name">
-                                <t t-esc="menu.name"/>
-                            </div>
-                        </div>
-                    </t>
-                </t>
+            <div class="m_home_menu">
+                <div class="m_home_menu_track" t-on-scroll="this.onScroll">
+                    <div class="m_home_menu_page" t-foreach="this.pages" t-as="page" t-key="page_index">
+                        <button type="button" class="m_home_menu_item"
+                                t-foreach="page" t-as="menu" t-key="menu.id"
+                                t-att-data-action-id="menu.actionID" t-on-click="this.onMenuItemClick">
+                            <img t-if="menu.webIconData" class="m_home_menu_icon" t-att-src="menu.webIconData" alt=""/>
+                            <span t-else="" class="m_home_menu_icon m_home_menu_fallback"
+                                  t-attf-style="background: {{ this.colorOf(menu) }}"><t t-esc="this.initialOf(menu)"/></span>
+                            <span class="m_home_menu_label"><t t-esc="menu.name"/></span>
+                        </button>
+                    </div>
+                </div>
+                <div class="m_home_menu_dots" t-if="this.pages.length > 1">
+                    <span t-foreach="this.pages" t-as="page" t-key="page_index"
+                          t-attf-class="m_home_menu_dot {{ this.state.page === page_index ? 'is_active' : '' }}"></span>
+                </div>
             </div>
         </t>
     `;
 
     setup() {
         this.mobileActionService = useService("mobileAction");
+        this.state = proxy({ page: 0 });
+        this.pages = [];
 
         onWillStart(async () => {
             /** @type {MenuData[]} */
-            const allMenuItems = await this._loadMenus();
-            
-            // flex占位, 一行不足4个的增加占位元素
-            const placeHolderNum = (4 - (allMenuItems.length % 4)) % 4;
-            this.menus = [...allMenuItems, ...Array(placeHolderNum).fill({isPlaceHolder: true})]
+            const menus = await this._loadMenus();
+            this.pages = chunk(menus, MENUS_PER_PAGE);
         });
     }
 
     /**
-     * 加载手机端menu数据
+     * 加载手机端 menu 数据, 只保留带动作的应用
      * @returns {Promise<MenuData[]>}
      */
     async _loadMenus() {
-        /** @type {Object} */
         const menusData = await this._fetchMenuData();
-
-        // 这里仅筛选含有action_id的
-        /** @type {Object[]} */
-        const haveActionMenus = Object.values(menusData).filter(el => el.actionID);
-
-        return haveActionMenus;
+        return Object.values(menusData).filter((el) => el.actionID);
     }
 
     /**
-     * 从后台加载menu数据
-     * @returns {Promise<MenuData[]>}
+     * 从后台加载 menu 数据
+     * @returns {Promise<Object>}
      */
     async _fetchMenuData() {
         // 此版本的 session 不再提供 cache_hashes, 缺失时使用时间戳, 每次都重新加载菜单
@@ -91,8 +86,30 @@ export class HomeMenu extends Component {
         return res.json();
     }
 
+    colorOf(menu) {
+        return FALLBACK_COLORS[Number(menu.id) % FALLBACK_COLORS.length];
+    }
+
+    initialOf(menu) {
+        return (menu.name || "?").trim().charAt(0).toUpperCase();
+    }
+
+    /** 根据滚动位置计算当前页, 用于底部的页码点 */
+    onScroll(ev) {
+        const track = ev.currentTarget;
+        this.state.page = Math.round(track.scrollLeft / track.clientWidth);
+    }
+
     onMenuItemClick(ev) {
         const actionId = ev.currentTarget.dataset.actionId;
         this.mobileActionService.doAction(actionId);
     }
-};
+}
+
+function chunk(items, size) {
+    const pages = [];
+    for (let i = 0; i < items.length; i += size) {
+        pages.push(items.slice(i, i + size));
+    }
+    return pages;
+}
