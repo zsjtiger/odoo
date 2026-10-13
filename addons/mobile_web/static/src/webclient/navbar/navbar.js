@@ -9,7 +9,8 @@ export class MobileNavBar extends Component {
     static template = xml`
         <t t-name="mobile_web.MobileNavBar">
           <div class="m_navbar">
-            <div></div>
+            <div class="m_navbar_back" t-if="this.canGoBack()" t-on-click="this.onBackClick">&#8249;</div>
+            <div t-else=""></div>
             <div class="m_navbar_title">
                 <t t-if="this.renderInfo.title" t-esc="this.renderInfo.title"/>
             </div>
@@ -36,6 +37,15 @@ export class MobileNavBar extends Component {
         onWillDestroy(() => {
             this.env.bus.removeEventListener("NAVBAR_TITLE:UPDATE", this.onTitleUpdate);
         });
+    }
+
+    /** 不在首页时才显示返回按钮 */
+    canGoBack() {
+        return window.location.pathname !== "/mobile_web/home";
+    }
+
+    onBackClick() {
+        window.history.back();
     }
 
     onReturnHomeClick(ev) {

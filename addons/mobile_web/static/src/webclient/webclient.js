@@ -42,7 +42,7 @@ export class MobileWebClient extends Component {
             this.env.bus.trigger("WEB_CLIENT_READY");
         });
 
-        useBus(routerBus, "ROUTE_CHANGE", this.loadRouterState)
+        useBus(routerBus, "ROUTE_CHANGE", () => this.loadRouterState())
         this._onGlobalClick = this.onGlobalClick.bind(this);
         onMounted(() => window.addEventListener("click", this._onGlobalClick, { capture: true }));
         onWillUnmount(() => window.removeEventListener("click", this._onGlobalClick, { capture: true }));

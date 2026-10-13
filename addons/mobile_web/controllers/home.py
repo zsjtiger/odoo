@@ -169,3 +169,17 @@ class Home(WebHome):
         qs = dict(parse_qsl(parts.query))
         qs['redirect'] = redirect
         return urlunsplit(parts._replace(query=urlencode(qs)))
+
+    @route('/mobile_web/search_domain', type='json', auth='user', readonly=True)
+    def mobile_search_domain(self, model, text=''):
+        """
+        手机端的简单搜索: 把输入的文本转换为模型 `_rec_name` 字段上的 ilike 条件.
+        没有 `_rec_name` 的模型不做搜索(返回空条件).
+        """
+        text = (text or '').strip()
+        if not text or model not in request.env:
+            return []
+        rec_name = request.env[model]._rec_name
+        if not rec_name or rec_name not in request.env[model]._fields:
+            return []
+        return [(rec_name, 'ilike', text)]
