@@ -29,14 +29,14 @@ export class HomeMenu extends Component {
     static template = xml`
         <t t-name="mobile_web.HomePage.HomeMenu">
             <div class="m_home_page_menu card">
-                <t t-foreach="menus" t-as="menu" t-key="menu.id">
+                <t t-foreach="this.menus" t-as="menu" t-key="menu.id">
                     <t t-if="menu.isPlaceHolder">
                         <div class="menu_item menu_item_placeholder"></div>
                     </t>
                     <t t-else="">
                         <div class="menu_item card" t-att="{'data-action-id': menu.actionID}" t-on-click="this.onMenuItemClick">
                             <div t-if="menu.webIconData">
-                                <img t-attf-src="data:image/png;base64,{{menu.webIconData}}" class="menu_item_icon"/>
+                                <img t-att-src="menu.webIconData" class="menu_item_icon"/>
                             </div>
 
                             <div class="menu_item_name">
@@ -82,8 +82,8 @@ export class HomeMenu extends Component {
      * @returns {Promise<MenuData[]>}
      */
     async _fetchMenuData() {
-        const cacheHashes = session.cache_hashes;
-        let loadMenusHash = cacheHashes.load_menus || new Date().getTime().toString();
+        // 此版本的 session 不再提供 cache_hashes, 缺失时使用时间戳, 每次都重新加载菜单
+        const loadMenusHash = session.cache_hashes?.load_menus || Date.now().toString();
         const res = await browser.fetch(`${loadMenusUrl}/${loadMenusHash}`);
         if (!res.ok) {
             throw new Error("Error while fetching menus");

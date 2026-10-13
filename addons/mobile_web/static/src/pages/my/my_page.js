@@ -5,7 +5,6 @@ import { PAGE_KEYS } from '../common/page_keys';
 
 
 export class UserMyPage extends MobilePage {
-    static props = {};
     static components = {
     }
     static template = xml`

@@ -1,17 +1,17 @@
 import { Component, xml, onWillDestroy } from "@odoo/owl";
+import { render } from "@web/core/owl/utils";
 import { MobileActionMenu } from './action_menu';
 
 
 export class MobileActionContainer extends Component {
     static components = { MobileActionMenu };
-    static props = {};
     static template = xml`
         <t t-name="mobile_web.MobileActionContainer">
             <div class="m_action_manager">
-                <t t-if="info.Component" t-component="info.Component" className="'m_action'" t-props="info.componentProps" t-key="info.id"/>
+                <t t-if="this.info.Component" t-component="this.info.Component" className="'m_action'" t-props="this.info.componentProps" t-key="this.info.id"/>
             </div>
 
-            <MobileActionMenu actions="info.currentActions"/>
+            <MobileActionMenu actions="this.info.currentActions"/>
         </t>
     `;
 
@@ -19,7 +19,7 @@ export class MobileActionContainer extends Component {
         this.info = {};
         this.onActionManagerUpdate = ({ detail: info }) => {
             this.info = info;
-            this.render();
+            render(this);
         };
 
         this.env.bus.addEventListener("ACTION_MANAGER:UPDATE", this.onActionManagerUpdate);

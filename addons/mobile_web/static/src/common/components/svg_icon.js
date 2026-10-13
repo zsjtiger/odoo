@@ -1,23 +1,19 @@
-import { Component, xml } from "@odoo/owl";
+import { Component, t, useProps, xml } from "@odoo/owl";
 
 
 export class SvgIcon extends Component {
     static components = {};
-    static props = {
-        iconHref: [String, Boolean],
-        className: [String, Boolean],
-    };
-    static defaultProps = {
-        iconHref: false,
-        className: false
-    };
+    props = useProps({
+        iconHref: t.or([t.string(), t.boolean()]).optional(false),
+        className: t.or([t.string(), t.boolean()]).optional(false),
+    });
 
     static template = xml`
         <t t-name="mobile_web.SvgIcon">
-            <t t-if="props.iconHref">
+            <t t-if="this.props.iconHref">
                 <div>
-                    <svg t-att-class="props.className or 'm_svg_icon'">
-                        <use t-att="{'href': props.iconHref}"></use>
+                    <svg t-att-class="this.props.className or 'm_svg_icon'">
+                        <use t-att="{'href': this.props.iconHref}"></use>
                     </svg>
                 </div>
             </t>

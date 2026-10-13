@@ -1,4 +1,5 @@
 import { Component, xml, onWillDestroy } from "@odoo/owl";
+import { render } from "@web/core/owl/utils";
 import { useService } from "@web/core/utils/hooks";
 
 import { SvgIcon } from '@mobile_web/common/components/svg_icon'
@@ -10,15 +11,14 @@ export class MobileNavBar extends Component {
           <div class="m_navbar">
             <div></div>
             <div class="m_navbar_title">
-                <t t-if="renderInfo.title" t-esc="renderInfo.title"/>
+                <t t-if="this.renderInfo.title" t-esc="this.renderInfo.title"/>
             </div>
             <div class="m_navbar_return_home" t-on-click="this.onReturnHomeClick">
-                <SvgIcon iconHref="renderInfo.returnHomeIconRef" className="'return_home_icon'"/>
+                <SvgIcon iconHref="this.renderInfo.returnHomeIconRef" className="'return_home_icon'"/>
             </div>
           </div>
         </t>
     `;
-    static props = {};
     static components = {SvgIcon};
 
     setup() {
@@ -29,7 +29,7 @@ export class MobileNavBar extends Component {
         
         this.onTitleUpdate = ({detail: info}) => {
             this.renderInfo = Object.assign(this.renderInfo, info);
-            this.render();
+            render(this);
         };
 
         this.env.bus.addEventListener("NAVBAR_TITLE:UPDATE", this.onTitleUpdate);

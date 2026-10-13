@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "@odoo/owl";
+import { onMounted, onWillUnmount } from "@odoo/owl";
 
 // -----------------------------------------------------------------------------
 // Touch Gesture Hook
@@ -29,10 +29,9 @@ export function useTouchGesture(options = {}) {
         zoneRef,
     } = options;
 
-    const startRef = useRef({ x: 0, y: 0, time: 0 });
+    const startRef = { current: { x: 0, y: 0, time: 0 } };
 
-    useEffect(
-        (el) => {
+    const attachTouchListeners = (el) => {
             if (!el) {
                 return;
             }
@@ -113,7 +112,12 @@ export function useTouchGesture(options = {}) {
                 el.removeEventListener("touchmove", onTouchMove);
                 el.removeEventListener("touchend", onTouchEnd);
             };
-        },
-        () => [zoneRef?.el || document.body]
-    );
+    };
+
+    const getZone = () => (typeof zoneRef === "function" ? zoneRef() : zoneRef?.el) || document.body;
+    let detachTouchListeners = null;
+    onMounted(() => {
+        detachTouchListeners = attachTouchListeners(getZone());
+    });
+    onWillUnmount(() => detachTouchListeners?.());
 }

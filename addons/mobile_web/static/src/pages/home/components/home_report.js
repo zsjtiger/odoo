@@ -5,7 +5,7 @@ export class HomeReport extends Component {
     static template = xml`
         <t t-name="mobile_web.HomePage.HomeReport">
             <div class="m_home_page_report card">
-                <t t-foreach="reportData" t-as="d" t-key="d">
+                <t t-foreach="this.reportData" t-as="d" t-key="d">
                     <div class="report_data">
                         <div class="report_data_value"><t t-esc="d.value"/></div>
                         <div class="report_data_name"><t t-esc="d.name"/></div>

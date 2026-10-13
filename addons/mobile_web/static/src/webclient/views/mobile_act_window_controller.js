@@ -1,4 +1,5 @@
-import { Component, xml, onWillStart, useState, useSubEnv, markRaw, useRef } from "@odoo/owl";
+import { Component, markRaw, onWillStart, proxy, t, useProps, xml } from "@odoo/owl";
+import { useSubEnv } from "@web/core/owl/utils";
 import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
 import { View, getDefaultConfig } from "@web/views/view";
@@ -23,29 +24,25 @@ import { router as _router } from "@mobile_web/core/browser/router";
 export class MobileActWindowController extends Component {
     static template = xml`
         <t t-name="mobile_web.MobileActWindowController">
-            <div class="m_act_window_controller" t-ref="root">
-                <t t-if="viewProps">
-                    <View t-props="viewProps"/>
+            <div class="m_act_window_controller">
+                <t t-if="this.state.viewProps">
+                    <View t-props="this.state.viewProps"/>
                 </t>
             </div>
         </t>
     `;
     static components = { View };
-    static props = {
-        action: Object,
-        resId: { type: [Number, String, { value: false }], optional: true },
-        additionalContext: { type: Object, optional: true },
-    };
-    static defaultProps = {
-        additionalContext: {},
-    };
+    props = useProps({
+        action: t.object(),
+        resId: t.or([t.number(), t.string(), t.literal(false)]).optional(),
+        additionalContext: t.object().optional({}),
+    });
 
     setup() {
-        this.rootRef = useRef("root");
         this.viewService = useService("view");
         this.dialogService = useService("dialog");
 
-        this.state = useState({
+        this.state = proxy({
             viewProps: null,
         });
 
@@ -133,7 +130,8 @@ export class MobileActWindowController extends Component {
                 searchPanel: false,
                 banner: false,
             },
-            searchViewId: action.search_view_id || false,
+            // many2one 的值形如 [id, name], 视图服务需要的是 id
+            searchViewId: action.search_view_id ? action.search_view_id[0] : false,
             loadIrFilters: false,
             loadActionMenus: false,
             selectRecord: this._onSelectRecord.bind(this),

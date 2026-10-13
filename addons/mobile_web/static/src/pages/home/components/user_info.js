@@ -6,7 +6,7 @@ export class UserInfo extends Component {
     static template = xml`
         <t t-name="mobile_web.HomePage.UserInfo">
             <div class="mobile_home_page_user_info">
-                <t t-out="userInfo.userName"/>
+                <t t-out="this.userInfo.userName"/>
             </div>
         </t>
     `;

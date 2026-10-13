@@ -1,5 +1,5 @@
 // owl
-import { Component, xml, onMounted, useExternalListener, useState } from "@odoo/owl";
+import { Component, xml, onMounted, onWillUnmount, proxy } from "@odoo/owl";
 
 // odoo web core
 import { localization } from "@web/core/data/l10n/localization";
@@ -20,20 +20,19 @@ export class MobileWebClient extends Component {
                 <MobileActionContainer/>
 
                 <!-- TODO: 错误处理目前只是在webclient展示一个div，后续可能需要封装为弹窗？ -->
-                <t t-if="state.error">
-                    <div t-esc="state.error" style="color: red;"/>
+                <t t-if="this.state.error">
+                    <div t-esc="this.state.error" style="color: red;"/>
                 </t>
             </div>
         </t>
     `;
-    static props = {};
     static components = {
         MobileNavBar,
         MobileActionContainer,
     };
 
     setup() {
-        this.state = useState({error: false});  // TODO: 错误处理目前只是在webclient展示一个div，后续可能需要封装为弹窗？
+        this.state = proxy({error: false});  // TODO: 错误处理目前只是在webclient展示一个div，后续可能需要封装为弹窗？
         this.mobileActionService = useService("mobileAction");
         this.localization = localization;
 
@@ -44,7 +43,9 @@ export class MobileWebClient extends Component {
         });
 
         useBus(routerBus, "ROUTE_CHANGE", this.loadRouterState)
-        useExternalListener(window, "click", this.onGlobalClick, { capture: true });
+        this._onGlobalClick = this.onGlobalClick.bind(this);
+        onMounted(() => window.addEventListener("click", this._onGlobalClick, { capture: true }));
+        onWillUnmount(() => window.removeEventListener("click", this._onGlobalClick, { capture: true }));
     };
 
     /**

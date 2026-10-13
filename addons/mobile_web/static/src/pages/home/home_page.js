@@ -10,7 +10,6 @@ import { SuggestionList } from './components/suggestion_list';
 
 
 export class HomePage extends MobilePage {
-    static props = {};
     static components = {
         UserInfo,
         HomeReport,
