@@ -24,6 +24,15 @@ This module provides the core of the Odoo Mobile Web Client.
     'assets': {
         # 登录前要加载的
         'mobile_web.assets_frontend': [
+            # 模块加载器与 owl(common包依赖 odoo.define 与 @odoo/owl)
+            'web/static/src/boot/module_loader.js',
+            'web/static/lib/luxon/luxon.js',
+            'web/static/lib/owl/owl.js',
+            'web/static/src/core/owl/owl3_compatibility_layer.js',
+            'web/static/src/core/owl/utils.js',
+            'web/static/lib/owl/odoo_module.js',
+            # 第三方库(UMD, 注册为全局 CryptoJS)
+            'mobile_web/static/lib/crypto-js/crypto-js.js',
             # common包
             'mobile_web/static/src/common/**/*',
             # 页面包(仅加载登录页)

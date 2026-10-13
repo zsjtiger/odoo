@@ -2,17 +2,14 @@
     <!-- Layout -->
     <template id="mobile_web.login_layout" inherit_id="mobile_web.layout" primary="True">
         <!-- 资产包加载 -->
-        <xpath expr="//head/link[last()]" position="after">
+        <!-- 放在 `var odoo` 定义之后, 资产包中的代码可以直接使用 odoo 全局对象 -->
+        <xpath expr="//script[@id='web.layout.odooscript']" position="after">
             <t t-call-assets="mobile_web.assets_frontend"/>
         </xpath>
 
         <xpath expr="//head/script[last()]" position="after">
-            <script src="/mobile_web/static/lib/crypto-js/crypto-js.js" type="text/javascript"/>
-        </xpath>
-
-        <xpath expr="//head/script[last()]" position="after">
             <script id="mobile_web.login_layout.scripts.functions" type="text/javascript">
-                const fpPromise = import('./static/lib/fingerprintjs-v4/fp.js').then(FingerprintJS => FingerprintJS.load())
+                const fpPromise = import('/mobile_web/static/lib/fingerprintjs-v4/fp.js').then(FingerprintJS => FingerprintJS.load())
 
                 function rememberPassword(loginFormData) {
                   const isRemember = Boolean(loginFormData.get('remember_password'))

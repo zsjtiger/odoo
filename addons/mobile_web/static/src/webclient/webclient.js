@@ -4,7 +4,7 @@ import { Component, xml, onMounted, useExternalListener, useState } from "@odoo/
 // odoo web core
 import { localization } from "@web/core/data/l10n/localization";
 import { useBus, useService } from "@web/core/utils/hooks";
-import { routerBus } from "@web/core/browser/router";
+import { routerBus } from "@web/core/services/browser/router";
 import { router } from '@mobile_web/core/browser/router';
 
 // webclient components
