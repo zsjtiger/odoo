@@ -9,7 +9,6 @@ import mimetypes
 import os
 import re
 import shutil
-import stat
 import tempfile
 import typing
 import uuid
@@ -31,31 +30,21 @@ from odoo.tools.misc import limited_field_access_token
 if typing.TYPE_CHECKING:
     from collections.abc import Collection
 
-_logger = logging.getLogger(__name__)
-SECURITY_FIELDS = ('res_model', 'res_id', 'create_uid', 'public', 'res_field')
-MAX_COMODELS_FOR_DOMAIN = 5
-MAX_SEARCH_LIMIT = IN_MAX * 10
-CREATE_FROM_STREAM_FLAG = object()  # sentinel that cannot be given over RPC
-DIRECTORY_MODE = 0o751
-GC_FILE_SUFFIX = '.__gc'
-GC_GRACE_PERIOD = 1800  # 30 minutes
-GC_GRACE_PERIOD_MAX = 604800  # 1 week
 
+_logger = logging.getLogger('odoo.addons.base.models.ir_attachment')
 
-def condition_values(model, field_name, domain):
-    """Get the values in the domain for a specific field name.
-
-    Returns the values appearing in the `in` conditions that would be restricted
-    to by the domain.
-    """
-    domain = domain.optimize(model)
-    for condition in domain.map_conditions(
-        lambda cond: cond
-        if cond.field_expr == field_name and cond.operator == 'in'
-        else Domain.TRUE
-    ).optimize(model).iter_conditions():
-        return condition.value
-    return None
+from .helpers import (
+    CREATE_FROM_STREAM_FLAG,
+    DIRECTORY_MODE,
+    GC_FILE_SUFFIX,
+    GC_GRACE_PERIOD,
+    GC_GRACE_PERIOD_MAX,
+    MAX_COMODELS_FOR_DOMAIN,
+    MAX_SEARCH_LIMIT,
+    SECURITY_FIELDS,
+    condition_values,
+)
+from .local_file import LocalBinaryFile
 
 
 class IrAttachment(models.Model):
@@ -1154,56 +1143,3 @@ class IrAttachment(models.Model):
 
 
 IrAttachment._inverse_raw.__override__ = False  # whitelist super()
-
-
-class LocalBinaryFile(BinaryValue):
-    """Lazily loaded file."""
-    __slots__ = ('__checksum', '__content', '__mimetype', '__path', '__stat', 'filename')
-
-    def __init__(self, record: IrAttachment):
-        """ Open a file as a binary value.
-
-        :param path: absolute path to the file
-        :param model: model to check the path
-        :raise OSError: if the file cannot be opened
-        """
-        path = record._full_path(record.store_fname)
-        self.__path = path
-        self.__stat = os.stat(path)  # checks that the file exists
-        if not stat.S_ISREG(self.__stat.st_mode):
-            raise FileNotFoundError(f"Path is not a regular file: {path}")
-        self.__checksum: str = record.checksum
-        self.__content: bytes | None = None
-        self.__mimetype: str | None = None
-        self.filename = record.name
-
-    def open(self):
-        assert isinstance(self, LocalBinaryFile)
-        if self.__content is not None:
-            return super().open()
-        # open the file
-        return open(self.__path, 'rb')
-
-    @property
-    def content(self) -> bytes:
-        if self.__content is None:
-            with self.open() as f:
-                self.__content = f.read()
-        return self.__content
-
-    @property
-    def mimetype(self):
-        if self.__mimetype is None:
-            self.__mimetype = guess_file_mimetype(self.__path)
-        return self.__mimetype
-
-    @property
-    def size(self):
-        return self.__stat.st_size
-
-    @property
-    def checksum(self):
-        return self.__checksum
-
-    def __repr__(self):
-        return f"LocalBinaryFile({self.__path!r})"
