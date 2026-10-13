@@ -1,0 +1,19 @@
+<crossnow>
+    <template id="mobile_web.webclient_bootstrap">
+        <t t-call="mobile_web.layout">
+            <t t-set="head_web">
+                <script type="text/javascript">
+                    // Block to avoid leaking variables in the script scope
+                    {
+                        // the `session_info`` is from the `request.env['ir.http'].webclient_rendering_context()`,
+                        // and provide the `session` variable in '@web/core/session'
+                        crossnow.__session_info__ =<t t-out="json.dumps(session_info)"/>;
+                    }
+                </script>
+
+                <t t-call-assets="mobile_web.assets_web"/>
+            </t>
+            <t t-set="head" t-value="head_web + (head or '')" media="screen"/>    
+        </t>
+    </template>
+</crossnow>

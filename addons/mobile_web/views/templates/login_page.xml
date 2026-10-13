@@ -1,0 +1,193 @@
+<crossnow>
+    <!-- Layout -->
+    <template id="mobile_web.login_layout" inherit_id="mobile_web.layout" primary="True">
+        <!-- 资产包加载 -->
+        <xpath expr="//head/link[last()]" position="after">
+            <t t-call-assets="mobile_web.assets_frontend"/>
+        </xpath>
+
+        <xpath expr="//head/script[last()]" position="after">
+            <script src="/mobile_web/static/lib/crypto-js/crypto-js.js" type="text/javascript"/>
+        </xpath>
+
+        <xpath expr="//head/script[last()]" position="after">
+            <script id="mobile_web.login_layout.scripts.functions" type="text/javascript">
+                const fpPromise = import('./static/lib/fingerprintjs-v4/fp.js').then(FingerprintJS => FingerprintJS.load())
+
+                function rememberPassword(loginFormData) {
+                  const isRemember = Boolean(loginFormData.get('remember_password'))
+
+                  if (isRemember) {
+                    const password = loginFormData.get('password')
+                    const username = loginFormData.get('login')
+
+                    fpPromise.then(fp => fp.get()).then(fpResult => {
+                      const uniqueID = fpResult.visitorId;
+                      const toSavePassword = CryptoJS.AES.encrypt(password, uniqueID).toString();
+                      localStorage.setItem('snow_o_username', JSON.stringify(username));
+                      localStorage.setItem('snow_o_psw', JSON.stringify(toSavePassword));
+                    })
+                  }
+
+                  localStorage.setItem('snow_o_isRemember', JSON.stringify(isRemember));
+                }
+
+                function loadPassword() {
+                  isRememberPasswordInputEl = document.getElementById("m-login-form-remember-password")
+                  usernameInputEl = document.getElementById("m-login-field-login")
+                  passwordInputEl = document.getElementById("m-login-field-password")
+
+                  let isRemember = false;
+                  isRememberString = localStorage.getItem('snow_o_isRemember');
+                  if (isRememberString) {
+                    isRemember = Boolean(JSON.parse(isRememberString))
+                  }
+
+                  if (isRemember) {
+                    const usernameString = localStorage.getItem('snow_o_username');
+                    const pswString = localStorage.getItem('snow_o_psw');
+                    if (usernameString &amp;&amp; pswString) {
+                      fpPromise.then(fp => fp.get()).then(fpResult => {
+                        const username = JSON.parse(usernameString);
+                        const psw = JSON.parse(pswString);
+
+                        const uniqueID = fpResult.visitorId;
+                        const password = CryptoJS.AES.decrypt(psw, uniqueID).toString(CryptoJS.enc.Utf8);
+
+                        usernameInputEl.value = username;
+                        passwordInputEl.value = password;
+                        isRememberPasswordInputEl.checked = isRemember;
+                      })
+                    }
+                  }
+                }
+
+                function doLogin(event) {
+                  event.preventDefault();
+
+                  const loginFormEl = event.target.form;
+                  const loginFormData = new FormData(loginFormEl);
+
+                  rememberPassword(loginFormData);
+
+                  if (loginFormEl.checkValidity()) {
+                    loginFormEl.submit();
+                  } else {
+                    loginFormEl.reportValidity();
+                  }
+                }
+            </script>
+        </xpath>
+
+        <xpath expr="//head/script[last()]" position="after">
+            <script id="mobile_web.login_layout.scripts.main" type="text/javascript">
+                let showPassword = false;
+                window.onload = () => {
+                  loadPassword();
+                  const toggleEl = document.getElementById("m-login-toggle-password-visible");
+                  toggleEl.addEventListener('click', (event) => {
+                    showPassword = !showPassword;
+
+                    const passwordInputEl = document.getElementById("m-login-field-password");
+                    if (showPassword) {
+                      passwordInputEl.type = "text";
+                      event.target.textContent = "🙊";
+                    } else {
+                      passwordInputEl.type = "password";
+                      event.target.textContent = "🙈";
+                    }
+                  })
+                }
+            </script>
+        </xpath>
+    </template>
+
+    <!-- 登录页 -->
+    <template id="mobile_web.login" name="Mobile Login">
+        <t t-call="mobile_web.login_layout">
+            <div class="m_login">
+                <div class="m_login_main_logo_container">
+                    <div class="m_login_main_logo">
+                        <img src="/mobile_web/static/public/img/login/login.png" draggable="false" style="height: 100%; width: 100%;"/>
+                    </div>
+                </div>
+
+                <div class="m_login_sub_logo_container">
+                    <div class="m_login_sub_logo">
+                        <img src="/mobile_web/static/public/img/login/logo.png" draggable="false" style="height: 100%; width: 100%;"/>
+                    </div>
+                </div>
+
+                <div class="m_login_form_container">
+                    <form id ="m-login-form" class="m_login_form" role="form" t-attf-action="/mobile_web/login" method="post" nsubmit="this.action = '/web/login' + location.hash">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                        <div class="m_login_field m_login_field_username">
+                            <input type="text"
+                                   class="m_login_field_input"
+                                   placeholder="请输入用户名"
+                                   name="login"
+                                   id="m-login-field-login"
+                                   autofocus="autofocus"
+                                   required="required"
+                                   autocapitalize="off"/>
+                        </div>
+                        <div class="m_login_field m_login_field_password">
+                            <input type="password"
+                                   class="m_login_field_input"
+                                   placeholder="请输入密码"
+                                   name="password"
+                                   id="m-login-field-password"
+                                   required="required"
+                                   autocomplete="current-password"
+                                   t-att-autofocus="'autofocus' if login else None"
+                                   maxlength="4096"/>
+                            <div class="toggle_password_visible" id="m-login-toggle-password-visible">🙈</div>
+                        </div>
+
+                        <div class="m_login_form_alert_message" t-if="error">
+                            <t t-esc="error"/>
+                        </div>
+
+                        <div class="m_login_form_alert_message" t-if="message">
+                            <t t-esc="message"/>
+                        </div>
+
+                        <div class="m_login_form_functions">
+                            <div class="m_login_form_remember_password">
+                                <input type="checkbox" id="m-login-form-remember-password" name="remember_password" value="true"/>
+                                <label for="m-login-form-remember-password">记住密码</label>
+                            </div>
+
+                            <a href="/mobile_web/retrieve_password" class="m_login_form_forget_password">忘记密码?</a>
+                        </div>
+
+                        <button type="submit" class="m_login_form_confirm_btn" onClick="doLogin(event)">
+                            登录
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- 找回密码页 -->
+    <template id="mobile_web.login_retrieve_password" name="Mobile Login Retrieve Password">
+        <t t-call="mobile_web.login_layout">
+            <div class="m_login_retrieve_password">TODO</div>
+        </t>
+    </template>
+
+    <!-- 设置新密码页 -->
+    <template id="mobile_web.login_new_password" name="Mobile Login Set New Password">
+        <t t-call="mobile_web.login_layout">
+            <div class="m_login_new_password">TODO</div>
+        </t>
+    </template>
+
+    <template id="mobile_web.login_successful" name="Login successful">
+        <t t-call="mobile_web.layout">
+            <div>成功登录了, 现在是手机端的外部用户登录成功页</div>
+        </t>
+    </template>
+</crossnow>

@@ -1,0 +1,14 @@
+<crossnow>
+    <!-- Base Layout -->
+    <template id="mobile_web.layout" name="Mobile layout" inherit_id="web.layout" primary="True">
+        <!-- viewpoint 设置 -->
+        <xpath expr="//head/meta[last()]" position="after">
+            <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        </xpath>
+
+        <!-- icon导入 -->
+        <xpath expr="//head/script[last()]" position="after">
+            <script async="" type="text/javascript" src="/mobile_web/static/public/iconfont.js"></script>
+        </xpath>
+    </template>
+</crossnow>

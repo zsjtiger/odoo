@@ -1,0 +1,71 @@
+# -*- coding: utf-8 -*-
+{
+    'name': "Mobile Web",
+    'category': 'Hidden',
+    'description': """
+crossnow Mobile Web core module
+===============================
+
+This module provides the core of the crossnow Mobile Web Client.
+    """,
+    'version': '1.0',
+    'depends': ['base', 'web'],
+    'data': [
+        'security/ir.model.access.csv',
+
+        ## views
+        # template
+        'views/templates/base_layout.xml',
+        'views/templates/login_page.xml',
+        'views/templates/webclient_bootstrap.xml',
+        
+        # test
+        'views/mobile_pages.xml',
+    ],
+    'assets': {
+        # 登录前要加载的
+        'mobile_web.assets_frontend': [
+            # common包
+            'mobile_web/static/src/common/**/*',
+            # 页面包(仅加载登录页)
+            'mobile_web/static/src/pages/login/**/*',
+        ],
+
+        # 登录后要加载的
+        'mobile_web.assets_backend': [
+            # web core js only
+            ('include', 'mobile_web._assets_load_web_core_js'),
+            # mobile core包
+            "mobile_web/static/src/core/**/*",
+            # common包
+            'mobile_web/static/src/common/**/*',
+            # webclient结构包
+            'mobile_web/static/src/webclient/**/*',
+            # 页面包(去掉登录页)
+            'mobile_web/static/src/pages/**/*',
+            ('remove', 'mobile_web/static/src/pages/login/**/*'),
+        ],
+
+        # WebClient bootstrap专用
+        'mobile_web.assets_web': [
+            ('include', 'mobile_web.assets_backend'),
+            'mobile_web/static/src/start.js',
+            'mobile_web/static/src/main.js'
+        ],
+
+        'mobile_web._assets_load_web_core_js': [
+            # module loader
+            'web/static/src/module_loader.js',
+            # libs
+            'web/static/lib/luxon/luxon.js',
+            'web/static/lib/owl/owl.js',
+            'web/static/lib/owl/crossnow_module.js',
+            # core
+            'web/static/src/env.js',
+            'web/static/src/session.js',
+            'web/static/src/core/**/*.js',
+            ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'), #TODO: always lazy-loaded
+        ]
+    },
+    'pre_init_hook': '_pre_init_hook',
+}

@@ -1,0 +1,38 @@
+.m_home_page_menu {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+
+    height: 360px;
+    overflow: auto;
+}
+
+.menu_item {
+    width: calc(25% - 15px);
+    height: 60px;
+    box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .menu_item_icon {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .menu_item_name {
+        width: 100%;
+        text-align: center;
+        font-size: 12px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+.menu_item_placeholder {
+    visibility: hidden;
+}

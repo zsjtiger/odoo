@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<crossnow>
+    <!-- 手机端页面 -->
+    <data noupdate="0">
+        <!-- 主页 -->
+        <record id="home_page" model="mobile_web.mobile.page">
+            <field name="name">Home Page</field>
+            <field name="page_component_id">mobile_page.home_page</field>
+        </record>
+
+        <record id="home_page_action" model="ir.actions.mobile_page">
+            <field name="name">Mobile Web Home Page Action</field>
+            <field name="type">ir.actions.mobile_page</field>
+            <field name="path">home</field>
+            <field name="binding_mobile_page" ref="mobile_web.home_page"/>
+        </record>
+
+        <!-- 待办页 -->
+        <record id="todo_page" model="mobile_web.mobile.page">
+            <field name="name">待办</field>
+            <field name="page_component_id">mobile_page.todo_page</field>
+        </record>
+
+        <record id="todo_page_action" model="ir.actions.mobile_page">
+            <field name="name">Mobile Web TODO Page Action</field>
+            <field name="type">ir.actions.mobile_page</field>
+            <field name="path">todo</field>
+            <field name="binding_mobile_page" ref="mobile_web.todo_page"/>
+        </record>
+
+        <!-- 日程页 -->
+        <record id="schedule_page" model="mobile_web.mobile.page">
+            <field name="name">日程</field>
+            <field name="page_component_id">mobile_page.schedule_page</field>
+        </record>
+
+        <record id="schedule_page_action" model="ir.actions.mobile_page">
+            <field name="name">Mobile Web Schedule Page Action</field>
+            <field name="type">ir.actions.mobile_page</field>
+            <field name="path">schedule</field>
+            <field name="binding_mobile_page" ref="mobile_web.schedule_page"/>
+        </record>
+
+        <!-- 我的 -->
+        <record id="user_my_page" model="mobile_web.mobile.page">
+            <field name="name">我的</field>
+            <field name="page_component_id">mobile_page.user_my_page</field>
+        </record>
+
+        <record id="user_my_page_action" model="ir.actions.mobile_page">
+            <field name="name">Mobile Web UserMy Page Action</field>
+            <field name="type">ir.actions.mobile_page</field>
+            <field name="path">my</field>
+            <field name="binding_mobile_page" ref="mobile_web.user_my_page"/>
+        </record>
+    </data>
+
+    <!-- 页面底部action -->
+    <data noupdate="0">
+        <!-- HOME PAGE -->
+        <record id="home_page_home_page_action_rel" model="mobile_web.mobile.page.actions">
+            <field name="name">主页</field>
+            <field name="mobile_page" ref="mobile_web.home_page"/>
+            <field name="ir_action" ref="mobile_web.home_page_action"/>
+            <field name="svg_icon_href">#crossnow-icon-TabHome</field>
+            <field name="sequence">1</field>
+        </record>
+        <record id="home_page_todo_page_action_rel" model="mobile_web.mobile.page.actions">
+            <field name="name">待办</field>
+            <field name="mobile_page" ref="mobile_web.home_page"/>
+            <field name="ir_action" ref="mobile_web.todo_page_action"/>
+            <field name="svg_icon_href">#crossnow-icon-TabWaiting</field>
+            <field name="sequence">2</field>
+        </record>
+        <record id="home_page_schedule_page_action_rel" model="mobile_web.mobile.page.actions">
+            <field name="name">日程</field>
+            <field name="mobile_page" ref="mobile_web.home_page"/>
+            <field name="ir_action" ref="mobile_web.schedule_page_action"/>
+            <field name="svg_icon_href">#crossnow-icon-TabSchedule</field>
+            <field name="sequence">3</field>
+        </record>
+        <record id="home_page_user_my_page_action_rel" model="mobile_web.mobile.page.actions">
+            <field name="name">我的</field>
+            <field name="mobile_page" ref="mobile_web.home_page"/>
+            <field name="ir_action" ref="mobile_web.user_my_page_action"/>
+            <field name="svg_icon_href">#crossnow-icon-TabMy</field>
+            <field name="sequence">4</field>
+        </record>
+
+        <!-- TODO PAGE -->
+        <record id="todo_page_home_page_action_rel" model="mobile_web.mobile.page.actions">
+            <field name="name">主页</field>
+            <field name="mobile_page" ref="mobile_web.todo_page"/>
+            <field name="ir_action" ref="mobile_web.home_page_action"/>
+            <field name="svg_icon_href">#crossnow-icon-TabHome</field>
+            <field name="sequence">1</field>
+        </record>
+        <record id="todo_page_todo_page_action_rel" model="mobile_web.mobile.page.actions">
+            <field name="name">待办</field>
+            <field name="mobile_page" ref="mobile_web.todo_page"/>
+            <field name="ir_action" ref="mobile_web.todo_page_action"/>
+            <field name="svg_icon_href">#crossnow-icon-TabWaiting</field>
+            <field name="sequence">2</field>
+        </record>
+        <record id="todo_page_schedule_page_action_rel" model="mobile_web.mobile.page.actions">
+            <field name="name">日程</field>
+            <field name="mobile_page" ref="mobile_web.todo_page"/>
+            <field name="ir_action" ref="mobile_web.schedule_page_action"/>
+            <field name="svg_icon_href">#crossnow-icon-TabSchedule</field>
+            <field name="sequence">3</field>
+        </record>
+        <record id="todo_page_user_my_page_action_rel" model="mobile_web.mobile.page.actions">
+            <field name="name">我的</field>
+            <field name="mobile_page" ref="mobile_web.todo_page"/>
+            <field name="ir_action" ref="mobile_web.user_my_page_action"/>
+            <field name="svg_icon_href">#crossnow-icon-TabMy</field>
+            <field name="sequence">4</field>
+        </record>
+
+        <!-- SCHEDULE PAGE -->
+        <record id="schedule_page_home_page_action_rel" model="mobile_web.mobile.page.actions">
+            <field name="name">主页</field>
+            <field name="mobile_page" ref="mobile_web.schedule_page"/>
+            <field name="ir_action" ref="mobile_web.home_page_action"/>
+            <field name="svg_icon_href">#crossnow-icon-TabHome</field>
+            <field name="sequence">1</field>
+        </record>
+        <record id="schedule_page_todo_page_action_rel" model="mobile_web.mobile.page.actions">
+            <field name="name">待办</field>
+            <field name="mobile_page" ref="mobile_web.schedule_page"/>
+            <field name="ir_action" ref="mobile_web.todo_page_action"/>
+            <field name="svg_icon_href">#crossnow-icon-TabWaiting</field>
+            <field name="sequence">2</field>
+        </record>
+        <record id="schedule_page_schedule_page_action_rel" model="mobile_web.mobile.page.actions">
+            <field name="name">日程</field>
+            <field name="mobile_page" ref="mobile_web.schedule_page"/>
+            <field name="ir_action" ref="mobile_web.schedule_page_action"/>
+            <field name="svg_icon_href">#crossnow-icon-TabSchedule</field>
+            <field name="sequence">3</field>
+        </record>
+        <record id="schedule_page_user_my_page_action_rel" model="mobile_web.mobile.page.actions">
+            <field name="name">我的</field>
+            <field name="mobile_page" ref="mobile_web.schedule_page"/>
+            <field name="ir_action" ref="mobile_web.user_my_page_action"/>
+            <field name="svg_icon_href">#crossnow-icon-TabMy</field>
+            <field name="sequence">4</field>
+        </record>
+
+        <!-- USER MY PAGE -->
+        <record id="user_my_page_home_page_action_rel" model="mobile_web.mobile.page.actions">
+            <field name="name">主页</field>
+            <field name="mobile_page" ref="mobile_web.user_my_page"/>
+            <field name="ir_action" ref="mobile_web.home_page_action"/>
+            <field name="svg_icon_href">#crossnow-icon-TabHome</field>
+            <field name="sequence">1</field>
+        </record>
+        <record id="user_my_page_todo_page_action_rel" model="mobile_web.mobile.page.actions">
+            <field name="name">待办</field>
+            <field name="mobile_page" ref="mobile_web.user_my_page"/>
+            <field name="ir_action" ref="mobile_web.todo_page_action"/>
+            <field name="svg_icon_href">#crossnow-icon-TabWaiting</field>
+            <field name="sequence">2</field>
+        </record>
+        <record id="user_my_page_schedule_page_action_rel" model="mobile_web.mobile.page.actions">
+            <field name="name">日程</field>
+            <field name="mobile_page" ref="mobile_web.user_my_page"/>
+            <field name="ir_action" ref="mobile_web.schedule_page_action"/>
+            <field name="svg_icon_href">#crossnow-icon-TabSchedule</field>
+            <field name="sequence">3</field>
+        </record>
+        <record id="user_my_page_user_my_page_action_rel" model="mobile_web.mobile.page.actions">
+            <field name="name">我的</field>
+            <field name="mobile_page" ref="mobile_web.user_my_page"/>
+            <field name="ir_action" ref="mobile_web.user_my_page_action"/>
+            <field name="svg_icon_href">#crossnow-icon-TabMy</field>
+            <field name="sequence">4</field>
+        </record>
+    </data>
+</crossnow>
