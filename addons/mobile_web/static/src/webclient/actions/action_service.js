@@ -3,7 +3,7 @@ import { KeepLast } from "@web/core/utils/concurrency";
 
 import { router as _router } from "@mobile_web/core/browser/router";
 import { mobilePageRegistry } from "@mobile_web/pages/shared/page_registry";
-import { MobileActWindowController } from "@mobile_web/webclient/views/mobile_act_window_controller";
+import { MobileActWindowController } from "@mobile_web/views/act_window_controller";
 import { buildRouteState } from "@mobile_web/webclient/actions/action_utils";
 import { loadAction, loadPageActions } from "@mobile_web/webclient/actions/action_loader";
 

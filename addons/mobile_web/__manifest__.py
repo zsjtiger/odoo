@@ -74,6 +74,8 @@ This module provides the core of the Odoo Mobile Web Client.
             'mobile_web/static/src/common/**/*',
             # webclient结构包
             'mobile_web/static/src/webclient/**/*',
+            # 移动端视图层(list / kanban / form / 字段)
+            'mobile_web/static/src/views/**/*',
             # 页面包(去掉登录页)
             'mobile_web/static/src/pages/**/*',
             ('remove', 'mobile_web/static/src/pages/login/**/*'),
