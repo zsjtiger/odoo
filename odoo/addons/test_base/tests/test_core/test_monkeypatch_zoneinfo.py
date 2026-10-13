@@ -86,7 +86,7 @@ class TestTZ(TransactionCase):
         def login(cookie_tz):
             user.write({'tz': False, 'login_date': False})
             request = MagicMock(cookies={'tz': cookie_tz})
-            with patch('odoo.addons.base.models.res_users.request', request):
+            with patch('odoo.addons.base.models.res_users.users.request', request):
                 self.env['res.users']._login(
                     {'login': 'tz_test', 'password': 'tz_test', 'type': 'password'},
                     {'interactive': False},

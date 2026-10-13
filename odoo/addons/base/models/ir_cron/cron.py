@@ -1,93 +1,30 @@
+"""The scheduled actions (ir.cron): their execution, their failures and their deactivation."""
+
 from __future__ import annotations
 
 import contextvars
-import copy
-import enum
 import logging
 import math
 import os
 import threading
 import time
 import typing
-from datetime import datetime, timedelta, timezone
-
+from datetime import datetime, timezone
 import psycopg2
 import psycopg2.errors
-from dateutil.relativedelta import relativedelta
-
 from odoo import api, fields, models, sql_db
 from odoo.exceptions import LockError, UserError
 from odoo.http.dispatcher import serialize_exception
-from odoo.modules import Manifest
 from odoo.tools import SQL, config
-from odoo.tools.constants import GC_UNLINK_LIMIT
 from odoo.tools.func import deprecated
 
 if typing.TYPE_CHECKING:
     from collections.abc import Iterable
-
     from odoo.sql_db import BaseCursor
 
-_logger = logging.getLogger(__name__)
+from .helpers import BASE_VERSION, BadModuleState, BadVersion, CONSECUTIVE_TIMEOUT_FOR_FAILURE, CompletionStatus, ListLogHandler, MAX_FAIL_TIME, MIN_DELTA_BEFORE_DEACTIVATION, MIN_FAILURE_COUNT_BEFORE_DEACTIVATION, MIN_RUNS_PER_JOB, MIN_TIME_PER_JOB, ODOO_NOTIFY_FUNCTION, _intervalTypes
 
-BASE_VERSION = Manifest.for_addon('base')['version']
-MAX_FAIL_TIME = timedelta(hours=5)  # chosen with a fair roll of the dice
-MIN_RUNS_PER_JOB = 10
-MIN_TIME_PER_JOB = 120  # seconds
-CONSECUTIVE_TIMEOUT_FOR_FAILURE = 3
-MIN_FAILURE_COUNT_BEFORE_DEACTIVATION = 5
-MIN_DELTA_BEFORE_DEACTIVATION = timedelta(days=7)
-# crons must satisfy both minimum thresholds before deactivation
-
-# custom function to call instead of default PostgreSQL's `pg_notify`
-ODOO_NOTIFY_FUNCTION = os.getenv('ODOO_NOTIFY_FUNCTION', 'pg_notify')
-
-
-class BadVersion(Exception):
-    pass
-
-
-class BadModuleState(Exception):
-    pass
-
-
-_intervalTypes = {
-    'days': lambda interval: relativedelta(days=interval),
-    'hours': lambda interval: relativedelta(hours=interval),
-    'weeks': lambda interval: relativedelta(days=7 * interval),
-    'months': lambda interval: relativedelta(months=interval),
-    'minutes': lambda interval: relativedelta(minutes=interval),
-}
-
-
-class CompletionStatus(enum.StrEnum):
-    FULLY_DONE = 'fully done'
-    PARTIALLY_DONE = 'partially done'
-    FAILED = 'failed'
-
-
-class ListLogHandler(logging.Handler):
-    def __init__(self, logger, level=logging.NOTSET):
-        super().__init__(level)
-        self.logger = logger
-        self.list_log_handler = contextvars.ContextVar('list_log_handler', default=None)
-
-    def emit(self, record):
-        logs = self.list_log_handler.get(None)
-        if logs is None:
-            return
-        record = copy.copy(record)
-        logs.append(record)
-
-    def __enter__(self):
-        # set a list in the current context
-        logs = []
-        self.list_log_handler.set(logs)
-        self.logger.addHandler(self)
-        return logs
-
-    def __exit__(self, *exc):
-        self.logger.removeHandler(self)
+_logger = logging.getLogger('odoo.addons.base.models.ir_cron')
 
 
 class IrCron(models.Model):
@@ -925,42 +862,3 @@ class IrCron(models.Model):
 
     def action_open_scheduled_action(self):
         return self.ir_actions_server_id.action_open_scheduled_action()
-
-
-class IrCronTrigger(models.Model):
-    _name = 'ir.cron.trigger'
-    _description = 'Triggered Action'
-    _rec_name = 'cron_id'
-    _allow_sudo_commands = False
-
-    cron_id = fields.Many2one("ir.cron", index=True, required=True, ondelete="cascade")
-    call_at = fields.Datetime(index=True, required=True)
-
-    @api.autovacuum
-    def _gc_cron_triggers(self):
-        # active cron jobs are cleared by `_clear_schedule` when the job starts
-        domain = [
-            ('call_at', '<', datetime.now() + relativedelta(weeks=-1)),
-            ('cron_id.active', '=', False),
-        ]
-        records = self.search(domain, limit=GC_UNLINK_LIMIT)
-        records.unlink()
-        return len(records), len(records) == GC_UNLINK_LIMIT  # done, remaining
-
-
-class IrCronProgress(models.Model):
-    _name = 'ir.cron.progress'
-    _description = 'Progress of Scheduled Action'
-    _rec_name = 'cron_id'
-
-    cron_id = fields.Many2one("ir.cron", required=True, index=True, ondelete='cascade')
-    remaining = fields.Integer(default=0)
-    done = fields.Integer(default=0)
-    deactivate = fields.Boolean()
-    timed_out_counter = fields.Integer(default=0)
-
-    @api.autovacuum
-    def _gc_cron_progress(self):
-        records = self.search([('create_date', '<', datetime.now() - relativedelta(weeks=1))], limit=GC_UNLINK_LIMIT)
-        records.unlink()
-        return len(records), len(records) == GC_UNLINK_LIMIT  # done, remaining
