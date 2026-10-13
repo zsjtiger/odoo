@@ -420,7 +420,7 @@ def _generate_code_uncached(self, template: int | str | etree._Element):
         "    return template_functions, code",
     ])
     compiled = compile(wrap_code, f"<{ref}>", 'exec')
-    globals_dict = self.__prepare_globals()
+    globals_dict = self._IrQweb__prepare_globals()
     globals_dict['__builtins__'] = globals_dict  # So that unknown/unsafe builtins are never added.
     unsafe_eval(compiled, globals_dict)
 
