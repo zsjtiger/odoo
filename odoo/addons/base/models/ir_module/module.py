@@ -1,24 +1,20 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import functools
+
 import logging
 import os
 import platform
-import shutil
 import warnings
 from collections import OrderedDict, defaultdict
 from textwrap import dedent
 
 import lxml.html
 import psycopg2
-from docutils import nodes
 from docutils.core import publish_string
-from docutils.transforms import Transform, writer_aux
-from docutils.writers.html4css1 import Writer
 from markupsafe import Markup
 
 import odoo
 from odoo import _, api, fields, models, modules, tools
-from odoo.exceptions import AccessDenied, UserError, ValidationError
+from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.modules.module import Manifest, MissingDependency
@@ -32,129 +28,11 @@ from odoo.tools.text.translate import (
     get_po_paths,
 )
 
-_logger = logging.getLogger(__name__)
 
-ACTION_DICT = {
-    'view_mode': 'form',
-    'res_model': 'base.module.upgrade',
-    'target': 'new',
-    'type': 'ir.actions.act_window',
-}
+_logger = logging.getLogger('odoo.addons.base.models.ir_module')
 
-
-def backup(path, raise_exception=True):
-    path = os.path.normpath(path)
-    if not os.path.exists(path):
-        if not raise_exception:
-            return None
-        raise OSError('path does not exists')
-    cnt = 1
-    while True:
-        bck = '%s~%d' % (path, cnt)
-        if not os.path.exists(bck):
-            shutil.move(path, bck)
-            return bck
-        cnt += 1
-
-
-def assert_log_admin_access[T](method: T, /) -> T:
-    """Decorator checking that the calling user is an administrator, and logging the call.
-
-    Raises an AccessDenied error if the user does not have administrator privileges, according
-    to `user._is_admin()`.
-    """
-    @functools.wraps(method)
-    def check_and_log(self, *args, **kwargs):
-        user = self.env.user
-        origin = request.httprequest.remote_addr if request else 'n/a'
-        log_data = (method.__name__, self.sudo().mapped('display_name'), user.login, user.id, origin)
-        if not self.env.is_admin():
-            _logger.warning('DENY access to module.%s on %s to user %s ID #%s via %s', *log_data)
-            raise AccessDenied()
-        _logger.info('ALLOW access to module.%s on %s to user %s #%s via %s', *log_data)
-        return method(self, *args, **kwargs)
-    return check_and_log
-
-
-class IrModuleCategory(models.Model):
-    _name = 'ir.module.category'
-    _description = "Application"
-    _order = 'sequence, name, id'
-    _allow_sudo_commands = False
-
-    name = fields.Char(string='Name', required=True, translate=True)
-    parent_id = fields.Many2one('ir.module.category', string='Parent Application', index=True)
-    child_ids = fields.One2many('ir.module.category', 'parent_id', string='Child Applications')
-    module_ids = fields.One2many('ir.module.module', 'category_id', string='Modules')
-    privilege_ids = fields.One2many('res.groups.privilege', 'category_id', string='Privileges')
-    description = fields.Text(string='Description', translate=True)
-    sequence = fields.Integer(string='Sequence')
-    visible = fields.Boolean(string='Visible', default=True)
-    exclusive = fields.Boolean(string='Exclusive')
-    xml_id = fields.Char(string='External ID', compute='_compute_xml_id')
-
-    def _compute_xml_id(self):
-        xml_ids = defaultdict(list)
-        domain = [('model', '=', self._name), ('res_id', 'in', self.ids)]
-        for data in self.env['ir.model.data'].sudo().search_read(domain, ['module', 'name', 'res_id']):
-            xml_ids[data['res_id']].append("%s.%s" % (data['module'], data['name']))
-        for cat in self:
-            cat.xml_id = xml_ids.get(cat.id, [''])[0]
-
-    @api.constrains('parent_id')
-    def _check_parent_not_circular(self):
-        if self._has_cycle():
-            raise ValidationError(_("Error ! You cannot create recursive categories."))
-
-
-class MyFilterMessages(Transform):
-    """
-    Custom docutils transform to remove `system message` for a document and
-    generate warnings.
-
-    (The standard filter removes them based on some `report_level` passed in
-    the `settings_override` dictionary, but if we use it, we can't see them
-    and generate warnings.)
-    """
-    default_priority = 870
-
-    def apply(self):
-        # Use `findall()` if available (docutils >= 0.20), otherwise fallback to `traverse()`.
-        # This ensures compatibility across environments with different docutils versions.
-        if hasattr(self.document, 'findall'):
-            nodes_iter = self.document.findall(nodes.system_message)
-        else:
-            nodes_iter = self.document.traverse(nodes.system_message)
-
-        for node in nodes_iter:
-            _logger.debug("docutils' system message present: %s", str(node))
-            node.parent.remove(node)
-
-
-class MyWriter(Writer):
-    """
-    Custom docutils html4ccs1 writer that doesn't add the warnings to the
-    output document.
-    """
-    def get_transforms(self):
-        return [MyFilterMessages, writer_aux.Admonitions]
-
-
-STATES = [
-    ('uninstallable', 'Uninstallable'),
-    ('uninstalled', 'Not Installed'),
-    ('installed', 'Installed'),
-    ('to upgrade', 'To be upgraded'),
-    ('to remove', 'To be removed'),
-    ('to install', 'To be installed'),
-]
-
-
-XML_DECLARATION = (
-    '<?xml version='.encode('utf-8'),
-    '<?xml version='.encode('utf-16-be'),
-    '<?xml version='.encode('utf-16-le'),
-)
+from .helpers import ACTION_DICT, STATES, assert_log_admin_access
+from .rst import MyWriter
 
 
 class IrModuleModule(models.Model):
@@ -1023,111 +901,3 @@ class IrModuleModule(models.Model):
     @api.model
     def _extract_resource_attachment_translations(self, module, lang):
         yield from ()
-
-
-DEP_STATES = STATES + [('unknown', 'Unknown')]
-
-
-class IrModuleModuleDependency(models.Model):
-    _name = 'ir.module.module.dependency'
-    _description = "Module dependency"
-    _log_access = False  # inserts are done manually, create and write uid, dates are always null
-    _allow_sudo_commands = False
-
-    # the dependency name
-    name = fields.Char(index=True)
-
-    # the module that depends on it
-    module_id = fields.Many2one('ir.module.module', 'Module', ondelete='cascade')
-
-    # the module corresponding to the dependency, and its status
-    depend_id = fields.Many2one('ir.module.module', 'Dependency',
-                                compute='_compute_depend', search='_search_depend')
-    state = fields.Selection(DEP_STATES, string='Status', compute='_compute_state')
-
-    auto_install_required = fields.Boolean(
-        default=True,
-        help="Whether this dependency blocks automatic installation "
-             "of the dependent")
-
-    @api.depends('name')
-    def _compute_depend(self):
-        # retrieve all modules corresponding to the dependency names
-        names = {dep.name for dep in self}
-        mods = self.env['ir.module.module'].search([('name', 'in', names)])
-
-        # index modules by name, and assign dependencies
-        name_mod = {mod.name: mod for mod in mods}
-        for dep in self:
-            dep.depend_id = name_mod.get(dep.name)
-
-    def _search_depend(self, operator, value):
-        if operator not in ('in', 'any'):
-            return NotImplemented
-        modules = self.env['ir.module.module'].browse(value)
-        return [('name', 'in', modules.mapped('name'))]
-
-    @api.depends('depend_id.state')
-    def _compute_state(self):
-        for dependency in self:
-            dependency.state = dependency.depend_id.state or 'unknown'
-
-    @api.model
-    def all_dependencies(self, module_names):
-        to_search = {key: True for key in module_names}
-        res = {}
-        def search_direct_deps(to_search, res):
-            to_search_list = to_search.keys()
-            dependencies = self.web_search_read(domain=[("module_id.name", "in", to_search_list)], specification={"module_id":{"fields":{"name":{}}}, "name": {}, })["records"]
-            to_search.clear()
-            for dependency in dependencies:
-                dep_name = dependency["name"]
-                mod_name = dependency["module_id"]["name"]
-                if dep_name not in res and dep_name not in to_search and dep_name not in to_search_list:
-                    to_search[dep_name] = True
-                if mod_name not in res:
-                    res[mod_name] = []
-                res[mod_name].append(dep_name)
-        search_direct_deps(to_search, res)
-        while to_search:
-            search_direct_deps(to_search, res)
-        return res
-
-
-class IrModuleModuleExclusion(models.Model):
-    _name = 'ir.module.module.exclusion'
-    _description = "Module exclusion"
-    _allow_sudo_commands = False
-
-    # the exclusion name
-    name = fields.Char(index=True)
-
-    # the module that excludes it
-    module_id = fields.Many2one('ir.module.module', 'Module', ondelete='cascade')
-
-    # the module corresponding to the exclusion, and its status
-    exclusion_id = fields.Many2one('ir.module.module', 'Exclusion Module',
-                                   compute='_compute_exclusion', search='_search_exclusion')
-    state = fields.Selection(DEP_STATES, string='Status', compute='_compute_state')
-
-    @api.depends('name')
-    def _compute_exclusion(self):
-        # retrieve all modules corresponding to the exclusion names
-        names = {excl.name for excl in self}
-        mods = self.env['ir.module.module'].search([('name', 'in', names)])
-
-        # index modules by name, and assign dependencies
-        name_mod = {mod.name: mod for mod in mods}
-        for excl in self:
-            excl.exclusion_id = name_mod.get(excl.name)
-
-    def _search_exclusion(self, operator, value):
-        if operator not in ('in', 'any'):
-            return NotImplemented
-        modules = self.env['ir.module.module'].browse(value)
-        return [('name', 'in', modules.mapped('name'))]
-
-    @api.depends('exclusion_id.state')
-    def _compute_state(self):
-        for exclusion in self:
-            exclusion.state = exclusion.exclusion_id.state or 'unknown'
