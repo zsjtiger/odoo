@@ -8,7 +8,8 @@ import { makeContext } from "@web/core/data/context";
 import { evaluateExpr } from "@web/core/data/py_js/py";
 import { router as _router } from "@mobile_web/core/browser/router";
 import { MobileFormActions } from "@mobile_web/webclient/views/mobile_form_actions";
-import { findDescendant, getActionViews, getStateAction, hasFormView } from "@mobile_web/webclient/views/mobile_view_utils";
+import { buildRouteState, getActionViews, hasFormView } from "@mobile_web/webclient/actions/action_utils";
+import { findDescendant } from "@mobile_web/webclient/views/mobile_view_utils";
 
 // -----------------------------------------------------------------------------
 // MobileActWindowController
@@ -251,17 +252,7 @@ export class MobileActWindowController extends Component {
      * 同步路由状态, resId 为 "new" 表示新建
      */
     _pushRouteState(resId) {
-        const stateAction = getStateAction(this.props.action);
-        _router.pushState({
-            action: stateAction,
-            resId,
-            _isMobile: true,
-            actionStack: [{
-                action: stateAction,
-                resId,
-                _isMobile: true,
-            }],
-        });
+        _router.pushState(buildRouteState(this.props.action, resId));
     }
 
     _setNavbarTitle(title) {

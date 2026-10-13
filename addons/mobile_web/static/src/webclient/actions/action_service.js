@@ -10,6 +10,7 @@ import { KeepLast } from "@web/core/utils/concurrency";
 import { router as _router } from '@mobile_web/core/browser/router';
 import { mobilePageRegistry } from '@mobile_web/pages/common/page_registry';
 import { MobileActWindowController } from '@mobile_web/webclient/views/mobile_act_window_controller';
+import { buildRouteState } from '@mobile_web/webclient/actions/action_utils';
 
 
 // -----------------------------------------------------------------------------
@@ -272,13 +273,6 @@ export function makeMobileActionManager(env, router = _router) {
     };
 
     /**
-     * TODO: 加载当前view的所有action
-     */
-    async function loadViewActions() {
-        
-    };
-
-    /**
      * 与router联动, 将当前的action转换为state, 调用router更新路由
      * 由于Mobile端没有PC端的面包屑, 所以这里的State仅保存当前的state, 也就是说actionStack始终长度为1
      * 首先使用action.path字段, 其次使用action.id字段
@@ -287,25 +281,7 @@ export function makeMobileActionManager(env, router = _router) {
      * @param {number|string|false} [resId]
      */
     function pushState(action, resId = false) {
-        const stateAction = action.path ? action.path : action.id;
-
-        /** @type {RouterState} */
-        const state = {
-            action: stateAction,
-            _isMobile: true,
-        };
-
-        if (resId) {
-            state.resId = resId;
-        }
-
-        state.actionStack = [{
-            action: stateAction,
-            _isMobile: true,
-            ...(resId ? { resId } : {}),
-        }];
-
-        router.pushState(state);
+        router.pushState(buildRouteState(action, resId));
     };
 
     // ---------------------------------------------------------------------------
