@@ -1,4 +1,4 @@
-from crossnow import models, fields, api
+from odoo import api, models, fields
 
 
 class MobilePage(models.Model):

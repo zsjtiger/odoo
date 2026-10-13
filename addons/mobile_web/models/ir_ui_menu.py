@@ -1,7 +1,7 @@
 import logging
 
-from crossnow import models, fields, api
-from crossnow.http import request
+from odoo import models, fields
+from odoo.http import request
 
 
 _logger = logging.getLogger(__name__)
@@ -16,7 +16,6 @@ class MenuMobileExtend(models.Model):
         default='pc'
     )
 
-    @api.returns('self')
     def _filter_visible_menus(self):
         """
         在base的基础上，额外过滤掉不符合当前device_type的menu记录

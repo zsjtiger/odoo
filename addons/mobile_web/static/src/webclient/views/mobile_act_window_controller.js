@@ -1,9 +1,9 @@
-import { Component, xml, onWillStart, useState, useSubEnv, markRaw, useRef } from "@crossnow/owl";
-import { registry } from "@web/core/registry";
+import { Component, xml, onWillStart, useState, useSubEnv, markRaw, useRef } from "@odoo/owl";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
 import { View, getDefaultConfig } from "@web/views/view";
-import { makeContext } from "@web/core/context";
-import { evaluateExpr } from "@web/core/py_js/py";
+import { makeContext } from "@web/core/data/context";
+import { evaluateExpr } from "@web/core/data/py_js/py";
 import { router as _router } from "@mobile_web/core/browser/router";
 
 // -----------------------------------------------------------------------------

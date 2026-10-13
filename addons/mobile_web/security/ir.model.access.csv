@@ -1,4 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_ir_actions_mobile_page_all,"Access ir.actions.mobile_page All",model_ir_actions_mobile_page,,1,1,1,1
-access_mobile_web_mobile_page_all,"Access mobile_web.mobile.page All",model_mobile_web_mobile_page,,1,1,1,1
-access_mobile_web_mobile_page_actions_all,"Access mobile_web.mobile.page.actions All",model_mobile_web_mobile_page_actions,,1,1,1,1

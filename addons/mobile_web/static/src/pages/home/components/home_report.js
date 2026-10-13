@@ -1,4 +1,4 @@
-import { Component, xml, onWillStart } from "@crossnow/owl";
+import { Component, xml, onWillStart } from "@odoo/owl";
 
 
 export class HomeReport extends Component {

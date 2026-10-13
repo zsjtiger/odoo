@@ -1,5 +1,5 @@
-import { Component, xml } from "@crossnow/owl";
-import { user } from '@web/core/user';
+import { Component, xml } from "@odoo/owl";
+import { user } from '@web/core/services/user';
 
 
 export class UserInfo extends Component {

@@ -1,4 +1,4 @@
-from crossnow import models, fields, api
+from odoo import models, fields
 
 
 class IrActionMobilePage(models.Model):
@@ -18,7 +18,7 @@ class IrActionMobilePage(models.Model):
         }
 
     def read(self, fields=None, load='_classic_read'):
-        def get_bingding_mobile_page_id(value: dict) -> int | None:
+        def get_binding_mobile_page_id(value: dict) -> int | None:
             """
             read方法内的通用逻辑, 从read的结果中获取binding_mobile_page字段的id值
             例如:
@@ -29,15 +29,15 @@ class IrActionMobilePage(models.Model):
                 }
             从中获取:
                 binding_mobile_page字段对应的id, 也就是`1`.
-                
-            bpm: binding_mobile_page
+
+            bmp: binding_mobile_page
             """
             bmp_data = value.get('binding_mobile_page', False)
             if bmp_data:
                 bmp_id = bmp_data[0]
                 if isinstance(bmp_id, int):
                     return bmp_id
-                return None
+            return None
 
         result: list[dict] = super().read(fields, load)
 
@@ -49,14 +49,18 @@ class IrActionMobilePage(models.Model):
 
         all_bmp_id = []
         for val in result:
-            if bmp_id := get_bingding_mobile_page_id(val):
+            if bmp_id := get_binding_mobile_page_id(val):
                 all_bmp_id.append(bmp_id)
 
         all_bmp_res = self.env['mobile_web.mobile.page'].browse(all_bmp_id)
 
         for val in result:
-            if bmp_id := get_bingding_mobile_page_id(val):
-                bmp_rec = all_bmp_res.filtered(lambda o: o.id == bmp_id).ensure_one()
-                val["binding_mobile_page"] = (bmp_rec.id, bmp_rec.display_name ,bmp_rec.page_component_id)
+            if bmp_id := get_binding_mobile_page_id(val):
+                # 关联的页面可能已被删除, 此时保持为空而不是抛出异常
+                bmp_rec = all_bmp_res.filtered(lambda o: o.id == bmp_id)
+                if bmp_rec:
+                    val["binding_mobile_page"] = (bmp_rec.id, bmp_rec.display_name, bmp_rec.page_component_id)
+                else:
+                    val["binding_mobile_page"] = False
 
         return result

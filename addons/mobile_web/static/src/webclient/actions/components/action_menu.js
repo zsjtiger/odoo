@@ -1,4 +1,4 @@
-import { Component, xml } from "@crossnow/owl";
+import { Component, xml } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 import { SvgIcon } from "../../../common/components/svg_icon";

@@ -1,8 +1,8 @@
 // owl
-import { Component, xml, onMounted, useExternalListener, useState } from "@crossnow/owl";
+import { Component, xml, onMounted, useExternalListener, useState } from "@odoo/owl";
 
-// crossnow web core
-import { localization } from "@web/core/l10n/localization";
+// odoo web core
+import { localization } from "@web/core/data/l10n/localization";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { routerBus } from "@web/core/browser/router";
 import { router } from '@mobile_web/core/browser/router';

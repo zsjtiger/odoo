@@ -1,4 +1,4 @@
-<crossnow>
+<odoo>
     <!-- Layout -->
     <template id="mobile_web.login_layout" inherit_id="mobile_web.layout" primary="True">
         <!-- 资产包加载 -->
@@ -190,4 +190,4 @@
             <div>成功登录了, 现在是手机端的外部用户登录成功页</div>
         </t>
     </template>
-</crossnow>
+</odoo>

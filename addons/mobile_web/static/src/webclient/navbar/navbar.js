@@ -1,4 +1,4 @@
-import { Component, xml, onWillDestroy } from "@crossnow/owl";
+import { Component, xml, onWillDestroy } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 import { SvgIcon } from '@mobile_web/common/components/svg_icon'

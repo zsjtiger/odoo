@@ -1,6 +1,6 @@
 import { omit } from "@web/core/utils/objects";
 import { isNumeric } from "@web/core/utils/strings";
-import { router as _router, urlToState, stateToUrl, startRouter } from '@web/core/browser/router';
+import { router as _router, startRouter } from '@web/core/services/browser/router';
 
 
 // -----------------------------------------------------------------------------
@@ -22,7 +22,7 @@ import { router as _router, urlToState, stateToUrl, startRouter } from '@web/cor
 
 /**
  * RouterState除了未标注的属性外, 仍可附加其他属性:
- * 例如: `127.0.0.1:8069/crossnow/action-11?name=123&age=321`, 经mobileUrlToState转换后,
+ * 例如: `127.0.0.1:8069/mobile_web/action-11?name=123&age=321`, 经mobileUrlToState转换后,
  * RouterState 为 `{name: 123, age: 321, action: 11, actionStack: Array(1)}`
  *
  * @typedef {Object} RouterState
@@ -51,6 +51,10 @@ import { router as _router, urlToState, stateToUrl, startRouter } from '@web/cor
 // -----------------------------------------------------------------------------
 
 
+// web 通过 router 对象提供 state <-> url 的转换(可被替换), 这里保存 web 的原始实现
+const webUrlToState = _router.urlToState;
+const webStateToUrl = _router.stateToUrl;
+
 /**
  *
  * @param {URL} urlObj
@@ -58,7 +62,7 @@ import { router as _router, urlToState, stateToUrl, startRouter } from '@web/cor
  */
 export function mobileUrlToState(urlObj) {
     /** @type {RouterState} */
-    const webState = urlToState(urlObj);
+    const webState = webUrlToState(urlObj);
 
     if (webState && webState.hasOwnProperty('actionStack')) {
         return webState;
@@ -122,17 +126,17 @@ export function mobileUrlToState(urlObj) {
 
 
 /**
- * 这里只需要把web里的`stateToUrl`方法的返回值的`crossnow`换成`mobile_web`即可
+ * 这里只需要把web里的`stateToUrl`方法的返回值的前缀(`/odoo` 或 `/scoped_app`)换成`/mobile_web`即可
  * 
  * @param {RouterState} state 
  * @return {string}
  */
 export function mobileStateToUrl(state) {
     /** @type {string} */
-    const webUrl = stateToUrl(state);
+    const webUrl = webStateToUrl(state);
 
     if (state?._isMobile) {
-        return webUrl.replace('crossnow', 'mobile_web')
+        return webUrl.replace(/^\/(odoo|scoped_app)(?=\/|\?|$)/, '/mobile_web');
     }
 
     return webUrl;
@@ -140,7 +144,7 @@ export function mobileStateToUrl(state) {
 
 
 // -----------------------------------------------------------------------------
-// crossnow JS Module Scripts
+// mobile_web JS Module Scripts
 // -----------------------------------------------------------------------------
 
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<crossnow>
+<odoo>
     <!-- 手机端页面 -->
     <data noupdate="0">
         <!-- 主页 -->
@@ -177,4 +177,4 @@
             <field name="sequence">4</field>
         </record>
     </data>
-</crossnow>
+</odoo>

@@ -3,15 +3,15 @@
     'name': "Mobile Web",
     'category': 'Hidden',
     'description': """
-crossnow Mobile Web core module
-===============================
+Odoo Mobile Web core module
+============================
 
-This module provides the core of the crossnow Mobile Web Client.
+This module provides the core of the Odoo Mobile Web Client.
     """,
     'version': '1.0',
     'depends': ['base', 'web'],
     'data': [
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
 
         ## views
         # template
@@ -55,17 +55,18 @@ This module provides the core of the crossnow Mobile Web Client.
 
         'mobile_web._assets_load_web_core_js': [
             # module loader
-            'web/static/src/module_loader.js',
+            'web/static/src/boot/module_loader.js',
             # libs
             'web/static/lib/luxon/luxon.js',
             'web/static/lib/owl/owl.js',
-            'web/static/lib/owl/crossnow_module.js',
+            'web/static/lib/owl/odoo_module.js',
             # core
-            'web/static/src/env.js',
-            'web/static/src/session.js',
+            'web/static/src/boot/env.js',
+            'web/static/src/boot/session.js',
             'web/static/src/core/**/*.js',
-            ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'), #TODO: always lazy-loaded
+            ('remove', 'web/static/src/core/components/emoji_picker/emoji_data.js'), #TODO: always lazy-loaded
         ]
     },
     'pre_init_hook': '_pre_init_hook',
+    'uninstall_hook': '_uninstall_hook',
 }

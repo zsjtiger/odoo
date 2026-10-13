@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "@crossnow/owl";
+import { useEffect, useRef } from "@odoo/owl";
 
 // -----------------------------------------------------------------------------
 // Touch Gesture Hook
@@ -10,7 +10,7 @@ import { useEffect, useRef } from "@crossnow/owl";
  * @property {() => void} [onSwipeRight]
  * @property {number} [threshold=50]
  * @property {number} [angleThreshold=45]
- * @property {import("@crossnow/owl").Ref} [zoneRef]
+ * @property {import("@odoo/owl").Ref} [zoneRef]
  */
 
 /**

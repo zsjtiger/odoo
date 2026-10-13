@@ -1,11 +1,11 @@
-import { markup, Component, xml } from "@crossnow/owl";
-import { registry } from "@web/core/registry";
+import { markup, Component, xml } from "@odoo/owl";
+import { registry } from "@web/core/framework/registry";
 import { useBus } from "@web/core/utils/hooks";
-import { rpc, rpcBus } from "@web/core/network/rpc";
-import { session } from "@web/session";
-import { user } from "@web/core/user";
-import { makeContext } from "@web/core/context";
-import { Deferred, KeepLast } from "@web/core/utils/concurrency";
+import { rpc, rpcBus } from "@web/core/services/network/rpc";
+import { session } from "@web/boot/session";
+import { user } from "@web/core/services/user";
+import { makeContext } from "@web/core/data/context";
+import { KeepLast } from "@web/core/utils/concurrency";
 
 import { router as _router } from '@mobile_web/core/browser/router';
 import { mobilePageRegistry } from '@mobile_web/pages/common/page_registry';

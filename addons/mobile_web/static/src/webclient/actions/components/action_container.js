@@ -1,4 +1,4 @@
-import { Component, xml, onWillDestroy } from "@crossnow/owl";
+import { Component, xml, onWillDestroy } from "@odoo/owl";
 import { MobileActionMenu } from './action_menu';
 
 

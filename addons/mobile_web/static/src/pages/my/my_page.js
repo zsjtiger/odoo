@@ -1,4 +1,4 @@
-import { xml } from '@crossnow/owl';
+import { xml } from '@odoo/owl';
 import { MobilePage } from '../common/components/mobile_page';
 import { mobilePageRegistry } from '../common/page_registry';
 

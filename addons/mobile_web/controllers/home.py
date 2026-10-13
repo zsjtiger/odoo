@@ -1,19 +1,17 @@
 # -*- coding: utf-8 -*-
 import json
-import werkzeug
-from werkzeug.urls import url_encode
+from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
-import crossnow
-import crossnow.exceptions
-from crossnow import http
-from crossnow.tools import ustr
-from crossnow.http import request
-from crossnow.service import security
-from crossnow.tools.translate import _
-from crossnow.exceptions import AccessError
+import odoo.exceptions
+from odoo import _
+from odoo.exceptions import AccessError
+from odoo.http import Controller, request, route
+from odoo.http.router import db_list
+from odoo.http.session import authenticate, check, touch
+from odoo.tools import config
 
-from crossnow.addons.web.controllers.utils import ensure_db, is_user_internal
-from crossnow.addons.web.controllers.home import SIGN_UP_REQUEST_PARAMS, CREDENTIAL_PARAMS, LOGIN_SUCCESSFUL_PARAMS
+from odoo.addons.web.controllers.home import CREDENTIAL_PARAMS, LOGIN_SUCCESSFUL_PARAMS, SIGN_UP_REQUEST_PARAMS
+from odoo.addons.web.controllers.utils import ensure_db, is_user_internal
 
 
 mobile_context = {
@@ -21,8 +19,8 @@ mobile_context = {
 }
 
 
-class Home(http.Controller):
-    @http.route(['/mobile_web', '/mobile_web/<path:js_router_path>'], type='http', auth='none')
+class Home(Controller):
+    @route(['/mobile_web', '/mobile_web/<path:js_router_path>'], type='http', auth='none')
     def mobile_web_client(self, **kw):
         """
         * 未登录，重定向至登录页面
@@ -36,13 +34,12 @@ class Home(http.Controller):
             return request.redirect_query('/mobile_web/login', query={'redirect': request.httprequest.full_path}, code=303)
         if kw.get('redirect'):
             return request.redirect(kw.get('redirect'), 303)
-        if not security.check_session(request.session, request.env, request):
-            raise http.SessionExpiredException("Session expired")
+        check(request.session, request)  # raises SessionExpiredException when the session is expired
         if not is_user_internal(request.session.uid):
             return request.redirect('/mobile_web/login_successful', 303)
 
         # Side-effect, refresh the session lifetime
-        request.session.touch()
+        touch(request.session)
 
         request.update_env(user=request.session.uid)
         try:
@@ -54,7 +51,7 @@ class Home(http.Controller):
         except AccessError:
             return request.redirect('/mobile_web/login?error=access')
 
-    @http.route('/mobile_web/login', type='http', auth='none')
+    @route('/mobile_web/login', type='http', auth='none')
     def mobile_web_login(self, redirect=None, **kw):
         """
         * GET请求, 获取登录页面
@@ -68,25 +65,28 @@ class Home(http.Controller):
             return request.redirect(redirect)
         if request.env.uid is None:
             if request.session.uid is None:
-                request.env["ir.http"]._auth_method_public()
+                request.env["ir.http"]._auth_method_public({})
             else:
                 request.update_env(user=request.session.uid)
 
         values = {k: v for k, v in request.params.items() if k in SIGN_UP_REQUEST_PARAMS}
         try:
-            values['databases'] = http.db_list()
-        except crossnow.exceptions.AccessDenied:
+            values['databases'] = db_list()
+        except odoo.exceptions.AccessDenied:
             values['databases'] = None
 
         if request.httprequest.method == 'POST':
             """ 登录处理逻辑 """
             try:
-                credential = {key: value for key, value in request.params.items() if key in CREDENTIAL_PARAMS}
+                credential = {key: value for key, value in request.params.items() if key in CREDENTIAL_PARAMS and value}
                 credential.setdefault('type', 'password')
-                auth_info: dict = request.session.authenticate(request.session.db, credential)
-            except crossnow.exceptions.AccessDenied as e:
+                # 与web登录保持一致: 需要验证码时先校验验证码
+                if request.env['res.users']._should_captcha_login(credential):
+                    request.env['ir.http']._verify_request_recaptcha_token('login')
+                auth_info: dict = authenticate(request.session, request.env, credential)
+            except odoo.exceptions.AccessDenied as e:
                 # 登录失败, 处理values(渲染web.login的qweb context), 下面的逻辑重新渲染login页面
-                if e.args == crossnow.exceptions.AccessDenied().args:
+                if e.args == odoo.exceptions.AccessDenied().args:
                     values['error'] = _("Wrong login/password")
                 else:
                     values['error'] = e.args[0]
@@ -101,7 +101,7 @@ class Home(http.Controller):
         # 渲染登录页面
         if 'login' not in values and request.session.get('auth_login'):
             values['login'] = request.session.get('auth_login')
-        if not crossnow.tools.config['list_db']:
+        if not config['list_db']:
             values['disable_database_manager'] = True
 
         response = request.render('mobile_web.login', values)
@@ -109,7 +109,7 @@ class Home(http.Controller):
         response.headers['Content-Security-Policy'] = "frame-ancestors 'self'"
         return response
 
-    @http.route('/mobile_web/retrieve_password', type='http', auth='none')
+    @route('/mobile_web/retrieve_password', type='http', auth='none')
     def mobile_web_retrieve_password(self, redirect=None, **kw):
         values = {}
         response = request.render('mobile_web.login_retrieve_password', values)
@@ -118,13 +118,13 @@ class Home(http.Controller):
 
         return response
 
-    @http.route('/mobile_web/login_successful', type='http', auth='user', website=True, sitemap=False)
+    @route('/mobile_web/login_successful', type='http', auth='user')
     def login_successful_external_user(self, **kwargs):
         """ 非内部用户登录后显示的界面 """
         valid_values = {k: v for k, v in kwargs.items() if k in LOGIN_SUCCESSFUL_PARAMS}
         return request.render('mobile_web.login_successful', valid_values)
 
-    @http.route('/mobile_web/webclient/load_menus/<string:unique>', type='http', auth='user', methods=['GET'], readonly=True)
+    @route('/mobile_web/webclient/load_menus/<string:unique>', type='http', auth='user', methods=['GET'], readonly=True)
     def mobile_web_load_menus(self, unique, lang=None):
         """
         加载手机端的menu data
@@ -136,13 +136,13 @@ class Home(http.Controller):
         request.update_context(**mobile_context)
 
         menus_data = request.env["ir.ui.menu"].load_web_menus(request.session.debug)
-        request_body = json.dumps(menus_data, default=ustr)
+        request_body = json.dumps(menus_data, default=str)
         response = request.make_response(request_body, [
             ('Content-Type', 'application/json'),
         ])
         return response
     
-    @http.route('/mobile_web/page_actions/load', type='json', auth='user', readonly=True)
+    @route('/mobile_web/page_actions/load', type='json', auth='user', readonly=True)
     def mobile_page_load_actions(self, mobile_page_id, context=None):
         if context:
             request.update_context(**context)
@@ -162,7 +162,7 @@ class Home(http.Controller):
         if not redirect:
             return url
 
-        parsed = werkzeug.urls.url_parse(url)
-        qs = parsed.decode_query()
+        parts = urlsplit(url)
+        qs = dict(parse_qsl(parts.query))
         qs['redirect'] = redirect
-        return parsed.replace(query=werkzeug.urls.url_encode(qs)).to_url()
+        return urlunsplit(parts._replace(query=urlencode(qs)))

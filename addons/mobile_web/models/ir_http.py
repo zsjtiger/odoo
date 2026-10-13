@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-from crossnow import models
-from crossnow.http import request, SessionExpiredException, root, get_session_max_inactivity
+from odoo import models
+from odoo.http import request
+from odoo.http.session import SessionExpiredException, get_session_max_inactivity, session_store
 
 
 class IrHttpMobileExtend(models.AbstractModel):
@@ -9,7 +10,7 @@ class IrHttpMobileExtend(models.AbstractModel):
     @classmethod
     def _handle_error(cls, exception):
         """
-        对于crossnow.http.HttpDispatcher, 遇到SessionExpiredException默认重定向到/web/login
+        对于odoo.http.HttpDispatcher, 遇到SessionExpiredException默认重定向到/web/login
         手机端适配, 根据request的url, 手机端的请求重定向到/mobile_web/login
         """
         # TODO: 这可能不是个好方式，错误处理应当在HttpDispatcher中处理，IrHttp负责调用
@@ -21,7 +22,7 @@ class IrHttpMobileExtend(models.AbstractModel):
                 was_connected = session.uid is not None
                 response = request.redirect_query('/mobile_web/login', {'redirect': request.httprequest.full_path})
                 if was_connected:
-                    root.session_store.rotate(session, request.env)
+                    session_store().rotate(session, request.env)
                     response.set_cookie(
                         'session_id',
                         session.sid,

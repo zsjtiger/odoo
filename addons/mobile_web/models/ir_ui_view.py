@@ -1,4 +1,3 @@
-from crossnow import models, fields, api
 
 
 # TODO: device_type可用于手机端切换view的功能使用

@@ -1,6 +1,6 @@
-import { Component, xml, onWillStart } from "@crossnow/owl";
-import { browser } from "@web/core/browser/browser";
-import { session } from "@web/session";
+import { Component, xml, onWillStart } from "@odoo/owl";
+import { browser } from "@web/core/services/browser/browser";
+import { session } from "@web/boot/session";
 import { useService } from "@web/core/utils/hooks";
 
 
