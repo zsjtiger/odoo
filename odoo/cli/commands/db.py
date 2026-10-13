@@ -63,6 +63,34 @@ class Db(Command):
 
         subs = parser.add_subparsers()
 
+        self._add_init_parser(subs)
+        self._add_load_parser(subs)
+        self._add_dump_parser(subs)
+        self._add_duplicate_parser(subs)
+        self._add_rename_parser(subs)
+        self._add_drop_parser(subs)
+        self._add_neutralize_parser(subs)
+        self._add_obfuscate_parser(subs)
+
+        args = parser.parse_args(cmdargs)
+
+        config.parse_config([
+            val
+            for k, v in vars(args).items()
+            if v is not None
+            if k in ['config', 'data_dir', 'addons_path'] or k.startswith(('db_', 'pg_'))
+            for val in [
+                '--data-dir' if k == 'data_dir'
+                    else '--addons-path' if k == 'addons_path'
+                    else f'--{k}',
+                v,
+            ]
+        ], setup_logging=True)
+        report_configuration()
+
+        args.func(args)
+
+    def _add_init_parser(self, subs):
         # INIT ----------------------------------
 
         init = subs.add_parser(
@@ -109,6 +137,7 @@ class Db(Command):
                 $ cross-cli.py module install --help
         """)
 
+    def _add_load_parser(self, subs):
         # LOAD ----------------------------------
 
         load = subs.add_parser(
@@ -136,6 +165,7 @@ class Db(Command):
         )
         load.add_argument('dump_file', help="zip or pg_dump file to load")
 
+    def _add_dump_parser(self, subs):
         # DUMP ----------------------------------
 
         dump = subs.add_parser(
@@ -161,6 +191,7 @@ class Db(Command):
             help="if passed, zip database is dumped without filestore (default: false)"
         )
 
+    def _add_duplicate_parser(self, subs):
         # DUPLICATE -----------------------------
 
         duplicate = subs.add_parser("duplicate", help="Duplicate a database including filestore.")
@@ -176,6 +207,7 @@ class Db(Command):
         duplicate.add_argument("source")
         duplicate.add_argument("target", help="database to copy `source` to, must not exist unless `-f` is specified in which case it will be dropped first")
 
+    def _add_rename_parser(self, subs):
         # RENAME --------------------------------
 
         rename = subs.add_parser("rename", help="Rename a database including filestore.")
@@ -187,12 +219,14 @@ class Db(Command):
         rename.add_argument('source')
         rename.add_argument("target", help="database to rename `source` to, must not exist unless `-f` is specified, in which case it will be dropped first")
 
+    def _add_drop_parser(self, subs):
         # DROP ----------------------------------
 
         drop = subs.add_parser("drop", help="Delete a database including filestore")
         drop.set_defaults(func=self.drop)
         drop.add_argument("database", help="database to delete")
 
+    def _add_neutralize_parser(self, subs):
         neutralize = subs.add_parser(
             "neutralize",
             help="Neutralize a database for testing: no emails sent, etc.",
@@ -204,6 +238,7 @@ class Db(Command):
             help="Output the neutralization SQL instead of applying it",
         )
 
+    def _add_obfuscate_parser(self, subs):
         obfuscate = subs.add_parser(
             "obfuscate",
             help="Obfuscate (or unobfuscate) data of a database",
@@ -236,24 +271,6 @@ class Db(Command):
             help="Don't ask for manual confirmation. Use it carefully as the obfuscate method is not considered "
                  "as safe to transfer anonymous datas to a third party.",
         )
-
-        args = parser.parse_args(cmdargs)
-
-        config.parse_config([
-            val
-            for k, v in vars(args).items()
-            if v is not None
-            if k in ['config', 'data_dir', 'addons_path'] or k.startswith(('db_', 'pg_'))
-            for val in [
-                '--data-dir' if k == 'data_dir'
-                    else '--addons-path' if k == 'addons_path'
-                    else f'--{k}',
-                v,
-            ]
-        ], setup_logging=True)
-        report_configuration()
-
-        args.func(args)
 
     def neutralize(self, args):
         try:

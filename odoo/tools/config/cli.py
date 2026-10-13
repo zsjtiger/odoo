@@ -20,6 +20,22 @@ def _build_cli(self):
     version = "%s %s" % (release.description, release.version)
     parser = OdooOptionParser(version=version, option_class=OdooOption)
 
+    _add_file_only_options(parser, FileOnlyOption)
+    _add_common_options(parser)
+    _add_http_options(parser)
+    _add_web_options(parser)
+    _add_testing_options(parser)
+    _add_logging_options(parser)
+    _add_smtp_options(parser)
+    _add_database_options(parser)
+    _add_i18n_options(parser)
+    _add_security_options(parser)
+    _add_advanced_options(parser)
+    _add_multiprocessing_options(parser, PosixOnlyOption)
+    return parser
+
+
+def _add_file_only_options(parser, FileOnlyOption):
     parser.add_option(FileOnlyOption(dest='admin_passwd', my_default='admin'))
     parser.add_option(FileOnlyOption(dest='bin_path', type='path', my_default='', file_exportable=False))
     parser.add_option(FileOnlyOption(dest='csv_internal_sep', my_default=','))
@@ -34,6 +50,8 @@ def _build_cli(self):
     parser.add_option(FileOnlyOption(dest='websocket_rate_limit_burst', type='int', my_default=10))
     parser.add_option(FileOnlyOption(dest='websocket_rate_limit_delay', type='float', my_default=0.2))
 
+
+def _add_common_options(parser):
     # Server startup config
     group = optparse.OptionGroup(parser, "Common options")
     group.add_option("-c", "--config", dest="config", type='path', file_loadable=False, env_name='ODOO_RC',
@@ -77,6 +95,8 @@ def _build_cli(self):
                           "- terminate: Terminate the current worker process      ")
     parser.add_option_group(group)
 
+
+def _add_http_options(parser):
     # HTTP
     group = optparse.OptionGroup(parser, "HTTP Service Configuration")
     group.add_option("--http-interface", dest="http_interface", my_default='127.0.0.1',
@@ -96,6 +116,8 @@ def _build_cli(self):
                           "files (assets/attachments) to the web server.")
     parser.add_option_group(group)
 
+
+def _add_web_options(parser):
     # WEB
     group = optparse.OptionGroup(parser, "Web interface Configuration")
     group.add_option("--db-filter", dest="dbfilter", my_default='', metavar="REGEXP",
@@ -103,6 +125,8 @@ def _build_cli(self):
                           "The expression can use %d (domain) and %h (host) placeholders.")
     parser.add_option_group(group)
 
+
+def _add_testing_options(parser):
     # Testing Group
     group = optparse.OptionGroup(parser, "Testing Configuration")
     group.add_option("--test-file", dest="test_file", type='path', my_default='', file_loadable=False,
@@ -140,6 +164,8 @@ def _build_cli(self):
                      help="Screenshots will go in DIR/{db_name}/screenshots. Defaults to %s." % temp_tests_dir)
     parser.add_option_group(group)
 
+
+def _add_logging_options(parser):
     # Logging Group
     group = optparse.OptionGroup(parser, "Logging Configuration")
     group.add_option("--logfile", dest="logfile", type='path', my_default='',
@@ -170,6 +196,8 @@ def _build_cli(self):
 
     parser.add_option_group(group)
 
+
+def _add_smtp_options(parser):
     # SMTP Group
     group = optparse.OptionGroup(parser, "SMTP Configuration")
     group.add_option('--email-from', dest='email_from', my_default='',
@@ -192,6 +220,8 @@ def _build_cli(self):
                      help='specify the SSL private key used for authentication')
     parser.add_option_group(group)
 
+
+def _add_database_options(parser):
     # Database Group
     group = optparse.OptionGroup(parser, "Database related options")
     group.add_option("-d", "--database", dest="db_name", type='comma', metavar="DATABASE,...", my_default=[], env_name='PGDATABASE',
@@ -225,6 +255,8 @@ def _build_cli(self):
                      help="specify the database for shared system operations like bus and maintenance")
     parser.add_option_group(group)
 
+
+def _add_i18n_options(parser):
     # i18n Group
     group = optparse.OptionGroup(parser, "Internationalisation options",
         "Use these options to translate Odoo to another language. "
@@ -237,6 +269,8 @@ def _build_cli(self):
                      help="overwrites existing translation terms on updating a module.")
     parser.add_option_group(group)
 
+
+def _add_security_options(parser):
     # Security Group
     security = optparse.OptionGroup(parser, 'Security-related options')
     security.add_option('--no-database-list', action="store_false", dest='list_db', my_default=True,
@@ -245,6 +279,8 @@ def _build_cli(self):
                              "so be sure to set a proper --database parameter first")
     parser.add_option_group(security)
 
+
+def _add_advanced_options(parser):
     # Advanced options
     group = optparse.OptionGroup(parser, "Advanced options")
     group.add_option('--dev', dest='dev_mode', type='comma', metavar="FEATURE,...", my_default=[], file_exportable=False, env_name='ODOO_DEV',
@@ -282,6 +318,8 @@ def _build_cli(self):
                      help="Absolute path to the GeoIP Country database file.")
     parser.add_option_group(group)
 
+
+def _add_multiprocessing_options(parser, PosixOnlyOption):
     group = optparse.OptionGroup(parser, "Multiprocessing options")
     # TODO sensible default for the three following limits.
     group.add_option(PosixOnlyOption(
@@ -327,8 +365,6 @@ def _build_cli(self):
                      help="Maximum number of request to be processed per worker (default 65536).",
                      type="int"))
     parser.add_option_group(group)
-
-    return parser
 
 
 def _load_default_options(self):
