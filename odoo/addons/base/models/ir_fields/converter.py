@@ -1,43 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 import functools
 import itertools
 import json
 from datetime import UTC
-from typing import NamedTuple
 
 from odoo import api, Command, fields, models
 from odoo.tools import OrderedSet, SQL
-from odoo.tools.text.translate import _, code_translations, LazyTranslate
-
-_lt = LazyTranslate(__name__)
-
-REFERENCING_FIELDS = {None, 'id', '.id'}
-def only_ref_fields(record):
-    return {k: v for k, v in record.items() if k in REFERENCING_FIELDS}
-def exclude_ref_fields(record):
-    return {k: v for k, v in record.items() if k not in REFERENCING_FIELDS}
-
-# these lazy translations promise translations for ['yes', 'no', 'true', 'false']
-BOOLEAN_TRANSLATIONS = (
-    _lt('yes'),
-    _lt('no'),
-    _lt('true'),
-    _lt('false')
-)
-
-
-class FakeField(NamedTuple):
-    comodel_name: str
-    name: str
-
-
-class ImportWarning(Warning):
-    """ Used to send warnings upwards the stack during the import process """
-    pass
-
-class ConversionNotFound(ValueError):
-    pass
+from odoo.tools.text.translate import _, code_translations
+from .helpers import REFERENCING_FIELDS, FakeField, exclude_ref_fields, only_ref_fields
 
 
 class IrFieldsConverter(models.AbstractModel):
