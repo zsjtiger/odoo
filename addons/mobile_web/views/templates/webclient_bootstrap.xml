@@ -12,9 +12,9 @@
 
             <!-- 加载顺序即依赖顺序: 启动基础 -> web 的 JS(不含样式) -> 移动端代码 -> 挂载入口 -->
             <!-- web 的样式(视图组件需要) -->
-            <t t-call-assets="web.assets_backend" t-js="false"/>
+            <t t-call-assets="mobile_web.assets_web_backend" t-js="false"/>
             <t t-call-assets="mobile_web.assets_boot" t-css="false"/>
-            <t t-call-assets="web.assets_backend" t-css="false"/>
+            <t t-call-assets="mobile_web.assets_web_backend" t-css="false"/>
             <t t-call-assets="mobile_web.assets_backend"/>
             <t t-call-assets="mobile_web.assets_start" t-css="false"/>
         </t>

@@ -43,6 +43,28 @@ This module provides the core of the Odoo Mobile Web Client.
 
         # 登录后要加载的移动端代码(css+js). 依赖的 web 模块由 web.assets_backend 提供,
         # 因此必须在 web 的 JS 之后加载, 模板中的顺序: boot -> web -> 本包 -> start
+        # web 后台包的移动端版本: 去掉移动端不用的桌面端部分(日历/设置视图, 桌面端外壳, 教程).
+        # 不改动 web.assets_backend 本身, 桌面端不受影响
+        'mobile_web.assets_web_backend': [
+            ('include', 'web.assets_backend'),
+            # 视图: 移动端只支持 list / kanban / form
+            ('remove', 'web/static/src/views/calendar/**'),
+            ('remove', 'web/static/src/views/settings/**'),
+            # 桌面端外壳(移动端有自己的 webclient 与 navbar)
+            # 注意: webclient/navbar 与 webclient/menus 不能删, 它们的 scss 是移动端布局需要的;
+            # webclient/actions 不能删, action 服务依赖它(menu、reloadCompany 等服务需要 action)
+            ('remove', 'web/static/src/webclient/webclient.js'),
+            ('remove', 'web/static/src/webclient/user_menu/**'),
+            ('remove', 'web/static/src/webclient/burger_menu/**'),
+            ('remove', 'web/static/src/webclient/switch_company_menu/**'),
+            ('remove', 'web/static/src/webclient/share_target/**'),
+            ('remove', 'web/static/src/webclient/offline_systray/**'),
+            ('remove', 'web/static/src/webclient/debug/**'),
+            ('remove', 'web/static/src/views/debug_items.js'),
+            # 教程(web_tour) 移动端不使用
+            ('remove', 'web_tour/static/src/**'),
+        ],
+
         'mobile_web.assets_backend': [
             # mobile core包(core/** 由 web 提供, 这里只保留移动端的 router)
             'mobile_web/static/src/core/browser/router.js',
