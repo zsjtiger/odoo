@@ -7,6 +7,9 @@ from odoo.exceptions import UserError
 from .helpers import STATES, assert_log_admin_access
 
 
+_logger = logging.getLogger('odoo.addons.base.models.ir_module')
+
+
 class IrModuleModule(models.Model):
     _name = 'ir.module.module'
     _rec_name = "shortdesc"
@@ -180,9 +183,6 @@ class IrModuleModule(models.Model):
     @api.model
     def _extract_resource_attachment_translations(self, module, lang):
         return _translations._extract_resource_attachment_translations(self, module, lang)
-
-
-_logger = logging.getLogger('odoo.addons.base.models.ir_module')
 
 
 # the delegated methods of the class, and the modules that use the class: at the end, they import this module

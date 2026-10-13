@@ -13,6 +13,9 @@ if typing.TYPE_CHECKING:
     from collections.abc import Collection
 
 
+_logger = logging.getLogger('odoo.addons.base.models.ir_attachment')
+
+
 class IrAttachment(models.Model):
     """Attachments are used to link binary files or url to any openerp document.
 
@@ -187,9 +190,6 @@ class IrAttachment(models.Model):
         return _serving._can_return_content(self, field_name, access_token)
     def _migrate_remote_to_local(self):
         return _serving._migrate_remote_to_local(self)
-
-
-_logger = logging.getLogger('odoo.addons.base.models.ir_attachment')
 
 
 IrAttachment._inverse_raw.__override__ = False  # whitelist super()

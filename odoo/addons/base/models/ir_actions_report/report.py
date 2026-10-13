@@ -8,6 +8,9 @@ from PIL import ImageFile
 from odoo import api, fields, models
 
 
+_logger = logging.getLogger('odoo.addons.base.models.ir_actions_report')
+
+
 class IrActionsReport(models.Model):
     _name = 'ir.actions.report'
     _description = 'Report Action'
@@ -141,9 +144,6 @@ class IrActionsReport(models.Model):
 
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
-
-
-_logger = logging.getLogger('odoo.addons.base.models.ir_actions_report')
 
 
 # the delegated methods of the class, and the modules that use the class: at the end, they import this module

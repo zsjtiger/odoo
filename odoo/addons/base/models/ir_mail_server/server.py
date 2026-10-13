@@ -17,6 +17,11 @@ from odoo.exceptions import UserError
 from .tls import _verify_check_hostname_callback
 
 
+_logger = logging.getLogger('odoo.addons.base.models.ir_mail_server')
+_test_logger = logging.getLogger('odoo.tests')
+SMTP_TIMEOUT = 60
+
+
 class IrMail_Server(models.Model):
     """Represents an SMTP server, able to send outgoing emails, with SSL and TLS capabilities."""
     _name = 'ir.mail_server'
@@ -292,17 +297,6 @@ class IrMail_Server(models.Model):
     @api.onchange('smtp_encryption')
     def _onchange_encryption(self):
         return _settings._onchange_encryption(self)
-
-
-_logger = logging.getLogger('odoo.addons.base.models.ir_mail_server')
-
-
-
-
-_test_logger = logging.getLogger('odoo.tests')
-
-
-SMTP_TIMEOUT = 60
 
 
 # the delegated methods of the class, and the modules that use the class: at the end, they import this module

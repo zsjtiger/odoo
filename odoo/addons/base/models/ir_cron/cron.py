@@ -16,6 +16,9 @@ if typing.TYPE_CHECKING:
     from odoo.sql_db import BaseCursor
 
 
+_logger = logging.getLogger('odoo.addons.base.models.ir_cron')
+
+
 class IrCron(models.Model):
     """ Model describing cron jobs (also called actions or tasks).
     """
@@ -129,9 +132,6 @@ class IrCron(models.Model):
         return _records.action_open_parent_action(self)
     def action_open_scheduled_action(self):
         return _records.action_open_scheduled_action(self)
-
-
-_logger = logging.getLogger('odoo.addons.base.models.ir_cron')
 
 
 # the delegated methods of the class, and the modules that use the class: at the end, they import this module

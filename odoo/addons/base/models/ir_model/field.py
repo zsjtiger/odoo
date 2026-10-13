@@ -1,25 +1,14 @@
-"""The fields of the models (ir.model.fields): their definition, their types and their schema."""
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+"""The fields of the models (ir.model.fields): the model and its fields. The methods are split by concern in the other modules of this package."""
 
 from __future__ import annotations
 
 import logging
-from ast import literal_eval
-from collections import defaultdict
 from odoo import api, fields, models
-from odoo.exceptions import UserError, ValidationError
-from odoo.fields import Domain
-from odoo.tools import frozendict, sql, unique, OrderedSet, SQL
-from odoo.tools.safe_eval import expr_eval
-from odoo.tools.text.translate import FIELD_TRANSLATE, _
 
-from .helpers import field_xmlid, make_compute, mark_modified, select_en, upsert_en
 
 _logger = logging.getLogger('odoo.addons.base.models.ir_model')
-
-
 FIELD_TYPES = [(key, key) for key in sorted(fields.Field._by_type__)]
-
-
 FIELD_INDEX_TYPES = [
     ('btree', 'B-tree'),
     ('btree_not_null', 'B-tree, excluding nulls'),
@@ -33,7 +22,6 @@ class IrModelFields(models.Model):
     _order = "name, id"
     _rec_name = 'field_description'
     _allow_sudo_commands = False
-
     name = fields.Char(string='Field Name', default='x_', required=True, index=True)
     model = fields.Char(string='Model Name', required=True, index=True,
                         help="The technical name of the model this field belongs to")
@@ -105,7 +93,6 @@ class IrModelFields(models.Model):
                                                       "    name, partner_id.name")
     store = fields.Boolean(string='Stored', default=True, help="Whether the value is stored in the database.")
     currency_field = fields.Char(string="Currency field", help="Name of the Many2one field holding the res.currency")
-    # HTML sanitization reflection, useless for other kinds of fields
     sanitize = fields.Boolean(string='Sanitize HTML', default=True)
     sanitize_overridable = fields.Boolean(string='Sanitize HTML overridable', default=False)
     sanitize_tags = fields.Boolean(string='Sanitize HTML Tags', default=True)
@@ -114,978 +101,138 @@ class IrModelFields(models.Model):
     sanitize_form = fields.Boolean(string='Sanitize HTML Form', default=True)
     strip_style = fields.Boolean(string='Strip Style Attribute', default=False)
     strip_classes = fields.Boolean(string='Strip Class Attribute', default=False)
-
-
     @api.depends('relation', 'relation_field')
     def _compute_relation_field_id(self):
-        for rec in self:
-            if rec.state == 'manual' and rec.relation_field:
-                rec.relation_field_id = self._get(rec.relation, rec.relation_field)
-            else:
-                rec.relation_field_id = False
-
+        return _computed._compute_relation_field_id(self)
     @api.depends('related')
     def _compute_related_field_id(self):
-        for rec in self:
-            if rec.state == 'manual' and rec.related:
-                rec.related_field_id = rec._related_field()
-            else:
-                rec.related_field_id = False
-
+        return _computed._compute_related_field_id(self)
     @api.depends('selection_ids')
     def _compute_selection(self):
-        for rec in self:
-            if rec.ttype in ('selection', 'reference'):
-                rec.selection = str(self.env['ir.model.fields.selection']._get_selection(rec.id))
-            else:
-                rec.selection = False
-
+        return _computed._compute_selection(self)
     def _inverse_selection(self):
-        for rec in self:
-            selection = literal_eval(rec.selection or "[]")
-            self.env['ir.model.fields.selection']._update_selection(rec.model, rec.name, selection)
-
+        return _computed._inverse_selection(self)
     @api.depends('ttype', 'related', 'compute')
     def _compute_copied(self):
-        for rec in self:
-            rec.copied = (rec.ttype != 'one2many') and not (rec.related or rec.compute)
-
+        return _computed._compute_copied(self)
     def _get_allowed_index_types(self):
-        self.ensure_one()
-        if not self.store or self.ttype in ('one2many', 'many2many'):
-            return []
-
-        allowed = [] if self.translate else ['btree', 'btree_not_null']
-        if (
-            self.ttype in ('char', 'text', 'html')
-            and not self.company_dependent
-            and self.env.registry.has_trigram
-        ):
-            allowed.append('trigram')
-        return allowed
-
+        return _computed._get_allowed_index_types(self)
     @api.depends('state', 'ttype', 'store', 'translate', 'company_dependent')
     def _compute_allowed_index_types(self):
-        for field in self:
-            field.allowed_index_types = field._get_allowed_index_types()
-
+        return _computed._compute_allowed_index_types(self)
     @api.onchange('store', 'ttype', 'translate', 'company_dependent')
     def _onchange_index(self):
-        for field in self:
-            if field.index and field.index not in field._get_allowed_index_types():
-                field.index = False
-
+        return _computed._onchange_index(self)
     @api.constrains('index', 'state', 'ttype', 'store', 'translate', 'company_dependent')
     def _check_index(self):
-        for field in self:
-            if field.state != 'manual' or not field.index:
-                continue
-            if not field.store or field.ttype in ('one2many', 'many2many'):
-                raise ValidationError(_("Only stored fields with a database column can be indexed."))
-            if field.translate and field.index != 'trigram':
-                raise ValidationError(_("Translated fields only support trigram indexes."))
-            if field.index == 'trigram':
-                if field.ttype not in ('char', 'text', 'html') or field.company_dependent:
-                    raise ValidationError(_("Trigram indexes are only supported on stored Char, Text, and HTML fields."))
-                if not field.env.registry.has_trigram:
-                    raise ValidationError(_("Trigram indexes require the PostgreSQL pg_trgm extension."))
-
+        return _checks._check_index(self)
     @api.depends()
     def _in_modules(self):
-        installed_modules = self.env['ir.module.module'].search([('state', '=', 'installed')])
-        installed_names = set(installed_modules.mapped('name'))
-        xml_ids = models.Model._get_external_ids(self)
-        for field in self:
-            module_names = set(xml_id.split('.')[0] for xml_id in xml_ids[field.id])
-            field.modules = ", ".join(sorted(installed_names & module_names))
-
+        return _computed._in_modules(self)
     @api.constrains('domain')
     def _check_domain(self):
-        for field in self:
-            try:
-                expr_eval(field.domain or '[]')
-            except Exception as e:  # noqa: BLE001
-                raise ValidationError(
-                    _("An error occurred while evaluating the domain:\n%(error)s", error=e)
-                ) from e
-
+        return _checks._check_domain(self)
     @api.constrains('name')
     def _check_name(self):
-        for field in self:
-            try:
-                models.check_pg_name(field.name)
-            except ValidationError:
-                msg = _("Field names can only contain characters, digits and underscores (up to 63).")
-                raise ValidationError(msg)
-
+        return _checks._check_name(self)
     _name_unique = models.Constraint('UNIQUE(model, name)', "Field names must be unique per model.")
     _size_gt_zero = models.Constraint('CHECK (size>=0)', 'Size of the field cannot be negative.')
     _name_manual_field = models.Constraint(
         "CHECK (state != 'manual' OR name LIKE 'x\\_%')",
         "Custom fields must have a name that starts with 'x_'!",
     )
-
     def _related_field(self):
-        """ Return the ``ir.model.fields`` record corresponding to ``self.related``. """
-        names = self.related.split(".")
-        last = len(names) - 1
-        model_name = self.model or self.model_id.model
-        for index, name in enumerate(names):
-            field = self._get(model_name, name)
-            if not field:
-                raise UserError(_(
-                    'Unknown field name "%(field_name)s" in related field "%(related_field)s"',
-                    field_name=name,
-                    related_field=self.related,
-                ))
-            if index < last and not field.relation:
-                raise UserError(_(
-                    'Non-relational field name "%(field_name)s" in related field "%(related_field)s"',
-                    field_name=name,
-                    related_field=self.related,
-                ))
-            if index < last and self.env.registry.ready and not (
-                field.store or (
-                    (model := self.env.get(model_name)) is not None
-                    and (model_field := model._fields.get(field.name))
-                    and model_field._description_searchable
-                )
-            ):
-                raise UserError(_(
-                    'Field "%(field_name)s" in related path "%(related_field)s" is not searchable. '
-                    'Non-searchable fields cannot be used in related fields.',
-                    field_name=name,
-                    related_field=self.related,
-                ))
-            model_name = field.relation
-        return field
-
+        return _checks._related_field(self)
     @api.constrains('related')
     def _check_related(self):
-        for rec in self:
-            if rec.state == 'manual' and rec.related:
-                field = rec._related_field()
-                if field.ttype != rec.ttype:
-                    raise ValidationError(_(
-                        'Related field "%(related_field)s" does not have type "%(type)s"',
-                        related_field=rec.related,
-                        type=rec.ttype,
-                    ))
-                if field.relation != rec.relation:
-                    raise ValidationError(_(
-                        'Related field "%(related_field)s" does not have comodel "%(comodel)s"',
-                        related_field=rec.related,
-                        comodel=rec.relation,
-                    ))
-
+        return _checks._check_related(self)
     @api.onchange('related')
     def _onchange_related(self):
-        if self.related:
-            try:
-                field = self._related_field()
-            except UserError as e:
-                return {'warning': {'title': _("Warning"), 'message': e}}
-            self.ttype = field.ttype
-            self.relation = field.relation
-            self.readonly = True
-
+        return _computed._onchange_related(self)
     @api.onchange('relation')
     def _onchange_relation(self):
-        try:
-            self._check_relation()
-        except ValidationError as e:
-            return {'warning': {'title': _("Model %s does not exist", self.relation), 'message': e}}
-
+        return _computed._onchange_relation(self)
     @api.constrains('relation')
     def _check_relation(self):
-        for rec in self:
-            if rec.state == 'manual' and rec.relation and not rec.env['ir.model']._get_id(rec.relation):
-                raise ValidationError(_("Unknown model name '%s' in Related Model", rec.relation))
-
+        return _checks._check_relation(self)
     @api.constrains('depends')
     def _check_depends(self):
-        """ Check whether all fields in dependencies are valid. """
-        for record in self:
-            if not record.depends:
-                continue
-            for seq in record.depends.split(","):
-                if not seq.strip():
-                    raise UserError(_("Empty dependency in “%s”", record.depends))
-                model = self.env[record.model]
-                names = seq.strip().split(".")
-                last = len(names) - 1
-                for index, name in enumerate(names):
-                    if name == 'id':
-                        raise UserError(_("Compute method cannot depend on field 'id'"))
-                    field = model._fields.get(name)
-                    if field is None:
-                        raise UserError(_(
-                            'Unknown field “%(field)s” in dependency “%(dependency)s”',
-                            field=name,
-                            dependency=seq.strip(),
-                        ))
-                    if index < last and not field.relational:
-                        raise UserError(_(
-                            'Non-relational field “%(field)s” in dependency “%(dependency)s”',
-                            field=name,
-                            dependency=seq.strip(),
-                        ))
-                    model = model[name]
-
+        return _checks._check_depends(self)
     @api.onchange('compute')
     def _onchange_compute(self):
-        if self.compute:
-            self.readonly = True
-
+        return _computed._onchange_compute(self)
     @api.constrains('relation_table')
     def _check_relation_table(self):
-        for rec in self:
-            if rec.relation_table:
-                models.check_pg_name(rec.relation_table)
-
+        return _checks._check_relation_table(self)
     @api.constrains('relation', 'relation_field')
     def _check_relation_field(self):
-        if any(
-            (rec := record).state == 'manual'
-            and rec.ttype == 'one2many'
-            and rec.relation_field
-            and not self._get(rec.relation, rec.relation_field)
-            for record in self
-        ):
-            raise ValidationError(_(
-                "Unknown field “%(field)s” on model “%(model)s” in Relation Field",
-                field=rec.relation_field,
-                model=rec.relation,
-            ))
-
+        return _checks._check_relation_field(self)
     @api.constrains('currency_field')
     def _check_currency_field(self):
-        for rec in self:
-            if rec.state == 'manual' and rec.ttype == 'monetary':
-                if not rec.currency_field:
-                    currency_field = self._get(rec.model, 'currency_id') or self._get(rec.model, 'x_currency_id')
-                    if not currency_field:
-                        raise ValidationError(_("Currency field is empty and there is no fallback field in the model"))
-                else:
-                    currency_field = self._get(rec.model, rec.currency_field)
-                    if not currency_field:
-                        raise ValidationError(_("Unknown field specified “%s” in currency_field", rec.currency_field))
-
-                if currency_field.ttype != 'many2one':
-                    raise ValidationError(_("Currency field does not have type many2one"))
-                if currency_field.relation != 'res.currency':
-                    raise ValidationError(_("Currency field should have a res.currency relation"))
-
+        return _checks._check_currency_field(self)
     @api.model
     def _custom_many2many_names(self, model_name, comodel_name):
-        """ Return default names for the table and columns of a custom many2many field. """
-        rel1 = self.env[model_name]._table
-        rel2 = self.env[comodel_name]._table
-        table = 'x_%s_%s_rel' % tuple(sorted([rel1, rel2]))
-        if rel1 == rel2:
-            return (table, 'id1', 'id2')
-        else:
-            return (table, '%s_id' % rel1, '%s_id' % rel2)
-
+        return _computed._custom_many2many_names(self, model_name, comodel_name)
     @api.onchange('ttype', 'model_id', 'relation')
     def _onchange_ttype(self):
-        if self.ttype == 'many2many' and self.model_id and self.relation:
-            if self.relation not in self.env:
-                return
-            names = self._custom_many2many_names(self.model_id.model, self.relation)
-            self.relation_table, self.column1, self.column2 = names
-        else:
-            self.relation_table = False
-            self.column1 = False
-            self.column2 = False
-
+        return _computed._onchange_ttype(self)
     @api.onchange('relation_table')
     def _onchange_relation_table(self):
-        if self.relation_table:
-            # check whether other fields use the same table
-            others = self.search([('ttype', '=', 'many2many'),
-                                  ('relation_table', '=', self.relation_table),
-                                  ('id', 'not in', self.ids)])
-            if others:
-                for other in others:
-                    if (other.model, other.relation) == (self.relation, self.model):
-                        # other is a candidate inverse field
-                        self.column1 = other.column2
-                        self.column2 = other.column1
-                        return
-                return {'warning': {
-                    'title': _("Warning"),
-                    'message': _("The table “%s” is used by another, possibly incompatible field(s).", self.relation_table),
-                }}
-
+        return _computed._onchange_relation_table(self)
     @api.constrains('required', 'ttype', 'on_delete')
     def _check_on_delete_required_m2o(self):
-        for rec in self:
-            if rec.ttype == 'many2one' and rec.required and rec.on_delete == 'set null':
-                raise ValidationError(_(
-                    "The m2o field %s is required but declares its ondelete policy "
-                    "as being 'set null'. Only 'restrict' and 'cascade' make sense.", rec.name,
-                ))
-
+        return _checks._check_on_delete_required_m2o(self)
     def _get(self, model_name, name):
-        """ Return the (sudoed) `ir.model.fields` record with the given model and name.
-        The result may be an empty recordset if the model is not found.
-        """
-        field_id = model_name and name and self._get_ids(model_name).get(name)
-        return self.sudo().browse(field_id)
-
+        return _records._get(self, model_name, name)
     @api.ormcache('model_name', cache='stable')
     def _get_ids(self, model_name):
-        cr = self.env.cr
-        cr.execute("SELECT name, id FROM ir_model_fields WHERE model=%s", [model_name])
-        return dict(cr.fetchall())
-
+        return _records._get_ids(self, model_name)
     def _drop_column(self):
-        from odoo.orm.models.classes import pop_field  # noqa: PLC0415
-
-        tables_to_drop = set()
-
-        for field in self:
-            if field.name in models.MAGIC_COLUMNS:
-                continue
-            model = self.env.get(field.model)
-            is_model = model is not None
-            if field.store:
-                # TODO: Refactor this brol in master
-                if is_model and sql.column_exists(self.env.cr, model._table, field.name) and \
-                        sql.table_kind(self.env.cr, model._table) == sql.TableKind.Regular:
-                    self.env.cr.execute(SQL('ALTER TABLE %s DROP COLUMN %s CASCADE',
-                        SQL.identifier(model._table), SQL.identifier(field.name),
-                    ))
-                if field.state == 'manual' and field.ttype == 'many2many':
-                    rel_name = field.relation_table or (is_model and model._fields[field.name].relation)
-                    tables_to_drop.add(rel_name)
-            if field.state == 'manual' and is_model:
-                model_cls = self.env.registry[model._name]
-                pop_field(model_cls, field.name)
-
-        if tables_to_drop:
-            # drop the relation tables that are not used by other fields
-            self.env.cr.execute("""SELECT relation_table FROM ir_model_fields
-                                WHERE relation_table IN %s AND id NOT IN %s""",
-                             (tuple(tables_to_drop), tuple(self.ids)))
-            tables_to_keep = {row[0] for row in self.env.cr.fetchall()}
-            for rel_name in tables_to_drop - tables_to_keep:
-                self.env.cr.execute(SQL('DROP TABLE %s', SQL.identifier(rel_name)))
-
-        return True
-
+        return _records._drop_column(self)
     def _prepare_update(self):
-        """ Check whether the fields in ``self`` may be modified or removed.
-            This method prevents the modification/deletion of many2one fields
-            that have an inverse one2many, for instance.
-        """
-        from odoo.orm.models.classes import pop_field  # noqa: PLC0415
-
-        force_delete = self.env.context.get('force_delete')
-        if not force_delete and any(record.state != 'manual' for record in self):
-            raise UserError(_("This column contains module data and cannot be removed!"))
-
-        records = self              # all the records to delete
-        fields_ = OrderedSet()      # all the fields corresponding to 'records'
-        failed_dependencies = []    # list of broken (field, dependent_field)
-
-        for record in self:
-            model = self.env.get(record.model)
-            if model is None:
-                continue
-            field = model._fields.get(record.name)
-            if field is None:
-                continue
-            fields_.add(field)
-            for dep in self.pool.get_dependent_fields(field):
-                if dep.manual:
-                    failed_dependencies.append((field, dep))
-                elif dep.inherited:
-                    fields_.add(dep)
-                    records |= self._get(dep.model_name, dep.name)
-
-        for field in fields_:
-            for inverse in model.pool.field_inverses[field]:
-                if inverse.manual and inverse.type == 'one2many':
-                    failed_dependencies.append((field, inverse))
-
-        self = records
-
-        if failed_dependencies:
-            if not force_delete:
-                field, dep = failed_dependencies[0]
-                raise UserError(_(
-                    "The field '%(field)s' cannot be removed because the field '%(other_field)s' depends on it.",
-                    field=field, other_field=dep,
-                ))
-            else:
-                self |= self.browse().union(
-                    self._get(dep.model_name, dep.name)
-                    for field, dep in failed_dependencies
-                )
-
-        records = self.filtered(lambda record: record.state == 'manual')
-        if not records:
-            return self
-
-        # remove pending write of this field
-        # DLE P16: if there are pending updates of the field we currently try to unlink, pop them out from the cache
-        # test `test_unlink_with_dependant`
-        for record in records:
-            model = self.env.get(record.model)
-            field = model and model._fields.get(record.name)
-            if field:
-                self.env._field_dirty.pop(field)
-        # remove fields from registry, and check that views are not broken
-        fields = [pop_field(self.env.registry[record.model], record.name) for record in records]
-        domain = Domain.OR([('arch_db', 'like', record.name)] for record in records)
-        views = self.env['ir.ui.view'].search(domain)
-        try:
-            for view in views:
-                view._check_xml()
-        except Exception:
-            if not force_delete:
-                raise UserError(_(
-                    "Cannot rename/delete fields that are still present in views:\nFields: %(fields)s\nView: %(view)s",
-                    fields=fields,
-                    view=view.name,
-                ))
-            else:
-                # uninstall mode
-                _logger.warning(
-                    "The following fields were force-deleted to prevent a registry crash %s the following view might be broken %s",
-                    ", ".join(str(f) for f in fields),
-                    view.name)
-        finally:
-            if not self.pool.uninstalling_modules:
-                # the registry has been modified, restore it
-                self.pool._setup_models__(self.env.cr)
-
-        return self
-
+        return _records._prepare_update(self)
     def unlink(self):
-        if not self:
-            return True
-
-        # prevent screwing up fields that depend on these fields
-        self = self._prepare_update()
-
-        # determine registry fields corresponding to self
-        fields = OrderedSet()
-        for record in self:
-            try:
-                fields.add(self.pool[record.model]._fields[record.name])
-            except KeyError:
-                pass
-
-        # clean the registry from the fields to remove
-        assert self.env.registry is self.pool
-        self.env.transaction.will_change_registry()
-        self.pool._discard_fields(fields)
-
-        # discard the removed fields from fields to compute
-        for field in fields:
-            self.env.transaction.tocompute.pop(field, None)
-
-        model_names = self.mapped('model')
-        self._drop_column()
-        res = super().unlink()
-
-        # The field we just deleted might be inherited, and the registry is
-        # inconsistent in this case; therefore we reload the registry.
-        # Beware: when renaming a field, method write() calls unlink() on the
-        # corresponding inherited fields with 'force_delete' in context, and
-        # method write() itself is in charge of cleaning up the registry. If
-        # done here, the field to be renamed regenerates an inherited field
-        # below, and we end up with two records for the inherited field: one
-        # with the old name, and one with the new name.
-        if not (self.env.context.get('force_delete') or self.pool.uninstalling_modules):
-            # setup models; this re-initializes models in registry
-            self.env.flush_all()
-            self.pool._setup_models__(self.env.cr, model_names)
-            # update database schema of model and its descendant models
-            models = self.pool.descendants(model_names, '_inherits')
-            self.pool.init_models(self.env.cr, models, dict(self.env.context, update_custom_fields=True))
-
-        return res
-
+        return _records.unlink(self)
     @api.model_create_multi
     def create(self, vals_list):
-        IrModel = self.env['ir.model']
-        for vals in vals_list:
-            if 'index' in vals:
-                vals['index'] = 'btree' if vals['index'] is True else vals['index'] or None
-            if vals.get('translate') and not isinstance(vals['translate'], str):
-                _logger.warning("Deprecated since Odoo 19, ir.model.fields.translate becomes Selection, the value should be a string")
-                vals['translate'] = 'html_translate' if vals.get('ttype') == 'html' else 'standard'
-            if 'model_id' in vals:
-                model_from_id = IrModel.browse(vals['model_id']).model
-                if vals.get('model', False):
-                    if vals['model'] != model_from_id:
-                        raise ValidationError(_(
-                            "Inconsistent values: model=%(model)s does not match model_id=%(model_id)s.",
-                            model=vals['model'], model_id=vals['model_id'],
-                        ))
-                else:
-                    vals['model'] = model_from_id
-
-        # for self._get_ids() in _update_selection()
-        # we need to invalidate the cache before and after creation of the field
-        self.env.transaction.invalidate_ormcache('stable')
-        res = super().create(vals_list)
-        self.env.transaction.invalidate_ormcache('stable')
-        models = OrderedSet(res.mapped('model'))
-
-        for vals in vals_list:
-            if vals.get('state', 'manual') == 'manual':
-                relation = vals.get('relation')
-                if relation and not IrModel._get_id(relation):
-                    raise UserError(_("Model %s does not exist!", vals['relation']))
-
-                if (
-                    vals.get('ttype') == 'one2many' and
-                    vals.get("store", True) and
-                    not vals.get("related") and
-                    not self.search_count([
-                        ('ttype', '=', 'many2one'),
-                        ('model', '=', vals['relation']),
-                        ('name', '=', vals['relation_field']),
-                    ])
-                ):
-                    raise UserError(_("Many2one %(field)s on model %(model)s does not exist!", field=vals['relation_field'], model=vals['relation']))
-
-        if any(model in self.pool for model in models):
-            # setup models; this re-initializes model in registry
-            self.env.flush_all()
-            self.pool._setup_models__(self.env.cr, models)
-            # update database schema of models and their descendants
-            models = self.pool.descendants(models, '_inherits')
-            self.pool.init_models(self.env.cr, models, dict(self.env.context, update_custom_fields=True))
-
-        return res
-
+        return _records.create(self, vals_list)
     def _get_writable_properties(self):
-        return [fname for fname in self._fields if self._fields[fname].translate]
-
+        return _records._get_writable_properties(self)
     def write(self, vals):
-        if not self:
-            return True
-
-        # if set, *one* column can be renamed here
-        column_rename = None
-
-        # names of the models to patch
-        patched_models = set()
-
-        writable_properties = self._get_writable_properties()
-        writable_properties_only = all(field_name in writable_properties for field_name in vals)
-        if vals and self and not writable_properties_only:
-            for item in self:
-                if item.state != 'manual':
-                    raise UserError(_('Properties of base fields cannot be altered in this manner! '
-                                      'Please modify them through Python code, '
-                                      'preferably through a custom addon!'))
-
-                if vals.get('model_id', item.model_id.id) != item.model_id.id:
-                    raise UserError(_("Changing the model of a field is forbidden!"))
-
-                if vals.get('ttype', item.ttype) != item.ttype:
-                    raise UserError(_("Changing the type of a field is not yet supported. "
-                                      "Please drop it and create it again!"))
-
-                obj = self.pool.get(item.model)
-                field = getattr(obj, '_fields', {}).get(item.name)
-
-                if vals.get('name', item.name) != item.name:
-                    # We need to rename the field
-                    item._prepare_update()
-                    if item.ttype in ('one2many', 'many2many', 'binary'):
-                        # those field names are not explicit in the database!
-                        pass
-                    else:
-                        if column_rename:
-                            raise UserError(_('Can only rename one field at a time!'))
-                        column_rename = (obj._table, item.name, vals['name'], item.index, item.store)
-
-                # We don't check the 'state', because it might come from the context
-                # (thus be set for multiple fields) and will be ignored anyway.
-                if obj is not None and field is not None:
-                    patched_models.add(obj._name)
-
-        # These shall never be written (modified)
-        for column_name in ('model_id', 'model', 'state'):
-            if column_name in vals:
-                del vals[column_name]
-
-        if 'index' in vals:
-            index = vals['index']
-            vals['index'] = 'btree' if index is True or index == 'True' else index or None
-
-        if vals.get('translate') and not isinstance(vals['translate'], str):
-            _logger.warning("Deprecated since Odoo 19, ir.model.fields.translate becomes Selection, the value should be a string")
-            vals['translate'] = 'html_translate' if vals.get('ttype') == 'html' else 'standard'
-
-        if column_rename and self.state == 'manual':
-            # renaming a studio field, remove inherits fields
-            # we need to set the uninstall flag to allow removing them
-            (self._prepare_update() - self).with_context(force_delete=True).unlink()
-
-        res = super().write(vals)
-
-        self.env.flush_all()
-
-        if column_rename:
-            # rename column in database, and its corresponding index if present
-            table, oldname, newname, index, stored = column_rename
-            if stored:
-                self.env.cr.execute(SQL(
-                    'ALTER TABLE %s RENAME COLUMN %s TO %s',
-                    SQL.identifier(table),
-                    SQL.identifier(oldname),
-                    SQL.identifier(newname)
-                ))
-                if index:
-                    self.env.cr.execute(SQL(
-                        'ALTER INDEX %s RENAME TO %s',
-                        SQL.identifier(f'{table}_{oldname}_index'),
-                        SQL.identifier(f'{table}_{newname}_index'),
-                    ))
-
-        if column_rename or patched_models or writable_properties_only:
-            # setup models, this will reload all manual fields in registry
-            self.env.flush_all()
-            model_names = OrderedSet(self.mapped('model'))
-            self.pool._setup_models__(self.env.cr, model_names)
-
-        if patched_models:
-            # update the database schema of the models to patch
-            models = self.pool.descendants(patched_models, '_inherits')
-            self.pool.init_models(self.env.cr, models, dict(self.env.context, update_custom_fields=True))
-
-        return res
-
+        return _records.write(self, vals)
     @api.depends('field_description', 'model')
     def _compute_display_name(self):
-        IrModel = self.env["ir.model"]
-        for field in self:
-            if self.env.context.get('hide_model'):
-                field.display_name = field.field_description
-                continue
-            model_string = IrModel._get(field.model).name
-            field.display_name = f'{field.field_description} ({model_string})'
-
+        return _computed._compute_display_name(self)
     def _reflect_field_params(self, field, model_id):
-        """ Return the values to write to the database for the given field. """
-        translate = next(k for k, v in FIELD_TRANSLATE.items() if v == field.translate)
-        return {
-            'model_id': model_id,
-            'model': field.model_name,
-            'name': field.name,
-            'field_description': field.string,
-            'help': field.help or None,
-            'ttype': field.type,
-            'state': 'manual' if field.manual else 'base',
-            'relation': field.comodel_name if field.relational else None,
-            'index': 'btree' if field.index is True else field.index or None,
-            'store': bool(field.store),
-            'copied': bool(field.copy),
-            'on_delete': field.ondelete if field.type == 'many2one' else None,
-            'related': field.related or None,
-            'readonly': bool(field.readonly),
-            'required': bool(field.required),
-            'selectable': bool(field.search or field.store),
-            'size': getattr(field, 'size', None),
-            'translate': translate,
-            'company_dependent': bool(field.company_dependent),
-            'relation_field': field.inverse_name if field.type == 'one2many' else None,
-            'relation_model_field': field.model_field if field.type == "many2one_reference" else None,
-            'relation_table': field.relation if field.type == 'many2many' else None,
-            'column1': field.column1 if field.type == 'many2many' else None,
-            'column2': field.column2 if field.type == 'many2many' else None,
-            'currency_field': field.currency_field if field.type == 'monetary' else None,
-            # html sanitization attributes (useless for other fields)
-            'sanitize': field.sanitize if field.type == 'html' else None,
-            'sanitize_overridable': field.sanitize_overridable if field.type == 'html' else None,
-            'sanitize_tags': field.sanitize_tags if field.type == 'html' else None,
-            'sanitize_attributes': field.sanitize_attributes if field.type == 'html' else None,
-            'sanitize_style': field.sanitize_style if field.type == 'html' else None,
-            'sanitize_form': field.sanitize_form if field.type == 'html' else None,
-            'strip_style': field.strip_style if field.type == 'html' else None,
-            'strip_classes': field.strip_classes if field.type == 'html' else None,
-        }
-
+        return _manual._reflect_field_params(self, field, model_id)
     def _reflect_fields(self, model_names):
-        """ Reflect the fields of the given models. """
-
-        for model_name in model_names:
-            model = self.env[model_name]
-            by_label = {}
-            for field in model._fields.values():
-                if field.string in by_label:
-                    other = by_label[field.string]
-                    _logger.warning('Two fields (%s, %s) of %s have the same label: %s. [Modules: %s and %s]',
-                                    field.name, other.name, model, field.string, field._module, other._module)
-                else:
-                    by_label[field.string] = field
-
-        # determine expected and existing rows
-        rows = []
-        for model_name in model_names:
-            model_id = self.env['ir.model']._get_id(model_name)
-            for field in self.env[model_name]._fields.values():
-                rows.append(self._reflect_field_params(field, model_id))
-        if not rows:
-            return
-        cols = list(unique(['model', 'name'] + list(rows[0])))
-        expected = [tuple(row[col] for col in cols) for row in rows]
-
-        field_ids = {}
-        existing = {}
-        for row in select_en(self, ['id'] + cols, model_names):
-            field_ids[row[1:3]] = row[0]
-            existing[row[1:3]] = row[1:]
-
-        # create or update rows
-        rows = [row for row in expected if existing.get(row[:2]) != row]
-        if rows:
-            ids = upsert_en(self, cols, rows, ['model', 'name'])
-            for row, id_ in zip(rows, ids):
-                field_ids[row[:2]] = id_
-            self.pool.post_init(mark_modified, self.browse(ids), cols[2:])
-
-        # update their XML id
-        module = self.env.context.get('module')
-        if not module:
-            return
-
-        data_list = []
-        for (field_model, field_name), field_id in field_ids.items():
-            model = self.env[field_model]
-            field = model._fields.get(field_name)
-            if field and (
-                module == model._original_module
-                or module in field._modules
-                or any(
-                    # module introduced field on model by inheritance
-                    field_name in self.env[parent]._fields
-                    for parent, parent_module in model._inherit_module.items()
-                    if module == parent_module
-                )
-            ):
-                xml_id = field_xmlid(module, field_model, field_name)
-                record = self.browse(field_id)
-                data_list.append({'xml_id': xml_id, 'record': record})
-        self.env['ir.model.data']._update_xmlids(data_list)
-
+        return _manual._reflect_fields(self, model_names)
     def _reflect_field_groups(self, model_names):
-        """ Synchronize the groups field based on the 'groups' attribute declared
-        in the model field's definitions.
-
-        This looks up the external IDs declared in Python (e.g.
-        `test_field = fields.Char(...,groups='base.group_user'))`, retrieves the
-        corresponding group records, and updates the 'ir_model_fields_group_rel'
-        relation.
-        """
-        if not model_names:
-            return
-
-        def lookup_group(field, xmlid):
-            try:
-                model, res_id = self.env['ir.model.data']._xmlid_lookup(xmlid)
-            except ValueError:
-                raise ValueError(f"{field} failed to lookup group xmlid {xmlid}")
-            assert model == 'res.groups' and res_id, "In"
-            return res_id
-
-        model_ids = [self.env['ir.model']._get_id(model_name) for model_name in model_names]
-        existing = {
-            (field.id, group.id)
-            for field in self.sudo().search([('model_id', 'in', model_ids)])
-            for group in field.groups
-        }
-
-        expected = set()
-        for model_name in model_names:
-            field_ids = self.env['ir.model.fields']._get_ids(model_name)
-            for field in self.env[model_name]._fields.values():
-                if not field.groups or field.groups == fields.NO_ACCESS:
-                    continue
-                field_id = field_ids[field.name]
-                expected.update(
-                    (field_id, lookup_group(field, xmlid))
-                    for xmlid in field.groups.split(',')
-                    if xmlid[0] != '!'  # ignore negative group specifications
-                )
-
-        self.invalidate_model(['groups'])
-        if to_add := sorted(expected - existing):
-            self.env.cr.execute("""
-                INSERT INTO ir_model_fields_group_rel(field_id, group_id)
-                SELECT * FROM UNNEST(%s, %s)
-            """, [list(array) for array in zip(*to_add)])
-        if to_remove := sorted(existing - expected):
-            self.env.cr.execute("""
-            DELETE FROM ir_model_fields_group_rel rel
-            WHERE EXISTS (
-                SELECT FROM UNNEST(%s, %s) AS rm(field_id, group_id)
-                WHERE rm.field_id = rel.field_id AND rm.group_id = rel.group_id
-            )
-            """, [list(array) for array in zip(*to_remove)])
-
+        return _manual._reflect_field_groups(self, model_names)
     @api.ormcache(cache='stable')
     def _all_manual_field_data(self):
-        cr = self.env.cr
-        # we cannot use self._fields to determine translated fields, as it has not been set up yet
-        cr.execute("""
-            SELECT *, field_description->>'en_US' AS field_description, help->>'en_US' AS help
-            FROM ir_model_fields
-            WHERE state = 'manual'
-        """)
-        result = defaultdict(dict)
-        for row in cr.dictfetchall():
-            result[row['model']][row['name']] = row
-        return result
-
+        return _manual._all_manual_field_data(self)
     def _get_manual_field_data(self, model_name):
-        """ Return the given model's manual field data. """
-        return self._all_manual_field_data().get(model_name, {})
-
+        return _manual._get_manual_field_data(self, model_name)
     def _instanciate_attrs(self, field_data):
-        """ Return the parameters for a field instance for ``field_data``. """
-        attrs = {
-            'manual': True,
-            'string': field_data['field_description'],
-            'help': field_data['help'],
-            'index': field_data['index'],
-            'copy': bool(field_data['copied']),
-            'related': field_data['related'],
-            'required': bool(field_data['required']),
-            'readonly': bool(field_data['readonly']),
-            'store': bool(field_data['store']),
-            'company_dependent': bool(field_data['company_dependent']),
-        }
-        if field_data['ttype'] in ('char', 'text', 'html'):
-            attrs['translate'] = FIELD_TRANSLATE.get(
-                field_data['translate'],
-                True
-            )
-            if field_data['ttype'] == 'char':
-                attrs['size'] = field_data['size'] or None
-                if attrs['copy']:
-                    attrs.pop('copy')  # use the default setting for "(copy)"
-            elif field_data['ttype'] == 'html':
-                attrs['sanitize'] = field_data['sanitize']
-                attrs['sanitize_overridable'] = field_data['sanitize_overridable']
-                attrs['sanitize_tags'] = field_data['sanitize_tags']
-                attrs['sanitize_attributes'] = field_data['sanitize_attributes']
-                attrs['sanitize_style'] = field_data['sanitize_style']
-                attrs['sanitize_form'] = field_data['sanitize_form']
-                attrs['strip_style'] = field_data['strip_style']
-                attrs['strip_classes'] = field_data['strip_classes']
-        elif field_data['ttype'] in ('selection', 'reference'):
-            if not attrs['related']:
-                attrs['selection'] = self.env['ir.model.fields.selection']._get_selection_data(field_data['id'])
-            if field_data['ttype'] == 'selection':
-                attrs['group_expand'] = field_data['group_expand']
-        elif field_data['ttype'] == 'many2one':
-            if not self.pool.loaded and field_data['relation'] not in self.env:
-                return
-            attrs['comodel_name'] = field_data['relation']
-            attrs['ondelete'] = field_data['on_delete']
-            attrs['domain'] = expr_eval(field_data['domain'] or '[]')
-            attrs['group_expand'] = '_read_group_expand_full' if field_data['group_expand'] else None
-        elif field_data['ttype'] == 'one2many':
-            if not self.pool.loaded and not (
-                field_data['relation'] in self.env and (
-                    field_data['relation_field'] in self.env[field_data['relation']]._fields or
-                    field_data['relation_field'] in self._get_manual_field_data(field_data['relation'])
-            )):
-                return
-            attrs['comodel_name'] = field_data['relation']
-            attrs['inverse_name'] = field_data['relation_field']
-            attrs['domain'] = expr_eval(field_data['domain'] or '[]')
-        elif field_data['ttype'] == 'many2many':
-            if not self.pool.loaded and field_data['relation'] not in self.env:
-                return
-            attrs['comodel_name'] = field_data['relation']
-            rel, col1, col2 = self._custom_many2many_names(field_data['model'], field_data['relation'])
-            attrs['relation'] = field_data['relation_table'] or rel
-            attrs['column1'] = field_data['column1'] or col1
-            attrs['column2'] = field_data['column2'] or col2
-            attrs['domain'] = expr_eval(field_data['domain'] or '[]')
-        elif field_data['ttype'] == 'monetary':
-            # be sure that custom monetary field are always instanciated
-            if not self.pool.loaded and \
-                field_data['currency_field'] and not self._is_manual_name(field_data['currency_field']):
-                return
-            attrs['currency_field'] = field_data['currency_field']
-        # add compute function if given
-        if field_data['compute']:
-            attrs['compute'] = make_compute(field_data['compute'], field_data['depends'])
-        return attrs
-
+        return _manual._instanciate_attrs(self, field_data)
     @api.model
     def _is_manual_name(self, name):
-        return name.startswith('x_')
-
+        return _manual._is_manual_name(self, name)
     @api.model
     def get_field_string(self, model_name):
-        """ Return the translation of fields strings in the context's language.
-        Note that the result contains the available translations only.
-
-        :param model_name: the name of a model
-        :return: the model's fields' strings as a dictionary `{field_name: field_string}`
-        """
-        return {
-            field_name: values['field_description']
-            for field_name, values in self._get_fields_cached(model_name).items()
-        }
-
+        return _manual.get_field_string(self, model_name)
     @api.model
     def get_field_help(self, model_name):
-        """ Return the translation of fields help in the context's language.
-        Note that the result contains the available translations only.
-
-        :param model_name: the name of a model
-        :return: the model's fields' help as a dictionary `{field_name: field_help}`
-        """
-        return {
-            field_name: values['help']
-            for field_name, values in self._get_fields_cached(model_name).items()
-        }
-
+        return _manual.get_field_help(self, model_name)
     @api.model
     def get_field_selection(self, model_name, field_name):
-        """ Return the translation of a field's selection in the context's language.
-        Note that the result contains the available translations only.
-
-        :param model_name: the name of the field's model
-        :param field_name: the name of the field
-        :return: the fields' selection as a list
-        """
-        return self._get_fields_cached(model_name).get(field_name, {}).get('selection', [])
-
+        return _manual.get_field_selection(self, model_name, field_name)
     @api.model
     @api.ormcache('model_name', 'self.env.lang', cache='stable')
     def _get_fields_cached(self, model_name):
-        """ Return the translated information of all model field's in the context's language.
-        Note that the result contains the available translations only.
+        return _manual._get_fields_cached(self, model_name)
 
-        :param model_name: the name of the field's model
-        :return: {field_name: {id, help, field_description, [selection]}}
-        """
-        fields = self.sudo().browse(self._get_ids(model_name).values())
-        result = {
-            field.name: {
-                'id': field.id,
-                'help': field.help,
-                'field_description': field.field_description,
-            }
-            for field in fields
-        }
-        for field in fields.filtered(lambda field: field.ttype in ('selection', 'reference')):
-            result[field.name]['selection'] = [
-                (sel.value, sel.name) for sel in field.selection_ids
-            ]
-        return frozendict(result)
+
+# the delegated methods of the class, and the modules that use the class: at the end, they import this module
+from . import checks as _checks, computed as _computed, records as _records, manual as _manual  # noqa: E402
