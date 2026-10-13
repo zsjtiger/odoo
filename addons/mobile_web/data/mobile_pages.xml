@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!-- 手机端页面 -->
-    <data noupdate="0">
+    <data noupdate="1">
         <!-- 主页 -->
         <record id="home_page" model="mobile_web.mobile.page">
             <field name="name">Home Page</field>
@@ -56,7 +56,7 @@
     </data>
 
     <!-- 页面底部action -->
-    <data noupdate="0">
+    <data noupdate="1">
         <!-- HOME PAGE -->
         <record id="home_page_home_page_action_rel" model="mobile_web.mobile.page.actions">
             <field name="name">主页</field>

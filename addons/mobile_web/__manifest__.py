@@ -13,14 +13,13 @@ This module provides the core of the Odoo Mobile Web Client.
     'data': [
         'security/ir.access.csv',
 
-        ## views
-        # template
+        ## data: page and navigation configuration, kept when upgrading
+        'data/mobile_pages.xml',
+
+        ## views: templates
         'views/templates/base_layout.xml',
         'views/templates/login_page.xml',
         'views/templates/webclient_bootstrap.xml',
-        
-        # test
-        'views/mobile_pages.xml',
     ],
     'assets': {
         # 登录前要加载的
