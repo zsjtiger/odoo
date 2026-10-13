@@ -1,7 +1,6 @@
 import { Component, markRaw, onWillStart, onWillUpdateProps, proxy, t, useProps, xml } from "@odoo/owl";
 import { useSubEnv } from "@web/core/owl/utils";
 import { registry } from "@web/core/framework/registry";
-import { useService } from "@web/core/utils/hooks";
 import { View, getDefaultConfig } from "@web/views/view";
 import { rpc } from "@web/core/services/network/rpc";
 import { makeContext } from "@web/core/data/context";
@@ -48,8 +47,6 @@ export class MobileActWindowController extends Component {
     });
 
     setup() {
-        this.viewService = useService("view");
-        this.dialogService = useService("dialog");
 
         this.state = proxy({
             viewProps: null,

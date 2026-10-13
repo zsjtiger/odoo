@@ -1,14 +1,22 @@
 /**
- * 动作的视图列表: 没有明确指定 views 时, 使用 view_mode 推导
+ * 动作的视图列表, 顺序与 web 一致: 以 view_mode 为准, 视图 id 从 action.views 中按类型取.
+ * 服务端返回的 views 顺序取决于 ir.actions.act_window.view 的 sequence, 不一定与 view_mode 相同
+ * (例如 view_mode 为 kanban,list,form 而 sequence 为 list 优先), 因此不能直接使用 action.views 的顺序.
  *
  * @param {Object} action
  * @returns {Array<[number|false, string]>}
  */
 export function getActionViews(action) {
-    if (action.views && action.views.length) {
-        return [...action.views];
+    if (!action.view_mode) {
+        return action.views && action.views.length
+            ? [...action.views]
+            : [[false, "list"], [false, "form"]];
     }
-    return (action.view_mode || "list,form").split(",").map((viewMode) => [false, viewMode.trim()]);
+    const viewIdByType = new Map((action.views || []).map(([id, type]) => [type, id]));
+    return action.view_mode.split(",").map((viewMode) => {
+        const type = viewMode.trim();
+        return [viewIdByType.get(type) || false, type];
+    });
 }
 
 /**
