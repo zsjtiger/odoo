@@ -4,7 +4,6 @@ import datetime
 import email.policy
 import functools
 import logging
-import re
 import smtplib
 import ssl
 from email.message import EmailMessage
@@ -18,7 +17,7 @@ from cryptography.x509 import load_pem_x509_certificate
 from OpenSSL.crypto import Error as SSLCryptoError
 from OpenSSL.SSL import VERIFY_FAIL_IF_NO_PEER_CERT, VERIFY_PEER
 from OpenSSL.SSL import Error as SSLError
-from urllib3.contrib.pyopenssl import PyOpenSSLContext, get_subj_alt_name
+from urllib3.contrib.pyopenssl import PyOpenSSLContext
 
 from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import UserError
@@ -28,96 +27,25 @@ from odoo.tools import (
     email_domain_normalize,
     email_normalize,
     encapsulate_email,
-    formataddr,
 )
+
+_logger = logging.getLogger('odoo.addons.base.models.ir_mail_server')
+
+from .addresses import extract_rfc2822_addresses
+from .errors import MailDeliveryException
+from .tls import _verify_check_hostname_callback
 
 try:
     # urllib3 1.26 (ubuntu jammy and up, debian bullseye and up)
-    from urllib3.util.ssl_match_hostname import CertificateError, match_hostname
+    from urllib3.util.ssl_match_hostname import CertificateError
 except ImportError:
     # urllib3 1.25 and below
-    from urllib3.packages.ssl_match_hostname import CertificateError, match_hostname
+    from urllib3.packages.ssl_match_hostname import CertificateError
 
-_logger = logging.getLogger(__name__)
+
 _test_logger = logging.getLogger('odoo.tests')
 
 SMTP_TIMEOUT = 60
-
-
-class MailDeliveryException(Exception):
-    """Specific exception subclass for mail delivery errors"""
-
-
-# Python 3: patch SMTP's internal printer/debugger
-def _print_debug(self, *args):
-    _logger.debug(' '.join(str(a) for a in args))
-smtplib.SMTP._print_debug = _print_debug
-
-# Python 3: workaround for bpo-35805, only partially fixed in Python 3.8.
-RFC5322_IDENTIFICATION_HEADERS = {'message-id', 'in-reply-to', 'references', 'resent-msg-id'}
-USER_DEFINED_HEADERS = {'bcc', 'cc', 'from', 'reply-to', 'subject', 'to'}
-_noFoldPolicy = email.policy.SMTP.clone(max_line_length=None)
-_maxFoldPolicy = email.policy.SMTP.clone(max_line_length=998)  # rfc5322#section-2.1.1
-class IdentificationFieldsNoFoldPolicy(email.policy.EmailPolicy):
-    # Override _fold() to avoid folding identification fields, excluded by RFC2047 section 5
-    # These are particularly important to preserve, as MTAs will often rewrite non-conformant
-    # Message-ID headers, causing a loss of thread information (replies are lost)
-    # Also override _fold() for user-defined headers that may not fit on 78 characters,
-    # as Python's folding algorithm is unreliable and fail to handle all weird cases.
-    def _fold(self, name, value, *args, **kwargs):
-        if name.lower() in RFC5322_IDENTIFICATION_HEADERS:
-            return _noFoldPolicy._fold(name, value, *args, **kwargs)
-        if name.lower() in USER_DEFINED_HEADERS:
-            return _maxFoldPolicy._fold(name, value, *args, **kwargs)
-        return super()._fold(name, value, *args, **kwargs)
-
-# Global monkey-patch for our preferred SMTP policy, preserving the non-default linesep
-email.policy.SMTP = IdentificationFieldsNoFoldPolicy(linesep=email.policy.SMTP.linesep)
-
-# Python 2: replace smtplib's stderr
-class WriteToLogger(object):
-    def write(self, s):
-        _logger.debug(s)
-smtplib.stderr = WriteToLogger()
-
-def is_ascii(s):
-    return all(ord(cp) < 128 for cp in s)
-
-address_pattern = re.compile(r'([^" ,<@]+@[^>" ,]+)')
-
-def extract_rfc2822_addresses(text):
-    """Returns a list of valid RFC2822 addresses
-       that can be found in ``source``, ignoring
-       malformed ones and non-ASCII ones.
-    """
-    if not text:
-        return []
-    candidates = address_pattern.findall(text)
-    valid_addresses = []
-    for c in candidates:
-        try:
-            valid_addresses.append(formataddr(('', c), charset='ascii'))
-        except idna.IDNAError:
-            pass
-    return valid_addresses
-
-
-def _verify_check_hostname_callback(cnx, x509, err_no, err_depth, return_code, *, hostname):
-    """Callback used for pyOpenSSL.verify_mode, by default pyOpenSSL
-       only checkes :param:`err_no`, we enrich it to also verify that
-       the SMTP server :param:`hostname` matches the :param:`x509`'s
-       Common Name (CN) or Subject Alternative Name (SAN)."""
-    if err_no:
-        return False
-
-    if err_depth == 0:  # leaf certificate
-        peercert = {
-            "subject": ((("commonName", x509.get_subject().CN),),),
-            "subjectAltName": get_subj_alt_name(x509),
-        }
-        match_hostname(peercert, hostname)  # it raises when it does not match
-
-    return True
 
 
 class IrMail_Server(models.Model):
