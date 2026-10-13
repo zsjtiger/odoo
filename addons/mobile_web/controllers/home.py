@@ -5,12 +5,13 @@ from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 import odoo.exceptions
 from odoo import _
 from odoo.exceptions import AccessError
-from odoo.http import Controller, request, route
+from odoo.http import request, route
 from odoo.http.router import db_list
 from odoo.http.session import authenticate, check, touch
 from odoo.tools import config
 
 from odoo.addons.web.controllers.home import CREDENTIAL_PARAMS, LOGIN_SUCCESSFUL_PARAMS, SIGN_UP_REQUEST_PARAMS
+from odoo.addons.web.controllers.home import Home as WebHome
 from odoo.addons.web.controllers.utils import ensure_db, is_user_internal
 
 
@@ -19,7 +20,9 @@ mobile_context = {
 }
 
 
-class Home(Controller):
+# 继承 web 的 Home: 登录、会话、数据库等 web 的路由保持不变.
+# 注意: Odoo 中同名方法会覆盖父类(web)的路由, 因此移动端的方法都使用 mobile 相关的名字.
+class Home(WebHome):
     @route(['/mobile_web', '/mobile_web/<path:js_router_path>'], type='http', auth='none')
     def mobile_web_client(self, **kw):
         """
@@ -93,7 +96,7 @@ class Home(Controller):
             else:
                 uid = auth_info['uid']
                 request.params['login_success'] = True
-                return request.redirect(self._login_redirect(uid, redirect=redirect))
+                return request.redirect(self._mobile_login_redirect(uid, redirect=redirect))
         else:
             if 'error' in request.params and request.params.get('error') == 'access':
                 values['error'] = _('Only employees can access this database. Please contact the administrator.')
@@ -119,7 +122,7 @@ class Home(Controller):
         return response
 
     @route('/mobile_web/login_successful', type='http', auth='user')
-    def login_successful_external_user(self, **kwargs):
+    def mobile_login_successful(self, **kwargs):
         """ 非内部用户登录后显示的界面 """
         valid_values = {k: v for k, v in kwargs.items() if k in LOGIN_SUCCESSFUL_PARAMS}
         return request.render('mobile_web.login_successful', valid_values)
@@ -148,7 +151,7 @@ class Home(Controller):
             request.update_context(**context)
         return request.env['mobile_web.mobile.page.actions'].get_page_actions(mobile_page_id)
 
-    def _login_redirect(self, uid, redirect=None):
+    def _mobile_login_redirect(self, uid, redirect=None):
         """
         逻辑与addons.web.controller.main._get_login_redirect_url是一致的
         这里默认要redirect到mobile_web
