@@ -49,7 +49,6 @@ export class MobileKanbanView extends Component {
         <t t-name="mobile_web.MobileKanbanView">
             <div class="m_kanban_view">
                 <div class="m_list_meta">
-                    <span t-if="this.collection.state.total !== null"><t t-esc="this.rangeText"/></span>
                     <button type="button" class="m_link_button" t-on-click="this.onRefresh">刷新</button>
                 </div>
                 <ul class="m_kanban">
@@ -121,16 +120,7 @@ export class MobileKanbanView extends Component {
     }
 
     get sentinelText() {
-        const { loading, records, total } = this.collection.state;
-        if (loading) {
-            return "加载中…";
-        }
-        return total && records.length >= total ? "已显示全部" : "";
-    }
-
-    get rangeText() {
-        const { records, total } = this.collection.state;
-        return total ? `1-${records.length} / ${total}` : "";
+        return this.collection.state.loading ? "加载中…" : "";
     }
 
     onCardClick(ev) {
