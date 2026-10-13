@@ -25,7 +25,7 @@ This module provides the core of the Odoo Mobile Web Client.
         # 登录前要加载的
         'mobile_web.assets_frontend': [
             # 模块加载器与 owl(common包依赖 odoo.define 与 @odoo/owl)
-            ('include', 'mobile_web._assets_load_loader_js'),
+            ('include', 'mobile_web._assets_load_owl_js'),
             # 第三方库(UMD, 注册为全局 CryptoJS)
             'mobile_web/static/lib/crypto-js/crypto-js.js',
             # common包
@@ -36,7 +36,9 @@ This module provides the core of the Odoo Mobile Web Client.
 
         # 启动基础(JS): 模块加载器, owl, env, session. 必须先于 web 的 JS 加载
         'mobile_web.assets_boot': [
-            ('include', 'mobile_web._assets_load_loader_js'),
+            ('include', 'mobile_web._assets_load_owl_js'),
+            # luxon 只在后台使用(登录页不需要)
+            ('include', 'mobile_web._assets_load_luxon_js'),
             # core
             'web/static/src/boot/session.js',
         ],
@@ -86,16 +88,18 @@ This module provides the core of the Odoo Mobile Web Client.
         ],
 
         # 模块加载器与 owl, 登录页与启动包共用(不含 session, 登录页没有 session 信息)
-        'mobile_web._assets_load_loader_js': [
+        'mobile_web._assets_load_owl_js': [
             # module loader
             'web/static/src/boot/module_loader.js',
             # libs
-            'web/static/lib/luxon/luxon.js',
             'web/static/lib/owl/owl.js',
             'web/static/lib/owl/odoo_module.js',
             # owl 兼容层(供 @web/core/owl/utils 使用)
             'web/static/src/core/owl/owl3_compatibility_layer.js',
             'web/static/src/core/owl/utils.js',
+        ],
+        'mobile_web._assets_load_luxon_js': [
+            'web/static/lib/luxon/luxon.js',
         ]
     },
     'pre_init_hook': '_pre_init_hook',

@@ -1,3 +1,6 @@
+import re
+from pathlib import Path
+
 from odoo import api, models, fields
 
 
@@ -8,6 +11,15 @@ PAGE_COMPONENT_IDS = (
     'mobile_page.schedule_page',
     'mobile_page.user_my_page',
 )
+
+
+# 图标雪碧图(static/public/iconfont.js)中的 symbol id. 只保留了移动端用到的图标以减小体积,
+# 新增图标时需要重新生成该文件(从 iconfont.cn 下载完整包后裁剪). 数据中配置的图标须在其中
+ICON_SPRITE_JS = Path(__file__).resolve().parents[1] / 'static' / 'public' / 'iconfont.js'
+
+
+def get_sprite_icon_ids() -> set:
+    return set(re.findall(r'<symbol id="([^"]+)"', ICON_SPRITE_JS.read_text(encoding='utf-8')))
 
 
 class MobilePage(models.Model):

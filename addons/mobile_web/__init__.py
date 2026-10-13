@@ -20,6 +20,14 @@ def _post_init_hook(env):
         import logging  # noqa: PLC0415
         logging.getLogger(__name__).warning(
             "mobile pages without a registered frontend component: %s", unknown.mapped('page_component_id'))
+    # 图标检查: 数据中的图标若不在精简后的雪碧图中, 页面上会显示空白图标
+    import logging  # noqa: PLC0415
+    from .models.mobile_page import get_sprite_icon_ids  # noqa: PLC0415
+    actions = env['mobile_web.mobile.page.actions'].search([('svg_icon_href', '!=', False)])
+    sprite_ids = get_sprite_icon_ids()
+    missing = {a.svg_icon_href for a in actions if a.svg_icon_href.lstrip('#') not in sprite_ids}
+    if missing:
+        logging.getLogger(__name__).warning("mobile page icons missing from static/public/iconfont.js: %s", sorted(missing))
 
 
 # 卸载模块后的hook: 删除由 `_pre_init_hook` 创建的表
