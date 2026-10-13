@@ -8,7 +8,6 @@ import logging
 import os
 import re
 import time
-import typing
 import unicodedata
 
 from urllib3.exceptions import LocationParseError
@@ -18,11 +17,6 @@ import werkzeug.routing
 import werkzeug.utils
 from werkzeug.datastructures import WWWAuthenticate
 from werkzeug.exceptions import Unauthorized
-
-try:
-    from werkzeug.routing import NumberConverter
-except ImportError:
-    from werkzeug.routing.converters import NumberConverter  # moved in werkzeug 2.2.2
 
 # optional python-slugify import (https://github.com/un33k/python-slugify)
 try:
@@ -50,7 +44,11 @@ from odoo.tools.json import json_default
 from odoo.tools.misc import get_lang, submap
 from odoo.tools.text.translate import code_translations
 
-_logger = logging.getLogger(__name__)
+from .converters import ModelConverter, ModelsConverter, SignedIntConverter
+from .requirements import AuthRequirements, CheckIdentityResult
+from .rules import FasterRule
+
+_logger = logging.getLogger('odoo.addons.base.models.ir_http')
 
 # see also mimetypes module: https://docs.python.org/3/library/mimetypes.html and odoo.tools.files.mimetypes
 EXTENSION_TO_WEB_MIMETYPES = {
@@ -62,120 +60,6 @@ EXTENSION_TO_WEB_MIMETYPES = {
     '.csv': 'text/csv',
     '.html': 'text/html',
 }
-
-
-class AuthRequirements(typing.TypedDict, total=False):
-    logout: bool
-    """True if a full login is required."""
-
-    check_identity: bool
-    """True if an identity check is required."""
-
-    mfa: bool
-    """True if multi-factor authentication is required."""
-
-    first_fa_method: str
-    """
-    Previously used first-factor authentication method.
-    Used to avoid reusing the same method as a second factor.
-    """
-
-    fingerprint_check: bool
-    """
-    True if re-authentication can be fully completed
-    using the device fingerprint alone.
-    """
-
-
-class CheckIdentityResult(typing.TypedDict, total=False):
-    auth_methods: list[str]
-    """
-    List of available authentication methods.
-    Present when no credential is provided, or when an additional
-    authentication factor is required.
-    """
-
-    mfa: bool
-    """True if a second authentication factor is required."""
-
-
-class RequestUID:
-    def __init__(self, **kw):
-        self.__dict__.update(kw)
-
-
-class ModelConverter(werkzeug.routing.BaseConverter):
-    regex = r'[0-9]+'
-
-    def __init__(self, url_map, model=False):
-        super().__init__(url_map)
-        self.model = model
-
-    def to_python(self, value: str) -> models.BaseModel:
-        uid = RequestUID(value=value, converter=self)
-        env = api.Environment(request.env.cr, uid, request.env.context)
-        unslug = env['ir.http']._unslug
-        return env[self.model].browse(unslug(value)[1])
-
-    def to_url(self, value: models.BaseModel) -> str:
-        return value.env['ir.http']._slug(value)
-
-
-class ModelsConverter(werkzeug.routing.BaseConverter):
-    regex = r'[0-9,]+'
-
-    def __init__(self, url_map, model=False):
-        super().__init__(url_map)
-        self.model = model
-
-    def to_python(self, value: str) -> models.BaseModel:
-        uid = RequestUID(value=value, converter=self)
-        env = api.Environment(request.env.cr, uid, request.env.context)
-        return env[self.model].browse(int(v) for v in value.split(','))
-
-    def to_url(self, value: models.BaseModel) -> str:
-        return ",".join(value.ids)
-
-
-class SignedIntConverter(NumberConverter):
-    regex = r'-?\d+'
-    num_convert = int
-
-
-class LazyCompiledBuilder:
-    def __init__(self, rule, _compile_builder, append_unknown):
-        self.rule = rule
-        self._callable = None
-        self._compile_builder = _compile_builder
-        self._append_unknown = append_unknown
-
-    def __get__(self, *args):
-        # Rule.compile will actually call
-        #
-        #   self._build = self._compile_builder(False).__get__(self, None)
-        #   self._build_unknown = self._compile_builder(True).__get__(self, None)
-        #
-        # meaning the _build and _build unkown will contain _compile_builder().__get__(self, None).
-        # This is why this override of __get__ is needed.
-        return self
-
-    def __call__(self, *args, **kwargs):
-        if self._callable is None:
-            self._callable = self._compile_builder(self._append_unknown).__get__(self.rule, None)
-            del self.rule
-            del self._compile_builder
-            del self._append_unknown
-        return self._callable(*args, **kwargs)
-
-
-class FasterRule(werkzeug.routing.Rule):
-    """
-    _compile_builder is a major part of the routing map generation and rules
-    are actually not build so often.
-    This classe makes calls to _compile_builder lazy
-    """
-    def _compile_builder(self, append_unknown=True):
-        return LazyCompiledBuilder(self, super()._compile_builder, append_unknown)
 
 
 class IrHttp(models.AbstractModel):
