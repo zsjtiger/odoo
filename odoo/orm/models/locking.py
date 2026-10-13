@@ -6,7 +6,6 @@ from __future__ import annotations
 import re
 import typing
 
-import psycopg2.errors
 import psycopg2.extensions
 
 from odoo.exceptions import LockError

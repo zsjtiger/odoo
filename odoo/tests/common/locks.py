@@ -7,9 +7,6 @@ import threading
 import typing
 from contextlib import contextmanager
 import odoo.cli
-import odoo.models
-import odoo.orm.models.registry
-import odoo.addons.base
 
 if typing.TYPE_CHECKING:
     pass

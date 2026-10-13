@@ -7,7 +7,6 @@ import re
 import typing
 from collections import deque
 
-import psycopg2.errors
 import psycopg2.extensions
 
 from odoo.exceptions import MissingError

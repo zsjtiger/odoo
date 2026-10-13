@@ -10,10 +10,6 @@ from contextlib import closing
 from datetime import datetime
 from enum import IntEnum
 import psycopg2
-import odoo.api
-import odoo.modules
-import odoo.modules.neutralize
-import odoo.release
 import odoo.orm.database.sql_db
 import odoo.tools
 from odoo.exceptions import AccessDenied, UserError

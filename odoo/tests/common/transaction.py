@@ -11,7 +11,6 @@ from copy import deepcopy
 from unittest.mock import patch
 from passlib.context import CryptContext
 import odoo.cli
-import odoo.models
 import odoo.orm.models.registry
 from odoo import api, fields
 from odoo.orm.models.environments import CacheLayer
@@ -19,7 +18,6 @@ from odoo.modules.registry import Registry
 from odoo.orm.database.sql_db import Cursor
 from odoo.tools import mute_logger
 from odoo.tools.lru import LRU
-import odoo.addons.base
 from odoo.tests import test_cursor
 
 if typing.TYPE_CHECKING:

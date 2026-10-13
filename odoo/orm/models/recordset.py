@@ -8,7 +8,6 @@ import re
 import typing
 from collections.abc import Callable
 
-import psycopg2.errors
 import psycopg2.extensions
 
 

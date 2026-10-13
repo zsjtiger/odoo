@@ -11,9 +11,7 @@ import typing
 import warnings
 import psycopg2
 import psycopg2.errorcodes  # noqa: F401
-import psycopg2.errors
 import psycopg2.extensions
-import psycopg2.extras
 from psycopg2.extensions import ISOLATION_LEVEL_REPEATABLE_READ
 from psycopg2.pool import PoolError
 from werkzeug import urls

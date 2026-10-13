@@ -9,7 +9,6 @@ import typing
 from collections import defaultdict
 from operator import call
 
-import psycopg2.errors
 import psycopg2.extensions
 
 from odoo.tools import (

@@ -22,8 +22,6 @@ from xmlrpc import client as xmlrpclib
 import requests
 from requests import Session
 import odoo.cli
-import odoo.models
-import odoo.orm.models.registry
 from odoo import api
 from odoo.http import request
 from odoo.http.requestlib import Request
@@ -38,7 +36,6 @@ from odoo.http.session import Session as OdooHttpSession
 from odoo.tools import config
 from odoo.tools.profiling import profiler
 from odoo.tools.misc import real_time
-import odoo.addons.base
 
 if typing.TYPE_CHECKING:
     pass

@@ -8,7 +8,6 @@ import typing
 import warnings
 from collections.abc import Iterable
 
-import psycopg2.errors
 import psycopg2.extensions
 
 

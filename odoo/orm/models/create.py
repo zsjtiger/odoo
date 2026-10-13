@@ -9,7 +9,6 @@ import typing
 from collections import defaultdict
 from collections.abc import Iterable
 
-import psycopg2.errors
 import psycopg2.extensions
 
 from odoo.exceptions import ValidationError, UserError

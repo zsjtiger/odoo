@@ -3,11 +3,8 @@
 from __future__ import annotations
 
 import typing
-import psycopg2
 import psycopg2.errorcodes  # noqa: F401
-import psycopg2.errors
 import psycopg2.extensions
-import psycopg2.extras
 
 if typing.TYPE_CHECKING:
 

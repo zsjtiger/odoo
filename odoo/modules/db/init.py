@@ -15,9 +15,6 @@ from zoneinfo import TZPATH
 from psycopg2.extras import Json
 import odoo.api
 import odoo.modules
-import odoo.modules.neutralize
-import odoo.release
-import odoo.orm.database.sql_db
 import odoo.tools
 from odoo.tools import config
 from odoo.tools.date_utils import all_timezones

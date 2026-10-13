@@ -13,14 +13,11 @@ import typing
 from concurrent.futures import Future
 import freezegun
 import odoo.cli
-import odoo.models
-import odoo.orm.models.registry
 from odoo import api
 from odoo.tools import config
 from odoo.tools.misc import str2bool
 from odoo.tools.safe_eval import safe_whitelist
 from odoo.tools.xml.xml_utils import _validate_xml
-import odoo.addons.base
 from odoo.tests import case
 
 if typing.TYPE_CHECKING:

@@ -9,7 +9,6 @@ import typing
 import uuid
 from collections import defaultdict
 
-import psycopg2.errors
 import psycopg2.extensions
 
 from odoo.tools import (
