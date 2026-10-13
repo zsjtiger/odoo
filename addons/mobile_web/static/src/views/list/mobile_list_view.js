@@ -5,6 +5,7 @@ import { parseArch, collectFieldNames, isHiddenColumn, splitColumns } from "@mob
 import { getFieldWidget } from "@mobile_web/views/fields/index";
 import { MobileRecordModel } from "@mobile_web/views/record_model";
 import { RecordCollection } from "@mobile_web/views/record_list";
+import { useInfiniteScroll } from "@mobile_web/views/infinite_scroll";
 
 const SECONDARY_COLUMNS = 2;
 
@@ -37,9 +38,9 @@ export class MobileListView extends Component {
                 </ul>
                 <p t-if="this.collection.state.error" class="m_error">加载失败, 请重试</p>
                 <p t-if="!this.collection.state.loading and this.collection.state.total === 0" class="m_empty">没有记录</p>
-                <button t-if="this.hasMore" type="button" class="m_load_more" t-on-click="this.onLoadMore" t-att-disabled="this.collection.state.loading">
-                    <t t-esc="this.collection.state.loading ? '加载中…' : '加载更多'"/>
-                </button>
+                <div t-ref="this.infinite.sentinel" class="m_load_sentinel">
+                    <t t-esc="this.sentinelText"/>
+                </div>
             </div>
         </t>
     `;
@@ -62,9 +63,10 @@ export class MobileListView extends Component {
         const fieldNames = [...collectFieldNames(node)];
         this.collection = new RecordCollection(this.makeModel(), fieldNames);
         onWillStart(() => this.collection.reload(this.props.domain));
+        this.infinite = useInfiniteScroll(this.collection);
         onWillUpdateProps((nextProps) => {
             if (JSON.stringify(nextProps.domain) !== JSON.stringify(this.collection.domain)) {
-                return this.collection.reload(nextProps.domain);
+                return this.collection.reload(nextProps.domain).then(() => this.infinite.recheck());
             }
         });
     }
@@ -94,9 +96,12 @@ export class MobileListView extends Component {
         };
     }
 
-    get hasMore() {
-        const { records, total } = this.collection.state;
-        return total !== null && records.length < total;
+    get sentinelText() {
+        const { loading, records, total } = this.collection.state;
+        if (loading) {
+            return "加载中…";
+        }
+        return total && records.length >= total ? "已显示全部" : "";
     }
 
     get rangeText() {
@@ -109,10 +114,6 @@ export class MobileListView extends Component {
 
     onRowClick(ev) {
         this.props.onSelect(Number(ev.currentTarget.dataset.id));
-    }
-
-    onLoadMore() {
-        return this.collection.loadMore();
     }
 
     onRefresh() {
