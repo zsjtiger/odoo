@@ -8,15 +8,18 @@ export class FormBlocks extends Component {
         <t t-name="mobile_web.FormBlocks">
             <t t-foreach="this.props.blocks" t-as="block" t-key="block.key">
                 <section t-if="block.kind === 'group'" class="m_form_group">
+                    <h3 t-if="block.title" class="m_form_separator"><t t-esc="block.title"/></h3>
                     <FormBlocks blocks="block.children" record="this.props.record" resModel="this.props.resModel" onFieldChange="this.props.onFieldChange"/>
                 </section>
-                <div t-elif="block.kind === 'field'" class="m_form_field">
+                <div t-elif="block.kind === 'field'" t-attf-class="m_form_field {{ block.stacked ? 'is_stacked' : '' }}">
                     <label class="m_form_label"><t t-esc="block.label"/></label>
-                    <t t-component="block.widget" t-props="this.fieldProps(block)"/>
+                    <div class="m_form_value">
+                        <t t-component="block.widget" t-props="this.fieldProps(block)"/>
+                    </div>
                 </div>
                 <h3 t-elif="block.kind === 'separator'" class="m_form_separator"><t t-esc="block.text"/></h3>
                 <div t-elif="block.kind === 'notebook'" class="m_form_notebook">
-                    <div class="m_segmented" role="tablist">
+                    <div class="m_form_tabs" role="tablist">
                         <button t-foreach="block.pages" t-as="page" t-key="page_index" type="button" role="tab"
                                 t-attf-class="m_segmented_item {{ this.activeTab(block) === page_index ? 'is_active' : '' }}"
                                 t-att-data-notebook="block.key" t-att-data-page="page_index" t-on-click="this.onTabClick">

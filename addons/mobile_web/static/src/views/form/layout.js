@@ -4,6 +4,9 @@ import { isInvisible } from "@mobile_web/views/arch";
 // 表单中不展示的标签: 按钮与头部操作在 v1 中不支持
 const SKIPPED_TAGS = ["header", "footer", "button", "label", "field_info"];
 
+// 这些类型的字段内容较长, 标签与内容上下排列
+const STACKED_TYPES = ["text", "html", "binary"];
+
 /**
  * 把 arch 解析为展示用的 block 树:
  *  - group: 一组字段(纵向排列)
@@ -36,6 +39,8 @@ export function buildLayout(node, fields, keyPrefix = "b") {
                     attrs: child.attrs,
                     field,
                     label: child.attrs.string || field.string,
+                    // 多行文本等内容较长的字段, 标签放在上方独占一行
+                    stacked: STACKED_TYPES.includes(field.type),
                     widget: getFieldWidget(child.attrs, field),
                     readonly: child.attrs.readonly === "1" || child.attrs.readonly === "True" || !!field.readonly,
                 });
@@ -57,7 +62,7 @@ export function buildLayout(node, fields, keyPrefix = "b") {
             case "group": {
                 const children = buildLayout(child, fields, key);
                 if (children.length) {
-                    blocks.push({ kind: "group", key, children });
+                    blocks.push({ kind: "group", key, title: child.attrs.string || "", children });
                 }
                 return;
             }
