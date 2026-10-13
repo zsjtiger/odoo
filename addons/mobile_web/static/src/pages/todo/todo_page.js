@@ -1,6 +1,7 @@
 import { xml } from '@odoo/owl';
 import { MobilePage } from '../common/components/mobile_page';
 import { mobilePageRegistry } from '../common/page_registry';
+import { PAGE_KEYS } from '../common/page_keys';
 
 
 export class TodoPage extends MobilePage {
@@ -16,4 +17,4 @@ export class TodoPage extends MobilePage {
     `;
 };
 
-mobilePageRegistry.add("mobile_page.todo_page", TodoPage);
+mobilePageRegistry.add(PAGE_KEYS.TODO, TodoPage);

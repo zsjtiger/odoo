@@ -76,5 +76,6 @@ This module provides the core of the Odoo Mobile Web Client.
         ]
     },
     'pre_init_hook': '_pre_init_hook',
+    'post_init_hook': '_post_init_hook',
     'uninstall_hook': '_uninstall_hook',
 }

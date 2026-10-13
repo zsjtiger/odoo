@@ -1,6 +1,7 @@
 import { xml } from '@odoo/owl';
 import { MobilePage } from '../common/components/mobile_page';
 import { mobilePageRegistry } from '../common/page_registry';
+import { PAGE_KEYS } from '../common/page_keys';
 
 import { UserInfo } from './components/user_info';
 import { HomeReport } from './components/home_report';
@@ -29,4 +30,4 @@ export class HomePage extends MobilePage {
 };
 
 
-mobilePageRegistry.add("mobile_page.home_page", HomePage);
+mobilePageRegistry.add(PAGE_KEYS.HOME, HomePage);

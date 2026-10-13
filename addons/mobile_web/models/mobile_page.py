@@ -1,6 +1,15 @@
 from odoo import api, models, fields
 
 
+# 前端注册的页面组件id, 与 static/src/pages/common/page_keys.js 保持一致
+PAGE_COMPONENT_IDS = (
+    'mobile_page.home_page',
+    'mobile_page.todo_page',
+    'mobile_page.schedule_page',
+    'mobile_page.user_my_page',
+)
+
+
 class MobilePage(models.Model):
     _name = 'mobile_web.mobile.page'
 
