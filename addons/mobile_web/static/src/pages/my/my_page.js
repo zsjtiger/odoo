@@ -1,7 +1,7 @@
 import { xml } from '@odoo/owl';
-import { MobilePage } from '../common/components/mobile_page';
-import { mobilePageRegistry } from '../common/page_registry';
-import { PAGE_KEYS } from '../common/page_keys';
+import { MobilePage } from "@mobile_web/pages/shared/components/mobile_page";
+import { mobilePageRegistry } from "@mobile_web/pages/shared/page_registry";
+import { PAGE_KEYS } from "@mobile_web/pages/shared/page_keys";
 
 
 export class UserMyPage extends MobilePage {

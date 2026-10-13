@@ -1,7 +1,7 @@
 import { Component, t, useProps, xml } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
-import { SvgIcon } from "../../../common/components/svg_icon";
+import { SvgIcon } from "@mobile_web/common/components/svg_icon";
 
 
 export class ActionMenuItem extends Component {

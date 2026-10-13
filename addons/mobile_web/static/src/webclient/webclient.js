@@ -5,11 +5,11 @@ import { Component, xml, onMounted, onWillUnmount, proxy } from "@odoo/owl";
 import { localization } from "@web/core/data/l10n/localization";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { routerBus } from "@web/core/services/browser/router";
-import { router } from '@mobile_web/core/browser/router';
+import { router } from "@mobile_web/core/browser/router";
 
 // webclient components
-import { MobileActionContainer } from "./actions/components/action_container";
-import { MobileNavBar } from "./navbar/navbar";
+import { MobileActionContainer } from "@mobile_web/webclient/actions/components/action_container";
+import { MobileNavBar } from "@mobile_web/webclient/navbar/navbar";
 
 
 export class MobileWebClient extends Component {

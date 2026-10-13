@@ -2,7 +2,7 @@ import { Component, xml, onWillDestroy } from "@odoo/owl";
 import { render } from "@web/core/owl/utils";
 import { useService } from "@web/core/utils/hooks";
 
-import { SvgIcon } from '@mobile_web/common/components/svg_icon'
+import { SvgIcon } from "@mobile_web/common/components/svg_icon"
 
 
 export class MobileNavBar extends Component {

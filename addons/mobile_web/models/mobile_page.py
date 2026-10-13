@@ -1,7 +1,7 @@
 from odoo import api, models, fields
 
 
-# 前端注册的页面组件id, 与 static/src/pages/common/page_keys.js 保持一致
+# 前端注册的页面组件id, 与 static/src/pages/shared/page_keys.js 保持一致
 PAGE_COMPONENT_IDS = (
     'mobile_page.home_page',
     'mobile_page.todo_page',

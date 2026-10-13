@@ -6,7 +6,7 @@ from odoo.tests import TransactionCase
 
 from ..models.mobile_page import PAGE_COMPONENT_IDS
 
-PAGE_KEYS_JS = Path(__file__).resolve().parents[1] / 'static' / 'src' / 'pages' / 'common' / 'page_keys.js'
+PAGE_KEYS_JS = Path(__file__).resolve().parents[1] / 'static' / 'src' / 'pages' / 'shared' / 'page_keys.js'
 
 
 class TestMobilePage(TransactionCase):

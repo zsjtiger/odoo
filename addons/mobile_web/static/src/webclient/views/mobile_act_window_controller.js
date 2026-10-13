@@ -9,7 +9,7 @@ import { evaluateExpr } from "@web/core/data/py_js/py";
 import { router as _router } from "@mobile_web/core/browser/router";
 import { MobileFormActions } from "@mobile_web/webclient/views/mobile_form_actions";
 import { buildRouteState, getActionViews, hasFormView } from "@mobile_web/webclient/actions/action_utils";
-import { findDescendant } from "@mobile_web/webclient/views/mobile_view_utils";
+import { findDescendant } from "@mobile_web/common/owl_tree";
 
 // -----------------------------------------------------------------------------
 // MobileActWindowController

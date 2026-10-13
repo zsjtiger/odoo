@@ -1,12 +1,12 @@
 import { xml } from '@odoo/owl';
-import { MobilePage } from '../common/components/mobile_page';
-import { mobilePageRegistry } from '../common/page_registry';
-import { PAGE_KEYS } from '../common/page_keys';
+import { MobilePage } from "@mobile_web/pages/shared/components/mobile_page";
+import { mobilePageRegistry } from "@mobile_web/pages/shared/page_registry";
+import { PAGE_KEYS } from "@mobile_web/pages/shared/page_keys";
 
-import { UserInfo } from './components/user_info';
-import { HomeReport } from './components/home_report';
-import { HomeMenu } from './components/home_menu';
-import { SuggestionList } from './components/suggestion_list';
+import { UserInfo } from "@mobile_web/pages/home/components/user_info";
+import { HomeReport } from "@mobile_web/pages/home/components/home_report";
+import { HomeMenu } from "@mobile_web/pages/home/components/home_menu";
+import { SuggestionList } from "@mobile_web/pages/home/components/suggestion_list";
 
 
 export class HomePage extends MobilePage {

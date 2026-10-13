@@ -1,16 +1,11 @@
-import { markup, Component, xml } from "@odoo/owl";
 import { registry } from "@web/core/framework/registry";
-import { useBus } from "@web/core/utils/hooks";
-import { rpc, rpcBus } from "@web/core/services/network/rpc";
-import { session } from "@web/boot/session";
-import { user } from "@web/core/services/user";
-import { makeContext } from "@web/core/data/context";
 import { KeepLast } from "@web/core/utils/concurrency";
 
-import { router as _router } from '@mobile_web/core/browser/router';
-import { mobilePageRegistry } from '@mobile_web/pages/common/page_registry';
-import { MobileActWindowController } from '@mobile_web/webclient/views/mobile_act_window_controller';
-import { buildRouteState } from '@mobile_web/webclient/actions/action_utils';
+import { router as _router } from "@mobile_web/core/browser/router";
+import { mobilePageRegistry } from "@mobile_web/pages/shared/page_registry";
+import { MobileActWindowController } from "@mobile_web/webclient/views/mobile_act_window_controller";
+import { buildRouteState } from "@mobile_web/webclient/actions/action_utils";
+import { loadAction, loadPageActions } from "@mobile_web/webclient/actions/action_loader";
 
 
 // -----------------------------------------------------------------------------
@@ -116,7 +111,7 @@ export function makeMobileActionManager(env, router = _router) {
         const keepLast = new KeepLast();  // TODO: 使用keeplast的这个行为，是从web模块拷贝过来的
 
         // 加载action
-        const actionPromise = _loadAction(actionRequest, options.additionalContext);
+        const actionPromise = loadAction(actionRequest, options.additionalContext);
         let action = await keepLast.add(actionPromise);
 
         // 执行action
@@ -165,7 +160,7 @@ export function makeMobileActionManager(env, router = _router) {
 
         const mobilePageComponent = mobilePageRegistry.get(mobilePageComponentId);
         /** @type {Array[CurrentActionInfo]} currentActions */
-        const currentActions = await _loadPageActions(mobilePageId);
+        const currentActions = await loadPageActions(mobilePageId);
 
         /** @type {ActionContainerEventInfo} */
         const actionContainerInfo = {
@@ -220,57 +215,6 @@ export function makeMobileActionManager(env, router = _router) {
     // ---------------------------------------------------------------------------
     // Misc Tool Function
     // ---------------------------------------------------------------------------
-
-    /**
-     * 将actionRequest加载为Action
-     *
-     * @param {ActionRequest} actionRequest
-     * @param {Object} context
-     * @returns {Promise<Action>}
-     * @private
-     */
-    async function _loadAction(actionRequest, context = {}) {
-        // TODO: 实现ir.actions.client
-        // TODO: 实现web中的actionCache功能(如需要)
-
-        if (typeof actionRequest === "string" || typeof actionRequest === "number") {
-            // actionRequest is an id or an xmlid
-            const ctx = makeContext([user.context, context]);
-            delete ctx.params;
-
-            let action = await rpc("/web/action/load", {
-                action_id: actionRequest,
-                context: ctx,
-            });
-            if (action.help) {
-                action.help = markup(action.help)
-            }
-
-            return Object.assign({}, action);
-        }
-
-        // actionRequest is an object describing the action
-        return actionRequest;
-    };
-
-    /**
-     * 加载mobile_page的所有的action
-     * 
-     * @param {number} pageId 
-     * @param {object} context 
-     * @returns {Promise<CurrentActionInfo[]>}
-     */
-    async function _loadPageActions(pageId, context = {}) {
-        const ctx = makeContext([user.context, context]);
-        delete ctx.params;
-        /** @type {CurrentActionInfo[]} */
-        let actions = await rpc('/mobile_web/page_actions/load', {
-            mobile_page_id: pageId,
-            context: ctx
-        });
-
-        return actions;
-    };
 
     /**
      * 与router联动, 将当前的action转换为state, 调用router更新路由

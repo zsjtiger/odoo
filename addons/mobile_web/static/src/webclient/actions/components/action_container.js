@@ -1,6 +1,6 @@
 import { Component, xml, onWillDestroy } from "@odoo/owl";
 import { render } from "@web/core/owl/utils";
-import { MobileActionMenu } from './action_menu';
+import { MobileActionMenu } from "@mobile_web/webclient/actions/components/action_menu";
 
 
 export class MobileActionContainer extends Component {
