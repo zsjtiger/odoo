@@ -5,9 +5,8 @@ import { parseArch, collectFieldNames, isHiddenColumn, splitColumns } from "@mob
 import { getFieldWidget } from "@mobile_web/views/fields/index";
 import { MobileRecordModel } from "@mobile_web/views/record_model";
 import { RecordCollection } from "@mobile_web/views/record_list";
+import { hasDisplayValue } from "@mobile_web/views/fields/field_utils";
 import { useInfiniteScroll } from "@mobile_web/views/infinite_scroll";
-
-const SECONDARY_COLUMNS = 2;
 
 /**
  * 移动端列表视图: 每行一张卡片式的行, 第一列作为标题, 后面的列作为副标题
@@ -29,7 +28,7 @@ export class MobileListView extends Component {
                             </div>
                             <div class="m_list_secondary" t-if="this.secondary.length">
                                 <t t-foreach="this.secondary" t-as="column" t-key="column.name">
-                                    <span class="m_list_cell"><t t-component="this.getWidget(column)" t-props="this.cellProps(column, record)"/></span>
+                                    <span class="m_list_cell" t-if="this.hasValue(column, record)"><t t-component="this.getWidget(column)" t-props="this.cellProps(column, record)"/></span>
                                 </t>
                             </div>
                         </button>
@@ -58,7 +57,7 @@ export class MobileListView extends Component {
         const columns = node.children.filter((c) => c.tag === "field" && c.attrs.name && !isHiddenColumn(c));
         const { primary, secondary } = splitColumns(columns.map((c) => this.column(c)));
         this.primary = primary;
-        this.secondary = secondary.slice(0, SECONDARY_COLUMNS);
+        this.secondary = secondary;
         const fieldNames = [...collectFieldNames(node)];
         this.collection = new RecordCollection(this.makeModel(), fieldNames);
         onWillStart(() => this.collection.reload(this.props.domain));
@@ -76,6 +75,10 @@ export class MobileListView extends Component {
 
     column(node) {
         return { name: node.attrs.name, attrs: node.attrs, field: this.props.fields[node.attrs.name] };
+    }
+
+    hasValue(column, record) {
+        return hasDisplayValue(record.data[column.name]);
     }
 
     getWidget(column) {

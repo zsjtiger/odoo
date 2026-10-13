@@ -16,6 +16,9 @@ This module provides the core of the Odoo Mobile Web Client.
         ## data: page and navigation configuration, kept when upgrading
         'data/mobile_pages.xml',
 
+        ## views: 列表/看板的标题字段配置(继承 web 的视图, 只加 title 属性)
+        'data/mobile_views.xml',
+
         ## views: templates
         'views/templates/base_layout.xml',
         'views/templates/login_page.xml',

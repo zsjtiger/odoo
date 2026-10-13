@@ -79,9 +79,17 @@ const TITLE_TYPES = ["char", "many2one", "text", "selection"];
  * @returns {{primary: Object|null, secondary: Object[]}}
  */
 export function splitColumns(columns) {
-    const index = columns.findIndex((c) => c.field && TITLE_TYPES.includes(c.field.type));
+    // 视图中用 class="mobile_title" 显式标记的字段优先; 否则按字段类型选择文本类字段
+    let index = columns.findIndex((c) => isTitleMarked(c.attrs));
+    if (index < 0) {
+        index = columns.findIndex((c) => c.field && TITLE_TYPES.includes(c.field.type));
+    }
     const primaryIndex = index >= 0 ? index : 0;
     const primary = columns[primaryIndex] || null;
     const secondary = columns.filter((_, i) => i !== primaryIndex);
     return { primary, secondary };
+}
+
+function isTitleMarked(attrs) {
+    return (attrs.class || "").split(/\s+/).includes("mobile_title");
 }

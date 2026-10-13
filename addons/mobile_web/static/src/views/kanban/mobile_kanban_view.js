@@ -5,6 +5,7 @@ import { parseArch, collectFieldNames, isHiddenColumn, splitColumns } from "@mob
 import { getFieldWidget } from "@mobile_web/views/fields/index";
 import { MobileRecordModel } from "@mobile_web/views/record_model";
 import { RecordCollection } from "@mobile_web/views/record_list";
+import { hasDisplayValue } from "@mobile_web/views/fields/field_utils";
 import { useInfiniteScroll } from "@mobile_web/views/infinite_scroll";
 
 /**
@@ -57,8 +58,10 @@ export class MobileKanbanView extends Component {
                             <div class="m_kanban_title" t-if="this.title">
                                 <t t-component="this.getWidget(this.title)" t-props="this.cellProps(this.title, record)"/>
                             </div>
-                            <div class="m_kanban_line" t-foreach="this.lines" t-as="column" t-key="column.name">
-                                <t t-component="this.getWidget(column)" t-props="this.cellProps(column, record)"/>
+                            <div class="m_kanban_lines" t-if="this.lines.length">
+                                <span class="m_kanban_line" t-foreach="this.lines" t-as="column" t-key="column.name" t-if="this.hasValue(column, record)">
+                                    <t t-component="this.getWidget(column)" t-props="this.cellProps(column, record)"/>
+                                </span>
                             </div>
                         </button>
                     </li>
@@ -100,6 +103,10 @@ export class MobileKanbanView extends Component {
                 return this.collection.reload(nextProps.domain).then(() => this.infinite.recheck());
             }
         });
+    }
+
+    hasValue(column, record) {
+        return hasDisplayValue(record.data[column.name]);
     }
 
     getWidget(column) {

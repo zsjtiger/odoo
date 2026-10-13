@@ -31,3 +31,13 @@ export const fieldProps = {
 export function displayOrEmpty(text) {
     return text === undefined || text === null || text === false ? "" : String(text);
 }
+
+/**
+ * 列表/看板中是否显示该值: 空值不占位, 避免出现孤立的分隔符
+ */
+export function hasDisplayValue(value) {
+    if (value === false || value === undefined || value === null || value === "") {
+        return false;
+    }
+    return !(Array.isArray(value) && value.length === 0);
+}
