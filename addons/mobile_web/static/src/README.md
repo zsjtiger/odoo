@@ -12,7 +12,7 @@
 | `actions/` | 动作系统: action 服务、加载器、动作菜单 `action_menu/` |
 | `views/` | 视图框架: arch 解析、记录模型与列表、视图注册表; 视图本身在 `list/`、`kanban/`、`form/`、`act_window/` |
 | `fields/` | 字段组件与字段记录适配层 (`field_record.js`) |
-| `widgets/` | 通用控件: 底部弹层选择器 `select_sheet/`、图标 `svg_icon/`、通用样式 `ui/` |
+| `widgets/` | 通用控件: 底部弹层选择器 `select_sheet/`、选择器按钮 `picker/`、开关 `switch/`、图标 `svg_icon/`、通用样式 `ui/` |
 | `reports/` | 报表类展示组件: `home_report/` |
 | `pages/` | 页面: 首页 (`home/`)、待办、日程、我的; 页面注册表在 `shared/` |
 

@@ -3,6 +3,7 @@ import { useService } from "@web/core/utils/hooks";
 import { mobileFieldRegistry } from "@mobile_web/views/registries";
 import { fieldProps, displayOrEmpty } from "@mobile_web/fields/field_utils";
 import { MobileSelectSheet } from "@mobile_web/widgets/select_sheet/select_sheet";
+import { PickerButton } from "@mobile_web/widgets/picker/picker";
 import { fieldTexts } from "@mobile_web/core/texts";
 import { _t } from "@web/core/data/l10n/translation";
 
@@ -34,16 +35,12 @@ function makeNameSearch(orm, relation, context) {
 
 export class Many2oneField extends Component {
     texts = fieldTexts;
-    static components = { MobileSelectSheet };
+    static components = { MobileSelectSheet, PickerButton };
     static template = xml`
         <t t-name="mobile_web.Many2oneField">
             <span t-if="this.props.readonly" class="m_field_value"><t t-esc="this.displayName"/></span>
             <t t-else="">
-                <button type="button" class="m_picker_button" t-on-click="this.openSheet">
-                    <span t-if="this.current" class="m_picker_value"><t t-esc="this.displayName"/></span>
-                    <span t-else="" class="m_picker_placeholder"><t t-esc="this.texts.select"/></span>
-                    <span class="m_picker_caret">›</span>
-                </button>
+                <PickerButton value="this.current ? this.displayName : false" placeholder="this.texts.select" onClick="this.openSheet"/>
                 <MobileSelectSheet t-if="this.state.open" title="this.props.field.string"
                     search="this.search" selected="this.currentItems" allowClear="true"
                     onConfirm="this.onConfirm" onClose="this.close"/>
@@ -67,9 +64,9 @@ export class Many2oneField extends Component {
     get currentItems() {
         return this.current ? [{ id: this.current[0], name: pairName(this.current) }] : [];
     }
-    openSheet() {
+    openSheet = () => {
         this.state.open = true;
-    }
+    };
     close = () => {
         this.state.open = false;
     };
@@ -116,9 +113,9 @@ export class Many2manyField extends Component {
     get currentItems() {
         return this.pairs.map(([id, name]) => ({ id, name }));
     }
-    openSheet() {
+    openSheet = () => {
         this.state.open = true;
-    }
+    };
     close = () => {
         this.state.open = false;
     };

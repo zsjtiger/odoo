@@ -2,6 +2,8 @@ import { Component, proxy, signal, useProps, xml } from "@odoo/owl";
 import { mobileFieldRegistry } from "@mobile_web/views/registries";
 import { fieldProps, displayOrEmpty } from "@mobile_web/fields/field_utils";
 import { MobileSelectSheet } from "@mobile_web/widgets/select_sheet/select_sheet";
+import { PickerButton } from "@mobile_web/widgets/picker/picker";
+import { Switch } from "@mobile_web/widgets/switch/switch";
 import { fieldTexts } from "@mobile_web/core/texts";
 import { deserializeDate, deserializeDateTime, serializeDateTime } from "@web/core/data/l10n/dates";
 import { formatDate, formatDateTime, formatFloat, formatInteger, formatMonetary } from "@web/views/fields/formatters";
@@ -181,14 +183,11 @@ mobileFieldRegistry.add("monetary", NumberField);
 
 export class BooleanField extends Component {
     texts = fieldTexts;
+    static components = { Switch };
     static template = xml`
         <t t-name="mobile_web.BooleanField">
             <span t-if="this.props.readonly" class="m_field_value"><t t-esc="this.label"/></span>
-            <label t-else="" class="m_switch">
-                <input type="checkbox" t-att-checked="!!this.props.record.data[this.props.name]" t-on-change="this.onInput"/>
-                <span class="m_switch_track"></span>
-                <span class="m_switch_label"><t t-esc="this.label"/></span>
-            </label>
+            <Switch t-else="" checked="!!this.props.record.data[this.props.name]" label="this.label" onChange="this.onInput"/>
         </t>
     `;
     props = useProps(fieldProps);
@@ -196,9 +195,10 @@ export class BooleanField extends Component {
     get label() {
         return this.props.record.data[this.props.name] ? this.texts.yes : this.texts.no;
     }
-    onInput(ev) {
-        this.props.onChange(ev.target.checked);
-    }
+    // 作为子组件的回调传递, 使用箭头函数保持 this
+    onInput = (checked) => {
+        this.props.onChange(checked);
+    };
 }
 mobileFieldRegistry.add("boolean", BooleanField);
 
@@ -208,16 +208,12 @@ mobileFieldRegistry.add("boolean", BooleanField);
 
 export class SelectionField extends Component {
     texts = fieldTexts;
-    static components = { MobileSelectSheet };
+    static components = { MobileSelectSheet, PickerButton };
     static template = xml`
         <t t-name="mobile_web.SelectionField">
             <span t-if="this.props.readonly" class="m_field_value"><t t-esc="this.label"/></span>
             <t t-else="">
-                <button type="button" class="m_picker_button" t-on-click="this.openSheet">
-                    <span t-if="this.hasValue" class="m_picker_value"><t t-esc="this.label"/></span>
-                    <span t-else="" class="m_picker_placeholder"><t t-esc="this.texts.select"/></span>
-                    <span class="m_picker_caret">›</span>
-                </button>
+                <PickerButton value="this.hasValue ? this.label : false" placeholder="this.texts.select" onClick="this.openSheet"/>
                 <MobileSelectSheet t-if="this.state.open" title="this.props.field.string"
                     options="this.options" selected="this.currentIds" allowClear="true"
                     onConfirm="this.onConfirm" onClose="this.close"/>
@@ -243,9 +239,9 @@ export class SelectionField extends Component {
         const option = this.options.find((o) => o.id === this.currentValue);
         return option ? option.name : displayOrEmpty(this.currentValue);
     }
-    openSheet() {
+    openSheet = () => {
         this.state.open = true;
-    }
+    };
     close = () => {
         this.state.open = false;
     };
