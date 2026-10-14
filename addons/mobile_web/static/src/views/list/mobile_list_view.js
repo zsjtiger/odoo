@@ -7,18 +7,28 @@ import { MobileRecordModel } from "@mobile_web/views/record_model";
 import { RecordCollection } from "@mobile_web/views/record_list";
 import { hasDisplayValue } from "@mobile_web/views/fields/field_utils";
 import { useInfiniteScroll } from "@mobile_web/views/infinite_scroll";
+import { _t } from "@web/core/data/l10n/translation";
 
 /**
  * 移动端列表视图: 每行一张卡片式的行, 第一列作为标题, 后面的列作为副标题
  *
  * 点击整行进入表单; 底部"加载更多"分页, 避免一次加载过多数据
  */
+// 界面文字, 由 _t 包装并通过 i18n/*.po 翻译(模板中用 this.texts 引用)
+const TEXTS = {
+    refresh: _t("Refresh"),
+    loadFailed: _t("Failed to load, please try again"),
+    noRecords: _t("No records"),
+    loading: _t("Loading…"),
+};
+
 export class MobileListView extends Component {
+    texts = TEXTS;
     static template = xml`
         <t t-name="mobile_web.MobileListView">
             <div class="m_list_view">
                 <div class="m_list_meta">
-                    <button type="button" class="m_link_button" t-on-click="this.onRefresh">刷新</button>
+                    <button type="button" class="m_link_button" t-on-click="this.onRefresh"><t t-esc="this.texts.refresh"/></button>
                 </div>
                 <ul class="m_list">
                     <li t-foreach="this.collection.state.records" t-as="record" t-key="record.resId">
@@ -34,8 +44,8 @@ export class MobileListView extends Component {
                         </button>
                     </li>
                 </ul>
-                <p t-if="this.collection.state.error" class="m_error">加载失败, 请重试</p>
-                <p t-if="!this.collection.state.loading and this.collection.state.total === 0" class="m_empty">没有记录</p>
+                <p t-if="this.collection.state.error" class="m_error"><t t-esc="this.texts.loadFailed"/></p>
+                <p t-if="!this.collection.state.loading and this.collection.state.total === 0" class="m_empty"><t t-esc="this.texts.noRecords"/></p>
                 <div t-ref="this.infinite.sentinel" class="m_load_sentinel">
                     <t t-esc="this.sentinelText"/>
                 </div>
@@ -99,7 +109,7 @@ export class MobileListView extends Component {
     }
 
     get sentinelText() {
-        return this.collection.state.loading ? "加载中…" : "";
+        return this.collection.state.loading ? this.texts.loading : "";
     }
 
     onRowClick(ev) {

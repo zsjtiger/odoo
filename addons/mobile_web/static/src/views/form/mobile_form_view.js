@@ -1,5 +1,6 @@
 import { Component, onWillStart, proxy, t, useProps, xml } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
+import { _t } from "@web/core/data/l10n/translation";
 import { mobileViewRegistry } from "@mobile_web/views/registries";
 import { parseArch, collectFieldNames } from "@mobile_web/views/arch";
 import { MobileRecordModel, normalizeFromServer, serializeForServer } from "@mobile_web/views/record_model";
@@ -13,25 +14,38 @@ import { FormBlocks } from "@mobile_web/views/form/form_blocks";
  * - 新建: default_get + onchange 计算默认值; 保存后通过 onSaved 通知容器跳转到记录
  * - 编辑: 读取记录, 字段改动后触发 onchange, 底部固定的"放弃/保存"栏
  */
+// 界面文字: 用 _t 包装, 翻译由 i18n/*.po 提供(模板中通过 this.texts 引用)
+const TEXTS = {
+    unsaved: _t("Unsaved changes"),
+    discard: _t("Discard"),
+    save: _t("Save"),
+    saving: _t("Saving…"),
+    loading: _t("Loading…"),
+    notFound: _t("The record does not exist or has been deleted"),
+    saved: _t("Saved"),
+    failed: _t("Operation failed"),
+};
+
 export class MobileFormView extends Component {
     static components = { FormBlocks };
+    texts = TEXTS;
     static template = xml`
         <t t-name="mobile_web.MobileFormView">
             <div class="m_form_view" t-if="this.state.record">
                 <h2 class="m_form_title" t-if="this.state.record.data.display_name"><t t-esc="this.state.record.data.display_name"/></h2>
                 <FormBlocks blocks="this.blocks" record="this.state.record" resModel="this.props.resModel" onFieldChange="this.onFieldChange"/>
                 <div class="m_form_footer">
-                    <span class="m_form_status" t-if="this.state.record.isDirty">未保存的修改</span>
+                    <span class="m_form_status" t-if="this.state.record.isDirty"><t t-esc="this.texts.unsaved"/></span>
                     <div class="m_form_footer_actions">
-                        <button type="button" class="m_btn m_btn_secondary" t-on-click="this.onDiscard">放弃</button>
+                        <button type="button" class="m_btn m_btn_secondary" t-on-click="this.onDiscard"><t t-esc="this.texts.discard"/></button>
                         <button type="button" class="m_btn m_btn_primary" t-att-disabled="this.saveDisabled" t-on-click="this.onSave">
-                            <t t-esc="this.state.saving ? '保存中…' : '保存'"/>
+                            <t t-esc="this.state.saving ? this.texts.saving : this.texts.save"/>
                         </button>
                     </div>
                 </div>
             </div>
             <p t-elif="this.state.error" class="m_error"><t t-esc="this.state.error"/></p>
-            <p t-else="" class="m_empty">加载中…</p>
+            <p t-else="" class="m_empty"><t t-esc="this.texts.loading"/></p>
         </t>
     `;
     props = useProps({
@@ -68,7 +82,7 @@ export class MobileFormView extends Component {
             if (this.props.resId) {
                 const raw = await this.model.readRecord(this.props.resId, this.fieldNames);
                 if (!raw) {
-                    this.state.error = "记录不存在或已被删除";
+                    this.state.error = this.texts.notFound;
                     return;
                 }
                 this.state.record = new MobileRecord(
@@ -191,7 +205,7 @@ export class MobileFormView extends Component {
             const wasNew = record.isNew;
             const saved = await this.model.saveRecord(record.resId, { ...record.changes }, this.fieldNames);
             record.reset(saved.id, toUIData(this.props.fields, saved, this.fieldNames));
-            this.notification.add("已保存", { type: "success" });
+            this.notification.add(this.texts.saved, { type: "success" });
             if (wasNew) {
                 this.props.onSaved(saved.id);
             }
@@ -210,7 +224,7 @@ export class MobileFormView extends Component {
     }
 
     errorMessage(error) {
-        return error?.data?.message || error?.message || "操作失败";
+        return error?.data?.message || error?.message || this.texts.failed;
     }
 }
 

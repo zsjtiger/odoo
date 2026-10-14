@@ -19,18 +19,18 @@ function fieldProps(overrides) {
     };
 }
 
-test("BooleanField shows 是/否 when readonly", async () => {
+test("BooleanField shows Yes/No when readonly", async () => {
     await mountWithCleanup(BooleanField, {
         props: fieldProps({ readonly: true, record: { data: { active: true } } }),
     });
-    expect(queryOne(".m_field_value")).toHaveText("是");
+    expect(queryOne(".m_field_value")).toHaveText("Yes");
 });
 
-test("BooleanField shows 否 for a false value", async () => {
+test("BooleanField shows No for a false value", async () => {
     await mountWithCleanup(BooleanField, {
         props: fieldProps({ readonly: true, record: { data: { active: false } } }),
     });
-    expect(queryOne(".m_field_value")).toHaveText("否");
+    expect(queryOne(".m_field_value")).toHaveText("No");
 });
 
 test("BooleanField switch reports the new value when toggled", async () => {

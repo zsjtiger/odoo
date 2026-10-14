@@ -25,7 +25,7 @@ def get_sprite_icon_ids() -> set:
 class MobilePage(models.Model):
     _name = 'mobile_web.mobile.page'
 
-    name = fields.Char(string="page name")
+    name = fields.Char(string="page name", translate=True)
     page_component_id = fields.Char(string="Owl Component ID which defined in frontend MobilePage registry")
     binding_views = fields.Many2many('ir.ui.view', string='ir.ui.view records which bind to current MobilePage')
 

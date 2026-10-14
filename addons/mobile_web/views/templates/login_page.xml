@@ -122,7 +122,7 @@
                         <div class="m_login_field m_login_field_username">
                             <input type="text"
                                    class="m_login_field_input"
-                                   placeholder="请输入用户名"
+                                   placeholder="Please enter your username"
                                    name="login"
                                    id="m-login-field-login"
                                    autofocus="autofocus"
@@ -132,7 +132,7 @@
                         <div class="m_login_field m_login_field_password">
                             <input type="password"
                                    class="m_login_field_input"
-                                   placeholder="请输入密码"
+                                   placeholder="Please enter your password"
                                    name="password"
                                    id="m-login-field-password"
                                    required="required"
@@ -153,14 +153,14 @@
                         <div class="m_login_form_functions">
                             <div class="m_login_form_remember_password">
                                 <input type="checkbox" id="m-login-form-remember-password" name="remember_password" value="true"/>
-                                <label for="m-login-form-remember-password">记住密码</label>
+                                <label for="m-login-form-remember-password">Remember password</label>
                             </div>
 
-                            <a href="/mobile_web/retrieve_password" class="m_login_form_forget_password">忘记密码?</a>
+                            <a href="/mobile_web/retrieve_password" class="m_login_form_forget_password">Forgot password?</a>
                         </div>
 
                         <button type="submit" class="m_login_form_confirm_btn" onClick="doLogin(event)">
-                            登录
+                            Log in
                         </button>
                     </form>
                 </div>
@@ -184,7 +184,7 @@
 
     <template id="mobile_web.login_successful" name="Login successful">
         <t t-call="mobile_web.layout">
-            <div>成功登录了, 现在是手机端的外部用户登录成功页</div>
+            <div>Logged in successfully</div>
         </t>
     </template>
 </odoo>

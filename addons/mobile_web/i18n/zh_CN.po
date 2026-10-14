@@ -1,0 +1,544 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* mobile_web
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 20.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-14 01:18+0000\n"
+"PO-Revision-Date: 2026-10-14 01:18+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"Language: zh_CN\n"
+
+#. module: mobile_web
+#: model:ir.module.module,description:base.module_mobile_web
+msgid ""
+"\n"
+"Odoo Mobile Web core module\n"
+"============================\n"
+"\n"
+"This module provides the core of the Odoo Mobile Web Client.\n"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/act_window_controller.js:0
+msgid "%s - New"
+msgstr "%s - 新建"
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/fields/relational_fields.js:0
+msgid "%s more lines"
+msgstr "还有 %s 项"
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__help
+msgid "Action Description"
+msgstr "操作说明"
+
+#. module: mobile_web
+#: model:ir.model,name:mobile_web.model_ir_actions_mobile_page
+msgid "Action Mobile Page"
+msgstr "手机端页面动作"
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__name
+msgid "Action Name"
+msgstr "操作名称"
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__type
+msgid "Action Type"
+msgstr "操作类型"
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__binding_model_id
+msgid "Binding Model"
+msgstr "绑定模型"
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__binding_type
+msgid "Binding Type"
+msgstr "绑定类型"
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__binding_view_types
+msgid "Binding View Types"
+msgstr "绑定视图类型"
+
+#. module: mobile_web
+#: model:ir.model.fields.selection,name:mobile_web.selection__ir_ui_menu__device_type__both
+msgid "Both"
+msgstr "两者"
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/texts.js:0
+msgid "Cancel"
+msgstr "取消"
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/texts.js:0
+msgid "Change image"
+msgstr "更换图片"
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/texts.js:0
+msgid "Clear selection"
+msgstr "不选"
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/texts.js:0
+msgid "Confirm"
+msgstr "确定"
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__create_uid
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page__create_uid
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page_actions__create_uid
+msgid "Created by"
+msgstr "创建人"
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__create_date
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page__create_date
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page_actions__create_date
+msgid "Created on"
+msgstr "创建时间"
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/pages/home/components/home_report.js:0
+msgid "Data 1"
+msgstr "数据 1"
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/pages/home/components/home_report.js:0
+msgid "Data 2"
+msgstr "数据 2"
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/pages/home/components/home_report.js:0
+msgid "Data 3"
+msgstr "数据 3"
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/texts.js:0
+msgid "Delete"
+msgstr "删除"
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/form/mobile_form_view.js:0
+msgid "Discard"
+msgstr "放弃"
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__display_name
+#: model:ir.model.fields,field_description:mobile_web.field_ir_http__display_name
+#: model:ir.model.fields,field_description:mobile_web.field_ir_ui_menu__display_name
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page__display_name
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page_actions__display_name
+msgid "Display Name"
+msgstr "显示名称"
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/texts.js:0
+msgid "Edit"
+msgstr "编辑"
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/texts.js:0
+msgid "Edit line items on the desktop"
+msgstr "明细请在电脑端编辑"
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__explanation
+msgid "Explanation"
+msgstr "说明"
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__xml_id
+msgid "External ID"
+msgstr "外部 ID"
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/kanban/mobile_kanban_view.js:0
+#: code:addons/mobile_web/static/src/views/list/mobile_list_view.js:0
+msgid "Failed to load, please try again"
+msgstr "加载失败, 请重试"
+
+#. module: mobile_web
+#: model_terms:ir.ui.view,arch_db:mobile_web.login
+msgid "Forgot password?"
+msgstr "忘记密码?"
+
+#. module: mobile_web
+#: model:ir.model,name:mobile_web.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP 路由"
+
+#. module: mobile_web
+#: model:mobile_web.mobile.page,name:mobile_web.home_page
+msgid "Home Page"
+msgstr "主页"
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__id
+#: model:ir.model.fields,field_description:mobile_web.field_ir_http__id
+#: model:ir.model.fields,field_description:mobile_web.field_ir_ui_menu__id
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page__id
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page_actions__id
+msgid "ID"
+msgstr "ID"
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__write_uid
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page__write_uid
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page_actions__write_uid
+msgid "Last Updated by"
+msgstr "最后更新人"
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__write_date
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page__write_date
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page_actions__write_date
+msgid "Last Updated on"
+msgstr "最后更新时间"
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/form/mobile_form_view.js:0
+#: code:addons/mobile_web/static/src/views/kanban/mobile_kanban_view.js:0
+#: code:addons/mobile_web/static/src/views/list/mobile_list_view.js:0
+#: code:addons/mobile_web/static/src/views/texts.js:0
+msgid "Loading…"
+msgstr "加载中…"
+
+#. module: mobile_web
+#: model_terms:ir.ui.view,arch_db:mobile_web.login
+msgid "Log in"
+msgstr "登录"
+
+#. module: mobile_web
+#: model_terms:ir.ui.view,arch_db:mobile_web.login_successful
+msgid "Logged in successfully"
+msgstr "登录成功"
+
+#. module: mobile_web
+#: model:ir.model,name:mobile_web.model_ir_ui_menu
+msgid "Menu"
+msgstr "菜单"
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_ir_ui_menu__device_type
+msgid "Menu Show Device Type"
+msgstr "菜单显示的设备类型"
+
+#. module: mobile_web
+#: model:ir.model.fields.selection,name:mobile_web.selection__ir_ui_menu__device_type__mobile
+msgid "Mobile"
+msgstr "移动端"
+
+#. module: mobile_web
+#: model:ir.module.module,shortdesc:base.module_mobile_web
+msgid "Mobile Web"
+msgstr "移动端网页"
+
+#. module: mobile_web
+#: model:ir.actions.mobile_page,name:mobile_web.home_page_action
+msgid "Mobile Web Home Page Action"
+msgstr "移动端主页动作"
+
+#. module: mobile_web
+#: model:ir.actions.mobile_page,name:mobile_web.schedule_page_action
+msgid "Mobile Web Schedule Page Action"
+msgstr "移动端日程页动作"
+
+#. module: mobile_web
+#: model:ir.actions.mobile_page,name:mobile_web.todo_page_action
+msgid "Mobile Web TODO Page Action"
+msgstr "移动端待办页动作"
+
+#. module: mobile_web
+#: model:ir.actions.mobile_page,name:mobile_web.user_my_page_action
+msgid "Mobile Web UserMy Page Action"
+msgstr "移动端我的页动作"
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/pages/home/components/home_report.js:0
+msgid "More >"
+msgstr "更多 >"
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/pages/my/my_page.js:0
+msgid "My"
+msgstr "我的"
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/texts.js:0
+msgid "No"
+msgstr "否"
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/texts.js:0
+msgid "No matching results"
+msgstr "没有匹配的结果"
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/kanban/mobile_kanban_view.js:0
+#: code:addons/mobile_web/static/src/views/list/mobile_list_view.js:0
+msgid "No records"
+msgstr "没有记录"
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/pages/home/components/suggestion_list.js:0
+msgid "No suggestions yet"
+msgstr "暂无推荐内容"
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/texts.js:0
+msgid "None"
+msgstr "无"
+
+#. module: mobile_web
+#. odoo-python
+#: code:addons/mobile_web/controllers/home.py:0
+msgid ""
+"Only employees can access this database. Please contact the administrator."
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/form/mobile_form_view.js:0
+msgid "Operation failed"
+msgstr "操作失败"
+
+#. module: mobile_web
+#: model:ir.model.fields,help:mobile_web.field_ir_actions_mobile_page__help
+msgid ""
+"Optional help text for the users with a description of the target view, such"
+" as its usage and purpose."
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page__page_component_id
+msgid "Owl Component ID which defined in frontend MobilePage registry"
+msgstr "前端 MobilePage 注册表中定义的 Owl 组件 ID"
+
+#. module: mobile_web
+#: model:ir.model.fields.selection,name:mobile_web.selection__ir_ui_menu__device_type__pc
+msgid "PC"
+msgstr "电脑端"
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/form/layout.js:0
+msgid "Page %s"
+msgstr "页 %s"
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__path
+msgid "Path to show in the URL"
+msgstr "URL 中显示的路径"
+
+#. module: mobile_web
+#: model_terms:ir.ui.view,arch_db:mobile_web.login
+msgid "Please enter your password"
+msgstr "请输入密码"
+
+#. module: mobile_web
+#: model_terms:ir.ui.view,arch_db:mobile_web.login
+msgid "Please enter your username"
+msgstr "请输入用户名"
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/kanban/mobile_kanban_view.js:0
+#: code:addons/mobile_web/static/src/views/list/mobile_list_view.js:0
+msgid "Refresh"
+msgstr "刷新"
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page_actions__name
+msgid "Relation Action Name"
+msgstr "关联动作名称"
+
+#. module: mobile_web
+#: model_terms:ir.ui.view,arch_db:mobile_web.login
+msgid "Remember password"
+msgstr "记住密码"
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/form/mobile_form_view.js:0
+msgid "Save"
+msgstr "保存"
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/form/mobile_form_view.js:0
+msgid "Saved"
+msgstr "已保存"
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/form/mobile_form_view.js:0
+msgid "Saving…"
+msgstr "保存中…"
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/pages/schedule/schedule_page.js:0
+msgid "Schedule"
+msgstr "日程"
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/texts.js:0
+msgid "Search"
+msgstr "搜索"
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/texts.js:0
+msgid "Select image"
+msgstr "选择图片"
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/texts.js:0
+msgid "Select…"
+msgstr "请选择"
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page_actions__sequence
+msgid "Sequence"
+msgstr "序号"
+
+#. module: mobile_web
+#: model:ir.model.fields,help:mobile_web.field_ir_actions_mobile_page__binding_model_id
+msgid ""
+"Setting a value makes this action available in the sidebar for the given "
+"model."
+msgstr ""
+
+#. module: mobile_web
+#: model_terms:ir.ui.view,arch_db:mobile_web.login_new_password
+#: model_terms:ir.ui.view,arch_db:mobile_web.login_retrieve_password
+msgid "TODO"
+msgstr "待实现"
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/form/mobile_form_view.js:0
+msgid "The record does not exist or has been deleted"
+msgstr "记录不存在或已被删除"
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/pages/todo/todo_page.js:0
+msgid "To do"
+msgstr "待办"
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/form/mobile_form_view.js:0
+msgid "Unsaved changes"
+msgstr "未保存的修改"
+
+#. module: mobile_web
+#: model:ir.model.fields,help:mobile_web.field_ir_actions_mobile_page__explanation
+msgid "Verbose description of what this action actually does"
+msgstr "描述此动作实际执行的内容"
+
+#. module: mobile_web
+#. odoo-python
+#: code:addons/mobile_web/controllers/home.py:0
+msgid "Wrong login/password"
+msgstr "用户名或密码错误"
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/texts.js:0
+msgid "Yes"
+msgstr "是"
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__binding_mobile_page
+msgid ""
+"action type: `ir.actions.mobile_page` binding mobile_web.mobile.page record"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page__binding_views
+msgid "ir.ui.view records which bind to current MobilePage"
+msgstr "与当前 MobilePage 关联的 ir.ui.view 记录"
+
+#. module: mobile_web
+#: model:ir.model,name:mobile_web.model_mobile_web_mobile_page
+msgid "mobile_web.mobile.page"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model,name:mobile_web.model_mobile_web_mobile_page_actions
+msgid "mobile_web.mobile.page.actions"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page__name
+msgid "page name"
+msgstr "页面名称"
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page_actions__ir_action
+msgid "relation ir_action"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page_actions__mobile_page
+msgid "relation mobile_page"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page_actions__svg_icon_href
+msgid "svg use item href(xlink:href) property, such as `#crossnow-icon-TabMy`"
+msgstr ""
+
+#. module: mobile_web
+#: model:mobile_web.mobile.page,name:mobile_web.todo_page
+msgid "待办"
+msgstr "待办"
+
+#. module: mobile_web
+#: model:mobile_web.mobile.page,name:mobile_web.user_my_page
+msgid "我的"
+msgstr "我的"
+
+#. module: mobile_web
+#: model:mobile_web.mobile.page,name:mobile_web.schedule_page
+msgid "日程"
+msgstr "日程"

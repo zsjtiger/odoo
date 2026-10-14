@@ -166,7 +166,7 @@ test("editing a field marks the form dirty and save writes the change", async ()
     await mountWithCleanup(MobileFormView, { props: formProps() });
     typeValue(queryAll(".m_form_field input")[0], "Gamma");
     await settle();
-    expect(queryOne(".m_form_status")).toHaveText("未保存的修改");
+    expect(queryOne(".m_form_status")).toHaveText("Unsaved changes");
     await click(".m_form_footer .m_btn_primary");
     await settle();
     expect(writes).toEqual([{ name: "Gamma" }]);

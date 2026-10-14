@@ -7,6 +7,7 @@ import { MobileRecordModel } from "@mobile_web/views/record_model";
 import { RecordCollection } from "@mobile_web/views/record_list";
 import { hasDisplayValue } from "@mobile_web/views/fields/field_utils";
 import { useInfiniteScroll } from "@mobile_web/views/infinite_scroll";
+import { _t } from "@web/core/data/l10n/translation";
 
 /**
  * 找到卡片的字段布局: 优先使用 templates 中的 card 模板, 否则使用看板根节点下的字段
@@ -45,12 +46,21 @@ function collectCardFields(nodes) {
  *
  * 只支持 arch 中的字段, 不解析 QWeb 的条件/样式指令
  */
+// 界面文字, 由 _t 包装并通过 i18n/*.po 翻译(模板中用 this.texts 引用)
+const TEXTS = {
+    refresh: _t("Refresh"),
+    loadFailed: _t("Failed to load, please try again"),
+    noRecords: _t("No records"),
+    loading: _t("Loading…"),
+};
+
 export class MobileKanbanView extends Component {
+    texts = TEXTS;
     static template = xml`
         <t t-name="mobile_web.MobileKanbanView">
             <div class="m_kanban_view">
                 <div class="m_list_meta">
-                    <button type="button" class="m_link_button" t-on-click="this.onRefresh">刷新</button>
+                    <button type="button" class="m_link_button" t-on-click="this.onRefresh"><t t-esc="this.texts.refresh"/></button>
                 </div>
                 <ul class="m_kanban">
                     <li t-foreach="this.collection.state.records" t-as="record" t-key="record.resId">
@@ -66,8 +76,8 @@ export class MobileKanbanView extends Component {
                         </button>
                     </li>
                 </ul>
-                <p t-if="this.collection.state.error" class="m_error">加载失败, 请重试</p>
-                <p t-if="!this.collection.state.loading and this.collection.state.total === 0" class="m_empty">没有记录</p>
+                <p t-if="this.collection.state.error" class="m_error"><t t-esc="this.texts.loadFailed"/></p>
+                <p t-if="!this.collection.state.loading and this.collection.state.total === 0" class="m_empty"><t t-esc="this.texts.noRecords"/></p>
                 <div t-ref="this.infinite.sentinel" class="m_load_sentinel">
                     <t t-esc="this.sentinelText"/>
                 </div>
@@ -127,7 +137,7 @@ export class MobileKanbanView extends Component {
     }
 
     get sentinelText() {
-        return this.collection.state.loading ? "加载中…" : "";
+        return this.collection.state.loading ? this.texts.loading : "";
     }
 
     onCardClick(ev) {

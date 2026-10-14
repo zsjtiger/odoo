@@ -3,6 +3,8 @@ import { useService } from "@web/core/utils/hooks";
 import { mobileFieldRegistry } from "@mobile_web/views/registries";
 import { fieldProps, displayOrEmpty } from "@mobile_web/views/fields/field_utils";
 import { MobileSelectSheet } from "@mobile_web/views/widgets/select_sheet";
+import { fieldTexts } from "@mobile_web/views/texts";
+import { _t } from "@web/core/data/l10n/translation";
 
 /**
  * 关系字段的值统一为 [id, name] (many2one) 或 [[id, name], ...] (x2many)
@@ -31,6 +33,7 @@ function makeNameSearch(orm, relation, context) {
 // -----------------------------------------------------------------------------
 
 export class Many2oneField extends Component {
+    texts = fieldTexts;
     static components = { MobileSelectSheet };
     static template = xml`
         <t t-name="mobile_web.Many2oneField">
@@ -38,7 +41,7 @@ export class Many2oneField extends Component {
             <t t-else="">
                 <button type="button" class="m_picker_button" t-on-click="this.openSheet">
                     <span t-if="this.current" class="m_picker_value"><t t-esc="this.displayName"/></span>
-                    <span t-else="" class="m_picker_placeholder">请选择</span>
+                    <span t-else="" class="m_picker_placeholder"><t t-esc="this.texts.select"/></span>
                     <span class="m_picker_caret">›</span>
                 </button>
                 <MobileSelectSheet t-if="this.state.open" title="this.props.field.string"
@@ -83,15 +86,16 @@ mobileFieldRegistry.add("many2one", Many2oneField);
 // -----------------------------------------------------------------------------
 
 export class Many2manyField extends Component {
+    texts = fieldTexts;
     static components = { MobileSelectSheet };
     static template = xml`
         <t t-name="mobile_web.Many2manyField">
             <div class="m_tags">
                 <span t-foreach="this.pairs" t-as="pair" t-key="pair[0]" class="m_tag"><t t-esc="pair[1]"/></span>
-                <span t-if="!this.pairs.length and !this.props.compact" class="m_field_value m_field_empty">无</span>
+                <span t-if="!this.pairs.length and !this.props.compact" class="m_field_value m_field_empty"><t t-esc="this.texts.none"/></span>
             </div>
             <button t-if="!this.props.readonly" type="button" class="m_picker_button m_picker_button_compact" t-on-click="this.openSheet">
-                编辑 <span class="m_picker_caret">›</span>
+                <t t-esc="this.texts.edit"/> <span class="m_picker_caret">›</span>
             </button>
             <MobileSelectSheet t-if="this.state.open" title="this.props.field.string" multiple="true"
                 search="this.search" selected="this.currentItems"
@@ -132,17 +136,22 @@ mobileFieldRegistry.add("many2many", Many2manyField);
 const ONE2MANY_PREVIEW = 5;
 
 export class One2manyField extends Component {
+    texts = fieldTexts;
     static template = xml`
         <t t-name="mobile_web.One2manyField">
             <ul class="m_one2many_list">
                 <li t-foreach="this.preview" t-as="pair" t-key="pair[0]"><t t-esc="pair[1]"/></li>
-                <li t-if="this.hiddenCount > 0" class="m_field_empty">还有 <t t-esc="this.hiddenCount"/> 项</li>
-                <li t-if="!this.pairs.length and !this.props.compact" class="m_field_empty">无</li>
+                <li t-if="this.hiddenCount > 0" class="m_field_empty"><t t-esc="this.moreText"/></li>
+                <li t-if="!this.pairs.length and !this.props.compact" class="m_field_empty"><t t-esc="this.texts.none"/></li>
             </ul>
-            <p t-if="!this.props.readonly" class="m_field_hint">明细请在电脑端编辑</p>
+            <p t-if="!this.props.readonly" class="m_field_hint"><t t-esc="this.texts.editOnDesktop"/></p>
         </t>
     `;
     props = useProps(fieldProps);
+
+    get moreText() {
+        return _t("%s more lines", this.hiddenCount);
+    }
 
     get pairs() {
         return (this.props.record.data[this.props.name] || []).map(([id, name]) => [id, name ?? `#${id}`]);
@@ -161,20 +170,21 @@ mobileFieldRegistry.add("one2many", One2manyField);
 // -----------------------------------------------------------------------------
 
 export class BinaryField extends Component {
+    texts = fieldTexts;
     static template = xml`
         <t t-name="mobile_web.BinaryField">
             <t t-if="this.props.readonly">
                 <img t-if="this.imageSrc" class="m_field_image" t-att-src="this.imageSrc" alt=""/>
-                <span t-elif="!this.props.compact" class="m_field_value m_field_empty">无</span>
+                <span t-elif="!this.props.compact" class="m_field_value m_field_empty"><t t-esc="this.texts.none"/></span>
             </t>
             <div t-else="" class="m_binary">
                 <img t-if="this.imageSrc" class="m_field_image" t-att-src="this.imageSrc" alt=""/>
                 <div class="m_binary_actions">
                     <label class="m_picker_button m_picker_button_compact">
-                        <t t-esc="this.hasValue ? '更换图片' : '选择图片'"/>
+                        <t t-esc="this.hasValue ? this.texts.changeImage : this.texts.selectImage"/>
                         <input type="file" accept="image/*" capture="environment" class="m_visually_hidden" t-on-change="this.onFile"/>
                     </label>
-                    <button t-if="this.hasValue" type="button" class="m_picker_button m_picker_button_compact m_button_danger" t-on-click="this.onClear">删除</button>
+                    <button t-if="this.hasValue" type="button" class="m_picker_button m_picker_button_compact m_button_danger" t-on-click="this.onClear"><t t-esc="this.texts.delete"/></button>
                 </div>
             </div>
         </t>

@@ -1,7 +1,14 @@
 import { Component, xml, onWillStart } from "@odoo/owl";
+import { _t } from "@web/core/data/l10n/translation";
 
+
+// 界面文字, 由 _t 包装并通过 i18n/*.po 翻译(模板中用 this.texts 引用)
+const TEXTS = {
+    more: _t("More >"),
+};
 
 export class HomeReport extends Component {
+    texts = TEXTS;
     static template = xml`
         <t t-name="mobile_web.HomePage.HomeReport">
             <div class="m_home_page_report card">
@@ -13,7 +20,7 @@ export class HomeReport extends Component {
                 </t>
 
                 <div class="more_report">
-                    更多>
+                    <t t-esc="this.texts.more"/>
                 </div>
             </div>
         </t>
@@ -32,15 +39,15 @@ export class HomeReport extends Component {
     async _loadReportData() {
         return [
             {
-                name: '数据1',
+                name: _t("Data 1"),
                 value: 70
             },
             {
-                name: '数据2',
+                name: _t("Data 2"),
                 value: 33
             },
             {
-                name: '数据3',
+                name: _t("Data 3"),
                 value: 32
             }
         ]

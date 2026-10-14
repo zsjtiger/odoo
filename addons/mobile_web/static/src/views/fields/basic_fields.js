@@ -2,6 +2,7 @@ import { Component, proxy, useProps, xml } from "@odoo/owl";
 import { mobileFieldRegistry } from "@mobile_web/views/registries";
 import { fieldProps, displayOrEmpty } from "@mobile_web/views/fields/field_utils";
 import { MobileSelectSheet } from "@mobile_web/views/widgets/select_sheet";
+import { fieldTexts } from "@mobile_web/views/texts";
 import { deserializeDate, deserializeDateTime, serializeDateTime } from "@web/core/data/l10n/dates";
 import { formatDate, formatDateTime, formatFloat, formatInteger, formatMonetary } from "@web/views/fields/formatters";
 
@@ -145,6 +146,7 @@ mobileFieldRegistry.add("monetary", NumberField);
 // -----------------------------------------------------------------------------
 
 export class BooleanField extends Component {
+    texts = fieldTexts;
     static template = xml`
         <t t-name="mobile_web.BooleanField">
             <span t-if="this.props.readonly" class="m_field_value"><t t-esc="this.label"/></span>
@@ -158,7 +160,7 @@ export class BooleanField extends Component {
     props = useProps(fieldProps);
 
     get label() {
-        return this.props.record.data[this.props.name] ? "是" : "否";
+        return this.props.record.data[this.props.name] ? this.texts.yes : this.texts.no;
     }
     onInput(ev) {
         this.props.onChange(ev.target.checked);
@@ -171,6 +173,7 @@ mobileFieldRegistry.add("boolean", BooleanField);
 // -----------------------------------------------------------------------------
 
 export class SelectionField extends Component {
+    texts = fieldTexts;
     static components = { MobileSelectSheet };
     static template = xml`
         <t t-name="mobile_web.SelectionField">
@@ -178,7 +181,7 @@ export class SelectionField extends Component {
             <t t-else="">
                 <button type="button" class="m_picker_button" t-on-click="this.openSheet">
                     <span t-if="this.hasValue" class="m_picker_value"><t t-esc="this.label"/></span>
-                    <span t-else="" class="m_picker_placeholder">请选择</span>
+                    <span t-else="" class="m_picker_placeholder"><t t-esc="this.texts.select"/></span>
                     <span class="m_picker_caret">›</span>
                 </button>
                 <MobileSelectSheet t-if="this.state.open" title="this.props.field.string"

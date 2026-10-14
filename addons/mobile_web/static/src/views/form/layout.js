@@ -1,5 +1,6 @@
 import { getFieldWidget } from "@mobile_web/views/fields/index";
 import { isInvisible } from "@mobile_web/views/arch";
+import { _t } from "@web/core/data/l10n/translation";
 
 // 表单中不展示的标签: 按钮与头部操作在 v1 中不支持
 const SKIPPED_TAGS = ["header", "footer", "button", "label", "field_info"];
@@ -50,7 +51,7 @@ export function buildLayout(node, fields, keyPrefix = "b") {
                 const pages = child.children
                     .filter((p) => p.tag === "page" && !isInvisible(p))
                     .map((page, pageIndex) => ({
-                        title: page.attrs.string || `页 ${pageIndex + 1}`,
+                        title: page.attrs.string || _t("Page %s", pageIndex + 1),
                         blocks: buildLayout(page, fields, `${key}.${pageIndex}`),
                     }));
                 blocks.push({ kind: "notebook", key, pages });

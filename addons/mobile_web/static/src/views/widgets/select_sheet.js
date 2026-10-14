@@ -1,4 +1,5 @@
 import { Component, onWillStart, onWillUnmount, proxy, t, useProps, xml } from "@odoo/owl";
+import { fieldTexts } from "@mobile_web/views/texts";
 
 /**
  * 移动端的底部弹层选择器: 用于 selection / many2one / many2many
@@ -10,23 +11,24 @@ import { Component, onWillStart, onWillUnmount, proxy, t, useProps, xml } from "
  * 选项格式统一为 {id, name}
  */
 export class MobileSelectSheet extends Component {
+    texts = fieldTexts;
     static template = xml`
         <t t-name="mobile_web.MobileSelectSheet">
             <div class="m_sheet_backdrop" t-on-click="this.onBackdropClick">
                 <div class="m_sheet" role="dialog">
                     <header class="m_sheet_header">
-                        <button type="button" class="m_sheet_btn" t-on-click="this.onCancel">取消</button>
+                        <button type="button" class="m_sheet_btn" t-on-click="this.onCancel"><t t-esc="this.texts.cancel"/></button>
                         <span class="m_sheet_title"><t t-esc="this.props.title"/></span>
-                        <button t-if="this.props.multiple" type="button" class="m_sheet_btn m_sheet_btn_primary" t-on-click="this.onConfirmMulti">确定</button>
+                        <button t-if="this.props.multiple" type="button" class="m_sheet_btn m_sheet_btn_primary" t-on-click="this.onConfirmMulti"><t t-esc="this.texts.confirm"/></button>
                         <span t-else="" class="m_sheet_btn_spacer"></span>
                     </header>
                     <div class="m_sheet_search">
-                        <input type="search" class="m_input" placeholder="搜索" enterkeyhint="search"
+                        <input type="search" class="m_input" t-att-placeholder="this.texts.search" enterkeyhint="search"
                                t-att-value="this.state.text" t-on-input="this.onSearchInput"/>
                     </div>
                     <ul class="m_sheet_list">
                         <li t-if="this.props.allowClear">
-                            <button type="button" class="m_sheet_item m_sheet_item_clear" t-on-click="this.onClear">不选</button>
+                            <button type="button" class="m_sheet_item m_sheet_item_clear" t-on-click="this.onClear"><t t-esc="this.texts.clearSelection"/></button>
                         </li>
                         <t t-foreach="this.state.items" t-as="item" t-key="item.id">
                             <li>
@@ -37,8 +39,8 @@ export class MobileSelectSheet extends Component {
                                 </button>
                             </li>
                         </t>
-                        <li t-if="this.state.loading" class="m_sheet_status">加载中…</li>
-                        <li t-elif="!this.state.items.length" class="m_sheet_status">没有匹配的结果</li>
+                        <li t-if="this.state.loading" class="m_sheet_status"><t t-esc="this.texts.loading"/></li>
+                        <li t-elif="!this.state.items.length" class="m_sheet_status"><t t-esc="this.texts.noMatch"/></li>
                     </ul>
                 </div>
             </div>

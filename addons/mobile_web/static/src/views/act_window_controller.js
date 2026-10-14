@@ -6,6 +6,8 @@ import { rpc } from "@web/core/services/network/rpc";
 import { router as _router } from "@mobile_web/core/browser/router";
 import { buildRouteState, getActionViews, hasFormView } from "@mobile_web/webclient/actions/action_utils";
 import { mobileViewRegistry } from "@mobile_web/views/registries";
+import { fieldTexts } from "@mobile_web/views/texts";
+import { _t } from "@web/core/data/l10n/translation";
 import "@mobile_web/views/index";
 
 // -----------------------------------------------------------------------------
@@ -23,11 +25,12 @@ import "@mobile_web/views/index";
  * - 与 router 联动, 将当前 resId 写入 URL
  */
 export class MobileActWindowController extends Component {
+    texts = fieldTexts;
     static template = xml`
         <t t-name="mobile_web.MobileActWindowController">
             <div class="m_act_window_controller">
                 <div class="m_search_bar" t-if="this.state.type !== 'form' and this.hasSearch">
-                    <input type="search" class="m_search_input" placeholder="搜索" enterkeyhint="search"
+                    <input type="search" class="m_search_input" t-att-placeholder="this.texts.search" enterkeyhint="search"
                            t-on-keydown="this.onSearchKeydown"/>
                 </div>
                 <t t-if="this.state.ready">
@@ -210,7 +213,7 @@ export class MobileActWindowController extends Component {
         // web 的视图使用 undefined 表示新建记录, "new" 只保留在 URL 状态中
         this._switchToForm(undefined);
         this._pushRouteState("new");
-        this._setNavbarTitle(`${action.display_name || "Odoo"} - 新建`);
+        this._setNavbarTitle(_t("%s - New", action.display_name || "Odoo"));
     }
 
     _switchToForm(resId) {
