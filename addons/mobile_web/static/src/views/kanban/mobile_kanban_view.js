@@ -1,6 +1,8 @@
 import { Component, onWillStart, onWillUpdateProps, proxy, t, useProps, xml } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { ActionSheet } from "@mobile_web/widgets/action_sheet/action_sheet";
+import { SortFilterBar } from "@mobile_web/widgets/sort_filter/sort_filter";
+import { buildFilterDomain, filterableFields, sortableFields } from "@mobile_web/views/record_filters";
 import { buttonItems, collectButtons, runRecordButton } from "@mobile_web/actions/record_buttons";
 import { mobileViewRegistry } from "@mobile_web/views/registries";
 import { parseArch, collectFieldNames, isHiddenColumn, splitColumns } from "@mobile_web/views/arch";
@@ -62,13 +64,14 @@ const TEXTS = {
 
 export class MobileKanbanView extends Component {
     texts = TEXTS;
-    static components = { ActionSheet };
+    static components = { ActionSheet, SortFilterBar };
     static template = xml`
         <t t-name="mobile_web.MobileKanbanView">
             <div class="m_kanban_view">
                 <div class="m_list_meta">
                     <button type="button" class="m_link_button" t-on-click="this.onRefresh"><t t-esc="this.texts.refresh"/></button>
                 </div>
+                <SortFilterBar t-if="this.sortFields.length or this.filterFields.length" sortFields="this.sortFields" filterFields="this.filterFields" onChange="this.onSortFilter"/>
                 <ul class="m_kanban">
                     <li t-foreach="this.collection.state.records" t-as="record" t-key="record.resId"
                         t-attf-class="{{ this.rowButtons.length ? 'has_more' : '' }}">
@@ -115,16 +118,20 @@ export class MobileKanbanView extends Component {
         const { primary, secondary } = splitColumns(columns);
         this.title = primary;
         this.lines = secondary;
+        const sortInfo = columns;
+        this.sortFields = sortableFields(sortInfo);
+        this.filterFields = filterableFields(sortInfo);
+        this.filterDomain = [];
         const fieldNames = [...collectFieldNames(root)];
         this.collection = new RecordCollection(
             new MobileRecordModel(this.orm, this.props.resModel, this.props.fields, this.props.context),
             fieldNames
         );
-        onWillStart(() => this.collection.reload(this.props.domain));
+        onWillStart(() => this.reloadCollection());
         this.infinite = useInfiniteScroll(this.collection);
         onWillUpdateProps((nextProps) => {
-            if (JSON.stringify(nextProps.domain) !== JSON.stringify(this.collection.domain)) {
-                return this.collection.reload(nextProps.domain).then(() => this.infinite.recheck());
+            if (JSON.stringify(this.combinedDomain(nextProps)) !== JSON.stringify(this.collection.domain)) {
+                return this.reloadCollection(nextProps).then(() => this.infinite.recheck());
             }
         });
     }
@@ -187,7 +194,7 @@ export class MobileKanbanView extends Component {
                 mobileAction: this.mobileAction,
             });
             if (reload) {
-                await this.collection.reload();
+                await this.reloadCollection();
             }
         } catch (error) {
             notify(this.notification, error?.data?.message || error?.message || this.texts.actionFailed, {
@@ -197,12 +204,28 @@ export class MobileKanbanView extends Component {
         }
     };
 
+    /** 视图的 domain 与排序/筛选条件合并后查询 */
+    combinedDomain(props = this.props) {
+        return [...(props.domain || []), ...this.filterDomain];
+    }
+
+    reloadCollection(props = this.props) {
+        return this.collection.reload(this.combinedDomain(props), this.collection.order);
+    }
+
+    /** 排序与筛选栏的变化: 更新条件并重新加载第一页 */
+    // 作为子组件的回调传递, 使用箭头函数保持 this
+    onSortFilter = ({ order, filter }) => {
+        this.filterDomain = buildFilterDomain(filter);
+        return this.collection.reload(this.combinedDomain(), order);
+    };
+
     onCardClick(ev) {
         this.props.onSelect(Number(ev.currentTarget.dataset.id));
     }
 
     onRefresh() {
-        return this.collection.reload();
+        return this.reloadCollection();
     }
 }
 

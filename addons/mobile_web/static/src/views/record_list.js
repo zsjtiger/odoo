@@ -17,6 +17,8 @@ export class RecordCollection {
         this.model = model;
         this.fieldNames = fieldNames;
         this.domain = [];
+        // 排序: 如 "name desc", 空表示服务端默认顺序
+        this.order = "";
         this.state = proxy({
             records: [],
             total: null,
@@ -29,8 +31,9 @@ export class RecordCollection {
     /**
      * 重新加载第一页
      */
-    async reload(domain = this.domain) {
+    async reload(domain = this.domain, order = this.order) {
         this.domain = domain;
+        this.order = order;
         const requestId = ++this.requestId;
         this.state.loading = true;
         this.state.error = null;
@@ -40,6 +43,7 @@ export class RecordCollection {
                 fieldNames: this.fieldNames,
                 offset: 0,
                 limit: PAGE_SIZE,
+                order: this.order,
             });
             if (requestId !== this.requestId) {
                 return;
@@ -70,6 +74,7 @@ export class RecordCollection {
                 fieldNames: this.fieldNames,
                 offset: this.state.records.length,
                 limit: PAGE_SIZE,
+                order: this.order,
             });
             if (requestId !== this.requestId) {
                 return;

@@ -8,6 +8,8 @@ import { RecordCollection } from "@mobile_web/views/record_list";
 import { hasDisplayValue } from "@mobile_web/fields/field_utils";
 import { useInfiniteScroll } from "@mobile_web/views/infinite_scroll";
 import { ActionSheet } from "@mobile_web/widgets/action_sheet/action_sheet";
+import { SortFilterBar } from "@mobile_web/widgets/sort_filter/sort_filter";
+import { buildFilterDomain, filterableFields, sortableFields } from "@mobile_web/views/record_filters";
 import { buttonItems, collectButtons, runRecordButton } from "@mobile_web/actions/record_buttons";
 import { readonlyFieldRecord } from "@mobile_web/fields/field_record";
 import { _t } from "@web/core/data/l10n/translation";
@@ -30,13 +32,14 @@ const TEXTS = {
 
 export class MobileListView extends Component {
     texts = TEXTS;
-    static components = { ActionSheet };
+    static components = { ActionSheet, SortFilterBar };
     static template = xml`
         <t t-name="mobile_web.MobileListView">
             <div class="m_list_view">
                 <div class="m_list_meta">
                     <button type="button" class="m_link_button" t-on-click="this.onRefresh"><t t-esc="this.texts.refresh"/></button>
                 </div>
+                <SortFilterBar t-if="this.sortFields.length or this.filterFields.length" sortFields="this.sortFields" filterFields="this.filterFields" onChange="this.onSortFilter"/>
                 <ul class="m_list">
                     <li t-foreach="this.collection.state.records" t-as="record" t-key="record.resId"
                         t-attf-class="{{ this.rowButtons.length ? 'has_more' : '' }}">
@@ -82,13 +85,17 @@ export class MobileListView extends Component {
         const { primary, secondary } = splitColumns(columns.map((c) => this.column(c)));
         this.primary = primary;
         this.secondary = secondary;
+        const sortInfo = columns.map((c) => this.column(c));
+        this.sortFields = sortableFields(sortInfo);
+        this.filterFields = filterableFields(sortInfo);
+        this.filterDomain = [];
         const fieldNames = [...collectFieldNames(node)];
         this.collection = new RecordCollection(this.makeModel(), fieldNames);
-        onWillStart(() => this.collection.reload(this.props.domain));
+        onWillStart(() => this.reloadCollection());
         this.infinite = useInfiniteScroll(this.collection);
         onWillUpdateProps((nextProps) => {
-            if (JSON.stringify(nextProps.domain) !== JSON.stringify(this.collection.domain)) {
-                return this.collection.reload(nextProps.domain).then(() => this.infinite.recheck());
+            if (JSON.stringify(this.combinedDomain(nextProps)) !== JSON.stringify(this.collection.domain)) {
+                return this.reloadCollection(nextProps).then(() => this.infinite.recheck());
             }
         });
     }
@@ -159,7 +166,7 @@ export class MobileListView extends Component {
                 mobileAction: this.mobileAction,
             });
             if (reload) {
-                await this.collection.reload();
+                await this.reloadCollection();
             }
         } catch (error) {
             notify(this.notification, error?.data?.message || error?.message || this.texts.actionFailed, {
@@ -169,12 +176,28 @@ export class MobileListView extends Component {
         }
     };
 
+    /** 视图的 domain 与排序/筛选条件合并后查询 */
+    combinedDomain(props = this.props) {
+        return [...(props.domain || []), ...this.filterDomain];
+    }
+
+    reloadCollection(props = this.props) {
+        return this.collection.reload(this.combinedDomain(props), this.collection.order);
+    }
+
+    /** 排序与筛选栏的变化: 更新条件并重新加载第一页 */
+    // 作为子组件的回调传递, 使用箭头函数保持 this
+    onSortFilter = ({ order, filter }) => {
+        this.filterDomain = buildFilterDomain(filter);
+        return this.collection.reload(this.combinedDomain(), order);
+    };
+
     onRowClick(ev) {
         this.props.onSelect(Number(ev.currentTarget.dataset.id));
     }
 
     onRefresh() {
-        return this.collection.reload();
+        return this.reloadCollection();
     }
 }
 

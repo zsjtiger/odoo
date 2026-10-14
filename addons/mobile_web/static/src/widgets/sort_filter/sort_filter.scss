@@ -1,0 +1,32 @@
+// 排序与筛选栏: 同一行中的下拉选择与文本输入, 触控目标不小于 44px
+.m_sort_filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    padding: 8px 16px;
+    background: $surface;
+    border-bottom: 1px solid $line;
+}
+
+.m_sort_filter_select,
+.m_sort_filter_input {
+    min-height: 44px;
+    max-width: 100%;
+    padding: 0 10px;
+    border: 1px solid $line;
+    border-radius: 8px;
+    background: $surface;
+    color: $text;
+    font-size: 16px;
+}
+
+.m_sort_filter_dir {
+    min-width: 44px;
+    min-height: 44px;
+    border: 1px solid $line;
+    border-radius: 8px;
+    background: $surface;
+    color: $theme;
+    font-size: 18px;
+}
