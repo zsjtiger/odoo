@@ -3,7 +3,7 @@ import { click, queryAll, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { mountWithCleanup } from "@web/../tests/_framework/component_test_helpers";
 import { onRpc } from "@web/../tests/web_test_helpers";
-import { BinaryField, Many2manyField, Many2oneField, One2manyField } from "@mobile_web/fields/relational_fields";
+import { BinaryField, ManyToManyCheckboxesField, Many2manyField, Many2oneField, One2manyField } from "@mobile_web/fields/relational_fields";
 import { fieldProps, recordOf } from "@mobile_web/../tests/helpers/field_props";
 
 describe.current.tags("mobile");
@@ -166,4 +166,38 @@ test("binary shows None when readonly and empty", async () => {
     });
     expect(queryOne(".m_field_empty")).toHaveText("None");
     expect(queryAll("img.m_field_image").length).toBe(0);
+});
+
+test("many2many checkboxes lists the candidates and reports the toggled selection", async () => {
+    const values = [];
+    onRpc("res.partner", "name_search", () => [
+        [1, "Alpha"],
+        [2, "Beta"],
+    ]);
+    await mountWithCleanup(ManyToManyCheckboxesField, {
+        props: fieldProps({
+            name: "tag_ids",
+            field: { type: "many2many", string: "Tags", relation: "res.partner" },
+            record: recordOf({ tag_ids: [[1, "Alpha"]] }),
+            onChange: (value) => values.push(value),
+        }),
+    });
+    await settle();
+    const boxes = queryAll("input[type=checkbox]");
+    expect(boxes.map((b) => b.checked)).toEqual([true, false]);
+    boxes[1].checked = true;
+    boxes[1].dispatchEvent(new Event("change"));
+    expect(values).toEqual([[[1, "Alpha"], [2, "Beta"]]]);
+});
+
+test("many2many checkboxes show the selected names when readonly", async () => {
+    await mountWithCleanup(ManyToManyCheckboxesField, {
+        props: fieldProps({
+            name: "tag_ids",
+            field: { type: "many2many", string: "Tags", relation: "res.partner" },
+            readonly: true,
+            record: recordOf({ tag_ids: [[1, "Alpha"]] }),
+        }),
+    });
+    expect(queryOne(".m_tag")).toHaveText("Alpha");
 });

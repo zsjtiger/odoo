@@ -111,3 +111,89 @@
         border-radius: 4px;
     }
 }
+
+// 单选按钮组
+.m_radio_group {
+    display: flex;
+    flex-direction: column;
+}
+
+.m_radio {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    font-size: 16px;
+    input {
+        width: 20px;
+        height: 20px;
+        margin: 0;
+        accent-color: $theme-btn;
+    }
+}
+
+// 状态条: 选项横向排列, 当前状态高亮
+.m_statusbar {
+    display: flex;
+    overflow-x: auto;
+    border: 1px solid $line;
+    border-radius: 6px;
+}
+
+.m_statusbar_item {
+    flex: 1 0 auto;
+    min-height: 36px;
+    padding: 0 12px;
+    border: none;
+    border-right: 1px solid $line;
+    background: $surface;
+    color: $muted;
+    font-size: 14px;
+    &:last-child {
+        border-right: none;
+    }
+    &.is_active {
+        background: $theme-btn;
+        color: #fff;
+        font-weight: 600;
+    }
+}
+
+// 星级
+.m_priority {
+    display: flex;
+    gap: 4px;
+}
+
+.m_priority_star {
+    min-width: 44px;
+    min-height: 44px;
+    border: none;
+    background: transparent;
+    color: #d0d0d0;
+    font-size: 24px;
+    &.is_active {
+        color: #f0a030;
+    }
+}
+
+// 多选复选框
+.m_checkbox_list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.m_checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    font-size: 16px;
+    input {
+        width: 20px;
+        height: 20px;
+        margin: 0;
+        accent-color: $theme-btn;
+    }
+}

@@ -12,7 +12,7 @@ export class FormBlocks extends Component {
                     <FormBlocks blocks="block.children" record="this.props.record" resModel="this.props.resModel" onFieldChange="this.props.onFieldChange"/>
                 </section>
                 <div t-elif="block.kind === 'field'" t-attf-class="m_form_field {{ block.stacked ? 'is_stacked' : '' }}">
-                    <label class="m_form_label"><t t-esc="block.label"/></label>
+                    <label t-if="!block.hideLabel" class="m_form_label"><t t-esc="block.label"/></label>
                     <div class="m_form_value">
                         <t t-component="block.widget" t-props="this.fieldProps(block)"/>
                     </div>

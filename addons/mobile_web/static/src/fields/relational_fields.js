@@ -1,4 +1,4 @@
-import { Component, proxy, useProps, xml } from "@odoo/owl";
+import { Component, onWillStart, proxy, useProps, xml } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { mobileFieldRegistry } from "@mobile_web/views/registries";
 import { fieldProps, displayOrEmpty } from "@mobile_web/fields/field_utils";
@@ -125,6 +125,61 @@ export class Many2manyField extends Component {
     };
 }
 mobileFieldRegistry.add("many2many", Many2manyField);
+
+// -----------------------------------------------------------------------------
+// many2many_checkboxes: 候选项直接以复选框列出, 适合候选项较少的场景
+// -----------------------------------------------------------------------------
+
+export class ManyToManyCheckboxesField extends Component {
+    texts = fieldTexts;
+    static template = xml`
+        <t t-name="mobile_web.ManyToManyCheckboxesField">
+            <div t-if="this.props.readonly" class="m_tags">
+                <span t-foreach="this.pairs" t-as="pair" t-key="pair[0]" class="m_tag"><t t-esc="pair[1]"/></span>
+                <span t-if="!this.pairs.length" class="m_field_value m_field_empty"><t t-esc="this.texts.none"/></span>
+            </div>
+            <ul t-else="" class="m_checkbox_list">
+                <li t-foreach="this.state.options" t-as="option" t-key="option[0]">
+                    <label class="m_checkbox">
+                        <input type="checkbox" t-att-data-id="option[0]" t-att-checked="this.isSelected(option[0])" t-on-change="this.onToggle"/>
+                        <span><t t-esc="option[1]"/></span>
+                    </label>
+                </li>
+            </ul>
+        </t>
+    `;
+    props = useProps(fieldProps);
+    orm = useService("orm");
+    state = proxy({ options: [] });
+
+    setup() {
+        this.search = makeNameSearch(this.orm, this.props.field.relation, {});
+        onWillStart(async () => {
+            if (!this.props.readonly) {
+                // 候选项与已选项合并, 已选但不在候选中的记录也要能取消选择
+                const options = await this.search("");
+                const selected = this.pairs.filter(([id]) => !options.some((o) => o.id === id)).map(([id, name]) => ({ id, name }));
+                this.state.options = [...options, ...selected].map((o) => [o.id, o.name]);
+            }
+        });
+    }
+
+    get pairs() {
+        return (this.props.record.data[this.props.name] || []).map(([id, name]) => [id, name ?? `#${id}`]);
+    }
+    isSelected(id) {
+        return this.pairs.some(([pairId]) => pairId === id);
+    }
+    onToggle(ev) {
+        const id = Number(ev.target.dataset.id);
+        const option = this.state.options.find(([optionId]) => optionId === id);
+        const next = ev.target.checked
+            ? [...this.pairs, option]
+            : this.pairs.filter(([pairId]) => pairId !== id);
+        this.props.onChange(next);
+    }
+}
+mobileFieldRegistry.add("many2many_checkboxes", ManyToManyCheckboxesField);
 
 // -----------------------------------------------------------------------------
 // one2many (v1: 只读列表, 明细在电脑端编辑)

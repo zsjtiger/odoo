@@ -78,3 +78,23 @@ test("field values come from the record adapter", async () => {
     await mountBlocks(`<form><field name="name"/></form>`);
     expect(queryOne(".m_form_field input")).toHaveValue("Alpha");
 });
+
+test("a statusbar in the header is shown without a label", async () => {
+    const root = parseArch(`<form><header><field name="state" widget="statusbar"/></header></form>`);
+    const header = root.children.find((child) => child.tag === "header");
+    const blocks = buildLayout(header, {
+        state: {
+            type: "selection",
+            string: "State",
+            selection: [
+                ["draft", "Draft"],
+                ["done", "Done"],
+            ],
+        },
+    });
+    await mountWithCleanup(FormBlocks, {
+        props: { blocks, record: recordOf({ state: "done" }), resModel: "res.partner", onFieldChange: () => {} },
+    });
+    expect(queryAll(".m_statusbar_item").length).toBe(2);
+    expect(queryAll(".m_form_label").length).toBe(0);
+});

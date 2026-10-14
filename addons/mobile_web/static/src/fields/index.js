@@ -1,5 +1,7 @@
 import "@mobile_web/fields/basic_fields";
 import "@mobile_web/fields/relational_fields";
+import "@mobile_web/fields/selection_fields";
+import "@mobile_web/fields/numeric_fields";
 import { mobileFieldRegistry } from "@mobile_web/views/registries";
 
 /**

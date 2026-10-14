@@ -37,6 +37,9 @@ export class MobileFormView extends Component {
         <t t-name="mobile_web.MobileFormView">
             <div class="m_form_view" t-if="this.state.record">
                 <h2 class="m_form_title" t-if="this.state.record.data.display_name"><t t-esc="this.state.record.data.display_name"/></h2>
+                <div class="m_form_statusbar" t-if="this.headerBlocks.length">
+                    <FormBlocks blocks="this.headerBlocks" record="this.fieldRecord" resModel="this.props.resModel" onFieldChange="this.onFieldChange"/>
+                </div>
                 <div class="m_form_header_buttons" t-if="this.headerItems.length">
                     <Button t-foreach="this.headerItems" t-as="item" t-key="item.key" label="item.label" onClick="item.run"/>
                 </div>
@@ -75,6 +78,8 @@ export class MobileFormView extends Component {
         // 头部按钮: <header> 中的 <button>, 在保存后的记录上显示
         const header = root.children.find((child) => child.tag === "header");
         this.headerButtons = header ? collectButtons(header) : [];
+        // 头部中的字段(如状态条), 按表单字段的方式渲染
+        this.headerBlocks = header ? buildLayout(header, this.props.fields) : [];
         this.blocks = buildLayout(root, this.props.fields);
         this.model = new MobileRecordModel(this.orm, this.props.resModel, this.props.fields, this.props.context);
         // 字段组件通过适配层读写记录, 写入仍走 onFieldChange (触发 onchange)

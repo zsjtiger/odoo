@@ -172,3 +172,10 @@
         width: auto;
     }
 }
+
+// 表单头部的字段(状态条)
+.m_form_statusbar {
+    padding: 8px 16px;
+    background: $surface;
+    border-bottom: 1px solid $line;
+}
