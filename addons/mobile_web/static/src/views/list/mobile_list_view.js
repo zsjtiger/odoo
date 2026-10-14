@@ -7,6 +7,7 @@ import { MobileRecordModel } from "@mobile_web/views/record_model";
 import { RecordCollection } from "@mobile_web/views/record_list";
 import { hasDisplayValue } from "@mobile_web/views/fields/field_utils";
 import { useInfiniteScroll } from "@mobile_web/views/infinite_scroll";
+import { readonlyFieldRecord } from "@mobile_web/views/field_record";
 import { _t } from "@web/core/data/l10n/translation";
 
 /**
@@ -99,7 +100,7 @@ export class MobileListView extends Component {
         return {
             name: column.name,
             field: column.field,
-            record,
+            record: readonlyFieldRecord(record),
             readonly: true,
             compact: true,
             attrs: column.attrs,

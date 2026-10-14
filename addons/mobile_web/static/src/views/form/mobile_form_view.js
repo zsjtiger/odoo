@@ -7,6 +7,7 @@ import { MobileRecordModel, normalizeFromServer, serializeForServer } from "@mob
 import { MobileRecord, toUIData } from "@mobile_web/views/record";
 import { buildLayout } from "@mobile_web/views/form/layout";
 import { FormBlocks } from "@mobile_web/views/form/form_blocks";
+import { FieldRecordAdapter } from "@mobile_web/views/field_record";
 
 /**
  * 移动端表单视图
@@ -33,7 +34,7 @@ export class MobileFormView extends Component {
         <t t-name="mobile_web.MobileFormView">
             <div class="m_form_view" t-if="this.state.record">
                 <h2 class="m_form_title" t-if="this.state.record.data.display_name"><t t-esc="this.state.record.data.display_name"/></h2>
-                <FormBlocks blocks="this.blocks" record="this.state.record" resModel="this.props.resModel" onFieldChange="this.onFieldChange"/>
+                <FormBlocks blocks="this.blocks" record="this.fieldRecord" resModel="this.props.resModel" onFieldChange="this.onFieldChange"/>
                 <div class="m_form_footer">
                     <span class="m_form_status" t-if="this.state.record.isDirty"><t t-esc="this.texts.unsaved"/></span>
                     <div class="m_form_footer_actions">
@@ -66,6 +67,11 @@ export class MobileFormView extends Component {
         this.fieldNames = [...collectFieldNames(root)];
         this.blocks = buildLayout(root, this.props.fields);
         this.model = new MobileRecordModel(this.orm, this.props.resModel, this.props.fields, this.props.context);
+        // 字段组件通过适配层读写记录, 写入仍走 onFieldChange (触发 onchange)
+        this.fieldRecord = new FieldRecordAdapter({
+            getRecord: () => this.state.record,
+            onFieldChange: (name, value) => this.onFieldChange(name, value),
+        });
         onWillStart(() => this.load());
     }
 

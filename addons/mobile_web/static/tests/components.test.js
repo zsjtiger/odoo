@@ -2,9 +2,19 @@ import { describe, expect, test } from "@odoo/hoot";
 import { click, queryAll, queryOne } from "@odoo/hoot-dom";
 import { mountWithCleanup } from "@web/../tests/_framework/component_test_helpers";
 import { BooleanField, CharField } from "@mobile_web/views/fields/basic_fields";
+import { FieldRecordAdapter } from "@mobile_web/views/field_record";
 import { MobileSelectSheet } from "@mobile_web/views/widgets/select_sheet";
 
 describe.current.tags("mobile");
+
+/** 与表单视图一致的记录适配层: 字段组件通过它读值、提交值 */
+function recordOf(data, { fields = {}, onFieldChange = () => {} } = {}) {
+    return new FieldRecordAdapter({
+        getRecord: () => ({ data, fields, isNew: false }),
+        onFieldChange,
+    });
+}
+
 
 /** 挂载字段组件时的公共 props */
 function fieldProps(overrides) {
@@ -52,7 +62,7 @@ test("CharField renders an email as a mailto link when readonly", async () => {
             field: { type: "char" },
             readonly: true,
             attrs: { widget: "email" },
-            record: { data: { email: "a@b.c" } },
+            record: recordOf({ email: "a@b.c" }),
         }),
     });
     expect(queryOne("a.m_field_link")).toHaveAttribute("href", "mailto:a@b.c");
@@ -64,27 +74,30 @@ test("CharField without a value shows nothing when readonly", async () => {
             name: "name",
             field: { type: "char" },
             readonly: true,
-            record: { data: { name: false } },
+            record: recordOf({ name: false }),
         }),
     });
     expect(queryOne(".m_field_value")).toHaveText("");
 });
 
-test("CharField reports the trimmed text, or false when empty", async () => {
+test("CharField commits the trimmed text, or false when empty", async () => {
     const values = [];
     await mountWithCleanup(CharField, {
         props: fieldProps({
             name: "name",
             field: { type: "char" },
-            record: { data: { name: "x" } },
-            onChange: (value) => values.push(value),
+            record: recordOf({ name: "x" }, {
+                fields: { name: { type: "char" } },
+                onFieldChange: (name, value) => values.push(value),
+            }),
         }),
     });
     const input = queryOne("input");
-    input.value = "  hello  ";
-    input.dispatchEvent(new Event("change"));
-    input.value = "   ";
-    input.dispatchEvent(new Event("change"));
+    for (const text of ["  hello  ", "   "]) {
+        input.value = text;
+        input.dispatchEvent(new Event("input"));
+        input.dispatchEvent(new Event("change"));
+    }
     expect(values).toEqual(["hello", false]);
 });
 

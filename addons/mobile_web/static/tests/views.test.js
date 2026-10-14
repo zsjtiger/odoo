@@ -67,6 +67,7 @@ async function settle() {
 /** 在输入框中输入文本并触发 change, 与用户离开输入框时的行为一致 */
 function typeValue(input, value) {
     input.value = value;
+    input.dispatchEvent(new Event("input"));
     input.dispatchEvent(new Event("change"));
 }
 
