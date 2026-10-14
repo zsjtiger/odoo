@@ -8,6 +8,8 @@ import { MobileRecord, toUIData } from "@mobile_web/views/record";
 import { buildLayout } from "@mobile_web/views/form/layout";
 import { FormBlocks } from "@mobile_web/views/form/form_blocks";
 import { FieldRecordAdapter } from "@mobile_web/fields/field_record";
+import { Button } from "@mobile_web/widgets/button/button";
+import { buttonItems, collectButtons, runRecordButton } from "@mobile_web/actions/record_buttons";
 
 /**
  * 移动端表单视图
@@ -25,15 +27,19 @@ const TEXTS = {
     notFound: _t("The record does not exist or has been deleted"),
     saved: _t("Saved"),
     failed: _t("Operation failed"),
+    saveFirst: _t("Save your changes before running this action"),
 };
 
 export class MobileFormView extends Component {
-    static components = { FormBlocks };
+    static components = { FormBlocks, Button };
     texts = TEXTS;
     static template = xml`
         <t t-name="mobile_web.MobileFormView">
             <div class="m_form_view" t-if="this.state.record">
                 <h2 class="m_form_title" t-if="this.state.record.data.display_name"><t t-esc="this.state.record.data.display_name"/></h2>
+                <div class="m_form_header_buttons" t-if="this.headerItems.length">
+                    <Button t-foreach="this.headerItems" t-as="item" t-key="item.key" label="item.label" onClick="item.run"/>
+                </div>
                 <FormBlocks blocks="this.blocks" record="this.fieldRecord" resModel="this.props.resModel" onFieldChange="this.onFieldChange"/>
                 <div class="m_form_footer">
                     <span class="m_form_status" t-if="this.state.record.isDirty"><t t-esc="this.texts.unsaved"/></span>
@@ -60,11 +66,15 @@ export class MobileFormView extends Component {
     });
     orm = useService("orm");
     notification = useService("notification");
+    mobileAction = useService("mobileAction");
     state = proxy({ record: null, saving: false, error: null });
 
     setup() {
         const root = parseArch(this.props.arch);
         this.fieldNames = [...collectFieldNames(root)];
+        // 头部按钮: <header> 中的 <button>, 在保存后的记录上显示
+        const header = root.children.find((child) => child.tag === "header");
+        this.headerButtons = header ? collectButtons(header) : [];
         this.blocks = buildLayout(root, this.props.fields);
         this.model = new MobileRecordModel(this.orm, this.props.resModel, this.props.fields, this.props.context);
         // 字段组件通过适配层读写记录, 写入仍走 onFieldChange (触发 onchange)
@@ -227,6 +237,40 @@ export class MobileFormView extends Component {
             return this.props.onDiscard();
         }
         await this.load();
+    }
+
+    /** 头部按钮: 只对已保存的记录显示, 并按 invisible 过滤 */
+    get headerItems() {
+        const record = this.state.record;
+        if (!record || record.isNew) {
+            return [];
+        }
+        return buttonItems(this.headerButtons, record.data, (node) => () => this.runButton(node));
+    }
+
+    /**
+     * 执行头部按钮. 有未保存的修改时先提示保存, 避免按钮基于旧数据执行
+     */
+    async runButton(node) {
+        if (this.state.record.isDirty) {
+            this.notification.add(this.texts.saveFirst, { type: "warning" });
+            return;
+        }
+        try {
+            const reload = await runRecordButton({
+                node,
+                resModel: this.props.resModel,
+                resIds: [this.state.record.resId],
+                context: this.props.context,
+                orm: this.orm,
+                mobileAction: this.mobileAction,
+            });
+            if (reload) {
+                await this.load();
+            }
+        } catch (error) {
+            this.notification.add(this.errorMessage(error), { type: "danger", sticky: true });
+        }
     }
 
     errorMessage(error) {

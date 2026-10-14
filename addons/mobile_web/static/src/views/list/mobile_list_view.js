@@ -1,4 +1,4 @@
-import { Component, onWillStart, onWillUpdateProps, t, useProps, xml } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, proxy, t, useProps, xml } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { mobileViewRegistry } from "@mobile_web/views/registries";
 import { parseArch, collectFieldNames, isHiddenColumn, splitColumns } from "@mobile_web/views/arch";
@@ -7,6 +7,8 @@ import { MobileRecordModel } from "@mobile_web/views/record_model";
 import { RecordCollection } from "@mobile_web/views/record_list";
 import { hasDisplayValue } from "@mobile_web/fields/field_utils";
 import { useInfiniteScroll } from "@mobile_web/views/infinite_scroll";
+import { ActionSheet } from "@mobile_web/widgets/action_sheet/action_sheet";
+import { buttonItems, collectButtons, runRecordButton } from "@mobile_web/actions/record_buttons";
 import { readonlyFieldRecord } from "@mobile_web/fields/field_record";
 import { _t } from "@web/core/data/l10n/translation";
 
@@ -17,6 +19,8 @@ import { _t } from "@web/core/data/l10n/translation";
  */
 // 界面文字, 由 _t 包装并通过 i18n/*.po 翻译(模板中用 this.texts 引用)
 const TEXTS = {
+    moreActions: _t("More actions"),
+    actionFailed: _t("Action failed"),
     refresh: _t("Refresh"),
     loadFailed: _t("Failed to load, please try again"),
     noRecords: _t("No records"),
@@ -25,6 +29,7 @@ const TEXTS = {
 
 export class MobileListView extends Component {
     texts = TEXTS;
+    static components = { ActionSheet };
     static template = xml`
         <t t-name="mobile_web.MobileListView">
             <div class="m_list_view">
@@ -32,7 +37,8 @@ export class MobileListView extends Component {
                     <button type="button" class="m_link_button" t-on-click="this.onRefresh"><t t-esc="this.texts.refresh"/></button>
                 </div>
                 <ul class="m_list">
-                    <li t-foreach="this.collection.state.records" t-as="record" t-key="record.resId">
+                    <li t-foreach="this.collection.state.records" t-as="record" t-key="record.resId"
+                        t-attf-class="{{ this.rowButtons.length ? 'has_more' : '' }}">
                         <button type="button" class="m_list_row" t-att-data-id="record.resId" t-on-click="this.onRowClick">
                             <div class="m_list_primary">
                                 <t t-if="this.primary" t-component="this.getWidget(this.primary)" t-props="this.cellProps(this.primary, record)"/>
@@ -43,8 +49,10 @@ export class MobileListView extends Component {
                                 </t>
                             </div>
                         </button>
+                        <button t-if="this.rowButtons.length" type="button" class="m_row_more" t-att-data-id="record.resId" t-att-aria-label="this.texts.moreActions" t-on-click="this.onMoreClick">⋯</button>
                     </li>
                 </ul>
+                <ActionSheet t-if="this.state.sheet" items="this.sheetItems" onClose="this.closeSheet"/>
                 <p t-if="this.collection.state.error" class="m_error"><t t-esc="this.texts.loadFailed"/></p>
                 <p t-if="!this.collection.state.loading and this.collection.state.total === 0" class="m_empty"><t t-esc="this.texts.noRecords"/></p>
                 <div t-ref="this.infinite.sentinel" class="m_load_sentinel">
@@ -62,9 +70,13 @@ export class MobileListView extends Component {
         onSelect: t.function(),
     });
     orm = useService("orm");
+    notification = useService("notification");
+    mobileAction = useService("mobileAction");
+    state = proxy({ sheet: null });
 
     setup() {
         const node = parseArch(this.props.arch);
+        this.rowButtons = collectButtons(node);
         const columns = node.children.filter((c) => c.tag === "field" && c.attrs.name && !isHiddenColumn(c));
         const { primary, secondary } = splitColumns(columns.map((c) => this.column(c)));
         this.primary = primary;
@@ -112,6 +124,49 @@ export class MobileListView extends Component {
     get sentinelText() {
         return this.collection.state.loading ? this.texts.loading : "";
     }
+
+    /** 记录上的操作弹层 */
+    get sheetItems() {
+        const sheet = this.state.sheet;
+        if (!sheet) {
+            return [];
+        }
+        return buttonItems(this.rowButtons, sheet.record.data, (node) => () => this.runRowButton(node, sheet.record));
+    }
+
+    onMoreClick(ev) {
+        const id = Number(ev.currentTarget.dataset.id);
+        const record = this.collection.state.records.find((r) => r.resId === id);
+        if (record) {
+            this.state.sheet = { record };
+        }
+    }
+
+    closeSheet = () => {
+        this.state.sheet = null;
+    };
+
+    /** 执行一条记录的操作; 对象方法可能改变数据, 此时重新加载列表 */
+    runRowButton = async (node, record) => {
+        try {
+            const reload = await runRecordButton({
+                node,
+                resModel: this.props.resModel,
+                resIds: [record.resId],
+                context: this.props.context,
+                orm: this.orm,
+                mobileAction: this.mobileAction,
+            });
+            if (reload) {
+                await this.collection.reload();
+            }
+        } catch (error) {
+            this.notification.add(error?.data?.message || error?.message || this.texts.actionFailed, {
+                type: "danger",
+                sticky: true,
+            });
+        }
+    };
 
     onRowClick(ev) {
         this.props.onSelect(Number(ev.currentTarget.dataset.id));

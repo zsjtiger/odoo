@@ -5,6 +5,7 @@ import { fieldProps, displayOrEmpty } from "@mobile_web/fields/field_utils";
 import { MobileSelectSheet } from "@mobile_web/widgets/select_sheet/select_sheet";
 import { PickerButton } from "@mobile_web/widgets/picker/picker";
 import { Button } from "@mobile_web/widgets/button/button";
+import { FileButton } from "@mobile_web/widgets/file_button/file_button";
 import { fieldTexts } from "@mobile_web/core/texts";
 import { _t } from "@web/core/data/l10n/translation";
 
@@ -167,7 +168,7 @@ mobileFieldRegistry.add("one2many", One2manyField);
 
 export class BinaryField extends Component {
     texts = fieldTexts;
-    static components = { Button };
+    static components = { Button, FileButton };
     static template = xml`
         <t t-name="mobile_web.BinaryField">
             <t t-if="this.props.readonly">
@@ -177,10 +178,7 @@ export class BinaryField extends Component {
             <div t-else="" class="m_binary">
                 <img t-if="this.imageSrc" class="m_field_image" t-att-src="this.imageSrc" alt=""/>
                 <div class="m_binary_actions">
-                    <label class="m_picker_button m_picker_button_compact">
-                        <t t-esc="this.hasValue ? this.texts.changeImage : this.texts.selectImage"/>
-                        <input type="file" accept="image/*" capture="environment" class="m_visually_hidden" t-on-change="this.onFile"/>
-                    </label>
+                    <FileButton label="this.hasValue ? this.texts.changeImage : this.texts.selectImage" capture="environment" onFile="this.onFileData"/>
                     <Button t-if="this.hasValue" label="this.texts.delete" compact="true" danger="true" onClick="this.onClear"/>
                 </div>
             </div>
@@ -202,18 +200,10 @@ export class BinaryField extends Component {
         }
         return `/web/image/${this.props.resModel}/${this.props.record.resId}/${this.props.name}`;
     }
-    onFile(ev) {
-        const file = ev.target.files && ev.target.files[0];
-        if (!file) {
-            return;
-        }
-        const reader = new FileReader();
-        reader.onload = () => {
-            // data:<mime>;base64,<payload>
-            this.props.onChange(String(reader.result).split(",")[1]);
-        };
-        reader.readAsDataURL(file);
-    }
+    /** 选中的图片内容(base64), 由文件按钮回传 */
+    onFileData = (base64) => {
+        this.props.onChange(base64);
+    };
     onClear = () => {
         this.props.onChange(false);
     };

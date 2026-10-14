@@ -75,3 +75,28 @@
     font-size: 13px;
     color: $muted;
 }
+
+// 记录操作: 每行右侧的 ⋯ 按钮, 有操作时为行留出空间
+.m_list > li,
+.m_kanban > li {
+    position: relative;
+}
+
+.m_row_more {
+    position: absolute;
+    top: 50%;
+    right: 4px;
+    transform: translateY(-50%);
+    min-width: 44px;
+    min-height: 44px;
+    border: none;
+    background: transparent;
+    color: $muted;
+    font-size: 20px;
+    line-height: 1;
+}
+
+.m_list > li.has_more > .m_list_row,
+.m_kanban > li.has_more > .m_kanban_card {
+    padding-right: 52px;
+}

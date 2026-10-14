@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 20.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-14 02:05+0000\n"
-"PO-Revision-Date: 2026-10-14 02:05+0000\n"
+"POT-Creation-Date: 2026-10-14 02:23+0000\n"
+"PO-Revision-Date: 2026-10-14 02:23+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -57,6 +57,19 @@ msgstr "操作名称"
 #: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__type
 msgid "Action Type"
 msgstr "操作类型"
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/kanban/mobile_kanban_view.js:0
+#: code:addons/mobile_web/static/src/views/list/mobile_list_view.js:0
+msgid "Action failed"
+msgstr "操作失败"
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/widgets/action_sheet/action_sheet.js:0
+msgid "Actions"
+msgstr "操作"
 
 #. module: mobile_web
 #: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__binding_model_id
@@ -289,6 +302,13 @@ msgstr "更多 >"
 
 #. module: mobile_web
 #. odoo-javascript
+#: code:addons/mobile_web/static/src/views/kanban/mobile_kanban_view.js:0
+#: code:addons/mobile_web/static/src/views/list/mobile_list_view.js:0
+msgid "More actions"
+msgstr "更多操作"
+
+#. module: mobile_web
+#. odoo-javascript
 #: code:addons/mobile_web/static/src/pages/my/my_page.js:0
 msgid "My"
 msgstr "我的"
@@ -397,6 +417,12 @@ msgstr "记住密码"
 #: code:addons/mobile_web/static/src/views/form/mobile_form_view.js:0
 msgid "Save"
 msgstr "保存"
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/form/mobile_form_view.js:0
+msgid "Save your changes before running this action"
+msgstr "请先保存修改再执行此操作"
 
 #. module: mobile_web
 #. odoo-javascript

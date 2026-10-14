@@ -159,3 +159,16 @@
     gap: 12px;
     margin-left: auto;
 }
+
+// 表单头部按钮: 在一行中排列, 按钮自然宽度
+.m_form_header_buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 8px 16px;
+    background: $surface;
+    border-bottom: 1px solid $line;
+    .m_picker_button {
+        width: auto;
+    }
+}

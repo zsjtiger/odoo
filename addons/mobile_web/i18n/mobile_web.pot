@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 20.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-14 02:05+0000\n"
-"PO-Revision-Date: 2026-10-14 02:05+0000\n"
+"POT-Creation-Date: 2026-10-14 02:23+0000\n"
+"PO-Revision-Date: 2026-10-14 02:23+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -55,6 +55,19 @@ msgstr ""
 #. module: mobile_web
 #: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__type
 msgid "Action Type"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/kanban/mobile_kanban_view.js:0
+#: code:addons/mobile_web/static/src/views/list/mobile_list_view.js:0
+msgid "Action failed"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/widgets/action_sheet/action_sheet.js:0
+msgid "Actions"
 msgstr ""
 
 #. module: mobile_web
@@ -288,6 +301,13 @@ msgstr ""
 
 #. module: mobile_web
 #. odoo-javascript
+#: code:addons/mobile_web/static/src/views/kanban/mobile_kanban_view.js:0
+#: code:addons/mobile_web/static/src/views/list/mobile_list_view.js:0
+msgid "More actions"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
 #: code:addons/mobile_web/static/src/pages/my/my_page.js:0
 msgid "My"
 msgstr ""
@@ -395,6 +415,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mobile_web/static/src/views/form/mobile_form_view.js:0
 msgid "Save"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/form/mobile_form_view.js:0
+msgid "Save your changes before running this action"
 msgstr ""
 
 #. module: mobile_web
