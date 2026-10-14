@@ -4,7 +4,7 @@ import { mobilePageRegistry } from "@mobile_web/pages/shared/page_registry";
 import { PAGE_KEYS } from "@mobile_web/pages/shared/page_keys";
 
 import { UserInfo } from "@mobile_web/pages/home/components/user_info";
-import { HomeReport } from "@mobile_web/pages/home/components/home_report";
+import { HomeReport } from "@mobile_web/reports/home_report/home_report";
 import { HomeMenu } from "@mobile_web/pages/home/components/home_menu";
 import { SuggestionList } from "@mobile_web/pages/home/components/suggestion_list";
 

@@ -31,8 +31,9 @@ This module provides the core of the Odoo Mobile Web Client.
             ('include', 'mobile_web._assets_load_owl_js'),
             # 第三方库(UMD, 注册为全局 CryptoJS)
             'mobile_web/static/lib/crypto-js/crypto-js.js',
-            # common包
-            'mobile_web/static/src/common/**/*',
+            # 共用样式与图标(登录页需要)
+            'mobile_web/static/src/styles/**/*',
+            'mobile_web/static/src/widgets/svg_icon/**/*',
             # 页面包(仅加载登录页)
             'mobile_web/static/src/pages/login/**/*',
         ],
@@ -71,14 +72,17 @@ This module provides the core of the Odoo Mobile Web Client.
         ],
 
         'mobile_web.assets_backend': [
-            # mobile core包(core/** 由 web 提供, 这里只保留移动端的 router)
-            'mobile_web/static/src/core/browser/router.js',
-            # common包
-            'mobile_web/static/src/common/**/*',
-            # webclient结构包
-            'mobile_web/static/src/webclient/**/*',
-            # 移动端视图层(list / kanban / form / 字段)
+            # 按功能域组织(见 static/src 下各目录的说明): 样式在前, 供后续组件使用
+            'mobile_web/static/src/styles/**/*',
+            'mobile_web/static/src/core/**/*',
+            'mobile_web/static/src/widgets/**/*',
+            'mobile_web/static/src/layout/**/*',
+            'mobile_web/static/src/actions/**/*',
+            'mobile_web/static/src/app/webclient.js',
+            'mobile_web/static/src/app/webclient.scss',
+            'mobile_web/static/src/fields/**/*',
             'mobile_web/static/src/views/**/*',
+            'mobile_web/static/src/reports/**/*',
             # 页面包(去掉登录页)
             'mobile_web/static/src/pages/**/*',
             ('remove', 'mobile_web/static/src/pages/login/**/*'),
@@ -89,21 +93,25 @@ This module provides the core of the Odoo Mobile Web Client.
         'web.assets_unit_tests': [
             ('include', 'mobile_web.assets_unit_src'),
             'mobile_web/static/tests/helpers/*.js',
-            'mobile_web/static/tests/*.test.js',
+            'mobile_web/static/tests/**/*.test.js',
         ],
         # 单元测试覆盖的移动端源码; main.js 会启动整个 webclient, 不放入测试包
         'mobile_web.assets_unit_src': [
-            'mobile_web/static/src/common/**/*.js',
-            'mobile_web/static/src/core/browser/router.js',
-            'mobile_web/static/src/webclient/**/*.js',
+            'mobile_web/static/src/core/**/*.js',
+            'mobile_web/static/src/widgets/**/*.js',
+            'mobile_web/static/src/layout/**/*.js',
+            'mobile_web/static/src/actions/**/*.js',
+            'mobile_web/static/src/app/webclient.js',
+            'mobile_web/static/src/fields/**/*.js',
             'mobile_web/static/src/views/**/*.js',
+            'mobile_web/static/src/reports/**/*.js',
             'mobile_web/static/src/pages/**/*.js',
         ],
         'mobile_web.assets_start': [
             # env 依赖 web 的核心服务, 因此放在 web 的 JS 之后
             'web/static/src/boot/env.js',
             'web/static/src/boot/start.js',
-            'mobile_web/static/src/main.js',
+            'mobile_web/static/src/app/main.js',
         ],
 
         # 模块加载器与 owl, 登录页与启动包共用(不含 session, 登录页没有 session 信息)

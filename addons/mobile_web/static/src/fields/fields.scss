@@ -1,0 +1,192 @@
+// 字段组件: 值展示、输入框、选择器、开关、多对多、图片
+
+// -----------------------------------------------------------------------------
+// 字段控件
+// -----------------------------------------------------------------------------
+
+.m_field_value {
+    font-size: 16px;
+    color: $text;
+    word-break: break-word;
+}
+
+.m_field_link {
+    color: $theme;
+    text-decoration: underline;
+}
+
+.m_field_multiline {
+    margin: 0;
+    white-space: pre-wrap;
+}
+
+.m_field_number {
+    font-variant-numeric: tabular-nums;
+}
+
+.m_field_hint {
+    margin: 4px 0 0;
+    font-size: 12px;
+    color: $muted;
+}
+
+.m_input {
+    width: 100%;
+    min-height: 44px;
+    box-sizing: border-box;
+    padding: 8px 12px;
+    border: 1px solid $line;
+    border-radius: 8px;
+    background: $surface;
+    font-size: 16px;
+    color: $text;
+    &:focus {
+        outline: none;
+        border-color: $theme-btn;
+    }
+}
+
+.m_textarea {
+    min-height: 88px;
+    resize: vertical;
+}
+
+// 原生输入控件(日期 / 数字)与文本框保持一致的高度
+.m_input_date,
+.m_input_datetime,
+.m_input_number {
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.m_picker_button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    min-height: 44px;
+    box-sizing: border-box;
+    padding: 8px 12px;
+    border: 1px solid $line;
+    border-radius: 8px;
+    background: $surface;
+    font-size: 16px;
+    color: $text;
+    text-align: left;
+    &.m_picker_button_compact {
+        width: auto;
+        min-width: 88px;
+        justify-content: center;
+        color: $theme;
+        margin-top: 8px;
+    }
+}
+
+.m_picker_placeholder {
+    color: #bebebe;
+}
+
+.m_picker_caret {
+    color: $muted;
+    margin-left: 8px;
+}
+
+// 开关
+.m_switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    input {
+        position: absolute;
+        opacity: 0;
+        width: 1px;
+        height: 1px;
+    }
+    .m_switch_track {
+        position: relative;
+        width: 51px;
+        height: 31px;
+        border-radius: 16px;
+        background: #e0e0e0;
+        transition: background 0.2s;
+        &::after {
+            content: "";
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 27px;
+            height: 27px;
+            border-radius: 50%;
+            background: #fff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+            transition: transform 0.2s;
+        }
+    }
+    input:checked + .m_switch_track {
+        background: $theme-btn;
+        &::after {
+            transform: translateX(20px);
+        }
+    }
+    input:focus-visible + .m_switch_track {
+        outline: 2px solid $theme-btn;
+        outline-offset: 2px;
+    }
+    .m_switch_label {
+        font-size: 16px;
+    }
+}
+
+// 多对多的标签
+.m_tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.m_tag {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 14px;
+    background: #e6f4f4;
+    color: $theme;
+    font-size: 14px;
+}
+
+.m_one2many_list {
+    margin: 0;
+    padding-left: 18px;
+    font-size: 15px;
+    color: $text;
+    li {
+        min-height: 28px;
+    }
+}
+
+// 图片
+.m_field_image {
+    display: block;
+    max-width: 160px;
+    max-height: 160px;
+    border-radius: 8px;
+    border: 1px solid $line;
+    object-fit: contain;
+}
+
+.m_binary_actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+// 列表与看板中的图片缩略图
+.m_list_primary,
+.m_list_secondary,
+.m_kanban_card {
+    .m_field_image {
+        max-width: 28px;
+        max-height: 28px;
+        border-radius: 4px;
+    }
+}

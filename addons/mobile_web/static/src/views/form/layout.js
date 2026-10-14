@@ -1,4 +1,4 @@
-import { getFieldWidget } from "@mobile_web/views/fields/index";
+import { getFieldWidget } from "@mobile_web/fields/index";
 import { isInvisible } from "@mobile_web/views/arch";
 import { _t } from "@web/core/data/l10n/translation";
 

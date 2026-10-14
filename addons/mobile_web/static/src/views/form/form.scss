@@ -1,0 +1,161 @@
+// 表单视图: 标题、分组、字段行、页签、底部操作栏
+
+// -----------------------------------------------------------------------------
+// 表单
+// -----------------------------------------------------------------------------
+
+.m_form_view {
+    padding: 0 0 calc(72px + env(safe-area-inset-bottom));
+    background: $page;
+    min-height: 100%;
+}
+
+.m_form_title {
+    margin: 0;
+    padding: 16px;
+    font-size: 20px;
+    color: $text;
+    background: $surface;
+    border-bottom: 1px solid $line;
+}
+
+// 分组: 白底整行展示, 组与组之间留出间距, 有标题时左侧蓝色竖条
+.m_form_group {
+    margin: 12px 0 0;
+    padding: 0 0 4px;
+    background: $surface;
+    border-top: 1px solid $line;
+    border-bottom: 1px solid $line;
+}
+
+// 一行: 左侧标签, 右侧值, 行间细线分隔
+.m_form_field {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 48px;
+    padding: 8px 16px;
+    border-top: 1px solid $line;
+    &:first-child {
+        border-top: none;
+    }
+    &.is_stacked {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+    }
+}
+
+.m_form_label {
+    flex: 0 0 84px;
+    font-size: 15px;
+    color: $text;
+    line-height: 1.4;
+    .is_stacked > & {
+        flex-basis: auto;
+    }
+}
+
+.m_form_value {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-size: 15px;
+    color: $text;
+}
+
+// 表单内的输入框去掉边框, 占位文字为浅灰色, 与列表式表单一致
+.m_form_field .m_input {
+    min-height: 32px;
+    padding: 4px 0;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    font-size: 15px;
+    &:focus {
+        border: none;
+        box-shadow: none;
+    }
+    &::placeholder {
+        color: #c0c4cc;
+    }
+}
+
+.m_form_field.is_stacked .m_form_value .m_input {
+    padding: 8px 10px;
+    border: 1px solid $line;
+    border-radius: 6px;
+}
+
+// 分组标题: 左侧蓝色竖条 + 小号粗体文字
+.m_form_separator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 12px 16px 4px;
+    font-size: 14px;
+    font-weight: 600;
+    color: $text;
+    &::before {
+        content: "";
+        width: 3px;
+        height: 14px;
+        border-radius: 2px;
+        background: #4a7cf0;
+    }
+}
+
+.m_form_notebook {
+    margin: 12px 0 0;
+}
+
+// 标签页: 小号文字, 紧凑排列
+.m_form_tabs {
+    display: flex;
+    gap: 6px;
+    padding: 0 16px 8px;
+    overflow-x: auto;
+}
+
+.m_form_tabs .m_segmented_item {
+    flex: 0 0 auto;
+    min-height: 28px;
+    padding: 0 12px;
+    border: 1px solid $line;
+    border-radius: 14px;
+    background: $surface;
+    color: $muted;
+    font-size: 13px;
+    &.is_active {
+        border-color: $theme;
+        background: $theme;
+        color: #fff;
+        font-weight: 500;
+    }
+}
+
+// 底部固定操作栏: 放弃 / 保存
+.m_form_footer {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+    background: $surface;
+    border-top: 1px solid $line;
+}
+
+.m_form_status {
+    font-size: 13px;
+    color: #e99c42;
+}
+
+.m_form_footer_actions {
+    display: flex;
+    gap: 12px;
+    margin-left: auto;
+}

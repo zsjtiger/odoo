@@ -1,0 +1,63 @@
+// 通用控件: 按钮、错误与空状态文字、隐藏辅助元素
+
+// -----------------------------------------------------------------------------
+// 通用
+// -----------------------------------------------------------------------------
+
+.m_error {
+    margin: 16px;
+    color: $danger;
+}
+
+.m_empty,
+.m_field_empty {
+    color: $muted;
+    padding: 16px;
+    text-align: center;
+}
+
+.m_link_button {
+    border: none;
+    background: none;
+    color: $theme;
+    min-height: 44px;
+    padding: 0 8px;
+    font-size: 15px;
+}
+
+.m_visually_hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    opacity: 0;
+}
+
+.m_btn {
+    min-height: 44px;
+    min-width: 88px;
+    padding: 0 16px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.m_btn_primary {
+    background: $theme-btn;
+    color: #fff;
+    &:disabled {
+        background: #bebebe;
+    }
+}
+
+.m_btn_secondary {
+    background: $surface;
+    color: $text;
+    border-color: $line;
+}
+
+.m_button_danger {
+    color: $danger;
+}

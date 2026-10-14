@@ -7,7 +7,7 @@ import { MobileRecordModel, normalizeFromServer, serializeForServer } from "@mob
 import { MobileRecord, toUIData } from "@mobile_web/views/record";
 import { buildLayout } from "@mobile_web/views/form/layout";
 import { FormBlocks } from "@mobile_web/views/form/form_blocks";
-import { FieldRecordAdapter } from "@mobile_web/views/field_record";
+import { FieldRecordAdapter } from "@mobile_web/fields/field_record";
 
 /**
  * 移动端表单视图

@@ -2,12 +2,12 @@ import { Component, onWillStart, onWillUpdateProps, t, useProps, xml } from "@od
 import { useService } from "@web/core/utils/hooks";
 import { mobileViewRegistry } from "@mobile_web/views/registries";
 import { parseArch, collectFieldNames, isHiddenColumn, splitColumns } from "@mobile_web/views/arch";
-import { getFieldWidget } from "@mobile_web/views/fields/index";
+import { getFieldWidget } from "@mobile_web/fields/index";
 import { MobileRecordModel } from "@mobile_web/views/record_model";
 import { RecordCollection } from "@mobile_web/views/record_list";
-import { hasDisplayValue } from "@mobile_web/views/fields/field_utils";
+import { hasDisplayValue } from "@mobile_web/fields/field_utils";
 import { useInfiniteScroll } from "@mobile_web/views/infinite_scroll";
-import { readonlyFieldRecord } from "@mobile_web/views/field_record";
+import { readonlyFieldRecord } from "@mobile_web/fields/field_record";
 import { _t } from "@web/core/data/l10n/translation";
 
 /**

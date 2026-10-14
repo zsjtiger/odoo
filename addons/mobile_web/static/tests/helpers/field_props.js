@@ -1,4 +1,4 @@
-import { FieldRecordAdapter } from "@mobile_web/views/field_record";
+import { FieldRecordAdapter } from "@mobile_web/fields/field_record";
 
 /**
  * 与表单视图一致的记录适配层: 字段组件通过它读值、提交值.

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 20.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-14 01:18+0000\n"
-"PO-Revision-Date: 2026-10-14 01:18+0000\n"
+"POT-Creation-Date: 2026-10-14 02:05+0000\n"
+"PO-Revision-Date: 2026-10-14 02:05+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -28,13 +28,13 @@ msgstr ""
 
 #. module: mobile_web
 #. odoo-javascript
-#: code:addons/mobile_web/static/src/views/act_window_controller.js:0
+#: code:addons/mobile_web/static/src/views/act_window/act_window_controller.js:0
 msgid "%s - New"
 msgstr "%s - 新建"
 
 #. module: mobile_web
 #. odoo-javascript
-#: code:addons/mobile_web/static/src/views/fields/relational_fields.js:0
+#: code:addons/mobile_web/static/src/fields/relational_fields.js:0
 msgid "%s more lines"
 msgstr "还有 %s 项"
 
@@ -80,25 +80,25 @@ msgstr "两者"
 
 #. module: mobile_web
 #. odoo-javascript
-#: code:addons/mobile_web/static/src/views/texts.js:0
+#: code:addons/mobile_web/static/src/core/texts.js:0
 msgid "Cancel"
 msgstr "取消"
 
 #. module: mobile_web
 #. odoo-javascript
-#: code:addons/mobile_web/static/src/views/texts.js:0
+#: code:addons/mobile_web/static/src/core/texts.js:0
 msgid "Change image"
 msgstr "更换图片"
 
 #. module: mobile_web
 #. odoo-javascript
-#: code:addons/mobile_web/static/src/views/texts.js:0
+#: code:addons/mobile_web/static/src/core/texts.js:0
 msgid "Clear selection"
 msgstr "不选"
 
 #. module: mobile_web
 #. odoo-javascript
-#: code:addons/mobile_web/static/src/views/texts.js:0
+#: code:addons/mobile_web/static/src/core/texts.js:0
 msgid "Confirm"
 msgstr "确定"
 
@@ -118,25 +118,25 @@ msgstr "创建时间"
 
 #. module: mobile_web
 #. odoo-javascript
-#: code:addons/mobile_web/static/src/pages/home/components/home_report.js:0
+#: code:addons/mobile_web/static/src/reports/home_report/home_report.js:0
 msgid "Data 1"
 msgstr "数据 1"
 
 #. module: mobile_web
 #. odoo-javascript
-#: code:addons/mobile_web/static/src/pages/home/components/home_report.js:0
+#: code:addons/mobile_web/static/src/reports/home_report/home_report.js:0
 msgid "Data 2"
 msgstr "数据 2"
 
 #. module: mobile_web
 #. odoo-javascript
-#: code:addons/mobile_web/static/src/pages/home/components/home_report.js:0
+#: code:addons/mobile_web/static/src/reports/home_report/home_report.js:0
 msgid "Data 3"
 msgstr "数据 3"
 
 #. module: mobile_web
 #. odoo-javascript
-#: code:addons/mobile_web/static/src/views/texts.js:0
+#: code:addons/mobile_web/static/src/core/texts.js:0
 msgid "Delete"
 msgstr "删除"
 
@@ -157,13 +157,13 @@ msgstr "显示名称"
 
 #. module: mobile_web
 #. odoo-javascript
-#: code:addons/mobile_web/static/src/views/texts.js:0
+#: code:addons/mobile_web/static/src/core/texts.js:0
 msgid "Edit"
 msgstr "编辑"
 
 #. module: mobile_web
 #. odoo-javascript
-#: code:addons/mobile_web/static/src/views/texts.js:0
+#: code:addons/mobile_web/static/src/core/texts.js:0
 msgid "Edit line items on the desktop"
 msgstr "明细请在电脑端编辑"
 
@@ -224,10 +224,10 @@ msgstr "最后更新时间"
 
 #. module: mobile_web
 #. odoo-javascript
+#: code:addons/mobile_web/static/src/core/texts.js:0
 #: code:addons/mobile_web/static/src/views/form/mobile_form_view.js:0
 #: code:addons/mobile_web/static/src/views/kanban/mobile_kanban_view.js:0
 #: code:addons/mobile_web/static/src/views/list/mobile_list_view.js:0
-#: code:addons/mobile_web/static/src/views/texts.js:0
 msgid "Loading…"
 msgstr "加载中…"
 
@@ -283,7 +283,7 @@ msgstr "移动端我的页动作"
 
 #. module: mobile_web
 #. odoo-javascript
-#: code:addons/mobile_web/static/src/pages/home/components/home_report.js:0
+#: code:addons/mobile_web/static/src/reports/home_report/home_report.js:0
 msgid "More >"
 msgstr "更多 >"
 
@@ -295,13 +295,13 @@ msgstr "我的"
 
 #. module: mobile_web
 #. odoo-javascript
-#: code:addons/mobile_web/static/src/views/texts.js:0
+#: code:addons/mobile_web/static/src/core/texts.js:0
 msgid "No"
 msgstr "否"
 
 #. module: mobile_web
 #. odoo-javascript
-#: code:addons/mobile_web/static/src/views/texts.js:0
+#: code:addons/mobile_web/static/src/core/texts.js:0
 msgid "No matching results"
 msgstr "没有匹配的结果"
 
@@ -320,7 +320,7 @@ msgstr "暂无推荐内容"
 
 #. module: mobile_web
 #. odoo-javascript
-#: code:addons/mobile_web/static/src/views/texts.js:0
+#: code:addons/mobile_web/static/src/core/texts.js:0
 msgid "None"
 msgstr "无"
 
@@ -418,19 +418,19 @@ msgstr "日程"
 
 #. module: mobile_web
 #. odoo-javascript
-#: code:addons/mobile_web/static/src/views/texts.js:0
+#: code:addons/mobile_web/static/src/core/texts.js:0
 msgid "Search"
 msgstr "搜索"
 
 #. module: mobile_web
 #. odoo-javascript
-#: code:addons/mobile_web/static/src/views/texts.js:0
+#: code:addons/mobile_web/static/src/core/texts.js:0
 msgid "Select image"
 msgstr "选择图片"
 
 #. module: mobile_web
 #. odoo-javascript
-#: code:addons/mobile_web/static/src/views/texts.js:0
+#: code:addons/mobile_web/static/src/core/texts.js:0
 msgid "Select…"
 msgstr "请选择"
 
@@ -483,7 +483,7 @@ msgstr "用户名或密码错误"
 
 #. module: mobile_web
 #. odoo-javascript
-#: code:addons/mobile_web/static/src/views/texts.js:0
+#: code:addons/mobile_web/static/src/core/texts.js:0
 msgid "Yes"
 msgstr "是"
 

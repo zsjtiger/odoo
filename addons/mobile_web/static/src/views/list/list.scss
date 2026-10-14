@@ -1,0 +1,77 @@
+// 列表视图: 行、主副字段、紧凑单元格、无限滚动哨兵
+
+// -----------------------------------------------------------------------------
+// 列表 / 看板
+// -----------------------------------------------------------------------------
+
+.m_list_meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 16px;
+    font-size: 13px;
+    color: $muted;
+}
+
+.m_list,
+.m_kanban {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.m_list_row {
+    display: block;
+    width: 100%;
+    min-height: 44px;
+    box-sizing: border-box;
+    padding: 8px 14px;
+    border: none;
+    border-bottom: 1px solid $line;
+    background: $surface;
+    text-align: left;
+    &:active {
+        background: #f0fafa;
+    }
+}
+
+.m_list_primary {
+    font-size: 16px;
+    font-weight: 700;
+    color: $text;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.m_list_secondary {
+    margin-top: 2px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    font-size: 13px;
+    color: $muted;
+}
+
+// 其他字段紧凑地排在一行, 字段之间用 · 分隔, 只显示值
+.m_list_cell {
+    display: inline-flex;
+    align-items: center;
+    .m_field_value {
+        font-size: 13px;
+    }
+    & + .m_list_cell::before {
+        content: "·";
+        margin: 0 6px;
+        color: #ccc;
+    }
+}
+
+// 无限滚动的哨兵: 滚动到这里时自动加载下一页, 这里只显示状态文字
+.m_load_sentinel {
+    min-height: 44px;
+    padding: 12px 16px 24px;
+    text-align: center;
+    font-size: 13px;
+    color: $muted;
+}
