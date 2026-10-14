@@ -1,7 +1,11 @@
-import { Component, onWillStart, proxy, useProps, xml } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, proxy, useProps, xml } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { mobileFieldRegistry } from "@mobile_web/views/registries";
-import { fieldProps, displayOrEmpty } from "@mobile_web/fields/field_utils";
+import { fieldProps, displayOrEmpty, hasDisplayValue } from "@mobile_web/fields/field_utils";
+import { getFieldWidget } from "@mobile_web/fields/field_widget";
+import { readonlyFieldRecord } from "@mobile_web/fields/field_record";
+import { MobileRecord, toUIData } from "@mobile_web/views/record";
+import { parseArch, isHiddenColumn, splitColumns } from "@mobile_web/views/arch";
 import { MobileSelectSheet } from "@mobile_web/widgets/select_sheet/select_sheet";
 import { PickerButton } from "@mobile_web/widgets/picker/picker";
 import { Button } from "@mobile_web/widgets/button/button";
@@ -182,37 +186,118 @@ export class ManyToManyCheckboxesField extends Component {
 mobileFieldRegistry.add("many2many_checkboxes", ManyToManyCheckboxesField);
 
 // -----------------------------------------------------------------------------
-// one2many (v1: 只读列表, 明细在电脑端编辑)
+// one2many: 表单中完整展示明细(列与列表视图一致), 明细在电脑端编辑;
+// 列表与看板单元格中只显示名称
 // -----------------------------------------------------------------------------
 
-const ONE2MANY_PREVIEW = 5;
-
+/**
+ * 明细的列表视图加载失败或尚未加载时, 仍用名称展示, 数据不会消失
+ */
 export class One2manyField extends Component {
     texts = fieldTexts;
     static template = xml`
         <t t-name="mobile_web.One2manyField">
-            <ul class="m_one2many_list">
-                <li t-foreach="this.preview" t-as="pair" t-key="pair[0]"><t t-esc="pair[1]"/></li>
-                <li t-if="this.hiddenCount > 0" class="m_field_empty"><t t-esc="this.moreText"/></li>
-                <li t-if="!this.pairs.length and !this.props.compact" class="m_field_empty"><t t-esc="this.texts.none"/></li>
+            <ul t-if="this.props.compact or !this.state.rows.length" class="m_one2many_list">
+                <li t-foreach="this.pairs" t-as="pair" t-key="pair[0]"><t t-esc="pair[1]"/></li>
+                <li t-if="!this.pairs.length and !this.props.compact and this.props.readonly" class="m_field_empty"><t t-esc="this.texts.none"/></li>
+            </ul>
+            <ul t-else="" class="m_one2many_rows">
+                <li t-foreach="this.state.rows" t-as="row" t-key="row.id" class="m_one2many_row">
+                    <div class="m_list_primary">
+                        <t t-if="row.primary" t-component="row.primary.widget" t-props="row.primary.props"/>
+                    </div>
+                    <div class="m_list_secondary">
+                        <t t-foreach="row.secondary" t-as="cell" t-key="cell.name">
+                            <span class="m_list_cell" t-if="cell.hasValue"><t t-component="cell.widget" t-props="cell.props"/></span>
+                        </t>
+                    </div>
+                </li>
             </ul>
             <p t-if="!this.props.readonly" class="m_field_hint"><t t-esc="this.texts.editOnDesktop"/></p>
         </t>
     `;
     props = useProps(fieldProps);
+    orm = useService("orm");
+    view = useService("view");
+    state = proxy({ rows: [] });
+    loadedKey = null;
 
-    get moreText() {
-        return _t("%s more lines", this.hiddenCount);
+    setup() {
+        onWillStart(() => this.load());
+        onWillUpdateProps((nextProps) => this.load(nextProps));
     }
 
     get pairs() {
         return (this.props.record.data[this.props.name] || []).map(([id, name]) => [id, name ?? `#${id}`]);
     }
-    get preview() {
-        return this.pairs.slice(0, ONE2MANY_PREVIEW);
+
+    /**
+     * 读取明细的列表视图与记录, 只在表单中(非单元格)需要
+     */
+    async load(props = this.props) {
+        const relation = props.field.relation;
+        const ids = (props.record.data[props.name] || []).map((pair) => (Array.isArray(pair) ? pair[0] : pair));
+        const key = `${relation}:${ids.join(",")}`;
+        if (props.compact || !relation || !ids.length) {
+            this.loadedKey = null;
+            this.state.rows = [];
+            return;
+        }
+        if (key === this.loadedKey) {
+            return;
+        }
+        this.loadedKey = key;
+        try {
+            const { fields, views } = await this.view.loadViews({
+                resModel: relation,
+                views: [[false, "list"]],
+                context: {},
+            });
+            const node = parseArch(views.list.arch);
+            const columns = node.children
+                .filter((c) => c.tag === "field" && c.attrs.name && !isHiddenColumn(c) && fields[c.attrs.name])
+                .map((c) => ({ name: c.attrs.name, attrs: c.attrs, field: fields[c.attrs.name] }));
+            const { primary, secondary } = splitColumns(columns);
+            const fieldNames = columns.length ? columns.map((c) => c.name) : ["display_name"];
+            const raws = await this.orm.read(relation, ids, fieldNames);
+            if (this.loadedKey !== key) {
+                return;
+            }
+            const byId = new Map(raws.map((raw) => [raw.id, raw]));
+            this.state.rows = ids
+                .filter((id) => byId.has(id))
+                .map((id) => {
+                    const record = new MobileRecord(fields, id, toUIData(fields, byId.get(id), fieldNames));
+                    return {
+                        id,
+                        primary: primary && this.cell(primary, record, relation),
+                        secondary: secondary.map((column) => this.cell(column, record, relation)),
+                    };
+                });
+        } catch {
+            // 加载失败时保留名称展示
+            if (this.loadedKey === key) {
+                this.state.rows = [];
+            }
+        }
     }
-    get hiddenCount() {
-        return Math.max(0, this.pairs.length - ONE2MANY_PREVIEW);
+
+    cell(column, record, relation) {
+        return {
+            name: column.name,
+            widget: getFieldWidget(column.attrs, column.field),
+            hasValue: hasDisplayValue(record.data[column.name]),
+            props: {
+                name: column.name,
+                field: column.field,
+                record: readonlyFieldRecord(record),
+                readonly: true,
+                attrs: column.attrs,
+                resModel: relation,
+                compact: true,
+                onChange: () => {},
+            },
+        };
     }
 }
 mobileFieldRegistry.add("one2many", One2manyField);

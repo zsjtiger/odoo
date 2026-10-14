@@ -59,7 +59,7 @@ test("text commits the edited value, or false when cleared", async () => {
     expect(values).toEqual(["Hello", false]);
 });
 
-test("html is shown as plain text without markup", async () => {
+test("html is shown as formatted content in a form", async () => {
     await mountWithCleanup(HtmlField, {
         props: fieldProps({
             name: "body",
@@ -68,7 +68,8 @@ test("html is shown as plain text without markup", async () => {
             record: recordOf({ body: "<p>Hello <b>world</b></p>" }),
         }),
     });
-    expect(queryOne("p.m_field_multiline")).toHaveText("Hello world");
+    expect(queryOne(".m_field_html b")).toHaveText("world");
+    expect(queryOne(".m_field_html")).toHaveText("Hello world");
 });
 
 test("selection shows the label of the current option", async () => {

@@ -2,11 +2,41 @@ import { describe, expect, test } from "@odoo/hoot";
 import { click, queryAll, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { mountWithCleanup } from "@web/../tests/_framework/component_test_helpers";
-import { onRpc } from "@web/../tests/web_test_helpers";
+import { defineModels, fields, models, onRpc } from "@web/../tests/web_test_helpers";
 import { BinaryField, ManyToManyCheckboxesField, Many2manyField, Many2oneField, One2manyField } from "@mobile_web/fields/relational_fields";
 import { fieldProps, recordOf } from "@mobile_web/../tests/helpers/field_props";
 
 describe.current.tags("mobile");
+
+class Line extends models.Model {
+    _name = "sale.line";
+    name = fields.Char();
+    qty = fields.Float();
+    _records = [
+        { id: 1, name: "Chair", qty: 2 },
+        { id: 2, name: "Desk", qty: 1 },
+        { id: 3, name: "Lamp", qty: 4 },
+    ];
+}
+
+defineModels([Line]);
+
+/** 明细的列表视图: 名称作为标题, 数量作为副标题 */
+function mockLineViews() {
+    onRpc("sale.line", "get_views", () => ({
+        models: {
+            "sale.line": {
+                fields: {
+                    name: { type: "char", string: "Name" },
+                    qty: { type: "float", string: "Quantity" },
+                },
+            },
+        },
+        views: {
+            list: { arch: `<list><field name="name" class="mobile_title"/><field name="qty"/></list>`, id: 1 },
+        },
+    }));
+}
 
 /** 等待 name_search 的结果渲染到弹层中 */
 async function settle() {
@@ -92,18 +122,53 @@ test("many2many reports the full selection on confirm", async () => {
     expect(values).toEqual([[[1, "Alpha"], [2, "Beta"]]]);
 });
 
-test("one2many previews five lines and counts the rest", async () => {
-    const lines = Array.from({ length: 7 }, (_, i) => [i + 1, `Line ${i + 1}`]);
+test("one2many shows every line with the columns of the list view when readonly", async () => {
+    mockLineViews();
     await mountWithCleanup(One2manyField, {
         props: fieldProps({
             name: "line_ids",
-            field: { type: "one2many", string: "Lines", relation: "res.partner" },
+            field: { type: "one2many", string: "Lines", relation: "sale.line" },
             readonly: true,
-            record: recordOf({ line_ids: lines }),
+            record: recordOf({ line_ids: [[1, "Chair"], [2, "Desk"], [3, "Lamp"]] }),
         }),
     });
-    expect(queryAll(".m_one2many_list li:not(.m_field_empty)").length).toBe(5);
-    expect(queryOne(".m_one2many_list .m_field_empty")).toHaveText("2 more lines");
+    await settle();
+    expect(queryAll(".m_one2many_row .m_list_primary").map((el) => el.textContent.trim())).toEqual(["Chair", "Desk", "Lamp"]);
+    expect(queryAll(".m_one2many_row .m_list_cell").length).toBe(3);
+    expect(queryAll(".m_one2many_row .m_list_cell")[0].textContent).toInclude("2");
+});
+
+test("one2many in a list cell shows only the names", async () => {
+    mockLineViews();
+    await mountWithCleanup(One2manyField, {
+        props: fieldProps({
+            name: "line_ids",
+            field: { type: "one2many", string: "Lines", relation: "sale.line" },
+            readonly: true,
+            compact: true,
+            record: recordOf({ line_ids: [[1, "Chair"], [2, "Desk"]] }),
+        }),
+    });
+    await settle();
+    expect(queryAll(".m_one2many_row").length).toBe(0);
+    expect(queryAll(".m_one2many_list li").map((el) => el.textContent.trim())).toEqual(["Chair", "Desk"]);
+});
+
+test("one2many keeps showing the names when the lines cannot be loaded", async () => {
+    onRpc("sale.line", "get_views", () => {
+        throw new Error("access denied");
+    });
+    await mountWithCleanup(One2manyField, {
+        props: fieldProps({
+            name: "line_ids",
+            field: { type: "one2many", string: "Lines", relation: "sale.line" },
+            readonly: true,
+            record: recordOf({ line_ids: [[1, "Chair"]] }),
+        }),
+    });
+    await settle();
+    expect(queryAll(".m_one2many_row").length).toBe(0);
+    expect(queryAll(".m_one2many_list li").map((el) => el.textContent.trim())).toEqual(["Chair"]);
 });
 
 test("one2many shows None when there are no lines", async () => {

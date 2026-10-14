@@ -1,10 +1,11 @@
-import { Component, proxy, signal, useProps, xml } from "@odoo/owl";
+import { Component, markup, proxy, signal, useProps, xml } from "@odoo/owl";
 import { mobileFieldRegistry } from "@mobile_web/views/registries";
 import { fieldProps, displayOrEmpty } from "@mobile_web/fields/field_utils";
 import { MobileSelectSheet } from "@mobile_web/widgets/select_sheet/select_sheet";
 import { PickerButton } from "@mobile_web/widgets/picker/picker";
 import { Switch } from "@mobile_web/widgets/switch/switch";
 import { fieldTexts } from "@mobile_web/core/texts";
+import { sanitizeHtml } from "@mobile_web/fields/html_sanitize";
 import { deserializeDate, deserializeDateTime, serializeDateTime } from "@web/core/data/l10n/dates";
 import { formatDate, formatDateTime, formatFloat, formatInteger, formatMonetary } from "@web/views/fields/formatters";
 import { InvalidNumberError, parseFloat, parseInteger } from "@web/views/fields/parsers";
@@ -90,20 +91,38 @@ export class TextField extends Component {
 mobileFieldRegistry.add("text", TextField);
 
 /**
- * html 字段在移动端只读展示纯文本: 编辑 html 需要富文本编辑器, v1 不支持, 避免破坏原有格式
+ * html 字段: 表单中只读展示清理后的富文本(标题、列表、表格、链接、图片);
+ * 列表与看板单元格中只显示纯文本. 富文本的编辑需要编辑器, 移动端在电脑端编辑.
  */
 export class HtmlField extends Component {
+    texts = fieldTexts;
     static template = xml`
-        <p class="m_field_value m_field_multiline"><t t-esc="this.plainText"/></p>
+        <t t-name="mobile_web.HtmlField">
+            <p t-if="this.props.compact" class="m_field_value m_field_multiline"><t t-esc="this.plainText"/></p>
+            <t t-else="">
+                <div t-if="this.html" class="m_field_html"><t t-out="this.content"/></div>
+                <span t-elif="this.props.readonly" class="m_field_value m_field_empty"><t t-esc="this.texts.none"/></span>
+                <p t-if="!this.props.readonly" class="m_field_hint"><t t-esc="this.texts.editRichTextOnDesktop"/></p>
+            </t>
+        </t>
     `;
     props = useProps(fieldProps);
 
+    get rawValue() {
+        return this.props.record.data[this.props.name] || "";
+    }
+    /** 清理后的 html 字符串, 为空时不展示富文本区域 */
+    get html() {
+        return sanitizeHtml(this.rawValue);
+    }
+    get content() {
+        return markup(this.html);
+    }
     get plainText() {
-        const raw = this.props.record.data[this.props.name];
-        if (!raw) {
+        if (!this.rawValue) {
             return "";
         }
-        return new DOMParser().parseFromString(raw, "text/html").body.textContent.trim();
+        return new DOMParser().parseFromString(sanitizeHtml(this.rawValue), "text/html").body.textContent.trim();
     }
 }
 mobileFieldRegistry.add("html", HtmlField);

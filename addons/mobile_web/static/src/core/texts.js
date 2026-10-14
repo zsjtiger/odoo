@@ -14,6 +14,7 @@ export const fieldTexts = {
     selectImage: _t("Select image"),
     delete: _t("Delete"),
     editOnDesktop: _t("Edit line items on the desktop"),
+    editRichTextOnDesktop: _t("Edit rich text on the desktop"),
     cancel: _t("Cancel"),
     confirm: _t("Confirm"),
     search: _t("Search"),

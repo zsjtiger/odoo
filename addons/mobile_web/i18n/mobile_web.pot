@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 20.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-14 03:09+0000\n"
-"PO-Revision-Date: 2026-10-14 03:09+0000\n"
+"POT-Creation-Date: 2026-10-14 03:22+0000\n"
+"PO-Revision-Date: 2026-10-14 03:22+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -29,12 +29,6 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mobile_web/static/src/views/act_window/act_window_controller.js:0
 msgid "%s - New"
-msgstr ""
-
-#. module: mobile_web
-#. odoo-javascript
-#: code:addons/mobile_web/static/src/fields/relational_fields.js:0
-msgid "%s more lines"
 msgstr ""
 
 #. module: mobile_web
@@ -220,6 +214,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mobile_web/static/src/core/texts.js:0
 msgid "Edit line items on the desktop"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/core/texts.js:0
+msgid "Edit rich text on the desktop"
 msgstr ""
 
 #. module: mobile_web
