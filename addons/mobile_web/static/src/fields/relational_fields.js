@@ -4,6 +4,7 @@ import { mobileFieldRegistry } from "@mobile_web/views/registries";
 import { fieldProps, displayOrEmpty } from "@mobile_web/fields/field_utils";
 import { MobileSelectSheet } from "@mobile_web/widgets/select_sheet/select_sheet";
 import { PickerButton } from "@mobile_web/widgets/picker/picker";
+import { Button } from "@mobile_web/widgets/button/button";
 import { fieldTexts } from "@mobile_web/core/texts";
 import { _t } from "@web/core/data/l10n/translation";
 
@@ -84,16 +85,14 @@ mobileFieldRegistry.add("many2one", Many2oneField);
 
 export class Many2manyField extends Component {
     texts = fieldTexts;
-    static components = { MobileSelectSheet };
+    static components = { MobileSelectSheet, Button };
     static template = xml`
         <t t-name="mobile_web.Many2manyField">
             <div class="m_tags">
                 <span t-foreach="this.pairs" t-as="pair" t-key="pair[0]" class="m_tag"><t t-esc="pair[1]"/></span>
                 <span t-if="!this.pairs.length and !this.props.compact" class="m_field_value m_field_empty"><t t-esc="this.texts.none"/></span>
             </div>
-            <button t-if="!this.props.readonly" type="button" class="m_picker_button m_picker_button_compact" t-on-click="this.openSheet">
-                <t t-esc="this.texts.edit"/> <span class="m_picker_caret">›</span>
-            </button>
+            <Button t-if="!this.props.readonly" label="this.texts.edit" compact="true" caret="true" onClick="this.openSheet"/>
             <MobileSelectSheet t-if="this.state.open" title="this.props.field.string" multiple="true"
                 search="this.search" selected="this.currentItems"
                 onConfirm="this.onConfirm" onClose="this.close"/>
@@ -168,6 +167,7 @@ mobileFieldRegistry.add("one2many", One2manyField);
 
 export class BinaryField extends Component {
     texts = fieldTexts;
+    static components = { Button };
     static template = xml`
         <t t-name="mobile_web.BinaryField">
             <t t-if="this.props.readonly">
@@ -181,7 +181,7 @@ export class BinaryField extends Component {
                         <t t-esc="this.hasValue ? this.texts.changeImage : this.texts.selectImage"/>
                         <input type="file" accept="image/*" capture="environment" class="m_visually_hidden" t-on-change="this.onFile"/>
                     </label>
-                    <button t-if="this.hasValue" type="button" class="m_picker_button m_picker_button_compact m_button_danger" t-on-click="this.onClear"><t t-esc="this.texts.delete"/></button>
+                    <Button t-if="this.hasValue" label="this.texts.delete" compact="true" danger="true" onClick="this.onClear"/>
                 </div>
             </div>
         </t>
@@ -214,9 +214,9 @@ export class BinaryField extends Component {
         };
         reader.readAsDataURL(file);
     }
-    onClear() {
+    onClear = () => {
         this.props.onChange(false);
-    }
+    };
 }
 mobileFieldRegistry.add("binary", BinaryField);
 mobileFieldRegistry.add("image", BinaryField);
