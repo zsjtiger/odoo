@@ -6,15 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 20.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-14 02:23+0000\n"
-"PO-Revision-Date: 2026-10-14 02:23+0000\n"
+"POT-Creation-Date: 2026-10-14 03:09+0000\n"
+"PO-Revision-Date: 2026-10-14 03:09+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"Language: zh_CN\n"
 
 #. module: mobile_web
 #: model:ir.module.module,description:base.module_mobile_web
@@ -37,6 +36,12 @@ msgstr "%s - 新建"
 #: code:addons/mobile_web/static/src/fields/relational_fields.js:0
 msgid "%s more lines"
 msgstr "还有 %s 项"
+
+#. module: mobile_web
+#. odoo-python
+#: code:addons/mobile_web/models/mobile_password_reset.py:0
+msgid "<p>Follow this link to set a new password: <a href=\"%s\">%s</a></p>"
+msgstr "<p>请点击以下链接设置新密码: <a href=\"%s\">%s</a></p>"
 
 #. module: mobile_web
 #: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__help
@@ -70,6 +75,23 @@ msgstr "操作失败"
 #: code:addons/mobile_web/static/src/widgets/action_sheet/action_sheet.js:0
 msgid "Actions"
 msgstr "操作"
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/widgets/sort_filter/sort_filter.js:0
+msgid "All"
+msgstr "全部"
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/widgets/sort_filter/sort_filter.js:0
+msgid "Ascending"
+msgstr "升序"
+
+#. module: mobile_web
+#: model_terms:ir.ui.view,arch_db:mobile_web.login_retrieve_password
+msgid "Back to log in"
+msgstr "返回登录"
 
 #. module: mobile_web
 #: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__binding_model_id
@@ -111,14 +133,26 @@ msgstr "不选"
 
 #. module: mobile_web
 #. odoo-javascript
+#: code:addons/mobile_web/static/src/pages/my/my_page.js:0
+msgid "Company"
+msgstr "公司"
+
+#. module: mobile_web
+#. odoo-javascript
 #: code:addons/mobile_web/static/src/core/texts.js:0
 msgid "Confirm"
 msgstr "确定"
 
 #. module: mobile_web
+#: model_terms:ir.ui.view,arch_db:mobile_web.login_new_password
+msgid "Confirm the new password"
+msgstr "确认新密码"
+
+#. module: mobile_web
 #: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__create_uid
 #: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page__create_uid
 #: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page_actions__create_uid
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_password_reset__create_uid
 msgid "Created by"
 msgstr "创建人"
 
@@ -126,6 +160,7 @@ msgstr "创建人"
 #: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__create_date
 #: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page__create_date
 #: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page_actions__create_date
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_password_reset__create_date
 msgid "Created on"
 msgstr "创建时间"
 
@@ -155,6 +190,12 @@ msgstr "删除"
 
 #. module: mobile_web
 #. odoo-javascript
+#: code:addons/mobile_web/static/src/widgets/sort_filter/sort_filter.js:0
+msgid "Descending"
+msgstr "降序"
+
+#. module: mobile_web
+#. odoo-javascript
 #: code:addons/mobile_web/static/src/views/form/mobile_form_view.js:0
 msgid "Discard"
 msgstr "放弃"
@@ -165,6 +206,7 @@ msgstr "放弃"
 #: model:ir.model.fields,field_description:mobile_web.field_ir_ui_menu__display_name
 #: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page__display_name
 #: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page_actions__display_name
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_password_reset__display_name
 msgid "Display Name"
 msgstr "显示名称"
 
@@ -181,6 +223,17 @@ msgid "Edit line items on the desktop"
 msgstr "明细请在电脑端编辑"
 
 #. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/pages/my/my_page.js:0
+msgid "Email"
+msgstr "电子邮件"
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_password_reset__expires_at
+msgid "Expires At"
+msgstr "过期时间"
+
+#. module: mobile_web
 #: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__explanation
 msgid "Explanation"
 msgstr "说明"
@@ -192,15 +245,29 @@ msgstr "外部 ID"
 
 #. module: mobile_web
 #. odoo-javascript
+#: code:addons/mobile_web/static/src/pages/my/my_page.js:0
+#: code:addons/mobile_web/static/src/pages/schedule/schedule_page.js:0
+#: code:addons/mobile_web/static/src/pages/todo/todo_page.js:0
 #: code:addons/mobile_web/static/src/views/kanban/mobile_kanban_view.js:0
 #: code:addons/mobile_web/static/src/views/list/mobile_list_view.js:0
 msgid "Failed to load, please try again"
 msgstr "加载失败, 请重试"
 
 #. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/widgets/sort_filter/sort_filter.js:0
+msgid "Filter by"
+msgstr "筛选"
+
+#. module: mobile_web
 #: model_terms:ir.ui.view,arch_db:mobile_web.login
 msgid "Forgot password?"
 msgstr "忘记密码?"
+
+#. module: mobile_web
+#: model_terms:ir.ui.view,arch_db:mobile_web.login_new_password
+msgid "Go to log in"
+msgstr "去登录"
 
 #. module: mobile_web
 #: model:ir.model,name:mobile_web.model_ir_http
@@ -218,13 +285,22 @@ msgstr "主页"
 #: model:ir.model.fields,field_description:mobile_web.field_ir_ui_menu__id
 #: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page__id
 #: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page_actions__id
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_password_reset__id
 msgid "ID"
 msgstr "ID"
+
+#. module: mobile_web
+#. odoo-python
+#: code:addons/mobile_web/controllers/home.py:0
+msgid ""
+"If the account exists, a reset link has been sent to its email address."
+msgstr "如果该账号存在, 重置链接已发送到其邮箱。"
 
 #. module: mobile_web
 #: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__write_uid
 #: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page__write_uid
 #: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page_actions__write_uid
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_password_reset__write_uid
 msgid "Last Updated by"
 msgstr "最后更新人"
 
@@ -232,6 +308,7 @@ msgstr "最后更新人"
 #: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__write_date
 #: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page__write_date
 #: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page_actions__write_date
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_password_reset__write_date
 msgid "Last Updated on"
 msgstr "最后更新时间"
 
@@ -253,6 +330,12 @@ msgstr "登录"
 #: model_terms:ir.ui.view,arch_db:mobile_web.login_successful
 msgid "Logged in successfully"
 msgstr "登录成功"
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/pages/my/my_page.js:0
+msgid "Login"
+msgstr "登录名"
 
 #. module: mobile_web
 #: model:ir.model,name:mobile_web.model_ir_ui_menu
@@ -295,6 +378,11 @@ msgid "Mobile Web UserMy Page Action"
 msgstr "移动端我的页动作"
 
 #. module: mobile_web
+#: model:ir.model,name:mobile_web.model_mobile_web_password_reset
+msgid "Mobile password reset token"
+msgstr "移动端密码重置令牌"
+
+#. module: mobile_web
 #. odoo-javascript
 #: code:addons/mobile_web/static/src/reports/home_report/home_report.js:0
 msgid "More >"
@@ -315,9 +403,21 @@ msgstr "我的"
 
 #. module: mobile_web
 #. odoo-javascript
+#: code:addons/mobile_web/static/src/pages/my/my_page.js:0
+msgid "Name"
+msgstr "名称"
+
+#. module: mobile_web
+#. odoo-javascript
 #: code:addons/mobile_web/static/src/core/texts.js:0
 msgid "No"
 msgstr "否"
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/pages/schedule/schedule_page.js:0
+msgid "No events today"
+msgstr "今天没有日程"
 
 #. module: mobile_web
 #. odoo-javascript
@@ -345,11 +445,23 @@ msgid "None"
 msgstr "无"
 
 #. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/pages/shared/components/unavailable.js:0
+msgid "Not available yet"
+msgstr "暂未开放"
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/pages/todo/todo_page.js:0
+msgid "Nothing to do"
+msgstr "暂无待办"
+
+#. module: mobile_web
 #. odoo-python
 #: code:addons/mobile_web/controllers/home.py:0
 msgid ""
 "Only employees can access this database. Please contact the administrator."
-msgstr ""
+msgstr "只有员工可以访问此数据库, 请联系管理员。"
 
 #. module: mobile_web
 #. odoo-javascript
@@ -381,6 +493,14 @@ msgid "Page %s"
 msgstr "页 %s"
 
 #. module: mobile_web
+#. odoo-python
+#: code:addons/mobile_web/controllers/home.py:0
+msgid ""
+"Password reset by email is not available yet. Please contact the "
+"administrator."
+msgstr "暂不支持通过邮件找回密码, 请联系管理员。"
+
+#. module: mobile_web
 #: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__path
 msgid "Path to show in the URL"
 msgstr "URL 中显示的路径"
@@ -392,6 +512,7 @@ msgstr "请输入密码"
 
 #. module: mobile_web
 #: model_terms:ir.ui.view,arch_db:mobile_web.login
+#: model_terms:ir.ui.view,arch_db:mobile_web.login_retrieve_password
 msgid "Please enter your username"
 msgstr "请输入用户名"
 
@@ -411,6 +532,17 @@ msgstr "关联动作名称"
 #: model_terms:ir.ui.view,arch_db:mobile_web.login
 msgid "Remember password"
 msgstr "记住密码"
+
+#. module: mobile_web
+#: model_terms:ir.ui.view,arch_db:mobile_web.login_new_password
+msgid "Request a new reset link"
+msgstr "重新申请重置链接"
+
+#. module: mobile_web
+#. odoo-python
+#: code:addons/mobile_web/models/mobile_password_reset.py:0
+msgid "Reset your password"
+msgstr "重置密码"
 
 #. module: mobile_web
 #. odoo-javascript
@@ -461,22 +593,49 @@ msgid "Select…"
 msgstr "请选择"
 
 #. module: mobile_web
+#: model_terms:ir.ui.view,arch_db:mobile_web.login_retrieve_password
+msgid "Send reset link"
+msgstr "发送重置链接"
+
+#. module: mobile_web
 #: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page_actions__sequence
 msgid "Sequence"
 msgstr "序号"
+
+#. module: mobile_web
+#: model_terms:ir.ui.view,arch_db:mobile_web.login_new_password
+msgid "Set a new password (at least 10 characters)"
+msgstr "设置新密码（至少 10 个字符）"
+
+#. module: mobile_web
+#: model_terms:ir.ui.view,arch_db:mobile_web.login_new_password
+msgid "Set new password"
+msgstr "设置新密码"
 
 #. module: mobile_web
 #: model:ir.model.fields,help:mobile_web.field_ir_actions_mobile_page__binding_model_id
 msgid ""
 "Setting a value makes this action available in the sidebar for the given "
 "model."
-msgstr ""
+msgstr "设置后, 该操作会出现在对应模型的侧边栏中。"
 
 #. module: mobile_web
-#: model_terms:ir.ui.view,arch_db:mobile_web.login_new_password
-#: model_terms:ir.ui.view,arch_db:mobile_web.login_retrieve_password
-msgid "TODO"
-msgstr "待实现"
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/widgets/sort_filter/sort_filter.js:0
+msgid "Sort by"
+msgstr "排序"
+
+#. module: mobile_web
+#. odoo-python
+#: code:addons/mobile_web/models/mobile_password_reset.py:0
+msgid "The password must be at least %s characters long."
+msgstr "密码至少需要 %s 个字符。"
+
+#. module: mobile_web
+#. odoo-python
+#: code:addons/mobile_web/controllers/home.py:0
+msgid "The passwords do not match."
+msgstr "两次输入的密码不一致。"
 
 #. module: mobile_web
 #. odoo-javascript
@@ -485,16 +644,53 @@ msgid "The record does not exist or has been deleted"
 msgstr "记录不存在或已被删除"
 
 #. module: mobile_web
+#: model:ir.model.constraint,message:mobile_web.constraint_mobile_web_password_reset_token_unique
+msgid "The reset token must be unique."
+msgstr "重置令牌必须唯一。"
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/actions/action_service.js:0
+msgid "This action is not available on mobile yet: %s"
+msgstr "该操作暂不支持移动端: %s"
+
+#. module: mobile_web
+#: model_terms:ir.ui.view,arch_db:mobile_web.login_new_password
+msgid "This reset link is invalid or has expired."
+msgstr "重置链接无效或已过期。"
+
+#. module: mobile_web
 #. odoo-javascript
 #: code:addons/mobile_web/static/src/pages/todo/todo_page.js:0
 msgid "To do"
 msgstr "待办"
 
 #. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_password_reset__token
+msgid "Token"
+msgstr "令牌"
+
+#. module: mobile_web
 #. odoo-javascript
 #: code:addons/mobile_web/static/src/views/form/mobile_form_view.js:0
 msgid "Unsaved changes"
 msgstr "未保存的修改"
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_password_reset__used
+msgid "Used"
+msgstr "已使用"
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_password_reset__user_id
+msgid "User"
+msgstr "用户"
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/widgets/sort_filter/sort_filter.js:0
+msgid "Value"
+msgstr "值"
 
 #. module: mobile_web
 #: model:ir.model.fields,help:mobile_web.field_ir_actions_mobile_page__explanation
@@ -512,6 +708,11 @@ msgstr "用户名或密码错误"
 #: code:addons/mobile_web/static/src/core/texts.js:0
 msgid "Yes"
 msgstr "是"
+
+#. module: mobile_web
+#: model_terms:ir.ui.view,arch_db:mobile_web.login_new_password
+msgid "Your password has been reset."
+msgstr "密码已重置。"
 
 #. module: mobile_web
 #: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__binding_mobile_page
