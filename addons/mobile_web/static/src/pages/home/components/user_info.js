@@ -14,6 +14,6 @@ export class UserInfo extends Component {
     setup() {
         this.userInfo = {};
 
-        this.userInfo.userName = user.name || user.UserId;
+        this.userInfo.userName = user.name;
     }
 };

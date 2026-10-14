@@ -1,4 +1,5 @@
 import { KeepLast } from "@web/core/utils/concurrency";
+import { _t } from "@web/core/data/l10n/translation";
 
 import { router as _router } from "@mobile_web/core/browser/router";
 import { asComponent } from "@mobile_web/core/env";
@@ -6,6 +7,7 @@ import { mobilePageRegistry } from "@mobile_web/pages/shared/page_registry";
 import { MobileActWindowController } from "@mobile_web/views/act_window/act_window_controller";
 import { buildRouteState } from "@mobile_web/actions/action_utils";
 import { loadAction, loadPageActions } from "@mobile_web/actions/action_loader";
+import { notify } from "@mobile_web/core/notification";
 
 
 // -----------------------------------------------------------------------------
@@ -86,7 +88,15 @@ export class MobilePageNotFoundError extends Error {};
 // -----------------------------------------------------------------------------
 
 
-export function makeMobileActionManager(env, router = _router) {
+/**
+ * 浏览器相关的操作, 可以在测试中替换
+ */
+const DEFAULT_DEPS = {
+    openUrl: (url, target) => (target === "_self" ? window.location.assign(url) : window.open(url, "_blank")),
+    reload: () => window.location.reload(),
+};
+
+export function makeMobileActionManager(env, router = _router, deps = DEFAULT_DEPS) {
     /** @type {Action} 记录一下当前正在展示的action */
     let currentAction;
 
@@ -118,11 +128,70 @@ export function makeMobileActionManager(env, router = _router) {
             case "ir.actions.act_window":
                 return _executeActionActWindow(action, options)
 
-            // TODO: 其他action的支持
+            // 打开外部链接 / 报表文件
+            case "ir.actions.act_url":
+                return _executeActionUrl(action);
+            case "ir.actions.report":
+                return _executeActionReport(action, options);
+
+            // 服务端动作: 执行后返回的动作会被继续打开
+            case "ir.actions.server":
+                return _executeActionServer(action, options);
+
+            // 客户端动作: 只支持移动端有对应实现的 tag
+            case "ir.actions.client":
+                return _executeActionClient(action);
+
+            // 其余类型暂不支持: 明确提示用户, 而不是静默失败
             default:
-                console.log("TODO")
+                return _unsupported(action.type);
         }
     };
+
+    /**
+     * 给用户一个明确的提示: 该动作在移动端暂未开放
+     *
+     * @param {string} name 动作类型或 tag
+     */
+    function _unsupported(name) {
+        notify(env.services.notification, _t("This action is not available on mobile yet: %s", name), {
+            type: "warning",
+        });
+    }
+
+    /** `ir.actions.act_url`: 在新窗口或当前窗口打开链接 */
+    function _executeActionUrl(action) {
+        deps.openUrl(action.url, action.target === "self" ? "_self" : "_blank");
+    }
+
+    /** `ir.actions.report`: 直接打开报表文件, 报表对象来自当前记录(active_ids) */
+    function _executeActionReport(action, options = {}) {
+        const ids = (options.additionalContext?.active_ids || []).join(",");
+        const kind = action.report_type === "qweb-html" ? "html" : "pdf";
+        deps.openUrl(`/report/${kind}/${action.report_name}/${ids}`, "_blank");
+    }
+
+    /** `ir.actions.server`: 在服务端执行, 返回的动作继续打开 */
+    async function _executeActionServer(action, options = {}) {
+        const result = await env.services.orm.call("ir.actions.server", "run", [[action.id]], {
+            context: options.additionalContext || {},
+        });
+        if (result && result.type) {
+            return doAction(result, options);
+        }
+    }
+
+    /** `ir.actions.client`: 目前支持 reload 与 home */
+    async function _executeActionClient(action) {
+        switch (action.tag) {
+            case "reload":
+                return deps.reload();
+            case "home":
+                return doAction("home");
+            default:
+                return _unsupported(action.tag ? `${action.type} (${action.tag})` : action.type);
+        }
+    }
 
     // ---------------------------------------------------------------------------
     // Action Handler
@@ -238,7 +307,8 @@ export function makeMobileActionManager(env, router = _router) {
 
 
 export const mobileActionService = {
-    dependencies: [],
+    // 需要 orm 执行服务端动作, notification 提示不支持的动作
+    dependencies: ["orm", "notification"],
     start(env) {
         return makeMobileActionManager(env);
     },

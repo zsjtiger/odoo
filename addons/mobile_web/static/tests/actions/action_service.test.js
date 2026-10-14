@@ -1,3 +1,4 @@
+import { patchTranslations } from "@web/../tests/_framework/translation_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { EventBus } from "@odoo/owl";
 import { defineModels, fields, makeMockServer, models, onRpc } from "@web/../tests/web_test_helpers";
@@ -128,14 +129,19 @@ test("an action given by id is loaded from the server first", async () => {
     expect(actions[0].componentProps.action.res_model).toBe("res.partner");
 });
 
-test("an unsupported action type is ignored without touching the page", async () => {
+test("an unsupported action type tells the user and does not touch the page", async () => {
+    patchTranslations({});
     const bus = new EventBus();
     const actions = listen(bus, "ACTION_MANAGER:UPDATE");
     const { router, pushed } = makeRouter();
-    const { doAction } = makeMobileActionManager({ bus }, router);
+    const messages = [];
+    const env = { bus, services: { notification: { add: (msg) => messages.push(msg) }, orm: {} } };
+    const { doAction } = makeMobileActionManager(env, router, { openUrl() {}, reload() {} });
 
-    await doAction({ type: "ir.actions.client", id: 3 });
+    await doAction({ type: "ir.actions.act_window_close", id: 3 });
 
     expect(actions.length).toBe(0);
     expect(pushed.length).toBe(0);
+    expect(messages.length).toBe(1);
+    expect(String(messages[0])).toInclude("ir.actions.act_window_close");
 });
