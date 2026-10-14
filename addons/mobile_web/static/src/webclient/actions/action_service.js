@@ -1,4 +1,3 @@
-import { registry } from "@web/core/framework/registry";
 import { KeepLast } from "@web/core/utils/concurrency";
 
 import { router as _router } from "@mobile_web/core/browser/router";
@@ -251,4 +250,4 @@ export const mobileActionService = {
 };
 
 
-registry.category("services").add("mobileAction", mobileActionService);
+// 注册在 main.js 中完成(见 mobileActionService), 避免测试包加载顺序导致重复注册

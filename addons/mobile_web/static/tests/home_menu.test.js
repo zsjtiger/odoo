@@ -1,20 +1,15 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { click, queryAll, queryOne } from "@odoo/hoot-dom";
 import { mountWithCleanup } from "@web/../tests/_framework/component_test_helpers";
-import { registry } from "@web/core/framework/registry";
 import { browser } from "@web/core/services/browser/browser";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { HomeMenu } from "@mobile_web/pages/home/components/home_menu";
+import { mobileActionCalls, resetMobileActionCalls } from "@mobile_web/../tests/helpers/mobile_action_stub";
 
 describe.current.tags("mobile");
 
-/** 记录 doAction 的调用, 代替真正的动作服务 */
-const doActionCalls = [];
-registry.category("services").add("mobileAction", {
-    start() {
-        return { doAction: (actionId) => doActionCalls.push(actionId) };
-    },
-});
+/** doAction 的调用记录, 由公共的 mobileAction 桩服务提供 */
+const doActionCalls = mobileActionCalls;
 
 function makeMenus(count, { withIcon = true } = {}) {
     const menus = {};
@@ -89,9 +84,9 @@ test("only menus with an action are shown", async () => {
 });
 
 test("clicking an app runs its action", async () => {
-    doActionCalls.length = 0;
+    resetMobileActionCalls();
     stubMenus(makeMenus(2));
     await mountHomeMenu();
     await click(queryAll(".m_home_menu_item")[1]);
-    expect(doActionCalls).toEqual(["101"]);
+    expect(doActionCalls.map((call) => call.actionId)).toEqual(["101"]);
 });

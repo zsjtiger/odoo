@@ -88,13 +88,16 @@ This module provides the core of the Odoo Mobile Web Client.
         # 单元测试(hoot): 移动端的源码与测试文件, 由 web 的测试包统一运行, 测试标签为 mobile
         'web.assets_unit_tests': [
             ('include', 'mobile_web.assets_unit_src'),
+            'mobile_web/static/tests/helpers/*.js',
             'mobile_web/static/tests/*.test.js',
         ],
+        # 单元测试覆盖的移动端源码; main.js 会启动整个 webclient, 不放入测试包
         'mobile_web.assets_unit_src': [
+            'mobile_web/static/src/common/**/*.js',
             'mobile_web/static/src/core/browser/router.js',
-            'mobile_web/static/src/webclient/actions/action_utils.js',
+            'mobile_web/static/src/webclient/**/*.js',
             'mobile_web/static/src/views/**/*.js',
-            'mobile_web/static/src/pages/home/components/home_menu.js',
+            'mobile_web/static/src/pages/**/*.js',
         ],
         'mobile_web.assets_start': [
             # env 依赖 web 的核心服务, 因此放在 web 的 JS 之后

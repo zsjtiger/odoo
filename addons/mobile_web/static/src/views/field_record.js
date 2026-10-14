@@ -31,6 +31,15 @@ export class FieldRecordAdapter {
         return this.getRecord().isNew;
     }
 
+    get resId() {
+        return this.getRecord().resId;
+    }
+
+    /** 尚未保存的改动(服务端格式), 例如刚选择的图片 */
+    get changes() {
+        return this.getRecord().changes;
+    }
+
     get isInEdition() {
         return true;
     }
