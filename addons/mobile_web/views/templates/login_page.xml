@@ -143,11 +143,11 @@
                         </div>
 
                         <div class="m_login_form_alert_message" t-if="error">
-                            <t t-esc="error"/>
+                            <t t-out="error"/>
                         </div>
 
                         <div class="m_login_form_alert_message" t-if="message">
-                            <t t-esc="message"/>
+                            <t t-out="message"/>
                         </div>
 
                         <div class="m_login_form_functions">
@@ -168,17 +168,64 @@
         </t>
     </template>
 
-    <!-- 找回密码页 -->
+    <!-- 找回密码页: 输入登录名, 发送重置链接 -->
     <template id="mobile_web.login_retrieve_password" name="Mobile Login Retrieve Password">
         <t t-call="mobile_web.login_layout">
-            <div class="m_login_retrieve_password">TODO</div>
+            <div class="m_login">
+                <div class="m_login_form_container">
+                    <form class="m_login_form" role="form" method="post" action="/mobile_web/retrieve_password">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <div class="m_login_field m_login_field_username">
+                            <input type="text" name="login" class="m_login_field_input" required="required"
+                                   autocapitalize="off" placeholder="Please enter your username"/>
+                        </div>
+                        <div class="m_login_form_alert_message" t-if="message">
+                            <t t-out="message"/>
+                        </div>
+                        <button type="submit" class="m_login_form_confirm_btn">Send reset link</button>
+                        <div class="m_login_form_functions">
+                            <a href="/mobile_web/login">Back to log in</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </t>
     </template>
 
-    <!-- 设置新密码页 -->
+    <!-- 设置新密码页: 令牌无效或已过期时只显示提示 -->
     <template id="mobile_web.login_new_password" name="Mobile Login Set New Password">
         <t t-call="mobile_web.login_layout">
-            <div class="m_login_new_password">TODO</div>
+            <div class="m_login">
+                <div class="m_login_form_container">
+                    <t t-if="not valid">
+                        <div class="m_login_form_alert_message">This reset link is invalid or has expired.</div>
+                        <div class="m_login_form_functions">
+                            <a href="/mobile_web/retrieve_password">Request a new reset link</a>
+                        </div>
+                    </t>
+                    <t t-elif="done">
+                        <div class="m_login_form_alert_message">Your password has been reset.</div>
+                        <div class="m_login_form_functions">
+                            <a href="/mobile_web/login">Go to log in</a>
+                        </div>
+                    </t>
+                    <form t-else="" class="m_login_form" role="form" method="post" t-attf-action="/mobile_web/reset_password/{{ token }}">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <div class="m_login_field">
+                            <input type="password" name="password" class="m_login_field_input" required="required"
+                                   autocomplete="new-password" placeholder="Set a new password (at least 10 characters)"/>
+                        </div>
+                        <div class="m_login_field">
+                            <input type="password" name="confirm_password" class="m_login_field_input" required="required"
+                                   autocomplete="new-password" placeholder="Confirm the new password"/>
+                        </div>
+                        <div class="m_login_form_alert_message" t-if="error">
+                            <t t-out="error"/>
+                        </div>
+                        <button type="submit" class="m_login_form_confirm_btn">Set new password</button>
+                    </form>
+                </div>
+            </div>
         </t>
     </template>
 

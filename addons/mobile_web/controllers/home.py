@@ -112,13 +112,42 @@ class Home(WebHome):
         response.headers['Content-Security-Policy'] = "frame-ancestors 'self'"
         return response
 
-    @route('/mobile_web/retrieve_password', type='http', auth='none')
-    def mobile_web_retrieve_password(self, redirect=None, **kw):
-        values = {}
+    @route('/mobile_web/retrieve_password', type='http', auth='none', methods=['GET', 'POST'], readonly=False)
+    def mobile_web_retrieve_password(self, login=None, **kw):
+        """
+        找回密码: 提交登录名后发送重置链接.
+        无论账号是否存在、是否能发送, 页面给出的结果相同, 避免泄露账号信息.
+        """
+        values = {'message': None}
+        if request.httprequest.method == 'POST':
+            reset = request.env['mobile_web.password.reset'].sudo().create_for_login(login) if login else None
+            delivered = bool(reset) and reset.deliver()
+            if delivered:
+                values['message'] = _("If the account exists, a reset link has been sent to its email address.")
+            else:
+                values['message'] = _("Password reset by email is not available yet. Please contact the administrator.")
         response = request.render('mobile_web.login_retrieve_password', values)
         response.headers['X-Frame-Options'] = 'SAMEORIGIN'
         response.headers['Content-Security-Policy'] = "frame-ancestors 'self'"
+        return response
 
+    @route('/mobile_web/reset_password/<string:token>', type='http', auth='none', methods=['GET', 'POST'], readonly=False)
+    def mobile_web_reset_password(self, token, password=None, confirm_password=None, **kw):
+        """ 设置新密码: 令牌有效时显示表单, 提交后令牌失效 """
+        reset = request.env['mobile_web.password.reset'].get_valid(token)
+        values = {'valid': bool(reset), 'token': token, 'error': None, 'done': False}
+        if reset and request.httprequest.method == 'POST':
+            if password != confirm_password:
+                values['error'] = _("The passwords do not match.")
+            else:
+                try:
+                    reset.set_password(password)
+                    values['done'] = True
+                except odoo.exceptions.UserError as e:
+                    values['error'] = e.args[0]
+        response = request.render('mobile_web.login_new_password', values)
+        response.headers['X-Frame-Options'] = 'SAMEORIGIN'
+        response.headers['Content-Security-Policy'] = "frame-ancestors 'self'"
         return response
 
     @route('/mobile_web/login_successful', type='http', auth='user')
