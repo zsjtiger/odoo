@@ -11,6 +11,7 @@ import { ActionSheet } from "@mobile_web/widgets/action_sheet/action_sheet";
 import { buttonItems, collectButtons, runRecordButton } from "@mobile_web/actions/record_buttons";
 import { readonlyFieldRecord } from "@mobile_web/fields/field_record";
 import { _t } from "@web/core/data/l10n/translation";
+import { notify } from "@mobile_web/core/notification";
 
 /**
  * 移动端列表视图: 每行一张卡片式的行, 第一列作为标题, 后面的列作为副标题
@@ -161,7 +162,7 @@ export class MobileListView extends Component {
                 await this.collection.reload();
             }
         } catch (error) {
-            this.notification.add(error?.data?.message || error?.message || this.texts.actionFailed, {
+            notify(this.notification, error?.data?.message || error?.message || this.texts.actionFailed, {
                 type: "danger",
                 sticky: true,
             });

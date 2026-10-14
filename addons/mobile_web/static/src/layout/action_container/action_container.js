@@ -1,6 +1,7 @@
 import { Component, xml, onWillDestroy } from "@odoo/owl";
 import { render } from "@web/core/owl/utils";
 import { MobileActionMenu } from "@mobile_web/actions/action_menu/action_menu";
+import { envOf } from "@mobile_web/core/env";
 
 
 export class MobileActionContainer extends Component {
@@ -22,9 +23,9 @@ export class MobileActionContainer extends Component {
             render(this);
         };
 
-        this.env.bus.addEventListener("ACTION_MANAGER:UPDATE", this.onActionManagerUpdate);
+        envOf(this).bus.addEventListener("ACTION_MANAGER:UPDATE", this.onActionManagerUpdate);
         onWillDestroy(() => {
-            this.env.bus.removeEventListener("ACTION_MANAGER:UPDATE", this.onActionManagerUpdate);
+            envOf(this).bus.removeEventListener("ACTION_MANAGER:UPDATE", this.onActionManagerUpdate);
         });
     }
 }

@@ -10,6 +10,7 @@ import { FormBlocks } from "@mobile_web/views/form/form_blocks";
 import { FieldRecordAdapter } from "@mobile_web/fields/field_record";
 import { Button } from "@mobile_web/widgets/button/button";
 import { buttonItems, collectButtons, runRecordButton } from "@mobile_web/actions/record_buttons";
+import { notify } from "@mobile_web/core/notification";
 
 /**
  * 移动端表单视图
@@ -163,7 +164,7 @@ export class MobileFormView extends Component {
                 this.fieldNames
             );
             if (warning) {
-                this.notification.add(warning.message, { type: "warning", title: warning.title });
+                notify(this.notification, warning.message, { type: "warning", title: warning.title });
             }
             for (const [name, raw] of Object.entries(values)) {
                 const field = this.props.fields[name];
@@ -174,7 +175,7 @@ export class MobileFormView extends Component {
                 record.update(name, uiValue);
             }
         } catch (error) {
-            this.notification.add(this.errorMessage(error), { type: "danger" });
+            notify(this.notification, this.errorMessage(error), { type: "danger" });
         }
     }
 
@@ -226,12 +227,12 @@ export class MobileFormView extends Component {
             const wasNew = record.isNew;
             const saved = await this.model.saveRecord(record.resId, { ...record.changes }, this.fieldNames);
             record.reset(saved.id, toUIData(this.props.fields, saved, this.fieldNames));
-            this.notification.add(this.texts.saved, { type: "success" });
+            notify(this.notification, this.texts.saved, { type: "success" });
             if (wasNew) {
                 this.props.onSaved(saved.id);
             }
         } catch (error) {
-            this.notification.add(this.errorMessage(error), { type: "danger", sticky: true });
+            notify(this.notification, this.errorMessage(error), { type: "danger", sticky: true });
         } finally {
             this.state.saving = false;
         }
@@ -258,7 +259,7 @@ export class MobileFormView extends Component {
      */
     async runButton(node) {
         if (this.state.record.isDirty) {
-            this.notification.add(this.texts.saveFirst, { type: "warning" });
+            notify(this.notification, this.texts.saveFirst, { type: "warning" });
             return;
         }
         try {
@@ -274,7 +275,7 @@ export class MobileFormView extends Component {
                 await this.load();
             }
         } catch (error) {
-            this.notification.add(this.errorMessage(error), { type: "danger", sticky: true });
+            notify(this.notification, this.errorMessage(error), { type: "danger", sticky: true });
         }
     }
 

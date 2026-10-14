@@ -80,5 +80,5 @@ export class FieldRecordAdapter {
  * @param {Object} record 列表/看板中的记录 (含 data)
  */
 export function readonlyFieldRecord(record) {
-    return new FieldRecordAdapter({ getRecord: () => record, onFieldChange: () => {} });
+    return new FieldRecordAdapter({ getRecord: () => record, onFieldChange: async () => {} });
 }

@@ -1,6 +1,7 @@
 import { KeepLast } from "@web/core/utils/concurrency";
 
 import { router as _router } from "@mobile_web/core/browser/router";
+import { asComponent } from "@mobile_web/core/env";
 import { mobilePageRegistry } from "@mobile_web/pages/shared/page_registry";
 import { MobileActWindowController } from "@mobile_web/views/act_window/act_window_controller";
 import { buildRouteState } from "@mobile_web/actions/action_utils";
@@ -33,10 +34,9 @@ import { loadAction, loadPageActions } from "@mobile_web/actions/action_loader";
  * @property {string|false} help HTML string
  * @property {number} id
  * @property {string} name
- * @property {"ir.actions.act_window"|"ir.actions.act_url"|"ir.actions.server"|"ir.actions.client"|"ir.actions.report"|"ir.actions.mobile_page""} type
+ * @property {"ir.actions.act_window"|"ir.actions.act_url"|"ir.actions.server"|"ir.actions.client"|"ir.actions.report"|"ir.actions.mobile_page"} type
  * @property {ActionXMLId} xml_id
  * @property {string|false} path
- * @property {number|false} binding_mobile_page
  * 
  * // from python `env['ir.actions.act_window']._get_readable_fields()`
  * @property {number[]} embedded_action_ids
@@ -52,18 +52,13 @@ import { loadAction, loadPageActions } from "@mobile_web/actions/action_loader";
  * @property {ActionMode} target
  * @property {number|false} view_id
  * @property {string} view_mode
- * @property {Array[Array[number|false, string]]} views
+ * @property {Array<[number|false, string]>} views
  * 
  * // from python `env['ir.actions.mobile_page']._get_readable_fields()`
  * @property {MobilePageInfo} binding_mobile_page
  */
 
 /** 
- * @typedef {Object} CurrentActionInfo 当前Action内可执行的其他Action
- * @property {string} name
- * @property {number} action_id
- * @property {number} svg_icon_href
- */
 
 /** @typedef {[mobilePageId, mobilePageName, mobilePageComponentId] | false} MobilePageInfo */
 /** @typedef {number} mobilePageId */
@@ -72,7 +67,7 @@ import { loadAction, loadPageActions } from "@mobile_web/actions/action_loader";
 
 /**
  * @typedef {object} ActionContainerEventInfo
- * @property {Component} Component
+ * @property {import("@odoo/owl").Component} Component
  * @property {object} [componentProps]
  * @property {CurrentActionInfo[]} [currentActions]
  */
@@ -158,12 +153,12 @@ export function makeMobileActionManager(env, router = _router) {
         }
 
         const mobilePageComponent = mobilePageRegistry.get(mobilePageComponentId);
-        /** @type {Array[CurrentActionInfo]} currentActions */
+        /** @type {CurrentActionInfo[]} currentActions */
         const currentActions = await loadPageActions(mobilePageId);
 
         /** @type {ActionContainerEventInfo} */
         const actionContainerInfo = {
-            'Component': mobilePageComponent,
+            'Component': asComponent(mobilePageComponent),
             'currentActions': currentActions,
         };
 
@@ -192,7 +187,7 @@ export function makeMobileActionManager(env, router = _router) {
 
         /** @type {ActionContainerEventInfo} */
         const actionContainerInfo = {
-            'Component': MobileActWindowController,
+            'Component': asComponent(MobileActWindowController),
             'componentProps': {
                 action: Object.assign({}, action),
                 resId,

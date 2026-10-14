@@ -6,7 +6,7 @@ import { normalizeFromServer, serializeForServer } from "@mobile_web/views/recor
 export class MobileRecord {
     /**
      * @param {Object} fields  字段定义
-     * @param {number|null} resId  null 表示新建
+     * @param {number|null|false} resId  null 或 false 表示新建
      * @param {Object} data  界面格式的值
      */
     constructor(fields, resId, data) {

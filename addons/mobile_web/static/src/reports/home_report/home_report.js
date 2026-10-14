@@ -34,7 +34,7 @@ export class HomeReport extends Component {
 
     /**
      * 
-     * @returns {Object[]}
+     * @returns {Promise<Object[]>}
      */
     async _loadReportData() {
         return [

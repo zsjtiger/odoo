@@ -9,6 +9,7 @@ import { mobileViewRegistry } from "@mobile_web/views/registries";
 import { fieldTexts } from "@mobile_web/core/texts";
 import { _t } from "@web/core/data/l10n/translation";
 import "@mobile_web/views/index";
+import { envOf } from "@mobile_web/core/env";
 
 // -----------------------------------------------------------------------------
 // MobileActWindowController
@@ -96,9 +97,9 @@ export class MobileActWindowController extends Component {
         const views = getActionViews(action);
         const loaded = await this.viewService.loadViews({
             resModel: action.res_model,
-            views,
+            views: /** @type {[number, string][]} */ (views),
             context,
-        }, { actionId: action.id });
+        }, /** @type {any} */ ({ actionId: action.id }));
         // 字段定义在模型级别共享, 各视图只有自己的 arch
         this.fields = loaded.fields;
         this.archs = Object.fromEntries(views.map(([, type]) => [type, loaded.views[type].arch]));
@@ -229,6 +230,6 @@ export class MobileActWindowController extends Component {
     }
 
     _setNavbarTitle(title) {
-        this.env.bus.trigger("NAVBAR_TITLE:UPDATE", { title });
+        envOf(this).bus.trigger("NAVBAR_TITLE:UPDATE", { title });
     }
 }

@@ -20,3 +20,8 @@
 - 每个组件的样式放在组件旁边 (`*.scss`), 通过清单 `__manifest__.py` 中的资产包加载.
 - 对外的导入路径使用 `@mobile_web/<目录>/<文件>`, 不要跨目录导入其它组件的内部文件.
 - 测试在 `static/tests/` 下镜像源码目录结构, 公共测试工具在 `static/tests/helpers/`.
+
+类型检查:
+- 源码是 JS, 用 JSDoc 标注类型; `../jsconfig.json` 开启了 `checkJs`, 并引用 web 的 `@types` 与 `owl.d.ts`.
+- 运行 `../typecheck.sh` 检查 `src/` 下的错误 (需要 `tsc`, 例如 `npm i -g typescript@5`).
+- `src/@types/mobile.d.ts` 补充移动端的注册表分类与服务类型; Owl 的 `Component` 没有 `env` 等类型, 通过 `core/env.js` 的 `envOf` 访问.

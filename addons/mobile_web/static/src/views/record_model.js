@@ -98,6 +98,9 @@ export class MobileRecordModel {
      *
      * @returns {Promise<{records: Object[], length: number}>}
      */
+    /**
+     * @param {{ domain: any[], fieldNames: string[], offset?: number, limit?: number, order?: string }} options
+     */
     searchRecords({ domain, fieldNames, offset = 0, limit = 40, order }) {
         return this.orm.webSearchRead(this.resModel, domain, {
             specification: buildSpec(this.fields, fieldNames),

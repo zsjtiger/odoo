@@ -3,6 +3,7 @@ import { render } from "@web/core/owl/utils";
 import { useService } from "@web/core/utils/hooks";
 
 import { SvgIcon } from "@mobile_web/widgets/svg_icon/svg_icon"
+import { envOf } from "@mobile_web/core/env";
 
 
 export class MobileNavBar extends Component {
@@ -32,9 +33,9 @@ export class MobileNavBar extends Component {
             render(this);
         };
 
-        this.env.bus.addEventListener("NAVBAR_TITLE:UPDATE", this.onTitleUpdate);
+        envOf(this).bus.addEventListener("NAVBAR_TITLE:UPDATE", this.onTitleUpdate);
         onWillDestroy(() => {
-            this.env.bus.removeEventListener("NAVBAR_TITLE:UPDATE", this.onTitleUpdate);
+            envOf(this).bus.removeEventListener("NAVBAR_TITLE:UPDATE", this.onTitleUpdate);
         });
     }
 

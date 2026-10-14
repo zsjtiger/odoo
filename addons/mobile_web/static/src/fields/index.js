@@ -9,7 +9,7 @@ import { mobileFieldRegistry } from "@mobile_web/views/registries";
  *
  * @param {Object} attrs  arch 节点属性
  * @param {Object} field  字段定义
- * @returns {Component}
+ * @returns {import("@odoo/owl").Component}
  */
 export function getFieldWidget(attrs, field) {
     if (attrs.widget && mobileFieldRegistry.contains(attrs.widget)) {

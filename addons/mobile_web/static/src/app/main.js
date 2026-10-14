@@ -1,9 +1,10 @@
 import { startWebClient } from "@web/boot/start";
 import { registry } from "@web/core/framework/registry";
-import { mobileActionService } from "@mobile_web/actions/action_service";
+import { registerMobileServices } from "@mobile_web/app/services";
 import { MobileWebClient } from "@mobile_web/app/webclient";
 import "@mobile_web/pages/index";
+import { asComponent } from "@mobile_web/core/env";
 
-registry.category("services").add("mobileAction", mobileActionService);
+registerMobileServices(registry.category("services"));
 
-startWebClient(MobileWebClient);
+startWebClient(asComponent(MobileWebClient));

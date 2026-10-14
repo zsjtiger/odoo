@@ -29,7 +29,7 @@ import { router as _router, startRouter } from '@web/core/services/browser/route
  * @property {number|string} [action] action信息: `ir.actions.action.id` or `ir.actions.action.path`
  * @property {string} [model] model名: `ir.model.model`
  * @property {number} [active_id]
- * @property {number} [resId] 记录id
+ * @property {number|string} [resId] 记录id
  * @property {StateActionStack} [actionStack]
  * @property {Boolean} [_isMobile]
  */
@@ -41,7 +41,7 @@ import { router as _router, startRouter } from '@web/core/services/browser/route
  * @property {number|string} [action] action信息: `ir.actions.action.id` or `ir.actions.action.path`
  * @property {string} [model] model名: `ir.model.model`
  * @property {number} [active_id]
- * @property {number} [resId] 记录id
+ * @property {number|string} [resId] 记录id
  * @property {Boolean} [_isMobile]
  */
 

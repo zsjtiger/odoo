@@ -11,6 +11,7 @@ import { hasDisplayValue } from "@mobile_web/fields/field_utils";
 import { useInfiniteScroll } from "@mobile_web/views/infinite_scroll";
 import { readonlyFieldRecord } from "@mobile_web/fields/field_record";
 import { _t } from "@web/core/data/l10n/translation";
+import { notify } from "@mobile_web/core/notification";
 
 /**
  * 找到卡片的字段布局: 优先使用 templates 中的 card 模板, 否则使用看板根节点下的字段
@@ -189,7 +190,7 @@ export class MobileKanbanView extends Component {
                 await this.collection.reload();
             }
         } catch (error) {
-            this.notification.add(error?.data?.message || error?.message || this.texts.actionFailed, {
+            notify(this.notification, error?.data?.message || error?.message || this.texts.actionFailed, {
                 type: "danger",
                 sticky: true,
             });

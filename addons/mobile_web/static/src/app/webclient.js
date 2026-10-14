@@ -10,6 +10,7 @@ import { router } from "@mobile_web/core/browser/router";
 // webclient components
 import { MobileActionContainer } from "@mobile_web/layout/action_container/action_container";
 import { MobileNavBar } from "@mobile_web/layout/navbar/navbar";
+import { envOf } from "@mobile_web/core/env";
 
 
 export class MobileWebClient extends Component {
@@ -32,14 +33,14 @@ export class MobileWebClient extends Component {
     };
 
     setup() {
-        this.state = proxy({error: false});  // TODO: 错误处理目前只是在webclient展示一个div，后续可能需要封装为弹窗？
+        this.state = proxy({ error: /** @type {string|false} */ (false) });  // TODO: 错误处理目前只是在webclient展示一个div，后续可能需要封装为弹窗？
         this.mobileActionService = useService("mobileAction");
         this.localization = localization;
 
         // life cycle
         onMounted(() => {
             this.loadRouterState();
-            this.env.bus.trigger("WEB_CLIENT_READY");
+            envOf(this).bus.trigger("WEB_CLIENT_READY");
         });
 
         useBus(routerBus, "ROUTE_CHANGE", () => this.loadRouterState())
@@ -52,8 +53,7 @@ export class MobileWebClient extends Component {
      * 解析当前访问的URL, 为前端action
      */
     async loadRouterState() {
-        /** @type {ActionRequest} action */
-        const { action } = router.current;
+        const { action } = /** @type {Record<string, any>} */ (router.current);
 
         if (action) {
             this.mobileActionService.doAction(action).catch((msg) => {
@@ -74,7 +74,7 @@ export class MobileWebClient extends Component {
     onGlobalClick(ev) {
         if (
             ev.ctrlKey
-            && !ev.target.isContentEditable
+            && !(/** @type {HTMLElement} */ (ev.target)).isContentEditable
             && ((ev.target instanceof HTMLAnchorElement && ev.target.href)
                 || (ev.target instanceof HTMLElement && ev.target.closest("a[href]:not([href=''])")))
         ) {

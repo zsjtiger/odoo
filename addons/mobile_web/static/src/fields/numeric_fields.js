@@ -33,6 +33,20 @@ class NumericBase extends Component {
     get editValue() {
         return this.value === false ? "" : this.format(this.value, true);
     }
+    /**
+     * 子类实现: 存储值 -> 界面文字
+     * @returns {string}
+     */
+    format(value, forEdit) {
+        throw new Error("format() must be implemented by the subclass");
+    }
+    /**
+     * 子类实现: 界面文字 -> 存储值, 无效时抛出
+     * @returns {number|false}
+     */
+    parse(raw) {
+        throw new Error("parse() must be implemented by the subclass");
+    }
     checkRelative(raw) {
         if (R_RELATIVE_OPERATION.test(raw.trim())) {
             throw new InvalidNumberError(raw);
