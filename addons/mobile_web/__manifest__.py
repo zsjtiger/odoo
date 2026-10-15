@@ -70,6 +70,8 @@ This module provides the core of the Odoo Mobile Web Client.
             ('remove', 'web/static/src/views/debug_items.js'),
             # 教程(web_tour) 移动端不使用
             ('remove', 'web_tour/static/src/**'),
+            # 表情选择器(聊天/备注编辑用) 移动端没有使用, 且 emoji 数据约 0.5 MB
+            ('remove', 'web/static/src/core/components/emoji_picker/**'),
         ],
 
         'mobile_web.assets_backend': [
