@@ -13,13 +13,14 @@ async function settle() {
     }
 }
 
-test("the sheet shows the message and a danger confirm button", async () => {
+test("the dialog shows the message and a danger confirm button on the right", async () => {
     await mountWithCleanup(ConfirmSheet, {
         props: { message: "Delete it?", confirmLabel: "Delete", danger: true, onAnswer: () => {} },
     });
-    expect(queryOne(".m_confirm_message")).toHaveText("Delete it?");
-    expect(queryOne(".m_sheet_btn_danger")).toHaveText("Delete");
-    expect(queryOne(".m_sheet_cancel")).toHaveText("Cancel");
+    expect(queryOne(".m_alert_message")).toHaveText("Delete it?");
+    expect(queryOne(".m_confirm_yes")).toHaveText("Delete");
+    expect(queryOne(".m_confirm_yes")).toHaveClass("is_danger");
+    expect(queryOne(".m_confirm_no")).toHaveText("Cancel");
 });
 
 test("confirming answers true and cancelling answers false", async () => {
@@ -27,19 +28,19 @@ test("confirming answers true and cancelling answers false", async () => {
     await mountWithCleanup(ConfirmSheet, {
         props: { message: "Sure?", confirmLabel: "Yes", onAnswer: (v) => answers.push(v) },
     });
-    await click(".m_sheet_btn_primary");
-    await click(".m_sheet_cancel");
+    await click(".m_confirm_yes");
+    await click(".m_confirm_no");
     expect(answers).toEqual([true, false]);
 });
 
-test("tapping the backdrop cancels, tapping the sheet does not", async () => {
+test("tapping the backdrop cancels, tapping the dialog does not", async () => {
     const answers = [];
     await mountWithCleanup(ConfirmSheet, {
         props: { message: "Sure?", confirmLabel: "Yes", onAnswer: (v) => answers.push(v) },
     });
-    await click(".m_confirm_message");
+    await click(".m_alert_message");
     expect(answers).toEqual([]);
-    await click(".m_sheet_backdrop");
+    await click(".m_alert_backdrop");
     expect(answers).toEqual([false]);
 });
 
@@ -69,9 +70,9 @@ test("useConfirmSheet resolves the ask with the user's answer", async () => {
     await mountWithCleanup(Host);
     await click(".ask");
     await settle();
-    expect(queryOne(".m_confirm_message")).toHaveText("Really?");
-    await click(".m_sheet_btn_danger");
+    expect(queryOne(".m_alert_message")).toHaveText("Really?");
+    await click(".m_confirm_yes");
     await settle();
-    expect(queryAll(".m_confirm_sheet").length).toBe(0);
+    expect(queryAll(".m_alert").length).toBe(0);
     expect(queryOne(".result")).toHaveText("true");
 });

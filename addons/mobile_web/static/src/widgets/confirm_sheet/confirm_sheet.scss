@@ -1,17 +1,56 @@
-// 确认弹层: 消息文字与两个按钮, 删除等危险操作使用红色确认按钮
-.m_confirm_sheet {
-    padding: 20px 16px 8px;
+// 确认对话框: 居中的 iOS 风格提示, 消息在上, 底部左取消右确认, 按钮之间以细线分隔
+.m_alert_backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.4);
 }
 
-.m_confirm_message {
-    margin: 0 0 16px;
-    font-size: 16px;
-    color: $text;
+.m_alert {
+    width: 270px;
+    max-width: calc(100% - 64px);
+    overflow: hidden;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
     text-align: center;
 }
 
-// 危险操作的确认按钮: 红色文字, 与 m_sheet_btn 的基础样式保持相同的特异性
-.m_sheet_btn.m_sheet_btn_danger {
-    color: #e5484d;
-    font-weight: 600;
+.m_alert_message {
+    margin: 0;
+    padding: 20px 16px;
+    font-size: 17px;
+    line-height: 1.4;
+    color: #000;
+}
+
+.m_alert_footer {
+    display: flex;
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.m_alert_btn {
+    flex: 1;
+    min-height: 44px;
+    padding: 11px 0;
+    border: none;
+    background: none;
+    font-size: 17px;
+    color: #007aff;
+
+    & + & {
+        border-left: 1px solid rgba(0, 0, 0, 0.12);
+    }
+
+    &.is_primary {
+        font-weight: 600;
+    }
+
+    &.is_danger {
+        font-weight: 600;
+        color: #ff3b30;
+    }
 }

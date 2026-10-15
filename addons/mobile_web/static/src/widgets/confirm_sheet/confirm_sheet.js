@@ -3,7 +3,8 @@ import { _t } from "@web/core/data/l10n/translation";
 import { fieldTexts } from "@mobile_web/core/texts";
 
 /**
- * 确认弹层: 在执行有风险的操作前征求用户同意.
+ * 确认对话框 (iOS 风格的居中提示): 消息在上, 底部左侧为取消, 右侧为确认.
+ * 危险操作的确认按钮使用红色.
  *
  * 视图中使用 useConfirmSheet(): ask(message) 返回 Promise<boolean>, 模板中放置 ConfirmSheet
  * 并把 answer 作为 onAnswer 传入; 用户选择后 Promise 才会完成.
@@ -12,12 +13,14 @@ export class ConfirmSheet extends Component {
     fieldTexts = fieldTexts;
     static template = xml`
         <t t-name="mobile_web.ConfirmSheet">
-            <div class="m_sheet_backdrop" t-on-click="this.onBackdropClick">
-                <div class="m_sheet m_confirm_sheet" role="alertdialog" aria-modal="true">
-                    <p class="m_confirm_message"><t t-esc="this.props.message"/></p>
-                    <button type="button" t-attf-class="m_sheet_btn {{ this.props.danger ? 'm_sheet_btn_danger' : 'm_sheet_btn_primary' }}"
-                            t-on-click="this.onConfirm"><t t-esc="this.props.confirmLabel"/></button>
-                    <button type="button" class="m_sheet_btn m_sheet_cancel" t-on-click="this.onCancel"><t t-esc="this.fieldTexts.cancel"/></button>
+            <div class="m_alert_backdrop" t-on-click="this.onBackdropClick">
+                <div class="m_alert" role="alertdialog" aria-modal="true">
+                    <p class="m_alert_message"><t t-esc="this.props.message"/></p>
+                    <div class="m_alert_footer">
+                        <button type="button" class="m_alert_btn m_confirm_no" t-on-click="this.onCancel"><t t-esc="this.fieldTexts.cancel"/></button>
+                        <button type="button" t-attf-class="m_alert_btn m_confirm_yes {{ this.props.danger ? 'is_danger' : 'is_primary' }}"
+                                t-on-click="this.onConfirm"><t t-esc="this.props.confirmLabel"/></button>
+                    </div>
                 </div>
             </div>
         </t>
@@ -36,7 +39,7 @@ export class ConfirmSheet extends Component {
         this.props.onAnswer(false);
     };
     onBackdropClick(ev) {
-        // 点击遮罩等同于取消; 点击弹层本身不关闭
+        // 点击遮罩等同于取消; 点击对话框本身不关闭
         if (ev.target === ev.currentTarget) {
             this.props.onAnswer(false);
         }

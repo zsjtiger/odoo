@@ -72,7 +72,7 @@ async function mountList({ canDelete, arch = LIST_ARCH }) {
 
 /** 在确认弹层中作答: 确认(危险按钮) 或取消 */
 async function answerSheet(yes) {
-    await click(yes ? ".m_sheet_btn_danger" : ".m_sheet_cancel");
+    await click(yes ? ".m_confirm_yes" : ".m_confirm_no");
     await settle();
 }
 
@@ -82,7 +82,7 @@ test("the delete asks for confirmation first and deletes only after the user con
     await swipeFirstRow();
     await click(firstDelete());
     await settle();
-    expect(queryOne(".m_confirm_message")).toHaveText("Delete this record?");
+    expect(queryOne(".m_alert_message")).toHaveText("Delete this record?");
     expect(list.unlinked).toEqual([]);
     await answerSheet(true);
     expect(list.unlinked).toEqual([1]);
@@ -95,7 +95,7 @@ test("cancelling the confirmation keeps the record", async () => {
     await click(firstDelete());
     await settle();
     await answerSheet(false);
-    expect(queryAll(".m_confirm_sheet").length).toBe(0);
+    expect(queryAll(".m_alert").length).toBe(0);
     expect(list.unlinked).toEqual([]);
 });
 
@@ -105,7 +105,7 @@ test("without delete access the delete button is unavailable and no confirmation
     expect(firstDelete()).toHaveAttribute("disabled");
     await click(firstDelete());
     await settle();
-    expect(queryAll(".m_confirm_sheet").length).toBe(0);
+    expect(queryAll(".m_alert").length).toBe(0);
     expect(list.unlinked).toEqual([]);
 });
 
@@ -115,6 +115,6 @@ test("delete=\"0\" in the arch disables deleting even with access", async () => 
     expect(firstDelete()).toHaveAttribute("disabled");
     await click(firstDelete());
     await settle();
-    expect(queryAll(".m_confirm_sheet").length).toBe(0);
+    expect(queryAll(".m_alert").length).toBe(0);
     expect(list.unlinked).toEqual([]);
 });
