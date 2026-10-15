@@ -1,4 +1,4 @@
-from crossnow import models
+from odoo import models
 
 
 class IrUiMenu(models.Model):
@@ -12,7 +12,7 @@ class IrUiMenu(models.Model):
         """
         menus = super().load_menus(debug)
 
-        if (self.env['ir.config_parameter'].sudo().get_param('enable_common_workflow') != 'enable'
+        if (self.env['ir.config_parameter'].sudo().get_str('enable_common_workflow') != 'enable'
                 and not self.env.user.has_group('base.group_erp_manager')):
             target_index = ''
             for index, menu in menus.items():

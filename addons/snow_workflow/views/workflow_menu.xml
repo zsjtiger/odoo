@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<crossnow>
-    <menuitem name="workflow" id="snow_workflow_menu_root" sequence="600"/>
-    <menuitem name="workflow definition" id="snow_workflow_definition" parent="snow_workflow_menu_root"
-              action="snow_workflow_definition_act" groups="base.group_erp_manager"/>
-    <menuitem name="approval management" id="snow_workflow_approval" parent="snow_workflow_menu_root">
-        <menuitem id="common_pending_approval_menu" m-hide="1" name="wait my approval" action="snow_workflow_execution_task_act"/>
-        <menuitem id="common_approved_menu" m-hide="1" name="processed" action="action_workflow_execution_task_history_act"/>
-        <menuitem id="common_self_approval_menu" m-hide="1" name="my raised" action="action_my_submission_act"/>
-        <menuitem id="common_copy_to_me_menu" m-hide="1" name="copy to me" action="snow_workflow_carbon_copy_act"/>
-    </menuitem>
-</crossnow>
+<odoo>
+    <data>
+        <menuitem name="workflow" id="snow_workflow_menu_root" sequence="600"/>
+        <menuitem name="workflow definition" id="snow_workflow_definition" parent="snow_workflow_menu_root"
+                  action="snow_workflow_definition_act" groups="base.group_erp_manager"/>
+        <menuitem name="approval management" id="snow_workflow_approval" parent="snow_workflow_menu_root">
+            <menuitem id="common_pending_approval_menu" name="wait my approval" action="snow_workflow_execution_task_act"/>
+            <menuitem id="common_approved_menu" name="processed" action="action_workflow_execution_task_history_act"/>
+            <menuitem id="common_self_approval_menu" name="my raised" action="action_my_submission_act"/>
+            <menuitem id="common_copy_to_me_menu" name="copy to me" action="snow_workflow_carbon_copy_act"/>
+        </menuitem>
+    </data>
+</odoo>

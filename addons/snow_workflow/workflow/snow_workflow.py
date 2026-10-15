@@ -4,7 +4,7 @@ import logging
 import datetime
 import functools
 
-from crossnow.exceptions import UserError
+from odoo.exceptions import UserError
 from .attendee import TaskAttendee
 from .status import WorkflowStatus
 from .vision import SnowWorkflowVision
@@ -58,7 +58,7 @@ class SnowWorkflowMeta(type):
 class SnowBaseWorkflow(metaclass=SnowWorkflowMeta):
     def __init__(self, env, workflow_instance):
         """
-        :param env: crossnow.api.Environment
+        :param env: odoo.api.Environment
         :param workflow_instance: `snow.workflow.instance`的记录
         """
         self.env = env

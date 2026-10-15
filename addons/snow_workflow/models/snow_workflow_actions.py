@@ -1,6 +1,6 @@
 import json
 import logging
-from crossnow import models, api, _
+from odoo import models, api, _
 from ..workflow.button import ButtonCompute
 from ..workflow.snow_workflow import SnowWorkflow
 
@@ -18,8 +18,8 @@ class WorkflowAction(models.AbstractModel):
         :return:
         """
         record = self.env[model_name].browse(record_id)
-        if record.exists() and record.name_get():
-            title = record.name_get()[0][1] if len(record.name_get()[0]) > 1 else 'Submit Success'
+        if record.exists() and record.display_name:
+            title = record.display_name
         else:
             title = 'Submit Success'
         return {

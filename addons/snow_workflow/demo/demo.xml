@@ -1,4 +1,4 @@
-<crossnow>
+<odoo>
     <data>
 <!--
           <record id="object0" model="snow_workflow.snow_workflow">
@@ -27,4 +27,4 @@
           </record>
 -->
     </data>
-</crossnow>
+</odoo>

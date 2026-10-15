@@ -1,6 +1,6 @@
 import datetime
 
-from crossnow import _
+from odoo import _
 from .exceptions import SnowWorkflowRuntimeError
 from . import GROUP_APPROVE_EXECUTION_TASKS
 

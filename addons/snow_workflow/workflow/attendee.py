@@ -2,7 +2,7 @@ import re
 import logging
 
 from .exceptions import SnowWorkflowValidationError, SnowWorkflowAttendeeLaneAnalyzeError, SnowWorkflowRuntimeError
-from crossnow.tools import html_escape
+from odoo.tools import html_escape
 
 
 logger = logging.getLogger(__name__)

@@ -1,5 +1,5 @@
-from crossnow import models
-from crossnow.http import request
+from odoo import models
+from odoo.http import request
 
 
 class Http(models.AbstractModel):
@@ -16,7 +16,7 @@ class Http(models.AbstractModel):
         approval_models = user.fetch_approval_models()
         res.update({"approval_models": approval_models})
         enable_common_workflow = False
-        if request.env['ir.config_parameter'].sudo().get_param('enable_common_workflow') != 'disable':
+        if request.env['ir.config_parameter'].sudo().get_str('enable_common_workflow') != 'disable':
             enable_common_workflow = True
         res.update({"enable_common_workflow": enable_common_workflow})
         return res

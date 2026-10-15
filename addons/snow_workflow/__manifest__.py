@@ -23,14 +23,13 @@
     ],
     'assets': {
         'web.assets_backend': [
-            'snow_workflow/static/src/js/*.js',
+            # 旧版 (odoo.define / web.field_registry) 的 JS 暂未迁移到 Owl, 不加载, 见 static/src/js
             'snow_workflow/static/src/scss/*.scss',
+            # 旧版 qweb 资源包已不存在: 模板与 JS 一起由 web.assets_backend 加载
+            'snow_workflow/static/src/xml/*.xml',
         ],
         'web.assets_frontend': [
             # '/static/src/js/position_advance_query_panel.js',
-        ],
-        'web.assets_qweb': [
-            'snow_workflow/static/src/xml/*.xml',
         ],
     },
     'demo': [

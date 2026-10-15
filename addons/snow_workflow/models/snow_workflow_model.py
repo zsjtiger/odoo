@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from crossnow import models, fields, api
-from crossnow.exceptions import ValidationError
+from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 from ..workflow import MY_APPROVED_TASKS_TYPE, STATUS_MAPPING
 from ..workflow.engines import BpmnWorkflowEngine
 
@@ -111,7 +111,8 @@ class WorkflowExternalManagers(models.Model):
 
 
 class WorkflowActionMixin(models.AbstractModel):
-    _register = False
+    _name = 'snow.workflow.action.mixin'
+    _description = 'workflow action mixin'
     task_name = fields.Char(string='task name', compute='_compute_task_name', search='_search_task_name', store=False)
 
     @api.depends('object')
@@ -188,12 +189,13 @@ class WorkflowActionMixin(models.AbstractModel):
 
     @api.model
     def search_count(self, args):
-        res = self.search(args, count=True)
+        # 与 search 使用同样的数据范围
+        res = len(self.search(args))
         self.clean_context_type()
-        return res if isinstance(res, int) else len(res)
+        return res
 
     @api.model
-    def search(self, args, offset=0, limit=None, order=None, count=False):
+    def search(self, args, offset=0, limit=None, order=None):
         """
         扩展父类search方法，限定审批流控制台的数据范围
 
@@ -224,8 +226,7 @@ class WorkflowActionMixin(models.AbstractModel):
         # self.clean_context_type()
 
         _args.extend(args)
-        return super(WorkflowActionMixin, self).search(_args, offset=offset, limit=limit,
-                                                       order=order, count=count)
+        return super(WorkflowActionMixin, self).search(_args, offset=offset, limit=limit, order=order)
 
     def get_pending_args(self):
         filtered_domain = [('user', '=', self.env.uid),
@@ -364,8 +365,9 @@ class WorkflowInstanceSuspendHistory(models.Model):
     suspend_user = fields.Many2one('res.users', string="suspend user")
 
 
-class WorkflowExecution(models.Model, WorkflowActionMixin):
+class WorkflowExecution(models.Model):
     _name = 'snow.workflow.execution'
+    _inherit = ['snow.workflow.action.mixin']
     _description = 'workflow execution'
     _table = 'snow_workflow_execution'
     _order = 'id'
@@ -397,8 +399,9 @@ class WorkflowExecution(models.Model, WorkflowActionMixin):
             record.status_name = owner + STATUS_MAPPING.get(record.status)
 
 
-class WorkflowExecutionTaskHistory(models.Model, WorkflowActionMixin):
+class WorkflowExecutionTaskHistory(models.Model):
     _name = 'snow.workflow.execution.task.history'
+    _inherit = ['snow.workflow.action.mixin']
     _description = 'execution task history'
     _table = 'snow_workflow_execution_task_history'
     _order = 'id'
@@ -431,8 +434,9 @@ class WorkflowExecutionTaskHistory(models.Model, WorkflowActionMixin):
         return super(WorkflowExecutionTaskHistory, self).create(vals_list)
 
 
-class WorkflowExecutionTask(models.Model, WorkflowActionMixin):
+class WorkflowExecutionTask(models.Model):
     _name = 'snow.workflow.execution.task'
+    _inherit = ['snow.workflow.action.mixin']
     _description = 'Execution Task'
     _table = 'snow_workflow_execution_task'
     _order = 'id'
@@ -571,8 +575,9 @@ class WorkflowStateAction(models.Model):
     wf_state = fields.Char("workflow status")
 
 
-class WorkflowCarbonCopy(models.Model, WorkflowActionMixin):
+class WorkflowCarbonCopy(models.Model):
     _name = 'snow.workflow.carbon.copy'
+    _inherit = ['snow.workflow.action.mixin']
     _description = 'approval carbon copy'
     _table = 'snow_workflow_carbon_copy'
     _order = 'id'

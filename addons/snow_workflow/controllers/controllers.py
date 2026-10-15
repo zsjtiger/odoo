@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# from crossnow import http
+# from odoo import http
 
 
 # class SnowWorkflow(http.Controller):

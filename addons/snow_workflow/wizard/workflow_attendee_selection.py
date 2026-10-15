@@ -1,4 +1,4 @@
-from crossnow import models
+from odoo import models
 
 
 class WorkflowAttendeeSelection(models.TransientModel):

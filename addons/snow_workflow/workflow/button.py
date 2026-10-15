@@ -1,4 +1,4 @@
-from crossnow import _
+from odoo import _
 from .attendee import TaskAttendee
 from . import GROUP_APPROVE_EXECUTION_TASKS
 from .exceptions import SnowWorkflowValidationError

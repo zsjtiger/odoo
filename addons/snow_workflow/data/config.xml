@@ -1,8 +1,8 @@
-<crossnow>
+<odoo>
     <data noupdate="1">
         <record id = "enable_common_workflow" model = "ir.config_parameter">
             <field name="key">enable_common_workflow</field>
             <field name="value">disable</field>
         </record>
     </data>
-</crossnow>
+</odoo>
