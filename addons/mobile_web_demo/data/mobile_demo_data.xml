@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="mobile_demo_partner_a" model="res.partner">
+        <field name="name">Demo Partner Alpha</field>
+    </record>
+    <record id="mobile_demo_partner_b" model="res.partner">
+        <field name="name">Demo Partner Beta</field>
+    </record>
+    <record id="mobile_demo_partner_c" model="res.partner">
+        <field name="name">Demo Partner Delta</field>
+    </record>
+
+    <record id="mobile_demo_tag_vip" model="mobile.demo.tag">
+        <field name="name">VIP</field>
+        <field name="color">1</field>
+    </record>
+    <record id="mobile_demo_tag_followup" model="mobile.demo.tag">
+        <field name="name">Follow-up</field>
+        <field name="color">4</field>
+    </record>
+    <record id="mobile_demo_tag_internal" model="mobile.demo.tag">
+        <field name="name">Internal</field>
+        <field name="color">7</field>
+    </record>
+
+    <record id="mobile_demo_item_1" model="mobile.demo.item">
+        <field name="name">Alpha visit</field>
+        <field name="sequence">10</field>
+        <field name="state">done</field>
+        <field name="priority">2</field>
+        <field name="visit_type">urgent</field>
+        <field name="is_urgent">True</field>
+        <field name="urgent_reason">Patient reported chest pain</field>
+        <field name="note_required">Checked with the on-call doctor</field>
+        <field name="progress">100</field>
+        <field name="percentage">0.9</field>
+        <field name="qty">3</field>
+        <field name="duration">1.5</field>
+        <field name="price">1200</field>
+        <field name="date">2024-11-28</field>
+        <field name="visit_datetime">2024-11-28 02:30:00</field>
+        <field name="email">alpha@example.com</field>
+        <field name="phone">+86 10 1234 5678</field>
+        <field name="website">https://www.odoo.com</field>
+        <field name="secret">hidden-alpha</field>
+        <field name="description">First demo record, marked done and urgent.</field>
+        <field name="notes">&lt;p&gt;Rich text with &lt;b&gt;bold&lt;/b&gt; and a &lt;a href="https://www.odoo.com"&gt;link&lt;/a&gt;.&lt;/p&gt;</field>
+        <field name="payload" eval="{'source': 'demo', 'rank': 1, 'tags': ['a', 'b']}"/>
+        <field name="partner_id" ref="mobile_demo_partner_a"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="tag_ids" eval="[(6, 0, [ref('mobile_demo_tag_vip'), ref('mobile_demo_tag_followup')])]"/>
+        <field name="line_ids" eval="[(0, 0, {'name': 'Consultation', 'quantity': 1, 'unit_price': 300}), (0, 0, {'name': 'Medicine', 'quantity': 2, 'unit_price': 450})]"/>
+    </record>
+
+    <record id="mobile_demo_item_2" model="mobile.demo.item">
+        <field name="name">Beta follow-up</field>
+        <field name="sequence">20</field>
+        <field name="state">confirmed</field>
+        <field name="priority">1</field>
+        <field name="progress">40</field>
+        <field name="percentage">0.4</field>
+        <field name="qty">1</field>
+        <field name="duration">0.5</field>
+        <field name="price">250</field>
+        <field name="date">2024-11-29</field>
+        <field name="email">beta@example.com</field>
+        <field name="phone">+86 21 5550 1000</field>
+        <field name="color">#e5484d</field>
+        <field name="partner_id" ref="mobile_demo_partner_b"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="tag_ids" eval="[(6, 0, [ref('mobile_demo_tag_followup')])]"/>
+        <field name="line_ids" eval="[(0, 0, {'name': 'Follow-up call', 'quantity': 1, 'unit_price': 250})]"/>
+    </record>
+
+    <record id="mobile_demo_item_3" model="mobile.demo.item">
+        <field name="name">Gamma internal review</field>
+        <field name="sequence">30</field>
+        <field name="state">draft</field>
+        <field name="priority">0</field>
+        <field name="progress">0</field>
+        <field name="percentage">0</field>
+        <field name="qty">5</field>
+        <field name="duration">2</field>
+        <field name="price">80</field>
+        <field name="date">2024-12-01</field>
+        <field name="tag_ids" eval="[(6, 0, [ref('mobile_demo_tag_internal')])]"/>
+    </record>
+
+    <record id="mobile_demo_item_4" model="mobile.demo.item">
+        <field name="name">Delta cancelled</field>
+        <field name="sequence">40</field>
+        <field name="state">cancel</field>
+        <field name="active">True</field>
+        <field name="progress">15</field>
+        <field name="percentage">0.15</field>
+        <field name="date">2024-12-03</field>
+        <field name="partner_id" ref="mobile_demo_partner_c"/>
+    </record>
+</odoo>
