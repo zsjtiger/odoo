@@ -16,6 +16,7 @@ class MobileDemoLine(models.Model):
     item_id = fields.Many2one('mobile.demo.item', required=True, ondelete='cascade')
     name = fields.Char(required=True)
     quantity = fields.Float(default=1.0)
+    date = fields.Date(string="Date", default=fields.Date.context_today)
     unit_price = fields.Monetary(currency_field='currency_id')
     currency_id = fields.Many2one(related='item_id.currency_id')
     amount = fields.Monetary(compute='_compute_amount', store=True, currency_field='currency_id')

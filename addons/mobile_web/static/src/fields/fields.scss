@@ -346,3 +346,72 @@
     width: 100%;
     color: #e5484d;
 }
+
+// 时间线 (一对多 widget="timeline"): 左侧日期, 中间竖线与圆点, 右侧卡片
+.m_timeline {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.m_timeline_item {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 0 0 12px;
+    cursor: pointer;
+    &::before {
+        content: "";
+        position: absolute;
+        left: 72px;
+        top: 0;
+        bottom: 0;
+        width: 1px;
+        background: $theme-btn;
+    }
+    &:last-child::before {
+        bottom: auto;
+        height: 14px;
+    }
+}
+
+.m_timeline_date {
+    flex: 0 0 60px;
+    padding-top: 10px;
+    font-size: 13px;
+    text-align: right;
+    color: $text;
+}
+
+.m_timeline_dot {
+    flex: 0 0 12px;
+    width: 10px;
+    height: 10px;
+    margin: 13px 1px 0;
+    border: 2px solid $theme-btn;
+    border-radius: 50%;
+    background: $surface;
+    position: relative;
+    z-index: 1;
+}
+
+.m_timeline_card {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: #f2f2f2;
+}
+
+.m_timeline_title {
+    font-size: 15px;
+    color: $text;
+}
+
+.m_timeline_line {
+    margin-top: 4px;
+    font-size: 13px;
+    color: $muted;
+}

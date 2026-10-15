@@ -22,7 +22,7 @@ export class LineEditor extends Component {
                 <div class="m_line_editor_body m_form_view">
                     <FormBlocks blocks="this.props.blocks" record="this.adapter" resModel="this.props.resModel" readonly="false" invalid="this.state.invalid" onFieldChange="this.onFieldChange"/>
                 </div>
-                <div t-if="this.props.onDelete" class="m_line_editor_foot">
+                <div class="m_line_editor_foot">
                     <button type="button" class="m_btn m_btn_secondary m_line_editor_delete" t-on-click="this.props.onDelete"><t t-esc="this.texts.deleteLine"/></button>
                 </div>
             </div>
@@ -37,7 +37,7 @@ export class LineEditor extends Component {
         fields: t.object(),
         onSave: t.function(),
         onCancel: t.function(),
-        onDelete: t.function().optional(null),
+        onDelete: t.function(),
     });
     texts = fieldTexts;
     state = proxy({ record: this.props.record, changed: [], invalid: [] });

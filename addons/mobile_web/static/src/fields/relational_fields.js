@@ -233,7 +233,7 @@ export class One2manyField extends Component {
                 fields="this.schema.fields"
                 onSave="this.saveLine"
                 onCancel="this.cancelLine"
-                onDelete="this.state.editing.isNew ? null : this.deleteLine"/>
+                onDelete="this.deleteLine"/>
         </t>
     `;
     props = useProps(fieldProps);
