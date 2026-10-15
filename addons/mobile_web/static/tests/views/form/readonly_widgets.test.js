@@ -36,6 +36,8 @@ const CASES = [
     { widget: "", field: { type: "datetime" }, value: "2024-11-28 02:30:00" },
     { widget: "", field: { type: "many2one", relation: "res.partner" }, value: [1, "Alpha"] },
     { widget: "", field: { type: "many2many", relation: "res.partner" }, value: [[1, "Alpha"]] },
+    { widget: "many2many_tags", field: { type: "many2many", relation: "res.partner" }, value: [[1, "Alpha"]] },
+    { widget: "", field: { type: "monetary", currency_field: "currency_id" }, value: 1200, currency: [1, "USD"] },
     { widget: "many2many_checkboxes", field: { type: "many2many", relation: "res.partner" }, value: [[1, "Alpha"]] },
     { widget: "", field: { type: "binary" }, value: { size: 10 } },
     { widget: "image", field: { type: "binary" }, value: { size: 10 } },
@@ -62,16 +64,23 @@ function enabledControls() {
 
 test("every widget stays read-only in edit mode when the view marks it readonly", async () => {
     const failures = [];
-    for (const { widget, field, value } of CASES) {
+    for (const { widget, field, value, currency } of CASES) {
         const name = "f";
         const attrs = widget ? ` widget="${widget}"` : "";
         const root = parseArch(`<form><field name="${name}"${attrs} readonly="1"/></form>`);
-        const blocks = buildLayout(root, { [name]: field });
+        const fields = { [name]: field };
+        const data = { [name]: value };
+        if (currency) {
+            // 金额控件需要币种字段的值, 但币种本身不在视图中显示
+            fields.currency_id = { type: "many2one", relation: "res.currency" };
+            data.currency_id = currency;
+        }
+        const blocks = buildLayout(root, fields);
         const label = `${widget || field.type}`;
         await mountWithCleanup(FormBlocks, {
             props: {
                 blocks,
-                record: recordOf({ [name]: value }),
+                record: recordOf(data),
                 resModel: "res.partner",
                 readonly: false,
                 invalid: [],
