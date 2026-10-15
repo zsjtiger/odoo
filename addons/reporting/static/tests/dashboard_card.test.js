@@ -2,7 +2,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import { queryAll } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { mountWithCleanup } from "@web/../tests/_framework/component_test_helpers";
-import { DashBoardCardWidget } from "@board/widget/dashboard_card/dashboard_card";
+import { DashBoardCardWidget } from "@reporting/widget/dashboard_card/dashboard_card";
 
 describe.current.tags("headless");
 

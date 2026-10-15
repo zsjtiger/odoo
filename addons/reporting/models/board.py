@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 
 class Board(models.AbstractModel):
-    _name = 'board.board'
+    _name = 'reporting.board'
     _description = "Board"
     _auto = False
 

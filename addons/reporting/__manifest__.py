@@ -21,14 +21,14 @@
     'assets': {
         'web.assets_backend': [
             # echarts 必须先于图表部件加载
-            'board/static/lib/echarts.min.js',
-            'board/static/src/**/*.scss',
-            'board/static/src/**/*.js',
-            'board/static/src/**/*.xml',
+            'reporting/static/lib/echarts.min.js',
+            'reporting/static/src/**/*.scss',
+            'reporting/static/src/**/*.js',
+            'reporting/static/src/**/*.xml',
         ],
         'web.assets_unit_tests': [
-            'board/static/lib/echarts.min.js',
-            'board/static/tests/**/*.test.js',
+            'reporting/static/lib/echarts.min.js',
+            'reporting/static/tests/**/*.test.js',
         ],
     },
     'license': 'LGPL-3',

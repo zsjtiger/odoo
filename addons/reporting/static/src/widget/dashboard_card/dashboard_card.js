@@ -9,7 +9,7 @@ import { DashBoardCommonWidget } from "../common/dashboard_widget";
  */
 export class DashBoardCardWidget extends DashBoardCommonWidget {
     static template = xml`
-        <t t-name="board.DashBoardCardWidget">
+        <t t-name="reporting.DashBoardCardWidget">
             <div class="snow_mdm_dashboard_chart_container">
                 <t t-if="this.showLoading"><t t-out="this.texts.loading"/></t>
                 <div t-else="" class="snow_mdm_dashboard_card_container">

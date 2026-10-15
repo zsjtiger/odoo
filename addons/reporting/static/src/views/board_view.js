@@ -97,7 +97,7 @@ export function computePlacements(layout, actions) {
  */
 export class BoardActionCell extends Component {
     static template = xml`
-        <t t-name="board.BoardActionCell">
+        <t t-name="reporting.BoardActionCell">
             <h2 t-if="this.props.action.string" class="o_board_action_title" t-on-click="this.toggleFold">
                 <t t-out="this.props.action.string"/>
             </h2>
@@ -156,7 +156,7 @@ export class BoardActionCell extends Component {
  */
 export class BoardController extends Component {
     static template = xml`
-        <t t-name="board.BoardController">
+        <t t-name="reporting.BoardController">
             <div class="o_board_view">
                 <div t-if="!this.props.actions.length" class="o_view_nocontent">
                     <p class="o_board_empty"><t t-out="this.texts.empty"/></p>

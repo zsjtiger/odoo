@@ -13,7 +13,7 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
  */
 export class DashBoardCommonWidget extends Component {
     static template = xml`
-        <t t-name="board.DashBoardWidget">
+        <t t-name="reporting.DashBoardWidget">
             <div class="snow_mdm_dashboard_chart_container" t-ref="this.chartRef">
                 <t t-if="this.showLoading"><t t-out="this.texts.loading"/></t>
             </div>

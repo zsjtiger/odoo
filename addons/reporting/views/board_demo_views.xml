@@ -2,8 +2,8 @@
 <odoo>
     <!-- 图表演示: 每个图表一个表单视图与动作, 用于仪表盘的各个格子 -->
     <record id="board_demo_view_bar" model="ir.ui.view">
-        <field name="name">board.demo.bar.form</field>
-        <field name="model">board.demo</field>
+        <field name="name">reporting.demo.bar.form</field>
+        <field name="model">reporting.demo</field>
         <field name="arch" type="xml">
             <form>
                 <field name="chart_bar" widget="board_dashboard_bar" options="{'direction': 'vertical'}"/>
@@ -11,8 +11,8 @@
         </field>
     </record>
     <record id="board_demo_view_line" model="ir.ui.view">
-        <field name="name">board.demo.line.form</field>
-        <field name="model">board.demo</field>
+        <field name="name">reporting.demo.line.form</field>
+        <field name="model">reporting.demo</field>
         <field name="arch" type="xml">
             <form>
                 <field name="chart_line" widget="board_dashboard_line"/>
@@ -20,8 +20,8 @@
         </field>
     </record>
     <record id="board_demo_view_pie" model="ir.ui.view">
-        <field name="name">board.demo.pie.form</field>
-        <field name="model">board.demo</field>
+        <field name="name">reporting.demo.pie.form</field>
+        <field name="model">reporting.demo</field>
         <field name="arch" type="xml">
             <form>
                 <field name="chart_pie" widget="board_dashboard_pie"/>
@@ -29,8 +29,8 @@
         </field>
     </record>
     <record id="board_demo_view_gauge" model="ir.ui.view">
-        <field name="name">board.demo.gauge.form</field>
-        <field name="model">board.demo</field>
+        <field name="name">reporting.demo.gauge.form</field>
+        <field name="model">reporting.demo</field>
         <field name="arch" type="xml">
             <form>
                 <field name="chart_gauge" widget="board_dashboard_gauge"/>
@@ -38,8 +38,8 @@
         </field>
     </record>
     <record id="board_demo_view_radar" model="ir.ui.view">
-        <field name="name">board.demo.radar.form</field>
-        <field name="model">board.demo</field>
+        <field name="name">reporting.demo.radar.form</field>
+        <field name="model">reporting.demo</field>
         <field name="arch" type="xml">
             <form>
                 <field name="chart_radar" widget="board_dashboard_radar"/>
@@ -47,8 +47,8 @@
         </field>
     </record>
     <record id="board_demo_view_card" model="ir.ui.view">
-        <field name="name">board.demo.card.form</field>
-        <field name="model">board.demo</field>
+        <field name="name">reporting.demo.card.form</field>
+        <field name="model">reporting.demo</field>
         <field name="arch" type="xml">
             <form>
                 <field name="chart_card" widget="board_dashboard_card" options="{'column': 3}"/>
@@ -57,7 +57,7 @@
     </record>
     <record id="board_demo_action_bar" model="ir.actions.act_window">
         <field name="name">Bar</field>
-        <field name="res_model">board.demo</field>
+        <field name="res_model">reporting.demo</field>
         <field name="view_mode">form</field>
         <field name="view_id" ref="board_demo_view_bar"/>
         <field name="res_id" ref="board_demo_record"/>
@@ -65,7 +65,7 @@
     </record>
     <record id="board_demo_action_line" model="ir.actions.act_window">
         <field name="name">Line</field>
-        <field name="res_model">board.demo</field>
+        <field name="res_model">reporting.demo</field>
         <field name="view_mode">form</field>
         <field name="view_id" ref="board_demo_view_line"/>
         <field name="res_id" ref="board_demo_record"/>
@@ -73,7 +73,7 @@
     </record>
     <record id="board_demo_action_pie" model="ir.actions.act_window">
         <field name="name">Pie</field>
-        <field name="res_model">board.demo</field>
+        <field name="res_model">reporting.demo</field>
         <field name="view_mode">form</field>
         <field name="view_id" ref="board_demo_view_pie"/>
         <field name="res_id" ref="board_demo_record"/>
@@ -81,7 +81,7 @@
     </record>
     <record id="board_demo_action_gauge" model="ir.actions.act_window">
         <field name="name">Gauge</field>
-        <field name="res_model">board.demo</field>
+        <field name="res_model">reporting.demo</field>
         <field name="view_mode">form</field>
         <field name="view_id" ref="board_demo_view_gauge"/>
         <field name="res_id" ref="board_demo_record"/>
@@ -89,7 +89,7 @@
     </record>
     <record id="board_demo_action_radar" model="ir.actions.act_window">
         <field name="name">Radar</field>
-        <field name="res_model">board.demo</field>
+        <field name="res_model">reporting.demo</field>
         <field name="view_mode">form</field>
         <field name="view_id" ref="board_demo_view_radar"/>
         <field name="res_id" ref="board_demo_record"/>
@@ -97,7 +97,7 @@
     </record>
     <record id="board_demo_action_card" model="ir.actions.act_window">
         <field name="name">Card</field>
-        <field name="res_model">board.demo</field>
+        <field name="res_model">reporting.demo</field>
         <field name="view_mode">form</field>
         <field name="view_id" ref="board_demo_view_card"/>
         <field name="res_id" ref="board_demo_record"/>
@@ -106,7 +106,7 @@
 
     <record id="board_demo_action" model="ir.actions.act_window">
         <field name="name">Chart Demo</field>
-        <field name="res_model">board.demo</field>
+        <field name="res_model">reporting.demo</field>
         <field name="view_mode">form</field>
         <field name="res_id" ref="board_demo_record"/>
         <field name="target">current</field>

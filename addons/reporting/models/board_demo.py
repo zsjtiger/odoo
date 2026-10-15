@@ -6,7 +6,7 @@ from odoo import fields, models
 
 class BoardDemo(models.Model):
     """演示模型: 每个图表字段保存 JSON 数据, 由对应的仪表盘字段组件绘制."""
-    _name = 'board.demo'
+    _name = 'reporting.demo'
     _description = "Board Chart Demo"
 
     name = fields.Char(required=True)

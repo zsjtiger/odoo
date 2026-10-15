@@ -15,63 +15,63 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#. module: board
-#: code:addons/board/static/src/views/board_view.js:0
+#. module: reporting
+#: code:addons/reporting/static/src/views/board_view.js:0
 #, python-format
 msgid "This action can not be displayed: %s"
 msgstr ""
 
-#. module: board
-#: code:addons/board/static/src/views/board_view.js:0
+#. module: reporting
+#: code:addons/reporting/static/src/views/board_view.js:0
 msgid "Your personal dashboard is empty"
 msgstr ""
 
-#. module: board
-#: code:addons/board/static/src/widget/common/dashboard_widget.js:0
+#. module: reporting
+#: code:addons/reporting/static/src/widget/common/dashboard_widget.js:0
 msgid "Loading chart data…"
 msgstr ""
 
-#. module: board
-#: view:board.board:0
+#. module: reporting
+#: view:reporting.board:0
 msgid "Bar"
 msgstr ""
 
-#. module: board
-#: view:board.board:0
+#. module: reporting
+#: view:reporting.board:0
 msgid "Card"
 msgstr ""
 
-#. module: board
-#: view:board.board:0
+#. module: reporting
+#: view:reporting.board:0
 msgid "Gauge"
 msgstr ""
 
-#. module: board
-#: view:board.board:0
+#. module: reporting
+#: view:reporting.board:0
 msgid "Line"
 msgstr ""
 
-#. module: board
-#: view:board.board:0
+#. module: reporting
+#: view:reporting.board:0
 msgid "Pie"
 msgstr ""
 
-#. module: board
-#: view:board.board:0
+#. module: reporting
+#: view:reporting.board:0
 msgid "Radar"
 msgstr ""
 
-#. module: board
-#: model:ir.ui.menu,name:board.board_demo_menu
+#. module: reporting
+#: model:ir.ui.menu,name:reporting.board_demo_menu
 msgid "Chart Demo"
 msgstr ""
 
-#. module: board
-#: model:ir.ui.menu,name:board.board_menu
+#. module: reporting
+#: model:ir.ui.menu,name:reporting.board_menu
 msgid "Dashboard"
 msgstr ""
 
-#. module: board
-#: model:ir.ui.menu,name:board.board_menu_root
+#. module: reporting
+#: model:ir.ui.menu,name:reporting.board_menu_root
 msgid "Dashboards"
 msgstr ""

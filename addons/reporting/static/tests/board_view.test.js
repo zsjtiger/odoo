@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { computePlacements, parseBoardArch } from "@board/views/board_view";
+import { computePlacements, parseBoardArch } from "@reporting/views/board_view";
 
 describe.current.tags("headless");
 

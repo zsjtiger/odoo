@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { DashBoardRadarWidget } from "@board/widget/dashboard_radar/dashboard_radar";
+import { DashBoardRadarWidget } from "@reporting/widget/dashboard_radar/dashboard_radar";
 import { mountWithCleanup } from "@web/../tests/_framework/component_test_helpers";
 
 describe.current.tags("headless");
@@ -21,7 +21,7 @@ async function getOption(data) {
             options: {},
             record: {
                 data: { chart: JSON.stringify(data) },
-                resModel: "board.demo",
+                resModel: "reporting.demo",
                 context: {},
                 fields: { chart: { type: "text", string: "Chart" } },
             },

@@ -2,7 +2,7 @@ import { registry } from "@web/core/framework/registry";
 import { formatInteger } from "@web/views/fields/formatters";
 import { DashBoardCommonWidget } from "../common/dashboard_widget";
 
-const GEO_URL = "/board/static/public/cn_geo.json";
+const GEO_URL = "/reporting/static/public/cn_geo.json";
 
 export class DashBoardMapWidget extends DashBoardCommonWidget {
     geoLoaded = false;

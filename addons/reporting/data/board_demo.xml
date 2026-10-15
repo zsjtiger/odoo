@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="board_demo_record" model="board.demo">
+    <record id="board_demo_record" model="reporting.demo">
         <field name="name">Demo</field>
         <field name="chart_bar">[{"name": "Jan", "value": 120, "category": null, "filter_domain": []}, {"name": "Feb", "value": 180, "category": null, "filter_domain": []}, {"name": "Mar", "value": 150, "category": null, "filter_domain": []}, {"name": "Apr", "value": 210, "category": null, "filter_domain": []}]</field>
         <field name="chart_line">[{"name": "Jan", "value": 120, "category": "Sales", "filter_domain": []}, {"name": "Jan", "value": 80, "category": "Cost", "filter_domain": []}, {"name": "Feb", "value": 180, "category": "Sales", "filter_domain": []}, {"name": "Feb", "value": 95, "category": "Cost", "filter_domain": []}, {"name": "Mar", "value": 150, "category": "Sales", "filter_domain": []}, {"name": "Mar", "value": 110, "category": "Cost", "filter_domain": []}]</field>
