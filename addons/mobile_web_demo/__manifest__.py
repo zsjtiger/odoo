@@ -13,7 +13,7 @@ mobile_subtitle / mobile_date, sortable / filterable, default_order), and form
 layout (groups, separators, notebook, one2many, required / readonly / invisible).
     """,
     'version': '1.0',
-    'depends': ['mobile_web', 'gps'],
+    'depends': ['mobile_web'],
     'data': [
         'security/ir.access.csv',
         'views/mobile_demo_views.xml',
