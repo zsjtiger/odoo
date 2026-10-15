@@ -1,5 +1,7 @@
 import { describe, expect, test } from "@odoo/hoot";
+import { patchTranslations } from "@web/../tests/_framework/translation_test_helpers";
 import {
+    NODE_TYPES,
     fromBpmnXml,
     approverOfLaneName,
     laneNameOf,
@@ -8,6 +10,9 @@ import {
 } from "@snow_workflow/designer/bpmn_model";
 
 describe.current.tags("headless");
+
+// 校验信息是 _t 的惰性字符串, 测试中需要先加载翻译
+patchTranslations({});
 
 function model() {
     return {
@@ -65,10 +70,11 @@ test("the XML names approval tasks by their type, as the engine expects", () => 
 test("a diagram needs exactly one start and at least one end", () => {
     const noEnd = model();
     noEnd.nodes = noEnd.nodes.filter((n) => n.type !== "end");
-    expect(validateModel(noEnd).length).toBe(1);
+    noEnd.flows = noEnd.flows.filter((f) => f.target !== "e1");
+    expect(validateModel(noEnd).some((e) => e.includes("end event"))).toBe(true);
     const twoStarts = model();
     twoStarts.nodes.push({ id: "s2", type: "start", name: "", x: 0, y: 0, approver: { type: "submitter", users: [], script: "" } });
-    expect(validateModel(twoStarts).length).toBe(1);
+    expect(validateModel(twoStarts).some((e) => e.includes("exactly one start"))).toBe(true);
     expect(validateModel(model())).toEqual([]);
 });
 
@@ -87,4 +93,32 @@ test("special characters in names are escaped in the XML", () => {
     const xml = toBpmnXml(withName);
     expect(xml.includes("A &amp; &quot;B&quot; &lt;C&gt;")).toBe(true);
     expect(fromBpmnXml(xml).nodes[1].name).toBe('A & "B" <C>');
+});
+
+test("the designer does not offer the exclusive gateway, which has no conditions yet", () => {
+    expect(NODE_TYPES.exclusive).toBe(undefined);
+});
+
+test("an element the designer does not support is reported when the diagram is loaded", () => {
+    const xml = toBpmnXml(model()).replace(
+        "</bpmn:process>",
+        '<bpmn:serviceTask id="svc1" name="call"/></bpmn:process>'
+    );
+    const loaded = fromBpmnXml(xml);
+    expect(loaded.unsupported).toEqual(["serviceTask"]);
+    expect(validateModel(loaded, loaded.unsupported).some((e) => e.includes("serviceTask"))).toBe(true);
+});
+
+test("an approval task that is not one of the approval types is not supported", () => {
+    const xml = toBpmnXml(model()).replace('name="approve_execution"', 'name="unknown_task"');
+    expect(fromBpmnXml(xml).unsupported).toEqual(["userTask (unknown_task)"]);
+});
+
+test("a node without incoming or outgoing flows is an error", () => {
+    const lonely = model();
+    lonely.nodes.push({ id: "x1", type: "approve_execution", name: "Lonely", x: 0, y: 0,
+        approver: { type: "submitter", users: [], script: "" } });
+    const errors = validateModel(lonely);
+    expect(errors.some((e) => e.includes("Lonely") && e.includes("incoming"))).toBe(true);
+    expect(errors.some((e) => e.includes("Lonely") && e.includes("outgoing"))).toBe(true);
 });

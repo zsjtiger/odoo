@@ -1181,3 +1181,19 @@ msgstr "流程需要且只能有一个开始事件。"
 #. module: snow_workflow
 msgid "The script key of “%s” is not valid."
 msgstr "“%s”的脚本键名无效。"
+
+#. module: snow_workflow
+msgid "The element “%s” is not supported by the designer yet."
+msgstr "设计器暂不支持元素“%s”。"
+
+#. module: snow_workflow
+msgid "“%s” has no incoming flow."
+msgstr "“%s”没有入线。"
+
+#. module: snow_workflow
+msgid "“%s” has no outgoing flow."
+msgstr "“%s”没有出线。"
+
+#. module: snow_workflow
+msgid "These elements are not supported by the process designer: %s"
+msgstr "流程设计器暂不支持以下元素：%s"

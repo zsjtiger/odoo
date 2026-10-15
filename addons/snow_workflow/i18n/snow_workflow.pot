@@ -1176,3 +1176,19 @@ msgstr ""
 #. module: snow_workflow
 msgid "The script key of “%s” is not valid."
 msgstr ""
+
+#. module: snow_workflow
+msgid "The element “%s” is not supported by the designer yet."
+msgstr ""
+
+#. module: snow_workflow
+msgid "“%s” has no incoming flow."
+msgstr ""
+
+#. module: snow_workflow
+msgid "“%s” has no outgoing flow."
+msgstr ""
+
+#. module: snow_workflow
+msgid "These elements are not supported by the process designer: %s"
+msgstr ""

@@ -90,6 +90,27 @@ class TestBpmnDesigner(TransactionCase):
         with self.assertRaises(UserError):
             definition.save_bpmn(other)
 
+    def test_save_bpmn_rejects_elements_the_designer_does_not_support(self):
+        definition = self._definition()
+        exclusive = DESIGNED_XML.replace(
+            '<bpmn:endEvent id="end1">',
+            '<bpmn:exclusiveGateway id="gw1"/><bpmn:endEvent id="end1">')
+        with self.assertRaises(UserError):
+            definition.save_bpmn(exclusive)
+        service = DESIGNED_XML.replace(
+            '<bpmn:endEvent id="end1">',
+            '<bpmn:serviceTask id="svc1" name="call"/><bpmn:endEvent id="end1">')
+        with self.assertRaises(UserError):
+            definition.save_bpmn(service)
+
+    def test_save_bpmn_rejects_nodes_without_flows(self):
+        definition = self._definition()
+        orphan = DESIGNED_XML.replace(
+            '<bpmn:endEvent id="end1">',
+            '<bpmn:userTask id="lonely" name="approve_execution"/><bpmn:endEvent id="end1">')
+        with self.assertRaises(UserError):
+            definition.save_bpmn(orphan)
+
     def test_save_bpmn_rejects_content_that_is_not_bpmn(self):
         definition = self._definition()
         with self.assertRaises(UserError):

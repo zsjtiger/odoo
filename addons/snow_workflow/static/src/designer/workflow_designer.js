@@ -194,6 +194,13 @@ export class WorkflowDesigner extends Component {
             };
         }
         this.state.processId = model.processId;
+        this.unsupported = model.unsupported || [];
+        if (this.unsupported.length) {
+            this.notification.add(
+                this.unsupported.map((name) => _t("The element “%s” is not supported by the designer yet.", name)).join("\n"),
+                { type: "warning", sticky: true }
+            );
+        }
         this.state.nodes = model.nodes;
         this.state.flows = model.flows;
         this.state.users = await this.orm.searchRead("res.users", [["active", "=", true]], ["name"], {
@@ -456,7 +463,7 @@ export class WorkflowDesigner extends Component {
     }
 
     async save() {
-        const errors = validateModel(this.model);
+        const errors = validateModel(this.model, this.unsupported || []);
         if (errors.length) {
             this.notification.add(errors.join("\n"), { type: "danger", sticky: true });
             return;

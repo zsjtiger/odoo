@@ -23,14 +23,12 @@ export const NODE_TYPES = {
     group_approve_execution_or: { label: _t("Group approve (any)"), bpmn: "userTask", approval: true, size: [120, 60] },
     group_approve_execution_and: { label: _t("Group approve (all)"), bpmn: "userTask", approval: true, size: [120, 60] },
     parallel: { label: _t("Parallel gateway"), bpmn: "parallelGateway", size: [50, 50] },
-    exclusive: { label: _t("Exclusive gateway"), bpmn: "exclusiveGateway", size: [50, 50] },
 };
 
 const BPMN_TO_TYPE = {
     startEvent: "start",
     endEvent: "end",
     parallelGateway: "parallel",
-    exclusiveGateway: "exclusive",
 };
 
 /** 审批人规则: submitter (提交人) / users (指定用户) / script (脚本返回) */
@@ -69,9 +67,20 @@ export function approverOfLaneName(name) {
     return defaultApprover();
 }
 
+/**
+ * 设计器支持的流程元素 (其余元素如排他网关、服务任务、子流程等暂不支持, 保存时拒绝)
+ */
+export const SUPPORTED_PROCESS_CHILDREN = [
+    "startEvent", "endEvent", "parallelGateway", "sequenceFlow", "laneSet",
+    "documentation", "extensionElements",
+];
+
 /** 校验设计结果, 返回错误信息列表 (空表示可以保存) */
-export function validateModel(model) {
+export function validateModel(model, unsupported = []) {
     const errors = [];
+    for (const name of unsupported) {
+        errors.push(_t("The element “%s” is not supported by the designer yet.", name));
+    }
     const starts = model.nodes.filter((n) => n.type === "start");
     const ends = model.nodes.filter((n) => n.type === "end");
     if (starts.length !== 1) {
@@ -81,12 +90,19 @@ export function validateModel(model) {
         errors.push(_t("The process needs at least one end event."));
     }
     for (const node of model.nodes) {
-        if (NODE_TYPES[node.type]?.approval) {
+        const label = node.name || NODE_TYPES[node.type].label;
+        if (node.type !== "start" && !model.flows.some((f) => f.target === node.id)) {
+            errors.push(_t("“%s” has no incoming flow.", label));
+        }
+        if (node.type !== "end" && !model.flows.some((f) => f.source === node.id)) {
+            errors.push(_t("“%s” has no outgoing flow.", label));
+        }
+        if (NODE_TYPES[node.type].approval) {
             if (node.approver.type === "users" && !node.approver.users.length) {
-                errors.push(_t("Choose the approvers of “%s”.", node.name || NODE_TYPES[node.type].label));
+                errors.push(_t("Choose the approvers of “%s”.", label));
             }
             if (node.approver.type === "script" && !SCRIPT_KEY.test(node.approver.script)) {
-                errors.push(_t("The script key of “%s” is not valid.", node.name || NODE_TYPES[node.type].label));
+                errors.push(_t("The script key of “%s” is not valid.", label));
             }
         }
     }
@@ -204,6 +220,19 @@ export function fromBpmnXml(xml, { defaultProcessId = MAIN_PROCESS_ID } = {}) {
     const process = elementsNamed(doc, "process")[0];
     const processId = MAIN_PROCESS_ID || defaultProcessId;
 
+    // 流程中设计器不支持的元素 (保存时会被拒绝)
+    const unsupported = [];
+    for (const child of [...(process?.children || [])]) {
+        const name = localName(child);
+        if (SUPPORTED_PROCESS_CHILDREN.includes(name)) {
+            continue;
+        }
+        if (name === "userTask" && NODE_TYPES[child.getAttribute("name")]?.approval) {
+            continue;
+        }
+        unsupported.push(name === "userTask" ? `userTask (${child.getAttribute("name") || ""})` : name);
+    }
+
     const bounds = {};
     for (const shape of elementsNamed(doc, "BPMNShape")) {
         const dc = elementsNamed(shape, "Bounds")[0];
@@ -252,7 +281,7 @@ export function fromBpmnXml(xml, { defaultProcessId = MAIN_PROCESS_ID } = {}) {
         .map((el) => ({ id: el.getAttribute("id"), source: el.getAttribute("sourceRef"), target: el.getAttribute("targetRef") }))
         .filter((f) => ids.has(f.source) && ids.has(f.target));
 
-    return { processId, nodes, flows };
+    return { processId, nodes, flows, unsupported };
 }
 
 /** 生成不与已有元素冲突的 id (BPMN 的 id 须以字母开头) */

@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from lxml import etree
+
 from odoo import _, models, fields, api
 from odoo.exceptions import UserError, ValidationError
 from ..workflow import MY_APPROVED_TASKS_TYPE, STATUS_MAPPING
@@ -124,6 +126,43 @@ class WorkflowDefinition(models.Model):
             'params': {'definition_id': self.id},
         }
 
+    # 设计器支持的流程元素与审批任务类型 (与 static/src/designer/bpmn_model.js 保持一致)
+    DESIGNER_PROCESS_CHILDREN = {'startEvent', 'endEvent', 'parallelGateway', 'sequenceFlow',
+                                 'laneSet', 'documentation', 'extensionElements'}
+    DESIGNER_APPROVAL_TYPES = {'approve_execution', 'group_approve_execution_or',
+                               'group_approve_execution_and'}
+    DESIGNER_FLOW_NODES = {'startEvent', 'endEvent', 'parallelGateway', 'userTask'}
+
+    def _check_designer_limits(self, content):
+        """
+        设计器的限制: 只允许支持的元素, 除开始与结束外的节点必须有入线与出线
+        """
+        root = etree.fromstring(content.encode('utf-8'))
+        process = next((el for el in root.iter() if etree.QName(el).localname == 'process'), None)
+        unsupported = []
+        nodes, targets, sources = {}, set(), set()
+        for child in process:
+            if not isinstance(child.tag, str):
+                continue
+            name = etree.QName(child).localname
+            if name == 'userTask' and child.get('name') in self.DESIGNER_APPROVAL_TYPES:
+                nodes[child.get('id')] = name
+            elif name in self.DESIGNER_FLOW_NODES:
+                nodes[child.get('id')] = name
+            elif name == 'sequenceFlow':
+                targets.add(child.get('targetRef'))
+                sources.add(child.get('sourceRef'))
+            elif name not in self.DESIGNER_PROCESS_CHILDREN:
+                unsupported.append(f"{name} ({child.get('name') or child.get('id')})")
+        if unsupported:
+            raise UserError(_("These elements are not supported by the process designer: %s",
+                              ", ".join(unsupported)))
+        for node_id, name in nodes.items():
+            if name != 'startEvent' and node_id not in targets:
+                raise UserError(_("“%s” has no incoming flow.", node_id))
+            if name != 'endEvent' and node_id not in sources:
+                raise UserError(_("“%s” has no outgoing flow.", node_id))
+
     def save_bpmn(self, content):
         """
         流程设计器保存: 先用引擎解析校验, 通过后再写入 content (process_id 由 content 计算)
@@ -140,6 +179,7 @@ class WorkflowDefinition(models.Model):
             raise UserError(_("The process is not a valid BPMN diagram: %s", error)) from error
         if 'main_process' not in process_ids:
             raise UserError(_("The diagram must contain the process with id “main_process”."))
+        self._check_designer_limits(content)
         self.write({'content': content})
         return True
 
