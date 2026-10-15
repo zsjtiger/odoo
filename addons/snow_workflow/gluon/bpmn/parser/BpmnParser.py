@@ -177,6 +177,9 @@ class BpmnParser(object):
         """
         Add the given BPMN string to the parser's set. 
         """
+        # lxml 不接受带编码声明的 str, 按字节解析
+        if isinstance(bpmn_str, str):
+            bpmn_str = bpmn_str.encode('utf-8')
         self.add_bpmn_xml(etree.fromstring(bpmn_str), filename)
 
     def add_bpmn_xml(self, bpmn, filename=None):

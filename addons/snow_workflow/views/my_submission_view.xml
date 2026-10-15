@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <odoo>
     <data>
         <record id="view_my_submission_tree" model="ir.ui.view">
@@ -21,13 +21,13 @@
             <field name="model">snow.workflow.execution</field>
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile" create="0" edit="0" delete="0" default_order="submit_date desc">
-                    <field name="task_name" string="task name" m-layout="title"/>
-                    <field name="object_name" string="approval type" m-layout="subtitle"/>
-                    <field name="create_date" string="create date" m-layout="middleLeft"/>
-                    <field name="status_name" string="status name" m-layout="status"/>
-                    <field name="submitter_name" string="submitter" m-layout="middleRight"/>
+                    <field name="task_name" string="task name"/>
+                    <field name="object_name" string="approval type"/>
+                    <field name="create_date" string="create date"/>
+                    <field name="status_name" string="status name"/>
+                    <field name="submitter_name" string="submitter"/>
                     <button name="dynamic_redirect" type="object" string="detail" icon="fa-external-link"/>
-                </kanban>
+                <templates><t t-name="card"><div class="o_kanban_record"><div class="fw-bold"><field name="task_name"/></div><div class="text-muted small"><field name="object_name"/></div><div class="text-muted small"><field name="create_date"/></div><div class="text-muted small"><field name="status_name"/></div><div class="text-muted small"><field name="submitter_name"/></div></div></t></templates></kanban>
             </field>
         </record>
 
@@ -37,9 +37,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">snow.workflow.execution</field>
             <field name="view_mode">list,kanban</field>
-            <field name="view_ids" eval="[(5,0,0),
-            (0,0,{'view_id':ref('view_my_submission_tree'),'view_mode':'list'}),
-            (0,0,{'view_id':ref('view_my_submission_kanban'),'view_mode':'kanban'})]">
+            <field name="view_ids" eval="[(5,0,0),             (0,0,{'view_id':ref('view_my_submission_tree'),'view_mode':'list'}),             (0,0,{'view_id':ref('view_my_submission_kanban'),'view_mode':'kanban'})]">
             </field>
             <field name="context">{"_type": "own_approval"}</field>
         </record>

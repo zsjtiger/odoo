@@ -1,3 +1,4 @@
+<?xml version='1.0' encoding='UTF-8'?>
 <odoo>
   <record id="snow_workflow_definition_list" model="ir.ui.view">
     <field name="name">snow.workflow.definition.tree</field>
@@ -29,9 +30,9 @@
           <field name="name"/>
           <field name="process_id"/>
           <field name="version"/>
-          <field name="object_id" options="{'no_open': True, 'no_create_edit':True}" />
-          <field name="object_display_field"  options="{'no_open': True, 'no_create_edit':True}" />
-          <field name="target_view"  options="{'no_open': True, 'no_create_edit':True}" />
+          <field name="object_id" options="{'no_open': True, 'no_create_edit':True}"/>
+          <field name="object_display_field" options="{'no_open': True, 'no_create_edit':True}"/>
+          <field name="target_view" options="{'no_open': True, 'no_create_edit':True}"/>
           <field name="description"/>
           <field name="instances" readonly="1" invisible="not id">
             <list limit="5">
@@ -51,19 +52,15 @@
           <field name="reject_alert_message"/>
           <field name="show_alert_before_approval"/>
           <field name="approval_alert_message"/>
-          <field name="external_managers" m-mode="select" m-display="user_id"
-            string="external manager"
-            context="{'tree_view_ref': 'snow_workflow_external_managers_view_list'}"
-            mode="list,kanban"
-            options="{'no_create':True,'no_create_edit':True,'no_open':True}" >
+          <field name="external_managers" m-mode="select" m-display="user_id" string="external manager" context="{'tree_view_ref': 'snow_workflow_external_managers_view_list'}" mode="list,kanban" options="{'no_create':True,'no_create_edit':True,'no_open':True}">
               <kanban class="o_kanban_mobile">
-                  <field name="user_id" m-layout="title" />
-              </kanban>
+                  <field name="user_id"/>
+              <templates><t t-name="card"><div class="o_kanban_record"><div class="fw-bold"><field name="user_id"/></div></div></t></templates></kanban>
           </field>
           <field name="submit_warning_type"/>
           <field name="informed_consent"/>
           <field name="same_user_action"/>
-          <field name="content" widget="definition_content" />
+          <field name="content" widget="definition_content"/>
         </group>
       </form>
     </field>
