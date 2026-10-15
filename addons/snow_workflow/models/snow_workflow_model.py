@@ -1,8 +1,20 @@
 # -*- coding: utf-8 -*-
-from odoo import models, fields, api
-from odoo.exceptions import ValidationError
+from odoo import _, models, fields, api
+from odoo.exceptions import UserError, ValidationError
 from ..workflow import MY_APPROVED_TASKS_TYPE, STATUS_MAPPING
 from ..workflow.engines import BpmnWorkflowEngine
+
+
+# 新建流程定义时的空流程: 开始 -> 结束 (流程设计器中再完善)
+EMPTY_PROCESS_BPMN = """<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" id="Definitions_main" targetNamespace="http://snow.workflow/bpmn">
+  <bpmn:process id="main_process" isExecutable="true">
+    <bpmn:startEvent id="start_1"><bpmn:outgoing>flow_1</bpmn:outgoing></bpmn:startEvent>
+    <bpmn:sequenceFlow id="flow_1" sourceRef="start_1" targetRef="end_1"/>
+    <bpmn:endEvent id="end_1"><bpmn:incoming>flow_1</bpmn:incoming></bpmn:endEvent>
+  </bpmn:process>
+</bpmn:definitions>
+"""
 
 
 class WorkflowDefinition(models.Model):
@@ -20,7 +32,8 @@ class WorkflowDefinition(models.Model):
                                            required=True, ondelete='cascade')
     target_view = fields.Many2one('ir.ui.view', string="target view", required=True,
                                   ondelete='cascade')
-    content = fields.Text(string="process content", required=True, widget='definition_content')
+    content = fields.Text(string="process content", required=True, widget='definition_content',
+                          default=lambda self: EMPTY_PROCESS_BPMN)
     version = fields.Integer(string="version")
     deployed_on = fields.Datetime(string='deployed on', required=True, default=fields.Datetime.now)
     active = fields.Boolean(string='active', default=True)
@@ -97,6 +110,38 @@ class WorkflowDefinition(models.Model):
         """
         print(record)
         return self.sudo().search([('object', '=', model)])
+
+    def action_open_designer(self):
+        """
+        打开流程设计器 (表单中的按钮)
+        """
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'snow_workflow_designer',
+            'name': _('Process designer'),
+            'target': 'current',
+            'params': {'definition_id': self.id},
+        }
+
+    def save_bpmn(self, content):
+        """
+        流程设计器保存: 先用引擎解析校验, 通过后再写入 content (process_id 由 content 计算)
+
+        :param content: BPMN XML 字符串
+        """
+        self.ensure_one()
+        self.check_access('write')
+        try:
+            engine = BpmnWorkflowEngine(xml_str=content)
+            process_ids = engine.parser.get_process_ids()
+            engine._get_workflow_all_specs_from_xml_parser()
+        except Exception as error:
+            raise UserError(_("The process is not a valid BPMN diagram: %s", error)) from error
+        if 'main_process' not in process_ids:
+            raise UserError(_("The diagram must contain the process with id “main_process”."))
+        self.write({'content': content})
+        return True
 
 
 class WorkflowExternalManagers(models.Model):

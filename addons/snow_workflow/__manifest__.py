@@ -25,11 +25,14 @@
         'web.assets_backend': [
             'snow_workflow/static/src/fields/**/*.js',
             'snow_workflow/static/src/views/**/*.js',
+            'snow_workflow/static/src/designer/**/*.js',
+            'snow_workflow/static/src/designer/**/*.scss',
             'snow_workflow/static/src/scss/*.scss',
         ],
         'web.assets_unit_tests': [
             'snow_workflow/static/src/fields/**/*.js',
             'snow_workflow/static/src/views/**/*.js',
+            'snow_workflow/static/src/designer/**/*.js',
             'snow_workflow/static/tests/**/*.test.js',
         ],
     },

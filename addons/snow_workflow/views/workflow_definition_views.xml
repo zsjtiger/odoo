@@ -60,7 +60,9 @@
           <field name="submit_warning_type"/>
           <field name="informed_consent"/>
           <field name="same_user_action"/>
-          <field name="content" widget="definition_content"/>
+          <field name="content" invisible="1"/>
+          <button name="action_open_designer" type="object" string="Open process designer" class="btn-primary"
+                  invisible="not id" colspan="2"/>
         </group>
       </form>
     </field>

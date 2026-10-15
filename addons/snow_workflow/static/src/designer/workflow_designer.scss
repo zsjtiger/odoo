@@ -1,0 +1,211 @@
+// 流程设计器: 左侧节点面板, 中间画布 (节点与连线), 右侧属性面板
+
+.o_wf_designer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: #f5f6f8;
+}
+
+.o_wf_designer_toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: #fff;
+    border-bottom: 1px solid #e3e6ea;
+
+    .o_wf_designer_title {
+        flex: 1;
+        font-weight: 600;
+    }
+}
+
+.o_wf_designer_body {
+    display: flex;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.o_wf_palette {
+    flex: 0 0 160px;
+    padding: 12px;
+    overflow-y: auto;
+    background: #fff;
+    border-right: 1px solid #e3e6ea;
+}
+
+.o_wf_palette_title,
+.o_wf_properties_title {
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.o_wf_palette_item {
+    margin-bottom: 8px;
+    padding: 8px 10px;
+    border: 1px solid #d6dbe1;
+    border-radius: 6px;
+    background: #fafbfc;
+    cursor: grab;
+    user-select: none;
+}
+
+.o_wf_palette_hint,
+.o_wf_properties_hint {
+    margin-top: 12px;
+    font-size: 12px;
+    color: #7a8590;
+}
+
+.o_wf_canvas {
+    position: relative;
+    flex: 1 1 auto;
+    overflow: auto;
+    background-color: #fff;
+    background-image: radial-gradient(#e3e6ea 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+.o_wf_edges {
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: visible;
+    pointer-events: none;
+
+    .o_wf_flow {
+        fill: none;
+        stroke: #5a6a7a;
+        stroke-width: 2;
+        pointer-events: none;
+
+        &.is_selected {
+            stroke: #714b67;
+            stroke-width: 3;
+        }
+    }
+
+    .o_wf_flow_temp {
+        stroke-dasharray: 6 4;
+    }
+
+    .o_wf_flow_hit {
+        fill: none;
+        stroke: transparent;
+        stroke-width: 12;
+        pointer-events: stroke;
+        cursor: pointer;
+    }
+}
+
+.o_wf_node {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: 4px 8px;
+    border: 2px solid #5a6a7a;
+    border-radius: 8px;
+    background: #fff;
+    font-size: 13px;
+    text-align: center;
+    cursor: move;
+    user-select: none;
+
+    &.is_selected {
+        box-shadow: 0 0 0 3px rgba(113, 75, 103, 0.35);
+    }
+
+    &.o_wf_node_approve_execution,
+    &.o_wf_node_group_approve_execution_or,
+    &.o_wf_node_group_approve_execution_and {
+        background: #f4fbfb;
+        border-color: #03a09c;
+    }
+
+    &.o_wf_node_start,
+    &.o_wf_node_end {
+        border-radius: 50%;
+        padding: 0;
+        font-size: 11px;
+    }
+
+    &.o_wf_node_start {
+        border-color: #2e9d5b;
+        border-width: 3px;
+    }
+
+    &.o_wf_node_end {
+        border-color: #c4483b;
+        border-width: 4px;
+    }
+
+    &.o_wf_node_parallel,
+    &.o_wf_node_exclusive {
+        border-radius: 4px;
+        transform: rotate(45deg);
+        font-size: 0;
+        background: #fff8e6;
+        border-color: #d89a1e;
+
+        .o_wf_node_label {
+            transform: rotate(-45deg);
+        }
+    }
+
+    .o_wf_node_label {
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .o_wf_port {
+        position: absolute;
+        top: 50%;
+        right: -7px;
+        width: 12px;
+        height: 12px;
+        margin-top: -6px;
+        border: 2px solid #5a6a7a;
+        border-radius: 50%;
+        background: #fff;
+        cursor: crosshair;
+    }
+}
+
+.o_wf_properties {
+    flex: 0 0 260px;
+    padding: 12px;
+    overflow-y: auto;
+    background: #fff;
+    border-left: 1px solid #e3e6ea;
+
+    .o_wf_field {
+        display: block;
+        margin-bottom: 10px;
+
+        span {
+            display: block;
+            margin-bottom: 4px;
+            font-size: 12px;
+            color: #5a6a7a;
+        }
+    }
+
+    .o_wf_users {
+        max-height: 240px;
+        overflow-y: auto;
+        margin-bottom: 10px;
+        border: 1px solid #e3e6ea;
+        border-radius: 4px;
+        padding: 6px;
+    }
+
+    .o_wf_user {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+    }
+}

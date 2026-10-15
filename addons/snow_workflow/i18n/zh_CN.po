@@ -1065,3 +1065,119 @@ msgstr "审批通过操作"
 #, python-format
 msgid "Reject Operation"
 msgstr "审批拒绝操作"
+
+#. module: snow_workflow
+msgid "A flow cannot start at an end event or end at the start event."
+msgstr "结束事件不能发出连线, 开始事件不能作为连线的终点。"
+
+#. module: snow_workflow
+msgid "Approve"
+msgstr "审批"
+
+#. module: snow_workflow
+msgid "Approver"
+msgstr "审批人"
+
+#. module: snow_workflow
+msgid "Back"
+msgstr "返回"
+
+#. module: snow_workflow
+msgid "Choose the approvers of “%s”."
+msgstr "请选择“%s”的审批人。"
+
+#. module: snow_workflow
+msgid "Delete"
+msgstr "删除"
+
+#. module: snow_workflow
+msgid "Drag a node onto the canvas. Drag from the dot on the right of a node to another node to connect them."
+msgstr "从左侧拖拽节点到画布上。从节点右侧的圆点拖到另一个节点即可连线。"
+
+#. module: snow_workflow
+msgid "End"
+msgstr "结束"
+
+#. module: snow_workflow
+msgid "Exclusive gateway"
+msgstr "排他网关"
+
+#. module: snow_workflow
+msgid "Group approve (all)"
+msgstr "会签（全部通过）"
+
+#. module: snow_workflow
+msgid "Group approve (any)"
+msgstr "或签（任一通过）"
+
+#. module: snow_workflow
+msgid "Name"
+msgstr "名称"
+
+#. module: snow_workflow
+msgid "Nodes"
+msgstr "节点"
+
+#. module: snow_workflow
+msgid "Open process designer"
+msgstr "打开流程设计器"
+
+#. module: snow_workflow
+msgid "Parallel gateway"
+msgstr "并行网关"
+
+#. module: snow_workflow
+msgid "Process designer"
+msgstr "流程设计器"
+
+#. module: snow_workflow
+msgid "Save"
+msgstr "保存"
+
+#. module: snow_workflow
+msgid "Script"
+msgstr "脚本"
+
+#. module: snow_workflow
+msgid "Script key"
+msgstr "脚本键名"
+
+#. module: snow_workflow
+msgid "Select a node or a flow to edit it."
+msgstr "选择节点或连线进行编辑。"
+
+#. module: snow_workflow
+msgid "Sequence flow"
+msgstr "连线"
+
+#. module: snow_workflow
+msgid "Specific users"
+msgstr "指定用户"
+
+#. module: snow_workflow
+msgid "Start"
+msgstr "开始"
+
+#. module: snow_workflow
+msgid "The diagram must contain the process with id “main_process”."
+msgstr "图中必须包含 id 为“main_process”的流程。"
+
+#. module: snow_workflow
+msgid "The process has been saved."
+msgstr "流程已保存。"
+
+#. module: snow_workflow
+msgid "The process is not a valid BPMN diagram: %s"
+msgstr "流程不是有效的 BPMN 图：%s"
+
+#. module: snow_workflow
+msgid "The process needs at least one end event."
+msgstr "流程至少需要一个结束事件。"
+
+#. module: snow_workflow
+msgid "The process needs exactly one start event."
+msgstr "流程需要且只能有一个开始事件。"
+
+#. module: snow_workflow
+msgid "The script key of “%s” is not valid."
+msgstr "“%s”的脚本键名无效。"

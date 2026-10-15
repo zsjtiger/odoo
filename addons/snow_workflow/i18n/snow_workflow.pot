@@ -1060,3 +1060,119 @@ msgstr ""
 #, python-format
 msgid "Reject Operation"
 msgstr ""
+
+#. module: snow_workflow
+msgid "A flow cannot start at an end event or end at the start event."
+msgstr ""
+
+#. module: snow_workflow
+msgid "Approve"
+msgstr ""
+
+#. module: snow_workflow
+msgid "Approver"
+msgstr ""
+
+#. module: snow_workflow
+msgid "Back"
+msgstr ""
+
+#. module: snow_workflow
+msgid "Choose the approvers of “%s”."
+msgstr ""
+
+#. module: snow_workflow
+msgid "Delete"
+msgstr ""
+
+#. module: snow_workflow
+msgid "Drag a node onto the canvas. Drag from the dot on the right of a node to another node to connect them."
+msgstr ""
+
+#. module: snow_workflow
+msgid "End"
+msgstr ""
+
+#. module: snow_workflow
+msgid "Exclusive gateway"
+msgstr ""
+
+#. module: snow_workflow
+msgid "Group approve (all)"
+msgstr ""
+
+#. module: snow_workflow
+msgid "Group approve (any)"
+msgstr ""
+
+#. module: snow_workflow
+msgid "Name"
+msgstr ""
+
+#. module: snow_workflow
+msgid "Nodes"
+msgstr ""
+
+#. module: snow_workflow
+msgid "Open process designer"
+msgstr ""
+
+#. module: snow_workflow
+msgid "Parallel gateway"
+msgstr ""
+
+#. module: snow_workflow
+msgid "Process designer"
+msgstr ""
+
+#. module: snow_workflow
+msgid "Save"
+msgstr ""
+
+#. module: snow_workflow
+msgid "Script"
+msgstr ""
+
+#. module: snow_workflow
+msgid "Script key"
+msgstr ""
+
+#. module: snow_workflow
+msgid "Select a node or a flow to edit it."
+msgstr ""
+
+#. module: snow_workflow
+msgid "Sequence flow"
+msgstr ""
+
+#. module: snow_workflow
+msgid "Specific users"
+msgstr ""
+
+#. module: snow_workflow
+msgid "Start"
+msgstr ""
+
+#. module: snow_workflow
+msgid "The diagram must contain the process with id “main_process”."
+msgstr ""
+
+#. module: snow_workflow
+msgid "The process has been saved."
+msgstr ""
+
+#. module: snow_workflow
+msgid "The process is not a valid BPMN diagram: %s"
+msgstr ""
+
+#. module: snow_workflow
+msgid "The process needs at least one end event."
+msgstr ""
+
+#. module: snow_workflow
+msgid "The process needs exactly one start event."
+msgstr ""
+
+#. module: snow_workflow
+msgid "The script key of “%s” is not valid."
+msgstr ""
