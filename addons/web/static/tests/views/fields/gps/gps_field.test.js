@@ -25,13 +25,15 @@ async function settle() {
     }
 }
 
-test("an empty location field asks to select a location", async () => {
+test("an empty location field asks to get the location", async () => {
+    onRpc("gps", "get_map_config", () => ({}));
     const { record } = mockRecord();
     await mountWithCleanup(GpsField, { props: { name: "gps_id", record, readonly: false } });
-    expect(queryOne(".o_gps_field")).toHaveText("Select location…");
+    expect(queryOne(".o_gps_field")).toHaveText("Get location");
 });
 
 test("confirming manual coordinates creates a location owned by the record", async () => {
+    onRpc("gps", "get_map_config", () => ({}));
     const created = [];
     onRpc("gps", "create", ({ args }) => {
         created.push(args[0][0]);
@@ -68,6 +70,7 @@ test("confirming manual coordinates creates a location owned by the record", asy
 });
 
 test("confirm with an out of range latitude shows an error and saves nothing", async () => {
+    onRpc("gps", "get_map_config", () => ({}));
     let calls = 0;
     onRpc("gps", "create", () => {
         calls += 1;
