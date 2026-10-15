@@ -232,6 +232,9 @@
 
 .m_progressbar {
     position: relative;
+    // 放在列表或卡片的值区域中时没有自然宽度, 需要一个最小宽度才可见
+    width: 100%;
+    min-width: 120px;
     height: 20px;
     border-radius: 10px;
     overflow: hidden;
