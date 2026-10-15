@@ -1,0 +1,5 @@
+// 图表字段在移动端表单中: 字段值的包裹层宽度随内容收缩, 图表容器按百分比取宽会变成 0
+.m_form_field .m_form_value:has(> .snow_mdm_dashboard_chart_container) {
+    width: 100%;
+    flex: 1 1 auto;
+}

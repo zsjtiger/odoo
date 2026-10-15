@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- 移动端报表: 与桌面端的仪表盘不同, 移动端用表单纵向排列各个图表字段.
+         优先级低于默认 (数值大), 不影响桌面端 reporting.demo 的表单视图 -->
+    <record id="mobile_reporting_demo_form" model="ir.ui.view">
+        <field name="name">mobile.reporting.demo.form</field>
+        <field name="model">reporting.demo</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <!-- 报表只读: 不显示保存/放弃 -->
+            <form edit="false" create="false">
+                <field name="chart_bar" widget="board_dashboard_bar"/>
+                <field name="chart_line" widget="board_dashboard_line"/>
+                <field name="chart_pie" widget="board_dashboard_pie"/>
+                <field name="chart_gauge" widget="board_dashboard_gauge"/>
+                <field name="chart_radar" widget="board_dashboard_radar"/>
+                <field name="chart_card" widget="board_dashboard_card"/>
+            </form>
+        </field>
+    </record>
+
+    <!-- 移动端的动作不使用 res_id 打开记录: 先列出报表, 点击后进入只读的表单 -->
+    <record id="mobile_reporting_demo_list" model="ir.ui.view">
+        <field name="name">mobile.reporting.demo.list</field>
+        <field name="model">reporting.demo</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" class="mobile_title"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="mobile_reporting_demo_action" model="ir.actions.act_window">
+        <field name="name">Chart Demo</field>
+        <field name="res_model">reporting.demo</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="mobile_reporting_demo_list"/>
+    </record>
+
+    <record id="mobile_reporting_demo_action_form" model="ir.actions.act_window.view">
+        <field name="sequence">2</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="mobile_reporting_demo_form"/>
+        <field name="act_window_id" ref="mobile_reporting_demo_action"/>
+    </record>
+
+    <menuitem id="mobile_reporting_menu_root" name="Mobile Reporting" sequence="226"/>
+    <menuitem id="mobile_reporting_menu" name="Charts" parent="mobile_reporting_menu_root"
+              action="mobile_reporting_demo_action" sequence="10"/>
+</odoo>
