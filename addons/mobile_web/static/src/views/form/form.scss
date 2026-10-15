@@ -198,8 +198,9 @@
 }
 
 // 表单头部的字段(状态条)
+// 头部的字段行(状态条) 与下面的字段使用同样的内边距, 外层不再额外留白
 .m_form_statusbar {
-    padding: 8px 16px;
+    padding: 0;
     background: $surface;
     border-bottom: 1px solid $line;
 }
