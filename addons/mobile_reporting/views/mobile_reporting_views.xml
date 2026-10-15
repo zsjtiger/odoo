@@ -45,7 +45,7 @@
         <field name="act_window_id" ref="mobile_reporting_demo_action"/>
     </record>
 
-    <menuitem id="mobile_reporting_menu_root" name="Mobile Reporting" sequence="226"/>
-    <menuitem id="mobile_reporting_menu" name="Charts" parent="mobile_reporting_menu_root"
-              action="mobile_reporting_demo_action" sequence="10"/>
+    <!-- 顶级菜单带动作: 移动端首页的应用图标直接打开报表列表 -->
+    <menuitem id="mobile_reporting_menu_root" name="Mobile Reporting" sequence="226"
+              action="mobile_reporting_demo_action"/>
 </odoo>

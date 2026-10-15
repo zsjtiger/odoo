@@ -60,7 +60,7 @@ export class MobileFormView extends Component {
                         <div class="m_form_header_buttons" t-if="this.headerItems.length">
                             <Button t-foreach="this.headerItems" t-as="item" t-key="item.key" label="item.label" onClick="item.run"/>
                         </div>
-                        <button type="button" class="m_btn m_btn_primary m_form_edit" t-on-click="this.onEdit"><t t-esc="this.texts.edit"/></button>
+                        <button t-if="this.canEdit" type="button" class="m_btn m_btn_primary m_form_edit" t-on-click="this.onEdit"><t t-esc="this.texts.edit"/></button>
                     </div>
                 </div>
             </div>
@@ -85,6 +85,8 @@ export class MobileFormView extends Component {
 
     setup() {
         const root = parseArch(this.props.arch);
+        // edit="false": 表单不允许编辑 (例如报表), 只读记录不显示"编辑"按钮
+        this.canEdit = !["0", "false"].includes(root.attrs.edit);
         this.fieldNames = [...collectFieldNames(root)];
         // 头部按钮: <header> 中的 <button>, 在保存后的记录上显示
         const header = root.children.find((child) => child.tag === "header");
