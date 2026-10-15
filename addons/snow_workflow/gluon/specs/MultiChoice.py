@@ -1,0 +1,110 @@
+# Copyright 2023 The CrossNow.inc Authors.
+#
+from ..task import TaskState
+from ..exceptions import WorkflowException
+from .base import TaskSpec
+
+
+class MultiChoice(TaskSpec):
+
+    """
+    This class represents an if condition where multiple conditions may match
+    at the same time, creating multiple outgoing branches.
+    This task has one or more inputs, and one or more incoming branches.
+    This task has one or more outputs.
+    """
+
+    def __init__(self, wf_spec, name, **kwargs):
+        """
+        Constructor.
+
+        :type  wf_spec: WorkflowSpec
+        :param wf_spec: A reference to the workflow specification.
+        :type  name: str
+        :param name: The name of the task spec.
+        :type  kwargs: dict
+        :param kwargs: See :class:`gluon.specs.TaskSpec`.
+        """
+        super(MultiChoice, self).__init__(wf_spec, name, **kwargs)
+        self.cond_task_specs = []
+        self.choice = None
+
+    def connect(self, task_spec):
+        """
+        Convenience wrapper around connect_if() where condition is set to None.
+        """
+        return self.connect_if(None, task_spec)
+
+    def connect_if(self, condition, task_spec):
+        """
+        Connects a taskspec that is executed if the condition DOES match.
+
+        condition -- a condition (Condition)
+        taskspec -- the conditional task spec
+        """
+        assert task_spec is not None
+        self.outputs.append(task_spec)
+        self.cond_task_specs.append((condition, task_spec.name))
+        task_spec._connect_notify(self)
+
+    def test(self):
+        """
+        Checks whether all required attributes are set. Throws an exception
+        if an error was detected.
+        """
+        TaskSpec.test(self)
+        if len(self.cond_task_specs) < 1:
+            raise WorkflowException('At least one output required.', task_spec=self)
+        for condition, name in self.cond_task_specs:
+            if name is None:
+                raise WorkflowException('Condition with no task spec.', task_spec=self)
+            task_spec = self._wf_spec.get_task_spec_from_name(name)
+            if task_spec is None:
+                msg = 'Condition leads to non-existent task ' + repr(name)
+                raise WorkflowException(msg, task_spec=self)
+            if condition is None:
+                continue
+
+    def _on_trigger(self, my_task, choice):
+        """
+        Lets a caller narrow down the choice by using a Choose trigger.
+        """
+        self.choice = choice
+        # The caller needs to make sure that predict() is called.
+
+    def _predict_hook(self, my_task):
+        conditional, unconditional = [], []
+        for condition, output in self.cond_task_specs:
+            if self.choice is not None and output not in self.choice:
+                continue
+            if condition is None:
+                unconditional.append(self._wf_spec.get_task_spec_from_name(output))
+            else:
+                conditional.append(self._wf_spec.get_task_spec_from_name(output))
+        state = TaskState.MAYBE if my_task.state == TaskState.MAYBE else TaskState.LIKELY
+        my_task._sync_children(unconditional, state)
+        for spec in conditional:
+            my_task._add_child(spec, TaskState.MAYBE)
+
+    def _get_matching_outputs(self, my_task):
+        outputs = []
+        for condition, output in self.cond_task_specs:
+            if self.choice is not None and output not in self.choice:
+                continue
+            if condition is None or condition._matches(my_task):
+                outputs.append(self._wf_spec.get_task_spec_from_name(output))
+        return outputs
+
+    def _run_hook(self, my_task):
+        """Runs the task. Should not be called directly."""
+        my_task._sync_children(self._get_matching_outputs(my_task), TaskState.FUTURE)
+        for child in my_task.children:
+            child.task_spec._predict(child, mask=TaskState.FUTURE|TaskState.PREDICTED_MASK)
+        return True
+
+    def serialize(self, serializer):
+        return serializer.serialize_multi_choice(self)
+
+    @classmethod
+    def deserialize(self, serializer, wf_spec, s_state):
+        return serializer.deserialize_multi_choice(wf_spec, s_state)

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="snow_workflow.workflow_process">
+
+        <div class="snow-steps-content">
+            <t t-foreach="widget.steps" t-as="step_data">
+                <div t-attrf-class="adm-step adm-step-header {{step_data_index>0?'snow_hide':''}}" style="--title-font-size: 17px;
+                --description-font-size': 15px;
+                --indicator-margin-right': 12px;
+                --icon-size: 22px; background-color: #f4fbfb; " t-attrf-idx="{{step_data_index}}"  t-attrf-state="{{step_data_index>0?'hide':'show'}}">
+                    <div class="adm-step-title">
+                        <div class="title">
+                            <div class="title-left">
+                                <div class="title-name" style="color:#03A09C;margin-right:20px">
+                                    <t t-esc="step_data.create_date"/>
+                                </div>
+                                <div class="title-subtitle">
+                                    <t t-esc="step_data.submitter"/>
+                                </div>
+                            </div>
+                            <div class="adm-step-icon-container title-right">
+                                <div class="right-icon angle-down" style="margin-right:10px;margin-bottom:10px;">
+                                    <i class="fa fa-light fa-angle-down"/>
+                                </div>
+                                <div class="right-icon angle-up" style="margin-right:10px;margin-bottom:10px;">
+                                    <i class="fa fa-light fa-angle-up"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div t-attrf-class="snow-steps-content {{step_data_index>0?'snow_hide':''}}" t-attrf-idx="{{step_data_index}}">
+                    <div class="adm-steps adm-steps-vertical"
+                         style="--title-font-size: 17px;
+                    --description-font-size': 15px;
+                    --indicator-margin-right': 12px;
+                    --icon-size: 22px;"
+                    >
+
+                        <t t-foreach="step_data.approve_roadmap" t-as="data">
+                            <div class="adm-step adm-step-status-finish">
+
+                                <div class="adm-step-indicator">
+                                    <div class="adm-step-icon-container">
+                                        <div class="left-icon"
+                                             t-attf-style="color:{{widget.actionList[data.state]['color']}};">
+                                            <i t-attf-class="{{widget.actionList[data.state]['icon']}}"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="adm-step-content" t-att-style="['and', 'or'].includes(data.group_type) ? 'border: 1px solid #ccc; border-radius: 10px; padding: 10px; margin-bottom: 10px' : ''">
+                                    <div t-if="['and', 'or'].includes(data.group_type)" class="title-subtitle">
+                                        <t t-if="data.group_type === 'and'">
+                                            【Multiple Signature】
+                                        </t>
+                                        <t t-else="">
+                                            【Signed by One】
+                                        </t>
+                                    </div>
+                                    <t t-foreach="data.members" t-as="member">
+                                        <div class="adm-step-title">
+                                            <div class="title">
+                                                <div class="title-left">
+                                                    <div class="title-name">
+                                                        <t t-if="member.actor == 'empty'">
+                                                            empty
+                                                        </t>
+                                                        <t t-else="">
+                                                            <t t-out="member.actor"/>
+                                                        </t>
+                                                    </div>
+                                                    <div t-if="data.group_type === 'add'" class="title-subtitle">
+                                                        【Additional Signature】
+                                                    </div>
+                                                </div>
+                                                <div class="title-right">
+                                                    <div class="status" t-attf-style="color:{{widget.actionList[member.state]['color']}};">
+                                                        <t t-out="widget.actionList[member.state]['name']"/>
+                                                    </div>
+                                                    <div class="time">
+                                                        <t t-out="member.create_date"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="adm-step-description">
+                                            <div class="description">
+                                                <t t-out="member.comments"/>
+                                            </div>
+                                        </div>
+                                    </t>
+
+                                </div>
+                            </div>
+                        </t>
+
+                    </div>
+                </div>
+            </t>
+        </div>
+
+    </t>
+</templates>

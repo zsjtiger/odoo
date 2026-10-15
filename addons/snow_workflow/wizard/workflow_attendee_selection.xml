@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<crossnow>
+    <data>
+        <record id="workflow_add_attendee" model="ir.ui.view">
+            <field name="name">attendee.selection.form</field>
+            <field name="model">snow.workflow.attendee.selection</field>
+            <field name="arch" type="xml">
+                <form string="select user">
+                    <group>
+                    </group>
+                    <footer>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</crossnow>

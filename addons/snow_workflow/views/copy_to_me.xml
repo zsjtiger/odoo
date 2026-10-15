@@ -1,0 +1,43 @@
+<crossnow>
+  <record id="snow_workflow_carbon_copy_list" model="ir.ui.view">
+    <field name="name">snow.workflow.carbon.copy.tree</field>
+    <field name="model">snow.workflow.carbon.copy</field>
+    <field name="arch" type="xml">
+      <tree create="0" delete="0" edit="1" export_xlsx="false" default_order="create_date desc">
+        <field name="task_name" string="task name"/>
+        <field name="object_name" string="approval type"/>
+        <field name="create_date" string="copy date"/>
+        <field name="status_name" string="status name"/>
+        <field name="submitter_name" string="submitter"/>
+        <button name="dynamic_redirect" type="object" string="detail" icon="fa-external-link"/>
+      </tree>
+    </field>
+  </record>
+
+  <record id="snow_workflow_carbon_copy_kanban" model="ir.ui.view">
+    <field name="name">snow.workflow.carbon.copy.kanban</field>
+    <field name="model">snow.workflow.carbon.copy</field>
+    <field name="arch" type="xml">
+      <kanban class="o_kanban_mobile" create="0" edit="0" delete="0" export_xlsx="false" default_order="create_date desc">
+          <field name="task_name" string="task name" m-layout="title"/>
+          <field name="object_name" string="approval type" m-layout="subtitle"/>
+          <field name="create_date" string="copy date" m-layout="middleLeft"/>
+          <field name="status_name" string="status name" m-layout="status"/>
+          <field name="submitter_name" string="submitter" m-layout="middleRight"/>
+          <button name="dynamic_redirect" type="object" string="detail" icon="fa-external-link"/>
+      </kanban>
+    </field>
+  </record>
+
+  <record id="snow_workflow_carbon_copy_act" model="ir.actions.act_window">
+    <field name="name">copy to me</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">snow.workflow.carbon.copy</field>
+    <field name="view_mode">tree,kanban</field>
+    <field name="view_ids" eval="[(5,0,0),
+            (0,0,{'view_id':ref('snow_workflow_carbon_copy_list'),'view_mode':'tree'}),
+            (0,0,{'view_id':ref('snow_workflow_carbon_copy_kanban'),'view_mode':'kanban'})]">
+    </field>
+    <field name="context">{"_type": "copy_to_me"}</field>
+  </record>
+</crossnow>

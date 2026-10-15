@@ -1,0 +1,1067 @@
+# Translation of CrossNow Server.
+# This file contains the translation of the following modules:
+# 	* snow_workflow
+#
+# Translators:
+# Han Zhongshan <zhongshan.han@crossnow.cn>, 2024
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: CrossNow Server 17.5alpha1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-29 10:38+0000\n"
+"PO-Revision-Date: 2024-09-29 10:38+0000\n"
+"Last-Translator: Han Zhongshan, 2024\n"
+"Language-Team: Chinese (China) \n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_ir_model_access__perm_approval
+msgid "Approval Access"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_carbon_copy__copy_user
+msgid "Copy User"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_attendee_selection__create_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_carbon_copy__create_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__create_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution__create_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task__create_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_attendee__create_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_attendee_history__create_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_data__create_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_history__create_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_external_managers__create_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance__create_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance_suspend__create_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance_suspend_history__create_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_action__create_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_mapping__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_attendee_selection__create_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_carbon_copy__create_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__create_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution__create_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task__create_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_attendee__create_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_attendee_history__create_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_data__create_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_history__create_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_external_managers__create_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance__create_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance_suspend__create_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance_suspend_history__create_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_action__create_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_mapping__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_data__data_owner
+msgid "Data Owner"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_attendee_selection__display_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_carbon_copy__display_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__display_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution__display_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task__display_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_attendee__display_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_attendee_history__display_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_data__display_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_history__display_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_external_managers__display_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance__display_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance_suspend__display_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance_suspend_history__display_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_action__display_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_mapping__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model,name:snow_workflow.model_ir_http
+msgid "HTTP Routing"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_attendee_selection__id
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_carbon_copy__id
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__id
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution__id
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task__id
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_attendee__id
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_attendee_history__id
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_data__id
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_history__id
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_history__user_id
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_external_managers__id
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance__id
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance_suspend__id
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance_suspend_history__id
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_action__id
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_mapping__id
+msgid "ID"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_attendee_selection__write_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_carbon_copy__write_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__write_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution__write_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task__write_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_attendee__write_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_attendee_history__write_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_data__write_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_history__write_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_external_managers__write_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance__write_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance_suspend__write_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance_suspend_history__write_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_action__write_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_mapping__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_attendee_selection__write_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_carbon_copy__write_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__write_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution__write_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task__write_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_attendee__write_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_attendee_history__write_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_data__write_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_history__write_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_external_managers__write_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance__write_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance_suspend__write_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance_suspend_history__write_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_action__write_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_mapping__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model,name:snow_workflow.model_ir_ui_menu
+msgid "Menu"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__object
+msgid "Model"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model,name:snow_workflow.model_ir_model_access
+msgid "Model Access"
+msgstr ""
+
+#. module: snow_workflow
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_definition_filter
+msgid "Seach Definition"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution__status_owner
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance__status_owner
+msgid "Status Owner"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task__submitter_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_attendee__submitter_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_history__submitter_name
+msgid "Submitter"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model,name:snow_workflow.model_snow_workflow_execution_task_data
+msgid "Task Execution Data"
+msgstr "Task的业务数据"
+
+#. module: snow_workflow
+#: model:ir.model,name:snow_workflow.model_snow_workflow_execution_task_attendee
+msgid "Task Attendee"
+msgstr "Task的参与者"
+
+#. module: snow_workflow
+#: model:ir.model,name:snow_workflow.model_snow_workflow_execution_task_attendee_history
+msgid "Task Attendee History"
+msgstr "Task参与者历史"
+
+#. module: snow_workflow
+#. crossnow-web
+#: code:addons/snow_workflow/static/src/js/workflow_warning.js:0
+msgid "<div>The submission description cannot exceed 200 characters</div>"
+msgstr "<div>提交的描述不能超过200个字符</div>"
+
+#. module: snow_workflow
+#. crossnow-web
+#: code:addons/snow_workflow/static/src/js/workflow_warning.js:0
+msgid "<div>The submission description is required.</div>"
+msgstr "<div>提交描述是必填项</div>"
+
+#. module: snow_workflow
+#. crossnow-web
+#: code:addons/snow_workflow/static/src/js/workflow_warning.js:0
+msgid "<div>You must click read and agree!</div>"
+msgstr "<div>你需要勾选阅读并同意！</div>"
+
+#. module: snow_workflow
+#. crossnow-web
+#: code:addons/snow_workflow/static/src/js/workflow_warning.js:0
+msgid "information"
+msgstr "信息"
+
+#. module: snow_workflow
+#. crossnow-web
+#: code:addons/snow_workflow/static/src/js/workflow_warning.js:0
+msgid "OK"
+msgstr "确定"
+
+#. module: snow_workflow
+#: model:ir.model,name:snow_workflow.model_res_users
+msgid "User"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution__wf_execution_tasks
+msgid "Wf Execution Tasks"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution__wf_execution_tasks_history
+msgid "Wf Execution Tasks History"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_data__wf_task_history
+msgid "Wf Task History"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model,name:snow_workflow.model_snow_workflow_attendee_selection
+msgid "Workflow Attendee Selection"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model,name:snow_workflow.model_snow_workflow_instance
+msgid "Workflow Instance"
+msgstr "Workflow实例"
+
+#. module: snow_workflow
+#: model:ir.model,name:snow_workflow.model_snow_workflow_action
+msgid "snow.workflow.action"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model,name:snow_workflow.model_snow_workflow_notification
+msgid "snow.workflow.notification"
+msgstr ""
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/models/snow_workflow_actions.py:0
+#, python-format
+msgid "prompt message"
+msgstr "提示信息"
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/models/snow_workflow_actions.py:0
+#, python-format
+msgid "risk information"
+msgstr "风险提示"
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/models/snow_workflow_actions.py:0
+#, python-format
+msgid "submit information"
+msgstr "提交说明"
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/workflow/vision.py:0
+#, python-format
+msgid "self approval"
+msgstr "自审批"
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/models/snow_workflow_notification.py:0
+#, python-format
+msgid "Notice of pending review"
+msgstr "待审核通知"
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/models/snow_workflow_notification.py:0
+#, python-format
+msgid "Applicant notification"
+msgstr "申请者告知通知"
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/models/snow_workflow_notification.py:0
+#, python-format
+msgid "Notice of carbon copy"
+msgstr "抄送通知"
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/models/snow_workflow_notification.py:0
+#, python-format
+msgid "Send notifications at the platform level: {}"
+msgstr "平台级发送通知: {}"
+
+#. module: snow_workflow
+#. crossnow-web
+#: code:addons/snow_workflow/static/src/js/workflow_process.js:0
+msgid "Please enter the reason for refusal"
+msgstr "请输入拒绝理由"
+
+#. module: snow_workflow
+#. crossnow-web
+#: code:addons/snow_workflow/static/src/js/workflow_process.js:0
+msgid "save and submit"
+msgstr "保存并提交"
+
+#. module: snow_workflow
+#. crossnow-web
+#: code:addons/snow_workflow/static/src/js/workflow_process.js:0
+msgid "pass"
+msgstr "审批通过"
+
+#. module: snow_workflow
+#. crossnow-web
+#: code:addons/snow_workflow/static/src/js/workflow_process.js:0
+msgid "reject"
+msgstr "审批拒绝"
+
+#. module: snow_workflow
+#. crossnow-web
+#: code:addons/snow_workflow/static/src/js/workflow_process.js:0
+#, python-format
+msgid "submit for approval"
+msgstr "提交审批"
+
+#. module: snow_workflow
+#. crossnow-web
+#: code:addons/snow_workflow/static/src/js/workflow_process.js:0
+msgid "withdraw"
+msgstr "撤销"
+
+#. module: snow_workflow
+#. crossnow-web
+#: code:addons/snow_workflow/static/src/js/workflow_process.js:0
+msgid "suspend"
+msgstr "挂起"
+
+#. module: snow_workflow
+#. crossnow-web
+#: code:addons/snow_workflow/static/src/js/workflow_process.js:0
+msgid "suspended recovery"
+msgstr "挂起恢复"
+
+#. module: snow_workflow
+#. crossnow-web
+#: code:addons/snow_workflow/static/src/js/workflow_process.js:0
+msgid "under approval"
+msgstr "审批中"
+
+#. module: snow_workflow
+#. crossnow-web
+#: code:addons/snow_workflow/static/src/js/workflow_process.js:0
+msgid "wait"
+msgstr "等待"
+
+#. module: snow_workflow
+#. crossnow-web
+#: code:addons/snow_workflow/static/src/js/workflow_process.js:0
+msgid "add attendee"
+msgstr "加签"
+
+#. module: snow_workflow
+#. crossnow-web
+#: code:addons/snow_workflow/static/src/js/workflow_process.js:0
+msgid "withdrawn"
+msgstr "已撤回"
+
+#. module: snow_workflow
+#. crossnow-web
+#: code:addons/snow_workflow/static/src/xml/workflow_process.xml:0
+msgid "【Multiple Signature】"
+msgstr "【会签】"
+
+#. module: snow_workflow
+#. crossnow-web
+#: code:addons/snow_workflow/static/src/xml/workflow_process.xml:0
+msgid "【Additional Signature】"
+msgstr "【加签】"
+
+#. module: snow_workflow
+#. crossnow-web
+#: code:addons/snow_workflow/static/src/xml/workflow_process.xml:0
+msgid "【Signed by One】"
+msgstr "【或签】"
+
+#. module: snow_workflow
+#. crossnow-web
+#: code:addons/snow_workflow/static/src/xml/workflow_process.xml:0
+#: code:addons/snow_workflow/static/src/js/workflow_process.js:0
+msgid "empty"
+msgstr "空"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance__business_deleted
+msgid "business data deleted"
+msgstr "业务数据已删除"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_attendee__wf_task
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_data__wf_task
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_history__wf_task
+msgid "task"
+msgstr "任务"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task__wf_task_spec_json
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_history__wf_task_spec_json
+msgid "task spec description json"
+msgstr "任务spec的描述json"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task__task_xml_id
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_history__task_xml_id
+msgid "task xml_id"
+msgstr "任务xml_id"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_carbon_copy__task_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution__task_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task__task_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_history__task_name
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_carbon_copy_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_carbon_copy_list
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_execution_task_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_execution_task_list
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_my_submission_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_my_submission_tree
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_workflow_execution_task_history_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_workflow_execution_task_history_tree
+msgid "task name"
+msgstr "任务名称"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task__task_attendee
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_history__task_attendee_history
+msgid "task executor"
+msgstr "任务执行人"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task__wf_task_json
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_history__wf_task_json
+msgid "task description json"
+msgstr "任务描述json"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task__task_xml_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_history__task_xml_name
+msgid "task xml_name"
+msgstr "任务的xml_name"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_carbon_copy__object
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution__object
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task__object
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_history__object
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_action__object_id
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_mapping__object_id
+msgid "related object"
+msgstr "关联对象"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_mapping__object_field_name
+msgid "related object name"
+msgstr "关联对象字段名"
+
+#. module: snow_workflow
+#: model:ir.model,name:snow_workflow.model_snow_workflow_execution_task
+msgid "Execution Task"
+msgstr "准备要执行的Task"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution__vision_data
+msgid "vision data"
+msgstr "前端渲染数据"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_attendee__assigner_state
+msgid "assigner state"
+msgstr "加签任务状态"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__attendee_domain
+msgid "attendee domain"
+msgstr "加签范围"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_attendee_history__wf_task_history
+msgid "task history"
+msgstr "历史任务"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__deployed_on
+msgid "deployed on"
+msgstr "发布时间"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__deployed_by
+msgid "deployed by"
+msgstr "发布用户"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance__initiator
+msgid "initiator"
+msgstr "发起用户"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_data__value
+msgid "variable value"
+msgstr "变量值"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_data__name
+msgid "variable name"
+msgstr "变量名字"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__object_display_field
+msgid "object display field"
+msgstr "名称字段"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_action__action
+msgid "callback function"
+msgstr "回调函数"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__external_managers
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_definition_from
+#: model:ir.model,name:snow_workflow.model_snow_workflow_external_managers
+msgid "external manager"
+msgstr "外部管理者"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance__wf_executions
+msgid "execution"
+msgstr "子流程"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution__status
+msgid "execution status"
+msgstr "子流程状态"
+
+#. module: snow_workflow
+#: model:ir.model,name:snow_workflow.model_snow_workflow_carbon_copy
+msgid "approval carbon copy"
+msgstr "审批抄送"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_external_managers__definition_id
+msgid "definition id"
+msgstr "审批流id"
+
+#. module: snow_workflow
+#: model:ir.actions.act_window,name:snow_workflow.snow_workflow_definition_act
+#: model:ir.ui.menu,name:snow_workflow.snow_workflow_definition
+msgid "workflow definition"
+msgstr "审批流定义"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance_suspend__wf_instance
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance_suspend_history__wf_instance
+msgid "workflow instance"
+msgstr "审批流实例"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_mapping__instance_field_name
+msgid "workflow instance name"
+msgstr "审批流实例字段名"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance__suspend_info
+msgid "suspend info"
+msgstr "审批流挂起信息"
+
+#. module: snow_workflow
+#: model:ir.model,name:snow_workflow.model_snow_workflow_instance_suspend_history
+msgid "workflow instance suspend history"
+msgstr "审批流挂起操作历史"
+
+#. module: snow_workflow
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_carbon_copy_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_carbon_copy_list
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_execution_task_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_execution_task_list
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_my_submission_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_my_submission_tree
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_workflow_execution_task_history_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_workflow_execution_task_history_tree
+msgid "status name"
+msgstr "审批状态"
+
+#. module: snow_workflow
+#: model:ir.ui.menu,name:snow_workflow.snow_workflow_approval
+msgid "approval management"
+msgstr "审批管理"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance__object
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_carbon_copy_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_carbon_copy_list
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_execution_task_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_execution_task_list
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_my_submission_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_my_submission_tree
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_workflow_execution_task_history_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_workflow_execution_task_history_tree
+msgid "approval type"
+msgstr "审批类型"
+
+#. module: snow_workflow
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_definition_list
+msgid "object name"
+msgstr "对象名称"
+
+#. module: snow_workflow
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_definition_list
+msgid "object state"
+msgstr "对象状态"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_mapping__object_field_value
+msgid "related object value"
+msgstr "对象字段更新值"
+
+#. module: snow_workflow
+#: model:ir.ui.menu,name:snow_workflow.snow_workflow_menu_root
+msgid "workflow"
+msgstr "工作流"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance__wf_definition
+msgid "workflow definition"
+msgstr "工作流定义"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_carbon_copy__wf_instance
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution__wf_instance
+msgid "workflow instance"
+msgstr "工作流实例"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution__wf_json
+msgid "workflow description JSON"
+msgstr "工作流描述JSON"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance__status
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_action__wf_state
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_mapping__wf_state
+msgid "workflow status"
+msgstr "工作流状态"
+
+#. module: snow_workflow
+#: model:ir.model,name:snow_workflow.model_snow_workflow_state_action
+msgid "workflow state action"
+msgstr "工作流状态动作"
+
+#. module: snow_workflow
+#: model:ir.model,name:snow_workflow.model_snow_workflow_state_mapping
+msgid "workflow state mapping"
+msgstr "工作流状态映射"
+
+#. module: snow_workflow
+#: model:ir.model,name:snow_workflow.model_snow_workflow_execution
+msgid "workflow execution"
+msgstr "工作流的子流程"
+
+#. module: snow_workflow
+#: model:ir.ui.menu,name:snow_workflow.common_approved_menu
+msgid "processed"
+msgstr "已处理"
+
+#. module: snow_workflow
+#: model:ir.actions.act_window,name:snow_workflow.action_workflow_execution_task_history_act
+msgid "processed list"
+msgstr "已处理列表"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance__start_time
+msgid "start time"
+msgstr "开始时间"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task__in_progress
+msgid "in progress"
+msgstr "正在执行"
+
+#. module: snow_workflow
+#: model:ir.ui.menu,name:snow_workflow.common_pending_approval_menu
+msgid "wait my approval"
+msgstr "待我审批"
+
+#. module: snow_workflow
+#: model:ir.actions.act_window,name:snow_workflow.snow_workflow_execution_task_act
+msgid "wait my approval list"
+msgstr "待我审批列表"
+
+#. module: snow_workflow
+#: model:ir.ui.menu,name:snow_workflow.common_self_approval_menu
+msgid "my raised"
+msgstr "我发起的"
+
+#. module: snow_workflow
+#: model:ir.actions.act_window,name:snow_workflow.action_my_submission_act
+msgid "my raised list"
+msgstr "我发起的列表"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task__wf_instance
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_history__wf_instance
+msgid "related instance"
+msgstr "所属实例"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task__wf_execution
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_history__wf_execution
+msgid "related execution"
+msgstr "所属子流程"
+
+#. module: snow_workflow
+#: model:ir.actions.act_window,name:snow_workflow.snow_workflow_carbon_copy_act
+#: model:ir.ui.menu,name:snow_workflow.common_copy_to_me_menu
+msgid "copy to me"
+msgstr "抄送我的"
+
+#. module: snow_workflow
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_carbon_copy_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_carbon_copy_list
+msgid "copy date"
+msgstr "抄送日期"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance_suspend__suspend_user
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance_suspend_history__suspend_user
+msgid "suspend user"
+msgstr "挂起人"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance_suspend__suspend_time
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance_suspend_history__suspend_time
+msgid "suspend time"
+msgstr "挂起时间"
+
+#. module: snow_workflow
+#: model:ir.model,name:snow_workflow.model_snow_workflow_instance_suspend
+msgid "suspend instance"
+msgstr "挂起状态的工作流实例"
+
+#. module: snow_workflow
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_execution_task_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_execution_task_list
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_my_submission_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_my_submission_tree
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_workflow_execution_task_history_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_workflow_execution_task_history_tree
+msgid "create date"
+msgstr "提交日期"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__submit_warning_type
+msgid "warning type"
+msgstr "提交时的提示方式"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_carbon_copy__submitter_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution__submitter_name
+msgid "submitter"
+msgstr "提交者"
+
+#. module: snow_workflow
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_risk_warning_form
+msgid "verification"
+msgstr "提交验证"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution__is_complete
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance__is_complete
+msgid "is complete"
+msgstr "是否完成"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__can_add_attendee
+msgid "can add attendee"
+msgstr "是否支持加签"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__is_internal_suspend
+msgid "is internal suspend"
+msgstr "是否支持内部管理者挂起"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__is_external_suspend
+msgid "is external suspend"
+msgstr "是否支持外部管理者挂起"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_attendee__is_assigner
+msgid "is assigner"
+msgstr "是否是加签用户"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__active
+msgid "active"
+msgstr "是否生效"
+
+#. module: snow_workflow
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_carbon_copy_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_carbon_copy_list
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_execution_task_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_execution_task_list
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_my_submission_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_my_submission_tree
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_workflow_execution_task_history_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_workflow_execution_task_history_tree
+msgid "detail"
+msgstr "查看"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_carbon_copy__object_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution__object_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task__object_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_history__object_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance__object_name
+msgid "object name"
+msgstr "模块名"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__object_id
+msgid "object"
+msgstr "模型对象"
+
+#. module: snow_workflow
+#: model_terms:ir.actions.act_window,help:snow_workflow.snow_workflow_definition_act
+msgid "No records found!"
+msgstr "没有找到记录哦！"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__process_id
+msgid "process id"
+msgstr "流程id"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__content
+msgid "process content"
+msgstr "流程内容"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__name
+msgid "process name"
+msgstr "流程名称"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__description
+msgid "process description"
+msgstr "流程描述"
+
+#. module: snow_workflow
+#: model:ir.model,name:snow_workflow.model_snow_workflow_definition
+msgid "workflow definition"
+msgstr "审批流定义"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__version
+msgid "version"
+msgstr "版本编号"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_carbon_copy__status_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution__status_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task__status_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_history__status_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance__status_name
+msgid "status name"
+msgstr "状态名"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_attendee__user
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_attendee_history__user
+msgid "user"
+msgstr "用户"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_external_managers__user_id
+msgid "user id"
+msgstr "用户id"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_attendee_history__action
+msgid "user action"
+msgstr "用户执行的动作"
+
+#. module: snow_workflow
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_carbon_copy_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_carbon_copy_list
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_execution_task_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_execution_task_list
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_my_submission_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_my_submission_tree
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_workflow_execution_task_history_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_workflow_execution_task_history_tree
+msgid "submitter"
+msgstr "申请人"
+
+#. module: snow_workflow
+#: model:ir.model.fields.selection,name:snow_workflow.selection__snow_workflow_definition__submit_warning_type__no
+msgid "direct submission"
+msgstr "直接提交不提示"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__instances
+msgid "instance"
+msgstr "实例"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__same_user_action
+msgid "same people action"
+msgstr "相同审批人处理方式"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__informed_consent
+#: model:ir.model.fields.selection,name:snow_workflow.selection__snow_workflow_definition__submit_warning_type__inform
+msgid "informed consent"
+msgstr "知情同意书"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__show_alert_before_reject
+msgid "Show alert before reject"
+msgstr "拒绝时提示输入"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__reject_alert_message
+msgid "Reject alert message"
+msgstr "拒绝提示"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__show_alert_before_approval
+msgid "Show alert before approval"
+msgstr "通过时提示输入"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__approval_alert_message
+msgid "Approval alert message"
+msgstr "通过提示"
+
+#. module: snow_workflow
+#. crossnow-web
+#: code:addons/snow_workflow/static/src/xml/workflow_warning.xml:0
+msgid "cancel"
+msgstr "取消"
+
+#. module: snow_workflow
+#. crossnow-web
+#: code:addons/snow_workflow/static/src/xml/workflow_warning.xml:0
+msgid "submit"
+msgstr "确认提交"
+
+#. module: snow_workflow
+#. crossnow-web
+#: code:addons/snow_workflow/static/src/xml/workflow_warning.xml:0
+msgid "Please enter submission instructions"
+msgstr "请输入提交说明"
+
+#. module: snow_workflow
+#. crossnow-web
+#: code:addons/snow_workflow/static/src/xml/workflow_warning.xml:0
+msgid "Read and agree to this statement"
+msgstr "阅读并同意此声明"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance__record_id
+msgid "related record id"
+msgstr "绑定的记录ID"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance__end_time
+msgid "end time"
+msgstr "结束时间"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__target_view
+msgid "target view"
+msgstr "表单模板"
+
+#. module: snow_workflow
+#: model:ir.model,name:snow_workflow.model_snow_workflow_execution_task_history
+msgid "execution task history"
+msgstr "任务历史"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance_suspend_history__unsuspend_time
+msgid "unsuspend time"
+msgstr "解除挂起时间"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_carbon_copy__record_id
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution__record_id
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task__record_id
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_attendee__record_id
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_history__record_id
+msgid "record id"
+msgstr "记录id"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_action__order
+msgid "action order"
+msgstr "调用顺序"
+
+#. module: snow_workflow
+#: model:ir.model.fields.selection,name:snow_workflow.selection__snow_workflow_definition__same_user_action__follow
+msgid "like first time"
+msgstr "跟随第一次审批结果"
+
+#. module: snow_workflow
+#: model_terms:ir.ui.view,arch_db:snow_workflow.workflow_add_attendee
+#: model:ir.actions.act_window,name:snow_workflow.model_snow_workflow_actions
+msgid "select user"
+msgstr "选择加签用户"
+
+#. module: snow_workflow
+#: model:ir.model.fields.selection,name:snow_workflow.selection__snow_workflow_definition__same_user_action__wait
+msgid "duplicate approval"
+msgstr "重复审批"
+
+#. module: snow_workflow
+#: model:ir.model.fields.selection,name:snow_workflow.selection__snow_workflow_definition__submit_warning_type__risk
+msgid "risk warning + informed consent"
+msgstr "风险提示 + 知情同意书"
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/models/snow_workflow_actions.py:0
+#, python-format
+msgid "Pass Operation"
+msgstr "审批通过操作"
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/models/snow_workflow_actions.py:0
+#, python-format
+msgid "Reject Operation"
+msgstr "审批拒绝操作"

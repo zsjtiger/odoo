@@ -1,0 +1,99 @@
+<crossnow>
+  <record id="snow_workflow_definition_list" model="ir.ui.view">
+    <field name="name">snow.workflow.definition.tree</field>
+    <field name="model">snow.workflow.definition</field>
+    <field name="arch" type="xml">
+      <tree export_xlsx="false">
+        <field name="name"/>
+        <field name="process_id"/>
+        <field name="version"/>
+        <field name="object_id">
+          <tree>
+            <field name="model" string="object name"/>
+            <field name="state" string="object state"/>
+            <field name="modules"/>
+          </tree>
+        </field>
+        <field name="description"/>
+        <field name="active"/>
+      </tree>
+    </field>
+  </record>
+
+  <record id="snow_workflow_definition_from" model="ir.ui.view">
+    <field name="name">snow.workflow.definition.form</field>
+    <field name="model">snow.workflow.definition</field>
+    <field name="arch" type="xml">
+      <form>
+        <group>
+          <field name="name"/>
+          <field name="process_id"/>
+          <field name="version"/>
+          <field name="object_id" options="{'no_open': True, 'no_create_edit':True}" />
+          <field name="object_display_field"  options="{'no_open': True, 'no_create_edit':True}" />
+          <field name="target_view"  options="{'no_open': True, 'no_create_edit':True}" />
+          <field name="description"/>
+          <field name="instances" readonly="1" attrs="{'invisible': [('id', '=', False)]}">
+            <tree limit="5">
+              <field name="object_name"/>
+              <field name="record_id"/>
+              <field name="initiator"/>
+              <field name="start_time"/>
+              <field name="status_name"/>
+            </tree>
+          </field>
+          <field name="active"/>
+          <field name="is_internal_suspend"/>
+          <field name="is_external_suspend"/>
+          <field name="can_add_attendee"/>
+          <field name="attendee_domain"/>
+          <field name="show_alert_before_reject"/>
+          <field name="reject_alert_message"/>
+          <field name="show_alert_before_approval"/>
+          <field name="approval_alert_message"/>
+          <field name="external_managers" m-mode="select" m-display="user_id"
+            string="external manager"
+            context="{'tree_view_ref': 'snow_workflow_external_managers_view_list'}"
+            mode="list,kanban"
+            options="{'no_create':True,'no_create_edit':True,'no_open':True}" >
+              <kanban class="o_kanban_mobile">
+                  <field name="user_id" m-layout="title" />
+              </kanban>
+          </field>
+          <field name="submit_warning_type"/>
+          <field name="informed_consent"/>
+          <field name="same_user_action"/>
+          <field name="content" widget="definition_content" />
+        </group>
+      </form>
+    </field>
+  </record>
+
+  <record id="snow_workflow_external_managers_view_list" model="ir.ui.view">
+      <field name="name">external manager</field>
+      <field name="model">snow.workflow.external.managers</field>
+      <field name="arch" type="xml">
+          <tree editable="bottom" create="1">
+              <field name="user_id"/>
+          </tree>
+      </field>
+  </record>
+
+  <record id="snow_workflow_definition_filter" model="ir.ui.view">
+    <field name="name">snow.workflow.definition.select</field>
+    <field name="model">snow.workflow.definition</field>
+    <field name="arch" type="xml">
+      <search string="Seach Definition">
+        <filter name="description"/>
+        <field name="name"/>
+      </search>
+    </field>
+  </record>
+
+  <record model="ir.actions.act_window" id="snow_workflow_definition_act">
+    <field name="name">workflow definition</field>
+    <field name="res_model">snow.workflow.definition</field>
+    <field name="view_mode">tree,form</field>
+    <field name="help">No records found!</field>
+  </record>
+</crossnow>

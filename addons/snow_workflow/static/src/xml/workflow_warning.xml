@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="snow_workflow_warning">
+    <t t-name="snow_workflow.workflow_warning">
+        <div style="width: 100%;">
+            <t t-if="show_check_box">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" value="" id="read_and_agree"/>
+                        <span style="color:red;">Read and agree to this statement</span>
+                    </label>
+                </div>
+            </t>
+            <div>
+                <textarea class="form-control" rows="3" id="submit_info" t-att-placeholder="result.warning_info"></textarea>
+            </div>
+            <div style="float: right;  margin-top:10px">
+                <button class="btn btn-default" id="cancel">cancel</button>
+                <button class="btn btn-primary" id="submit">submit</button>
+            </div>
+        </div>
+    </t>
+</templates>

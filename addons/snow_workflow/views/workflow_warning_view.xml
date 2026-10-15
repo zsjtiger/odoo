@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<crossnow>
+    <data>
+        <record id="snow_workflow_warning_form" model="ir.ui.view">
+            <field name="name">snow.workflow.warning.form</field>
+            <field name="model">snow.workflow.execution.task.data</field>
+            <field name="arch" type="xml">
+                <form style="width: 300px; height: 500px;" class="temporary_verify_dialog">
+                    <header invisible="1"></header>
+                    <field name="name" widget="workflow_warning"></field>
+                    <footer invisible="1"></footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="snow_workflow_risk_warning_form" model="ir.ui.view">
+            <field name="name">snow.workflow.risk.warning.form</field>
+            <field name="model">snow.workflow.instance</field>
+            <field name="arch" type="xml">
+                <form string="verification" edit_expr="false">
+                    <header invisible="1">
+                    </header>
+                    <div>
+                    </div>
+                    <footer invisible="1"></footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</crossnow>
