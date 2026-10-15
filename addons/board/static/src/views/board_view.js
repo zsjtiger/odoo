@@ -99,11 +99,11 @@ export class BoardActionCell extends Component {
     static template = xml`
         <t t-name="board.BoardActionCell">
             <h2 t-if="this.props.action.string" class="o_board_action_title" t-on-click="this.toggleFold">
-                <t t-esc="this.props.action.string"/>
+                <t t-out="this.props.action.string"/>
             </h2>
             <div t-if="!this.state.folded" class="o_board_action_content">
                 <View t-if="this.state.viewProps" t-props="this.state.viewProps"/>
-                <p t-elif="this.state.error" class="o_board_action_error"><t t-esc="this.state.error"/></p>
+                <p t-elif="this.state.error" class="o_board_action_error"><t t-out="this.state.error"/></p>
             </div>
         </t>
     `;
@@ -135,6 +135,7 @@ export class BoardActionCell extends Component {
             const viewType = descr.viewMode.split(",")[0].trim();
             this.state.viewProps = {
                 resModel: action.res_model,
+                resId: action.res_id || false,
                 type: viewType,
                 views: action.views,
                 context,
@@ -158,7 +159,7 @@ export class BoardController extends Component {
         <t t-name="board.BoardController">
             <div class="o_board_view">
                 <div t-if="!this.props.actions.length" class="o_view_nocontent">
-                    <p class="o_board_empty"><t t-esc="this.texts.empty"/></p>
+                    <p class="o_board_empty"><t t-out="this.texts.empty"/></p>
                 </div>
                 <div t-else="" class="o_board_grid" t-att-style="this.gridStyle">
                     <t t-foreach="this.placements" t-as="placement" t-key="placement.action.key">

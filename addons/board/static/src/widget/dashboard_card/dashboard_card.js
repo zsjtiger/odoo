@@ -11,13 +11,13 @@ export class DashBoardCardWidget extends DashBoardCommonWidget {
     static template = xml`
         <t t-name="board.DashBoardCardWidget">
             <div class="snow_mdm_dashboard_chart_container">
-                <t t-if="this.showLoading"><t t-esc="this.texts.loading"/></t>
+                <t t-if="this.showLoading"><t t-out="this.texts.loading"/></t>
                 <div t-else="" class="snow_mdm_dashboard_card_container">
                     <t t-foreach="this.dashboardData" t-as="item" t-key="item.name">
                         <div class="snow_mdm_dashboard_card" t-att-style="this.cardStyle"
                              t-att-data-data-name="item.name" t-on-click="() => this.onItemClick(item.name)">
-                            <h4 class="snow_mdm_dashboard_card_title"><t t-esc="item.name"/></h4>
-                            <h5 class="snow_mdm_dashboard_card_value"><t t-esc="this.formatValue(item.value)"/></h5>
+                            <h4 class="snow_mdm_dashboard_card_title"><t t-out="item.name"/></h4>
+                            <h5 class="snow_mdm_dashboard_card_value"><t t-out="this.formatValue(item.value)"/></h5>
                         </div>
                     </t>
                     <t t-foreach="this.placeholders" t-as="index" t-key="index">

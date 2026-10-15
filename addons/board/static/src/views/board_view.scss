@@ -52,6 +52,14 @@
     color: #888;
 }
 
+// 嵌入的表单字段包裹层默认是 inline-block (宽度随内容收缩), 图表容器按百分比取宽会变成 0.
+// 让字段占满格子的宽度, 图表才能绘制
+.o_board_action_content .o_field_widget {
+    display: block;
+    width: 100%;
+    min-width: 0;
+}
+
 // 图表字段的容器需要确定的高度才能绘制
 .snow_mdm_dashboard_chart_container {
     min-height: 260px;

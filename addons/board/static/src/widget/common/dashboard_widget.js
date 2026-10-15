@@ -15,7 +15,7 @@ export class DashBoardCommonWidget extends Component {
     static template = xml`
         <t t-name="board.DashBoardWidget">
             <div class="snow_mdm_dashboard_chart_container" t-ref="this.chartRef">
-                <t t-if="this.showLoading"><t t-esc="this.texts.loading"/></t>
+                <t t-if="this.showLoading"><t t-out="this.texts.loading"/></t>
             </div>
         </t>
     `;

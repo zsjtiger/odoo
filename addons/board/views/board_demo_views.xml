@@ -1,21 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="board_demo_view_form" model="ir.ui.view">
-        <field name="name">board.demo.form</field>
+    <!-- 图表演示: 每个图表一个表单视图与动作, 用于仪表盘的各个格子 -->
+    <record id="board_demo_view_bar" model="ir.ui.view">
+        <field name="name">board.demo.bar.form</field>
         <field name="model">board.demo</field>
         <field name="arch" type="xml">
             <form>
-                <sheet>
-                    <group><field name="name"/></group>
-                    <group string="Bar"><field name="chart_bar" widget="board_dashboard_bar" options="{'direction': 'vertical'}"/></group>
-                    <group string="Line"><field name="chart_line" widget="board_dashboard_line"/></group>
-                    <group string="Pie"><field name="chart_pie" widget="board_dashboard_pie"/></group>
-                    <group string="Gauge"><field name="chart_gauge" widget="board_dashboard_gauge"/></group>
-                    <group string="Radar"><field name="chart_radar" widget="board_dashboard_radar"/></group>
-                    <group string="Card"><field name="chart_card" widget="board_dashboard_card" options="{'column': 3}"/></group>
-                </sheet>
+                <field name="chart_bar" widget="board_dashboard_bar" options="{'direction': 'vertical'}"/>
             </form>
         </field>
+    </record>
+    <record id="board_demo_view_line" model="ir.ui.view">
+        <field name="name">board.demo.line.form</field>
+        <field name="model">board.demo</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="chart_line" widget="board_dashboard_line"/>
+            </form>
+        </field>
+    </record>
+    <record id="board_demo_view_pie" model="ir.ui.view">
+        <field name="name">board.demo.pie.form</field>
+        <field name="model">board.demo</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="chart_pie" widget="board_dashboard_pie"/>
+            </form>
+        </field>
+    </record>
+    <record id="board_demo_view_gauge" model="ir.ui.view">
+        <field name="name">board.demo.gauge.form</field>
+        <field name="model">board.demo</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="chart_gauge" widget="board_dashboard_gauge"/>
+            </form>
+        </field>
+    </record>
+    <record id="board_demo_view_radar" model="ir.ui.view">
+        <field name="name">board.demo.radar.form</field>
+        <field name="model">board.demo</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="chart_radar" widget="board_dashboard_radar"/>
+            </form>
+        </field>
+    </record>
+    <record id="board_demo_view_card" model="ir.ui.view">
+        <field name="name">board.demo.card.form</field>
+        <field name="model">board.demo</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="chart_card" widget="board_dashboard_card" options="{'column': 3}"/>
+            </form>
+        </field>
+    </record>
+    <record id="board_demo_action_bar" model="ir.actions.act_window">
+        <field name="name">Bar</field>
+        <field name="res_model">board.demo</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="board_demo_view_bar"/>
+        <field name="res_id" ref="board_demo_record"/>
+        <field name="target">current</field>
+    </record>
+    <record id="board_demo_action_line" model="ir.actions.act_window">
+        <field name="name">Line</field>
+        <field name="res_model">board.demo</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="board_demo_view_line"/>
+        <field name="res_id" ref="board_demo_record"/>
+        <field name="target">current</field>
+    </record>
+    <record id="board_demo_action_pie" model="ir.actions.act_window">
+        <field name="name">Pie</field>
+        <field name="res_model">board.demo</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="board_demo_view_pie"/>
+        <field name="res_id" ref="board_demo_record"/>
+        <field name="target">current</field>
+    </record>
+    <record id="board_demo_action_gauge" model="ir.actions.act_window">
+        <field name="name">Gauge</field>
+        <field name="res_model">board.demo</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="board_demo_view_gauge"/>
+        <field name="res_id" ref="board_demo_record"/>
+        <field name="target">current</field>
+    </record>
+    <record id="board_demo_action_radar" model="ir.actions.act_window">
+        <field name="name">Radar</field>
+        <field name="res_model">board.demo</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="board_demo_view_radar"/>
+        <field name="res_id" ref="board_demo_record"/>
+        <field name="target">current</field>
+    </record>
+    <record id="board_demo_action_card" model="ir.actions.act_window">
+        <field name="name">Card</field>
+        <field name="res_model">board.demo</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="board_demo_view_card"/>
+        <field name="res_id" ref="board_demo_record"/>
+        <field name="target">current</field>
     </record>
 
     <record id="board_demo_action" model="ir.actions.act_window">

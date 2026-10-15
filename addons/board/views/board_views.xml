@@ -6,9 +6,13 @@
         <field name="model">board.board</field>
         <field name="arch" type="xml">
             <form js_class="board">
-                <board layout="2-2">
-                    <action string="Partners" name="base.action_partner_form" view_mode="list" layout="1-1"/>
-                    <action string="Companies" name="base.action_res_company_form" view_mode="list" layout="1-1"/>
+                <board layout="2-3">
+                    <action string="Bar" name="board.board_demo_action_bar" view_mode="form" layout="1-1"/>
+                    <action string="Line" name="board.board_demo_action_line" view_mode="form" layout="1-1"/>
+                    <action string="Pie" name="board.board_demo_action_pie" view_mode="form" layout="1-1"/>
+                    <action string="Gauge" name="board.board_demo_action_gauge" view_mode="form" layout="1-1"/>
+                    <action string="Radar" name="board.board_demo_action_radar" view_mode="form" layout="1-1"/>
+                    <action string="Card" name="board.board_demo_action_card" view_mode="form" layout="1-1"/>
                 </board>
             </form>
         </field>
