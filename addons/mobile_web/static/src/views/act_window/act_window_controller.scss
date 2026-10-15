@@ -188,7 +188,14 @@
     white-space: nowrap;
 }
 
-// 搜索栏右侧的筛选与排序图标
+// 搜索栏右侧的筛选、排序、清除图标: 紧挨着排列
+.m_search_actions {
+    display: flex;
+    align-items: center;
+    flex: 0 0 auto;
+    gap: 2px;
+}
+
 .m_search_icon_btn {
     display: flex;
     align-items: center;
@@ -207,4 +214,11 @@
     &.is_active {
         color: $theme;
     }
+}
+
+.m_search_actions .m_search_icon_btn,
+.m_search_actions .m_sort_menu_icon {
+    width: 32px;
+    height: 32px;
+    min-height: 32px;
 }

@@ -48,17 +48,23 @@ export class MobileActWindowController extends Component {
                         <input type="search" class="m_search_input" t-att-value="this.state.text" t-att-placeholder="this.texts.search"
                                enterkeyhint="search" t-on-input="this.onSearchInput" t-on-keydown="this.onSearchKeydown"/>
                     </div>
-                    <button t-if="this.state.facets.length" type="button" class="m_search_clear" t-on-click="this.onClearFacets">
-                        <t t-esc="this.texts.clear"/>
-                    </button>
-                    <button t-if="this.filters.length or this.mobileFilterSections.length" type="button"
-                            t-attf-class="m_search_icon_btn {{ this.state.activeFilters.length or this.hasMobileSelection ? 'is_active' : '' }}"
-                            t-att-aria-label="this.texts.filter" t-on-click="this.openFilters">
-                        <svg viewBox="0 0 24 24" aria-hidden="true">
-                            <path d="M3 5h18l-7 8v6l-4-2v-4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-                        </svg>
-                    </button>
-                    <SortMenu t-if="this.sortFields.length" iconOnly="true" sortFields="this.sortFields" onChange="this.onSortChange"/>
+                    <div class="m_search_actions">
+                        <button t-if="this.filters.length or this.mobileFilterSections.length" type="button"
+                                t-attf-class="m_search_icon_btn {{ this.state.activeFilters.length or this.hasMobileSelection ? 'is_active' : '' }}"
+                                t-att-aria-label="this.texts.filter" t-on-click="this.openFilters">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M3 5h18l-7 8v6l-4-2v-4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                        <SortMenu t-if="this.sortFields.length" iconOnly="true" sortFields="this.sortFields" onChange="this.onSortChange"/>
+                        <button t-if="this.state.facets.length" type="button" class="m_search_icon_btn m_search_clear"
+                                t-att-aria-label="this.texts.clear" t-on-click="this.onClearFacets">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/>
+                                <path d="M9 9l6 6M15 9l-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </button>
+                    </div>
                     </div>
                     <ul t-if="this.suggestions.length" class="m_search_suggest">
                         <li t-foreach="this.suggestions" t-as="row" t-key="row.key" class="m_search_row_item">
