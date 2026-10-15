@@ -25,7 +25,6 @@ export const fieldTexts = {
     search: _t("Search"),
     removeFilter: _t("Remove filter"),
     clear: _t("Clear"),
-    clearSelection: _t("Clear selection"),
     loading: _t("Loading…"),
     noMatch: _t("No matching results"),
 };

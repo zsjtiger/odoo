@@ -50,7 +50,7 @@ export class Many2oneField extends Component {
             <t t-else="">
                 <PickerButton value="this.current ? this.displayName : false" placeholder="this.texts.select" onClick="this.openSheet"/>
                 <MobileSelectSheet t-if="this.state.open" title="this.props.field.string"
-                    search="this.search" searchPlaceholder="this.props.attrs.placeholder || ''" selected="this.currentItems" allowClear="true"
+                    search="this.search" searchPlaceholder="this.props.attrs.placeholder || ''" selected="this.currentItems"
                     onConfirm="this.onConfirm" onClose="this.close"/>
             </t>
         </t>

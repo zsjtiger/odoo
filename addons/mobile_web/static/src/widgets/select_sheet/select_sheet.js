@@ -31,9 +31,6 @@ export class MobileSelectSheet extends Component {
                                t-att-value="this.state.text" t-on-input="this.onSearchInput"/>
                     </div>
                     <ul class="m_sheet_list">
-                        <li t-if="this.props.allowClear">
-                            <button type="button" class="m_sheet_item m_sheet_item_clear" t-on-click="this.onClear"><t t-esc="this.texts.clearSelection"/></button>
-                        </li>
                         <t t-foreach="this.state.items" t-as="item" t-key="item.id">
                             <li>
                                 <button type="button" t-attf-class="m_sheet_item {{ this.isSelected(item) ? 'is_selected' : '' }}"
@@ -58,7 +55,6 @@ export class MobileSelectSheet extends Component {
         searchPlaceholder: t.string().optional(""),
         selected: t.array().optional([]),
         multiple: t.boolean().optional(false),
-        allowClear: t.boolean().optional(false),
         onConfirm: t.function(),
         onClose: t.function(),
     });
@@ -113,10 +109,6 @@ export class MobileSelectSheet extends Component {
             return;
         }
         this.props.onConfirm([item]);
-    }
-
-    onClear() {
-        this.props.onConfirm([]);
     }
 
     onConfirmMulti() {

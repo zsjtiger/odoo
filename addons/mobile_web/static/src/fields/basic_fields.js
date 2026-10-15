@@ -234,7 +234,7 @@ export class SelectionField extends Component {
             <t t-else="">
                 <PickerButton value="this.hasValue ? this.label : false" placeholder="this.texts.select" onClick="this.openSheet"/>
                 <MobileSelectSheet t-if="this.state.open" title="this.props.field.string"
-                    options="this.options" selected="this.currentIds" allowClear="true"
+                    options="this.options" selected="this.currentIds"
                     onConfirm="this.onConfirm" onClose="this.close"/>
             </t>
         </t>
