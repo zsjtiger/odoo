@@ -161,6 +161,7 @@
     gap: 12px;
     padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
     background: $surface;
+    border-top: 1px solid $line;
 }
 
 .m_form_status {
