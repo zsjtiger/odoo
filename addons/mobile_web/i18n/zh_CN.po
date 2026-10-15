@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 20.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-15 08:23+0000\n"
-"PO-Revision-Date: 2026-10-15 08:23+0000\n"
+"POT-Creation-Date: 2026-10-15 08:12+0000\n"
+"PO-Revision-Date: 2026-10-15 08:12+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -88,11 +88,6 @@ msgid "Back to log in"
 msgstr "返回登录"
 
 #. module: mobile_web
-#: model:ir.model,name:mobile_web.model_base
-msgid "Base"
-msgstr ""
-
-#. module: mobile_web
 #: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__binding_model_id
 msgid "Binding Model"
 msgstr "绑定模型"
@@ -123,6 +118,12 @@ msgstr "取消"
 #: code:addons/mobile_web/static/src/core/texts.js:0
 msgid "Change image"
 msgstr "更换图片"
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/core/texts.js:0
+msgid "Clear"
+msgstr "清除"
 
 #. module: mobile_web
 #. odoo-javascript

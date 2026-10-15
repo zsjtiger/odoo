@@ -48,6 +48,9 @@ export class MobileActWindowController extends Component {
                         <input type="search" class="m_search_input" t-att-value="this.state.text" t-att-placeholder="this.texts.search"
                                enterkeyhint="search" t-on-input="this.onSearchInput" t-on-keydown="this.onSearchKeydown"/>
                     </div>
+                    <button t-if="this.state.facets.length" type="button" class="m_search_clear" t-on-click="this.onClearFacets">
+                        <t t-esc="this.texts.clear"/>
+                    </button>
                     <button t-if="this.filters.length or this.mobileFilterSections.length" type="button"
                             t-attf-class="m_search_icon_btn {{ this.state.activeFilters.length or this.hasMobileSelection ? 'is_active' : '' }}"
                             t-att-aria-label="this.texts.filter" t-on-click="this.openFilters">
@@ -436,6 +439,14 @@ export class MobileActWindowController extends Component {
         const row = this.suggestions[Number(ev.currentTarget.dataset.row)];
         const [value, label] = row.options[Number(ev.currentTarget.dataset.option)];
         this.addFacet(facetFromRow(row, { value, display: label }));
+    }
+
+    /** 清除: 删除全部条件与输入的文字 */
+    onClearFacets() {
+        this.state.facets = [];
+        this.state.text = "";
+        this.state.expanded = null;
+        this.applyFacets();
     }
 
     onRemoveFacet(ev) {
