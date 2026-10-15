@@ -13,7 +13,8 @@ export class One2manyFormField extends X2ManyField {
     static template = xml`
         <div class="o_one2many_form">
             <div t-foreach="this.list.records" t-as="record" t-key="record.id"
-                 class="o_one2many_form_card card position-relative p-3 pe-5 mb-2">
+                 class="o_one2many_form_card card position-relative p-3 pe-5 mb-2"
+                 t-on-focusin="() => this.onCardFocus(record)">
                 <button t-if="!this.props.readonly" type="button" class="btn-close position-absolute top-0 end-0 m-2"
                         aria-label="Delete" t-on-click="() => this.onDelete(record)"/>
                 <div t-foreach="this.cardColumns" t-as="column" t-key="column.name" class="d-flex align-items-center mb-2">
@@ -25,31 +26,45 @@ export class One2manyFormField extends X2ManyField {
                 </div>
             </div>
             <button t-if="!this.props.readonly" type="button" class="btn btn-secondary o_one2many_form_add rounded-circle"
-                    aria-label="Add" t-on-click="() => this.onAdd({ editable: 'bottom' })">+</button>
+                    aria-label="Add" t-on-click="() => this.onAddCard()">+</button>
         </div>
     `;
     static components = { ...X2ManyField.components, Field };
 
     setup() {
         super.setup();
-        // 卡片始终可编辑: 明细记录切换到编辑模式(列表默认只让一行处于编辑状态)
+        // 列表同一时间只允许一条明细处于编辑状态: 没有编辑中的明细时, 让第一张卡片进入编辑
         const enableCardEditing = () => {
-            if (this.props.readonly) {
+            if (this.props.readonly || this.list.editedRecord) {
                 return;
             }
-            for (const record of this.list.records) {
-                if (!record.isInEdition) {
-                    record.switchMode("edit");
-                }
+            const first = this.list.records[0];
+            if (first) {
+                first.switchMode("edit");
             }
         };
         onWillStart(enableCardEditing);
         onWillRender(enableCardEditing);
     }
 
+    /** 点击(获得焦点)某张卡片时, 结束当前编辑的明细并让该卡片进入编辑, 与列表行的行为一致 */
+    async onCardFocus(record) {
+        if (this.props.readonly || record.isInEdition) {
+            return;
+        }
+        await this.list.leaveEditMode();
+        await record.switchMode("edit");
+    }
+
     /** 卡片中的字段: 列表视图中的字段列(隐藏的按钮与不可见字段不显示) */
     get cardColumns() {
         return (this.archInfo.columns || []).filter((column) => column.type === "field" && !column.invisible);
+    }
+
+    /** 追加一张空卡片: 先结束当前编辑的明细(保存), 再在末尾新增一条 */
+    async onAddCard() {
+        await this.list.leaveEditMode();
+        await this.list.addNewRecord({ mode: "edit", position: "bottom" });
     }
 
     onDelete(record) {

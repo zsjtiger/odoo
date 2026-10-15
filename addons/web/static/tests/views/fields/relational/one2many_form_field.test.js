@@ -42,12 +42,11 @@ const ARCH = `
     </form>
 `;
 
-/** 记录保存时 keyitem 的 write 调用参数 */
+/** 记录保存时 keyitem 的 web_save 变更值(返回 undefined 时仍由模拟服务处理保存) */
 function captureWrites() {
     const writes = [];
-    onRpc("keyitem", "write", ({ args }) => {
+    onRpc("keyitem", "web_save", ({ args }) => {
         writes.push(args[1]);
-        return true;
     });
     return writes;
 }
