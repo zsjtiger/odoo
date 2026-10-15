@@ -1,4 +1,3 @@
-/** @crossnow-module **/
 import { registry } from "@web/core/registry";
 import fieldRegistryOwl from 'web.field_registry_owl';
 import { DashBoardCommonWidget } from '../common/dashboard_widget';

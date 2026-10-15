@@ -1,4 +1,3 @@
-/** @crossnow-module **/
 import AbstractFieldOwl from 'web.AbstractFieldOwl';
 const fieldUtils = require("web.field_utils");
 const { FORMAT_OPTIONS } = require('web/static/src/js/views/graph/graph_utils');
