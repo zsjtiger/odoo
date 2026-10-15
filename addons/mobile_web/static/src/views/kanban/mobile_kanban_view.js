@@ -12,6 +12,7 @@ import { MobileRecordModel } from "@mobile_web/views/record_model";
 import { RecordCollection } from "@mobile_web/views/record_list";
 import { hasDisplayValue } from "@mobile_web/fields/field_utils";
 import { useInfiniteScroll } from "@mobile_web/views/infinite_scroll";
+import { pullLabel, usePullToRefresh } from "@mobile_web/views/pull_to_refresh";
 import { readonlyFieldRecord } from "@mobile_web/fields/field_record";
 import { _t } from "@web/core/data/l10n/translation";
 import { notify } from "@mobile_web/core/notification";
@@ -57,7 +58,6 @@ function collectCardFields(nodes) {
 const TEXTS = {
     moreActions: _t("More actions"),
     actionFailed: _t("Action failed"),
-    refresh: _t("Refresh"),
     loadFailed: _t("Failed to load, please try again"),
     noRecords: _t("No records"),
     loading: _t("Loading…"),
@@ -68,10 +68,10 @@ export class MobileKanbanView extends Component {
     static components = { ActionSheet, SortFilterBar, SortMenu };
     static template = xml`
         <t t-name="mobile_web.MobileKanbanView">
-            <div class="m_kanban_view">
-                <div class="m_list_meta">
-                    <SortMenu t-if="this.sortFields.length" sortFields="this.sortFields" onChange="this.onSort"/>
-                    <button type="button" class="m_link_button" t-on-click="this.onRefresh"><t t-esc="this.texts.refresh"/></button>
+            <div class="m_kanban_view" t-ref="this.pull.container">
+                <div t-if="this.pull.state.distance > 0 or this.pull.state.refreshing" class="m_pull_indicator" t-att-style="'height: ' + this.pull.state.distance + 'px'"><t t-esc="this.pullText"/></div>
+                <div t-if="this.sortFields.length" class="m_list_meta">
+                    <SortMenu sortFields="this.sortFields" onChange="this.onSort"/>
                 </div>
                 <SortFilterBar t-if="this.filterFields.length" filterFields="this.filterFields" onChange="this.onFilter"/>
                 <ul class="m_kanban">
@@ -131,6 +131,7 @@ export class MobileKanbanView extends Component {
         );
         onWillStart(() => this.reloadCollection());
         this.infinite = useInfiniteScroll(this.collection);
+        this.pull = usePullToRefresh(() => this.reloadCollection());
         onWillUpdateProps((nextProps) => {
             if (JSON.stringify(this.combinedDomain(nextProps)) !== JSON.stringify(this.collection.domain)) {
                 return this.reloadCollection(nextProps).then(() => this.infinite.recheck());
@@ -231,8 +232,9 @@ export class MobileKanbanView extends Component {
         this.props.onSelect(Number(ev.currentTarget.dataset.id));
     }
 
-    onRefresh() {
-        return this.reloadCollection();
+    /** 下拉刷新时的提示文字 */
+    get pullText() {
+        return pullLabel(this.pull.state);
     }
 }
 

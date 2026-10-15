@@ -4,11 +4,24 @@
 // 列表 / 看板
 // -----------------------------------------------------------------------------
 
+// 工具条: 只包含排序菜单, 居中显示
 .m_list_meta {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     padding: 4px 16px;
+    font-size: 13px;
+    color: $muted;
+}
+
+// 下拉刷新指示器: 高度跟随下拉距离, 松手后保持在刷新中的高度
+.m_pull_indicator {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    overflow: hidden;
+    padding-bottom: 8px;
+    box-sizing: border-box;
     font-size: 13px;
     color: $muted;
 }
