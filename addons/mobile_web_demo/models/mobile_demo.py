@@ -45,6 +45,9 @@ class MobileDemoItem(models.Model):
         string="Status", default='draft', required=True)
     priority = fields.Selection([('0', "Normal"), ('1', "Important"), ('2', "Urgent")], string="Priority", default='0')
     visit_type = fields.Selection([('normal', "Normal"), ('urgent', "Urgent")], string="Visit type", default='normal')
+    category = fields.Selection(
+        [('a', "Category A"), ('b', "Category B"), ('c', "Category C"), ('d', "Category D")],
+        string="Category")
     color = fields.Char(string="Color", default="#0f9b8e")
     is_urgent = fields.Boolean(string="Urgent")
     urgent_reason = fields.Char(string="Urgent reason")

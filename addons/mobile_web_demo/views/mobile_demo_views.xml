@@ -91,6 +91,7 @@
                         <field name="active"/>
                         <field name="priority" widget="priority"/>
                         <field name="visit_type" widget="radio"/>
+                        <field name="category"/>
                         <field name="color" widget="color"/>
                         <field name="is_urgent"/>
                         <field name="urgent_reason" invisible="not is_urgent"/>
