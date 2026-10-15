@@ -2,6 +2,7 @@ import { Component, onWillStart, onWillUpdateProps, proxy, t, useProps, xml } fr
 import { useService } from "@web/core/utils/hooks";
 import { ActionSheet } from "@mobile_web/widgets/action_sheet/action_sheet";
 import { SortFilterBar } from "@mobile_web/widgets/sort_filter/sort_filter";
+import { SortMenu } from "@mobile_web/widgets/sort_menu/sort_menu";
 import { buildFilterDomain, filterableFields, sortableFields } from "@mobile_web/views/record_filters";
 import { buttonItems, collectButtons, runRecordButton } from "@mobile_web/actions/record_buttons";
 import { mobileViewRegistry } from "@mobile_web/views/registries";
@@ -64,14 +65,15 @@ const TEXTS = {
 
 export class MobileKanbanView extends Component {
     texts = TEXTS;
-    static components = { ActionSheet, SortFilterBar };
+    static components = { ActionSheet, SortFilterBar, SortMenu };
     static template = xml`
         <t t-name="mobile_web.MobileKanbanView">
             <div class="m_kanban_view">
                 <div class="m_list_meta">
+                    <SortMenu t-if="this.sortFields.length" sortFields="this.sortFields" onChange="this.onSort"/>
                     <button type="button" class="m_link_button" t-on-click="this.onRefresh"><t t-esc="this.texts.refresh"/></button>
                 </div>
-                <SortFilterBar t-if="this.sortFields.length or this.filterFields.length" sortFields="this.sortFields" filterFields="this.filterFields" onChange="this.onSortFilter"/>
+                <SortFilterBar t-if="this.filterFields.length" filterFields="this.filterFields" onChange="this.onFilter"/>
                 <ul class="m_kanban">
                     <li t-foreach="this.collection.state.records" t-as="record" t-key="record.resId"
                         t-attf-class="{{ this.rowButtons.length ? 'has_more' : '' }}">
@@ -213,11 +215,16 @@ export class MobileKanbanView extends Component {
         return this.collection.reload(this.combinedDomain(props), this.collection.order);
     }
 
-    /** 排序与筛选栏的变化: 更新条件并重新加载第一页 */
+    /** 排序菜单的变化: 按新的排序重新加载第一页 */
     // 作为子组件的回调传递, 使用箭头函数保持 this
-    onSortFilter = ({ order, filter }) => {
-        this.filterDomain = buildFilterDomain(filter);
+    onSort = ({ order }) => {
         return this.collection.reload(this.combinedDomain(), order);
+    };
+
+    /** 筛选栏的变化: 更新条件并保留当前排序, 重新加载第一页 */
+    onFilter = ({ filter }) => {
+        this.filterDomain = buildFilterDomain(filter);
+        return this.collection.reload(this.combinedDomain(), this.collection.order);
     };
 
     onCardClick(ev) {

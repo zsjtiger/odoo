@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 20.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-14 03:22+0000\n"
-"PO-Revision-Date: 2026-10-14 03:22+0000\n"
+"POT-Creation-Date: 2026-10-15 03:01+0000\n"
+"PO-Revision-Date: 2026-10-15 03:01+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -78,7 +78,7 @@ msgstr "全部"
 
 #. module: mobile_web
 #. odoo-javascript
-#: code:addons/mobile_web/static/src/widgets/sort_filter/sort_filter.js:0
+#: code:addons/mobile_web/static/src/widgets/sort_menu/sort_menu.js:0
 msgid "Ascending"
 msgstr "升序"
 
@@ -178,13 +178,19 @@ msgstr "数据 3"
 
 #. module: mobile_web
 #. odoo-javascript
+#: code:addons/mobile_web/static/src/widgets/sort_menu/sort_menu.js:0
+msgid "Default order"
+msgstr "默认排序"
+
+#. module: mobile_web
+#. odoo-javascript
 #: code:addons/mobile_web/static/src/core/texts.js:0
 msgid "Delete"
 msgstr "删除"
 
 #. module: mobile_web
 #. odoo-javascript
-#: code:addons/mobile_web/static/src/widgets/sort_filter/sort_filter.js:0
+#: code:addons/mobile_web/static/src/widgets/sort_menu/sort_menu.js:0
 msgid "Descending"
 msgstr "降序"
 
@@ -621,8 +627,8 @@ msgstr "设置后, 该操作会出现在对应模型的侧边栏中。"
 
 #. module: mobile_web
 #. odoo-javascript
-#: code:addons/mobile_web/static/src/widgets/sort_filter/sort_filter.js:0
-msgid "Sort by"
+#: code:addons/mobile_web/static/src/widgets/sort_menu/sort_menu.js:0
+msgid "Sort"
 msgstr "排序"
 
 #. module: mobile_web

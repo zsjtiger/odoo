@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { queryAll, queryOne, click } from "@odoo/hoot-dom";
+import { click, queryAll, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { mountWithCleanup } from "@web/../tests/_framework/component_test_helpers";
 import { defineModels, fields, models } from "@web/../tests/web_test_helpers";
@@ -48,25 +48,40 @@ function select(el, value) {
     el.dispatchEvent(new Event("change"));
 }
 
-test("the list shows the sort bar when its fields can be sorted or filtered", async () => {
+/** 在工具条的排序菜单中选择一个字段 */
+async function pickSort(name) {
+    await click(".m_sort_menu_toggle");
+    await settle();
+    await click(`.m_sort_menu_item[data-name="${name}"]`);
+    await settle();
+}
+
+/** 在排序菜单中选择升序或降序 (需要已选择排序字段) */
+async function pickDirection(dir) {
+    await click(".m_sort_menu_toggle");
+    await settle();
+    await click(`.m_sort_menu_item[data-dir="${dir}"]`);
+    await settle();
+}
+
+test("the toolbar shows the sort menu and the filter bar shows only the filter", async () => {
     await mountWithCleanup(MobileListView, {
         props: { resModel: "res.partner", arch: LIST_ARCH, fields: FIELDS, domain: [], context: {}, onSelect: () => {} },
     });
     await settle();
-    expect(queryAll(".m_sort_filter select").length).toBe(2);
+    expect(queryAll(".m_list_meta .m_sort_menu_toggle").length).toBe(1);
+    expect(queryAll(".m_sort_filter select").length).toBe(1);
+    expect(queryAll(".m_sort_filter_dir").length).toBe(0);
 });
 
-test("sorting the list by name reorders the rows, and the direction button reverses them", async () => {
+test("sorting the list by name reorders the rows, and the direction radio reverses them", async () => {
     await mountWithCleanup(MobileListView, {
         props: { resModel: "res.partner", arch: LIST_ARCH, fields: FIELDS, domain: [], context: {}, onSelect: () => {} },
     });
     await settle();
-    select(queryAll(".m_sort_filter select")[0], "name");
-    await settle();
-    await settle();
+    await pickSort("name");
     expect(rowNames()).toEqual(["Alpha", "Beta", "Gamma"]);
-    await click(".m_sort_filter_dir");
-    await settle();
+    await pickDirection("desc");
     expect(rowNames()).toEqual(["Gamma", "Beta", "Alpha"]);
 });
 
@@ -75,7 +90,7 @@ test("filtering the list by name keeps only the matching rows", async () => {
         props: { resModel: "res.partner", arch: LIST_ARCH, fields: FIELDS, domain: [], context: {}, onSelect: () => {} },
     });
     await settle();
-    select(queryAll(".m_sort_filter select")[1], "name");
+    select(queryOne(".m_sort_filter select"), "name");
     await settle();
     const input = queryOne(".m_sort_filter_input");
     input.value = "amm";
@@ -85,32 +100,29 @@ test("filtering the list by name keeps only the matching rows", async () => {
     expect(rowNames()).toEqual(["Gamma"]);
 });
 
-test("the sort and the filter work together", async () => {
+test("the sort and the filter work together and the sort survives a filter change", async () => {
     await mountWithCleanup(MobileListView, {
         props: { resModel: "res.partner", arch: LIST_ARCH, fields: FIELDS, domain: [], context: {}, onSelect: () => {} },
     });
     await settle();
-    select(queryAll(".m_sort_filter select")[1], "name");
+    await pickSort("name");
+    await pickDirection("desc");
+    select(queryOne(".m_sort_filter select"), "name");
     await settle();
     const input = queryOne(".m_sort_filter_input");
     input.value = "a";
     input.dispatchEvent(new Event("change"));
     await settle();
-    select(queryAll(".m_sort_filter select")[0], "name");
-    await settle();
-    await click(".m_sort_filter_dir");
     await settle();
     expect(rowNames()).toEqual(["Gamma", "Beta", "Alpha"]);
 });
 
-test("the kanban sorts its cards with the same bar", async () => {
+test("the kanban sorts its cards with the same menu", async () => {
     await mountWithCleanup(MobileKanbanView, {
         props: { resModel: "res.partner", arch: KANBAN_ARCH, fields: FIELDS, domain: [], context: {}, onSelect: () => {} },
     });
     await settle();
-    select(queryAll(".m_sort_filter select")[0], "name");
-    await settle();
-    await click(".m_sort_filter_dir");
-    await settle();
+    await pickSort("name");
+    await pickDirection("desc");
     expect(cardNames()).toEqual(["Gamma", "Beta", "Alpha"]);
 });

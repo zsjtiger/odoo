@@ -1,21 +1,17 @@
 import { Component, proxy, t, useProps, xml } from "@odoo/owl";
 import { _t } from "@web/core/data/l10n/translation";
 import { fieldTexts } from "@mobile_web/core/texts";
-import { orderString } from "@mobile_web/views/record_filters";
 
 // 界面文字, 由 _t 包装并通过 i18n/*.po 翻译
 const TEXTS = {
-    sortBy: _t("Sort by"),
     filterBy: _t("Filter by"),
-    ascending: _t("Ascending"),
-    descending: _t("Descending"),
     value: _t("Value"),
     all: _t("All"),
 };
 
 /**
- * 排序与筛选栏: 选择一个排序字段(可升序/降序)与一个筛选字段及其值.
- * 每次变化都通过 onChange 回传 { order, filter }, 由列表或看板决定如何查询.
+ * 筛选栏: 选择一个筛选字段及其值 (排序由工具条中的排序菜单负责).
+ * 每次变化都通过 onChange 回传 { filter }, 由列表或看板决定如何查询.
  */
 export class SortFilterBar extends Component {
     texts = TEXTS;
@@ -23,16 +19,6 @@ export class SortFilterBar extends Component {
     static template = xml`
         <t t-name="mobile_web.SortFilterBar">
             <div class="m_sort_filter">
-                <select class="m_sort_filter_select" t-att-aria-label="this.texts.sortBy" t-on-change="this.onSortName">
-                    <option value=""><t t-esc="this.texts.sortBy"/></option>
-                    <option t-foreach="this.props.sortFields" t-as="sort" t-key="sort.name" t-att-value="sort.name"
-                            t-att-selected="sort.name === this.state.sortName"><t t-esc="sort.label"/></option>
-                </select>
-                <button t-if="this.state.sortName" type="button" class="m_sort_filter_dir"
-                        t-att-aria-label="this.state.sortDir === 'asc' ? this.texts.ascending : this.texts.descending"
-                        t-on-click="this.toggleSortDir">
-                    <t t-esc="this.state.sortDir === 'asc' ? '↑' : '↓'"/>
-                </button>
                 <select class="m_sort_filter_select" t-att-aria-label="this.texts.filterBy" t-on-change="this.onFilterName">
                     <option value=""><t t-esc="this.texts.filterBy"/></option>
                     <option t-foreach="this.props.filterFields" t-as="filter" t-key="filter.name" t-att-value="filter.name"
@@ -52,11 +38,10 @@ export class SortFilterBar extends Component {
         </t>
     `;
     props = useProps({
-        sortFields: t.array(),
         filterFields: t.array(),
         onChange: t.function(),
     });
-    state = proxy({ sortName: "", sortDir: /** @type {"asc" | "desc"} */ ("asc"), filterName: "", filterValue: "" });
+    state = proxy({ filterName: "", filterValue: "" });
 
     get filterField() {
         return this.props.filterFields.find((f) => f.name === this.state.filterName) || null;
@@ -82,19 +67,8 @@ export class SortFilterBar extends Component {
 
     emit() {
         const field = this.filterField;
-        const sort = this.state.sortName ? { name: this.state.sortName, dir: this.state.sortDir } : null;
         const filter = field ? { name: field.name, type: field.type, value: this.state.filterValue } : null;
-        this.props.onChange({ order: orderString(sort), filter });
-    }
-
-    onSortName(ev) {
-        this.state.sortName = ev.target.value;
-        this.emit();
-    }
-
-    toggleSortDir() {
-        this.state.sortDir = this.state.sortDir === "asc" ? "desc" : "asc";
-        this.emit();
+        this.props.onChange({ filter });
     }
 
     onFilterName(ev) {

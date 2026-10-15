@@ -1,0 +1,63 @@
+// 排序菜单: 工具条中的按钮与下拉单选列表, 触控目标不小于 44px
+.m_sort_menu {
+    position: relative;
+}
+
+.m_sort_menu_toggle {
+    min-height: 44px;
+    padding: 0 8px;
+    border: none;
+    background: none;
+    color: $muted;
+    font-size: 14px;
+
+    &.is_active {
+        color: $theme;
+    }
+}
+
+.m_sort_menu_backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+}
+
+.m_sort_menu_panel {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 21;
+    min-width: 180px;
+    margin: 4px 0 0;
+    padding: 6px 0;
+    list-style: none;
+    border-radius: 8px;
+    background: $surface;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.14);
+}
+
+.m_sort_menu_item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 44px;
+    padding: 0 16px;
+    border: none;
+    background: none;
+    color: $text;
+    font-size: 16px;
+    text-align: left;
+}
+
+.m_sort_menu_check {
+    width: 18px;
+    color: $theme;
+    font-weight: 600;
+}
+
+.m_sort_menu_divider {
+    height: 1px;
+    margin: 6px 0;
+    background: $line;
+}
