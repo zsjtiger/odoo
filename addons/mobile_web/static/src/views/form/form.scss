@@ -252,6 +252,9 @@
         min-height: 0;
         padding: 10px 16px;
         border-top: 1px solid $line;
+        &:first-child {
+            border-top: none;
+        }
     }
 
     .m_form_label {
