@@ -24,7 +24,6 @@ export const fieldTexts = {
     confirm: _t("Confirm"),
     search: _t("Search"),
     removeFilter: _t("Remove filter"),
-    clear: _t("Clear"),
     filter: _t("Filter"),
     loading: _t("Loading…"),
     noMatch: _t("No matching results"),
