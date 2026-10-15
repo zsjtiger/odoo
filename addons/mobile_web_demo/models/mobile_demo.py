@@ -99,8 +99,8 @@ class MobileDemoItem(models.Model):
         }
 
     @api.model
-    def mobile_filter_config(self):
-        """ Custom filter panel of the mobile client (see mobile_web mobile_filter_config). """
+    def dynamic_filter_config(self):
+        """ Custom filter panel of the mobile client (see mobile_web dynamic_filter_config). """
         return [
             {
                 'name': 'subordinates',

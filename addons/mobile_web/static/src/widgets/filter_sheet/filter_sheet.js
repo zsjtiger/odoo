@@ -2,7 +2,7 @@ import { Component, proxy, t, useProps, xml } from "@odoo/owl";
 import { fieldTexts } from "@mobile_web/core/texts";
 
 /**
- * 自定义筛选面板: 按模型的 mobile_filter_config 展示分组, 每组可以有选项 (按钮或单选) 与卡片 (多对一记录).
+ * 自定义筛选面板: 按模型的 dynamic_filter_config 展示分组, 每组可以有选项 (按钮或单选) 与卡片 (多对一记录).
  *
  * props.sections: [{ name, label, options: [{key, label, radio}], cards: null | {field, records: [{id, name, sub}]} }]
  * props.selected: { options: string[], cards: Object<string, number[]> }

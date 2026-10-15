@@ -7,7 +7,7 @@ class Base(models.AbstractModel):
     _inherit = 'base'
 
     @api.model
-    def mobile_filter_config(self):
+    def dynamic_filter_config(self):
         """ Custom filter panel of the mobile client.
 
         Return a list of sections; each section is a dict with:

@@ -316,10 +316,10 @@ export class MobileActWindowController extends Component {
         return this.filterOptions.filter((option) => this.state.activeFilters.includes(option.id));
     }
 
-    /** 模型自定义的筛选面板配置 (mobile_filter_config); 没有配置时使用搜索视图的筛选项 */
+    /** 模型自定义的筛选面板配置 (dynamic_filter_config); 没有配置时使用搜索视图的筛选项 */
     async loadMobileFilterConfig(resModel) {
         try {
-            return (await this.orm.call(resModel, "mobile_filter_config", [])) || [];
+            return (await this.orm.call(resModel, "dynamic_filter_config", [])) || [];
         } catch {
             return [];
         }
