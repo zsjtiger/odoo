@@ -5,7 +5,7 @@
 /** 可排序的字段类型 (二进制、一对多、文本等不能排序) */
 const SORTABLE_TYPES = ["char", "integer", "float", "monetary", "date", "datetime", "boolean", "selection", "many2one"];
 
-/** 可筛选的字段类型, 与 buildFilterDomain 中的规则对应 */
+/** 可搜索 (顶部搜索的建议) 的字段类型, 与 search_facets 中的操作符规则对应 */
 const FILTERABLE_TYPES = ["char", "integer", "float", "monetary", "boolean", "selection", "many2one"];
 
 /**
@@ -65,35 +65,6 @@ export function sortableFields(columns) {
  */
 export function filterableFields(columns) {
     return pick(markedColumns(columns, "filterable"), FILTERABLE_TYPES);
-}
-
-/**
- * 筛选条件 -> 服务端 domain 的一个条件. 没有值时不加条件.
- *  - 文本与 many2one: 包含 (ilike, many2one 按名称匹配)
- *  - 选择、布尔、数值: 等于
- *
- * @param {{ name: string, type: string, value: string } | null} filter
- * @returns {any[]} domain 的条件列表(0 或 1 个)
- */
-export function buildFilterDomain(filter) {
-    if (!filter || filter.value === "" || filter.value === undefined || filter.value === null) {
-        return [];
-    }
-    const { name, type, value } = filter;
-    switch (type) {
-        case "char":
-        case "many2one":
-            return [[name, "ilike", value]];
-        case "boolean":
-            return [[name, "=", value === "true"]];
-        case "integer":
-            return [[name, "=", parseInt(value, 10)]];
-        case "float":
-        case "monetary":
-            return [[name, "=", parseFloat(value)]];
-        default:
-            return [[name, "=", value]];
-    }
 }
 
 /**

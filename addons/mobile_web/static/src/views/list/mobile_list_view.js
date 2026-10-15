@@ -9,9 +9,8 @@ import { hasDisplayValue } from "@mobile_web/fields/field_utils";
 import { useInfiniteScroll } from "@mobile_web/views/infinite_scroll";
 import { pullLabel, usePullToRefresh } from "@mobile_web/views/pull_to_refresh";
 import { ActionSheet } from "@mobile_web/widgets/action_sheet/action_sheet";
-import { FilterMenu } from "@mobile_web/widgets/filter_menu/filter_menu";
 import { SortMenu } from "@mobile_web/widgets/sort_menu/sort_menu";
-import { buildFilterDomain, filterableFields, sortableFields } from "@mobile_web/views/record_filters";
+import { sortableFields } from "@mobile_web/views/record_filters";
 import { buttonItems, collectButtons, runRecordButton } from "@mobile_web/actions/record_buttons";
 import { readonlyFieldRecord } from "@mobile_web/fields/field_record";
 import { _t } from "@web/core/data/l10n/translation";
@@ -38,14 +37,13 @@ const TEXTS = {
 
 export class MobileListView extends Component {
     texts = TEXTS;
-    static components = { ActionSheet, FilterMenu, SortMenu, SwipeRow, ConfirmSheet };
+    static components = { ActionSheet, SortMenu, SwipeRow, ConfirmSheet };
     static template = xml`
         <t t-name="mobile_web.MobileListView">
             <div class="m_list_view" t-ref="this.pull.container">
                 <div t-if="this.pull.state.distance > 0 or this.pull.state.refreshing" class="m_pull_indicator" t-att-style="'height: ' + this.pull.state.distance + 'px'"><t t-esc="this.pullText"/></div>
-                <div t-if="this.sortFields.length or this.filterFields.length" class="m_list_meta">
-                    <SortMenu t-if="this.sortFields.length" sortFields="this.sortFields" onChange="this.onSort"/>
-                    <FilterMenu t-if="this.filterFields.length" filterFields="this.filterFields" onChange="this.onFilter"/>
+                <div t-if="this.sortFields.length" class="m_list_meta">
+                    <SortMenu sortFields="this.sortFields" onChange="this.onSort"/>
                 </div>
                 <ul class="m_list">
                     <li t-foreach="this.collection.state.records" t-as="record" t-key="record.resId"
@@ -98,8 +96,6 @@ export class MobileListView extends Component {
         this.secondary = secondary;
         const sortInfo = columns.map((c) => this.column(c));
         this.sortFields = sortableFields(sortInfo);
-        this.filterFields = filterableFields(sortInfo);
-        this.filterDomain = [];
         const fieldNames = [...collectFieldNames(node)];
         this.collection = new RecordCollection(this.makeModel(), fieldNames);
         // 删除权限在首次渲染前确定, 没有权限时删除按钮不可用
@@ -197,7 +193,7 @@ export class MobileListView extends Component {
 
     /** 视图的 domain 与排序/筛选条件合并后查询 */
     combinedDomain(props = this.props) {
-        return [...(props.domain || []), ...this.filterDomain];
+        return props.domain || [];
     }
 
     reloadCollection(props = this.props) {
@@ -208,13 +204,6 @@ export class MobileListView extends Component {
     // 作为子组件的回调传递, 使用箭头函数保持 this
     onSort = ({ order }) => {
         return this.collection.reload(this.combinedDomain(), order);
-    };
-
-    /** 筛选菜单确定后: 已确定的条件合并为 domain, 保留当前排序, 重新加载第一页 */
-    // 作为子组件的回调传递, 使用箭头函数保持 this
-    onFilter = ({ filters }) => {
-        this.filterDomain = filters.flatMap((filter) => buildFilterDomain(filter));
-        return this.collection.reload(this.combinedDomain(), this.collection.order);
     };
 
     /** 左滑删除: 确认后调用服务端删除, 再重新加载第一页 */

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 20.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-15 04:23+0000\n"
-"PO-Revision-Date: 2026-10-15 04:23+0000\n"
+"POT-Creation-Date: 2026-10-15 04:30+0000\n"
+"PO-Revision-Date: 2026-10-15 04:30+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -72,18 +72,6 @@ msgstr "操作"
 
 #. module: mobile_web
 #. odoo-javascript
-#: code:addons/mobile_web/static/src/widgets/filter_menu/filter_menu.js:0
-msgid "Add"
-msgstr "添加"
-
-#. module: mobile_web
-#. odoo-javascript
-#: code:addons/mobile_web/static/src/widgets/filter_menu/filter_menu.js:0
-msgid "All"
-msgstr "全部"
-
-#. module: mobile_web
-#. odoo-javascript
 #: code:addons/mobile_web/static/src/widgets/sort_menu/sort_menu.js:0
 msgid "Ascending"
 msgstr "升序"
@@ -127,13 +115,7 @@ msgstr "更换图片"
 
 #. module: mobile_web
 #. odoo-javascript
-#: code:addons/mobile_web/static/src/widgets/filter_menu/filter_menu.js:0
-msgid "Choose a filter"
-msgstr "选择筛选项"
-
-#. module: mobile_web
-#. odoo-javascript
-#: code:addons/mobile_web/static/src/widgets/filter_menu/filter_menu.js:0
+#: code:addons/mobile_web/static/src/core/texts.js:0
 msgid "Clear"
 msgstr "清除"
 
@@ -290,12 +272,6 @@ msgstr "外部 ID"
 #: code:addons/mobile_web/static/src/views/list/mobile_list_view.js:0
 msgid "Failed to load, please try again"
 msgstr "加载失败, 请重试"
-
-#. module: mobile_web
-#. odoo-javascript
-#: code:addons/mobile_web/static/src/widgets/filter_menu/filter_menu.js:0
-msgid "Filter"
-msgstr "筛选"
 
 #. module: mobile_web
 #: model_terms:ir.ui.view,arch_db:mobile_web.login
@@ -459,12 +435,6 @@ msgstr "今天没有日程"
 
 #. module: mobile_web
 #. odoo-javascript
-#: code:addons/mobile_web/static/src/widgets/filter_menu/filter_menu.js:0
-msgid "No filters yet"
-msgstr "还没有筛选条件"
-
-#. module: mobile_web
-#. odoo-javascript
 #: code:addons/mobile_web/static/src/core/texts.js:0
 msgid "No matching results"
 msgstr "没有匹配的结果"
@@ -591,7 +561,6 @@ msgstr "记住密码"
 #. module: mobile_web
 #. odoo-javascript
 #: code:addons/mobile_web/static/src/core/texts.js:0
-#: code:addons/mobile_web/static/src/widgets/filter_menu/filter_menu.js:0
 msgid "Remove filter"
 msgstr "移除筛选条件"
 
@@ -753,12 +722,6 @@ msgstr "已使用"
 #: model:ir.model.fields,field_description:mobile_web.field_mobile_web_password_reset__user_id
 msgid "User"
 msgstr "用户"
-
-#. module: mobile_web
-#. odoo-javascript
-#: code:addons/mobile_web/static/src/widgets/filter_menu/filter_menu.js:0
-msgid "Value"
-msgstr "值"
 
 #. module: mobile_web
 #: model:ir.model.fields,help:mobile_web.field_ir_actions_mobile_page__explanation

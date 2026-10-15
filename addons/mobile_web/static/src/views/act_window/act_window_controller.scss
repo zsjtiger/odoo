@@ -161,3 +161,25 @@
     font-size: 15px;
     text-align: left;
 }
+
+// 搜索栏右侧的清除按钮: 只在有条件时显示
+.m_search_top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .m_search_box {
+        flex: 1;
+        min-width: 0;
+    }
+}
+
+.m_search_clear {
+    min-height: 44px;
+    padding: 0 4px;
+    border: none;
+    background: none;
+    color: $theme;
+    font-size: 15px;
+    white-space: nowrap;
+}

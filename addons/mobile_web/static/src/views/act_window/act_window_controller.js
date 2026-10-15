@@ -33,6 +33,7 @@ export class MobileActWindowController extends Component {
         <t t-name="mobile_web.MobileActWindowController">
             <div class="m_act_window_controller">
                 <div class="m_search_bar" t-if="this.state.type !== 'form' and this.hasSearch">
+                    <div class="m_search_top">
                     <div class="m_search_box">
                         <span t-foreach="this.state.facets" t-as="facet" t-key="facet.id" class="m_facet">
                             <span class="m_facet_text"><t t-esc="facet.label"/>: <t t-esc="facet.display"/></span>
@@ -41,6 +42,10 @@ export class MobileActWindowController extends Component {
                         </span>
                         <input type="search" class="m_search_input" t-att-value="this.state.text" t-att-placeholder="this.texts.search"
                                enterkeyhint="search" t-on-input="this.onSearchInput" t-on-keydown="this.onSearchKeydown"/>
+                    </div>
+                    <button t-if="this.state.facets.length" type="button" class="m_search_clear" t-on-click="this.onClearFacets">
+                        <t t-esc="this.texts.clear"/>
+                    </button>
                     </div>
                     <ul t-if="this.suggestions.length" class="m_search_suggest">
                         <li t-foreach="this.suggestions" t-as="row" t-key="row.key" class="m_search_row_item">
@@ -297,6 +302,14 @@ export class MobileActWindowController extends Component {
         const row = this.suggestions[Number(ev.currentTarget.dataset.row)];
         const [value, label] = row.options[Number(ev.currentTarget.dataset.option)];
         this.addFacet(facetFromRow(row, { value, display: label }));
+    }
+
+    /** 清除: 删除全部条件与输入的文字 */
+    onClearFacets() {
+        this.state.facets = [];
+        this.state.text = "";
+        this.state.expanded = null;
+        this.applyFacets();
     }
 
     onRemoveFacet(ev) {
