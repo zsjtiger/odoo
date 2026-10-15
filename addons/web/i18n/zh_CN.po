@@ -27675,6 +27675,26 @@ msgstr "选择位置…"
 msgid "The %s is missing or out of range."
 msgstr "%s 缺失或超出范围。"
 
+#. module: web
+#: model:ir.model.fields,field_description:web.field_res_config_settings__gps_amap_key
+msgid "AMap Key"
+msgstr "高德地图密钥"
+
+#. module: web
+#: model:ir.model.fields,field_description:web.field_res_config_settings__gps_amap_key
+msgid "Geocoder URL"
+msgstr "地理编码服务地址"
+
+#. module: web
+#: model:ir.model.fields,field_description:web.field_res_config_settings__gps_amap_key
+msgid "Key of the AMap JS API. Without it the GPS field shows a placeholder map."
+msgstr "高德地图 JS API 的密钥. 未配置时 GPS 字段显示占位地图."
+
+#. module: web
+#: model:ir.model.fields,field_description:web.field_res_config_settings__gps_amap_key
+msgid "Base URL of the geocoding service. Empty uses the default service."
+msgstr "地理编码服务的基础地址. 留空时使用默认服务."
+
 #~ msgid "Save current search"
 #~ msgstr "保存当前搜索"
 

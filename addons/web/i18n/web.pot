@@ -27720,3 +27720,23 @@ msgstr ""
 #: code:addons/web/static/src/core/components/emoji_picker/emoji_data.js:0
 msgid "空"
 msgstr ""
+
+#. module: web
+#: model:ir.model.fields,field_description:web.field_res_config_settings__gps_amap_key
+msgid "AMap Key"
+msgstr ""
+
+#. module: web
+#: model:ir.model.fields,field_description:web.field_res_config_settings__gps_amap_key
+msgid "Geocoder URL"
+msgstr ""
+
+#. module: web
+#: model:ir.model.fields,field_description:web.field_res_config_settings__gps_amap_key
+msgid "Key of the AMap JS API. Without it the GPS field shows a placeholder map."
+msgstr ""
+
+#. module: web
+#: model:ir.model.fields,field_description:web.field_res_config_settings__gps_amap_key
+msgid "Base URL of the geocoding service. Empty uses the default service."
+msgstr ""

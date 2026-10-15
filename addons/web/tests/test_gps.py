@@ -112,3 +112,18 @@ class TestGps(TransactionCase):
         request = urlopen.call_args.args[0]
         self.assertTrue(request.full_url.startswith('https://geo.example.com/search?'))
         self.assertIn('q=%E5%BB%BA%E5%9B%BD%E8%B7%AF', request.full_url)
+
+    def test_settings_save_the_gps_parameters(self):
+        settings = self.env['res.config.settings'].create({
+            'gps_amap_key': 'demo-key',
+            'gps_geocoder_url': 'https://geo.example.com/',
+        })
+        settings.execute()
+        params = self.env['ir.config_parameter'].sudo()
+        self.assertEqual(params.get_str('web.gps.amap_key'), 'demo-key')
+        self.assertEqual(params.get_str('web.gps.geocoder_url'), 'https://geo.example.com/')
+
+    def test_settings_read_the_gps_parameters(self):
+        self.env['ir.config_parameter'].sudo().set_str('web.gps.amap_key', 'stored-key')
+        settings = self.env['res.config.settings'].create({})
+        self.assertEqual(settings.gps_amap_key, 'stored-key')
