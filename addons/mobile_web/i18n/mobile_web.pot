@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 20.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-15 03:59+0000\n"
-"PO-Revision-Date: 2026-10-15 03:59+0000\n"
+"POT-Creation-Date: 2026-10-15 04:08+0000\n"
+"PO-Revision-Date: 2026-10-15 04:08+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -72,7 +72,13 @@ msgstr ""
 
 #. module: mobile_web
 #. odoo-javascript
-#: code:addons/mobile_web/static/src/widgets/sort_filter/sort_filter.js:0
+#: code:addons/mobile_web/static/src/widgets/filter_menu/filter_menu.js:0
+msgid "Add"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/widgets/filter_menu/filter_menu.js:0
 msgid "All"
 msgstr ""
 
@@ -117,6 +123,18 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mobile_web/static/src/core/texts.js:0
 msgid "Change image"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/widgets/filter_menu/filter_menu.js:0
+msgid "Choose a filter"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/widgets/filter_menu/filter_menu.js:0
+msgid "Clear"
 msgstr ""
 
 #. module: mobile_web
@@ -275,8 +293,8 @@ msgstr ""
 
 #. module: mobile_web
 #. odoo-javascript
-#: code:addons/mobile_web/static/src/widgets/sort_filter/sort_filter.js:0
-msgid "Filter by"
+#: code:addons/mobile_web/static/src/widgets/filter_menu/filter_menu.js:0
+msgid "Filter"
 msgstr ""
 
 #. module: mobile_web
@@ -441,6 +459,12 @@ msgstr ""
 
 #. module: mobile_web
 #. odoo-javascript
+#: code:addons/mobile_web/static/src/widgets/filter_menu/filter_menu.js:0
+msgid "No filters yet"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
 #: code:addons/mobile_web/static/src/core/texts.js:0
 msgid "No matching results"
 msgstr ""
@@ -562,6 +586,12 @@ msgstr ""
 #. module: mobile_web
 #: model_terms:ir.ui.view,arch_db:mobile_web.login
 msgid "Remember password"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/widgets/filter_menu/filter_menu.js:0
+msgid "Remove filter"
 msgstr ""
 
 #. module: mobile_web
@@ -719,7 +749,7 @@ msgstr ""
 
 #. module: mobile_web
 #. odoo-javascript
-#: code:addons/mobile_web/static/src/widgets/sort_filter/sort_filter.js:0
+#: code:addons/mobile_web/static/src/widgets/filter_menu/filter_menu.js:0
 msgid "Value"
 msgstr ""
 

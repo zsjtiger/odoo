@@ -4,14 +4,23 @@
 // 列表 / 看板
 // -----------------------------------------------------------------------------
 
-// 工具条: 只包含排序菜单, 居中显示
+// 工具条: 排序菜单居中, 筛选菜单靠右
 .m_list_meta {
-    display: flex;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
     padding: 4px 16px;
     font-size: 13px;
     color: $muted;
+}
+
+.m_list_meta > .m_sort_menu {
+    grid-column: 2;
+}
+
+.m_list_meta > .m_filter_menu {
+    grid-column: 3;
+    justify-self: end;
 }
 
 // 下拉刷新指示器: 高度跟随下拉距离, 松手后保持在刷新中的高度

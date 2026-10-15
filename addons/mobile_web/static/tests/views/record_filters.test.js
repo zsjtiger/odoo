@@ -87,3 +87,19 @@ test("a marked column of a type that cannot be sorted stays excluded", () => {
     ];
     expect(sortableFields(columns).map((f) => f.name)).toEqual([]);
 });
+
+test("with filterable marks in the arch, only the marked columns can be filtered", () => {
+    const columns = [
+        { name: "name", attrs: { name: "name", filterable: "1" }, field: { type: "char", string: "Name" } },
+        { name: "amount", attrs: { name: "amount" }, field: { type: "float", string: "Amount" } },
+    ];
+    expect(filterableFields(columns).map((f) => f.name)).toEqual(["name"]);
+});
+
+test("the sortable marks do not restrict the filterable fields", () => {
+    const columns = [
+        { name: "name", attrs: { name: "name", sortable: "1" }, field: { type: "char", string: "Name" } },
+        { name: "amount", attrs: { name: "amount" }, field: { type: "float", string: "Amount" } },
+    ];
+    expect(filterableFields(columns).map((f) => f.name)).toEqual(["name", "amount"]);
+});

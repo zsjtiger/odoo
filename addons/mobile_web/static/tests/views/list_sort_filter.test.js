@@ -43,11 +43,6 @@ function cardNames() {
     return queryAll(".m_kanban_card .m_kanban_title").map((el) => el.textContent.trim());
 }
 
-function select(el, value) {
-    el.value = value;
-    el.dispatchEvent(new Event("change"));
-}
-
 /** 在工具条的排序菜单中选择一个字段 */
 async function pickSort(name) {
     await click(".m_sort_menu_toggle");
@@ -64,14 +59,31 @@ async function pickDirection(dir) {
     await settle();
 }
 
-test("the toolbar shows the sort menu and the filter bar shows only the filter", async () => {
+/** 在筛选菜单中添加一个条件 (字段 + 值), 然后确定 */
+async function filterBy(fieldName, value) {
+    await click(".m_filter_menu_toggle");
+    await settle();
+    const fieldSelect = queryAll(".m_filter_add select")[0];
+    fieldSelect.value = fieldName;
+    fieldSelect.dispatchEvent(new Event("change"));
+    await settle();
+    const input = queryOne(".m_filter_input");
+    input.value = value;
+    input.dispatchEvent(new Event("change"));
+    await settle();
+    await click(".m_filter_add_btn");
+    await settle();
+    await click(".m_filter_confirm");
+    await settle();
+}
+
+test("the toolbar shows the sort and filter menus", async () => {
     await mountWithCleanup(MobileListView, {
         props: { resModel: "res.partner", arch: LIST_ARCH, fields: FIELDS, domain: [], context: {}, onSelect: () => {} },
     });
     await settle();
     expect(queryAll(".m_list_meta .m_sort_menu_toggle").length).toBe(1);
-    expect(queryAll(".m_sort_filter select").length).toBe(1);
-    expect(queryAll(".m_sort_filter_dir").length).toBe(0);
+    expect(queryAll(".m_list_meta .m_filter_menu_toggle").length).toBe(1);
 });
 
 test("sorting the list by name reorders the rows, and the direction radio reverses them", async () => {
@@ -85,17 +97,12 @@ test("sorting the list by name reorders the rows, and the direction radio revers
     expect(rowNames()).toEqual(["Gamma", "Beta", "Alpha"]);
 });
 
-test("filtering the list by name keeps only the matching rows", async () => {
+test("a confirmed filter keeps only the matching rows", async () => {
     await mountWithCleanup(MobileListView, {
         props: { resModel: "res.partner", arch: LIST_ARCH, fields: FIELDS, domain: [], context: {}, onSelect: () => {} },
     });
     await settle();
-    select(queryOne(".m_sort_filter select"), "name");
-    await settle();
-    const input = queryOne(".m_sort_filter_input");
-    input.value = "amm";
-    input.dispatchEvent(new Event("change"));
-    await settle();
+    await filterBy("name", "amm");
     await settle();
     expect(rowNames()).toEqual(["Gamma"]);
 });
@@ -107,14 +114,25 @@ test("the sort and the filter work together and the sort survives a filter chang
     await settle();
     await pickSort("name");
     await pickDirection("desc");
-    select(queryOne(".m_sort_filter select"), "name");
-    await settle();
-    const input = queryOne(".m_sort_filter_input");
-    input.value = "a";
-    input.dispatchEvent(new Event("change"));
-    await settle();
+    await filterBy("name", "a");
     await settle();
     expect(rowNames()).toEqual(["Gamma", "Beta", "Alpha"]);
+});
+
+test("clearing the filters shows every row again", async () => {
+    await mountWithCleanup(MobileListView, {
+        props: { resModel: "res.partner", arch: LIST_ARCH, fields: FIELDS, domain: [], context: {}, onSelect: () => {} },
+    });
+    await settle();
+    await filterBy("name", "amm");
+    await settle();
+    expect(rowNames()).toEqual(["Gamma"]);
+    await click(".m_filter_menu_toggle");
+    await settle();
+    await click(".m_filter_clear");
+    await settle();
+    await settle();
+    expect(rowNames()).toEqual(["Alpha", "Beta", "Gamma"]);
 });
 
 test("the kanban sorts its cards with the same menu", async () => {
@@ -137,4 +155,16 @@ test("the sort menu lists only the columns marked sortable in the arch", async (
     await settle();
     const items = queryAll(".m_sort_menu_panel [role=option]").map((el) => el.textContent.replace("✓", "").trim());
     expect(items).toEqual(["Default order", "Name"]);
+});
+
+test("the filter menu lists only the columns marked filterable in the arch", async () => {
+    const arch = `<list><field name="name" class="mobile_title" filterable="1"/><field name="email"/></list>`;
+    await mountWithCleanup(MobileListView, {
+        props: { resModel: "res.partner", arch, fields: FIELDS, domain: [], context: {}, onSelect: () => {} },
+    });
+    await settle();
+    await click(".m_filter_menu_toggle");
+    await settle();
+    const options = [...queryAll(".m_filter_add select")[0].querySelectorAll("option")].map((o) => o.textContent.trim());
+    expect(options).toEqual(["Choose a filter", "Name"]);
 });

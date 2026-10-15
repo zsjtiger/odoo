@@ -2,7 +2,7 @@ import { Component, onWillStart, onWillUpdateProps, proxy, t, useProps, xml } fr
 import { useService } from "@web/core/utils/hooks";
 import { ActionSheet } from "@mobile_web/widgets/action_sheet/action_sheet";
 import { ConfirmSheet, useConfirmSheet } from "@mobile_web/widgets/confirm_sheet/confirm_sheet";
-import { SortFilterBar } from "@mobile_web/widgets/sort_filter/sort_filter";
+import { FilterMenu } from "@mobile_web/widgets/filter_menu/filter_menu";
 import { SortMenu } from "@mobile_web/widgets/sort_menu/sort_menu";
 import { buildFilterDomain, filterableFields, sortableFields } from "@mobile_web/views/record_filters";
 import { buttonItems, collectButtons, runRecordButton } from "@mobile_web/actions/record_buttons";
@@ -66,15 +66,15 @@ const TEXTS = {
 
 export class MobileKanbanView extends Component {
     texts = TEXTS;
-    static components = { ActionSheet, SortFilterBar, SortMenu, ConfirmSheet };
+    static components = { ActionSheet, FilterMenu, SortMenu, ConfirmSheet };
     static template = xml`
         <t t-name="mobile_web.MobileKanbanView">
             <div class="m_kanban_view" t-ref="this.pull.container">
                 <div t-if="this.pull.state.distance > 0 or this.pull.state.refreshing" class="m_pull_indicator" t-att-style="'height: ' + this.pull.state.distance + 'px'"><t t-esc="this.pullText"/></div>
-                <div t-if="this.sortFields.length" class="m_list_meta">
-                    <SortMenu sortFields="this.sortFields" onChange="this.onSort"/>
+                <div t-if="this.sortFields.length or this.filterFields.length" class="m_list_meta">
+                    <SortMenu t-if="this.sortFields.length" sortFields="this.sortFields" onChange="this.onSort"/>
+                    <FilterMenu t-if="this.filterFields.length" filterFields="this.filterFields" onChange="this.onFilter"/>
                 </div>
-                <SortFilterBar t-if="this.filterFields.length" filterFields="this.filterFields" onChange="this.onFilter"/>
                 <ul class="m_kanban">
                     <li t-foreach="this.collection.state.records" t-as="record" t-key="record.resId"
                         t-attf-class="{{ this.rowButtons.length ? 'has_more' : '' }}">
@@ -226,9 +226,10 @@ export class MobileKanbanView extends Component {
         return this.collection.reload(this.combinedDomain(), order);
     };
 
-    /** 筛选栏的变化: 更新条件并保留当前排序, 重新加载第一页 */
-    onFilter = ({ filter }) => {
-        this.filterDomain = buildFilterDomain(filter);
+    /** 筛选菜单确定后: 已确定的条件合并为 domain, 保留当前排序, 重新加载第一页 */
+    // 作为子组件的回调传递, 使用箭头函数保持 this
+    onFilter = ({ filters }) => {
+        this.filterDomain = filters.flatMap((filter) => buildFilterDomain(filter));
         return this.collection.reload(this.combinedDomain(), this.collection.order);
     };
 
