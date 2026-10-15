@@ -94,11 +94,11 @@ test("list shows the marked field as the bold title", async () => {
     expect(queryAll(".m_list_primary")[0]).toHaveText("Alpha");
 });
 
-test("list shows the other fields as values only, without labels", async () => {
+test("list shows each other field as a label and a value, one per line", async () => {
     await mountWithCleanup(MobileListView, { props: listProps() });
-    const text = queryAll(".m_list_row")[0].textContent;
-    expect(text).toInclude("alpha@example.com");
-    expect(text).not.toInclude("Email");
+    const cell = queryAll(".m_list_row")[0].querySelector(".m_list_cell");
+    expect(cell.querySelector(".m_list_label")).toHaveText("Email");
+    expect(cell.querySelector(".m_list_value").textContent).toInclude("alpha@example.com");
 });
 
 test("list hides empty values instead of showing placeholders", async () => {

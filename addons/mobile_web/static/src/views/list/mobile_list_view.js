@@ -58,7 +58,10 @@ export class MobileListView extends Component {
                                 </div>
                                 <div class="m_list_secondary" t-if="this.secondary.length">
                                     <t t-foreach="this.secondary" t-as="column" t-key="column.name">
-                                        <span class="m_list_cell" t-if="this.hasValue(column, record)"><t t-component="this.getWidget(column)" t-props="this.cellProps(column, record)"/></span>
+                                        <div class="m_list_cell" t-if="this.hasValue(column, record)">
+                                            <span class="m_list_label"><t t-esc="this.labelOf(column)"/></span>
+                                            <span class="m_list_value"><t t-component="this.getWidget(column)" t-props="this.cellProps(column, record)"/></span>
+                                        </div>
                                     </t>
                                 </div>
                             </button>
@@ -128,6 +131,11 @@ export class MobileListView extends Component {
 
     hasValue(column, record) {
         return hasDisplayValue(record.data[column.name]);
+    }
+
+    /** 字段的显示名称, 列表行中每个值前面显示它 */
+    labelOf(column) {
+        return column.field?.string || column.name;
     }
 
     getWidget(column) {

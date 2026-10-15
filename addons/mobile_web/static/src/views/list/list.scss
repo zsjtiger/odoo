@@ -72,15 +72,32 @@
     color: $muted;
 }
 
-// 其他字段紧凑地排在一行, 字段之间用 · 分隔, 只显示值
+// 其他字段: 每行左侧是字段名, 右侧是值, 与表单的布局一致
 .m_list_cell {
-    display: block;
+    display: flex;
+    align-items: baseline;
+    min-width: 0;
+}
+
+.m_list_label {
+    flex: 0 0 88px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: $muted;
+    font-size: 13px;
+}
+
+.m_list_value {
+    flex: 1 1 auto;
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    color: $text;
+    font-size: 14px;
     .m_field_value {
-        font-size: 13px;
+        font-size: 14px;
     }
 }
 
