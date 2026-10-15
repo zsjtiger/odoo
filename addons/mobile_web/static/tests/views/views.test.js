@@ -186,6 +186,13 @@ test("an existing record opens in view mode, with the values as text", async () 
     expect(queryOne(".m_form_edit")).toBeEnabled();
 });
 
+test("view mode shows every field, empty ones included", async () => {
+    await mountWithCleanup(MobileFormView, { props: formProps({ resId: 2 }) });
+    const labels = queryAll(".m_form_field .m_form_label").map((el) => el.textContent);
+    expect(labels.length).toBe(3);
+    expect(labels.includes("Email")).toBe(true);
+});
+
 test("edit switches to edit mode with the values in the inputs", async () => {
     await mountWithCleanup(MobileFormView, { props: formProps() });
     await click(".m_form_edit");
