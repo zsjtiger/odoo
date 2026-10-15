@@ -1,7 +1,7 @@
 import { Component, proxy, t, useProps, xml } from "@odoo/owl";
 import { FormBlocks } from "@mobile_web/views/form/form_blocks";
 import { FieldRecordAdapter } from "@mobile_web/fields/field_record";
-import { hasDisplayValue } from "@mobile_web/fields/field_utils";
+import { missingRequiredNames } from "@mobile_web/views/form/modifiers";
 import { fieldTexts } from "@mobile_web/core/texts";
 
 /**
@@ -55,9 +55,7 @@ export class LineEditor extends Component {
     };
 
     onSave() {
-        const missing = Object.entries(this.props.fields)
-            .filter(([name, field]) => field.required && this.isBlockVisible(name) && !hasDisplayValue(this.state.record.data[name]))
-            .map(([name]) => name);
+        const missing = missingRequiredNames(this.props.blocks, this.state.record.data);
         if (missing.length) {
             this.state.invalid = missing;
             return;
@@ -65,7 +63,4 @@ export class LineEditor extends Component {
         this.props.onSave(this.state.changed, this.state.record.data);
     }
 
-    isBlockVisible(name) {
-        return this.props.blocks.some((block) => block.name === name);
-    }
 }

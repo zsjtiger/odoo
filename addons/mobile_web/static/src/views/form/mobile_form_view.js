@@ -4,6 +4,7 @@ import { _t } from "@web/core/data/l10n/translation";
 import { mobileViewRegistry } from "@mobile_web/views/registries";
 import { parseArch, collectFieldNames } from "@mobile_web/views/arch";
 import { MobileRecordModel, normalizeFromServer, serializeForServer } from "@mobile_web/views/record_model";
+import { missingRequiredNames } from "@mobile_web/views/form/modifiers";
 import { MobileRecord, toUIData } from "@mobile_web/views/record";
 import { buildLayout } from "@mobile_web/views/form/layout";
 import { FormBlocks } from "@mobile_web/views/form/form_blocks";
@@ -11,7 +12,6 @@ import { FieldRecordAdapter } from "@mobile_web/fields/field_record";
 import { Button } from "@mobile_web/widgets/button/button";
 import { buttonItems, collectButtons, runRecordButton } from "@mobile_web/actions/record_buttons";
 import { notify } from "@mobile_web/core/notification";
-import { hasDisplayValue } from "@mobile_web/fields/field_utils";
 
 /**
  * 移动端表单视图
@@ -239,7 +239,7 @@ export class MobileFormView extends Component {
 
     /** 视图中的必填字段没有值的名称列表 */
     missingRequired() {
-        return this.fieldNames.filter((name) => this.props.fields[name]?.required && !hasDisplayValue(this.state.record.data[name]));
+        return missingRequiredNames([...this.headerBlocks, ...this.blocks], this.state.record.data);
     }
 
     async onSave() {

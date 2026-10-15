@@ -1,5 +1,6 @@
 import { Component, proxy, t, useProps, xml } from "@odoo/owl";
 import { _t } from "@web/core/data/l10n/translation";
+import { isHiddenBlock, isReadonlyBlock, isRequiredBlock } from "@mobile_web/views/form/modifiers";
 
 const TEXTS = {
     required: _t("This field is required"),
@@ -16,8 +17,8 @@ export class FormBlocks extends Component {
                     <h3 t-if="block.title" class="m_form_separator"><t t-esc="block.title"/></h3>
                     <FormBlocks blocks="block.children" record="this.props.record" resModel="this.props.resModel" readonly="this.props.readonly" invalid="this.props.invalid" onFieldChange="this.props.onFieldChange"/>
                 </section>
-                <div t-elif="block.kind === 'field'" t-attf-class="m_form_field {{ block.stacked ? 'is_stacked' : '' }} {{ this.isInvalid(block) ? 'is_invalid' : '' }}">
-                    <label t-if="!block.hideLabel" class="m_form_label"><t t-esc="block.label"/><span t-if="block.required and !this.props.readonly" class="m_form_required">*</span></label>
+                <div t-elif="block.kind === 'field' and !this.isHidden(block)" t-attf-class="m_form_field {{ block.stacked ? 'is_stacked' : '' }} {{ this.isInvalid(block) ? 'is_invalid' : '' }}">
+                    <label t-if="!block.hideLabel" class="m_form_label"><t t-esc="block.label"/><span t-if="this.isRequired(block) and !this.isReadonly(block)" class="m_form_required">*</span></label>
                     <div class="m_form_value">
                         <t t-component="block.widget" t-props="this.fieldProps(block)"/>
                         <p t-if="this.isInvalid(block)" class="m_form_error"><t t-esc="this.texts.required"/></p>
@@ -54,7 +55,7 @@ export class FormBlocks extends Component {
             name: block.name,
             field: block.field,
             record: this.props.record,
-            readonly: this.props.readonly || block.readonly,
+            readonly: this.isReadonly(block),
             attrs: block.attrs,
             resModel: this.props.resModel,
             onChange: (value) => this.props.onFieldChange(block.name, value),
@@ -64,6 +65,23 @@ export class FormBlocks extends Component {
     /** 必填字段没有填写时, 保存前标记为无效 */
     isInvalid(block) {
         return this.props.invalid.includes(block.name);
+    }
+
+    get values() {
+        return this.props.record.data;
+    }
+
+    /** 字段是否隐藏 (invisible 表达式, 随值变化) */
+    isHidden(block) {
+        return isHiddenBlock(block, this.values);
+    }
+
+    isRequired(block) {
+        return isRequiredBlock(block, this.values);
+    }
+
+    isReadonly(block) {
+        return this.props.readonly || isReadonlyBlock(block, this.values);
     }
 
     activeTab(block) {
