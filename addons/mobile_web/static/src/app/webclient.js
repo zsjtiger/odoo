@@ -10,6 +10,7 @@ import { router } from "@mobile_web/core/browser/router";
 // webclient components
 import { MobileActionContainer } from "@mobile_web/layout/action_container/action_container";
 import { MobileNavBar } from "@mobile_web/layout/navbar/navbar";
+import { MobileToast } from "@mobile_web/layout/toast/toast";
 import { envOf } from "@mobile_web/core/env";
 
 
@@ -19,6 +20,7 @@ export class MobileWebClient extends Component {
             <div class="m_webclient">
                 <MobileNavBar/>
                 <MobileActionContainer/>
+                <MobileToast/>
 
                 <!-- TODO: 错误处理目前只是在webclient展示一个div，后续可能需要封装为弹窗？ -->
                 <t t-if="this.state.error">
@@ -30,6 +32,7 @@ export class MobileWebClient extends Component {
     static components = {
         MobileNavBar,
         MobileActionContainer,
+        MobileToast,
     };
 
     setup() {

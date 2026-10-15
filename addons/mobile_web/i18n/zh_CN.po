@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 20.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-15 03:40+0000\n"
-"PO-Revision-Date: 2026-10-15 03:40+0000\n"
+"POT-Creation-Date: 2026-10-15 03:59+0000\n"
+"PO-Revision-Date: 2026-10-15 03:59+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -127,6 +127,12 @@ msgstr "不选"
 
 #. module: mobile_web
 #. odoo-javascript
+#: code:addons/mobile_web/static/src/layout/toast/toast.js:0
+msgid "Close"
+msgstr "关闭"
+
+#. module: mobile_web
+#. odoo-javascript
 #: code:addons/mobile_web/static/src/pages/my/my_page.js:0
 msgid "Company"
 msgstr "公司"
@@ -134,6 +140,7 @@ msgstr "公司"
 #. module: mobile_web
 #. odoo-javascript
 #: code:addons/mobile_web/static/src/core/texts.js:0
+#: code:addons/mobile_web/static/src/widgets/confirm_sheet/confirm_sheet.js:0
 msgid "Confirm"
 msgstr "确定"
 
