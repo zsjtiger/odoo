@@ -152,6 +152,19 @@
     </record>
 
     <!-- ============================ key info: inline form lines ============================ -->
+    <!-- 桌面端的内嵌明细卡片使用列表视图中的字段 -->
+    <record id="mobile_demo_keyinfo_list" model="ir.ui.view">
+        <field name="name">mobile.demo.keyinfo.list</field>
+        <field name="model">mobile.demo.keyinfo</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="product"/>
+                <field name="key_info"/>
+                <field name="feedback"/>
+            </list>
+        </field>
+    </record>
+
     <record id="mobile_demo_keyinfo_form" model="ir.ui.view">
         <field name="name">mobile.demo.keyinfo.form</field>
         <field name="model">mobile.demo.keyinfo</field>
