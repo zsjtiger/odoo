@@ -1,4 +1,4 @@
-import { xml } from "@odoo/owl";
+import { onWillRender, onWillStart, xml } from "@odoo/owl";
 import { registry } from "@web/core/framework/registry";
 import { Field } from "@web/views/fields/field";
 import { X2ManyField, x2ManyField } from "@web/views/fields/relational/x2many/x2many_field";
@@ -29,6 +29,23 @@ export class One2manyFormField extends X2ManyField {
         </div>
     `;
     static components = { ...X2ManyField.components, Field };
+
+    setup() {
+        super.setup();
+        // 卡片始终可编辑: 明细记录切换到编辑模式(列表默认只让一行处于编辑状态)
+        const enableCardEditing = () => {
+            if (this.props.readonly) {
+                return;
+            }
+            for (const record of this.list.records) {
+                if (!record.isInEdition) {
+                    record.switchMode("edit");
+                }
+            }
+        };
+        onWillStart(enableCardEditing);
+        onWillRender(enableCardEditing);
+    }
 
     /** 卡片中的字段: 列表视图中的字段列(隐藏的按钮与不可见字段不显示) */
     get cardColumns() {

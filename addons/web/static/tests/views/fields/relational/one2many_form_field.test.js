@@ -1,7 +1,7 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { click, queryAll, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { clickSave, contains, defineModels, fields, models, mountView } from "@web/../tests/web_test_helpers";
+import { clickSave, contains, defineModels, fields, models, mountView, onRpc } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("headless");
 
@@ -42,6 +42,16 @@ const ARCH = `
     </form>
 `;
 
+/** 记录保存时 keyitem 的 write 调用参数 */
+function captureWrites() {
+    const writes = [];
+    onRpc("keyitem", "write", ({ args }) => {
+        writes.push(args[1]);
+        return true;
+    });
+    return writes;
+}
+
 async function mountItem(arch = ARCH) {
     await mountView({ type: "form", resModel: "keyitem", resId: 1, arch });
     await animationFrame();
@@ -67,19 +77,23 @@ test("the plus button adds an empty card", async () => {
 });
 
 test("the close button removes the line, saved as a delete", async () => {
+    const writes = captureWrites();
     await mountItem();
     await click(queryAll(".o_one2many_form_card .btn-close")[0]);
     await animationFrame();
     expect(queryAll(".o_one2many_form_card").length).toBe(1);
     await clickSave();
-    expect(KeyItem._records[0].keyinfo_ids).toEqual([2]);
+    expect(writes.length).toBe(1);
+    expect(writes[0].keyinfo_ids).toEqual([[2, 1]]);
 });
 
 test("editing a card and saving writes the value to the line", async () => {
+    const writes = captureWrites();
     await mountItem();
     await contains(".o_one2many_form_card input").edit("新产品");
     await clickSave();
-    expect(KeyInfo._records[0].product).toBe("新产品");
+    expect(writes.length).toBe(1);
+    expect(writes[0].keyinfo_ids).toEqual([[1, 1, { product: "新产品" }]]);
 });
 
 test("in readonly mode the cards are shown without add or delete buttons", async () => {
