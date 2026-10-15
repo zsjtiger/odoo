@@ -27,7 +27,7 @@ export class MobileSelectSheet extends Component {
                             <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/>
                             <line x1="16.5" y1="16.5" x2="21" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                         </svg>
-                        <input type="search" class="m_input m_sheet_search_input" t-att-placeholder="this.texts.search" enterkeyhint="search"
+                        <input type="search" class="m_input m_sheet_search_input" t-att-placeholder="this.props.searchPlaceholder or this.texts.search" enterkeyhint="search"
                                t-att-value="this.state.text" t-on-input="this.onSearchInput"/>
                     </div>
                     <ul class="m_sheet_list">
@@ -54,6 +54,8 @@ export class MobileSelectSheet extends Component {
         title: t.string().optional(""),
         options: t.array().optional([]),
         search: t.function().optional(),
+        // 搜索框的提示文字, 默认为"搜索"; 字段可以用 placeholder 属性配置
+        searchPlaceholder: t.string().optional(""),
         selected: t.array().optional([]),
         multiple: t.boolean().optional(false),
         allowClear: t.boolean().optional(false),

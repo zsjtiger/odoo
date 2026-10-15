@@ -68,6 +68,21 @@ test("many2one shows the placeholder when empty", async () => {
     expect(queryOne(".m_picker_placeholder")).toHaveText("Select…");
 });
 
+test("the search box shows the field placeholder, or Search when none is set", async () => {
+    onRpc("res.partner", "name_search", () => []);
+    await mountWithCleanup(Many2oneField, {
+        props: fieldProps({
+            name: "parent_id",
+            field: { type: "many2one", string: "Parent", relation: "res.partner" },
+            attrs: { placeholder: "Find a partner by name" },
+            record: recordOf({ parent_id: false }),
+        }),
+    });
+    await click(".m_picker_button");
+    await settle();
+    expect(queryOne(".m_sheet_search_input")).toHaveAttribute("placeholder", "Find a partner by name");
+});
+
 test("many2one picks a record from the name search and reports [id, name]", async () => {
     const values = [];
     onRpc("res.partner", "name_search", () => [
