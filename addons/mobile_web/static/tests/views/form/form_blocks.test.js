@@ -79,7 +79,7 @@ test("field values come from the record adapter", async () => {
     expect(queryOne(".m_form_field input")).toHaveValue("Alpha");
 });
 
-test("a statusbar in the header is shown without a label", async () => {
+test("a statusbar in the header is a field row labelled progress, followed by the status", async () => {
     const root = parseArch(`<form><header><field name="state" widget="statusbar"/></header></form>`);
     const header = root.children.find((child) => child.tag === "header");
     const blocks = buildLayout(header, {
@@ -97,5 +97,6 @@ test("a statusbar in the header is shown without a label", async () => {
     });
     expect(queryAll(".m_statusbar_item").length).toBe(1);
     expect(queryAll(".m_statusbar_item")[0].textContent).toBe("Done");
-    expect(queryAll(".m_form_label").length).toBe(0);
+    expect(queryAll(".m_form_label").length).toBe(1);
+    expect(queryOne(".m_form_label")).toHaveText("Progress");
 });
