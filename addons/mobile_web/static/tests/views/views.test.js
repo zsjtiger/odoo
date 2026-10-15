@@ -186,6 +186,29 @@ test("an existing record opens in view mode, with the values as text", async () 
     expect(queryOne(".m_form_edit")).toBeEnabled();
 });
 
+test("titled form groups render as bands with their fields", async () => {
+    const arch = `<form>
+        <sheet>
+            <field name="name"/>
+            <group string="基本信息">
+                <field name="email"/>
+                <field name="active"/>
+            </group>
+            <group string="其他信息">
+                <field name="parent_id"/>
+            </group>
+        </sheet>
+    </form>`;
+    await mountWithCleanup(MobileFormView, { props: formProps({ arch }) });
+    const bands = queryAll(".m_form_separator").map((el) => el.textContent);
+    expect(bands.includes("基本信息")).toBe(true);
+    expect(bands.includes("其他信息")).toBe(true);
+    const groups = queryAll(".m_form_group");
+    expect(groups.length).toBe(2);
+    expect(groups[0].querySelectorAll(".m_form_field").length).toBe(2);
+    expect(groups[1].querySelectorAll(".m_form_field").length).toBe(1);
+});
+
 test("view mode shows every field, empty ones included", async () => {
     await mountWithCleanup(MobileFormView, { props: formProps({ resId: 2 }) });
     const labels = queryAll(".m_form_field .m_form_label").map((el) => el.textContent);
