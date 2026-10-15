@@ -49,6 +49,13 @@ export class MobileActWindowController extends Component {
                                enterkeyhint="search" t-on-input="this.onSearchInput" t-on-keydown="this.onSearchKeydown"/>
                     </div>
                     <div class="m_search_actions">
+                        <button t-if="this.state.facets.length" type="button" class="m_search_icon_btn m_search_clear"
+                                t-att-aria-label="this.texts.clear" t-on-click="this.onClearFacets">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/>
+                                <path d="M9 9l6 6M15 9l-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </button>
                         <button t-if="this.filters.length or this.mobileFilterSections.length" type="button"
                                 t-attf-class="m_search_icon_btn {{ this.state.activeFilters.length or this.hasMobileSelection ? 'is_active' : '' }}"
                                 t-att-aria-label="this.texts.filter" t-on-click="this.openFilters">
@@ -57,13 +64,6 @@ export class MobileActWindowController extends Component {
                             </svg>
                         </button>
                         <SortMenu t-if="this.sortFields.length" iconOnly="true" sortFields="this.sortFields" onChange="this.onSortChange"/>
-                        <button t-if="this.state.facets.length" type="button" class="m_search_icon_btn m_search_clear"
-                                t-att-aria-label="this.texts.clear" t-on-click="this.onClearFacets">
-                            <svg viewBox="0 0 24 24" aria-hidden="true">
-                                <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/>
-                                <path d="M9 9l6 6M15 9l-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            </svg>
-                        </button>
                     </div>
                     </div>
                     <ul t-if="this.suggestions.length" class="m_search_suggest">
