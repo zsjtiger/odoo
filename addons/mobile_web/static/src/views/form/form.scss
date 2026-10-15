@@ -230,3 +230,49 @@
         line-height: 22px;
     }
 }
+
+// -----------------------------------------------------------------------------
+// 编辑模式: 与查看模式同一套布局 (白底, 无分组框, 左侧固定宽度标签, 行间细线),
+// 输入框只保留底部横线, 空值不显示占位文字, 下拉箭头为向下的箭头
+// -----------------------------------------------------------------------------
+
+.m_form_view:not(.is_readonly) {
+    background: $surface;
+
+    .m_form_group {
+        margin: 0;
+        padding: 0 0 8px;
+        background: none;
+        border: none;
+    }
+
+    .m_form_field {
+        align-items: flex-start;
+        gap: 16px;
+        min-height: 0;
+        padding: 10px 16px;
+        border-top: 1px solid $line;
+    }
+
+    .m_form_label {
+        flex: 0 0 96px;
+        font-size: 15px;
+        color: $text;
+        line-height: 22px;
+    }
+
+    .m_form_value {
+        font-size: 15px;
+        color: $text;
+        line-height: 22px;
+    }
+
+    .m_input::placeholder {
+        color: transparent;
+    }
+
+    .m_picker_caret {
+        display: inline-block;
+        transform: rotate(90deg);
+    }
+}
