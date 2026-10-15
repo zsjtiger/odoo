@@ -54,3 +54,36 @@ test("the order string is the field and direction, or empty without a sort", () 
     expect(orderString({ name: "name", dir: "desc" })).toBe("name DESC");
     expect(orderString(null)).toBe("");
 });
+
+test("with no sortable marks in the arch, every sortable column can be sorted", () => {
+    const columns = [
+        { name: "name", attrs: { name: "name" }, field: { type: "char", string: "Name" } },
+        { name: "amount", attrs: { name: "amount" }, field: { type: "float", string: "Amount" } },
+    ];
+    expect(sortableFields(columns).map((f) => f.name)).toEqual(["name", "amount"]);
+});
+
+test("marked columns are the only sortable ones once the arch marks any column", () => {
+    const columns = [
+        { name: "name", attrs: { name: "name", sortable: "1" }, field: { type: "char", string: "Name" } },
+        { name: "amount", attrs: { name: "amount" }, field: { type: "float", string: "Amount" } },
+        { name: "active", attrs: { name: "active", sortable: "True" }, field: { type: "boolean", string: "Active" } },
+    ];
+    expect(sortableFields(columns).map((f) => f.name)).toEqual(["name", "active"]);
+});
+
+test("sortable=\"0\" excludes a column even when no other column is marked", () => {
+    const columns = [
+        { name: "name", attrs: { name: "name" }, field: { type: "char", string: "Name" } },
+        { name: "amount", attrs: { name: "amount", sortable: "0" }, field: { type: "float", string: "Amount" } },
+    ];
+    expect(sortableFields(columns).map((f) => f.name)).toEqual(["name"]);
+});
+
+test("a marked column of a type that cannot be sorted stays excluded", () => {
+    const columns = [
+        { name: "lines", attrs: { name: "lines", sortable: "1" }, field: { type: "one2many", string: "Lines" } },
+        { name: "name", attrs: { name: "name" }, field: { type: "char", string: "Name" } },
+    ];
+    expect(sortableFields(columns).map((f) => f.name)).toEqual([]);
+});

@@ -126,3 +126,15 @@ test("the kanban sorts its cards with the same menu", async () => {
     await pickDirection("desc");
     expect(cardNames()).toEqual(["Gamma", "Beta", "Alpha"]);
 });
+
+test("the sort menu lists only the columns marked sortable in the arch", async () => {
+    const arch = `<list><field name="name" class="mobile_title" sortable="1"/><field name="email"/></list>`;
+    await mountWithCleanup(MobileListView, {
+        props: { resModel: "res.partner", arch, fields: FIELDS, domain: [], context: {}, onSelect: () => {} },
+    });
+    await settle();
+    await click(".m_sort_menu_toggle");
+    await settle();
+    const items = queryAll(".m_sort_menu_panel [role=option]").map((el) => el.textContent.replace("✓", "").trim());
+    expect(items).toEqual(["Default order", "Name"]);
+});

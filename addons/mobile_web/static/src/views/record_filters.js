@@ -24,8 +24,29 @@ function pick(columns, types) {
         }));
 }
 
+/** arch 中 sortable 属性的取值为真: "1" / "true" / "True" */
+function isTruthyAttr(value) {
+    return value === "1" || value === "true" || value === "True";
+}
+
+/**
+ * 可排序的字段. 默认所有可排序类型的列都可以排序;
+ * 如果 arch 中有列标记了 sortable, 则只有标记为真的列可以排序 (sortable="0" 始终排除).
+ *
+ * @param {{ name: string, attrs?: Object<string, string>, field: any }[]} columns
+ */
 export function sortableFields(columns) {
-    return pick(columns, SORTABLE_TYPES);
+    const sortAttr = (column) => column.attrs && column.attrs.sortable;
+    // 只有明确标记为真的列才会开启白名单; 仅写 sortable="0" 只排除该列, 其余仍然全部可排序
+    const anyMarked = columns.some((column) => isTruthyAttr(sortAttr(column)));
+    const allowed = columns.filter((column) => {
+        const attr = sortAttr(column);
+        if (attr !== undefined) {
+            return isTruthyAttr(attr);
+        }
+        return !anyMarked;
+    });
+    return pick(allowed, SORTABLE_TYPES);
 }
 
 export function filterableFields(columns) {
