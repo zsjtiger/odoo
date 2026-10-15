@@ -41,9 +41,8 @@ export class One2manyFormField extends One2manyField {
         <t t-name="mobile_web.One2manyFormField">
             <div class="m_o2m_head">
                 <span class="m_o2m_title"><t t-esc="this.props.field.string"/></span>
-                <button t-if="!this.props.readonly and this.state.schemaReady" type="button" class="m_o2m_add" t-on-click="this.addLine">
-                    <t t-esc="this.texts.addLine"/>
-                </button>
+                <button t-if="!this.props.readonly and this.state.schemaReady" type="button" class="m_o2m_add"
+                        t-att-aria-label="this.texts.addLine" t-on-click="this.addLine">+</button>
             </div>
             <p t-if="!this.state.schemaReady and this.state.pairs.length" class="m_field_hint"><t t-esc="this.texts.loading"/></p>
             <p t-if="this.state.schemaReady and !this.state.cards.length and this.props.readonly" class="m_field_empty"><t t-esc="this.texts.none"/></p>

@@ -438,13 +438,16 @@
 }
 
 .m_o2m_add {
-    height: 26px;
-    padding: 0 10px;
+    width: 28px;
+    height: 28px;
+    padding: 0;
     border: none;
-    border-radius: 4px;
+    border-radius: 50%;
     background: $theme-btn;
     color: #fff;
-    font-size: 13px;
+    font-size: 20px;
+    line-height: 28px;
+    text-align: center;
 }
 
 .m_o2m_card {

@@ -89,6 +89,7 @@ test("the field label is replaced by the title and the add button", async () => 
     await mountInline();
     expect(queryOne(".m_o2m_head .m_o2m_title")).toHaveText("Key info");
     expect(queryAll(".m_o2m_head .m_o2m_add").length).toBe(1);
+    expect(queryOne(".m_o2m_head .m_o2m_add")).toHaveText("+");
 });
 
 test("add shows an empty card right away, without opening an editor page", async () => {
