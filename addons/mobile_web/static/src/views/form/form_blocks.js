@@ -1,5 +1,6 @@
 import { Component, proxy, t, useProps, xml } from "@odoo/owl";
 import { _t } from "@web/core/data/l10n/translation";
+import { hasDisplayValue } from "@mobile_web/fields/field_utils";
 
 const TEXTS = {
     required: _t("This field is required"),
@@ -16,7 +17,7 @@ export class FormBlocks extends Component {
                     <h3 t-if="block.title" class="m_form_separator"><t t-esc="block.title"/></h3>
                     <FormBlocks blocks="block.children" record="this.props.record" resModel="this.props.resModel" readonly="this.props.readonly" invalid="this.props.invalid" onFieldChange="this.props.onFieldChange"/>
                 </section>
-                <div t-elif="block.kind === 'field'" t-attf-class="m_form_field {{ block.stacked ? 'is_stacked' : '' }} {{ this.isInvalid(block) ? 'is_invalid' : '' }}">
+                <div t-elif="block.kind === 'field' and (!this.props.readonly or this.hasValue(block))" t-attf-class="m_form_field {{ block.stacked ? 'is_stacked' : '' }} {{ this.isInvalid(block) ? 'is_invalid' : '' }}">
                     <label t-if="!block.hideLabel" class="m_form_label"><t t-esc="block.label"/><span t-if="block.required and !this.props.readonly" class="m_form_required">*</span></label>
                     <div class="m_form_value">
                         <t t-component="block.widget" t-props="this.fieldProps(block)"/>
@@ -59,6 +60,11 @@ export class FormBlocks extends Component {
             resModel: this.props.resModel,
             onChange: (value) => this.props.onFieldChange(block.name, value),
         };
+    }
+
+    /** 查看模式下只显示有值的字段 */
+    hasValue(block) {
+        return hasDisplayValue(this.props.record.data[block.name]);
     }
 
     /** 必填字段没有填写时, 保存前标记为无效 */

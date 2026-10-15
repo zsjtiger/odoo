@@ -202,3 +202,39 @@
     background: $surface;
     border-bottom: 1px solid $line;
 }
+
+// -----------------------------------------------------------------------------
+// 查看模式: 干净的左右布局, 无分隔线与底色, 只显示有值的字段 (与 PC 端查看态一致)
+// -----------------------------------------------------------------------------
+
+.m_form_view.is_readonly {
+    background: $surface;
+
+    .m_form_group {
+        margin: 0;
+        padding: 0 0 8px;
+        background: none;
+        border: none;
+    }
+
+    .m_form_field {
+        align-items: flex-start;
+        gap: 16px;
+        min-height: 0;
+        padding: 8px 16px;
+        border: none;
+    }
+
+    .m_form_label {
+        flex: 0 0 96px;
+        font-size: 14px;
+        color: #666;
+        line-height: 22px;
+    }
+
+    .m_form_value {
+        font-size: 15px;
+        color: $text;
+        line-height: 22px;
+    }
+}
