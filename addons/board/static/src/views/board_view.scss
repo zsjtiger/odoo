@@ -51,3 +51,8 @@
     text-align: center;
     color: #888;
 }
+
+// 图表字段的容器需要确定的高度才能绘制
+.snow_mdm_dashboard_chart_container {
+    min-height: 260px;
+}

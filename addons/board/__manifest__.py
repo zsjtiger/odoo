@@ -14,6 +14,8 @@
     'data': [
         'security/ir.access.csv',
         'views/board_views.xml',
+        'views/board_demo_views.xml',
+        'data/board_demo.xml',
     ],
     'application': True,
     'assets': {

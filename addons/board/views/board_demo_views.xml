@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="board_demo_view_form" model="ir.ui.view">
+        <field name="name">board.demo.form</field>
+        <field name="model">board.demo</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group><field name="name"/></group>
+                    <group string="Bar"><field name="chart_bar" widget="board_dashboard_bar" options="{'direction': 'vertical'}"/></group>
+                    <group string="Line"><field name="chart_line" widget="board_dashboard_line"/></group>
+                    <group string="Pie"><field name="chart_pie" widget="board_dashboard_pie"/></group>
+                    <group string="Gauge"><field name="chart_gauge" widget="board_dashboard_gauge"/></group>
+                    <group string="Radar"><field name="chart_radar" widget="board_dashboard_radar"/></group>
+                    <group string="Card"><field name="chart_card" widget="board_dashboard_card" options="{'column': 3}"/></group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="board_demo_action" model="ir.actions.act_window">
+        <field name="name">Chart Demo</field>
+        <field name="res_model">board.demo</field>
+        <field name="view_mode">form</field>
+        <field name="res_id" ref="board_demo_record"/>
+        <field name="target">current</field>
+    </record>
+
+    <menuitem id="board_demo_menu" name="Chart Demo" parent="board_menu_root" action="board_demo_action" sequence="20"/>
+</odoo>

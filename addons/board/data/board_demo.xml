@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="board_demo_record" model="board.demo">
+        <field name="name">Demo</field>
+        <field name="chart_bar">[{"name": "Jan", "value": 120, "category": null, "filter_domain": []}, {"name": "Feb", "value": 180, "category": null, "filter_domain": []}, {"name": "Mar", "value": 150, "category": null, "filter_domain": []}, {"name": "Apr", "value": 210, "category": null, "filter_domain": []}]</field>
+        <field name="chart_line">[{"name": "Jan", "value": 120, "category": "Sales", "filter_domain": []}, {"name": "Jan", "value": 80, "category": "Cost", "filter_domain": []}, {"name": "Feb", "value": 180, "category": "Sales", "filter_domain": []}, {"name": "Feb", "value": 95, "category": "Cost", "filter_domain": []}, {"name": "Mar", "value": 150, "category": "Sales", "filter_domain": []}, {"name": "Mar", "value": 110, "category": "Cost", "filter_domain": []}]</field>
+        <field name="chart_pie">[{"name": "Online", "value": 420, "category": null, "filter_domain": []}, {"name": "Retail", "value": 260, "category": null, "filter_domain": []}, {"name": "Partner", "value": 130, "category": null, "filter_domain": []}]</field>
+        <field name="chart_gauge">[{"name": "Done", "value": 72, "category": null, "filter_domain": []}, {"name": "Open", "value": 28, "category": null, "filter_domain": []}]</field>
+        <field name="chart_radar">[{"name": "Alpha", "value": 80, "category": "Quality", "filter_domain": []}, {"name": "Alpha", "value": 60, "category": "Price", "filter_domain": []}, {"name": "Alpha", "value": 90, "category": "Speed", "filter_domain": []}, {"name": "Beta", "value": 50, "category": "Quality", "filter_domain": []}, {"name": "Beta", "value": 70, "category": "Price", "filter_domain": []}, {"name": "Beta", "value": 40, "category": "Speed", "filter_domain": []}]</field>
+        <field name="chart_card">[{"name": "Leads", "value": 1280, "category": null, "filter_domain": []}, {"name": "Won", "value": 310, "category": null, "filter_domain": []}, {"name": "Lost", "value": 95, "category": null, "filter_domain": []}]</field>
+    </record>
+</odoo>
