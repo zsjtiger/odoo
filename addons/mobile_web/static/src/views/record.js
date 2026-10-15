@@ -14,6 +14,9 @@ export class MobileRecord {
         this.resId = resId;
         this.data = data;
         this.changes = {};
+        // 打开时的值(用于计算明细的删除), 以及明细中每条记录的界面改动 (name -> {id: {字段: 值}})
+        this.original = data;
+        this.lineEdits = {};
     }
 
     get isNew() {
@@ -68,7 +71,24 @@ export class MobileRecord {
     reset(resId, data) {
         this.resId = resId;
         this.data = data;
+        this.original = data;
         this.changes = {};
+        this.lineEdits = {};
+    }
+
+    /**
+     * 明细(one2many)的列表与改动: pairs 为界面列表, edits 为每条明细的界面改动, commands 为写入服务端的命令
+     */
+    setLines(name, pairs, edits, commands) {
+        this.data = { ...this.data, [name]: pairs };
+        this.lineEdits = { ...this.lineEdits, [name]: edits };
+        const changes = { ...this.changes };
+        if (commands.length) {
+            changes[name] = commands;
+        } else {
+            delete changes[name];
+        }
+        this.changes = changes;
     }
 }
 

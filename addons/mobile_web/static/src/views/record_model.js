@@ -70,10 +70,47 @@ export function serializeForServer(field, value) {
         case "many2many":
             return [[6, 0, value.map((pair) => pair[0])]];
         case "one2many":
-            return undefined; // v1: one2many 只读
+            return undefined; // 明细的改动由 lineCommands 生成命令, 见 MobileRecord.setLines
         default:
             return value === undefined ? false : value;
     }
+}
+
+/**
+ * 明细(one2many)的改动转换为写入服务端的命令:
+ *  - 原有明细不在当前列表中 -> [2, id] 删除
+ *  - 临时 id(负数)的新明细 -> [0, 0, values] 新建
+ *  - 原有明细有改动 -> [1, id, values] 更新
+ *
+ * @param {Object} comodelFields  明细模型的字段定义
+ * @param {number[]} originalIds  保存前已有的明细 id
+ * @param {Array<[number, string]>} pairs  当前明细列表
+ * @param {Object<number, Object>} edits  每条明细改动过的界面值 (id -> {字段名: 界面值})
+ * @returns {Array}
+ */
+export function lineCommands(comodelFields, originalIds, pairs, edits) {
+    const current = new Set(pairs.map((pair) => pair[0]));
+    const commands = originalIds.filter((id) => !current.has(id)).map((id) => [2, id]);
+    for (const [id] of pairs) {
+        if (id < 0) {
+            commands.push([0, 0, serializeValues(comodelFields, edits[id] || {})]);
+        } else if (edits[id]) {
+            commands.push([1, id, serializeValues(comodelFields, edits[id])]);
+        }
+    }
+    return commands;
+}
+
+function serializeValues(fields, values) {
+    const result = {};
+    for (const [name, value] of Object.entries(values)) {
+        const field = fields[name];
+        const serialized = field && serializeForServer(field, value);
+        if (serialized !== undefined) {
+            result[name] = serialized;
+        }
+    }
+    return result;
 }
 
 /**

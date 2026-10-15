@@ -7,6 +7,8 @@ import { readonlyFieldRecord } from "@mobile_web/fields/field_record";
 import { MobileRecord, toUIData } from "@mobile_web/views/record";
 import { parseArch, isHiddenColumn, splitColumns } from "@mobile_web/views/arch";
 import { MobileSelectSheet } from "@mobile_web/widgets/select_sheet/select_sheet";
+import { LineEditor } from "@mobile_web/fields/line_editor";
+import { lineCommands } from "@mobile_web/views/record_model";
 import { PickerButton } from "@mobile_web/widgets/picker/picker";
 import { Button } from "@mobile_web/widgets/button/button";
 import { FileButton } from "@mobile_web/widgets/file_button/file_button";
@@ -186,23 +188,29 @@ export class ManyToManyCheckboxesField extends Component {
 mobileFieldRegistry.add("many2many_checkboxes", ManyToManyCheckboxesField);
 
 // -----------------------------------------------------------------------------
-// one2many: 表单中完整展示明细(列与列表视图一致), 明细在电脑端编辑;
-// 列表与看板单元格中只显示名称
+// one2many: 表单中展示明细(列与列表视图一致); 编辑模式下可新增, 点击行编辑, 删除.
+// 改动保存为 one2many 命令 (见 lineCommands). 列表与看板单元格中只显示名称
 // -----------------------------------------------------------------------------
+
+// 新增明细的临时 id 使用负数, 保存时转换为 [0, 0, values] 命令
+let tempLineId = 0;
 
 /**
  * 明细的列表视图加载失败或尚未加载时, 仍用名称展示, 数据不会消失
  */
 export class One2manyField extends Component {
     texts = fieldTexts;
+    static components = { LineEditor };
     static template = xml`
         <t t-name="mobile_web.One2manyField">
             <ul t-if="this.props.compact or !this.state.rows.length" class="m_one2many_list">
-                <li t-foreach="this.pairs" t-as="pair" t-key="pair[0]"><t t-esc="pair[1]"/></li>
-                <li t-if="!this.pairs.length and !this.props.compact and this.props.readonly" class="m_field_empty"><t t-esc="this.texts.none"/></li>
+                <li t-foreach="this.state.pairs" t-as="pair" t-key="pair[0]"><t t-esc="pair[1]"/></li>
+                <li t-if="!this.state.pairs.length and !this.props.compact and this.props.readonly" class="m_field_empty"><t t-esc="this.texts.none"/></li>
             </ul>
             <ul t-else="" class="m_one2many_rows">
-                <li t-foreach="this.state.rows" t-as="row" t-key="row.id" class="m_one2many_row">
+                <li t-foreach="this.state.rows" t-as="row" t-key="row.id" class="m_one2many_row"
+                    t-attf-class="m_one2many_row {{ this.props.readonly ? '' : 'is_clickable' }}"
+                    t-att-data-id="row.id" t-on-click="this.onRowClick">
                     <div class="m_list_primary">
                         <t t-if="row.primary" t-component="row.primary.widget" t-props="row.primary.props"/>
                     </div>
@@ -213,73 +221,162 @@ export class One2manyField extends Component {
                     </div>
                 </li>
             </ul>
-            <p t-if="!this.props.readonly" class="m_field_hint"><t t-esc="this.texts.editOnDesktop"/></p>
+            <button t-if="!this.props.readonly and this.state.schemaReady" type="button" class="m_one2many_add" t-on-click="this.addLine">
+                <t t-esc="this.texts.addLine"/>
+            </button>
+            <p t-if="!this.props.readonly and !this.state.schemaReady" class="m_field_hint"><t t-esc="this.texts.loading"/></p>
+            <LineEditor t-if="this.state.editing"
+                title="this.state.editing.title"
+                resModel="this.props.field.relation"
+                blocks="this.state.editing.blocks"
+                record="this.state.editing.record"
+                fields="this.schema.fields"
+                onSave="this.saveLine"
+                onCancel="this.cancelLine"
+                onDelete="this.state.editing.isNew ? null : this.deleteLine"/>
         </t>
     `;
     props = useProps(fieldProps);
     orm = useService("orm");
     view = useService("view");
-    state = proxy({ rows: [] });
+    state = proxy({ pairs: [], rows: [], lines: {}, edits: {}, schemaReady: false, editing: null });
+    schema = null;
     loadedKey = null;
+    lastPairs = null;
 
     setup() {
+        // 编辑页通过 props 回调, 需要绑定 this
+        this.saveLine = this.saveLine.bind(this);
+        this.cancelLine = this.cancelLine.bind(this);
+        this.deleteLine = this.deleteLine.bind(this);
+        this.syncFromRecord();
         onWillStart(() => this.load());
-        onWillUpdateProps((nextProps) => this.load(nextProps));
+        onWillUpdateProps((nextProps) => {
+            // 记录被重新读取(保存后或放弃改动)时, 以记录中的值为准
+            if (nextProps.record.data[nextProps.name] !== this.lastPairs) {
+                this.syncFromRecord(nextProps);
+            }
+            return this.load(nextProps);
+        });
     }
 
-    get pairs() {
-        return (this.props.record.data[this.props.name] || []).map(([id, name]) => [id, name ?? `#${id}`]);
+    get recordFields() {
+        return this.schema?.fields || {};
+    }
+
+    syncFromRecord(props = this.props) {
+        const pairs = (props.record.data[props.name] || []).map(([id, name]) => [id, name ?? `#${id}`]);
+        this.lastPairs = props.record.data[props.name];
+        this.state.pairs = pairs;
+        this.state.edits = { ...(props.record.getRecord().lineEdits?.[props.name] || {}) };
+        this.loadedKey = null;
+        this.state.lines = {};
+        this.refreshRows();
     }
 
     /**
-     * 读取明细的列表视图与记录, 只在表单中(非单元格)需要
+     * 读取明细的列表视图(字段与列), 以及明细的记录 (只在需要时读取)
      */
     async load(props = this.props) {
         const relation = props.field.relation;
-        const ids = (props.record.data[props.name] || []).map((pair) => (Array.isArray(pair) ? pair[0] : pair));
+        const ids = this.state.pairs.map(([id]) => id).filter((id) => id > 0);
         const key = `${relation}:${ids.join(",")}`;
-        if (props.compact || !relation || !ids.length) {
-            this.loadedKey = null;
+        if (props.compact || !relation) {
             this.state.rows = [];
             return;
         }
-        if (key === this.loadedKey) {
-            return;
-        }
-        this.loadedKey = key;
         try {
-            const { fields, views } = await this.view.loadViews({
-                resModel: relation,
-                views: [[false, "list"]],
-                context: {},
-            });
-            const node = parseArch(views.list.arch);
-            const columns = node.children
-                .filter((c) => c.tag === "field" && c.attrs.name && !isHiddenColumn(c) && fields[c.attrs.name])
-                .map((c) => ({ name: c.attrs.name, attrs: c.attrs, field: fields[c.attrs.name] }));
-            const { primary, secondary } = splitColumns(columns);
-            const fieldNames = columns.length ? columns.map((c) => c.name) : ["display_name"];
-            const raws = await this.orm.read(relation, ids, fieldNames);
-            if (this.loadedKey !== key) {
+            await this.ensureSchema(relation);
+            if (this.loadedKey === key || !ids.length) {
+                this.loadedKey = key;
+                this.refreshRows();
                 return;
             }
-            const byId = new Map(raws.map((raw) => [raw.id, raw]));
-            this.state.rows = ids
-                .filter((id) => byId.has(id))
-                .map((id) => {
-                    const record = new MobileRecord(fields, id, toUIData(fields, byId.get(id), fieldNames));
-                    return {
-                        id,
-                        primary: primary && this.cell(primary, record, relation),
-                        secondary: secondary.map((column) => this.cell(column, record, relation)),
-                    };
-                });
+            const missing = ids.filter((id) => !this.state.lines[id]);
+            if (missing.length) {
+                const raws = await this.orm.read(relation, missing, this.schema.readNames);
+                for (const raw of raws) {
+                    this.state.lines[raw.id] = toUIData(this.schema.fields, raw, this.schema.readNames);
+                }
+            }
+            this.loadedKey = key;
+            this.refreshRows();
         } catch {
             // 加载失败时保留名称展示
-            if (this.loadedKey === key) {
-                this.state.rows = [];
-            }
+            this.state.rows = [];
         }
+    }
+
+    async ensureSchema(relation) {
+        if (this.schema && this.schema.relation === relation) {
+            return;
+        }
+        const { fields, views } = await this.view.loadViews({
+            resModel: relation,
+            views: [[false, "list"]],
+            context: {},
+        });
+        const node = parseArch(views.list.arch);
+        const allColumns = node.children
+            .filter((c) => c.tag === "field" && c.attrs.name && fields[c.attrs.name])
+            .map((c) => ({ name: c.attrs.name, attrs: c.attrs, field: fields[c.attrs.name] }));
+        const columns = allColumns.filter((c) => !isHiddenColumn({ tag: "field", attrs: c.attrs, children: [] }));
+        const { primary, secondary } = splitColumns(columns);
+        // 读取全部列(包括隐藏列, 例如金额的币种), 与表单中的字段
+        const readNames = [...new Set(allColumns.flatMap((c) => [c.name, c.field.currency_field].filter((n) => n && fields[n])))];
+        const editorBlocks = columns.map((column, index) => ({
+            kind: "field",
+            key: `line.${index}`,
+            name: column.name,
+            attrs: column.attrs,
+            field: column.field,
+            label: column.attrs.string || column.field.string,
+            stacked: ["text", "html", "binary"].includes(column.field.type),
+            required: Boolean(column.field.required),
+            hideLabel: false,
+            widget: getFieldWidget(column.attrs, column.field),
+            readonly: Boolean(column.field.readonly),
+        }));
+        this.schema = { relation, fields, columns, primary, secondary, readNames, editorBlocks };
+        this.state.schemaReady = true;
+    }
+
+    /** 每条明细的界面值: 读取的值加上界面上的改动 */
+    lineData(id) {
+        return { ...(this.state.lines[id] || {}), ...(this.state.edits[id] || {}) };
+    }
+
+    /** 明细的显示名称: 第一列的值, 没有时使用默认名称 */
+    labelOf(id) {
+        const primary = this.schema?.primary;
+        const data = this.lineData(id);
+        const value = primary ? data[primary.name] : undefined;
+        if (Array.isArray(value)) {
+            return value[1] ?? `#${value[0]}`;
+        }
+        if (value !== undefined && value !== false && value !== "") {
+            return String(value);
+        }
+        return id < 0 ? this.texts.newLine : `#${id}`;
+    }
+
+    /** 由当前明细列表生成界面行 (带有单元格的组件与值) */
+    refreshRows() {
+        if (!this.schema || !this.state.pairs.length || this.props.compact) {
+            this.state.rows = [];
+            return;
+        }
+        const { fields, primary, secondary, relation } = this.schema;
+        this.state.rows = this.state.pairs
+            .filter(([id]) => id < 0 || this.state.lines[id])
+            .map(([id]) => {
+                const record = new MobileRecord(fields, id, this.lineData(id));
+                return {
+                    id,
+                    primary: primary && this.cell(primary, record, relation),
+                    secondary: secondary.map((column) => this.cell(column, record, relation)),
+                };
+            });
     }
 
     cell(column, record, relation) {
@@ -298,6 +395,77 @@ export class One2manyField extends Component {
                 onChange: () => {},
             },
         };
+    }
+
+    /** 把明细列表与改动写回表单记录 (保存时生成 one2many 命令) */
+    commit(pairs, edits) {
+        this.state.pairs = pairs;
+        this.state.edits = edits;
+        this.refreshRows();
+        const originalIds = (this.props.record.getRecord().original[this.props.name] || []).map((pair) => pair[0]);
+        const commands = lineCommands(this.recordFields, originalIds, pairs, edits);
+        const data = pairs.map(([id]) => [id, this.labelOf(id)]);
+        this.lastPairs = data;
+        this.props.record.getRecord().setLines(this.props.name, data, edits, commands);
+    }
+
+    onRowClick(ev) {
+        if (this.props.readonly) {
+            return;
+        }
+        this.openLine(Number(ev.currentTarget.dataset.id));
+    }
+
+    openLine(id) {
+        const data = this.lineData(id);
+        this.state.editing = {
+            id,
+            isNew: id < 0 && !this.state.lines[id],
+            title: this.texts.editLine,
+            blocks: this.schema.editorBlocks,
+            record: new MobileRecord(this.schema.fields, id, data),
+        };
+    }
+
+    addLine() {
+        tempLineId += 1;
+        const id = -tempLineId;
+        this.commit([...this.state.pairs, [id, this.texts.newLine]], this.state.edits);
+        this.openLine(id);
+    }
+
+    saveLine(changedNames, data) {
+        const { id } = this.state.editing;
+        const edits = { ...this.state.edits };
+        const picked = {};
+        for (const name of changedNames) {
+            picked[name] = data[name];
+        }
+        edits[id] = { ...(edits[id] || {}), ...picked };
+        const pairs = this.state.pairs.some(([pairId]) => pairId === id)
+            ? this.state.pairs
+            : [...this.state.pairs, [id, this.texts.newLine]];
+        this.state.editing = null;
+        this.commit(pairs, edits);
+    }
+
+    cancelLine() {
+        const { id, isNew } = this.state.editing;
+        this.state.editing = null;
+        if (isNew) {
+            // 新增的明细取消时直接移除
+            const edits = { ...this.state.edits };
+            delete edits[id];
+            this.commit(this.state.pairs.filter(([pairId]) => pairId !== id), edits);
+        }
+    }
+
+    deleteLine() {
+        const { id } = this.state.editing;
+        this.state.editing = null;
+        const edits = { ...this.state.edits };
+        delete edits[id];
+        this.commit(this.state.pairs.filter(([pairId]) => pairId !== id), edits);
     }
 }
 mobileFieldRegistry.add("one2many", One2manyField);

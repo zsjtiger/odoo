@@ -173,6 +173,9 @@
     display: flex;
     align-items: center;
     gap: 12px;
+    .m_btn {
+        white-space: nowrap;
+    }
     margin-left: auto;
 }
 
