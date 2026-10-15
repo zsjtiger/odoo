@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 20.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-25 17:39+0000\n"
-"PO-Revision-Date: 2026-09-25 17:39+0000\n"
+"POT-Creation-Date: 2026-10-15 13:14+0000\n"
+"PO-Revision-Date: 2026-10-15 13:14+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -726,6 +726,9 @@ msgid "Add: %s"
 msgstr ""
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/gps/gps_field.js:0
+#: model:ir.model.fields,field_description:web.field_gps__address
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "Address"
 msgstr ""
@@ -1345,6 +1348,7 @@ msgstr ""
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/calendar/quick_create/calendar_quick_create.xml:0
+#: code:addons/web/static/src/views/fields/gps/gps_field.js:0
 #: code:addons/web/static/src/webclient/share_target/share_target_dialog.xml:0
 msgid "Cancel"
 msgstr ""
@@ -1495,8 +1499,8 @@ msgstr ""
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/components/datetime/datetime_picker_popover.xml:0
-#: code:addons/web/static/src/core/editors/model_field_selector/model_field_selector.xml:0
 #: code:addons/web/static/src/core/components/select_menu/select_menu.xml:0
+#: code:addons/web/static/src/core/editors/model_field_selector/model_field_selector.xml:0
 #: code:addons/web/static/src/core/editors/tree_editor/tree_editor.xml:0
 #: code:addons/web/static/src/views/fields/media/binary/binary_field.xml:0
 #: code:addons/web/static/src/views/fields/media/image/image_field.xml:0
@@ -1586,17 +1590,17 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/services/debug/debug_menu_items.xml:0
+#: code:addons/web/static/src/core/components/file_viewer/file_viewer.xml:0
 #: code:addons/web/static/src/core/dialogs/dialog/dialog.xml:0
 #: code:addons/web/static/src/core/dialogs/domain_selector_dialog/domain_selector_dialog.xml:0
-#: code:addons/web/static/src/core/services/errors/error_dialogs.xml:0
-#: code:addons/web/static/src/core/components/file_viewer/file_viewer.xml:0
 #: code:addons/web/static/src/core/editors/model_field_selector/model_field_selector_popover.xml:0
+#: code:addons/web/static/src/core/services/debug/debug_menu_items.xml:0
+#: code:addons/web/static/src/core/services/errors/error_dialogs.xml:0
 #: code:addons/web/static/src/core/services/notifications/notification.xml:0
 #: code:addons/web/static/src/core/services/pwa/install_prompt.xml:0
 #: code:addons/web/static/src/views/fields/dynamic_placeholder_popover.xml:0
-#: code:addons/web/static/src/views/fields/special/properties/property_definition.xml:0
 #: code:addons/web/static/src/views/fields/relational_utils.xml:0
+#: code:addons/web/static/src/views/fields/special/properties/property_definition.xml:0
 #: code:addons/web/static/src/views/kanban/kanban_column_examples_dialog.xml:0
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 #: code:addons/web/static/src/views/view_dialogs/form_view_dialog.xml:0
@@ -1634,8 +1638,8 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/selection/badge/badge_field.js:0
 #: code:addons/web/static/src/views/fields/relational/many2many_tags/many2many_tags_field.js:0
+#: code:addons/web/static/src/views/fields/selection/badge/badge_field.js:0
 msgid "Color field"
 msgstr ""
 
@@ -1738,6 +1742,7 @@ msgstr ""
 #: code:addons/web/static/src/core/dialogs/domain_selector_dialog/domain_selector_dialog.js:0
 #: code:addons/web/static/src/core/dialogs/expression_editor_dialog/expression_editor_dialog.xml:0
 #: code:addons/web/static/src/core/services/session/check_identity.xml:0
+#: code:addons/web/static/src/views/fields/gps/gps_field.js:0
 #: code:addons/web/static/src/webclient/switch_company_menu/switch_company_menu.xml:0
 msgid "Confirm"
 msgstr ""
@@ -1936,8 +1941,8 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/special/properties/property_tags.js:0
 #: code:addons/web/static/src/views/fields/relational_utils.js:0
+#: code:addons/web/static/src/views/fields/special/properties/property_tags.js:0
 msgid "Create \"%s\""
 msgstr ""
 
@@ -1951,11 +1956,6 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/views/view_dialogs/select_create_dialog.xml:0
 msgid "Create New"
-msgstr ""
-
-#. module: web
-#: model:ir.model,website_form_label:web.model_res_partner
-msgid "Create a Customer"
 msgstr ""
 
 #. module: web
@@ -1979,12 +1979,14 @@ msgstr ""
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__create_uid
+#: model:ir.model.fields,field_description:web.field_gps__create_uid
 #: model:ir.model.fields,field_description:web.field_res_users_settings_embedded_action__create_uid
 msgid "Created by"
 msgstr ""
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__create_date
+#: model:ir.model.fields,field_description:web.field_gps__create_date
 #: model:ir.model.fields,field_description:web.field_res_users_settings_embedded_action__create_date
 msgid "Created on"
 msgstr ""
@@ -2271,8 +2273,8 @@ msgstr ""
 #: code:addons/web/static/src/views/calendar/calendar_common/calendar_common_popover.xml:0
 #: code:addons/web/static/src/views/calendar/calendar_controller.js:0
 #: code:addons/web/static/src/views/fields/relational/many2x_binary/many2x_binary.xml:0
-#: code:addons/web/static/src/views/fields/special/properties/property_definition.xml:0
 #: code:addons/web/static/src/views/fields/relational_utils.js:0
+#: code:addons/web/static/src/views/fields/special/properties/property_definition.xml:0
 #: code:addons/web/static/src/views/form/form_controller.js:0
 #: code:addons/web/static/src/views/kanban/kanban_controller.js:0
 #: code:addons/web/static/src/views/list/list_controller.js:0
@@ -2344,6 +2346,11 @@ msgid "Developer Tools"
 msgstr ""
 
 #. module: web
+#: model:ir.model.fields.selection,name:web.selection__gps__source__device
+msgid "Device"
+msgstr ""
+
+#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/text/phone/phone_field.js:0
 msgid "Dial Field"
@@ -2403,26 +2410,26 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/components/signature/signature_dialog.xml:0
 #: code:addons/web/static/src/core/dialogs/confirmation_dialog/confirmation_dialog.js:0
 #: code:addons/web/static/src/core/dialogs/domain_selector_dialog/domain_selector_dialog.js:0
-#: code:addons/web/static/src/core/services/errors/error_dialogs.xml:0
 #: code:addons/web/static/src/core/dialogs/expression_editor_dialog/expression_editor_dialog.xml:0
-#: code:addons/web/static/src/core/components/signature/signature_dialog.xml:0
+#: code:addons/web/static/src/core/services/errors/error_dialogs.xml:0
 #: code:addons/web/static/src/search/search_model.js:0
 #: code:addons/web/static/src/views/fields/dynamic_placeholder_popover.xml:0
-#: code:addons/web/static/src/views/fields/special/properties/property_definition.xml:0
 #: code:addons/web/static/src/views/fields/relational_utils.xml:0
+#: code:addons/web/static/src/views/fields/special/properties/property_definition.xml:0
 #: code:addons/web/static/src/views/fields/text/translation/translation_components.xml:0
 #: code:addons/web/static/src/views/form/form_controller.xml:0
 #: code:addons/web/static/src/views/kanban/kanban_cover_image_dialog.xml:0
 #: code:addons/web/static/src/views/list/list_confirmation_dialog.xml:0
 #: code:addons/web/static/src/views/list/list_controller.xml:0
+#: code:addons/web/static/src/views/settings/fields/upgrade_dialog.xml:0
+#: code:addons/web/static/src/views/settings/settings_confirmation_dialog.xml:0
 #: code:addons/web/static/src/views/view_button/view_button.js:0
 #: code:addons/web/static/src/views/view_components/multi_create_popover.xml:0
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 #: code:addons/web/static/src/webclient/offline_systray/offline_systray.js:0
-#: code:addons/web/static/src/views/settings/fields/upgrade_dialog.xml:0
-#: code:addons/web/static/src/views/settings/settings_confirmation_dialog.xml:0
 #: code:addons/web/static/src/webclient/switch_company_menu/switch_company_menu.xml:0
 msgid "Discard"
 msgstr ""
@@ -2454,6 +2461,8 @@ msgstr ""
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__display_name
+#: model:ir.model.fields,field_description:web.field_gps__display_name
+#: model:ir.model.fields,field_description:web.field_gps_mixin__display_name
 #: model:ir.model.fields,field_description:web.field_ir_attachment__display_name
 #: model:ir.model.fields,field_description:web.field_ir_http__display_name
 #: model:ir.model.fields,field_description:web.field_ir_model__display_name
@@ -2613,8 +2622,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/core/components/file_viewer/file_viewer.xml:0
 #: code:addons/web/static/src/views/fields/media/binary/binary_field.xml:0
-#: code:addons/web/static/src/views/fields/relational/many2x_binary/many2x_binary.xml:0
 #: code:addons/web/static/src/views/fields/media/pdf_viewer/pdf_viewer_field.xml:0
+#: code:addons/web/static/src/views/fields/relational/many2x_binary/many2x_binary.xml:0
 msgid "Download"
 msgstr ""
 
@@ -2676,12 +2685,12 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/text/char/char_field.js:0
 #: code:addons/web/static/src/views/fields/date/datetime/datetime_field.js:0
-#: code:addons/web/static/src/views/fields/text/email/email_field.js:0
 #: code:addons/web/static/src/views/fields/relational/many2many_tags/many2many_tags_field.js:0
-#: code:addons/web/static/src/views/fields/text/phone/phone_field.js:0
 #: code:addons/web/static/src/views/fields/selection/selection/selection_field.js:0
+#: code:addons/web/static/src/views/fields/text/char/char_field.js:0
+#: code:addons/web/static/src/views/fields/text/email/email_field.js:0
+#: code:addons/web/static/src/views/fields/text/phone/phone_field.js:0
 #: code:addons/web/static/src/views/fields/text/text/text_field.js:0
 #: code:addons/web/static/src/views/fields/text/url/url_field.js:0
 msgid "Dynamic Placeholder"
@@ -2837,6 +2846,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/dynamic_placeholder_popover.xml:0
 msgid "Enter a default value"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/gps/gps_field.js:0
+msgid "Enter a valid latitude and longitude first."
 msgstr ""
 
 #. module: web
@@ -3109,6 +3124,12 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/gps/gps_field.js:0
+msgid "Find address"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/components/emoji_picker/emoji_picker.js:0
 msgid "Find the perfect emoji"
 msgstr ""
@@ -3311,6 +3332,21 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/views/settings/widgets/res_config_edition.xml:0
 msgid "GNU LGPL Licensed"
+msgstr ""
+
+#. module: web
+#: model:ir.model,name:web.model_gps
+msgid "GPS Location"
+msgstr ""
+
+#. module: web
+#: model:ir.model,name:web.model_gps_mixin
+msgid "GPS Owner Mixin"
+msgstr ""
+
+#. module: web
+#: model:ir.actions.server,name:web.ir_cron_gps_cleanup_orphans_ir_actions_server
+msgid "GPS: remove unreferenced locations"
 msgstr ""
 
 #. module: web
@@ -3536,6 +3572,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/core/components/emoji_picker/emoji_data.js:0
 #: model:ir.model.fields,field_description:web.field_base_document_layout__id
+#: model:ir.model.fields,field_description:web.field_gps__id
+#: model:ir.model.fields,field_description:web.field_gps_mixin__id
 #: model:ir.model.fields,field_description:web.field_ir_attachment__id
 #: model:ir.model.fields,field_description:web.field_ir_http__id
 #: model:ir.model.fields,field_description:web.field_ir_model__id
@@ -4147,12 +4185,14 @@ msgstr ""
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__write_uid
+#: model:ir.model.fields,field_description:web.field_gps__write_uid
 #: model:ir.model.fields,field_description:web.field_res_users_settings_embedded_action__write_uid
 msgid "Last Updated by"
 msgstr ""
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__write_date
+#: model:ir.model.fields,field_description:web.field_gps__write_date
 #: model:ir.model.fields,field_description:web.field_res_users_settings_embedded_action__write_date
 msgid "Last Updated on"
 msgstr ""
@@ -4191,6 +4231,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/core/components/emoji_picker/emoji_data.js:0
 msgid "Latin cross"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/gps/gps_field.js:0
+#: model:ir.model.fields,field_description:web.field_gps__latitude
+msgid "Latitude"
 msgstr ""
 
 #. module: web
@@ -4279,9 +4326,9 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/services/commands/command_palette.xml:0
 #: code:addons/web/static/src/core/editors/model_selector/model_selector.js:0
 #: code:addons/web/static/src/core/editors/record_selectors/record_autocomplete.js:0
+#: code:addons/web/static/src/core/services/commands/command_palette.xml:0
 #: code:addons/web/static/src/core/services/ui/block_ui.js:0
 #: code:addons/web/static/src/core/services/ui/block_ui.xml:0
 #: code:addons/web/static/src/views/calendar/calendar_filter_section/calendar_filter_section.js:0
@@ -4356,6 +4403,13 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/gps/gps_field.js:0
+#: model:ir.model.fields,field_description:web.field_gps__longitude
+msgid "Longitude"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/components/emoji_picker/emoji_data.js:0
 msgid "M"
 msgstr ""
@@ -4397,6 +4451,11 @@ msgid "Manage Databases"
 msgstr ""
 
 #. module: web
+#: model:ir.model.fields.selection,name:web.selection__gps__source__manual
+msgid "Manual"
+msgstr ""
+
+#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/relational/many2one_barcode/many2one_barcode_field.js:0
 msgid "Many2OneBarcode"
@@ -4425,6 +4484,11 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/relational/many2one/many2one_field.js:0
 #: code:addons/web/static/src/views/fields/special/properties/property_definition.js:0
 msgid "Many2one"
+msgstr ""
+
+#. module: web
+#: model:ir.model.fields.selection,name:web.selection__gps__source__map
+msgid "Map"
 msgstr ""
 
 #. module: web
@@ -4984,6 +5048,12 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/gps/gps_field.js:0
+msgid "No address was found for this point."
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.js:0
 msgid "No changes to apply"
 msgstr ""
@@ -5522,9 +5592,24 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/kanban/progress_bar_hook.js:0
 #: code:addons/web/static/src/views/fields/relational/res_user_group_ids/res_user_group_ids_field.js:0
+#: code:addons/web/static/src/views/kanban/progress_bar_hook.js:0
 msgid "Other"
+msgstr ""
+
+#. module: web
+#: model:ir.model.fields,field_description:web.field_gps__res_id
+msgid "Owner ID"
+msgstr ""
+
+#. module: web
+#: model:ir.model.fields,field_description:web.field_gps__res_field
+msgid "Owner field"
+msgstr ""
+
+#. module: web
+#: model:ir.model.fields,field_description:web.field_gps__res_model
+msgid "Owner model"
 msgstr ""
 
 #. module: web
@@ -5776,8 +5861,8 @@ msgstr ""
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/components/file_viewer/file_viewer.xml:0
-#: code:addons/web/static/src/core/editors/model_field_selector/model_field_selector_popover.xml:0
 #: code:addons/web/static/src/core/components/pager/pager.xml:0
+#: code:addons/web/static/src/core/editors/model_field_selector/model_field_selector_popover.xml:0
 #: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
 msgid "Previous"
 msgstr ""
@@ -6364,8 +6449,8 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/text/translation/translation_components.xml:0
 #: code:addons/web/static/src/views/form/form_controller.xml:0
 #: code:addons/web/static/src/views/list/list_controller.xml:0
-#: code:addons/web/static/src/views/view_dialogs/form_view_dialog.xml:0
 #: code:addons/web/static/src/views/settings/settings_confirmation_dialog.xml:0
+#: code:addons/web/static/src/views/view_dialogs/form_view_dialog.xml:0
 msgid "Save"
 msgstr ""
 
@@ -6449,8 +6534,9 @@ msgstr ""
 #: code:addons/web/static/src/search/search_model.js:0
 #: code:addons/web/static/src/views/fields/relational/badges_many2one/badges_many2one_field.js:0
 #: code:addons/web/static/src/views/fields/relational_utils.js:0
-#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 #: code:addons/web/static/src/views/settings/settings/settings_app.xml:0
+#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
+#: model:ir.model.fields.selection,name:web.selection__gps__source__search
 msgid "Search"
 msgstr ""
 
@@ -6465,6 +6551,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/relational/reference/reference_field.js:0
 msgid "Search a record..."
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/gps/gps_field.js:0
+msgid "Search address"
 msgstr ""
 
 #. module: web
@@ -6505,13 +6597,13 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/services/commands/command_palette.js:0
 #: code:addons/web/static/src/core/components/emoji_picker/emoji_picker.xml:0
 #: code:addons/web/static/src/core/editors/model_field_selector/model_field_selector_popover.xml:0
+#: code:addons/web/static/src/core/services/commands/command_palette.js:0
 #: code:addons/web/static/src/search/search_bar/offline_search_bar.xml:0
 #: code:addons/web/static/src/search/search_bar/search_bar.xml:0
-#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 #: code:addons/web/static/src/views/settings/settings_form_view.xml:0
+#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 #: code:addons/web/static/src/webclient/switch_company_menu/switch_company_menu.xml:0
 msgid "Search..."
 msgstr ""
@@ -6654,6 +6746,12 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/gps/gps_field.js:0
+msgid "Select location…"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/components/datetime/datetime_picker.js:0
 msgid "Select month"
 msgstr ""
@@ -6685,8 +6783,8 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/special/properties/property_definition.js:0
 #: code:addons/web/static/src/views/fields/selection/selection/selection_field.js:0
+#: code:addons/web/static/src/views/fields/special/properties/property_definition.js:0
 msgid "Selection"
 msgstr ""
 
@@ -6784,8 +6882,8 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/view_components/group_config_menu.xml:0
 #: code:addons/web/static/src/views/settings/settings_form_controller.js:0
+#: code:addons/web/static/src/views/view_components/group_config_menu.xml:0
 msgid "Settings"
 msgstr ""
 
@@ -6947,6 +7045,11 @@ msgid "Sort graph"
 msgstr ""
 
 #. module: web
+#: model:ir.model.fields,field_description:web.field_gps__source
+msgid "Source"
+msgstr ""
+
+#. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/view_button/view_button.xml:0
 msgid "Special:"
@@ -6997,8 +7100,8 @@ msgstr ""
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/editors/model_selector/model_selector.js:0
-#: code:addons/web/static/src/views/fields/special/properties/property_tags.js:0
 #: code:addons/web/static/src/views/fields/relational_utils.js:0
+#: code:addons/web/static/src/views/fields/special/properties/property_tags.js:0
 msgid "Start typing..."
 msgstr ""
 
@@ -7244,8 +7347,8 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/text/char/char_field.js:0
 #: code:addons/web/static/src/views/fields/special/properties/property_definition.js:0
+#: code:addons/web/static/src/views/fields/text/char/char_field.js:0
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "Text"
 msgstr ""
@@ -7254,6 +7357,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/core/components/file_viewer/file_viewer.xml:0
 msgid "Text file"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/gps/gps_field.js:0
+msgid "The %s is missing or out of range."
 msgstr ""
 
 #. module: web
@@ -8835,8 +8944,8 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/services/commands/command_items.xml:0
 #: code:addons/web/static/src/core/editors/tree_editor/tree_processor.js:0
+#: code:addons/web/static/src/core/services/commands/command_items.xml:0
 msgid "and"
 msgstr ""
 

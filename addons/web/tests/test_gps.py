@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 from odoo import fields
 from odoo.exceptions import ValidationError
@@ -91,3 +91,24 @@ class TestGps(TransactionCase):
         second = self._gps(address="Replacement", res_model='gps.owner.test', res_id=7, res_field='gps_id')
         self.assertFalse(first.exists())
         self.assertEqual(second.res_id, 7)
+
+    def _set_map_key(self, value):
+        self.env['ir.config_parameter'].sudo().set_str('web.gps.amap_key', value or '')
+
+    def test_map_config_is_empty_without_a_key(self):
+        self._set_map_key(False)
+        self.assertEqual(self.env['gps'].get_map_config(), {})
+
+    def test_map_config_exposes_the_configured_key(self):
+        self._set_map_key('demo-key')
+        self.assertEqual(self.env['gps'].get_map_config(), {'provider': 'amap', 'key': 'demo-key'})
+
+    def test_geocoder_request_uses_the_configured_service_url(self):
+        self.env['ir.config_parameter'].sudo().set_str('web.gps.geocoder_url', 'https://geo.example.com/')
+        response = MagicMock()
+        response.__enter__.return_value.read.return_value = b'[]'
+        with patch('urllib.request.urlopen', return_value=response) as urlopen:
+            self.assertEqual(self.env['gps'].search_address("建国路"), [])
+        request = urlopen.call_args.args[0]
+        self.assertTrue(request.full_url.startswith('https://geo.example.com/search?'))
+        self.assertIn('q=%E5%BB%BA%E5%9B%BD%E8%B7%AF', request.full_url)

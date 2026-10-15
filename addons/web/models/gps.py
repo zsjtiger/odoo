@@ -14,6 +14,8 @@ _logger = logging.getLogger(__name__)
 GEOCODER_URL_PARAM = 'web.gps.geocoder_url'
 DEFAULT_GEOCODER_URL = 'https://nominatim.openstreetmap.org'
 GEOCODER_TIMEOUT = 5
+# 地图 Key 的系统参数: 配置后前端加载高德地图, 未配置时只显示坐标与地址
+MAP_KEY_PARAM = 'web.gps.amap_key'
 
 # 没有被所属记录引用的位置, 超过这个时间后才会被清理 (避免删除正在编辑的表单中的位置)
 ORPHAN_GRACE_PERIOD = timedelta(hours=24)
@@ -101,7 +103,7 @@ class Gps(models.Model):
     @api.model
     def _gps_request(self, path, params):
         """ 请求地理编码服务, 失败时返回 None (不抛出异常, 前端显示为没有结果) """
-        base_url = self.env['ir.config_parameter'].sudo().get_param(GEOCODER_URL_PARAM) or DEFAULT_GEOCODER_URL
+        base_url = self.env['ir.config_parameter'].sudo().get_str(GEOCODER_URL_PARAM, DEFAULT_GEOCODER_URL)
         url = f"{base_url.rstrip('/')}/{path}?{urllib.parse.urlencode(params)}"
         request = urllib.request.Request(url, headers={'User-Agent': 'Odoo-GPS/1.0'})
         try:
@@ -147,3 +149,9 @@ class Gps(models.Model):
         if not item or 'display_name' not in item:
             return {}
         return {'address': item['display_name'], 'latitude': latitude, 'longitude': longitude}
+
+    @api.model
+    def get_map_config(self):
+        """ 前端地图的配置: 未配置 Key 时返回空字典, 前端不加载地图 """
+        key = self.env['ir.config_parameter'].sudo().get_str(MAP_KEY_PARAM)
+        return {'provider': 'amap', 'key': key} if key else {}

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 20.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-15 09:01+0000\n"
-"PO-Revision-Date: 2026-10-15 09:01+0000\n"
+"POT-Creation-Date: 2026-10-15 13:14+0000\n"
+"PO-Revision-Date: 2026-10-15 13:14+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -89,6 +89,12 @@ msgid "Add line"
 msgstr ""
 
 #. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/widgets/gps_sheet/gps_sheet.js:0
+msgid "Address"
+msgstr ""
+
+#. module: mobile_web
 #: model_terms:ir.ui.view,arch_db:mobile_web.login_retrieve_password
 msgid "Back to log in"
 msgstr ""
@@ -158,6 +164,12 @@ msgstr ""
 #. module: mobile_web
 #: model_terms:ir.ui.view,arch_db:mobile_web.login_new_password
 msgid "Confirm the new password"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/widgets/gps_sheet/gps_sheet.js:0
+msgid "Could not get the device location."
 msgstr ""
 
 #. module: mobile_web
@@ -282,6 +294,12 @@ msgid "Email"
 msgstr ""
 
 #. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/widgets/gps_sheet/gps_sheet.js:0
+msgid "Enter a valid latitude and longitude first."
+msgstr ""
+
+#. module: mobile_web
 #: model:ir.model.fields,field_description:mobile_web.field_mobile_web_password_reset__expires_at
 msgid "Expires At"
 msgstr ""
@@ -318,8 +336,20 @@ msgid "Filter"
 msgstr ""
 
 #. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/widgets/gps_sheet/gps_sheet.js:0
+msgid "Find address"
+msgstr ""
+
+#. module: mobile_web
 #: model_terms:ir.ui.view,arch_db:mobile_web.login
 msgid "Forgot password?"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/fields/gps_field.js:0
+msgid "Get location"
 msgstr ""
 
 #. module: mobile_web
@@ -380,11 +410,23 @@ msgstr ""
 
 #. module: mobile_web
 #. odoo-javascript
+#: code:addons/mobile_web/static/src/widgets/gps_sheet/gps_sheet.js:0
+msgid "Latitude"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
 #: code:addons/mobile_web/static/src/core/texts.js:0
 #: code:addons/mobile_web/static/src/views/form/mobile_form_view.js:0
 #: code:addons/mobile_web/static/src/views/kanban/mobile_kanban_view.js:0
 #: code:addons/mobile_web/static/src/views/list/mobile_list_view.js:0
 msgid "Loading…"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/widgets/gps_sheet/gps_sheet.js:0
+msgid "Locate me"
 msgstr ""
 
 #. module: mobile_web
@@ -401,6 +443,18 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mobile_web/static/src/pages/my/my_page.js:0
 msgid "Login"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/widgets/gps_sheet/gps_sheet.js:0
+msgid "Longitude"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/widgets/gps_sheet/gps_sheet.js:0
+msgid "Map is not configured. Enter the coordinates below."
 msgstr ""
 
 #. module: mobile_web
@@ -489,6 +543,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mobile_web/static/src/core/texts.js:0
 msgid "No"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/widgets/gps_sheet/gps_sheet.js:0
+msgid "No address was found for this point."
 msgstr ""
 
 #. module: mobile_web
@@ -695,6 +755,12 @@ msgstr ""
 
 #. module: mobile_web
 #. odoo-javascript
+#: code:addons/mobile_web/static/src/widgets/gps_sheet/gps_sheet.js:0
+msgid "Search address"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
 #: code:addons/mobile_web/static/src/core/texts.js:0
 msgid "Select image"
 msgstr ""
@@ -764,6 +830,12 @@ msgstr ""
 #. module: mobile_web
 #: model:ir.model.fields,field_description:mobile_web.field_mobile_custom_field__field_name
 msgid "Technical name"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/widgets/gps_sheet/gps_sheet.js:0
+msgid "The %s is missing or out of range."
 msgstr ""
 
 #. module: mobile_web

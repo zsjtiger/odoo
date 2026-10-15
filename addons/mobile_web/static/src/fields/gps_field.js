@@ -1,4 +1,4 @@
-import { Component, proxy, useProps, xml } from "@odoo/owl";
+import { Component, onWillStart, proxy, useProps, xml } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { saveLocation } from "@web/views/fields/gps/gps_utils";
 import { mobileFieldRegistry } from "@mobile_web/views/registries";
@@ -6,6 +6,7 @@ import { fieldProps, displayOrEmpty } from "@mobile_web/fields/field_utils";
 import { MobileGpsSheet } from "@mobile_web/widgets/gps_sheet/gps_sheet";
 import { PickerButton } from "@mobile_web/widgets/picker/picker";
 import { fieldTexts } from "@mobile_web/core/texts";
+import { _t } from "@web/core/data/l10n/translation";
 
 /** many2one 的值为 [id, 地址] */
 function pairName(pair) {
@@ -17,21 +18,29 @@ function pairName(pair) {
  * 确认后保存为 gps 记录 (新建或更新) 并写回 many2one 的值.
  */
 export class GpsField extends Component {
-    texts = fieldTexts;
+    texts = { ...fieldTexts, getLocation: _t("Get location") };
     static components = { MobileGpsSheet, PickerButton };
     static template = xml`
         <t t-name="mobile_web.GpsField">
             <span t-if="this.props.readonly" class="m_field_value"><t t-esc="this.displayName"/></span>
             <t t-else="">
-                <PickerButton value="this.current ? this.displayName : false" placeholder="this.texts.select" onClick="this.openSheet"/>
+                <PickerButton value="this.current ? this.displayName : false" placeholder="this.texts.getLocation" onClick="this.openSheet"/>
                 <MobileGpsSheet t-if="this.state.open" title="this.props.field.string" location="this.currentLocation"
-                    onConfirm="this.onConfirm" onClose="this.close"/>
+                    mapConfig="this.mapConfig" onConfirm="this.onConfirm" onClose="this.close"/>
             </t>
         </t>
     `;
     props = useProps(fieldProps);
     orm = useService("orm");
     state = proxy({ open: false });
+    mapConfig = {};
+
+    setup() {
+        // 地图配置(高德 Key)在控件创建时读取一次
+        onWillStart(async () => {
+            this.mapConfig = (await this.orm.call("gps", "get_map_config", [])) || {};
+        });
+    }
 
     get current() {
         return this.props.record.data[this.props.name] || false;

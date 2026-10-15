@@ -939,3 +939,39 @@ msgstr "我的"
 #: model:mobile_web.mobile.page,name:mobile_web.schedule_page
 msgid "日程"
 msgstr "日程"
+
+msgid "Address"
+msgstr "地址"
+
+msgid "Could not get the device location."
+msgstr "无法获取设备位置。"
+
+msgid "Enter a valid latitude and longitude first."
+msgstr "请先输入有效的经纬度。"
+
+msgid "Find address"
+msgstr "查找地址"
+
+msgid "Get location"
+msgstr "获取定位"
+
+msgid "Latitude"
+msgstr "纬度"
+
+msgid "Locate me"
+msgstr "定位到我"
+
+msgid "Longitude"
+msgstr "经度"
+
+msgid "Map is not configured. Enter the coordinates below."
+msgstr "未配置地图，请在下方输入经纬度。"
+
+msgid "No address was found for this point."
+msgstr "该位置没有找到地址。"
+
+msgid "Search address"
+msgstr "搜索地址"
+
+msgid "The %s is missing or out of range."
+msgstr "%s 缺失或超出范围。"
