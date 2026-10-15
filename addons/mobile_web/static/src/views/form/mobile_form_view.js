@@ -42,11 +42,11 @@ export class MobileFormView extends Component {
                 <div class="m_form_statusbar" t-if="this.headerBlocks.length">
                     <FormBlocks blocks="this.headerBlocks" record="this.fieldRecord" resModel="this.props.resModel" readonly="!this.state.editing" invalid="this.state.invalid" onFieldChange="this.onFieldChange"/>
                 </div>
-                <div class="m_form_header_buttons" t-if="this.headerItems.length">
-                    <Button t-foreach="this.headerItems" t-as="item" t-key="item.key" label="item.label" onClick="item.run"/>
-                </div>
                 <FormBlocks blocks="this.blocks" record="this.fieldRecord" resModel="this.props.resModel" readonly="!this.state.editing" invalid="this.state.invalid" onFieldChange="this.onFieldChange"/>
                 <div t-if="this.state.editing" class="m_form_footer">
+                    <div class="m_form_header_buttons" t-if="this.headerItems.length">
+                        <Button t-foreach="this.headerItems" t-as="item" t-key="item.key" label="item.label" onClick="item.run"/>
+                    </div>
                     <span class="m_form_status" t-if="this.state.record.isDirty"><t t-esc="this.texts.unsaved"/></span>
                     <div class="m_form_footer_actions">
                         <button type="button" class="m_btn m_btn_secondary" t-on-click="this.onDiscard"><t t-esc="this.texts.discard"/></button>
@@ -56,6 +56,9 @@ export class MobileFormView extends Component {
                     </div>
                 </div>
                 <div t-else="" class="m_form_footer">
+                    <div class="m_form_header_buttons" t-if="this.headerItems.length">
+                        <Button t-foreach="this.headerItems" t-as="item" t-key="item.key" label="item.label" onClick="item.run"/>
+                    </div>
                     <div class="m_form_footer_actions">
                         <button type="button" class="m_btn m_btn_primary m_form_edit" t-on-click="this.onEdit"><t t-esc="this.texts.edit"/></button>
                     </div>

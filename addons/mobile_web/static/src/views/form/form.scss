@@ -5,7 +5,7 @@
 // -----------------------------------------------------------------------------
 
 .m_form_view {
-    padding: 0 0 calc(72px + env(safe-area-inset-bottom));
+    padding: 0 0 calc(140px + env(safe-area-inset-bottom));
     background: $page;
     min-height: 100%;
 }
@@ -156,6 +156,7 @@
     bottom: 0;
     z-index: 10;
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
     gap: 12px;
@@ -175,14 +176,13 @@
     margin-left: auto;
 }
 
-// 表单头部按钮: 在一行中排列, 按钮自然宽度
+// 表单的操作按钮(header 中的 button): 显示在底部操作栏中, 位于保存/编辑按钮的上方, 自然宽度
 .m_form_header_buttons {
     display: flex;
+    flex: 0 0 100%;
     flex-wrap: wrap;
     gap: 8px;
-    padding: 8px 16px;
-    background: $surface;
-    border-bottom: 1px solid $line;
+    padding-bottom: 8px;
     .m_picker_button {
         width: auto;
     }
