@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 20.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-15 04:08+0000\n"
-"PO-Revision-Date: 2026-10-15 04:08+0000\n"
+"POT-Creation-Date: 2026-10-15 04:23+0000\n"
+"PO-Revision-Date: 2026-10-15 04:23+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -590,6 +590,7 @@ msgstr "记住密码"
 
 #. module: mobile_web
 #. odoo-javascript
+#: code:addons/mobile_web/static/src/core/texts.js:0
 #: code:addons/mobile_web/static/src/widgets/filter_menu/filter_menu.js:0
 msgid "Remove filter"
 msgstr "移除筛选条件"
@@ -640,6 +641,12 @@ msgstr "日程"
 #: code:addons/mobile_web/static/src/core/texts.js:0
 msgid "Search"
 msgstr "搜索"
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/act_window/act_window_controller.js:0
+msgid "Search %s for: %s"
+msgstr "搜索 %s 为: %s"
 
 #. module: mobile_web
 #. odoo-javascript

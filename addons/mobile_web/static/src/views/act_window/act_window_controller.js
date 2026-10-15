@@ -2,7 +2,6 @@ import { Component, onWillStart, onWillUpdateProps, proxy, t, useProps, xml } fr
 import { useService } from "@web/core/utils/hooks";
 import { makeContext } from "@web/core/data/context";
 import { evaluateExpr } from "@web/core/data/py_js/py";
-import { rpc } from "@web/core/services/network/rpc";
 import { router as _router } from "@mobile_web/core/browser/router";
 import { buildRouteState, getActionViews, hasFormView } from "@mobile_web/actions/action_utils";
 import { mobileViewRegistry } from "@mobile_web/views/registries";
@@ -10,6 +9,9 @@ import { fieldTexts } from "@mobile_web/core/texts";
 import { _t } from "@web/core/data/l10n/translation";
 import "@mobile_web/views/index";
 import { envOf } from "@mobile_web/core/env";
+import { parseArch, isHiddenColumn } from "@mobile_web/views/arch";
+import { filterableFields } from "@mobile_web/views/record_filters";
+import { facetFromRow, facetsDomain, suggestionRows } from "@mobile_web/views/search_facets";
 
 // -----------------------------------------------------------------------------
 // MobileActWindowController
@@ -31,8 +33,34 @@ export class MobileActWindowController extends Component {
         <t t-name="mobile_web.MobileActWindowController">
             <div class="m_act_window_controller">
                 <div class="m_search_bar" t-if="this.state.type !== 'form' and this.hasSearch">
-                    <input type="search" class="m_search_input" t-att-placeholder="this.texts.search" enterkeyhint="search"
-                           t-on-keydown="this.onSearchKeydown"/>
+                    <div class="m_search_box">
+                        <span t-foreach="this.state.facets" t-as="facet" t-key="facet.id" class="m_facet">
+                            <span class="m_facet_text"><t t-esc="facet.label"/>: <t t-esc="facet.display"/></span>
+                            <button type="button" class="m_facet_remove" t-att-data-index="facet_index"
+                                    t-att-aria-label="this.texts.removeFilter" t-on-click="this.onRemoveFacet">×</button>
+                        </span>
+                        <input type="search" class="m_search_input" t-att-value="this.state.text" t-att-placeholder="this.texts.search"
+                               enterkeyhint="search" t-on-input="this.onSearchInput" t-on-keydown="this.onSearchKeydown"/>
+                    </div>
+                    <ul t-if="this.suggestions.length" class="m_search_suggest">
+                        <li t-foreach="this.suggestions" t-as="row" t-key="row.key" class="m_search_row_item">
+                            <div class="m_search_row_main">
+                                <button type="button" class="m_search_row" t-att-data-index="row_index" t-on-click="this.onSuggestionClick">
+                                    <t t-esc="this.searchForText(row)"/>
+                                </button>
+                                <button t-if="row.expandable" type="button" class="m_search_expand" t-att-data-index="row_index"
+                                        t-on-click="this.onExpandClick" t-att-aria-expanded="row.expanded ? 'true' : 'false'">
+                                    <t t-esc="row.expanded ? '▾' : '▸'"/>
+                                </button>
+                            </div>
+                            <ul t-if="row.expanded" class="m_search_options">
+                                <li t-foreach="row.options" t-as="option" t-key="option_index">
+                                    <button type="button" class="m_search_option" t-att-data-row="row_index" t-att-data-option="option_index"
+                                            t-on-click="this.onOptionClick"><t t-esc="option[1]"/></button>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
                 </div>
                 <t t-if="this.state.ready">
                     <t t-component="this.viewComponent" t-key="this.viewKey" t-props="this.viewProps"/>
@@ -56,7 +84,14 @@ export class MobileActWindowController extends Component {
             resId: false,
             domain: [],
             views: null,
+            // 顶部搜索: 已生效的条件, 正在输入的文字, 展开的字段与其候选项
+            facets: [],
+            text: "",
+            expanded: null,
+            options: {},
         });
+        this.facetCounter = 0;
+        this.orm = useService("orm");
         this.fields = {};
         this.archs = {};
         this.baseDomain = [];
@@ -118,7 +153,7 @@ export class MobileActWindowController extends Component {
         this.context = context;
         this.state.type = type;
         this.state.resId = props.resId === "new" ? undefined : props.resId || false;
-        this.state.domain = this.baseDomain;
+        this.applyFacets();
         this.state.ready = true;
     }
 
@@ -171,18 +206,102 @@ export class MobileActWindowController extends Component {
         };
     }
 
-    /**
-     * 回车后按 `_rec_name` 搜索: 搜索条件与动作自身的 domain 合并
-     */
-    async onSearchKeydown(ev) {
+    /** 可搜索的字段: 列表 arch 中可筛选的列 (与筛选菜单相同的 filterable 规则) */
+    get searchFields() {
+        const arch = this.archs.list;
+        if (!arch) {
+            return [];
+        }
+        const node = parseArch(arch);
+        const columns = node.children
+            .filter((c) => c.tag === "field" && c.attrs.name && !isHiddenColumn(c))
+            .map((c) => ({ name: c.attrs.name, attrs: c.attrs, field: this.fields[c.attrs.name] }));
+        return filterableFields(columns);
+    }
+
+    /** 当前输入对应的建议行 */
+    get suggestions() {
+        return suggestionRows(this.state.text, this.searchFields, this.state.options, this.state.expanded);
+    }
+
+    /** 建议行的文字: 搜索 〈字段〉 为: 〈文字〉 */
+    searchForText(row) {
+        return _t("Search %s for: %s", row.label, row.text);
+    }
+
+    /** 按已生效的条件重新计算查询 domain: 动作的 domain 在前, 条件在后 */
+    applyFacets() {
+        this.state.domain = [...this.baseDomain, ...facetsDomain(this.state.facets)];
+    }
+
+    addFacet(facet) {
+        this.state.facets.push({ ...facet, id: ++this.facetCounter });
+        this.state.text = "";
+        this.state.expanded = null;
+        this.applyFacets();
+    }
+
+    onSearchInput(ev) {
+        this.state.text = ev.target.value;
+        this.state.expanded = null;
+    }
+
+    /** 回车: 添加第一个可直接搜索的建议 */
+    onSearchKeydown(ev) {
         if (ev.key !== "Enter") {
             return;
         }
-        const searchDomain = await rpc("/mobile_web/search_domain", {
-            model: this.props.action.res_model,
-            text: ev.target.value,
+        const row = this.suggestions.find((r) => !r.expandable);
+        if (row) {
+            this.addFacet(facetFromRow(row, null));
+        }
+    }
+
+    onSuggestionClick(ev) {
+        const row = this.suggestions[Number(ev.currentTarget.dataset.index)];
+        if (row.expandable) {
+            return this.toggleExpand(row);
+        }
+        this.addFacet(facetFromRow(row, null));
+    }
+
+    onExpandClick(ev) {
+        const row = this.suggestions[Number(ev.currentTarget.dataset.index)];
+        return this.toggleExpand(row);
+    }
+
+    async toggleExpand(row) {
+        if (this.state.expanded === row.name) {
+            this.state.expanded = null;
+            return;
+        }
+        this.state.expanded = row.name;
+        if (row.type === "many2one") {
+            await this.loadRecordOptions(row);
+        }
+    }
+
+    /** 多对一的候选记录: 按输入的文字做名称搜索 */
+    async loadRecordOptions(row) {
+        const relation = this.fields[row.name].relation;
+        const results = await this.orm.call(relation, "name_search", [], {
+            name: row.text,
+            operator: "ilike",
+            limit: 20,
+            context: this.context,
         });
-        this.state.domain = [...this.baseDomain, ...searchDomain];
+        this.state.options[row.name] = results.map(([id, label]) => [id, label]);
+    }
+
+    onOptionClick(ev) {
+        const row = this.suggestions[Number(ev.currentTarget.dataset.row)];
+        const [value, label] = row.options[Number(ev.currentTarget.dataset.option)];
+        this.addFacet(facetFromRow(row, { value, display: label }));
+    }
+
+    onRemoveFacet(ev) {
+        this.state.facets.splice(Number(ev.currentTarget.dataset.index), 1);
+        this.applyFacets();
     }
 
     onCreateClick() {

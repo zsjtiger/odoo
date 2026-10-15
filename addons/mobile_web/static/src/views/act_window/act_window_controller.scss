@@ -40,3 +40,124 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
     z-index: 5;
 }
+
+// -----------------------------------------------------------------------------
+// 顶部搜索: 条件胶囊 + 输入框 + 建议列表 (与 PC 端的搜索栏对应)
+// -----------------------------------------------------------------------------
+
+.m_search_box {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    min-height: 44px;
+    box-sizing: border-box;
+    padding: 4px 8px;
+    border: 1px solid #e8e5e5;
+    border-radius: 22px;
+    background: #f5f5f5;
+
+    .m_search_input {
+        flex: 1 1 120px;
+        min-width: 0;
+        height: 36px;
+        border: none;
+        background: transparent;
+        padding: 0 6px;
+    }
+}
+
+.m_facet {
+    display: inline-flex;
+    align-items: center;
+    max-width: 100%;
+    padding: 2px 4px 2px 10px;
+    border-radius: 16px;
+    background: $theme-bg-color;
+    color: $theme;
+    font-size: 14px;
+}
+
+.m_facet_text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.m_facet_remove {
+    min-width: 32px;
+    min-height: 32px;
+    border: none;
+    background: none;
+    color: inherit;
+    font-size: 18px;
+    line-height: 1;
+}
+
+.m_search_suggest {
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    z-index: 30;
+    max-height: 60vh;
+    overflow-y: auto;
+    margin: 4px 0 0;
+    padding: 4px 0;
+    list-style: none;
+    border-radius: 12px;
+    background: $surface;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.16);
+}
+
+.m_search_row_item {
+    border-bottom: 1px solid $line;
+
+    &:last-child {
+        border-bottom: none;
+    }
+}
+
+.m_search_row_main {
+    display: flex;
+    align-items: center;
+}
+
+.m_search_row {
+    flex: 1;
+    min-width: 0;
+    min-height: 44px;
+    padding: 0 14px;
+    border: none;
+    background: none;
+    color: $text;
+    font-size: 15px;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.m_search_expand {
+    min-width: 44px;
+    min-height: 44px;
+    border: none;
+    background: none;
+    color: $muted;
+}
+
+.m_search_options {
+    margin: 0;
+    padding: 0 0 6px 14px;
+    list-style: none;
+}
+
+.m_search_option {
+    width: 100%;
+    min-height: 40px;
+    padding: 0 14px;
+    border: none;
+    background: none;
+    color: $text;
+    font-size: 15px;
+    text-align: left;
+}

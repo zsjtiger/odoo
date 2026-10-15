@@ -18,6 +18,7 @@ export const fieldTexts = {
     cancel: _t("Cancel"),
     confirm: _t("Confirm"),
     search: _t("Search"),
+    removeFilter: _t("Remove filter"),
     clearSelection: _t("Clear selection"),
     loading: _t("Loading…"),
     noMatch: _t("No matching results"),

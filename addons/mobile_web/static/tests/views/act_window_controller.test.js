@@ -80,23 +80,78 @@ test("a record id opens the form for that record", async () => {
     expect(queryAll(".m_form_field input")[0]).toHaveValue("Alpha");
 });
 
-test("searching by enter filters the list through the server-side domain", async () => {
-    mockViews();
-    let searchText = null;
-    onRpc("/mobile_web/search_domain", async (req) => {
-        searchText = (await req.json()).params.text;
-        return [["name", "ilike", "Alpha"]];
+/** 记录每次列表查询的 domain */
+function recordDomains() {
+    const domains = [];
+    onRpc("res.partner", "web_search_read", ({ kwargs }) => {
+        domains.push(kwargs.domain);
     });
+    return domains;
+}
+
+function typeText(text) {
+    const input = queryOne(".m_search_input");
+    input.value = text;
+    input.dispatchEvent(new Event("input"));
+    return input;
+}
+
+test("typing shows one suggestion per searchable field", async () => {
+    mockViews();
     patchWithCleanup(router, { pushState() {} });
     await mountWithCleanup(MobileActWindowController, { props: { action: action() } });
     await settle();
-    const input = queryOne(".m_search_input");
-    input.value = "Alpha";
-    input.dispatchEvent(new Event("input"));
+    typeText("Alp");
+    await settle();
+    expect(queryAll(".m_search_row").map((el) => el.textContent.trim())).toEqual([
+        "Search Name for: Alp",
+        "Search Email for: Alp",
+    ]);
+});
+
+test("choosing a suggestion adds a facet and filters the list by that field", async () => {
+    mockViews();
+    const domains = recordDomains();
+    patchWithCleanup(router, { pushState() {} });
+    await mountWithCleanup(MobileActWindowController, { props: { action: action() } });
+    await settle();
+    typeText("Alp");
+    await settle();
+    await click(".m_search_row");
+    await settle();
+    expect(queryAll(".m_facet_text").map((el) => el.textContent.trim())).toEqual(["Name: Alp"]);
+    expect(domains.at(-1)).toEqual([["name", "ilike", "Alp"]]);
+    expect(queryAll(".m_list_row").length).toBe(1);
+    expect(queryOne(".m_search_input")).toHaveValue("");
+});
+
+test("pressing enter adds the first suggestion", async () => {
+    mockViews();
+    const domains = recordDomains();
+    patchWithCleanup(router, { pushState() {} });
+    await mountWithCleanup(MobileActWindowController, { props: { action: action() } });
+    await settle();
+    const input = typeText("Beta");
     input.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter" }));
     await settle();
-    expect(searchText).toBe("Alpha");
-    expect(queryAll(".m_list_row").length).toBe(1);
+    expect(domains.at(-1)).toEqual([["name", "ilike", "Beta"]]);
+});
+
+test("removing a facet restores the rows", async () => {
+    mockViews();
+    const domains = recordDomains();
+    patchWithCleanup(router, { pushState() {} });
+    await mountWithCleanup(MobileActWindowController, { props: { action: action() } });
+    await settle();
+    typeText("Alp");
+    await settle();
+    await click(".m_search_row");
+    await settle();
+    await click(".m_facet_remove");
+    await settle();
+    expect(queryAll(".m_facet").length).toBe(0);
+    expect(domains.at(-1)).toEqual([]);
+    expect(queryAll(".m_list_row").length).toBe(2);
 });
 
 test("the create button opens an empty form", async () => {
