@@ -77,6 +77,8 @@ test("a record id opens the form for that record", async () => {
     await mountWithCleanup(MobileActWindowController, { props: { action: action(), resId: 1 } });
     await settle();
     expect(queryAll(".m_form_view").length).toBe(1);
+    await click(".m_form_edit");
+    await settle();
     expect(queryAll(".m_form_field input")[0]).toHaveValue("Alpha");
 });
 

@@ -11,6 +11,7 @@ import { FieldRecordAdapter } from "@mobile_web/fields/field_record";
 import { Button } from "@mobile_web/widgets/button/button";
 import { buttonItems, collectButtons, runRecordButton } from "@mobile_web/actions/record_buttons";
 import { notify } from "@mobile_web/core/notification";
+import { hasDisplayValue } from "@mobile_web/fields/field_utils";
 
 /**
  * 移动端表单视图
@@ -29,6 +30,7 @@ const TEXTS = {
     saved: _t("Saved"),
     failed: _t("Operation failed"),
     saveFirst: _t("Save your changes before running this action"),
+    edit: _t("Edit"),
 };
 
 export class MobileFormView extends Component {
@@ -39,19 +41,24 @@ export class MobileFormView extends Component {
             <div class="m_form_view" t-if="this.state.record">
                 <h2 class="m_form_title" t-if="this.state.record.data.display_name"><t t-esc="this.state.record.data.display_name"/></h2>
                 <div class="m_form_statusbar" t-if="this.headerBlocks.length">
-                    <FormBlocks blocks="this.headerBlocks" record="this.fieldRecord" resModel="this.props.resModel" onFieldChange="this.onFieldChange"/>
+                    <FormBlocks blocks="this.headerBlocks" record="this.fieldRecord" resModel="this.props.resModel" readonly="!this.state.editing" invalid="this.state.invalid" onFieldChange="this.onFieldChange"/>
                 </div>
                 <div class="m_form_header_buttons" t-if="this.headerItems.length">
                     <Button t-foreach="this.headerItems" t-as="item" t-key="item.key" label="item.label" onClick="item.run"/>
                 </div>
-                <FormBlocks blocks="this.blocks" record="this.fieldRecord" resModel="this.props.resModel" onFieldChange="this.onFieldChange"/>
-                <div class="m_form_footer">
+                <FormBlocks blocks="this.blocks" record="this.fieldRecord" resModel="this.props.resModel" readonly="!this.state.editing" invalid="this.state.invalid" onFieldChange="this.onFieldChange"/>
+                <div t-if="this.state.editing" class="m_form_footer">
                     <span class="m_form_status" t-if="this.state.record.isDirty"><t t-esc="this.texts.unsaved"/></span>
                     <div class="m_form_footer_actions">
                         <button type="button" class="m_btn m_btn_secondary" t-on-click="this.onDiscard"><t t-esc="this.texts.discard"/></button>
                         <button type="button" class="m_btn m_btn_primary" t-att-disabled="this.saveDisabled" t-on-click="this.onSave">
                             <t t-esc="this.state.saving ? this.texts.saving : this.texts.save"/>
                         </button>
+                    </div>
+                </div>
+                <div t-else="" class="m_form_footer">
+                    <div class="m_form_footer_actions">
+                        <button type="button" class="m_btn m_btn_primary m_form_edit" t-on-click="this.onEdit"><t t-esc="this.texts.edit"/></button>
                     </div>
                 </div>
             </div>
@@ -71,7 +78,8 @@ export class MobileFormView extends Component {
     orm = useService("orm");
     notification = useService("notification");
     mobileAction = useService("mobileAction");
-    state = proxy({ record: null, saving: false, error: null });
+    // editing: 编辑模式 (新建记录总是编辑模式); invalid: 保存时必填但未填写的字段
+    state = proxy({ record: null, saving: false, error: null, editing: false, invalid: [] });
 
     setup() {
         const root = parseArch(this.props.arch);
@@ -112,6 +120,8 @@ export class MobileFormView extends Component {
                     this.props.resId,
                     toUIData(this.props.fields, raw, this.fieldNames)
                 );
+                this.state.editing = false;
+                this.state.invalid = [];
                 return;
             }
             // 二进制字段的默认值是原始字节, 无法序列化为 JSON, 不请求(与 web 一致)
@@ -119,6 +129,8 @@ export class MobileFormView extends Component {
             const defaults = await this.model.defaultGet(defaultNames);
             const record = new MobileRecord(this.props.fields, false, this.emptyData(defaults));
             this.state.record = record;
+            this.state.editing = true;
+            this.state.invalid = [];
             // 新建时 onchange 会根据默认值计算依赖字段(例如公司带出货币)
             await this.applyOnchange([]);
             record.markDefaults(this.fieldNames);
@@ -146,6 +158,7 @@ export class MobileFormView extends Component {
 
     onFieldChange = async (name, value) => {
         this.state.record.update(name, value);
+        this.state.invalid = this.state.invalid.filter((invalidName) => invalidName !== name);
         if (this.props.fields[name]) {
             await this.applyOnchange([name]);
         }
@@ -217,16 +230,33 @@ export class MobileFormView extends Component {
         return normalizeFromServer(field, raw);
     }
 
+    /** 进入编辑模式 */
+    onEdit() {
+        this.state.editing = true;
+    }
+
+    /** 视图中的必填字段没有值的名称列表 */
+    missingRequired() {
+        return this.fieldNames.filter((name) => this.props.fields[name]?.required && !hasDisplayValue(this.state.record.data[name]));
+    }
+
     async onSave() {
         const record = this.state.record;
         if (!record.isDirty && !record.isNew) {
             return;
         }
+        const missing = this.missingRequired();
+        if (missing.length) {
+            this.state.invalid = missing;
+            return;
+        }
+        this.state.invalid = [];
         this.state.saving = true;
         try {
             const wasNew = record.isNew;
             const saved = await this.model.saveRecord(record.resId, { ...record.changes }, this.fieldNames);
             record.reset(saved.id, toUIData(this.props.fields, saved, this.fieldNames));
+            this.state.editing = false;
             notify(this.notification, this.texts.saved, { type: "success" });
             if (wasNew) {
                 this.props.onSaved(saved.id);

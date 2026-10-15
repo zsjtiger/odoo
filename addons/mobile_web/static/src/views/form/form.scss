@@ -63,11 +63,12 @@
     color: $text;
 }
 
-// 表单内的输入框去掉边框, 占位文字为浅灰色, 与列表式表单一致
+// 表单内的输入框只保留底部横线, 占位文字为浅灰色, 与 PC 端编辑态一致
 .m_form_field .m_input {
     min-height: 32px;
     padding: 4px 0;
     border: none;
+    border-bottom: 1px solid $line;
     border-radius: 0;
     background: transparent;
     font-size: 15px;
@@ -86,22 +87,44 @@
     border-radius: 6px;
 }
 
-// 分组标题: 左侧蓝色竖条 + 小号粗体文字
-.m_form_separator {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin: 12px 16px 4px;
-    font-size: 14px;
-    font-weight: 600;
-    color: $text;
-    &::before {
-        content: "";
-        width: 3px;
-        height: 14px;
-        border-radius: 2px;
-        background: #4a7cf0;
+// 选择类控件与输入框一样只有底部横线
+.m_form_field .m_picker_button {
+    min-height: 32px;
+    padding: 4px 0;
+    border: none;
+    border-bottom: 1px solid $line;
+    border-radius: 0;
+    background: transparent;
+}
+
+// 必填字段的红色星号
+.m_form_required {
+    margin-left: 2px;
+    color: #e5484d;
+}
+
+// 必填但未填写: 横线与提示文字为红色
+.m_form_field.is_invalid {
+    .m_input,
+    .m_picker_button {
+        border-bottom-color: #e5484d;
     }
+}
+
+.m_form_error {
+    margin: 4px 0 0;
+    font-size: 13px;
+    color: #e5484d;
+}
+
+// 分组标题: 整行的浅绿色底, 绿色文字, 与 PC 端的分组标题一致
+.m_form_separator {
+    margin: 0;
+    padding: 10px 16px;
+    background: $theme-bg-color;
+    font-size: 14px;
+    font-weight: 400;
+    color: $theme;
 }
 
 .m_form_notebook {

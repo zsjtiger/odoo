@@ -42,6 +42,8 @@ export function buildLayout(node, fields, keyPrefix = "b") {
                     label: child.attrs.string || field.string,
                     // 多行文本等内容较长的字段, 标签放在上方独占一行
                     stacked: STACKED_TYPES.includes(field.type),
+                    // 必填: 字段定义或 arch 中 required="1"
+                    required: Boolean(field.required) || child.attrs.required === "1" || child.attrs.required === "True",
                     // 头部状态条没有标签, 状态本身就是标题
                     hideLabel: child.attrs.widget === "statusbar",
                     widget: getFieldWidget(child.attrs, field),

@@ -179,14 +179,24 @@ function formProps(overrides = {}) {
     };
 }
 
-test("form loads the record into the inputs", async () => {
+test("an existing record opens in view mode, with the values as text", async () => {
     await mountWithCleanup(MobileFormView, { props: formProps() });
     expect(queryOne(".m_form_title")).toHaveText("Alpha");
+    expect(queryAll(".m_form_field input").length).toBe(0);
+    expect(queryOne(".m_form_edit")).toBeEnabled();
+});
+
+test("edit switches to edit mode with the values in the inputs", async () => {
+    await mountWithCleanup(MobileFormView, { props: formProps() });
+    await click(".m_form_edit");
+    await settle();
     expect(queryAll(".m_form_field input")[0]).toHaveValue("Alpha");
 });
 
 test("form shows no unsaved status until a field is changed", async () => {
     await mountWithCleanup(MobileFormView, { props: formProps() });
+    await click(".m_form_edit");
+    await settle();
     expect(queryAll(".m_form_status").length).toBe(0);
     expect(queryOne(".m_form_footer .m_btn_primary")).not.toBeEnabled();
 });
@@ -197,12 +207,31 @@ test("editing a field marks the form dirty and save writes the change", async ()
         writes.push(args[1]);
     });
     await mountWithCleanup(MobileFormView, { props: formProps() });
+    await click(".m_form_edit");
+    await settle();
     typeValue(queryAll(".m_form_field input")[0], "Gamma");
     await settle();
     expect(queryOne(".m_form_status")).toHaveText("Unsaved changes");
     await click(".m_form_footer .m_btn_primary");
     await settle();
     expect(writes).toEqual([{ name: "Gamma" }]);
+    expect(queryAll(".m_form_field input").length).toBe(0);
+});
+
+test("a required field left empty blocks the save and shows the message", async () => {
+    const writes = [];
+    onRpc("res.partner", "web_save", ({ args }) => {
+        writes.push(args[1]);
+    });
+    const required = { ...FIELDS, name: { ...FIELDS.name, required: true } };
+    await mountWithCleanup(MobileFormView, { props: formProps({ resId: false, fields: required }) });
+    typeValue(queryAll(".m_form_field input")[0], "");
+    await settle();
+    expect(queryAll(".m_form_required").length).toBe(1);
+    await click(".m_form_footer .m_btn_primary");
+    await settle();
+    expect(writes).toEqual([]);
+    expect(queryOne(".m_form_field.is_invalid .m_form_error")).toHaveText("This field is required");
 });
 
 test("a new record fills defaults and reports the saved id", async () => {
