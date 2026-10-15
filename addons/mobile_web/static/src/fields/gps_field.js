@@ -1,6 +1,7 @@
-import { Component, onWillStart, proxy, useProps, xml } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, proxy, useProps, xml } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { saveLocation } from "@web/views/fields/gps/gps_utils";
+import { GpsPreview, readLocation } from "@web/views/fields/gps/gps_preview";
 import { mobileFieldRegistry } from "@mobile_web/views/registries";
 import { fieldProps, displayOrEmpty } from "@mobile_web/fields/field_utils";
 import { MobileGpsSheet } from "@mobile_web/widgets/gps_sheet/gps_sheet";
@@ -19,10 +20,15 @@ function pairName(pair) {
  */
 export class GpsField extends Component {
     texts = { ...fieldTexts, getLocation: _t("Get location") };
-    static components = { MobileGpsSheet, PickerButton };
+    static components = { MobileGpsSheet, PickerButton, GpsPreview };
     static template = xml`
         <t t-name="mobile_web.GpsField">
-            <span t-if="this.props.readonly" class="m_field_value"><t t-esc="this.displayName"/></span>
+            <t t-if="this.props.readonly">
+                <span class="m_field_value"><t t-esc="this.displayName"/></span>
+                <t t-foreach="this.previewList" t-as="preview" t-key="preview.key">
+                    <GpsPreview location="preview.location" mapConfig="this.mapConfig" height="160"/>
+                </t>
+            </t>
             <t t-else="">
                 <PickerButton value="this.current ? this.displayName : false" placeholder="this.texts.getLocation" onClick="this.openSheet"/>
                 <MobileGpsSheet t-if="this.state.open" title="this.props.field.string" location="this.currentLocation"
@@ -32,14 +38,17 @@ export class GpsField extends Component {
     `;
     props = useProps(fieldProps);
     orm = useService("orm");
-    state = proxy({ open: false });
+    state = proxy({ open: false, location: null });
     mapConfig = {};
 
     setup() {
         // 地图配置(高德 Key)在控件创建时读取一次
         onWillStart(async () => {
             this.mapConfig = (await this.orm.call("gps", "get_map_config", [])) || {};
+            await this.loadLocation(this.props);
         });
+        // 值变化后 (保存或放弃改动), 重新读取位置用于只读预览
+        onWillUpdateProps((nextProps) => this.loadLocation(nextProps));
     }
 
     get current() {
@@ -48,6 +57,20 @@ export class GpsField extends Component {
     get displayName() {
         return displayOrEmpty(pairName(this.current));
     }
+    /** 只读预览使用的位置 (带 key, 位置变化时预览重新创建) */
+    get previewList() {
+        const location = this.state.location;
+        if (!location || !this.current) {
+            return [];
+        }
+        return [{ key: `${this.current[0]}:${location.latitude}:${location.longitude}`, location }];
+    }
+
+    async loadLocation(props) {
+        const value = props.record.data[props.name];
+        this.state.location = value ? await readLocation(this.orm, value[0]) : null;
+    }
+
     get currentLocation() {
         // 已保存的位置在打开弹层时读取经纬度
         return this.current ? this.loadedLocation : null;

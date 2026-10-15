@@ -1,4 +1,4 @@
-import { Component, onMounted, onWillDestroy, onWillStart, signal, t, useProps, xml } from "@odoo/owl";
+import { Component, onMounted, onWillDestroy, onWillStart, onWillUpdateProps, proxy, signal, t, useProps, xml } from "@odoo/owl";
 import { _t } from "@web/core/data/l10n/translation";
 import { Dialog } from "@web/core/dialogs/dialog/dialog";
 import { registry } from "@web/core/framework/registry";
@@ -6,6 +6,7 @@ import { useService } from "@web/core/utils/hooks";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { GpsEditor } from "@web/views/fields/gps/gps_editor";
 import { saveLocation } from "@web/views/fields/gps/gps_utils";
+import { GpsPreview, readLocation } from "@web/views/fields/gps/gps_preview";
 
 const TEXTS = {
     searchAddress: _t("Search address"),
@@ -146,9 +147,15 @@ export class GpsDialog extends Component {
  * 位置控件 (many2one 指向 gps 模型, widget="gps"): 显示地址, 点击打开位置编辑对话框
  */
 export class GpsField extends Component {
+    static components = { GpsPreview };
     static template = xml`
-        <button type="button" class="o_input o_gps_field text-start w-100" t-att-id="this.props.id"
-                t-att-disabled="this.props.readonly" t-on-click="this.openDialog">
+        <div t-if="this.props.readonly" class="o_gps_field_readonly">
+            <div t-if="this.displayName"><t t-esc="this.displayName"/></div>
+            <t t-foreach="this.previewList" t-as="preview" t-key="preview.key">
+                <GpsPreview location="preview.location" mapConfig="this.mapConfig" height="240"/>
+            </t>
+        </div>
+        <button t-else="" type="button" class="o_input o_gps_field text-start w-100" t-att-id="this.props.id" t-on-click="this.openDialog">
             <t t-if="this.displayName"><t t-esc="this.displayName"/></t>
             <span t-else="" class="text-muted"><t t-esc="this.texts.selectLocation"/></span>
         </button>
@@ -159,11 +166,30 @@ export class GpsField extends Component {
     texts = TEXTS;
     mapConfig = {};
 
+    state = proxy({ location: null });
+
     setup() {
         // 地图配置(高德 Key)在控件创建时读取一次
         onWillStart(async () => {
             this.mapConfig = (await this.orm.call("gps", "get_map_config", [])) || {};
+            await this.loadLocation(this.props);
         });
+        // 值变化后 (保存或放弃改动), 重新读取位置用于只读预览
+        onWillUpdateProps((nextProps) => this.loadLocation(nextProps));
+    }
+
+    /** 只读预览使用的位置 (带 key, 位置变化时预览重新创建) */
+    get previewList() {
+        const location = this.state.location;
+        if (!location || !this.value) {
+            return [];
+        }
+        return [{ key: `${this.value.id}:${location.latitude}:${location.longitude}`, location }];
+    }
+
+    async loadLocation(props) {
+        const value = props.record.data[props.name];
+        this.state.location = value ? await readLocation(this.orm, value.id) : null;
     }
 
     get value() {

@@ -53,17 +53,25 @@ export class GpsEditor {
         }
     }
 
-    /** 在元素上创建地图, 并让点击地图打点 */
-    mountMap(element) {
+    /**
+     * 在元素上创建地图. interactive 为 false 时 (只读预览) 地图不可拖动缩放, 也不能打点.
+     */
+    mountMap(element, { interactive = true } = {}) {
         if (!this.AMap || !element) {
             return;
         }
         const { latitude, longitude } = this.state.location.latitude !== null ? this.state.location : DEFAULT_CENTER;
         const gcj = wgs84ToGcj02(latitude, longitude);
-        this.map = new this.AMap.Map(element, { zoom: 16, center: [gcj.longitude, gcj.latitude] });
+        const options = { zoom: 16, center: [gcj.longitude, gcj.latitude] };
+        if (!interactive) {
+            Object.assign(options, { dragEnable: false, zoomEnable: false, doubleClickZoom: false, scrollWheel: false });
+        }
+        this.map = new this.AMap.Map(element, options);
         this.marker = new this.AMap.Marker({ position: [gcj.longitude, gcj.latitude] });
         this.map.add(this.marker);
-        this.map.on("click", (ev) => this.onMapClick(ev.lnglat.getLng(), ev.lnglat.getLat()));
+        if (interactive) {
+            this.map.on("click", (ev) => this.onMapClick(ev.lnglat.getLng(), ev.lnglat.getLat()));
+        }
         this.state.mapReady = true;
         if (this.state.location.latitude === null) {
             this.marker.hide();
