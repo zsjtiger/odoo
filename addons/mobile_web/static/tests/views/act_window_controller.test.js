@@ -162,16 +162,14 @@ test("the clear button appears beside the search once there are conditions and r
     patchWithCleanup(router, { pushState() {} });
     await mountWithCleanup(MobileActWindowController, { props: { action: action() } });
     await settle();
-    expect(queryAll(".m_search_clear").length).toBe(0);
     typeText("Alp");
     await settle();
     await click(".m_search_row");
     await settle();
-    expect(queryAll(".m_search_clear").length).toBe(1);
-    await click(".m_search_clear");
+    expect(queryAll(".m_facet").length).toBe(1);
+    await click(".m_facet_remove");
     await settle();
     expect(queryAll(".m_facet").length).toBe(0);
-    expect(queryAll(".m_search_clear").length).toBe(0);
     expect(domains.at(-1)).toEqual([]);
     expect(queryAll(".m_list_row").length).toBe(2);
 });

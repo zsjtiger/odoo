@@ -51,13 +51,6 @@ export class MobileActWindowController extends Component {
                         </span>
                         <input type="search" class="m_search_input" t-att-value="this.state.text" t-att-placeholder="this.texts.search"
                                enterkeyhint="search" t-on-input="this.onSearchInput" t-on-keydown="this.onSearchKeydown"/>
-                        <button t-if="this.state.facets.length or this.state.text" type="button" class="m_search_clear"
-                                t-att-aria-label="this.texts.clear" t-on-click="this.onClearFacets">
-                            <svg viewBox="0 0 24 24" aria-hidden="true">
-                                <circle cx="12" cy="12" r="9" fill="currentColor"/>
-                                <path d="M9 9l6 6M15 9l-6 6" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
-                            </svg>
-                        </button>
                     </div>
                     <div class="m_search_actions">
                         <button t-if="this.filters.length or this.mobileFilterSections.length" type="button"
@@ -451,13 +444,6 @@ export class MobileActWindowController extends Component {
         this.addFacet(facetFromRow(row, { value, display: label }));
     }
 
-    /** 清除: 删除全部条件与输入的文字 */
-    onClearFacets() {
-        this.state.facets = [];
-        this.state.text = "";
-        this.state.expanded = null;
-        this.applyFacets();
-    }
 
     onRemoveFacet(ev) {
         this.state.facets.splice(Number(ev.currentTarget.dataset.index), 1);
