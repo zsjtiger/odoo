@@ -156,7 +156,7 @@ test("removing a facet restores the rows", async () => {
     expect(queryAll(".m_list_row").length).toBe(2);
 });
 
-test("the clear button appears beside the search once there are conditions and removes them all", async () => {
+test("each condition is removed with its own x, and removing the last one shows every row again", async () => {
     mockViews();
     const domains = recordDomains();
     patchWithCleanup(router, { pushState() {} });
@@ -193,3 +193,33 @@ test("an action without a form view has no create button", async () => {
     await settle();
     expect(queryAll(".m_create_btn").length).toBe(0);
 });
+
+test("a model's dynamic filter panel adds its chosen option to the domain", async () => {
+    mockViews();
+    onRpc("res.partner", "dynamic_filter_config", () => [
+        { name: "pick", label: "Pick", options: [{ key: "alpha", label: "Only Alpha", domain: [["name", "=", "Alpha"]] }] },
+    ]);
+    const domains = recordDomains();
+    patchWithCleanup(router, { pushState() {} });
+    await mountWithCleanup(MobileActWindowController, { props: { action: action() } });
+    await settle();
+    await click("button[aria-label=Filter]");
+    await settle();
+    expect(queryAll(".m_filter_sheet").length).toBe(1);
+    await click(".m_filter_chip");
+    await settle();
+    await click(".m_sheet_btn_primary");
+    await settle();
+    expect(queryAll(".m_filter_sheet").length).toBe(0);
+    expect(domains.at(-1)).toEqual([["name", "=", "Alpha"]]);
+    expect(queryAll(".m_list_row").length).toBe(1);
+});
+
+test("without a dynamic filter panel, the filter icon opens the search view filters instead", async () => {
+    mockViews();
+    patchWithCleanup(router, { pushState() {} });
+    await mountWithCleanup(MobileActWindowController, { props: { action: action() } });
+    await settle();
+    expect(queryAll("button[aria-label=Filter]").length).toBe(0);
+});
+
