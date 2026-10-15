@@ -12,6 +12,8 @@ import { envOf } from "@mobile_web/core/env";
 import { parseArch, isHiddenColumn } from "@mobile_web/views/arch";
 import { filterableFields, sortableFields } from "@mobile_web/views/record_filters";
 import { parseSearchFilters } from "@mobile_web/views/search_filters";
+import { mobileFilterDomain } from "@mobile_web/views/mobile_filters";
+import { MobileFilterSheet } from "@mobile_web/widgets/filter_sheet/filter_sheet";
 import { SortMenu } from "@mobile_web/widgets/sort_menu/sort_menu";
 import { MobileSelectSheet } from "@mobile_web/widgets/select_sheet/select_sheet";
 import { facetFromRow, facetsDomain, suggestionRows } from "@mobile_web/views/search_facets";
@@ -49,7 +51,8 @@ export class MobileActWindowController extends Component {
                     <button t-if="this.state.facets.length" type="button" class="m_search_clear" t-on-click="this.onClearFacets">
                         <t t-esc="this.texts.clear"/>
                     </button>
-                    <button t-if="this.filters.length" type="button" t-attf-class="m_search_icon_btn {{ this.state.activeFilters.length ? 'is_active' : '' }}"
+                    <button t-if="this.filters.length or this.mobileFilterSections.length" type="button"
+                            t-attf-class="m_search_icon_btn {{ this.state.activeFilters.length or this.hasMobileSelection ? 'is_active' : '' }}"
                             t-att-aria-label="this.texts.filter" t-on-click="this.openFilters">
                         <svg viewBox="0 0 24 24" aria-hidden="true">
                             <path d="M3 5h18l-7 8v6l-4-2v-4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
@@ -80,6 +83,8 @@ export class MobileActWindowController extends Component {
                 <t t-if="this.state.ready">
                     <t t-component="this.viewComponent" t-key="this.viewKey" t-props="this.viewProps"/>
                 </t>
+                <MobileFilterSheet t-if="this.state.filterPanel" title="this.texts.filter" sections="this.state.filterPanel"
+                    selected="this.state.mobileSelected" onConfirm="this.onMobileFilterConfirm" onClose="this.closeFilters"/>
                 <MobileSelectSheet t-if="this.state.filterSheet" title="this.texts.filter" options="this.filterOptions"
                     selected="this.selectedFilterItems" multiple="true" onConfirm="this.onFilterConfirm" onClose="this.closeFilters"/>
                 <button type="button" class="m_create_btn" t-if="this.state.ready and this.state.type !== 'form' and this.hasForm"
@@ -87,7 +92,7 @@ export class MobileActWindowController extends Component {
             </div>
         </t>
     `;
-    static components = { SortMenu, MobileSelectSheet };
+    static components = { SortMenu, MobileSelectSheet, MobileFilterSheet };
     props = useProps({
         action: t.object(),
         resId: t.or([t.number(), t.string(), t.literal(false)]).optional(),
@@ -111,7 +116,11 @@ export class MobileActWindowController extends Component {
             order: "",
             activeFilters: [],
             filterSheet: false,
+            // 模型自定义的筛选面板: 已选的选项与卡片, 以及打开时的分组 (含卡片记录)
+            mobileSelected: { options: [], cards: {} },
+            filterPanel: null,
         });
+        this.mobileFilterSections = [];
         this.facetCounter = 0;
         this.orm = useService("orm");
         this.fields = {};
@@ -162,6 +171,7 @@ export class MobileActWindowController extends Component {
         this.fields = loaded.fields;
         this.archs = Object.fromEntries(views.map(([, type]) => [type, loaded.views[type].arch]));
         this.filters = parseSearchFilters(loaded.views.search?.arch);
+        this.mobileFilterSections = await this.loadMobileFilterConfig(action.res_model);
         this.sortFields = this.computeSortFields();
 
         // 如果 URL 中有 resId, 并且视图包含 form, 则直接打开 form
@@ -257,7 +267,12 @@ export class MobileActWindowController extends Component {
 
     /** 按已生效的条件重新计算查询 domain: 动作的 domain 在前, 条件在后 */
     applyFacets() {
-        this.state.domain = [...this.baseDomain, ...facetsDomain(this.state.facets), ...this.activeFilterDomains()];
+        this.state.domain = [
+            ...this.baseDomain,
+            ...facetsDomain(this.state.facets),
+            ...this.activeFilterDomains(),
+            ...mobileFilterDomain(this.mobileFilterSections, this.state.mobileSelected),
+        ];
     }
 
     /** 已选择的筛选项对应的条件 (不同筛选项之间为且) */
@@ -292,17 +307,63 @@ export class MobileActWindowController extends Component {
         return (this.filters || []).map((filter) => ({ id: filter.key, name: filter.label }));
     }
 
+    get hasMobileSelection() {
+        const selected = this.state.mobileSelected;
+        return selected.options.length > 0 || Object.values(selected.cards).some((ids) => ids.length > 0);
+    }
+
     get selectedFilterItems() {
         return this.filterOptions.filter((option) => this.state.activeFilters.includes(option.id));
     }
 
-    openFilters() {
-        this.state.filterSheet = true;
+    /** 模型自定义的筛选面板配置 (mobile_filter_config); 没有配置时使用搜索视图的筛选项 */
+    async loadMobileFilterConfig(resModel) {
+        try {
+            return (await this.orm.call(resModel, "mobile_filter_config", [])) || [];
+        } catch {
+            return [];
+        }
+    }
+
+    /** 卡片的记录: 多对一字段对应模型的记录, subfield 作为卡片的第二行 */
+    async loadCardRecords({ field, subfield }) {
+        const relation = this.fields[field]?.relation;
+        if (!relation) {
+            return [];
+        }
+        const names = ["display_name", subfield].filter(Boolean);
+        const records = await this.orm.searchRead(relation, [], names, { limit: 80 });
+        return records.map((record) => ({
+            id: record.id,
+            name: record.display_name,
+            sub: subfield ? String(record[subfield] || "") : "",
+        }));
+    }
+
+    async openFilters() {
+        if (!this.mobileFilterSections.length) {
+            this.state.filterSheet = true;
+            return;
+        }
+        const sections = await Promise.all(
+            this.mobileFilterSections.map(async (section) => ({
+                ...section,
+                cards: section.cards ? { field: section.cards.field, records: await this.loadCardRecords(section.cards) } : null,
+            }))
+        );
+        this.state.filterPanel = sections;
     }
 
     // 作为子组件的回调传递, 使用箭头函数保持 this
     closeFilters = () => {
         this.state.filterSheet = false;
+        this.state.filterPanel = null;
+    };
+
+    onMobileFilterConfirm = (selected) => {
+        this.state.mobileSelected = selected;
+        this.state.filterPanel = null;
+        this.applyFacets();
     };
 
     onFilterConfirm = (selected) => {

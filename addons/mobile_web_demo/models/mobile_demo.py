@@ -97,3 +97,26 @@ class MobileDemoItem(models.Model):
             'tag': 'display_notification',
             'params': {'title': "Demo button", 'message': self.name, 'type': 'success'},
         }
+
+    @api.model
+    def mobile_filter_config(self):
+        """ Custom filter panel of the mobile client (see mobile_web mobile_filter_config). """
+        return [
+            {
+                'name': 'subordinates',
+                'label': "Subordinates",
+                'options': [
+                    {'key': 'mine', 'label': "Only mine", 'domain': [('user_id', '=', self.env.uid)], 'radio': True},
+                ],
+                'cards': {'field': 'user_id', 'subfield': 'login'},
+            },
+            {
+                'name': 'speaker',
+                'label': "Speaker",
+                'options': [
+                    {'key': 'speaker', 'label': "Speaker", 'domain': [('is_urgent', '=', True)]},
+                    {'key': 'not_speaker', 'label': "Non-speaker", 'domain': [('is_urgent', '=', False)]},
+                ],
+            },
+        ]
+
