@@ -45,7 +45,8 @@ export function buildLayout(node, fields, keyPrefix = "b") {
                     stacked: STACKED_TYPES.includes(field.type),
                     // 必填: 字段定义或 arch 中 required="1"
                     required: Boolean(field.required) || child.attrs.required === "1" || child.attrs.required === "True",
-                    hideLabel: false,
+                    // 时间线自带标题区域, 不再显示字段标签
+                    hideLabel: child.attrs.widget === "timeline",
                     widget: getFieldWidget(child.attrs, field),
                     readonly: child.attrs.readonly === "1" || child.attrs.readonly === "True" || !!field.readonly,
                 });

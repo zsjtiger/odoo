@@ -79,6 +79,16 @@ test("field values come from the record adapter", async () => {
     expect(queryOne(".m_form_field input")).toHaveValue("Alpha");
 });
 
+test("a timeline field has no label, the timeline shows its own content", async () => {
+    const blocks = buildLayout(parseArch(`<form><field name="line_ids" widget="timeline"/></form>`), {
+        ...FIELDS,
+        line_ids: { type: "one2many", string: "Lines", relation: "mobile.demo.line" },
+    });
+    expect(blocks.length).toBe(1);
+    expect(blocks[0].hideLabel).toBe(true);
+    expect(buildLayout(parseArch(`<form><field name="name"/></form>`), FIELDS)[0].hideLabel).toBe(false);
+});
+
 test("a statusbar in the header is a field row labelled progress, followed by the status", async () => {
     const root = parseArch(`<form><header><field name="state" widget="statusbar"/></header></form>`);
     const header = root.children.find((child) => child.tag === "header");
