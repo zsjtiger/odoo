@@ -1,0 +1,31 @@
+// 级联选择弹层: 顶部是层级标签, 列表沿用 m_sheet 的样式
+
+.m_cascade_tabs {
+    display: flex;
+    gap: 4px;
+    padding: 0 12px;
+    overflow-x: auto;
+    border-bottom: 1px solid $line;
+    background: $surface;
+}
+
+.m_cascade_tab {
+    flex: 0 0 auto;
+    min-height: 44px;
+    padding: 0 8px;
+    border: none;
+    border-bottom: 2px solid transparent;
+    background: none;
+    font-size: 15px;
+    color: $muted;
+    white-space: nowrap;
+    &.is_active {
+        color: $theme;
+        border-bottom-color: $theme;
+    }
+}
+
+.m_cascade_more {
+    font-size: 18px;
+    color: $muted;
+}
