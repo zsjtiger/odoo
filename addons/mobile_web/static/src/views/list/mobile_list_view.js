@@ -16,6 +16,8 @@ import { buttonItems, collectButtons, runRecordButton } from "@mobile_web/action
 import { readonlyFieldRecord } from "@mobile_web/fields/field_record";
 import { _t } from "@web/core/data/l10n/translation";
 import { notify } from "@mobile_web/core/notification";
+import { SwipeRow } from "@mobile_web/widgets/swipe_row/swipe_row";
+import { canDeleteRecords, deleteRecords } from "@mobile_web/views/record_delete";
 
 /**
  * 移动端列表视图: 每行一张卡片式的行, 第一列作为标题, 后面的列作为副标题
@@ -25,6 +27,8 @@ import { notify } from "@mobile_web/core/notification";
 // 界面文字, 由 _t 包装并通过 i18n/*.po 翻译(模板中用 this.texts 引用)
 const TEXTS = {
     moreActions: _t("More actions"),
+    delete: _t("Delete"),
+    confirmDelete: _t("Delete this record?"),
     actionFailed: _t("Action failed"),
     loadFailed: _t("Failed to load, please try again"),
     noRecords: _t("No records"),
@@ -33,7 +37,7 @@ const TEXTS = {
 
 export class MobileListView extends Component {
     texts = TEXTS;
-    static components = { ActionSheet, SortFilterBar, SortMenu };
+    static components = { ActionSheet, SortFilterBar, SortMenu, SwipeRow };
     static template = xml`
         <t t-name="mobile_web.MobileListView">
             <div class="m_list_view" t-ref="this.pull.container">
@@ -45,17 +49,19 @@ export class MobileListView extends Component {
                 <ul class="m_list">
                     <li t-foreach="this.collection.state.records" t-as="record" t-key="record.resId"
                         t-attf-class="{{ this.rowButtons.length ? 'has_more' : '' }}">
-                        <button type="button" class="m_list_row" t-att-data-id="record.resId" t-on-click="this.onRowClick">
-                            <div class="m_list_primary">
-                                <t t-if="this.primary" t-component="this.getWidget(this.primary)" t-props="this.cellProps(this.primary, record)"/>
-                            </div>
-                            <div class="m_list_secondary" t-if="this.secondary.length">
-                                <t t-foreach="this.secondary" t-as="column" t-key="column.name">
-                                    <span class="m_list_cell" t-if="this.hasValue(column, record)"><t t-component="this.getWidget(column)" t-props="this.cellProps(column, record)"/></span>
-                                </t>
-                            </div>
-                        </button>
-                        <button t-if="this.rowButtons.length" type="button" class="m_row_more" t-att-data-id="record.resId" t-att-aria-label="this.texts.moreActions" t-on-click="this.onMoreClick">⋯</button>
+                        <SwipeRow resId="record.resId" disabled="!this.canDelete" label="this.texts.delete" onDelete="this.onDeleteRow">
+                            <button type="button" class="m_list_row" t-att-data-id="record.resId" t-on-click="this.onRowClick">
+                                <div class="m_list_primary">
+                                    <t t-if="this.primary" t-component="this.getWidget(this.primary)" t-props="this.cellProps(this.primary, record)"/>
+                                </div>
+                                <div class="m_list_secondary" t-if="this.secondary.length">
+                                    <t t-foreach="this.secondary" t-as="column" t-key="column.name">
+                                        <span class="m_list_cell" t-if="this.hasValue(column, record)"><t t-component="this.getWidget(column)" t-props="this.cellProps(column, record)"/></span>
+                                    </t>
+                                </div>
+                            </button>
+                            <button t-if="this.rowButtons.length" type="button" class="m_row_more" t-att-data-id="record.resId" t-att-aria-label="this.texts.moreActions" t-on-click="this.onMoreClick">⋯</button>
+                        </SwipeRow>
                     </li>
                 </ul>
                 <ActionSheet t-if="this.state.sheet" items="this.sheetItems" onClose="this.closeSheet"/>
@@ -93,7 +99,13 @@ export class MobileListView extends Component {
         this.filterDomain = [];
         const fieldNames = [...collectFieldNames(node)];
         this.collection = new RecordCollection(this.makeModel(), fieldNames);
-        onWillStart(() => this.reloadCollection());
+        // 删除权限在首次渲染前确定, 没有权限时删除按钮不可用
+        this.allowDelete = node.attrs.delete !== "0";
+        this.canDelete = false;
+        onWillStart(async () => {
+            this.canDelete = this.allowDelete && (await canDeleteRecords(this.orm, this.props.resModel));
+            await this.reloadCollection();
+        });
         this.infinite = useInfiniteScroll(this.collection);
         this.pull = usePullToRefresh(() => this.reloadCollection());
         onWillUpdateProps((nextProps) => {
@@ -198,6 +210,24 @@ export class MobileListView extends Component {
     onFilter = ({ filter }) => {
         this.filterDomain = buildFilterDomain(filter);
         return this.collection.reload(this.combinedDomain(), this.collection.order);
+    };
+
+    /** 左滑删除: 确认后调用服务端删除, 再重新加载第一页 */
+    // 作为子组件的回调传递, 使用箭头函数保持 this
+    onDeleteRow = async (resId) => {
+        if (!this.canDelete || !window.confirm(this.texts.confirmDelete)) {
+            return;
+        }
+        try {
+            await deleteRecords(this.orm, this.props.resModel, [resId]);
+        } catch (error) {
+            notify(this.notification, error?.data?.message || error?.message || this.texts.actionFailed, {
+                type: "danger",
+                sticky: true,
+            });
+            return;
+        }
+        await this.reloadCollection();
     };
 
     onRowClick(ev) {

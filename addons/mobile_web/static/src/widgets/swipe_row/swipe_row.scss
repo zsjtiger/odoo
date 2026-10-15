@@ -1,0 +1,37 @@
+// 左滑删除: 内容层在上, 删除按钮固定在右侧, 触控目标不小于 44px
+.m_swipe_row {
+    position: relative;
+    overflow: hidden;
+}
+
+.m_swipe_content {
+    position: relative;
+    background: $surface;
+    transition: transform 0.2s ease;
+}
+
+.m_swipe_delete {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: #e5484d;
+    color: #fff;
+
+    &:disabled {
+        background: $line;
+        color: $muted;
+        opacity: 0.6;
+    }
+}
+
+.m_swipe_delete_icon {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;
+}

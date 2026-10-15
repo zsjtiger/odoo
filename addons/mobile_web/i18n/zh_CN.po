@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 20.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-15 03:24+0000\n"
-"PO-Revision-Date: 2026-10-15 03:24+0000\n"
+"POT-Creation-Date: 2026-10-15 03:40+0000\n"
+"PO-Revision-Date: 2026-10-15 03:40+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -185,8 +185,15 @@ msgstr "默认排序"
 #. module: mobile_web
 #. odoo-javascript
 #: code:addons/mobile_web/static/src/core/texts.js:0
+#: code:addons/mobile_web/static/src/views/list/mobile_list_view.js:0
 msgid "Delete"
 msgstr "删除"
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/list/mobile_list_view.js:0
+msgid "Delete this record?"
+msgstr "确定删除这条记录吗？"
 
 #. module: mobile_web
 #. odoo-javascript

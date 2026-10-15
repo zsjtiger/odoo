@@ -109,7 +109,7 @@
     line-height: 1;
 }
 
-.m_list > li.has_more > .m_list_row,
+.m_list > li.has_more .m_list_row,
 .m_kanban > li.has_more > .m_kanban_card {
     padding-right: 52px;
 }
