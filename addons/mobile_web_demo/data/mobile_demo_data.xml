@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
+    <!-- 自定义相关字段: 明细(O)可以编辑, 通过多对一读取的字段(M)只读 -->
+    <record id="mobile_demo_line_custom_item_name" model="mobile.custom.field">
+        <field name="name">Item name</field>
+        <field name="model_id" ref="model_mobile_demo_line"/>
+        <field name="path">item_id.name</field>
+        <field name="list_view" eval="True"/>
+        <field name="sequence">10</field>
+    </record>
+
     <record id="mobile_demo_partner_a" model="res.partner">
         <field name="name">Demo Partner Alpha</field>
     </record>
