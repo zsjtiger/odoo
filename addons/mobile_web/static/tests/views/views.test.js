@@ -181,7 +181,7 @@ function formProps(overrides = {}) {
 
 test("an existing record opens in view mode, with the values as text", async () => {
     await mountWithCleanup(MobileFormView, { props: formProps() });
-    expect(queryOne(".m_form_title")).toHaveText("Alpha");
+    expect(queryAll(".m_form_title").length).toBe(0);
     expect(queryAll(".m_form_field input").length).toBe(0);
     expect(queryOne(".m_form_edit")).toBeEnabled();
 });

@@ -39,7 +39,6 @@ export class MobileFormView extends Component {
     static template = xml`
         <t t-name="mobile_web.MobileFormView">
             <div t-attf-class="m_form_view {{ this.state.editing ? '' : 'is_readonly' }}" t-if="this.state.record">
-                <h2 class="m_form_title" t-if="this.state.record.data.display_name"><t t-esc="this.state.record.data.display_name"/></h2>
                 <div class="m_form_statusbar" t-if="this.headerBlocks.length">
                     <FormBlocks blocks="this.headerBlocks" record="this.fieldRecord" resModel="this.props.resModel" readonly="!this.state.editing" invalid="this.state.invalid" onFieldChange="this.onFieldChange"/>
                 </div>
