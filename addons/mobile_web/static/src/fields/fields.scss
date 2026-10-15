@@ -257,7 +257,10 @@
     align-items: center;
     justify-content: center;
     font-size: 12px;
+    font-weight: 600;
     color: $text;
+    // 文字压在填充色上时用白色描边保证对比度
+    text-shadow: 0 0 2px #fff, 0 0 2px #fff;
 }
 
 .m_field_json {

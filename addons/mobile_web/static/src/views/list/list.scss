@@ -35,6 +35,10 @@
 .m_kanban {
     list-style: none;
     margin: 0;
+}
+
+// 列表没有外边距; 看板的内边距在 kanban.scss 中设置
+.m_list {
     padding: 0;
 }
 
