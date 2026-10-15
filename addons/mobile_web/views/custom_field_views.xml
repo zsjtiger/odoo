@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mobile_custom_field_form" model="ir.ui.view">
+        <field name="name">mobile.custom.field.form</field>
+        <field name="model">mobile.custom.field</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="model_id"/>
+                            <field name="name"/>
+                            <field name="path" placeholder="e.g. company_id.currency_id.name"/>
+                            <field name="sequence"/>
+                        </group>
+                        <group>
+                            <field name="list_view"/>
+                            <field name="store" help="Stored fields can be sorted and searched in the database."/>
+                            <field name="field_name" readonly="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="mobile_custom_field_list" model="ir.ui.view">
+        <field name="name">mobile.custom.field.list</field>
+        <field name="model">mobile.custom.field</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="model_id"/>
+                <field name="name"/>
+                <field name="path"/>
+                <field name="list_view"/>
+                <field name="store"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="mobile_custom_field_action" model="ir.actions.act_window">
+        <field name="name">Custom Related Fields</field>
+        <field name="res_model">mobile.custom.field</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="mobile_custom_field_menu" name="Custom Related Fields" parent="base.menu_administration"
+              action="mobile_custom_field_action" sequence="90"/>
+</odoo>

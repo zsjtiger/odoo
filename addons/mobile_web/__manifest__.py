@@ -12,6 +12,7 @@ This module provides the core of the Odoo Mobile Web Client.
     'depends': ['base', 'web'],
     'data': [
         'security/ir.access.csv',
+        'views/custom_field_views.xml',
 
         ## data: page and navigation configuration, kept when upgrading
         'data/mobile_pages.xml',

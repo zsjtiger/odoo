@@ -6,3 +6,4 @@ from . import mobile_page
 from . import mobile_password_reset
 from . import ir_actions
 from . import dynamic_filter
+from . import custom_field

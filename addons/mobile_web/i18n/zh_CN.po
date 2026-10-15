@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 20.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-15 08:50+0000\n"
-"PO-Revision-Date: 2026-10-15 08:50+0000\n"
+"POT-Creation-Date: 2026-10-15 09:01+0000\n"
+"PO-Revision-Date: 2026-10-15 09:01+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -30,6 +30,18 @@ msgstr ""
 #: code:addons/mobile_web/static/src/views/act_window/act_window_controller.js:0
 msgid "%s - New"
 msgstr "%s - 新建"
+
+#. module: mobile_web
+#. odoo-python
+#: code:addons/mobile_web/models/custom_field.py:0
+msgid "'%(part)s' is not a field of the path %(path)s"
+msgstr "路径 %(path)s 中不存在字段 '%(part)s'"
+
+#. module: mobile_web
+#. odoo-python
+#: code:addons/mobile_web/models/custom_field.py:0
+msgid "'%(part)s' must be a many2one field to follow the path %(path)s"
+msgstr "路径 %(path)s 中的 '%(part)s' 必须是多对一字段"
 
 #. module: mobile_web
 #. odoo-python
@@ -150,6 +162,7 @@ msgstr "确认新密码"
 
 #. module: mobile_web
 #: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__create_uid
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_custom_field__create_uid
 #: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page__create_uid
 #: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page_actions__create_uid
 #: model:ir.model.fields,field_description:mobile_web.field_mobile_web_password_reset__create_uid
@@ -158,11 +171,23 @@ msgstr "创建人"
 
 #. module: mobile_web
 #: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__create_date
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_custom_field__create_date
 #: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page__create_date
 #: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page_actions__create_date
 #: model:ir.model.fields,field_description:mobile_web.field_mobile_web_password_reset__create_date
 msgid "Created on"
 msgstr "创建时间"
+
+#. module: mobile_web
+#: model:ir.model,name:mobile_web.model_mobile_custom_field
+msgid "Custom Related Field"
+msgstr "自定义相关字段"
+
+#. module: mobile_web
+#: model:ir.actions.act_window,name:mobile_web.mobile_custom_field_action
+#: model:ir.ui.menu,name:mobile_web.mobile_custom_field_menu
+msgid "Custom Related Fields"
+msgstr "自定义相关字段"
 
 #. module: mobile_web
 #. odoo-javascript
@@ -211,11 +236,19 @@ msgstr "放弃"
 #: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__display_name
 #: model:ir.model.fields,field_description:mobile_web.field_ir_http__display_name
 #: model:ir.model.fields,field_description:mobile_web.field_ir_ui_menu__display_name
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_custom_field__display_name
 #: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page__display_name
 #: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page_actions__display_name
 #: model:ir.model.fields,field_description:mobile_web.field_mobile_web_password_reset__display_name
 msgid "Display Name"
 msgstr "显示名称"
+
+#. module: mobile_web
+#: model:ir.model.fields,help:mobile_web.field_mobile_custom_field__path
+msgid ""
+"Dotted path of many2one fields ending with the field to show, e.g. "
+"doctor_id.hospital_id.address"
+msgstr "多对一字段组成的点分路径，以要显示的字段结尾，例如 doctor_id.hospital_id.address"
 
 #. module: mobile_web
 #. odoo-javascript
@@ -274,6 +307,11 @@ msgid "Failed to load, please try again"
 msgstr "加载失败, 请重试"
 
 #. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_custom_field__field_id
+msgid "Field"
+msgstr ""
+
+#. module: mobile_web
 #. odoo-javascript
 #: code:addons/mobile_web/static/src/core/texts.js:0
 msgid "Filter"
@@ -303,6 +341,7 @@ msgstr "主页"
 #: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__id
 #: model:ir.model.fields,field_description:mobile_web.field_ir_http__id
 #: model:ir.model.fields,field_description:mobile_web.field_ir_ui_menu__id
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_custom_field__id
 #: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page__id
 #: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page_actions__id
 #: model:ir.model.fields,field_description:mobile_web.field_mobile_web_password_reset__id
@@ -317,7 +356,13 @@ msgid ""
 msgstr "如果该账号存在, 重置链接已发送到其邮箱。"
 
 #. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_custom_field__name
+msgid "Label"
+msgstr "标签"
+
+#. module: mobile_web
 #: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__write_uid
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_custom_field__write_uid
 #: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page__write_uid
 #: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page_actions__write_uid
 #: model:ir.model.fields,field_description:mobile_web.field_mobile_web_password_reset__write_uid
@@ -326,6 +371,7 @@ msgstr "最后更新人"
 
 #. module: mobile_web
 #: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__write_date
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_custom_field__write_date
 #: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page__write_date
 #: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page_actions__write_date
 #: model:ir.model.fields,field_description:mobile_web.field_mobile_web_password_reset__write_date
@@ -401,6 +447,12 @@ msgstr "移动端我的页动作"
 #: model:ir.model,name:mobile_web.model_mobile_web_password_reset
 msgid "Mobile password reset token"
 msgstr "移动端密码重置令牌"
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_custom_field__model
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_custom_field__model_id
+msgid "Model"
+msgstr "模型"
 
 #. module: mobile_web
 #. odoo-javascript
@@ -525,6 +577,11 @@ msgid ""
 "Password reset by email is not available yet. Please contact the "
 "administrator."
 msgstr "暂不支持通过邮件找回密码, 请联系管理员。"
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_custom_field__path
+msgid "Path"
+msgstr "路径"
 
 #. module: mobile_web
 #: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__path
@@ -654,6 +711,7 @@ msgid "Send reset link"
 msgstr "发送重置链接"
 
 #. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_custom_field__sequence
 #: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page_actions__sequence
 msgid "Sequence"
 msgstr "序号"
@@ -676,10 +734,50 @@ msgid ""
 msgstr "设置后, 该操作会出现在对应模型的侧边栏中。"
 
 #. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_custom_field__list_view
+msgid "Show in list"
+msgstr "在列表中显示"
+
+#. module: mobile_web
 #. odoo-javascript
 #: code:addons/mobile_web/static/src/widgets/sort_menu/sort_menu.js:0
 msgid "Sort"
 msgstr "排序"
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_custom_field__store
+msgid "Stored"
+msgstr "存储"
+
+#. module: mobile_web
+#: model_terms:ir.ui.view,arch_db:mobile_web.mobile_custom_field_form
+msgid "Stored fields can be sorted and searched in the database."
+msgstr "存储的字段可以在数据库中排序和搜索。"
+
+#. module: mobile_web
+#: model:ir.model.fields,help:mobile_web.field_mobile_custom_field__store
+msgid ""
+"Stored fields can be sorted and searched in the database. Changing this may "
+"need a server restart."
+msgstr "存储的字段可以在数据库中排序和搜索。修改此项可能需要重启服务。"
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_custom_field__field_name
+msgid "Technical name"
+msgstr "技术名称"
+
+#. module: mobile_web
+#. odoo-python
+#: code:addons/mobile_web/models/custom_field.py:0
+msgid ""
+"The field '%(part)s' has the type %(type)s, which cannot be shown this way"
+msgstr "字段 '%(part)s' 的类型为 %(type)s，无法以这种方式显示"
+
+#. module: mobile_web
+#. odoo-python
+#: code:addons/mobile_web/models/custom_field.py:0
+msgid "The model %s has no list view to show the field in."
+msgstr "模型 %s 没有可以显示该字段的列表视图。"
 
 #. module: mobile_web
 #. odoo-python
@@ -692,6 +790,12 @@ msgstr "密码至少需要 %s 个字符。"
 #: code:addons/mobile_web/controllers/home.py:0
 msgid "The passwords do not match."
 msgstr "两次输入的密码不一致。"
+
+#. module: mobile_web
+#. odoo-python
+#: code:addons/mobile_web/models/custom_field.py:0
+msgid "The path is empty or has an empty step: %s"
+msgstr "路径为空或包含空的步骤：%s"
 
 #. module: mobile_web
 #. odoo-javascript
@@ -754,6 +858,11 @@ msgid "Verbose description of what this action actually does"
 msgstr "描述此动作实际执行的内容"
 
 #. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_custom_field__view_id
+msgid "View"
+msgstr ""
+
+#. module: mobile_web
 #. odoo-python
 #: code:addons/mobile_web/controllers/home.py:0
 msgid "Wrong login/password"
@@ -775,6 +884,11 @@ msgstr "密码已重置。"
 msgid ""
 "action type: `ir.actions.mobile_page` binding mobile_web.mobile.page record"
 msgstr ""
+
+#. module: mobile_web
+#: model_terms:ir.ui.view,arch_db:mobile_web.mobile_custom_field_form
+msgid "e.g. company_id.currency_id.name"
+msgstr "例如 company_id.currency_id.name"
 
 #. module: mobile_web
 #: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page__binding_views

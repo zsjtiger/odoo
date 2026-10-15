@@ -6,3 +6,4 @@ from . import test_mobile_hooks
 from . import test_mobile_models
 from . import test_mobile_page
 from . import test_mobile_routes
+from . import test_mobile_custom_field

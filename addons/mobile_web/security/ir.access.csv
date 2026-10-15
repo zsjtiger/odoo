@@ -5,3 +5,4 @@ access_mobile_web_mobile_page_user,mobile pages read by users,mobile_web.mobile.
 access_mobile_web_mobile_page_system,mobile pages managed by administrators,mobile_web.mobile.page,base.group_system,crud,
 access_mobile_web_mobile_page_actions_user,mobile page actions relations read by users,mobile_web.mobile.page.actions,base.group_user,r,
 access_mobile_web_mobile_page_actions_system,mobile page actions relations managed by administrators,mobile_web.mobile.page.actions,base.group_system,crud,
+access_mobile_custom_field_system,mobile custom field managed by administrators,mobile.custom.field,base.group_system,crud,
