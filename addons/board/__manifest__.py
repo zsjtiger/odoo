@@ -13,6 +13,7 @@
     'depends': ['base', 'web'],
     'data': [
         'security/ir.access.csv',
+        'views/board_views.xml',
     ],
     'application': True,
     'assets': {
@@ -22,6 +23,10 @@
             'board/static/src/**/*.scss',
             'board/static/src/**/*.js',
             'board/static/src/**/*.xml',
+        ],
+        'web.assets_unit_tests': [
+            'board/static/lib/echarts.min.js',
+            'board/static/tests/**/*.test.js',
         ],
     },
     'license': 'LGPL-3',

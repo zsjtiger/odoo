@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- 仪表盘视图: js_class="board" 由前端的仪表盘视图渲染; <action> 为要内嵌的动作 -->
+    <record id="board_board_view_form" model="ir.ui.view">
+        <field name="name">board.board.form</field>
+        <field name="model">board.board</field>
+        <field name="arch" type="xml">
+            <form js_class="board">
+                <board layout="2-2">
+                    <action string="Partners" name="base.action_partner_form" view_mode="list" layout="1-1"/>
+                    <action string="Companies" name="base.action_res_company_form" view_mode="list" layout="1-1"/>
+                </board>
+            </form>
+        </field>
+    </record>
+
+    <record id="board_board_action" model="ir.actions.act_window">
+        <field name="name">Dashboard</field>
+        <field name="res_model">board.board</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="board_board_view_form"/>
+        <field name="target">current</field>
+    </record>
+
+    <menuitem id="board_menu_root" name="Dashboards" sequence="225"
+              web_icon="board,static/description/icon.png"/>
+    <menuitem id="board_menu" name="Dashboard" parent="board_menu_root" action="board_board_action" sequence="10"/>
+</odoo>

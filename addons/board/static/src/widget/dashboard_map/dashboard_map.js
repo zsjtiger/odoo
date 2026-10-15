@@ -1,96 +1,68 @@
-import { registry } from "@web/core/registry";
-import fieldRegistryOwl from 'web.field_registry_owl';
-import { DashBoardCommonWidget } from '../common/dashboard_widget';
+import { registry } from "@web/core/framework/registry";
+import { formatInteger } from "@web/views/fields/formatters";
+import { DashBoardCommonWidget } from "../common/dashboard_widget";
 
-
-const formatterRegistry = registry.category("formatters");
-
+const GEO_URL = "/board/static/public/cn_geo.json";
 
 export class DashBoardMapWidget extends DashBoardCommonWidget {
-    static props = {
-        record: {type: Object, optional: true},
-        fieldName: {type: String, optional: true},
-        options: {type: Object, optional: true}
-    };
+    geoLoaded = false;
 
-    /**
-     * @override
-     */
-    _initChart(mapAttachElement) {
-        this.mapChart = echarts.init(mapAttachElement);
-        
-        $.get('/board/static/public/cn_geo.json', (geoJson) => {
-            // 注册地图geo json
-            this.mapChart.hideLoading();
-            echarts.registerMap('CN', geoJson);
-            
-            // 配置mapChart的显示
-            this.mapChart.setOption(this._mapChartOption);
-
-            // 支持点击跳转
-            this.mapChart.on('click', (params) => this._handleEchartsChartClick(params));
-
-            // 缩放时的label显示控制
-            this.mapChart.on('georoam', (param) => {
-                const { totalZoom } = param;
-                if (typeof totalZoom === 'number') {
-                    this.mapChart.setOption({
-                        series: [{
-                            label: {
-                                show: true ? totalZoom > 2 : false
-                            },
-                        }]
-                    });
-                }
-            });
-        });
+    /** 地图需要先加载中国地图的 geo json, 再绘制 */
+    renderChart() {
+        if (this.showLoading) {
+            return;
+        }
+        if (!this.geoLoaded) {
+            this._loadGeo().then(() => super.renderChart());
+            return;
+        }
+        super.renderChart();
     }
 
-    get _mapChartOption() {
+    async _loadGeo() {
+        if (this.geoLoaded || !window.echarts) {
+            return;
+        }
+        const response = await fetch(GEO_URL);
+        window.echarts.registerMap("CN", await response.json());
+        this.geoLoaded = true;
+    }
+
+    getChartOption() {
         return {
             tooltip: {
-                trigger: 'item',
-                // formatter: '{b}<br/>{c}',
+                trigger: "item",
                 formatter: (param) => {
-                    const integerFormatter = formatterRegistry.get('integer');
-                    const fromattedName = param.data.name;
-                    const formattedValue = param.data.value ? integerFormatter(param.data.value) : null ;
-
-                    return `${fromattedName} <br/> ${formattedValue}`;
+                    const value = param.data.value ? formatInteger(param.data.value) : null;
+                    return `${param.data.name} <br/> ${value}`;
                 },
             },
             visualMap: {
                 min: 0,
                 max: 100000,
-                text: ['High', 'Low'],
+                text: ["High", "Low"],
                 realtime: false,
                 calculable: true,
-                inRange: {
-                    color: ['lightskyblue', 'yellow', 'orangered']
-                }
+                inRange: { color: ["lightskyblue", "yellow", "orangered"] },
             },
             series: [
                 {
-                    // 这个series.name一定是value,不要设置成其他的，靠这个来判断后端数据的category是否为空
-                    // 自定义options时一定要注意这里，name要么是'value'，要么是后端数据的category字段的值
-                    name: 'value',
-                    type: 'map',
-                    map: 'CN',
+                    // 系列名必须为 value 或后端数据的 category 值, 点击时据此判断维度
+                    name: "value",
+                    type: "map",
+                    map: "CN",
                     roam: true,
-                    label: {
-                        // 放大时会有label显示
-                        show: false
-                    },
+                    label: { show: false },
                     zoom: 1.2,
-                    scaleLimit: {
-                        min: 1,
-                        max: 15
-                    },
+                    scaleLimit: { min: 1, max: 15 },
                     data: this._fieldData,
-                }
-            ]
+                },
+            ],
         };
     }
 }
 
-fieldRegistryOwl.add("snow_mdm_dashboard_map", DashBoardMapWidget);
+registry.category("fields").add("board_dashboard_map", {
+    component: DashBoardMapWidget,
+    supportedTypes: ["text", "char"],
+});
