@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template>
+<t t-name="DashBoard">
+    <div t-att-data-layout="node.attrs.layout" t-attf-class="oe_dashboard oe_dashboard_layout_grid" cellspacing="0" cellpadding="0" border="0">
+        <t t-foreach="node.children" t-as="action" t-if="action.tag == 'action'" t-call="DashBoard.action"/>
+    </div>
+</t>
+<t t-name="DashBoard.action">
+    <div t-att-data-id="action.attrs.id" class="oe_action">
+        <h2 t-attf-class="oe_header #{action.attrs.string ? '' : 'oe_header_empty'}">
+            <span class="oe_header_txt"> <t t-esc="action.attrs.string"/> </span>
+        </h2>
+        <div t-att-class="'oe_content' + (action.attrs.fold ? ' oe_folded' : '')"/>
+    </div>
+</t>
+<t t-name="DashBoard.NoContent">
+    <div class="o_view_nocontent">
+        <div class="o_nocontent_help">
+            <p class="o_view_nocontent_neutral_face">
+                Your personal dashboard is empty
+            </p>
+        </div>
+    </div>
+</t>
+<t t-name="DashBoard.xml">
+    <form t-att-string="form_title">
+        <board t-att-style="style">
+            <column t-foreach="columns" t-as="column">
+                <action t-foreach="column" t-as="action" t-att="action"/>
+            </column>
+        </board>
+    </form>
+</t>
+<div t-name="HomeWidget" class="oe_dashboard_home_widget"/>
+<t t-name="HomeWidget.content">
+    <h3><t t-esc="widget.title"/></h3>
+    <iframe width="100%" frameborder="0" t-att-src="url"/>
+</t>
+</template>

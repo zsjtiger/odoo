@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="snow_mdm.DashBoardWidget" owl="1">
+        <div class="snow_mdm_dashboard_chart_container">
+            <t t-esc="_showLoading ? '图表数据加载中...': ''"/>
+        </div>
+    </t>
+</templates>
