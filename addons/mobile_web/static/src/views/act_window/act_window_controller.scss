@@ -10,7 +10,7 @@
     border-bottom: 1px solid #e8e5e5;
     position: sticky;
     top: 0;
-    z-index: 2;
+    z-index: 10; // 高于浮动的新建按钮, 其中的排序/筛选面板才能盖住它
 }
 
 .m_search_input {

@@ -9,6 +9,7 @@ describe.current.tags("mobile");
 const SORT = [
     { name: "name", label: "Name", type: "char" },
     { name: "amount", label: "Amount", type: "float" },
+    { name: "email", label: "Email", type: "char" },
 ];
 
 /** Owl 的渲染是异步的: 点击之后等待渲染完成再查询 DOM */
@@ -18,84 +19,71 @@ async function settle() {
     }
 }
 
-function itemTexts() {
-    return queryAll(".m_sort_menu_panel [role=option]").map((el) => el.textContent.replace("✓", "").trim());
+function chip(name) {
+    return queryOne(`.m_sort_chip[data-name="${name}"]`);
 }
 
-function selectedTexts() {
-    return queryAll(".m_sort_menu_panel [aria-selected=true]").map((el) => el.textContent.replace("✓", "").trim());
-}
-
-test("the menu is closed until the toggle is pressed", async () => {
+test("the sheet is closed until the sort icon is pressed", async () => {
     await mountWithCleanup(SortMenu, { props: { sortFields: SORT, onChange: () => {} } });
-    expect(queryAll(".m_sort_menu_panel").length).toBe(0);
+    expect(queryAll(".m_sort_sheet").length).toBe(0);
     await click(".m_sort_menu_toggle");
     await settle();
-    expect(queryOne(".m_sort_menu_toggle")).toHaveAttribute("aria-expanded", "true");
-    expect(queryAll(".m_sort_menu_panel").length).toBe(1);
+    expect(queryAll(".m_sort_sheet").length).toBe(1);
 });
 
-test("the panel lists the default order and every sortable field", async () => {
+test("the sheet lists every sortable field as a chip", async () => {
     await mountWithCleanup(SortMenu, { props: { sortFields: SORT, onChange: () => {} } });
     await click(".m_sort_menu_toggle");
     await settle();
-    expect(itemTexts()).toEqual(["Default order", "Name", "Amount"]);
-    expect(selectedTexts()).toEqual(["Default order"]);
+    expect(queryAll(".m_sort_chip").map((el) => el.textContent.trim())).toEqual(["Name", "Amount", "Email"]);
 });
 
-test("picking a field reports its ascending order and closes the panel", async () => {
-    const events = [];
-    await mountWithCleanup(SortMenu, { props: { sortFields: SORT, onChange: (e) => events.push(e) } });
-    await click(".m_sort_menu_toggle");
-    await settle();
-    await click('.m_sort_menu_item[data-name="name"]');
-    await settle();
-    expect(events).toEqual([{ order: "name ASC" }]);
-    expect(queryAll(".m_sort_menu_panel").length).toBe(0);
-});
-
-test("the direction radios appear once a field is chosen and report descending", async () => {
-    const events = [];
-    await mountWithCleanup(SortMenu, { props: { sortFields: SORT, onChange: (e) => events.push(e) } });
-    await click(".m_sort_menu_toggle");
-    await settle();
-    await click('.m_sort_menu_item[data-name="amount"]');
-    await settle();
-    await click(".m_sort_menu_toggle");
-    await settle();
-    expect(itemTexts()).toEqual(["Default order", "Name", "Amount", "Ascending", "Descending"]);
-    expect(selectedTexts()).toEqual(["Amount", "Ascending"]);
-    await click('.m_sort_menu_item[data-dir="desc"]');
-    await settle();
-    expect(events.at(-1)).toEqual({ order: "amount DESC" });
-});
-
-test("choosing the default order reports an empty order", async () => {
-    const events = [];
-    await mountWithCleanup(SortMenu, { props: { sortFields: SORT, onChange: (e) => events.push(e) } });
-    await click(".m_sort_menu_toggle");
-    await settle();
-    await click('.m_sort_menu_item[data-name="name"]');
-    await settle();
-    await click(".m_sort_menu_toggle");
-    await settle();
-    await click('.m_sort_menu_item[data-name=""]');
-    await settle();
-    expect(events.at(-1)).toEqual({ order: "" });
-});
-
-test("the toggle is highlighted while a sort is active", async () => {
+test("a chip cycles from ascending to descending and then off", async () => {
     await mountWithCleanup(SortMenu, { props: { sortFields: SORT, onChange: () => {} } });
-    expect(queryOne(".m_sort_menu_toggle")).not.toHaveClass("is_active");
     await click(".m_sort_menu_toggle");
     await settle();
-    await click('.m_sort_menu_item[data-name="name"]');
+    await click(chip("name"));
     await settle();
-    expect(queryOne(".m_sort_menu_toggle")).toHaveClass("is_active");
+    expect(chip("name").textContent.trim()).toBe("Name ↑");
+    expect(chip("name").classList.contains("is_on")).toBe(true);
+    await click(chip("name"));
+    await settle();
+    expect(chip("name").textContent.trim()).toBe("Name ↓");
+    await click(chip("name"));
+    await settle();
+    expect(chip("name").textContent.trim()).toBe("Name");
+    expect(chip("name").classList.contains("is_on")).toBe(false);
 });
 
-test("the icon-only toggle has an accessible label and no text", async () => {
-    await mountWithCleanup(SortMenu, { props: { sortFields: SORT, onChange: () => {}, iconOnly: true } });
+test("confirm reports the selected fields in the order they were picked", async () => {
+    const orders = [];
+    await mountWithCleanup(SortMenu, { props: { sortFields: SORT, onChange: ({ order }) => orders.push(order) } });
+    await click(".m_sort_menu_toggle");
+    await settle();
+    await click(chip("name"));
+    await click(chip("email"));
+    await click(chip("email"));
+    await settle();
+    await click(".m_sheet_btn_primary");
+    await settle();
+    expect(orders).toEqual(["name ASC, email DESC"]);
+    expect(queryAll(".m_sort_sheet").length).toBe(0);
+});
+
+test("cancel leaves the sort unchanged", async () => {
+    const orders = [];
+    await mountWithCleanup(SortMenu, { props: { sortFields: SORT, onChange: ({ order }) => orders.push(order) } });
+    await click(".m_sort_menu_toggle");
+    await settle();
+    await click(chip("amount"));
+    await settle();
+    await click(".m_sheet_btn:not(.m_sheet_btn_primary)");
+    await settle();
+    expect(orders).toEqual([]);
+});
+
+test("the icon has an accessible label and no text", async () => {
+    await mountWithCleanup(SortMenu, { props: { sortFields: SORT, onChange: () => {} } });
     const toggle = queryAll(".m_sort_menu_toggle")[0];
     expect(toggle.getAttribute("aria-label")).toBe("Sort");
     expect(toggle.querySelectorAll("svg").length).toBe(1);

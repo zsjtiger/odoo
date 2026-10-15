@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { filterableFields, orderString, sortableFields } from "@mobile_web/views/record_filters";
+import { filterableFields, orderString, orderStringMany, sortableFields } from "@mobile_web/views/record_filters";
 
 describe.current.tags("mobile");
 
@@ -89,4 +89,9 @@ test("class marks mobile_sortable and mobile_filterable work where attributes ar
     ];
     expect(sortableFields(columns).map((f) => f.name)).toEqual(["name"]);
     expect(filterableFields(columns).map((f) => f.name)).toEqual(["amount"]);
+});
+
+test("several sort fields become one order string in the order given", () => {
+    expect(orderStringMany([{ name: "name", dir: "asc" }, { name: "email", dir: "desc" }])).toBe("name ASC, email DESC");
+    expect(orderStringMany([])).toBe("");
 });

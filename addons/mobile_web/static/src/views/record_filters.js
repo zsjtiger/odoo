@@ -84,3 +84,12 @@ export function filterableFields(columns) {
 export function orderString(sort) {
     return sort && sort.name ? `${sort.name} ${sort.dir.toUpperCase()}` : "";
 }
+
+/**
+ * 多个排序字段 -> 服务端 order 字符串, 如 "name ASC, department DESC" (按选择的先后顺序)
+ *
+ * @param {{ name: string, dir: "asc" | "desc" }[]} sorts
+ */
+export function orderStringMany(sorts) {
+    return sorts.map((sort) => `${sort.name} ${sort.dir.toUpperCase()}`).join(", ");
+}
