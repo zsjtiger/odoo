@@ -285,3 +285,19 @@
         transform: rotate(90deg);
     }
 }
+
+// 上下排列的字段(图片、多行文本等): 标签高度由文字决定, 不使用左侧的固定宽度
+.m_form_view .m_form_field.is_stacked > .m_form_label {
+    flex: 0 0 auto;
+}
+
+// 表单中的图片: 限制高度, 避免占用过多的空间
+.m_form_view .m_form_field .m_field_image {
+    max-width: 100%;
+    max-height: 120px;
+}
+
+// 空值占位文字在表单中不需要额外的内边距
+.m_form_view .m_form_field .m_field_empty {
+    padding: 0;
+}
