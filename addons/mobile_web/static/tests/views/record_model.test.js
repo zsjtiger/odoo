@@ -70,3 +70,10 @@ test("serializeForServer maps undefined scalars to false and keeps other values"
     expect(serializeForServer({ type: "char" }, "x")).toBe("x");
     expect(serializeForServer({ type: "boolean" }, true)).toBe(true);
 });
+
+test("a binary value read from the server is not written back unless it changed", () => {
+    const field = { type: "binary" };
+    expect(serializeForServer(field, { size: 926, checksum: "abc" })).toBe(undefined);
+    expect(serializeForServer(field, "iVBORw0KGgo=")).toBe("iVBORw0KGgo=");
+    expect(serializeForServer(field, false)).toBe(false);
+});

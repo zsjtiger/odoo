@@ -150,23 +150,31 @@
 }
 
 // 底部固定操作栏: 放弃 / 保存
+// 底部操作栏: 高度固定, 与查看 / 编辑 / 有未保存改动时保持一致
 .m_form_footer {
     position: fixed;
     left: 0;
     right: 0;
     bottom: 0;
     z-index: 10;
+    box-sizing: border-box;
+    height: calc(64px + env(safe-area-inset-bottom));
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+    padding: 8px 16px calc(8px + env(safe-area-inset-bottom));
     background: $surface;
     border-top: 1px solid $line;
 }
 
+// 未保存提示: 显示在底部操作栏的上方, 不占用操作栏的高度
 .m_form_status {
+    position: absolute;
+    left: 16px;
+    bottom: calc(100% + 4px);
     font-size: 13px;
+    white-space: nowrap;
     color: #e99c42;
 }
 

@@ -71,6 +71,12 @@ export function serializeForServer(field, value) {
             return [[6, 0, value.map((pair) => pair[0])]];
         case "one2many":
             return undefined; // 明细的改动由 lineCommands 生成命令, 见 MobileRecord.setLines
+        case "binary":
+            // 服务端读取时只返回 {size, checksum} 之类的信息, 没有内容: 未改动时不写回
+            if (value && typeof value === "object") {
+                return undefined;
+            }
+            return value === undefined ? false : value;
         default:
             return value === undefined ? false : value;
     }
