@@ -71,6 +71,7 @@ class MobileDemoKeyInfo(models.Model):
 
 class MobileDemoItem(models.Model):
     _name = 'mobile.demo.item'
+    _inherit = ['gps.mixin']
     _description = "Mobile Demo Item"
     _order = 'sequence, id'
 
@@ -113,6 +114,7 @@ class MobileDemoItem(models.Model):
     # --- relations ---
     partner_id = fields.Many2one('res.partner', string="Partner")
     region_id = fields.Many2one('mobile.demo.region', string="Region")
+    gps_id = fields.Many2one('gps', string="Location", ondelete='set null')
     company_id = fields.Many2one('res.company', string="Company", default=lambda self: self.env.company)
     user_id = fields.Many2one('res.users', string="Responsible")
     tag_ids = fields.Many2many('mobile.demo.tag', string="Tags")
