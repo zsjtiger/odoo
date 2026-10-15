@@ -95,6 +95,7 @@ test("a statusbar in the header is shown without a label", async () => {
     await mountWithCleanup(FormBlocks, {
         props: { blocks, record: recordOf({ state: "done" }), resModel: "res.partner", onFieldChange: () => {} },
     });
-    expect(queryAll(".m_statusbar_item").length).toBe(2);
+    expect(queryAll(".m_statusbar_item").length).toBe(1);
+    expect(queryAll(".m_statusbar_item")[0].textContent).toBe("Done");
     expect(queryAll(".m_form_label").length).toBe(0);
 });

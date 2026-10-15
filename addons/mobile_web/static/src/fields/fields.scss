@@ -134,7 +134,8 @@
 
 // 状态条: 选项横向排列, 当前状态高亮
 .m_statusbar {
-    display: flex;
+    display: inline-flex;
+    max-width: 100%;
     overflow-x: auto;
     border: 1px solid $line;
     border-radius: 6px;

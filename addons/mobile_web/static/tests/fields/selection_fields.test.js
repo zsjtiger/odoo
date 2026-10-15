@@ -52,29 +52,30 @@ test("radio shows the label when readonly", async () => {
     expect(queryOne(".m_field_value")).toHaveText("Done");
 });
 
-test("statusbar highlights the current state", async () => {
+test("statusbar shows only the current state", async () => {
     await mountWithCleanup(StatusBarField, { props: selectionProps("selection", STATES, "done") });
     const items = queryAll(".m_statusbar_item");
-    expect(items.map((el) => el.textContent)).toEqual(["Draft", "Done", "Cancelled"]);
-    expect(items.map((el) => el.classList.contains("is_active"))).toEqual([false, true, false]);
+    expect(items.length).toBe(1);
+    expect(items[0].textContent).toBe("Done");
+    expect(items[0].classList.contains("is_active")).toBe(true);
 });
 
-test("the statusbar only shows the state: clicking an item changes nothing", async () => {
+test("clicking the statusbar changes nothing", async () => {
     const values = [];
     await mountWithCleanup(StatusBarField, {
         props: selectionProps("selection", STATES, "draft", { onChange: (v) => values.push(v) }),
     });
-    await click(queryAll(".m_statusbar_item")[2]);
+    await click(queryAll(".m_statusbar_item")[0]);
     expect(values).toEqual([]);
-    expect(queryAll(".m_statusbar_item")[0].classList.contains("is_active")).toBe(true);
+    expect(queryAll(".m_statusbar_item")[0].textContent).toBe("Draft");
 });
 
-test("the statusbar in readonly mode shows the same state display", async () => {
+test("the statusbar in readonly mode shows the same state", async () => {
     await mountWithCleanup(StatusBarField, {
         props: selectionProps("selection", STATES, "draft", { readonly: true }),
     });
-    expect(queryAll(".m_statusbar_item").length).toBe(3);
-    expect(queryAll(".m_statusbar_item")[0].classList.contains("is_active")).toBe(true);
+    expect(queryAll(".m_statusbar_item").length).toBe(1);
+    expect(queryAll(".m_statusbar_item")[0].textContent).toBe("Draft");
 });
 
 test("priority shows one star per option after the first", async () => {

@@ -54,15 +54,11 @@ mobileFieldRegistry.add("radio", RadioField);
 // -----------------------------------------------------------------------------
 
 export class StatusBarField extends SelectionBase {
-    // 只读的状态显示: 高亮当前状态, 不能点击修改 (状态由按钮或业务流程改变)
+    // 只读的状态显示: 只展示当前状态, 不展示其余选项, 也不能点击修改
     static template = xml`
         <t t-name="mobile_web.StatusBarField">
             <div class="m_statusbar" role="status">
-                <span t-foreach="this.options" t-as="option" t-key="option_index"
-                      t-attf-class="m_statusbar_item {{ option_index === this.currentIndex ? 'is_active' : '' }}"
-                      t-att-aria-current="option_index === this.currentIndex ? 'step' : null">
-                    <t t-esc="option[1]"/>
-                </span>
+                <span class="m_statusbar_item is_active"><t t-esc="this.label"/></span>
             </div>
         </t>
     `;
