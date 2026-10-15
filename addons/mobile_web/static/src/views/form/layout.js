@@ -1,9 +1,12 @@
-import { getFieldWidget } from "@mobile_web/fields/index";
+import { getFieldWidget } from "@mobile_web/fields/field_widget";
 import { isInvisible } from "@mobile_web/views/arch";
 import { _t } from "@web/core/data/l10n/translation";
 
 // 表单中不展示的标签: 按钮与头部操作在 v1 中不支持
 const SKIPPED_TAGS = ["header", "footer", "button", "label", "field_info"];
+
+// 自带标题区域的部件, 表单中不再显示字段标签
+const SELF_TITLED_WIDGETS = ["timeline", "one2many_form"];
 
 // 这些类型的字段内容较长, 标签与内容上下排列
 const STACKED_TYPES = ["text", "html", "binary"];
@@ -45,8 +48,8 @@ export function buildLayout(node, fields, keyPrefix = "b") {
                     stacked: STACKED_TYPES.includes(field.type),
                     // 必填: 字段定义或 arch 中 required="1"
                     required: Boolean(field.required) || child.attrs.required === "1" || child.attrs.required === "True",
-                    // 时间线自带标题区域, 不再显示字段标签
-                    hideLabel: child.attrs.widget === "timeline",
+                    // 时间线与内嵌明细表单自带标题区域, 不再显示字段标签
+                    hideLabel: SELF_TITLED_WIDGETS.includes(child.attrs.widget),
                     widget: getFieldWidget(child.attrs, field),
                     readonly: child.attrs.readonly === "1" || child.attrs.readonly === "True" || !!field.readonly,
                 });

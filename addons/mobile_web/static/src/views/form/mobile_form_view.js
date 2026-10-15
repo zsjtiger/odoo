@@ -239,7 +239,15 @@ export class MobileFormView extends Component {
 
     /** 视图中的必填字段没有值的名称列表 */
     missingRequired() {
-        return missingRequiredNames([...this.headerBlocks, ...this.blocks], this.state.record.data);
+        const record = this.state.record;
+        const missing = missingRequiredNames([...this.headerBlocks, ...this.blocks], record.data);
+        // 字段组件注册的校验 (例如内嵌表单的明细必填项) 未通过时, 该字段也算缺失
+        for (const [name, check] of Object.entries(record.validators || {})) {
+            if (!check() && !missing.includes(name)) {
+                missing.push(name);
+            }
+        }
+        return missing;
     }
 
     async onSave() {

@@ -17,6 +17,8 @@ export class MobileRecord {
         // 打开时的值(用于计算明细的删除), 以及明细中每条记录的界面改动 (name -> {id: {字段: 值}})
         this.original = data;
         this.lineEdits = {};
+        // 字段组件注册的额外校验 (名称 -> 返回 true 表示通过), 例如内嵌表单的明细必填项, 保存前检查
+        this.validators = {};
     }
 
     get isNew() {

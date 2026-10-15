@@ -418,3 +418,60 @@
     font-size: 13px;
     color: $muted;
 }
+
+// -----------------------------------------------------------------------------
+// one2many_form: 标题行 + 每条明细一张卡片(卡片中是关联模型的表单)
+// -----------------------------------------------------------------------------
+
+.m_o2m_head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 40px;
+    padding: 0 16px;
+    background: $theme-bg-color;
+}
+
+.m_o2m_title {
+    font-size: 15px;
+    color: $theme;
+}
+
+.m_o2m_add {
+    height: 26px;
+    padding: 0 10px;
+    border: none;
+    border-radius: 4px;
+    background: $theme-btn;
+    color: #fff;
+    font-size: 13px;
+}
+
+.m_o2m_card {
+    position: relative;
+    margin: 12px 16px;
+    padding: 20px 12px 0;
+    border: 1px solid $line;
+    border-radius: 8px;
+    background: $surface;
+}
+
+// 卡片内的表单不需要为底部操作栏留空白 (覆盖 .m_form_view 的默认内边距)
+.m_o2m_card .m_form_view.m_o2m_body {
+    padding: 0 0 4px;
+}
+
+.m_o2m_card_delete {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 24px;
+    height: 24px;
+    border: 1px solid $line;
+    border-radius: 50%;
+    background: $surface;
+    color: $muted;
+    font-size: 16px;
+    line-height: 20px;
+    text-align: center;
+}
