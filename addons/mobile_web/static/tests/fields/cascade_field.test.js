@@ -85,5 +85,5 @@ test("choosing a sibling in the sheet reports its id and full path", async () =>
     await settle();
     await click(queryOne(".m_sheet_btn_primary"));
     await settle();
-    expect(values).toEqual([[4, "西城区"]]);
+    expect(values).toEqual([[4, "北京市 北京市 西城区"]]);
 });

@@ -103,7 +103,7 @@ test("confirm returns the item that was clicked last", async () => {
     await settle();
     await click(queryAll(".m_cascade_sheet .m_sheet_item")[0]);
     await click(queryOne(".m_sheet_btn_primary"));
-    expect(confirmed).toEqual([[{ id: 3, name: "东城区" }]]);
+    expect(confirmed).toEqual([[{ id: 3, name: "北京市 北京市 东城区" }]]);
 });
 
 test("an existing value opens at its level with the value checked", async () => {

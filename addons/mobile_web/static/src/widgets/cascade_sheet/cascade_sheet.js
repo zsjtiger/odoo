@@ -125,7 +125,9 @@ export class MobileCascadeSheet extends Component {
         if (!item) {
             return;
         }
-        this.state.selected = { id: item.id, name: item.name };
+        // 选中项的名称与服务端的显示名称一致: 完整路径, 例如 "北京市 北京市 东城区"
+        const fullName = [...this.state.path.map((node) => node.name), item.name].join(" ");
+        this.state.selected = { id: item.id, name: fullName };
         if (item.hasChildren) {
             this.state.path = [...this.state.path, item];
             await this.loadChildren(item.id);
