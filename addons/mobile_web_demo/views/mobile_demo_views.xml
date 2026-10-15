@@ -143,6 +143,26 @@
         </field>
     </record>
 
+    <!-- ============================ demo item: kanban ============================ -->
+    <record id="mobile_demo_item_kanban" model="ir.ui.view">
+        <field name="name">mobile.demo.item.kanban</field>
+        <field name="model">mobile.demo.item</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <templates>
+                    <t t-name="card">
+                        <field name="name" class="mobile_title"/>
+                        <field name="state" widget="state_selection"/>
+                        <field name="partner_id"/>
+                        <field name="total_amount"/>
+                        <field name="progress" widget="progressbar"/>
+                        <field name="tag_ids" widget="many2many_tags"/>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
     <!-- ============================ action and menu ============================ -->
     <record id="mobile_demo_item_action" model="ir.actions.act_window">
         <field name="name">Mobile Demo Items</field>
@@ -154,6 +174,14 @@
         </field>
     </record>
 
+    <record id="mobile_demo_item_kanban_action" model="ir.actions.act_window">
+        <field name="name">Mobile Demo Kanban</field>
+        <field name="res_model">mobile.demo.item</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="context">{}</field>
+    </record>
+
     <menuitem id="mobile_demo_menu_root" name="Mobile Demo" sequence="90"/>
     <menuitem id="mobile_demo_menu_items" name="Demo Items" parent="mobile_demo_menu_root" action="mobile_demo_item_action" sequence="10"/>
+    <menuitem id="mobile_demo_menu_kanban" name="Demo Kanban" parent="mobile_demo_menu_root" action="mobile_demo_item_kanban_action" sequence="20"/>
 </odoo>
