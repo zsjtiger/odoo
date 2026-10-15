@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 20.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-15 07:51+0000\n"
-"PO-Revision-Date: 2026-10-15 07:51+0000\n"
+"POT-Creation-Date: 2026-10-15 08:12+0000\n"
+"PO-Revision-Date: 2026-10-15 08:12+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -284,6 +284,12 @@ msgstr ""
 #: code:addons/mobile_web/static/src/views/kanban/mobile_kanban_view.js:0
 #: code:addons/mobile_web/static/src/views/list/mobile_list_view.js:0
 msgid "Failed to load, please try again"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/core/texts.js:0
+msgid "Filter"
 msgstr ""
 
 #. module: mobile_web

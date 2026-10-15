@@ -2,8 +2,6 @@ import { Component, onWillStart, onWillUpdateProps, proxy, t, useProps, xml } fr
 import { useService } from "@web/core/utils/hooks";
 import { ActionSheet } from "@mobile_web/widgets/action_sheet/action_sheet";
 import { ConfirmSheet, useConfirmSheet } from "@mobile_web/widgets/confirm_sheet/confirm_sheet";
-import { SortMenu } from "@mobile_web/widgets/sort_menu/sort_menu";
-import { sortableFields } from "@mobile_web/views/record_filters";
 import { buttonItems, collectButtons, runRecordButton } from "@mobile_web/actions/record_buttons";
 import { mobileViewRegistry } from "@mobile_web/views/registries";
 import { parseArch, collectFieldNames, isHiddenColumn, splitColumns } from "@mobile_web/views/arch";
@@ -65,14 +63,11 @@ const TEXTS = {
 
 export class MobileKanbanView extends Component {
     texts = TEXTS;
-    static components = { ActionSheet, SortMenu, ConfirmSheet };
+    static components = { ActionSheet, ConfirmSheet };
     static template = xml`
         <t t-name="mobile_web.MobileKanbanView">
             <div class="m_kanban_view" t-ref="this.pull.container">
                 <div t-if="this.pull.state.distance > 0 or this.pull.state.refreshing" class="m_pull_indicator" t-att-style="'height: ' + this.pull.state.distance + 'px'"><t t-esc="this.pullText"/></div>
-                <div t-if="this.sortFields.length" class="m_list_meta">
-                    <SortMenu sortFields="this.sortFields" onChange="this.onSort"/>
-                </div>
                 <ul class="m_kanban">
                     <li t-foreach="this.collection.state.records" t-as="record" t-key="record.resId"
                         t-attf-class="{{ this.rowButtons.length ? 'has_more' : '' }}">
@@ -104,6 +99,8 @@ export class MobileKanbanView extends Component {
         arch: t.string(),
         fields: t.object(),
         domain: t.array().optional([]),
+        // 排序由视图的工具条控制 (空字符串表示默认排序)
+        order: t.string().optional(""),
         context: t.object().optional({}),
         onSelect: t.function(),
     });
@@ -121,8 +118,6 @@ export class MobileKanbanView extends Component {
         const { primary, secondary } = splitColumns(columns);
         this.title = primary;
         this.lines = secondary;
-        const sortInfo = columns;
-        this.sortFields = sortableFields(sortInfo);
         const fieldNames = [...collectFieldNames(root)];
         this.collection = new RecordCollection(
             new MobileRecordModel(this.orm, this.props.resModel, this.props.fields, this.props.context),
@@ -132,7 +127,10 @@ export class MobileKanbanView extends Component {
         this.infinite = useInfiniteScroll(this.collection);
         this.pull = usePullToRefresh(() => this.reloadCollection());
         onWillUpdateProps((nextProps) => {
-            if (JSON.stringify(this.combinedDomain(nextProps)) !== JSON.stringify(this.collection.domain)) {
+            if (
+                JSON.stringify(this.combinedDomain(nextProps)) !== JSON.stringify(this.collection.domain) ||
+                (nextProps.order ?? "") !== this.collection.order
+            ) {
                 return this.reloadCollection(nextProps).then(() => this.infinite.recheck());
             }
         });
@@ -213,15 +211,11 @@ export class MobileKanbanView extends Component {
     }
 
     reloadCollection(props = this.props) {
-        return this.collection.reload(this.combinedDomain(props), this.collection.order);
+        return this.collection.reload(this.combinedDomain(props), props.order ?? "");
     }
 
     /** 排序菜单的变化: 按新的排序重新加载第一页 */
     // 作为子组件的回调传递, 使用箭头函数保持 this
-    onSort = ({ order }) => {
-        return this.collection.reload(this.combinedDomain(), order);
-    };
-
     onCardClick(ev) {
         this.props.onSelect(Number(ev.currentTarget.dataset.id));
     }

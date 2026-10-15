@@ -19,8 +19,14 @@ export class SortMenu extends Component {
     texts = TEXTS;
     static template = xml`
         <t t-name="mobile_web.SortMenu">
-            <div class="m_sort_menu">
-                <button type="button" t-attf-class="m_sort_menu_toggle {{ this.state.sortName ? 'is_active' : '' }}"
+            <div t-attf-class="m_sort_menu {{ this.props.iconOnly ? 'is_icon' : '' }}">
+                <button t-if="this.props.iconOnly" type="button" t-attf-class="m_sort_menu_toggle m_sort_menu_icon {{ this.state.sortName ? 'is_active' : '' }}"
+                        t-att-aria-label="this.texts.sort" t-att-aria-expanded="this.state.open ? 'true' : 'false'" t-on-click="this.toggle">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M7 4v16M3.5 7.5 7 4l3.5 3.5M17 20V4m-3.5 3.5L17 4l3.5 3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+                <button t-else="" type="button" t-attf-class="m_sort_menu_toggle {{ this.state.sortName ? 'is_active' : '' }}"
                         t-att-aria-expanded="this.state.open ? 'true' : 'false'" t-on-click="this.toggle">
                     <t t-esc="this.texts.sort"/> <t t-esc="this.state.open ? '▲' : '▼'"/>
                 </button>
@@ -66,6 +72,8 @@ export class SortMenu extends Component {
     props = useProps({
         sortFields: t.array(),
         onChange: t.function(),
+        // 只显示图标 (放在搜索栏右侧时使用)
+        iconOnly: t.boolean().optional(false),
     });
     state = proxy({ open: false, sortName: "", sortDir: /** @type {"asc" | "desc"} */ ("asc") });
 

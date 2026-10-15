@@ -10,7 +10,10 @@ import { _t } from "@web/core/data/l10n/translation";
 import "@mobile_web/views/index";
 import { envOf } from "@mobile_web/core/env";
 import { parseArch, isHiddenColumn } from "@mobile_web/views/arch";
-import { filterableFields } from "@mobile_web/views/record_filters";
+import { filterableFields, sortableFields } from "@mobile_web/views/record_filters";
+import { parseSearchFilters } from "@mobile_web/views/search_filters";
+import { SortMenu } from "@mobile_web/widgets/sort_menu/sort_menu";
+import { MobileSelectSheet } from "@mobile_web/widgets/select_sheet/select_sheet";
 import { facetFromRow, facetsDomain, suggestionRows } from "@mobile_web/views/search_facets";
 
 // -----------------------------------------------------------------------------
@@ -46,6 +49,13 @@ export class MobileActWindowController extends Component {
                     <button t-if="this.state.facets.length" type="button" class="m_search_clear" t-on-click="this.onClearFacets">
                         <t t-esc="this.texts.clear"/>
                     </button>
+                    <button t-if="this.filters.length" type="button" t-attf-class="m_search_icon_btn {{ this.state.activeFilters.length ? 'is_active' : '' }}"
+                            t-att-aria-label="this.texts.filter" t-on-click="this.openFilters">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M3 5h18l-7 8v6l-4-2v-4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <SortMenu t-if="this.sortFields.length" iconOnly="true" sortFields="this.sortFields" onChange="this.onSortChange"/>
                     </div>
                     <ul t-if="this.suggestions.length" class="m_search_suggest">
                         <li t-foreach="this.suggestions" t-as="row" t-key="row.key" class="m_search_row_item">
@@ -70,11 +80,14 @@ export class MobileActWindowController extends Component {
                 <t t-if="this.state.ready">
                     <t t-component="this.viewComponent" t-key="this.viewKey" t-props="this.viewProps"/>
                 </t>
+                <MobileSelectSheet t-if="this.state.filterSheet" title="this.texts.filter" options="this.filterOptions"
+                    selected="this.selectedFilterItems" multiple="true" onConfirm="this.onFilterConfirm" onClose="this.closeFilters"/>
                 <button type="button" class="m_create_btn" t-if="this.state.ready and this.state.type !== 'form' and this.hasForm"
                         t-on-click="this.onCreateClick">+</button>
             </div>
         </t>
     `;
+    static components = { SortMenu, MobileSelectSheet };
     props = useProps({
         action: t.object(),
         resId: t.or([t.number(), t.string(), t.literal(false)]).optional(),
@@ -94,6 +107,10 @@ export class MobileActWindowController extends Component {
             text: "",
             expanded: null,
             options: {},
+            // 排序 (Odoo 排序字符串) 与已选择的筛选项 (筛选项的 key)
+            order: "",
+            activeFilters: [],
+            filterSheet: false,
         });
         this.facetCounter = 0;
         this.orm = useService("orm");
@@ -135,14 +152,17 @@ export class MobileActWindowController extends Component {
         this.baseDomain = this.buildDomain(action);
 
         const views = getActionViews(action);
+        // 搜索视图的筛选项与列表视图的可排序字段一起加载
         const loaded = await this.viewService.loadViews({
             resModel: action.res_model,
-            views: /** @type {[number, string][]} */ (views),
+            views: /** @type {[number, string][]} */ ([...views, [false, "search"]]),
             context,
         }, /** @type {any} */ ({ actionId: action.id }));
         // 字段定义在模型级别共享, 各视图只有自己的 arch
         this.fields = loaded.fields;
         this.archs = Object.fromEntries(views.map(([, type]) => [type, loaded.views[type].arch]));
+        this.filters = parseSearchFilters(loaded.views.search?.arch);
+        this.sortFields = this.computeSortFields();
 
         // 如果 URL 中有 resId, 并且视图包含 form, 则直接打开 form
         let type = views[0][1];
@@ -207,6 +227,7 @@ export class MobileActWindowController extends Component {
         return {
             ...common,
             domain: this.state.domain,
+            order: this.state.order,
             onSelect: (resId) => this._onSelectRecord(resId),
         };
     }
@@ -236,8 +257,63 @@ export class MobileActWindowController extends Component {
 
     /** 按已生效的条件重新计算查询 domain: 动作的 domain 在前, 条件在后 */
     applyFacets() {
-        this.state.domain = [...this.baseDomain, ...facetsDomain(this.state.facets)];
+        this.state.domain = [...this.baseDomain, ...facetsDomain(this.state.facets), ...this.activeFilterDomains()];
     }
+
+    /** 已选择的筛选项对应的条件 (不同筛选项之间为且) */
+    activeFilterDomains() {
+        const domains = [];
+        for (const filter of this.filters || []) {
+            if (this.state.activeFilters.includes(filter.key)) {
+                try {
+                    domains.push(...evaluateExpr(filter.domain));
+                } catch {
+                    // 无法解析的筛选条件忽略, 不影响其他条件
+                }
+            }
+        }
+        return domains;
+    }
+
+    /** 排序菜单的字段: 列表(或看板)中标记为 sortable 的字段 */
+    computeSortFields() {
+        const arch = this.archs.list || this.archs.kanban;
+        if (!arch) {
+            return [];
+        }
+        const node = parseArch(arch);
+        const columns = node.children
+            .filter((c) => c.tag === "field" && c.attrs.name && this.fields[c.attrs.name])
+            .map((c) => ({ name: c.attrs.name, attrs: c.attrs, field: this.fields[c.attrs.name] }));
+        return sortableFields(columns);
+    }
+
+    get filterOptions() {
+        return (this.filters || []).map((filter) => ({ id: filter.key, name: filter.label }));
+    }
+
+    get selectedFilterItems() {
+        return this.filterOptions.filter((option) => this.state.activeFilters.includes(option.id));
+    }
+
+    openFilters() {
+        this.state.filterSheet = true;
+    }
+
+    // 作为子组件的回调传递, 使用箭头函数保持 this
+    closeFilters = () => {
+        this.state.filterSheet = false;
+    };
+
+    onFilterConfirm = (selected) => {
+        this.state.activeFilters = selected.map((item) => item.id);
+        this.state.filterSheet = false;
+        this.applyFacets();
+    };
+
+    onSortChange = ({ order }) => {
+        this.state.order = order;
+    };
 
     addFacet(facet) {
         this.state.facets.push({ ...facet, id: ++this.facetCounter });

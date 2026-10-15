@@ -93,3 +93,10 @@ test("the toggle is highlighted while a sort is active", async () => {
     await settle();
     expect(queryOne(".m_sort_menu_toggle")).toHaveClass("is_active");
 });
+
+test("the icon-only toggle has an accessible label and no text", async () => {
+    await mountWithCleanup(SortMenu, { props: { sortFields: SORT, onChange: () => {}, iconOnly: true } });
+    const toggle = queryAll(".m_sort_menu_toggle")[0];
+    expect(toggle.getAttribute("aria-label")).toBe("Sort");
+    expect(toggle.querySelectorAll("svg").length).toBe(1);
+});

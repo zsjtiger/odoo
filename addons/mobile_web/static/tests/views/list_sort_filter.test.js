@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { click, queryAll } from "@odoo/hoot-dom";
+import { queryAll } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { mountWithCleanup } from "@web/../tests/_framework/component_test_helpers";
 import { defineModels, fields, models } from "@web/../tests/web_test_helpers";
@@ -43,61 +43,26 @@ function cardNames() {
     return queryAll(".m_kanban_card .m_kanban_title").map((el) => el.textContent.trim());
 }
 
-/** 在工具条的排序菜单中选择一个字段 */
-async function pickSort(name) {
-    await click(".m_sort_menu_toggle");
-    await settle();
-    await click(`.m_sort_menu_item[data-name="${name}"]`);
-    await settle();
-}
-
-/** 在排序菜单中选择升序或降序 (需要已选择排序字段) */
-async function pickDirection(dir) {
-    await click(".m_sort_menu_toggle");
-    await settle();
-    await click(`.m_sort_menu_item[data-dir="${dir}"]`);
-    await settle();
-}
-
-test("the toolbar shows the sort menu only", async () => {
+test("the list shows its rows in the order it is given by the search bar", async () => {
     await mountWithCleanup(MobileListView, {
-        props: { resModel: "res.partner", arch: LIST_ARCH, fields: FIELDS, domain: [], context: {}, onSelect: () => {} },
+        props: { resModel: "res.partner", arch: LIST_ARCH, fields: FIELDS, domain: [], order: "name DESC", context: {}, onSelect: () => {} },
     });
     await settle();
-    expect(queryAll(".m_list_meta .m_sort_menu_toggle").length).toBe(1);
-    expect(queryAll(".m_list_meta .m_filter_menu_toggle").length).toBe(0);
-});
-
-test("sorting the list by name reorders the rows, and the direction radio reverses them", async () => {
-    await mountWithCleanup(MobileListView, {
-        props: { resModel: "res.partner", arch: LIST_ARCH, fields: FIELDS, domain: [], context: {}, onSelect: () => {} },
-    });
-    await settle();
-    await pickSort("name");
-    expect(rowNames()).toEqual(["Alpha", "Beta", "Gamma"]);
-    await pickDirection("desc");
     expect(rowNames()).toEqual(["Gamma", "Beta", "Alpha"]);
 });
 
-test("the kanban sorts its cards with the same menu", async () => {
-    await mountWithCleanup(MobileKanbanView, {
-        props: { resModel: "res.partner", arch: KANBAN_ARCH, fields: FIELDS, domain: [], context: {}, onSelect: () => {} },
+test("the default order keeps the server order", async () => {
+    await mountWithCleanup(MobileListView, {
+        props: { resModel: "res.partner", arch: LIST_ARCH, fields: FIELDS, domain: [], order: "", context: {}, onSelect: () => {} },
     });
     await settle();
-    await pickSort("name");
-    await pickDirection("desc");
+    expect(rowNames()).toEqual(["Alpha", "Beta", "Gamma"]);
+});
+
+test("the kanban shows its cards in the order it is given by the search bar", async () => {
+    await mountWithCleanup(MobileKanbanView, {
+        props: { resModel: "res.partner", arch: KANBAN_ARCH, fields: FIELDS, domain: [], order: "name DESC", context: {}, onSelect: () => {} },
+    });
+    await settle();
     expect(cardNames()).toEqual(["Gamma", "Beta", "Alpha"]);
 });
-
-test("the sort menu lists only the columns marked sortable in the arch", async () => {
-    const arch = `<list><field name="name" class="mobile_title" sortable="1"/><field name="email"/></list>`;
-    await mountWithCleanup(MobileListView, {
-        props: { resModel: "res.partner", arch, fields: FIELDS, domain: [], context: {}, onSelect: () => {} },
-    });
-    await settle();
-    await click(".m_sort_menu_toggle");
-    await settle();
-    const items = queryAll(".m_sort_menu_panel [role=option]").map((el) => el.textContent.replace("✓", "").trim());
-    expect(items).toEqual(["Default order", "Name"]);
-});
-

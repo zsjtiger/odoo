@@ -93,8 +93,8 @@ test("a short pull shows the hint to pull and then hides", async () => {
     expect(queryAll(".m_pull_indicator").length).toBe(0);
 });
 
-test("the list has no refresh button and the sort menu is in the toolbar", async () => {
+test("the list has no refresh button and no sort menu of its own: sorting is in the search bar", async () => {
     await mountList();
     expect(queryAll(".m_link_button").length).toBe(0);
-    expect(queryAll(".m_list_meta .m_sort_menu_toggle").length).toBe(1);
+    expect(queryAll(".m_sort_menu_toggle").length).toBe(0);
 });

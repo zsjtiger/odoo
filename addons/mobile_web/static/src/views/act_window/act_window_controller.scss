@@ -187,3 +187,24 @@
     font-size: 15px;
     white-space: nowrap;
 }
+
+// 搜索栏右侧的筛选与排序图标
+.m_search_icon_btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: none;
+    background: none;
+    color: $muted;
+    svg {
+        width: 22px;
+        height: 22px;
+    }
+    &.is_active {
+        color: $theme;
+    }
+}

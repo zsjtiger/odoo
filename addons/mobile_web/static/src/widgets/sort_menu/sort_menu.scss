@@ -62,3 +62,31 @@
     margin: 6px 0;
     background: $line;
 }
+
+// 搜索栏右侧的排序图标: 面板靠右展开
+.m_sort_menu.is_icon {
+    position: relative;
+    flex: 0 0 auto;
+}
+
+.m_sort_menu_icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    min-height: 36px;
+    padding: 0;
+    svg {
+        width: 22px;
+        height: 22px;
+    }
+    &.is_active {
+        color: $theme;
+    }
+}
+
+.m_sort_menu.is_icon .m_sort_menu_panel {
+    left: auto;
+    right: 0;
+    transform: none;
+}

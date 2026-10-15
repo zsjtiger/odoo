@@ -9,8 +9,6 @@ import { hasDisplayValue } from "@mobile_web/fields/field_utils";
 import { useInfiniteScroll } from "@mobile_web/views/infinite_scroll";
 import { pullLabel, usePullToRefresh } from "@mobile_web/views/pull_to_refresh";
 import { ActionSheet } from "@mobile_web/widgets/action_sheet/action_sheet";
-import { SortMenu } from "@mobile_web/widgets/sort_menu/sort_menu";
-import { sortableFields } from "@mobile_web/views/record_filters";
 import { buttonItems, collectButtons, runRecordButton } from "@mobile_web/actions/record_buttons";
 import { readonlyFieldRecord } from "@mobile_web/fields/field_record";
 import { _t } from "@web/core/data/l10n/translation";
@@ -56,14 +54,11 @@ const TEXTS = {
 
 export class MobileListView extends Component {
     texts = TEXTS;
-    static components = { ActionSheet, SortMenu, SwipeRow, ConfirmSheet };
+    static components = { ActionSheet, SwipeRow, ConfirmSheet };
     static template = xml`
         <t t-name="mobile_web.MobileListView">
             <div class="m_list_view" t-ref="this.pull.container">
                 <div t-if="this.pull.state.distance > 0 or this.pull.state.refreshing" class="m_pull_indicator" t-att-style="'height: ' + this.pull.state.distance + 'px'"><t t-esc="this.pullText"/></div>
-                <div t-if="this.sortFields.length" class="m_list_meta">
-                    <SortMenu sortFields="this.sortFields" onChange="this.onSort"/>
-                </div>
                 <ul class="m_list">
                     <li t-foreach="this.collection.state.records" t-as="record" t-key="record.resId"
                         t-attf-class="{{ this.rowButtons.length ? 'has_more' : '' }}">
@@ -115,6 +110,8 @@ export class MobileListView extends Component {
         arch: t.string(),
         fields: t.object(),
         domain: t.array().optional([]),
+        // 排序由视图的工具条控制 (order 为 Odoo 的排序字符串, 空字符串表示默认排序)
+        order: t.string().optional(""),
         context: t.object().optional({}),
         onSelect: t.function(),
     });
@@ -141,8 +138,6 @@ export class MobileListView extends Component {
         this.dateColumn = cols.find((c) => hasClass(c, "mobile_date")) || null;
         const placed = [this.badge, this.subtitle, this.dateColumn];
         this.secondary = secondary.filter((c) => !placed.includes(c));
-        const sortInfo = columns.map((c) => this.column(c));
-        this.sortFields = sortableFields(sortInfo);
         const fieldNames = [...collectFieldNames(node)];
         this.collection = new RecordCollection(this.makeModel(), fieldNames);
         // 删除权限在首次渲染前确定, 没有权限时删除按钮不可用
@@ -155,7 +150,10 @@ export class MobileListView extends Component {
         this.infinite = useInfiniteScroll(this.collection);
         this.pull = usePullToRefresh(() => this.reloadCollection());
         onWillUpdateProps((nextProps) => {
-            if (JSON.stringify(this.combinedDomain(nextProps)) !== JSON.stringify(this.collection.domain)) {
+            if (
+                JSON.stringify(this.combinedDomain(nextProps)) !== JSON.stringify(this.collection.domain) ||
+                (nextProps.order ?? "") !== this.collection.order
+            ) {
                 return this.reloadCollection(nextProps).then(() => this.infinite.recheck());
             }
         });
@@ -260,14 +258,8 @@ export class MobileListView extends Component {
     }
 
     reloadCollection(props = this.props) {
-        return this.collection.reload(this.combinedDomain(props), this.collection.order);
+        return this.collection.reload(this.combinedDomain(props), props.order ?? "");
     }
-
-    /** 排序菜单的变化: 按新的排序重新加载第一页 */
-    // 作为子组件的回调传递, 使用箭头函数保持 this
-    onSort = ({ order }) => {
-        return this.collection.reload(this.combinedDomain(), order);
-    };
 
     /** 左滑删除: 确认后调用服务端删除, 再重新加载第一页 */
     // 作为子组件的回调传递, 使用箭头函数保持 this
