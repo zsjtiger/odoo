@@ -1,0 +1,254 @@
+# Copyright 2023 The CrossNow.inc Authors.
+#
+from ..task import Task, TaskState
+from ..exceptions import WorkflowException
+from .base import TaskSpec
+from ..operators import valueof
+
+
+class Join(TaskSpec):
+
+    """
+    A task for synchronizing branches that were previously split using a
+    conditional task, such as MultiChoice. It has two or more incoming
+    branches and one or more outputs.
+
+    Keep in mind that each Join spec may have multiple corresponding
+    Task objects::
+
+        - When using the MultiInstance task
+        - When using the ThreadSplit task
+
+    When using the MultiInstance pattern, Join works across all
+    the resulting task instances. When using the ThreadSplit
+    pattern, Join ignores instances from another thread.
+
+    A Join task may enter the following states::
+
+        - FUTURE, LIKELY, or MAYBE: These are the initial predicted states.
+
+        - WAITING: This state is reached as soon as at least one of the
+        predecessors has completed.
+
+        - READY: All predecessors have completed. If multiple tasks within
+        the thread reference the same Join (e.g. if MultiInstance is used),
+        this state is only reached on one of the tasks; all other tasks go
+        directly from WAITING to completed.
+
+        - COMPLETED: All predecessors have completed, and
+        :class:`Task.complete()` was called.
+
+    The state may also change directly from WAITING to COMPLETED if the
+    Trigger pattern is used.
+    """
+
+    def __init__(self,
+                 wf_spec,
+                 name,
+                 split_task=None,
+                 threshold=None,
+                 cancel=False,
+                 **kwargs):
+        """
+        Constructor.
+
+        :type  wf_spec: :class:`gluon.specs.WorkflowSpec`
+        :param wf_spec: A reference to the parent (usually a workflow).
+        :type  name: string
+        :param name: A name for the task.
+        :type  split_task: str or None
+        :param split_task: The name of the task spec that was previously
+                           used to split the branch. If this is None,
+                           the most recent branch split is merged.
+        :type  threshold: int, :class:`gluon.operators.Attrib`, or None
+        :param threshold: Specifies how many incoming branches need to
+                          complete before the task triggers. When the limit
+                          is reached, the task fires but still expects all
+                          other branches to complete.
+                          You may also pass an attribute, in which case
+                          the value is resolved at runtime.
+                          Passing None means all incoming branches.
+        :type  cancel: bool
+        :param cancel: When True, any remaining incoming branches are
+                       cancelled as soon as the discriminator is activated.
+        :type  kwargs: dict
+        :param kwargs: See :class:`gluon.specs.TaskSpec`.
+        """
+        super(Join, self).__init__(wf_spec, name, **kwargs)
+        self.split_task = split_task
+        self.threshold = threshold
+        self.cancel_remaining = cancel
+
+    def _branch_is_complete(self, my_task):
+        # Determine whether that branch is now completed by checking whether
+        # it has any waiting items other than myself in it.
+        skip = None
+        for task in Task.Iterator(my_task, TaskState.NOT_FINISHED_MASK):
+            # If the current task is a child of myself, ignore it.
+            if skip is not None and task._is_descendant_of(skip):
+                continue
+            if task.task_spec == self:
+                skip = task
+                continue
+            return False
+        return True
+
+    def _branch_may_merge_at(self, task):
+        for child in task:
+            # Ignore tasks that were created by a trigger.
+            if child.triggered:
+                continue
+            # Merge found.
+            if child.task_spec == self:
+                return True
+            # If the task is predicted with less outputs than he has
+            # children, that means the prediction may be incomplete (for
+            # example, because a prediction is not yet possible at this time).
+            if child._is_predicted() and len(child.task_spec.outputs) > len(child.children):
+                return True
+        return False
+
+    def _get_split_task(self, my_task):
+        # One Join spec may have multiple corresponding Task objects::
+        #
+        #     - Due to the MultiInstance pattern.
+        #     - Due to the ThreadSplit pattern.
+        #
+        # When using the MultiInstance pattern, we want to join across
+        # the resulting task instances. When using the ThreadSplit
+        # pattern, we only join within the same thread. (Both patterns
+        # may also be mixed.)
+        #
+        # We are looking for all task instances that must be joined.
+        # We limit our search by starting at the split point.
+        if self.split_task:
+            task_spec = my_task.workflow.get_task_spec_from_name(self.split_task)
+            split_task = my_task._find_ancestor(task_spec)
+        else:
+            split_task = my_task.workflow.task_tree
+        return split_task
+
+    def _check_threshold_unstructured(self, my_task, force=False):
+        # The default threshold is the number of inputs.
+        threshold = valueof(my_task, self.threshold)
+        if threshold is None:
+            threshold = len(self.inputs)
+
+        # Look at the tree to find all places where this task is used.
+        tasks = []
+        for spec in self.inputs:
+            tasks.extend([ t for t in  my_task.workflow.task_tree._find_any(spec) if t.thread_id == my_task.thread_id ])
+
+        # Look up which tasks have already completed.
+        waiting_tasks = []
+        completed = 0
+        for task in tasks:
+            if task.parent is None or task._has_state(TaskState.COMPLETED):
+                completed += 1
+            elif not task._is_finished():
+                waiting_tasks.append(task)
+
+        # If the threshold was reached, get ready to fire.
+        return force or completed >= threshold, waiting_tasks
+
+    def _check_threshold_structured(self, my_task, force=False):
+        # Retrieve a list of all activated tasks from the associated
+        # task that did the conditional parallel split.
+        split_task = my_task._find_ancestor_from_name(self.split_task)
+        if split_task is None:
+            msg = 'Join with %s, which was not reached' % self.split_task
+            raise WorkflowException(msg, task_spec=self)
+        tasks = split_task.task_spec._get_activated_tasks(split_task, my_task)
+
+        # The default threshold is the number of branches that were started.
+        threshold = valueof(my_task, self.threshold)
+        if threshold is None:
+            threshold = len(tasks)
+
+        # Look up which tasks have already completed.
+        waiting_tasks = []
+        completed = 0
+        for task in tasks:
+            if not self._branch_may_merge_at(task):
+                completed += 1
+            elif self._branch_is_complete(task):
+                completed += 1
+            else:
+                waiting_tasks.append(task)
+
+        # If the threshold was reached, get ready to fire.
+        return force or completed >= threshold, waiting_tasks
+
+    def _start(self, my_task, force=False):
+        """
+        Checks whether the preconditions for going to READY state are met.
+        Returns True if the threshold was reached, False otherwise.
+        Also returns the list of tasks that yet need to be completed.
+        """
+        if my_task._is_finished():
+            return False, None
+        if my_task._has_state(TaskState.READY):
+            return True, None
+
+        # Check whether we may fire.
+        if self.split_task is None:
+            return self._check_threshold_unstructured(my_task, force)
+        else:
+            return self._check_threshold_structured(my_task, force)
+
+    def _update_hook(self, my_task):
+        # Check whether enough incoming branches have completed.
+        my_task._inherit_data()
+        may_fire, waiting_tasks = self._start(my_task)
+        if may_fire:
+            # If this is a cancelling join, cancel all incoming branches except for the one that just completed.
+            if self.cancel_remaining:
+                for task in waiting_tasks:
+                    task.cancel()
+            # Update the state of our child objects.
+            self._do_join(my_task)
+            return True
+        elif not my_task._is_finished():
+            my_task._set_state(TaskState.WAITING)
+
+    def _find_tasks(self, my_task):
+
+        split_task = self._get_split_task(my_task)
+        # Identify all corresponding task instances within the thread.
+        thread_tasks = []
+        for task in split_task._find_any(self):
+            # Ignore tasks from other threads.
+            if task.thread_id != my_task.thread_id:
+                continue
+            # Ignore my outgoing branches.
+            if self.split_task and task._is_descendant_of(my_task):
+                continue
+            # We have found a matching instance.
+            thread_tasks.append(task)
+        return thread_tasks
+
+    def _do_join(self, my_task):
+
+        # Execution will continue from this task; mark others as cancelled
+        for task in self._find_tasks(my_task):
+            if task != my_task:
+                task._set_state(TaskState.CANCELLED)
+                task._drop_children()
+
+    def _on_trigger(self, my_task):
+        """
+        May be called to fire the Join before the incoming branches are
+        completed.
+        """
+        tasks = sorted(self._find_tasks(my_task), key=lambda t: t.last_state_change)
+        for task in tasks[:-1]:
+            task._set_state(TaskState.CANCELLED)
+            task._drop_children()
+        tasks[-1]._ready()
+
+    def serialize(self, serializer):
+        return serializer.serialize_join(self)
+
+    @classmethod
+    def deserialize(self, serializer, wf_spec, s_state):
+        return serializer.deserialize_join(wf_spec, s_state)

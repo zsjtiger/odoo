@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+<crossnow>
+    <data noupdate="0">
+        <record id="access_snow_workflow_definition" model="ir.model.access">
+            <field name="name">Access Snow Workflow Definition</field>
+            <field name="model_id" ref="model_snow_workflow_definition"/>
+            <!--测试用-->
+            <field name="group_id" ref="base.group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+        <record id="access_snow_workflow_instance" model="ir.model.access">
+            <field name="name">Access Snow Workflow Instance</field>
+            <field name="model_id" ref="model_snow_workflow_instance"/>
+            <field name="group_id" ref="base.group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+        <record id="access_snow_workflow_instance_suspend" model="ir.model.access">
+            <field name="name">Access Snow Workflow Instance</field>
+            <field name="model_id" ref="model_snow_workflow_instance_suspend"/>
+            <field name="group_id" ref="base.group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+        <record id="access_snow_workflow_instance_suspend_history" model="ir.model.access">
+            <field name="name">Access Snow Workflow Instance</field>
+            <field name="model_id" ref="model_snow_workflow_instance_suspend_history"/>
+            <field name="group_id" ref="base.group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+        <record id="access_snow_workflow_execution" model="ir.model.access">
+            <field name="name">Access Snow Workflow Execution</field>
+            <field name="model_id" ref="model_snow_workflow_execution"/>
+            <field name="group_id" ref="base.group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+        <record id="access_snow_workflow_execution_task" model="ir.model.access">
+            <field name="name">Access Snow Workflow Execution Task</field>
+            <field name="model_id" ref="model_snow_workflow_execution_task"/>
+            <field name="group_id" ref="base.group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+        <record id="access_snow_workflow_execution_data_task" model="ir.model.access">
+            <field name="name">Access Snow Workflow Execution Task Data</field>
+            <field name="model_id" ref="snow_workflow.model_snow_workflow_execution_task_data"/>
+            <field name="group_id" ref="base.group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+        <record id="access_snow_workflow_execution_task_attendee" model="ir.model.access">
+            <field name="name">Access Snow Workflow Execution Task Attendee</field>
+            <field name="model_id" ref="model_snow_workflow_execution_task_attendee"/>
+            <field name="group_id" ref="base.group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+        <record id="access_snow_workflow_execution_task_attendee_history" model="ir.model.access">
+            <field name="name">Access Snow Workflow Execution Task Attendee History</field>
+            <field name="model_id" ref="model_snow_workflow_execution_task_attendee_history"/>
+            <field name="group_id" ref="base.group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+        <record id="access_snow_workflow_execution_task_history" model="ir.model.access">
+            <field name="name">Access Snow Workflow Execution Task History</field>
+            <field name="model_id" ref="model_snow_workflow_execution_task_history"/>
+            <field name="group_id" ref="base.group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+        <record id="access_snow_workflow_action" model="ir.model.access">
+            <field name="name">Access Snow Workflow Action</field>
+            <field name="model_id" ref="model_snow_workflow_action"/>
+            <field name="group_id" ref="base.group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+        <record id="access_snow_workflow_state_mapping" model="ir.model.access">
+            <field name="name">Access Snow Workflow State Mapping</field>
+            <field name="model_id" ref="model_snow_workflow_state_mapping"/>
+            <field name="group_id" ref="base.group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+        <record id="access_snow_workflow_external_managers" model="ir.model.access">
+            <field name="name">Access Snow Workflow External managers</field>
+            <field name="model_id" ref="model_snow_workflow_external_managers"/>
+            <field name="group_id" ref="base.group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+        <record id="access_snow_workflow_attendee_selection" model="ir.model.access">
+            <field name="name">Access Snow Workflow Attendee Selection</field>
+            <field name="model_id" ref="model_snow_workflow_attendee_selection"/>
+            <field name="group_id" ref="base.group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+        <record id="access_snow_workflow_carbon_copy" model="ir.model.access">
+            <field name="name">Access Snow Workflow Carbon Copy</field>
+            <field name="model_id" ref="model_snow_workflow_carbon_copy"/>
+            <field name="group_id" ref="base.group_user"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+    </data>
+</crossnow>
