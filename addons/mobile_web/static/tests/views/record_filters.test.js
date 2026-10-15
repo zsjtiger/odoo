@@ -80,3 +80,13 @@ test("the sortable marks do not restrict the filterable fields", () => {
     ];
     expect(filterableFields(columns).map((f) => f.name)).toEqual(["name", "amount"]);
 });
+
+test("class marks mobile_sortable and mobile_filterable work where attributes are not allowed", () => {
+    const columns = [
+        { name: "name", attrs: { name: "name", class: "mobile_title mobile_sortable" }, field: { type: "char", string: "Name" } },
+        { name: "amount", attrs: { name: "amount", class: "mobile_filterable" }, field: { type: "float", string: "Amount" } },
+        { name: "active", attrs: { name: "active" }, field: { type: "boolean", string: "Active" } },
+    ];
+    expect(sortableFields(columns).map((f) => f.name)).toEqual(["name"]);
+    expect(filterableFields(columns).map((f) => f.name)).toEqual(["amount"]);
+});

@@ -37,7 +37,16 @@ function isTruthyAttr(value) {
  * @param {string} attr
  */
 function markedColumns(columns, attr) {
-    const valueOf = (column) => column.attrs && column.attrs[attr];
+    // 视图 schema 不允许在 field 上写 sortable / filterable 属性, 因此同时支持 class 标记
+    // (mobile_sortable / mobile_filterable), 与 mobile_title 等标记保持一致
+    const valueOf = (column) => {
+        const value = column.attrs && column.attrs[attr];
+        if (value !== undefined) {
+            return value;
+        }
+        const classes = ((column.attrs && column.attrs.class) || "").split(/\s+/);
+        return classes.includes(`mobile_${attr}`) ? "1" : undefined;
+    };
     // 只有明确标记为真的列才会开启白名单; 仅写 "0" 只排除该列, 其余仍然可用
     const anyMarked = columns.some((column) => isTruthyAttr(valueOf(column)));
     return columns.filter((column) => {
