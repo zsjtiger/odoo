@@ -116,6 +116,7 @@
                         <field name="visit_datetime"/>
                         <field name="partner_id" placeholder="Search a partner by name"/>
                         <field name="region_id" widget="cascade"/>
+                        <field name="gps_id" widget="gps"/>
                         <field name="company_id"/>
                         <field name="user_id"/>
                         <field name="tag_ids" widget="many2many_tags"/>

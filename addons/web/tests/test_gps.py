@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from unittest.mock import patch
+
 from odoo import fields
 from odoo.exceptions import ValidationError
 from odoo.tests import TransactionCase, tagged
@@ -28,10 +30,11 @@ class TestGps(TransactionCase):
             self._gps(longitude=-181)
 
     def test_one_owner_field_has_one_location(self):
-        self._gps(res_model='gps.owner.test', res_id=5, res_field='gps_id')
+        # 新建时会替换同一所属字段的原位置, 唯一性约束在改写所属关系时检查
+        first = self._gps(res_model='gps.owner.test', res_id=5, res_field='gps_id')
+        other = self._gps(res_model='gps.owner.test', res_id=6, res_field='gps_id')
         with self.assertRaises(ValidationError):
-            self._gps(res_model='gps.owner.test', res_id=5, res_field='gps_id')
-
+            other.write({'res_id': first.res_id})
     def test_unsaved_owners_do_not_conflict(self):
         # 新建记录的位置 res_id 为 0, 多条都允许存在
         self._gps(res_model='gps.owner.test', res_id=0, res_field='gps_id')
@@ -50,3 +53,41 @@ class TestGps(TransactionCase):
         )
         self.env['gps']._cron_cleanup_orphans()
         self.assertFalse(gps.exists())
+
+    def test_search_address_parses_the_geocoder_results(self):
+        geocoder = [{'display_name': "北京市朝阳区建国路", 'lat': '39.9042', 'lon': '116.4074'}]
+        with patch.object(type(self.env['gps']), '_gps_request', return_value=geocoder) as request:
+            results = self.env['gps'].search_address("建国路")
+        self.assertEqual(results, [{'address': "北京市朝阳区建国路", 'latitude': 39.9042, 'longitude': 116.4074}])
+        self.assertEqual(request.call_args.args[0], 'search')
+
+    def test_search_address_skips_malformed_items(self):
+        geocoder = [{'display_name': "No coordinates"}, {'display_name': "OK", 'lat': '1', 'lon': '2'}]
+        with patch.object(type(self.env['gps']), '_gps_request', return_value=geocoder):
+            results = self.env['gps'].search_address("x")
+        self.assertEqual([item['address'] for item in results], ["OK"])
+
+    def test_search_address_without_query_makes_no_request(self):
+        with patch.object(type(self.env['gps']), '_gps_request') as request:
+            self.assertEqual(self.env['gps'].search_address("   "), [])
+        request.assert_not_called()
+
+    def test_search_address_failure_returns_no_results(self):
+        with patch.object(type(self.env['gps']), '_gps_request', return_value=None):
+            self.assertEqual(self.env['gps'].search_address("anything"), [])
+
+    def test_reverse_address_returns_the_address_of_the_point(self):
+        item = {'display_name': "北京市朝阳区建国路"}
+        with patch.object(type(self.env['gps']), '_gps_request', return_value=item):
+            result = self.env['gps'].reverse_address(39.9, 116.4)
+        self.assertEqual(result, {'address': "北京市朝阳区建国路", 'latitude': 39.9, 'longitude': 116.4})
+
+    def test_reverse_address_without_result_is_empty(self):
+        with patch.object(type(self.env['gps']), '_gps_request', return_value=None):
+            self.assertEqual(self.env['gps'].reverse_address(0, 0), {})
+
+    def test_creating_a_location_replaces_the_previous_one_of_the_same_owner_field(self):
+        first = self._gps(res_model='gps.owner.test', res_id=7, res_field='gps_id')
+        second = self._gps(address="Replacement", res_model='gps.owner.test', res_id=7, res_field='gps_id')
+        self.assertFalse(first.exists())
+        self.assertEqual(second.res_id, 7)

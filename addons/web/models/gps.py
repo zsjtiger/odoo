@@ -1,8 +1,19 @@
 # -*- coding: utf-8 -*-
+import json
+import logging
+import urllib.parse
+import urllib.request
 from datetime import timedelta
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
+
+_logger = logging.getLogger(__name__)
+
+# 地址搜索与逆地理编码的服务地址, 可以在系统参数中改为自建的 Nominatim 服务
+GEOCODER_URL_PARAM = 'web.gps.geocoder_url'
+DEFAULT_GEOCODER_URL = 'https://nominatim.openstreetmap.org'
+GEOCODER_TIMEOUT = 5
 
 # 没有被所属记录引用的位置, 超过这个时间后才会被清理 (避免删除正在编辑的表单中的位置)
 ORPHAN_GRACE_PERIOD = timedelta(hours=24)
@@ -52,6 +63,18 @@ class Gps(models.Model):
             if duplicate:
                 raise ValidationError("This owner already has a location for this field.")
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            # 同一所属字段新建位置时, 原来的位置已被替换 (例如上一次编辑取消后遗留的未保存位置), 删除它
+            if vals.get('res_model') and vals.get('res_id') and vals.get('res_field'):
+                self.search([
+                    ('res_model', '=', vals['res_model']),
+                    ('res_id', '=', vals['res_id']),
+                    ('res_field', '=', vals['res_field']),
+                ]).unlink()
+        return super().create(vals_list)
+
     def _get_owner(self):
         """ 所属记录, 不存在时返回空记录 """
         self.ensure_one()
@@ -70,3 +93,57 @@ class Gps(models.Model):
                 orphans |= gps
         orphans.unlink()
         return len(orphans)
+
+    # -------------------------------------------------------------------------
+    # 地址搜索与逆地理编码 (前端控件调用, 第三方服务的请求在服务端发出)
+    # -------------------------------------------------------------------------
+
+    @api.model
+    def _gps_request(self, path, params):
+        """ 请求地理编码服务, 失败时返回 None (不抛出异常, 前端显示为没有结果) """
+        base_url = self.env['ir.config_parameter'].sudo().get_param(GEOCODER_URL_PARAM) or DEFAULT_GEOCODER_URL
+        url = f"{base_url.rstrip('/')}/{path}?{urllib.parse.urlencode(params)}"
+        request = urllib.request.Request(url, headers={'User-Agent': 'Odoo-GPS/1.0'})
+        try:
+            with urllib.request.urlopen(request, timeout=GEOCODER_TIMEOUT) as response:
+                return json.loads(response.read().decode('utf-8'))
+        except Exception:
+            _logger.warning("GPS geocoder request failed: %s", url, exc_info=True)
+            return None
+
+    @api.model
+    def search_address(self, query, limit=8):
+        """ 按关键词搜索地址, 返回 [{address, latitude, longitude}] """
+        query = (query or '').strip()
+        if not query:
+            return []
+        items = self._gps_request('search', {
+            'q': query,
+            'format': 'json',
+            'limit': int(limit),
+            'accept-language': self.env.lang or 'en',
+        })
+        results = []
+        for item in items or []:
+            try:
+                results.append({
+                    'address': item['display_name'],
+                    'latitude': float(item['lat']),
+                    'longitude': float(item['lon']),
+                })
+            except (KeyError, TypeError, ValueError):
+                continue
+        return results
+
+    @api.model
+    def reverse_address(self, latitude, longitude):
+        """ 由坐标查询地址, 返回 {address, latitude, longitude} 或空字典 """
+        item = self._gps_request('reverse', {
+            'lat': latitude,
+            'lon': longitude,
+            'format': 'json',
+            'accept-language': self.env.lang or 'en',
+        })
+        if not item or 'display_name' not in item:
+            return {}
+        return {'address': item['display_name'], 'latitude': latitude, 'longitude': longitude}
