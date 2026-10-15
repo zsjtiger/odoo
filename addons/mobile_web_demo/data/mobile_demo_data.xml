@@ -32,6 +32,76 @@
         <field name="color">7</field>
     </record>
 
+    <!-- 层级数据: 省 > 市 > 区 -->
+    <record id="mobile_demo_region_bj" model="mobile.demo.region">
+        <field name="name">北京市</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="mobile_demo_region_bj_city" model="mobile.demo.region">
+        <field name="name">北京市</field>
+        <field name="sequence">10</field>
+        <field name="parent_id" ref="mobile_demo_region_bj"/>
+    </record>
+
+    <record id="mobile_demo_region_bj_dc" model="mobile.demo.region">
+        <field name="name">东城区</field>
+        <field name="sequence">10</field>
+        <field name="parent_id" ref="mobile_demo_region_bj_city"/>
+    </record>
+
+    <record id="mobile_demo_region_bj_xc" model="mobile.demo.region">
+        <field name="name">西城区</field>
+        <field name="sequence">20</field>
+        <field name="parent_id" ref="mobile_demo_region_bj_city"/>
+    </record>
+
+    <record id="mobile_demo_region_gd" model="mobile.demo.region">
+        <field name="name">广东省</field>
+        <field name="sequence">20</field>
+    </record>
+
+    <record id="mobile_demo_region_gz" model="mobile.demo.region">
+        <field name="name">广州市</field>
+        <field name="sequence">10</field>
+        <field name="parent_id" ref="mobile_demo_region_gd"/>
+    </record>
+
+    <record id="mobile_demo_region_gz_th" model="mobile.demo.region">
+        <field name="name">天河区</field>
+        <field name="sequence">10</field>
+        <field name="parent_id" ref="mobile_demo_region_gz"/>
+    </record>
+
+    <record id="mobile_demo_region_gz_yx" model="mobile.demo.region">
+        <field name="name">越秀区</field>
+        <field name="sequence">20</field>
+        <field name="parent_id" ref="mobile_demo_region_gz"/>
+    </record>
+
+    <record id="mobile_demo_region_zj" model="mobile.demo.region">
+        <field name="name">浙江省</field>
+        <field name="sequence">30</field>
+    </record>
+
+    <record id="mobile_demo_region_hz" model="mobile.demo.region">
+        <field name="name">杭州市</field>
+        <field name="sequence">10</field>
+        <field name="parent_id" ref="mobile_demo_region_zj"/>
+    </record>
+
+    <record id="mobile_demo_region_hz_xh" model="mobile.demo.region">
+        <field name="name">西湖区</field>
+        <field name="sequence">10</field>
+        <field name="parent_id" ref="mobile_demo_region_hz"/>
+    </record>
+
+    <record id="mobile_demo_region_hz_sc" model="mobile.demo.region">
+        <field name="name">上城区</field>
+        <field name="sequence">20</field>
+        <field name="parent_id" ref="mobile_demo_region_hz"/>
+    </record>
+
     <record id="mobile_demo_item_1" model="mobile.demo.item">
         <field name="name">Alpha visit</field>
         <field name="sequence">10</field>
@@ -57,6 +127,7 @@
         <field name="notes">&lt;p&gt;Rich text with &lt;b&gt;bold&lt;/b&gt; and a &lt;a href="https://www.odoo.com"&gt;link&lt;/a&gt;.&lt;/p&gt;</field>
         <field name="payload" eval="{'source': 'demo', 'rank': 1, 'tags': ['a', 'b']}"/>
         <field name="partner_id" ref="mobile_demo_partner_a"/>
+        <field name="region_id" ref="mobile_demo_region_bj_dc"/>
         <field name="user_id" ref="base.user_admin"/>
         <field name="tag_ids" eval="[(6, 0, [ref('mobile_demo_tag_vip'), ref('mobile_demo_tag_followup')])]"/>
         <field name="line_ids" eval="[(0, 0, {'name': 'Consultation', 'quantity': 1, 'unit_price': 300}), (0, 0, {'name': 'Medicine', 'quantity': 2, 'unit_price': 450})]"/>

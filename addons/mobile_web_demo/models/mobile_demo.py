@@ -27,6 +27,29 @@ class MobileDemoLine(models.Model):
             line.amount = line.quantity * line.unit_price
 
 
+class MobileDemoRegion(models.Model):
+    """层级数据(省 > 市 > 区), 用于演示级联选择控件 widget="cascade"."""
+    _name = 'mobile.demo.region'
+    _description = "Mobile Demo Region"
+    _order = 'sequence, id'
+
+    name = fields.Char(required=True)
+    sequence = fields.Integer(default=10)
+    parent_id = fields.Many2one('mobile.demo.region', string="Parent", ondelete='cascade', index=True)
+    child_ids = fields.One2many('mobile.demo.region', 'parent_id', string="Children")
+
+    @api.depends('name', 'parent_id.name')
+    def _compute_display_name(self):
+        # 显示名为完整路径, 例如 "北京市 北京市 东城区"
+        for region in self:
+            names = []
+            node = region
+            while node:
+                names.insert(0, node.name or '')
+                node = node.parent_id
+            region.display_name = ' '.join(names)
+
+
 class MobileDemoItem(models.Model):
     _name = 'mobile.demo.item'
     _description = "Mobile Demo Item"
@@ -70,6 +93,7 @@ class MobileDemoItem(models.Model):
 
     # --- relations ---
     partner_id = fields.Many2one('res.partner', string="Partner")
+    region_id = fields.Many2one('mobile.demo.region', string="Region")
     company_id = fields.Many2one('res.company', string="Company", default=lambda self: self.env.company)
     user_id = fields.Many2one('res.users', string="Responsible")
     tag_ids = fields.Many2many('mobile.demo.tag', string="Tags")

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 20.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-15 09:38+0000\n"
-"PO-Revision-Date: 2026-10-15 09:38+0000\n"
+"POT-Creation-Date: 2026-10-15 10:22+0000\n"
+"PO-Revision-Date: 2026-10-15 10:22+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -80,6 +80,11 @@ msgid "Category D"
 msgstr ""
 
 #. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_region__child_ids
+msgid "Children"
+msgstr ""
+
+#. module: mobile_web_demo
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__code
 msgid "Code"
 msgstr ""
@@ -113,6 +118,7 @@ msgstr ""
 #. module: mobile_web_demo
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__create_uid
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_line__create_uid
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_region__create_uid
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_tag__create_uid
 msgid "Created by"
 msgstr ""
@@ -120,6 +126,7 @@ msgstr ""
 #. module: mobile_web_demo
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__create_date
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_line__create_date
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_region__create_date
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_tag__create_date
 msgid "Created on"
 msgstr ""
@@ -174,6 +181,7 @@ msgstr ""
 #. module: mobile_web_demo
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__display_name
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_line__display_name
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_region__display_name
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_tag__display_name
 msgid "Display Name"
 msgstr ""
@@ -207,6 +215,7 @@ msgstr ""
 #. module: mobile_web_demo
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__id
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_line__id
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_region__id
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_tag__id
 msgid "ID"
 msgstr ""
@@ -234,6 +243,7 @@ msgstr ""
 #. module: mobile_web_demo
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__write_uid
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_line__write_uid
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_region__write_uid
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_tag__write_uid
 msgid "Last Updated by"
 msgstr ""
@@ -241,6 +251,7 @@ msgstr ""
 #. module: mobile_web_demo
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__write_date
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_line__write_date
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_region__write_date
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_tag__write_date
 msgid "Last Updated on"
 msgstr ""
@@ -277,6 +288,11 @@ msgid "Mobile Demo Line"
 msgstr ""
 
 #. module: mobile_web_demo
+#: model:ir.model,name:mobile_web_demo.model_mobile_demo_region
+msgid "Mobile Demo Region"
+msgstr ""
+
+#. module: mobile_web_demo
 #: model:ir.model,name:mobile_web_demo.model_mobile_demo_tag
 msgid "Mobile Demo Tag"
 msgstr ""
@@ -289,6 +305,7 @@ msgstr ""
 #. module: mobile_web_demo
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__name
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_line__name
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_region__name
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_tag__name
 msgid "Name"
 msgstr ""
@@ -308,6 +325,11 @@ msgstr ""
 #. module: mobile_web_demo
 #: model_terms:ir.ui.view,arch_db:mobile_web_demo.mobile_demo_item_form
 msgid "Numbers"
+msgstr ""
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_region__parent_id
+msgid "Parent"
 msgstr ""
 
 #. module: mobile_web_demo
@@ -352,6 +374,11 @@ msgid "Quantity"
 msgstr ""
 
 #. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__region_id
+msgid "Region"
+msgstr ""
+
+#. module: mobile_web_demo
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__note_required
 msgid "Required when urgent"
 msgstr ""
@@ -373,6 +400,7 @@ msgstr ""
 
 #. module: mobile_web_demo
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__sequence
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_region__sequence
 msgid "Sequence"
 msgstr ""
 

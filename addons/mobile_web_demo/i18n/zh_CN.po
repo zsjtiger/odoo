@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 20.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-15 09:38+0000\n"
-"PO-Revision-Date: 2026-10-15 09:38+0000\n"
+"POT-Creation-Date: 2026-10-15 10:22+0000\n"
+"PO-Revision-Date: 2026-10-15 10:22+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: zh_CN\n"
@@ -87,6 +87,11 @@ msgid "Category D"
 msgstr "分类 D"
 
 #. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_region__child_ids
+msgid "Children"
+msgstr "下级"
+
+#. module: mobile_web_demo
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__code
 msgid "Code"
 msgstr "代码"
@@ -120,6 +125,7 @@ msgstr "联系人"
 #. module: mobile_web_demo
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__create_uid
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_line__create_uid
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_region__create_uid
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_tag__create_uid
 msgid "Created by"
 msgstr "创建人"
@@ -127,6 +133,7 @@ msgstr "创建人"
 #. module: mobile_web_demo
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__create_date
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_line__create_date
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_region__create_date
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_tag__create_date
 msgid "Created on"
 msgstr "创建时间"
@@ -181,6 +188,7 @@ msgstr "描述"
 #. module: mobile_web_demo
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__display_name
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_line__display_name
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_region__display_name
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_tag__display_name
 msgid "Display Name"
 msgstr "显示名称"
@@ -214,6 +222,7 @@ msgstr "文件"
 #. module: mobile_web_demo
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__id
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_line__id
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_region__id
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_tag__id
 msgid "ID"
 msgstr "ID"
@@ -241,6 +250,7 @@ msgstr "明细名称"
 #. module: mobile_web_demo
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__write_uid
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_line__write_uid
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_region__write_uid
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_tag__write_uid
 msgid "Last Updated by"
 msgstr "最后更新人"
@@ -248,6 +258,7 @@ msgstr "最后更新人"
 #. module: mobile_web_demo
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__write_date
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_line__write_date
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_region__write_date
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_tag__write_date
 msgid "Last Updated on"
 msgstr "最后更新时间"
@@ -284,6 +295,11 @@ msgid "Mobile Demo Line"
 msgstr "移动端演示明细行"
 
 #. module: mobile_web_demo
+#: model:ir.model,name:mobile_web_demo.model_mobile_demo_region
+msgid "Mobile Demo Region"
+msgstr "移动端演示地区"
+
+#. module: mobile_web_demo
 #: model:ir.model,name:mobile_web_demo.model_mobile_demo_tag
 msgid "Mobile Demo Tag"
 msgstr "移动端演示标签"
@@ -296,6 +312,7 @@ msgstr "移动端演示"
 #. module: mobile_web_demo
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__name
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_line__name
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_region__name
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_tag__name
 msgid "Name"
 msgstr "名称"
@@ -316,6 +333,11 @@ msgstr "备注"
 #: model_terms:ir.ui.view,arch_db:mobile_web_demo.mobile_demo_item_form
 msgid "Numbers"
 msgstr "数值"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_region__parent_id
+msgid "Parent"
+msgstr "上级"
 
 #. module: mobile_web_demo
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__partner_id
@@ -359,6 +381,11 @@ msgid "Quantity"
 msgstr "数量"
 
 #. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__region_id
+msgid "Region"
+msgstr "地区"
+
+#. module: mobile_web_demo
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__note_required
 msgid "Required when urgent"
 msgstr "紧急时必填"
@@ -380,6 +407,7 @@ msgstr "机密"
 
 #. module: mobile_web_demo
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__sequence
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_region__sequence
 msgid "Sequence"
 msgstr "序号"
 
