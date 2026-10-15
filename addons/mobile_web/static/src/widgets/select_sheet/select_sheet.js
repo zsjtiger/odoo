@@ -23,7 +23,11 @@ export class MobileSelectSheet extends Component {
                         <span t-else="" class="m_sheet_btn_spacer"></span>
                     </header>
                     <div class="m_sheet_search">
-                        <input type="search" class="m_input" t-att-placeholder="this.texts.search" enterkeyhint="search"
+                        <svg class="m_sheet_search_icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/>
+                            <line x1="16.5" y1="16.5" x2="21" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        <input type="search" class="m_input m_sheet_search_input" t-att-placeholder="this.texts.search" enterkeyhint="search"
                                t-att-value="this.state.text" t-on-input="this.onSearchInput"/>
                     </div>
                     <ul class="m_sheet_list">
