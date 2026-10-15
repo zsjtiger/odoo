@@ -72,34 +72,8 @@
     color: $muted;
 }
 
-// 其他字段: 每行左侧是字段名, 右侧是值, 与表单的布局一致
-.m_list_cell {
-    display: flex;
-    align-items: baseline;
-    min-width: 0;
-}
 
-.m_list_label {
-    flex: 0 0 88px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    color: $muted;
-    font-size: 13px;
-}
 
-.m_list_value {
-    flex: 1 1 auto;
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    color: $text;
-    font-size: 14px;
-    .m_field_value {
-        font-size: 14px;
-    }
-}
 
 // 无限滚动的哨兵: 滚动到这里时自动加载下一页, 这里只显示状态文字
 .m_load_sentinel {
@@ -133,4 +107,100 @@
 .m_list > li.has_more .m_list_row,
 .m_kanban > li.has_more > .m_kanban_card {
     padding-right: 52px;
+}
+
+// -----------------------------------------------------------------------------
+// 列表卡片: 标题与状态胶囊在第一行, 副标题, 底部是其它字段与日期
+// -----------------------------------------------------------------------------
+
+.m_list_row.m_list_card {
+    display: block;
+    width: calc(100% - 24px);
+    margin: 8px 12px;
+    padding: 12px 14px;
+    border: none;
+    border-radius: 10px;
+    background: $surface;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+    text-align: left;
+}
+
+.m_card_head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+
+    .m_list_primary {
+        flex: 1;
+        min-width: 0;
+    }
+}
+
+// 状态胶囊: 颜色由 decoration-success / decoration-danger 决定
+.m_card_badge {
+    flex: 0 0 auto;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: $line;
+    color: $muted;
+    font-size: 12px;
+    line-height: 18px;
+
+    &.is_success {
+        background: #0f9b8e;
+        color: #fff;
+    }
+
+    &.is_danger {
+        background: #f4a08a;
+        color: #fff;
+    }
+
+    .m_badge {
+        padding: 0;
+        background: transparent;
+        color: inherit;
+        font-size: 12px;
+    }
+}
+
+.m_card_sub {
+    margin-top: 6px;
+    font-size: 13px;
+    color: $muted;
+}
+
+.m_card_foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 8px;
+    font-size: 13px;
+    color: $muted;
+}
+
+.m_card_lines {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 12px;
+    min-width: 0;
+
+    // 图片字段在卡片中只显示缩略图
+    img,
+    .m_field_image {
+        width: auto;
+        height: auto;
+        max-width: 96px;
+        max-height: 28px;
+        object-fit: contain;
+        border-radius: 6px;
+    }
+}
+
+.m_card_date {
+    flex: 0 0 auto;
+    white-space: nowrap;
 }

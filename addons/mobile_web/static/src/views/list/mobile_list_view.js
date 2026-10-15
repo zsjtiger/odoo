@@ -28,6 +28,22 @@ import { canDeleteRecords, deleteRecords } from "@mobile_web/views/record_delete
 /** 两次点击同一行的最大间隔 (毫秒), 超过则视为两次单击 */
 const DOUBLE_TAP_DELAY = 350;
 
+/** 字段节点的 class 中是否包含 name */
+function hasClass(column, name) {
+    return (column.attrs.class || "").split(/\s+/).includes(name);
+}
+
+/**
+ * 判断 decoration-* 的条件 "字段 == '值'" 是否成立 (值与字段的显示值以字符串比较)
+ */
+function decorationMatches(expr, record) {
+    const match = /^\s*(\w+)\s*==\s*['"]?([^'"]*)['"]?\s*$/.exec(expr || "");
+    if (!match) {
+        return false;
+    }
+    return String(record.data[match[1]]) === match[2];
+}
+
 const TEXTS = {
     moreActions: _t("More actions"),
     delete: _t("Delete"),
@@ -52,17 +68,29 @@ export class MobileListView extends Component {
                     <li t-foreach="this.collection.state.records" t-as="record" t-key="record.resId"
                         t-attf-class="{{ this.rowButtons.length ? 'has_more' : '' }}">
                         <SwipeRow resId="record.resId" disabled="!this.canDelete" label="this.texts.delete" onDelete="this.onDeleteRow">
-                            <button type="button" class="m_list_row" t-att-data-id="record.resId" t-on-click="this.onRowClick">
-                                <div class="m_list_primary">
-                                    <t t-if="this.primary" t-component="this.getWidget(this.primary)" t-props="this.cellProps(this.primary, record)"/>
+                            <button type="button" class="m_list_row m_list_card" t-att-data-id="record.resId" t-on-click="this.onRowClick">
+                                <div class="m_card_head">
+                                    <div class="m_list_primary">
+                                        <t t-if="this.primary" t-component="this.getWidget(this.primary)" t-props="this.cellProps(this.primary, record)"/>
+                                    </div>
+                                    <span t-if="this.badge and this.hasValue(this.badge, record)" t-attf-class="m_card_badge {{ this.toneOf(this.badge, record) }}">
+                                        <t t-component="this.getWidget(this.badge)" t-props="this.cellProps(this.badge, record)"/>
+                                    </span>
                                 </div>
-                                <div class="m_list_secondary" t-if="this.secondary.length">
-                                    <t t-foreach="this.secondary" t-as="column" t-key="column.name">
-                                        <div class="m_list_cell" t-if="this.hasValue(column, record)">
-                                            <span class="m_list_label"><t t-esc="this.labelOf(column)"/></span>
-                                            <span class="m_list_value"><t t-component="this.getWidget(column)" t-props="this.cellProps(column, record)"/></span>
-                                        </div>
-                                    </t>
+                                <div t-if="this.subtitle and this.hasValue(this.subtitle, record)" class="m_card_sub">
+                                    <t t-component="this.getWidget(this.subtitle)" t-props="this.cellProps(this.subtitle, record)"/>
+                                </div>
+                                <div t-if="this.secondary.length or this.dateColumn" class="m_card_foot">
+                                    <span class="m_card_lines">
+                                        <t t-foreach="this.secondary" t-as="column" t-key="column.name">
+                                            <span class="m_card_line" t-if="this.hasValue(column, record)">
+                                                <t t-component="this.getWidget(column)" t-props="this.cellProps(column, record)"/>
+                                            </span>
+                                        </t>
+                                    </span>
+                                    <span t-if="this.dateColumn and this.hasValue(this.dateColumn, record)" class="m_card_date">
+                                        <t t-component="this.getWidget(this.dateColumn)" t-props="this.cellProps(this.dateColumn, record)"/>
+                                    </span>
                                 </div>
                             </button>
                             <button t-if="this.rowButtons.length" type="button" class="m_row_more" t-att-data-id="record.resId" t-att-aria-label="this.texts.moreActions" t-on-click="this.onMoreClick">⋯</button>
@@ -98,9 +126,15 @@ export class MobileListView extends Component {
         const node = parseArch(this.props.arch);
         this.rowButtons = collectButtons(node);
         const columns = node.children.filter((c) => c.tag === "field" && c.attrs.name && !isHiddenColumn(c));
-        const { primary, secondary } = splitColumns(columns.map((c) => this.column(c)));
+        const cols = columns.map((c) => this.column(c));
+        const { primary, secondary } = splitColumns(cols);
         this.primary = primary;
-        this.secondary = secondary;
+        // 卡片布局: 用 class 标记的字段显示在固定的位置, 其余字段排在底部
+        this.badge = cols.find((c) => hasClass(c, "mobile_badge")) || null;
+        this.subtitle = cols.find((c) => hasClass(c, "mobile_subtitle")) || null;
+        this.dateColumn = cols.find((c) => hasClass(c, "mobile_date")) || null;
+        const placed = [this.badge, this.subtitle, this.dateColumn];
+        this.secondary = secondary.filter((c) => !placed.includes(c));
         const sortInfo = columns.map((c) => this.column(c));
         this.sortFields = sortableFields(sortInfo);
         const fieldNames = [...collectFieldNames(node)];
@@ -133,9 +167,20 @@ export class MobileListView extends Component {
         return hasDisplayValue(record.data[column.name]);
     }
 
-    /** 字段的显示名称, 列表行中每个值前面显示它 */
-    labelOf(column) {
-        return column.field?.string || column.name;
+    /**
+     * 状态胶囊的颜色: decoration-success / decoration-danger 为 "字段 == '值'" 形式的条件
+     *
+     * @param {{ attrs: Object<string, string> }} column
+     * @param {{ data: Object }} record
+     */
+    toneOf(column, record) {
+        if (decorationMatches(column.attrs["decoration-success"], record)) {
+            return "is_success";
+        }
+        if (decorationMatches(column.attrs["decoration-danger"], record)) {
+            return "is_danger";
+        }
+        return "";
     }
 
     getWidget(column) {

@@ -94,18 +94,33 @@ test("list shows the marked field as the bold title", async () => {
     expect(queryAll(".m_list_primary")[0]).toHaveText("Alpha");
 });
 
-test("list shows each other field as a label and a value, one per line", async () => {
+test("list cards show the other fields as values in the bottom line, without labels", async () => {
     await mountWithCleanup(MobileListView, { props: listProps() });
-    const cell = queryAll(".m_list_row")[0].querySelector(".m_list_cell");
-    expect(cell.querySelector(".m_list_label")).toHaveText("Email");
-    expect(cell.querySelector(".m_list_value").textContent).toInclude("alpha@example.com");
+    const text = queryAll(".m_list_card")[0].querySelector(".m_card_lines").textContent;
+    expect(text).toInclude("alpha@example.com");
+    expect(text).not.toInclude("Email");
+});
+
+test("marked fields are placed in the card: badge with its colour, subtitle, and the rest below", async () => {
+    const arch = `<list>
+        <field name="name" class="mobile_title"/>
+        <field name="email" class="mobile_subtitle"/>
+        <field name="active" class="mobile_badge" decoration-success="active == 'true'"/>
+    </list>`;
+    await mountWithCleanup(MobileListView, { props: listProps({ arch }) });
+    const card = queryAll(".m_list_card")[0];
+    expect(card.querySelector(".m_card_sub")).toHaveText("alpha@example.com");
+    const badge = card.querySelector(".m_card_badge");
+    expect(badge).toHaveClass("is_success");
+    expect(badge).toHaveText("Yes");
+    expect(card.querySelectorAll(".m_card_lines .m_card_line").length).toBe(0);
 });
 
 test("list hides empty values instead of showing placeholders", async () => {
     await mountWithCleanup(MobileListView, { props: listProps() });
-    // Beta 没有 email, 只剩 active 为 false 的值(否), 没有孤立的分隔符
-    const cells = queryAll(".m_list_row")[1].querySelectorAll(".m_list_cell");
-    expect(cells.length).toBe(0);
+    // Beta 没有 email, active 为 false 也不显示, 底部没有任何值
+    const lines = queryAll(".m_list_card")[1].querySelectorAll(".m_card_line");
+    expect(lines.length).toBe(0);
 });
 
 test("a single click on a row does not open the record", async () => {
@@ -127,12 +142,11 @@ test("a double click on a row selects the record", async () => {
     expect(selected).toEqual([2]);
 });
 
-test("each value of a row is its own cell, without separators between them", async () => {
+test("each value in the bottom line is its own item, without separators between them", async () => {
     await mountWithCleanup(MobileListView, { props: listProps() });
-    const secondary = queryAll(".m_list_row .m_list_secondary")[0];
-    const cells = [...secondary.querySelectorAll(":scope > .m_list_cell")];
-    expect(cells.length).toBeGreaterThan(1);
-    expect(secondary.textContent).not.toInclude("·");
+    const lines = queryAll(".m_list_card")[0].querySelectorAll(".m_card_lines > .m_card_line");
+    expect(lines.length).toBeGreaterThan(1);
+    expect(queryAll(".m_list_card")[0].textContent).not.toInclude("·");
 });
 
 test("kanban shows one card per record with the marked title", async () => {
