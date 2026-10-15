@@ -108,13 +108,31 @@ test("list hides empty values instead of showing placeholders", async () => {
     expect(cells.length).toBe(0);
 });
 
-test("clicking a row selects the record", async () => {
+test("a single click on a row does not open the record", async () => {
     const selected = [];
     await mountWithCleanup(MobileListView, {
         props: listProps({ onSelect: (id) => selected.push(id) }),
     });
     await click(queryAll(".m_list_row")[1]);
+    expect(selected).toEqual([]);
+});
+
+test("a double click on a row selects the record", async () => {
+    const selected = [];
+    await mountWithCleanup(MobileListView, {
+        props: listProps({ onSelect: (id) => selected.push(id) }),
+    });
+    await click(queryAll(".m_list_row")[1]);
+    await click(queryAll(".m_list_row")[1]);
     expect(selected).toEqual([2]);
+});
+
+test("each value of a row is its own cell, without separators between them", async () => {
+    await mountWithCleanup(MobileListView, { props: listProps() });
+    const secondary = queryAll(".m_list_row .m_list_secondary")[0];
+    const cells = [...secondary.querySelectorAll(":scope > .m_list_cell")];
+    expect(cells.length).toBeGreaterThan(1);
+    expect(secondary.textContent).not.toInclude("·");
 });
 
 test("kanban shows one card per record with the marked title", async () => {

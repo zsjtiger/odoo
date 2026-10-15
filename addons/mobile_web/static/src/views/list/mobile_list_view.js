@@ -25,6 +25,9 @@ import { canDeleteRecords, deleteRecords } from "@mobile_web/views/record_delete
  * 点击整行进入表单; 底部"加载更多"分页, 避免一次加载过多数据
  */
 // 界面文字, 由 _t 包装并通过 i18n/*.po 翻译(模板中用 this.texts 引用)
+/** 两次点击同一行的最大间隔 (毫秒), 超过则视为两次单击 */
+const DOUBLE_TAP_DELAY = 350;
+
 const TEXTS = {
     moreActions: _t("More actions"),
     delete: _t("Delete"),
@@ -85,6 +88,7 @@ export class MobileListView extends Component {
     notification = useService("notification");
     mobileAction = useService("mobileAction");
     state = proxy({ sheet: null });
+    lastRowClick = { id: null, time: 0 };
     confirmSheet = useConfirmSheet();
 
     setup() {
@@ -231,8 +235,18 @@ export class MobileListView extends Component {
         await this.reloadCollection();
     };
 
+    /**
+     * 双击一行进入表单: 同一行两次点击的间隔不超过 DOUBLE_TAP_DELAY 视为双击.
+     * 触摸设备上的双击不一定产生 dblclick 事件, 所以这里根据 click 判断, 鼠标与触摸都适用.
+     */
     onRowClick(ev) {
-        this.props.onSelect(Number(ev.currentTarget.dataset.id));
+        const id = Number(ev.currentTarget.dataset.id);
+        const now = Date.now();
+        const isDoubleClick = this.lastRowClick.id === id && now - this.lastRowClick.time <= DOUBLE_TAP_DELAY;
+        this.lastRowClick = isDoubleClick ? { id: null, time: 0 } : { id, time: now };
+        if (isDoubleClick) {
+            this.props.onSelect(id);
+        }
     }
 
     /** 下拉刷新时的提示文字 */

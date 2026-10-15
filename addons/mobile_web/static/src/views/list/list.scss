@@ -62,26 +62,25 @@
     white-space: nowrap;
 }
 
+// 副字段每个值独占一行, 与看板卡片一样不用分隔符串在一起
 .m_list_secondary {
     margin-top: 2px;
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
+    flex-direction: column;
+    gap: 2px;
     font-size: 13px;
     color: $muted;
 }
 
 // 其他字段紧凑地排在一行, 字段之间用 · 分隔, 只显示值
 .m_list_cell {
-    display: inline-flex;
-    align-items: center;
+    display: block;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     .m_field_value {
         font-size: 13px;
-    }
-    & + .m_list_cell::before {
-        content: "·";
-        margin: 0 6px;
-        color: #ccc;
     }
 }
 
