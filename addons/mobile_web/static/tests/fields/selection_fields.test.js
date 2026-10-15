@@ -59,21 +59,22 @@ test("statusbar highlights the current state", async () => {
     expect(items.map((el) => el.classList.contains("is_active"))).toEqual([false, true, false]);
 });
 
-test("clicking a statusbar item moves to that state", async () => {
+test("the statusbar only shows the state: clicking an item changes nothing", async () => {
     const values = [];
     await mountWithCleanup(StatusBarField, {
         props: selectionProps("selection", STATES, "draft", { onChange: (v) => values.push(v) }),
     });
     await click(queryAll(".m_statusbar_item")[2]);
-    expect(values).toEqual(["cancel"]);
+    expect(values).toEqual([]);
+    expect(queryAll(".m_statusbar_item")[0].classList.contains("is_active")).toBe(true);
 });
 
-test("the statusbar is read-only when the field is", async () => {
+test("the statusbar in readonly mode shows the same state display", async () => {
     await mountWithCleanup(StatusBarField, {
         props: selectionProps("selection", STATES, "draft", { readonly: true }),
     });
-    expect(queryAll(".m_statusbar_item").length).toBe(0);
-    expect(queryOne(".m_field_value")).toHaveText("Draft");
+    expect(queryAll(".m_statusbar_item").length).toBe(3);
+    expect(queryAll(".m_statusbar_item")[0].classList.contains("is_active")).toBe(true);
 });
 
 test("priority shows one star per option after the first", async () => {

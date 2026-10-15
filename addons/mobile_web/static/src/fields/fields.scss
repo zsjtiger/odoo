@@ -142,6 +142,9 @@
 
 .m_statusbar_item {
     flex: 1 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     min-height: 36px;
     padding: 0 12px;
     border: none;
