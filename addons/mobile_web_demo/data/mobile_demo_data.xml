@@ -128,6 +128,7 @@
         <field name="payload" eval="{'source': 'demo', 'rank': 1, 'tags': ['a', 'b']}"/>
         <field name="partner_id" ref="mobile_demo_partner_a"/>
         <field name="region_id" ref="mobile_demo_region_bj_dc"/>
+        <field name="keyinfo_ids" eval="[(0, 0, {'product': '测试', 'key_info': 'efficacy', 'feedback': 'positive'}), (0, 0, {'product': '鼓翘颗粒', 'key_info': 'safety', 'feedback': 'neutral'})]"/>
         <field name="user_id" ref="base.user_admin"/>
         <field name="tag_ids" eval="[(6, 0, [ref('mobile_demo_tag_vip'), ref('mobile_demo_tag_followup')])]"/>
         <field name="line_ids" eval="[(0, 0, {'name': 'Consultation', 'quantity': 1, 'unit_price': 300}), (0, 0, {'name': 'Medicine', 'quantity': 2, 'unit_price': 450})]"/>

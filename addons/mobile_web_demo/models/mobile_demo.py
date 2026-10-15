@@ -50,6 +50,25 @@ class MobileDemoRegion(models.Model):
             region.display_name = ' '.join(names)
 
 
+class MobileDemoKeyInfo(models.Model):
+    """关键信息: 内嵌明细表单(widget="one2many_form")的演示模型, 每条是一张表单卡片."""
+    _name = 'mobile.demo.keyinfo'
+    _description = "Mobile Demo Key Info"
+    _order = 'sequence, id'
+
+    item_id = fields.Many2one('mobile.demo.item', string="Item", required=True, ondelete='cascade', index=True)
+    sequence = fields.Integer(default=10)
+    product = fields.Char(string="Product", required=True)
+    key_info = fields.Selection(
+        [('efficacy', "Efficacy"), ('safety', "Safety"), ('usage', "Usage")],
+        string="Key info", required=True,
+    )
+    feedback = fields.Selection(
+        [('positive', "Positive"), ('neutral', "Neutral"), ('negative', "Negative")],
+        string="Feedback", required=True,
+    )
+
+
 class MobileDemoItem(models.Model):
     _name = 'mobile.demo.item'
     _description = "Mobile Demo Item"
@@ -98,6 +117,7 @@ class MobileDemoItem(models.Model):
     user_id = fields.Many2one('res.users', string="Responsible")
     tag_ids = fields.Many2many('mobile.demo.tag', string="Tags")
     line_ids = fields.One2many('mobile.demo.line', 'item_id', string="Lines")
+    keyinfo_ids = fields.One2many('mobile.demo.keyinfo', 'item_id', string="Key info")
 
     # --- contact and special text fields ---
     email = fields.Char(string="Email")

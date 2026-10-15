@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 20.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-15 10:22+0000\n"
-"PO-Revision-Date: 2026-10-15 10:22+0000\n"
+"POT-Creation-Date: 2026-10-15 10:43+0000\n"
+"PO-Revision-Date: 2026-10-15 10:43+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -117,6 +117,7 @@ msgstr ""
 
 #. module: mobile_web_demo
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__create_uid
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_keyinfo__create_uid
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_line__create_uid
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_region__create_uid
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_tag__create_uid
@@ -125,6 +126,7 @@ msgstr ""
 
 #. module: mobile_web_demo
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__create_date
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_keyinfo__create_date
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_line__create_date
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_region__create_date
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_tag__create_date
@@ -180,6 +182,7 @@ msgstr ""
 
 #. module: mobile_web_demo
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__display_name
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_keyinfo__display_name
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_line__display_name
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_region__display_name
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_tag__display_name
@@ -203,8 +206,18 @@ msgid "Duration (hours)"
 msgstr ""
 
 #. module: mobile_web_demo
+#: model:ir.model.fields.selection,name:mobile_web_demo.selection__mobile_demo_keyinfo__key_info__efficacy
+msgid "Efficacy"
+msgstr ""
+
+#. module: mobile_web_demo
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__email
 msgid "Email"
+msgstr ""
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_keyinfo__feedback
+msgid "Feedback"
 msgstr ""
 
 #. module: mobile_web_demo
@@ -214,6 +227,7 @@ msgstr ""
 
 #. module: mobile_web_demo
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__id
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_keyinfo__id
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_line__id
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_region__id
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_tag__id
@@ -231,6 +245,7 @@ msgid "Important"
 msgstr ""
 
 #. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_keyinfo__item_id
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_line__item_id
 msgid "Item"
 msgstr ""
@@ -241,7 +256,14 @@ msgid "Item name"
 msgstr ""
 
 #. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__keyinfo_ids
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_keyinfo__key_info
+msgid "Key info"
+msgstr ""
+
+#. module: mobile_web_demo
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__write_uid
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_keyinfo__write_uid
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_line__write_uid
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_region__write_uid
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_tag__write_uid
@@ -250,6 +272,7 @@ msgstr ""
 
 #. module: mobile_web_demo
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__write_date
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_keyinfo__write_date
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_line__write_date
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_region__write_date
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_tag__write_date
@@ -283,6 +306,11 @@ msgid "Mobile Demo Kanban"
 msgstr ""
 
 #. module: mobile_web_demo
+#: model:ir.model,name:mobile_web_demo.model_mobile_demo_keyinfo
+msgid "Mobile Demo Key Info"
+msgstr ""
+
+#. module: mobile_web_demo
 #: model:ir.model,name:mobile_web_demo.model_mobile_demo_line
 msgid "Mobile Demo Line"
 msgstr ""
@@ -308,6 +336,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_region__name
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_tag__name
 msgid "Name"
+msgstr ""
+
+#. module: mobile_web_demo
+#: model:ir.model.fields.selection,name:mobile_web_demo.selection__mobile_demo_keyinfo__feedback__negative
+msgid "Negative"
+msgstr ""
+
+#. module: mobile_web_demo
+#: model:ir.model.fields.selection,name:mobile_web_demo.selection__mobile_demo_keyinfo__feedback__neutral
+msgid "Neutral"
 msgstr ""
 
 #. module: mobile_web_demo
@@ -353,6 +391,11 @@ msgid "Phone"
 msgstr ""
 
 #. module: mobile_web_demo
+#: model:ir.model.fields.selection,name:mobile_web_demo.selection__mobile_demo_keyinfo__feedback__positive
+msgid "Positive"
+msgstr ""
+
+#. module: mobile_web_demo
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__price
 msgid "Price"
 msgstr ""
@@ -360,6 +403,11 @@ msgstr ""
 #. module: mobile_web_demo
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__priority
 msgid "Priority"
+msgstr ""
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_keyinfo__product
+msgid "Product"
 msgstr ""
 
 #. module: mobile_web_demo
@@ -389,6 +437,11 @@ msgid "Responsible"
 msgstr ""
 
 #. module: mobile_web_demo
+#: model:ir.model.fields.selection,name:mobile_web_demo.selection__mobile_demo_keyinfo__key_info__safety
+msgid "Safety"
+msgstr ""
+
+#. module: mobile_web_demo
 #: model_terms:ir.ui.view,arch_db:mobile_web_demo.mobile_demo_item_form
 msgid "Search a partner by name"
 msgstr ""
@@ -400,6 +453,7 @@ msgstr ""
 
 #. module: mobile_web_demo
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__sequence
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_keyinfo__sequence
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_region__sequence
 msgid "Sequence"
 msgstr ""
@@ -442,6 +496,11 @@ msgstr ""
 #. module: mobile_web_demo
 #: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__urgent_reason
 msgid "Urgent reason"
+msgstr ""
+
+#. module: mobile_web_demo
+#: model:ir.model.fields.selection,name:mobile_web_demo.selection__mobile_demo_keyinfo__key_info__usage
+msgid "Usage"
 msgstr ""
 
 #. module: mobile_web_demo
