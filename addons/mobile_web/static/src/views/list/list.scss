@@ -204,3 +204,17 @@
     flex: 0 0 auto;
     white-space: nowrap;
 }
+
+// 卡片中的图片: 放在最前面, 按图像完整展示 (不显示字段标签)
+.m_list_card .m_card_image {
+    margin: 0 0 10px;
+    .m_field_image {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        max-height: 160px;
+        border: none;
+        border-radius: 8px;
+        object-fit: cover;
+    }
+}

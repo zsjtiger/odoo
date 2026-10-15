@@ -123,27 +123,28 @@
     margin: 12px 0 0;
 }
 
-// 标签页: 小号文字, 紧凑排列
+// 标签页: 下划线样式, 当前页用主题色文字与下划线, 与分组标题的配色一致
 .m_form_tabs {
     display: flex;
-    gap: 6px;
-    padding: 0 16px 8px;
+    gap: 20px;
+    margin: 0 16px;
     overflow-x: auto;
+    border-bottom: 1px solid $line;
 }
 
 .m_form_tabs .m_segmented_item {
     flex: 0 0 auto;
-    min-height: 28px;
-    padding: 0 12px;
-    border: 1px solid $line;
-    border-radius: 14px;
-    background: $surface;
+    min-height: 40px;
+    padding: 0 0 10px;
+    border: none;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
+    background: none;
     color: $muted;
-    font-size: 13px;
+    font-size: 15px;
     &.is_active {
-        border-color: $theme;
-        background: $theme;
-        color: #fff;
+        border-bottom-color: $theme;
+        color: $theme;
         font-weight: 500;
     }
 }

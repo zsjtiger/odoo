@@ -69,6 +69,9 @@ export class MobileListView extends Component {
                         t-attf-class="{{ this.rowButtons.length ? 'has_more' : '' }}">
                         <SwipeRow resId="record.resId" disabled="!this.canDelete" label="this.texts.delete" onDelete="this.onDeleteRow">
                             <button type="button" class="m_list_row m_list_card" t-att-data-id="record.resId" t-on-click="this.onRowClick">
+                                <div t-if="this.image and this.hasValue(this.image, record)" class="m_card_image">
+                                    <t t-component="this.getWidget(this.image)" t-props="this.cellProps(this.image, record)"/>
+                                </div>
                                 <div class="m_card_head">
                                     <div class="m_list_primary">
                                         <t t-if="this.primary" t-component="this.getWidget(this.primary)" t-props="this.cellProps(this.primary, record)"/>
@@ -127,7 +130,10 @@ export class MobileListView extends Component {
         this.rowButtons = collectButtons(node);
         const columns = node.children.filter((c) => c.tag === "field" && c.attrs.name && !isHiddenColumn(c));
         const cols = columns.map((c) => this.column(c));
-        const { primary, secondary } = splitColumns(cols);
+        // 图片字段单独展示在卡片最前面, 不参与标题与底部字段的选择
+        this.image = cols.find((c) => c.attrs.widget === "image") || null;
+        const textCols = cols.filter((c) => c !== this.image);
+        const { primary, secondary } = splitColumns(textCols);
         this.primary = primary;
         // 卡片布局: 用 class 标记的字段显示在固定的位置, 其余字段排在底部
         this.badge = cols.find((c) => hasClass(c, "mobile_badge")) || null;
