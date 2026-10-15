@@ -1,6 +1,7 @@
 import { Component, onWillStart, onWillUpdateProps, proxy, t, useProps, xml } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { ActionSheet } from "@mobile_web/widgets/action_sheet/action_sheet";
+import { ConfirmSheet, useConfirmSheet } from "@mobile_web/widgets/confirm_sheet/confirm_sheet";
 import { SortFilterBar } from "@mobile_web/widgets/sort_filter/sort_filter";
 import { SortMenu } from "@mobile_web/widgets/sort_menu/sort_menu";
 import { buildFilterDomain, filterableFields, sortableFields } from "@mobile_web/views/record_filters";
@@ -65,7 +66,7 @@ const TEXTS = {
 
 export class MobileKanbanView extends Component {
     texts = TEXTS;
-    static components = { ActionSheet, SortFilterBar, SortMenu };
+    static components = { ActionSheet, SortFilterBar, SortMenu, ConfirmSheet };
     static template = xml`
         <t t-name="mobile_web.MobileKanbanView">
             <div class="m_kanban_view" t-ref="this.pull.container">
@@ -91,6 +92,9 @@ export class MobileKanbanView extends Component {
                     </li>
                 </ul>
                 <ActionSheet t-if="this.state.sheet" items="this.sheetItems" onClose="this.closeSheet"/>
+                <ConfirmSheet t-if="this.confirmSheet.state.dialog" message="this.confirmSheet.state.dialog.message"
+                              confirmLabel="this.confirmSheet.state.dialog.confirmLabel" danger="this.confirmSheet.state.dialog.danger"
+                              onAnswer="this.confirmSheet.answer"/>
                 <p t-if="this.collection.state.error" class="m_error"><t t-esc="this.texts.loadFailed"/></p>
                 <p t-if="!this.collection.state.loading and this.collection.state.total === 0" class="m_empty"><t t-esc="this.texts.noRecords"/></p>
                 <div t-ref="this.infinite.sentinel" class="m_load_sentinel">
@@ -111,6 +115,7 @@ export class MobileKanbanView extends Component {
     notification = useService("notification");
     mobileAction = useService("mobileAction");
     state = proxy({ sheet: null });
+    confirmSheet = useConfirmSheet();
 
     setup() {
         const root = parseArch(this.props.arch);
@@ -195,6 +200,7 @@ export class MobileKanbanView extends Component {
                 context: this.props.context,
                 orm: this.orm,
                 mobileAction: this.mobileAction,
+                confirm: this.confirmSheet.ask,
             });
             if (reload) {
                 await this.reloadCollection();

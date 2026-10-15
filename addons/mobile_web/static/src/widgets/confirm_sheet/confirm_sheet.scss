@@ -1,0 +1,17 @@
+// 确认弹层: 消息文字与两个按钮, 删除等危险操作使用红色确认按钮
+.m_confirm_sheet {
+    padding: 20px 16px 8px;
+}
+
+.m_confirm_message {
+    margin: 0 0 16px;
+    font-size: 16px;
+    color: $text;
+    text-align: center;
+}
+
+// 危险操作的确认按钮: 红色文字, 与 m_sheet_btn 的基础样式保持相同的特异性
+.m_sheet_btn.m_sheet_btn_danger {
+    color: #e5484d;
+    font-weight: 600;
+}

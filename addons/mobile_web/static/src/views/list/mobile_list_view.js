@@ -17,6 +17,7 @@ import { readonlyFieldRecord } from "@mobile_web/fields/field_record";
 import { _t } from "@web/core/data/l10n/translation";
 import { notify } from "@mobile_web/core/notification";
 import { SwipeRow } from "@mobile_web/widgets/swipe_row/swipe_row";
+import { ConfirmSheet, useConfirmSheet } from "@mobile_web/widgets/confirm_sheet/confirm_sheet";
 import { canDeleteRecords, deleteRecords } from "@mobile_web/views/record_delete";
 
 /**
@@ -37,7 +38,7 @@ const TEXTS = {
 
 export class MobileListView extends Component {
     texts = TEXTS;
-    static components = { ActionSheet, SortFilterBar, SortMenu, SwipeRow };
+    static components = { ActionSheet, SortFilterBar, SortMenu, SwipeRow, ConfirmSheet };
     static template = xml`
         <t t-name="mobile_web.MobileListView">
             <div class="m_list_view" t-ref="this.pull.container">
@@ -65,6 +66,9 @@ export class MobileListView extends Component {
                     </li>
                 </ul>
                 <ActionSheet t-if="this.state.sheet" items="this.sheetItems" onClose="this.closeSheet"/>
+                <ConfirmSheet t-if="this.confirmSheet.state.dialog" message="this.confirmSheet.state.dialog.message"
+                              confirmLabel="this.confirmSheet.state.dialog.confirmLabel" danger="this.confirmSheet.state.dialog.danger"
+                              onAnswer="this.confirmSheet.answer"/>
                 <p t-if="this.collection.state.error" class="m_error"><t t-esc="this.texts.loadFailed"/></p>
                 <p t-if="!this.collection.state.loading and this.collection.state.total === 0" class="m_empty"><t t-esc="this.texts.noRecords"/></p>
                 <div t-ref="this.infinite.sentinel" class="m_load_sentinel">
@@ -85,6 +89,7 @@ export class MobileListView extends Component {
     notification = useService("notification");
     mobileAction = useService("mobileAction");
     state = proxy({ sheet: null });
+    confirmSheet = useConfirmSheet();
 
     setup() {
         const node = parseArch(this.props.arch);
@@ -179,6 +184,7 @@ export class MobileListView extends Component {
                 context: this.props.context,
                 orm: this.orm,
                 mobileAction: this.mobileAction,
+                confirm: this.confirmSheet.ask,
             });
             if (reload) {
                 await this.reloadCollection();
@@ -215,7 +221,14 @@ export class MobileListView extends Component {
     /** 左滑删除: 确认后调用服务端删除, 再重新加载第一页 */
     // 作为子组件的回调传递, 使用箭头函数保持 this
     onDeleteRow = async (resId) => {
-        if (!this.canDelete || !window.confirm(this.texts.confirmDelete)) {
+        if (!this.canDelete) {
+            return;
+        }
+        const confirmed = await this.confirmSheet.ask(this.texts.confirmDelete, {
+            confirmLabel: this.texts.delete,
+            danger: true,
+        });
+        if (!confirmed) {
             return;
         }
         try {

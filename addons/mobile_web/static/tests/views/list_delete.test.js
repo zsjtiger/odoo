@@ -1,8 +1,8 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { click, queryAll } from "@odoo/hoot-dom";
+import { click, queryAll, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { mountWithCleanup } from "@web/../tests/_framework/component_test_helpers";
-import { defineModels, fields, models, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { defineModels, fields, models, onRpc } from "@web/../tests/web_test_helpers";
 import { MobileListView } from "@mobile_web/views/list/mobile_list_view";
 
 describe.current.tags("mobile");
@@ -70,42 +70,51 @@ async function mountList({ canDelete, arch = LIST_ARCH }) {
     return { unlinked, reads: () => reads };
 }
 
-test("with delete access, confirming the swipe deletes the record and reloads the list", async () => {
-    patchWithCleanup(window, { confirm: () => true });
+/** 在确认弹层中作答: 确认(危险按钮) 或取消 */
+async function answerSheet(yes) {
+    await click(yes ? ".m_sheet_btn_danger" : ".m_sheet_cancel");
+    await settle();
+}
+
+test("the delete asks for confirmation first and deletes only after the user confirms", async () => {
     const list = await mountList({ canDelete: true });
     const before = list.reads();
     await swipeFirstRow();
     await click(firstDelete());
     await settle();
+    expect(queryOne(".m_confirm_message")).toHaveText("Delete this record?");
+    expect(list.unlinked).toEqual([]);
+    await answerSheet(true);
     expect(list.unlinked).toEqual([1]);
     expect(list.reads()).toBe(before + 1);
 });
 
-test("declining the confirmation keeps the record", async () => {
-    patchWithCleanup(window, { confirm: () => false });
+test("cancelling the confirmation keeps the record", async () => {
     const list = await mountList({ canDelete: true });
     await swipeFirstRow();
     await click(firstDelete());
     await settle();
+    await answerSheet(false);
+    expect(queryAll(".m_confirm_sheet").length).toBe(0);
     expect(list.unlinked).toEqual([]);
 });
 
-test("without delete access the delete button is unavailable and nothing is deleted", async () => {
-    patchWithCleanup(window, { confirm: () => true });
+test("without delete access the delete button is unavailable and no confirmation is shown", async () => {
     const list = await mountList({ canDelete: false });
     await swipeFirstRow();
     expect(firstDelete()).toHaveAttribute("disabled");
     await click(firstDelete());
     await settle();
+    expect(queryAll(".m_confirm_sheet").length).toBe(0);
     expect(list.unlinked).toEqual([]);
 });
 
 test("delete=\"0\" in the arch disables deleting even with access", async () => {
-    patchWithCleanup(window, { confirm: () => true });
     const list = await mountList({ canDelete: true, arch: `<list delete="0"><field name="name"/></list>` });
     await swipeFirstRow();
     expect(firstDelete()).toHaveAttribute("disabled");
     await click(firstDelete());
     await settle();
+    expect(queryAll(".m_confirm_sheet").length).toBe(0);
     expect(list.unlinked).toEqual([]);
 });

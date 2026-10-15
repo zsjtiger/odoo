@@ -65,9 +65,10 @@ export async function runRecordButton({
     context = {},
     orm,
     mobileAction,
-    confirm = (message) => window.confirm(message),
+    confirm,
 }) {
-    if (node.attrs.confirm && !confirm(node.attrs.confirm)) {
+    // 需要确认的按钮: 等待用户在确认弹层中作答
+    if (node.attrs.confirm && !(await confirm(node.attrs.confirm))) {
         return false;
     }
     if (node.attrs.type === "action") {
