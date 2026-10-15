@@ -40,6 +40,10 @@ export class MobileActWindowController extends Component {
                 <div class="m_search_bar" t-if="this.state.type !== 'form' and this.hasSearch">
                     <div class="m_search_top">
                     <div class="m_search_box">
+                        <svg class="m_search_icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/>
+                            <line x1="16.5" y1="16.5" x2="21" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
                         <span t-foreach="this.state.facets" t-as="facet" t-key="facet.id" class="m_facet">
                             <span class="m_facet_text"><t t-esc="facet.label"/>: <t t-esc="facet.display"/></span>
                             <button type="button" class="m_facet_remove" t-att-data-index="facet_index"

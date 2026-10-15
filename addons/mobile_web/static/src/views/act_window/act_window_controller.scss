@@ -254,3 +254,13 @@
 .m_search_input:focus {
     outline: none;
 }
+
+// 搜索框前面的放大镜图标
+.m_search_box .m_search_icon {
+    flex: 0 0 auto;
+    width: 18px;
+    height: 18px;
+    margin: 0 2px 0 4px;
+    color: #b0b4bb;
+    pointer-events: none;
+}
