@@ -3,8 +3,6 @@
 
 from odoo import api, fields, models
 
-from ..tools.data_convert import SqlDataConvert
-
 
 class Board(models.AbstractModel):
     _name = 'board.board'
@@ -20,18 +18,3 @@ class Board(models.AbstractModel):
     @api.model_create_multi
     def create(self, vals_list):
         return self
-
-    @api.model
-    def convert_sql_to_board(self, model, all_fields, data, x_field=None):
-        """
-
-        :param model:
-        :param all_fields:
-        :param data:
-        :param x_field:
-        :return:
-        """
-        sql_data_convert = SqlDataConvert(self.env, model, all_fields)
-        if x_field:
-            sql_data_convert.set_x_field(x_field)
-        return sql_data_convert.convert(data)
