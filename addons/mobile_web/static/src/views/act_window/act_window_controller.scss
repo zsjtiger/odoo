@@ -224,3 +224,33 @@
     height: 32px;
     min-height: 32px;
 }
+
+// 清除按钮: 放在搜索框内部的右侧, 灰色圆形的 x
+.m_search_box .m_search_clear {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    margin-left: auto;
+    padding: 0;
+    border: none;
+    background: none;
+    color: #b0b4bb;
+    svg {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+// 搜索框只保留自己的清除按钮: 隐藏浏览器自带的清除叉与焦点边框
+.m_search_input::-webkit-search-cancel-button,
+.m_search_input::-webkit-search-decoration {
+    -webkit-appearance: none;
+    display: none;
+}
+
+.m_search_input:focus {
+    outline: none;
+}

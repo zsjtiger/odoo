@@ -47,15 +47,15 @@ export class MobileActWindowController extends Component {
                         </span>
                         <input type="search" class="m_search_input" t-att-value="this.state.text" t-att-placeholder="this.texts.search"
                                enterkeyhint="search" t-on-input="this.onSearchInput" t-on-keydown="this.onSearchKeydown"/>
-                    </div>
-                    <div class="m_search_actions">
-                        <button t-if="this.state.facets.length" type="button" class="m_search_icon_btn m_search_clear"
+                        <button t-if="this.state.facets.length or this.state.text" type="button" class="m_search_clear"
                                 t-att-aria-label="this.texts.clear" t-on-click="this.onClearFacets">
                             <svg viewBox="0 0 24 24" aria-hidden="true">
-                                <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/>
-                                <path d="M9 9l6 6M15 9l-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                <circle cx="12" cy="12" r="9" fill="currentColor"/>
+                                <path d="M9 9l6 6M15 9l-6 6" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
                             </svg>
                         </button>
+                    </div>
+                    <div class="m_search_actions">
                         <button t-if="this.filters.length or this.mobileFilterSections.length" type="button"
                                 t-attf-class="m_search_icon_btn {{ this.state.activeFilters.length or this.hasMobileSelection ? 'is_active' : '' }}"
                                 t-att-aria-label="this.texts.filter" t-on-click="this.openFilters">
