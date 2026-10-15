@@ -66,9 +66,7 @@ export class MobileListView extends Component {
                     </li>
                 </ul>
                 <ActionSheet t-if="this.state.sheet" items="this.sheetItems" onClose="this.closeSheet"/>
-                <ConfirmSheet t-if="this.confirmSheet.state.dialog" message="this.confirmSheet.state.dialog.message"
-                              confirmLabel="this.confirmSheet.state.dialog.confirmLabel" danger="this.confirmSheet.state.dialog.danger"
-                              onAnswer="this.confirmSheet.answer"/>
+                <ConfirmSheet t-if="this.confirmSheet.state.dialog" t-props="this.confirmSheet.state.dialog" onAnswer="this.confirmSheet.answer"/>
                 <p t-if="this.collection.state.error" class="m_error"><t t-esc="this.texts.loadFailed"/></p>
                 <p t-if="!this.collection.state.loading and this.collection.state.total === 0" class="m_empty"><t t-esc="this.texts.noRecords"/></p>
                 <div t-ref="this.infinite.sentinel" class="m_load_sentinel">

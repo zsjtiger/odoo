@@ -54,3 +54,33 @@
         color: #ff3b30;
     }
 }
+
+// 自定义正文: 位于消息与选项之间
+.m_alert_body {
+    padding: 0 16px 16px;
+}
+
+// 纵向排列的选项: 每项独占一行, 以细线分隔, 点击区域不小于 44px
+.m_alert_choices {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.m_alert_choice {
+    min-height: 44px;
+    padding: 11px 16px;
+    border: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+    background: none;
+    font-size: 17px;
+    color: #007aff;
+
+    &:first-child {
+        border-top: none;
+    }
+
+    &.is_danger {
+        color: #ff3b30;
+    }
+}

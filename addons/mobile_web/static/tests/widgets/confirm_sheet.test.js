@@ -13,6 +13,20 @@ async function settle() {
     }
 }
 
+/** 自定义正文: 显示 text, 点击后通过 close 作答 */
+class CustomBody extends Component {
+    static template = xml`
+        <div class="custom-body">
+            <span class="body-text"><t t-esc="this.props.text"/></span>
+            <button class="body-close" t-on-click="this.onClose">close</button>
+        </div>
+    `;
+    props = useProps({ text: t.string(), close: t.function() });
+    onClose() {
+        this.props.close("custom");
+    }
+}
+
 test("the dialog shows the message and a danger confirm button on the right", async () => {
     await mountWithCleanup(ConfirmSheet, {
         props: { message: "Delete it?", confirmLabel: "Delete", danger: true, onAnswer: () => {} },
@@ -44,29 +58,75 @@ test("tapping the backdrop cancels, tapping the dialog does not", async () => {
     expect(answers).toEqual([false]);
 });
 
+test("choices are stacked above the footer and answer with their key", async () => {
+    const answers = [];
+    await mountWithCleanup(ConfirmSheet, {
+        props: {
+            message: "人在天边月上明，风初紧，吹入画帘旌",
+            choices: [
+                { key: "read", label: "在线阅读" },
+                { key: "download", label: "下载文件" },
+                { key: "remove", label: "删除", danger: true },
+            ],
+            onAnswer: (v) => answers.push(v),
+        },
+    });
+    expect(queryAll(".m_alert_choice").map((el) => el.textContent)).toEqual(["在线阅读", "下载文件", "删除"]);
+    expect(queryOne(".m_alert_choice:last-child")).toHaveClass("is_danger");
+    await click('.m_alert_choice[data-key="download"]');
+    expect(answers).toEqual(["download"]);
+});
+
+test("without a confirm label only the cancel button is shown", async () => {
+    await mountWithCleanup(ConfirmSheet, {
+        props: { message: "Pick one", choices: [{ key: "a", label: "A" }], onAnswer: () => {} },
+    });
+    expect(queryAll(".m_confirm_yes").length).toBe(0);
+    expect(queryOne(".m_confirm_no")).toHaveText("Cancel");
+});
+
+test("a custom body receives its props and can answer through close", async () => {
+    const answers = [];
+    await mountWithCleanup(ConfirmSheet, {
+        props: {
+            component: CustomBody,
+            componentProps: { text: "hello" },
+            onAnswer: (v) => answers.push(v),
+        },
+    });
+    expect(queryOne(".body-text")).toHaveText("hello");
+    await click(".body-close");
+    expect(answers).toEqual(["custom"]);
+});
+
 class Host extends Component {
     static components = { ConfirmSheet };
     static template = xml`
         <div class="host">
             <button class="ask" t-on-click="this.onAsk">ask</button>
-            <span class="result"><t t-esc="this.result"/></span>
-            <ConfirmSheet t-if="this.confirm.state.dialog" message="this.confirm.state.dialog.message"
-                          confirmLabel="this.confirm.state.dialog.confirmLabel" danger="this.confirm.state.dialog.danger"
-                          onAnswer="this.confirm.answer"/>
+            <button class="ask-choices" t-on-click="this.onAskChoices">choices</button>
+            <span class="result"><t t-esc="this.state.result"/></span>
+            <ConfirmSheet t-if="this.confirm.state.dialog" t-props="this.confirm.state.dialog" onAnswer="this.confirm.answer"/>
         </div>
     `;
     confirm = useConfirmSheet();
     state = proxy({ result: "none" });
-    get result() {
-        return this.state.result;
-    }
     onAsk = async () => {
         const yes = await this.confirm.ask("Really?", { confirmLabel: "Go", danger: true });
         this.state.result = String(yes);
     };
+    onAskChoices = async () => {
+        const key = await this.confirm.ask("Which?", {
+            choices: [
+                { key: "one", label: "One" },
+                { key: "two", label: "Two" },
+            ],
+        });
+        this.state.result = String(key);
+    };
 }
 
-test("useConfirmSheet resolves the ask with the user's answer", async () => {
+test("useConfirmSheet resolves a confirm with true", async () => {
     await mountWithCleanup(Host);
     await click(".ask");
     await settle();
@@ -75,4 +135,13 @@ test("useConfirmSheet resolves the ask with the user's answer", async () => {
     await settle();
     expect(queryAll(".m_alert").length).toBe(0);
     expect(queryOne(".result")).toHaveText("true");
+});
+
+test("useConfirmSheet resolves a choice with its key", async () => {
+    await mountWithCleanup(Host);
+    await click(".ask-choices");
+    await settle();
+    await click('.m_alert_choice[data-key="two"]');
+    await settle();
+    expect(queryOne(".result")).toHaveText("two");
 });
