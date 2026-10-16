@@ -452,12 +452,12 @@ test("deserializeDateTime with different timezone", async () => {
 test("toLocaleDateTimeString: showWeekday", async () => {
     mockTimeZone(0);
     const value = DateTime.fromISO("2022-01-07T15:30:00");
+    // ICU 可能用窄不换行空格 (U+202F) 分隔时间与 AM/PM, 比较时统一为普通空格
+    const text = (options) => toLocaleDateTimeString(value, options).replace(/\u202f/g, " ");
 
-    expect(toLocaleDateTimeString(value, {})).toBe("Jan 7, 2022, 3:30 PM");
-    expect(toLocaleDateTimeString(value, { showWeekday: true })).toBe("Fri, Jan 7, 2022, 3:30 PM");
-    expect(toLocaleDateTimeString(value, { showWeekday: true, showDate: false })).toBe(
-        "Fri 3:30 PM"
-    );
+    expect(text({})).toBe("Jan 7, 2022, 3:30 PM");
+    expect(text({ showWeekday: true })).toBe("Fri, Jan 7, 2022, 3:30 PM");
+    expect(text({ showWeekday: true, showDate: false })).toBe("Fri 3:30 PM");
 });
 
 test("parseDate with short notations", async () => {
