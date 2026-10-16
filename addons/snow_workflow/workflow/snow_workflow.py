@@ -108,10 +108,14 @@ class SnowBaseWorkflow(metaclass=SnowWorkflowMeta):
         workflow.refresh_waiting_tasks()
         events = workflow.get_waiting_tasks()
         # 如果自审批，没有正在等待的任务
-        if len(events) > 0:
-            # 只有一个 waiting task
-            sub_workflow = workflow.get_subprocess(events[0])
-            sub_workflow.do_engine_steps()
+        subprocesses = list(workflow.subprocesses.values())
+        sub_workflow = subprocesses[0] if subprocesses else workflow
+        for event in events:
+            # 等待中的任务可能是审批子流程, 也可能是流程中的定时器 (定时器不属于子流程, 没有对应的子流程)
+            subprocess = workflow.get_subprocess(event)
+            if subprocess is not None:
+                subprocess.do_engine_steps()
+                sub_workflow = subprocess
         # 推进后的流保存为json，存入execution
         wf_json = bpmn_workflow_engine.save_workflow_obj_to_json_str(workflow)
         # 将初始化未定义的参数补齐，为自动处理做准备
@@ -123,6 +127,7 @@ class SnowBaseWorkflow(metaclass=SnowWorkflowMeta):
         """
         task_data = {}  # 为后续maybe task 准备数据
         ready_task_data = self.main_workflow.get_ready_user_tasks()
+        ready_names = {t.get_name() for t in ready_task_data}
         if len(ready_task_data) > 0:
             task_data = ready_task_data[0].data
         create_tasks = [t for t in self.main_workflow.get_tasks() if
@@ -136,8 +141,8 @@ class SnowBaseWorkflow(metaclass=SnowWorkflowMeta):
             # 根据task对象生成task_record的static数据
             record_util = SnowWorkflowRecordUtil(self.env, bpmn_workflow_engine)
             task_record_data = record_util.create_task_record_static_data(create_task)
-            # 按顺序，第一个任务为激活状态
-            if first:
+            # 按顺序，第一个已就绪的任务为激活状态 (前面有定时器时，后续审批尚未就绪，不能激活)
+            if first and create_task.get_name() in ready_names:
                 task_record_data.update({'in_progress': True})
                 first = False
 
@@ -203,8 +208,8 @@ class SnowBaseWorkflow(metaclass=SnowWorkflowMeta):
                 'initiator': self.env.uid,
                 'is_complete': False,
             })
-        # 分别处理自审批 和 普通提交审批
-        if len(events) == 0:
+        # 分别处理自审批 和 普通提交审批 (没有等待任务、也没有就绪的审批任务, 才是自审批)
+        if len(events) == 0 and len(ready_task_data) == 0:
             # 自审批没有历史任务，为了在已处理列表中留存数据，创建一条历史数据
             task_history = self.env['snow.workflow.execution.task.history'].create({
                 'task_xml_name': 'self_submit_approve',
@@ -645,12 +650,68 @@ class SnowBaseWorkflow(metaclass=SnowWorkflowMeta):
                                    task_name=current_task.task_xml_id, user=user,
                                    auto_handle=True)
 
+    def advance_timers(self):
+        """
+        定时器到期后推进流程 (由定时任务调用, 不经过用户操作)
+
+        :return: 流程是否发生了推进
+        """
+        engine = self.bpmn_workflow_engine
+        before = engine.save_workflow_obj_to_json_str(self.main_workflow)
+        self.main_workflow.refresh_waiting_tasks()
+        self.main_workflow.do_engine_steps()
+        if engine.save_workflow_obj_to_json_str(self.main_workflow) == before:
+            return False
+        self._sync_after_timer()
+        return True
+
+    def _sync_after_timer(self):
+        """
+        定时器推进后同步数据库: 激活已就绪的审批任务, 更新执行与实例状态, 通知下一位审批人
+        """
+        wf_execution = self.workflow_instance.wf_executions.filtered(lambda r: not r.is_complete)[0]
+        # 从 json 恢复的流程不一定带子流程字典, 流程是否完成以主流程为准
+        subprocess = self.main_workflow
+        ready_names = [t.get_name() for t in self.main_workflow.get_ready_user_tasks()]
+        for name in ready_names:
+            next_task = self.env['snow.workflow.execution.task'].with_context(_type='').sudo().search(
+                [('wf_execution', '=', wf_execution.id), ('task_xml_id', '=', name)], limit=1)
+            next_task.update({'in_progress': True})
+
+        vision_data = json.loads(wf_execution.vision_data)
+        if subprocess.is_completed():
+            vision_data['state'] = 'complete'
+        status_info = WorkflowStatus(wf_execution.wf_instance, self.env,
+                                     subprocess).compute_execution_status()
+        wf_execution.update({
+            'vision_data': json.dumps(vision_data, ensure_ascii=False),
+            'wf_json': self.bpmn_workflow_engine.save_workflow_obj_to_json_str(self.main_workflow),
+            'is_complete': subprocess.is_completed(),
+            'status': status_info.get('status'),
+            'status_owner': status_info.get('status_owner'),
+        })
+        wf_execution.flush_recordset()
+
+        status_info = WorkflowStatus(self.workflow_instance, self.env).compute_instance_status()
+        self.workflow_instance.write({
+            'is_complete': status_info.get('status') == 'pass',
+            'status': status_info.get('status'),
+            'status_owner': status_info.get('status_owner'),
+            'end_time': datetime.datetime.now() if self.main_workflow.is_completed() else None
+        })
+        self.workflow_instance.flush_recordset()
+
+        if ready_names:
+            self.do_auto_operation(wf_execution)
+            self.alert_next_approver(self.workflow_instance.id)
+
     def _do_db_operation(self, task_record, task, user_action, user, node_finished):
         """
             执行任务后，通用数据库处理
         """
         wf_execution = task_record.wf_execution
-        subprocess = list(self.main_workflow.subprocesses.values())[0]
+        # 流程是否完成以主流程为准 (从 json 恢复的流程不一定带子流程字典)
+        subprocess = self.main_workflow
         """
             处理 task_history_record 数据
         """
@@ -741,7 +802,7 @@ class SnowBaseWorkflow(metaclass=SnowWorkflowMeta):
             'status': status_info.get('status'),
             'status_owner': status_info.get('status_owner')
         })
-        wf_execution.flush()
+        wf_execution.flush_recordset()
 
         """
             最后更新instance状态
@@ -753,13 +814,14 @@ class SnowBaseWorkflow(metaclass=SnowWorkflowMeta):
             'status_owner': status_info.get('status_owner'),
             'end_time': datetime.datetime.now() if self.main_workflow.is_completed() else None
         })
-        self.workflow_instance.flush()
+        self.workflow_instance.flush_recordset()
 
         self.alert_submitter(wf_execution, user.name, user_action)
 
     def alert_submitter(self, wf_execution, user, user_action):
         # 通知demo，会在snow_common中做覆盖
-        self.env['snow.workflow.notification'].send_message_to_submitter(self.env.uid, '', '', '/')
+        self.env['snow.workflow.notification'].send_message_to_submitter(self.env.uid, '', '', '/',
+                                                                         user, user_action)
 
     def _do_db_operation_create_task_history(self, task_record, task):
         """

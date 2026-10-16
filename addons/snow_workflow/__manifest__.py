@@ -19,7 +19,8 @@
         'views/workflow_warning_view.xml',
         'views/workflow_menu.xml',
         'wizard/workflow_attendee_selection.xml',
-        'data/config.xml'
+        'data/config.xml',
+        'data/ir_cron.xml',
     ],
     'assets': {
         'web.assets_backend': [

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import ast
 import json
+import logging
 
 from lxml import etree
 
@@ -8,6 +9,9 @@ from odoo import _, models, fields, api
 from odoo.exceptions import UserError, ValidationError
 from ..workflow import MY_APPROVED_TASKS_TYPE, STATUS_MAPPING
 from ..workflow.engines import BpmnWorkflowEngine
+from ..workflow.snow_workflow import SnowWorkflow
+
+_logger = logging.getLogger(__name__)
 
 
 # 新建流程定义时的空流程: 开始 -> 结束 (流程设计器中再完善)
@@ -536,6 +540,22 @@ class WorkflowExecution(models.Model):
     _description = 'workflow execution'
     _table = 'snow_workflow_execution'
     _order = 'id'
+
+    @api.model
+    def _cron_advance_timers(self):
+        """
+        定时任务: 推进等待中的定时器, 到期后流程继续 (不经过用户审批).
+        挂起或挂起中的流程不推进; 单个流程失败只记录日志, 不影响其他流程.
+        """
+        executions = self.sudo().search([('is_complete', '=', False)])
+        for execution in executions:
+            if execution.wf_instance.suspend_info:
+                continue
+            try:
+                with self.env.cr.savepoint():
+                    SnowWorkflow(self.env, execution.wf_instance).advance_timers()
+            except Exception:
+                _logger.exception("Failed to advance timers of workflow execution %s", execution.id)
 
     # static: execution对象填充
     wf_json = fields.Text(string="workflow description JSON")
