@@ -316,7 +316,7 @@ test("a business rule needs a decision that the DMN defines", () => {
 test("a timer needs an ISO 8601 duration", () => {
     const model = nodesModel();
     model.nodes.find((n) => n.id === "tm").duration = "1 hour";
-    expect(validateModel(model, [], ["grade"]).some((e) => e.includes("ISO 8601"))).toBe(true);
+    expect(validateModel(model, [], ["grade"]).some((e) => e.includes("is not valid"))).toBe(true);
 });
 
 test("a script task needs a script, a message task needs a message name", () => {
@@ -346,4 +346,70 @@ test("a node other than a gateway can have only one outgoing flow", () => {
     const model = nodesModel();
     model.flows.push({ id: "fx", source: "sc", target: "e1", condition: "" });
     expect(validateModel(model, [], ["grade"]).some((e) => e.includes("gateway"))).toBe(true);
+});
+
+/** 包容网关 (默认分支 + 条件) 与事件网关 (之后接接收任务或定时器) */
+function gatewaysModel() {
+    const node = (id, type, props = {}) => ({
+        id, type, name: "", x: 0, y: 0, approver: defaultApprover(), ...props,
+    });
+    return {
+        processId: "main_process",
+        nodes: [
+            node("s1", "start"),
+            node("ig", "inclusive", { defaultFlow: "fd" }),
+            node("e1", "end"),
+            node("e2", "end"),
+            node("eg", "event_based"),
+            node("rm", "receive_message", { message: "go" }),
+            node("tm", "timer", { timerKind: "cycle", duration: "R3/PT1H" }),
+        ],
+        flows: [
+            { id: "f0", source: "s1", target: "ig", condition: "" },
+            { id: "fc", source: "ig", target: "e1", condition: "x > 5" },
+            { id: "fd", source: "ig", target: "e2", condition: "" },
+        ],
+    };
+}
+
+test("inclusive gateways keep their default flow and conditions, and timers keep their kind", () => {
+    const model = gatewaysModel();
+    const loaded = fromBpmnXml(toBpmnXml(model));
+    const byId = Object.fromEntries(loaded.nodes.map((n) => [n.id, n]));
+    expect(byId.ig.type).toBe("inclusive");
+    expect(byId.ig.defaultFlow).toBe("fd");
+    expect(loaded.flows.find((f) => f.id === "fc").condition).toBe("x > 5");
+    expect(byId.tm.timerKind).toBe("cycle");
+    expect(byId.tm.duration).toBe("R3/PT1H");
+});
+
+test("the timer kind decides the XML element", () => {
+    const model = gatewaysModel();
+    const xml = toBpmnXml(model);
+    expect(xml).toInclude("<bpmn:timeCycle>'R3/PT1H'</bpmn:timeCycle>");
+    model.nodes.find((n) => n.id === "tm").timerKind = "date";
+    model.nodes.find((n) => n.id === "tm").duration = "2030-01-01T09:00:00";
+    expect(toBpmnXml(model)).toInclude("<bpmn:timeDate>'2030-01-01T09:00:00'</bpmn:timeDate>");
+});
+
+test("a timer date and cycle are validated against their format", () => {
+    const model = gatewaysModel();
+    model.nodes.find((n) => n.id === "tm").timerKind = "date";
+    model.nodes.find((n) => n.id === "tm").duration = "tomorrow";
+    expect(validateModel(model, [], []).some((e) => e.includes("is not valid"))).toBe(true);
+});
+
+test("an inclusive gateway needs a default flow", () => {
+    const model = gatewaysModel();
+    model.nodes.find((n) => n.id === "ig").defaultFlow = "";
+    expect(validateModel(model, [], []).some((e) => e.includes("default flow"))).toBe(true);
+});
+
+test("after an event-based gateway only receive tasks and timers are allowed", () => {
+    const model = gatewaysModel();
+    model.flows.push({ id: "g1", source: "eg", target: "rm", condition: "" });
+    model.flows.push({ id: "g2", source: "eg", target: "tm", condition: "" });
+    expect(validateModel(model, [], []).some((e) => e.includes("only receive tasks"))).toBe(false);
+    model.flows.push({ id: "g3", source: "eg", target: "e1", condition: "" });
+    expect(validateModel(model, [], []).some((e) => e.includes("only receive tasks"))).toBe(true);
 });

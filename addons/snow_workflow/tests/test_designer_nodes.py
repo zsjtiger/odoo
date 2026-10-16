@@ -196,3 +196,69 @@ class TestDesignerNodes(TransactionCase):
                     '<bpmn:endEvent id="e2"><bpmn:incoming>f3</bpmn:incoming></bpmn:endEvent>')
         with self.assertRaises(UserError):
             self._save(branched)
+
+    # 包容网关: 满足的条件都执行; 默认分支只在没有任何条件满足时执行
+    INCLUSIVE = ('<bpmn:scriptTask id="pre" name="pre"><bpmn:script>x = %s</bpmn:script></bpmn:scriptTask>'
+                 '<bpmn:sequenceFlow id="p" sourceRef="pre" targetRef="g"/>'
+                 '<bpmn:inclusiveGateway id="g" name="g" default="fd">'
+                 '<bpmn:outgoing>c1</bpmn:outgoing><bpmn:outgoing>fd</bpmn:outgoing></bpmn:inclusiveGateway>'
+                 '<bpmn:sequenceFlow id="c1" sourceRef="g" targetRef="e1">'
+                 '<bpmn:conditionExpression>x &gt; 5</bpmn:conditionExpression></bpmn:sequenceFlow>'
+                 '<bpmn:sequenceFlow id="fd" sourceRef="g" targetRef="e2"/>'
+                 '<bpmn:endEvent id="e1"/><bpmn:endEvent id="e2"/>')
+
+    def _ends(self, body, **data):
+        from ..workflow.engines import BpmnWorkflowEngine
+        workflow = BpmnWorkflowEngine(xml_str=_process(
+            '<bpmn:startEvent id="s"><bpmn:outgoing>a</bpmn:outgoing></bpmn:startEvent>'
+            '<bpmn:sequenceFlow id="a" sourceRef="s" targetRef="pre"/>' + body)).get_workflow_obj_from_xml_parser()
+        workflow.do_engine_steps()
+        return sorted(t.task_spec.name for t in workflow.get_tasks()
+                      if t.task_spec.name in ('e1', 'e2') and t.state == 64)
+
+    def test_inclusive_gateway_takes_the_default_only_when_nothing_matches(self):
+        self.assertEqual(self._ends(self.INCLUSIVE % '10'), ['e1'])
+        self.assertEqual(self._ends(self.INCLUSIVE % '3'), ['e2'])
+
+    def test_inclusive_gateway_needs_a_default_flow(self):
+        without_default = self.INCLUSIVE.replace(' default="fd"', '').replace(
+            '<bpmn:outgoing>fd</bpmn:outgoing>', '').replace(
+            '<bpmn:sequenceFlow id="fd" sourceRef="g" targetRef="e2"/>', '')
+        with self.assertRaises(UserError):
+            self._save(without_default)
+
+    def test_event_based_gateway_leads_only_to_receives_and_timers(self):
+        def gateway(target):
+            return ('<bpmn:eventBasedGateway id="eg" name="eg"><bpmn:outgoing>m1</bpmn:outgoing>'
+                    '<bpmn:outgoing>t1</bpmn:outgoing></bpmn:eventBasedGateway>'
+                    '<bpmn:sequenceFlow id="m1" sourceRef="eg" targetRef="rm"/>'
+                    '<bpmn:sequenceFlow id="t1" sourceRef="eg" targetRef="%s"/>'
+                    '<bpmn:receiveTask id="rm" name="rm" messageRef="Message_go"/>'
+                    '<bpmn:intermediateCatchEvent id="tm" name="tm"><bpmn:timerEventDefinition>'
+                    '<bpmn:timeDuration>\'PT1H\'</bpmn:timeDuration></bpmn:timerEventDefinition>'
+                    '</bpmn:intermediateCatchEvent>') % target
+        body = ('<bpmn:startEvent id="s"><bpmn:outgoing>a</bpmn:outgoing></bpmn:startEvent>'
+                '<bpmn:sequenceFlow id="a" sourceRef="s" targetRef="eg"/>' + gateway("tm") +
+                '<bpmn:sequenceFlow id="r1" sourceRef="rm" targetRef="e"/>'
+                '<bpmn:sequenceFlow id="t2" sourceRef="tm" targetRef="e"/>'
+                '<bpmn:endEvent id="e"/>')
+        self._save(body, messages=self.MESSAGE)
+        bad = ('<bpmn:startEvent id="s"><bpmn:outgoing>a</bpmn:outgoing></bpmn:startEvent>'
+               '<bpmn:sequenceFlow id="a" sourceRef="s" targetRef="eg"/>' + gateway("sc") +
+               '<bpmn:scriptTask id="sc" name="sc"><bpmn:script>x = 1</bpmn:script></bpmn:scriptTask>'
+               '<bpmn:sequenceFlow id="r1" sourceRef="rm" targetRef="e"/>'
+               '<bpmn:sequenceFlow id="t2" sourceRef="sc" targetRef="e"/>'
+               '<bpmn:endEvent id="e"/>')
+        with self.assertRaises(UserError):
+            self._save(bad, messages=self.MESSAGE)
+
+    def test_timers_can_be_dates_and_cycles(self):
+        def timer(element, text):
+            return ('<bpmn:intermediateCatchEvent id="t" name="t"><bpmn:timerEventDefinition>'
+                    '<bpmn:%s>%s</bpmn:%s></bpmn:timerEventDefinition></bpmn:intermediateCatchEvent>'
+                    % (element, text, element))
+        self._save(_linear(timer('timeDate', "'2030-01-01T09:00:00'")))
+        self._save(_linear(timer('timeCycle', "'R3/PT1H'")))
+        for element, bad in (('timeDate', "'tomorrow'"), ('timeCycle', "'PT1H'"), ('timeDate', 'x')):
+            with self.assertRaises(UserError):
+                self._save(_linear(timer(element, bad)))

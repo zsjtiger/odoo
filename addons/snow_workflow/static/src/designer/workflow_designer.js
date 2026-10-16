@@ -5,10 +5,12 @@ import { useService } from "@web/core/utils/hooks";
 import { standardActionServiceProps } from "@web/webclient/actions/action_plugin";
 import {
     APPROVER_TYPES,
+    CONDITIONAL_GATEWAYS,
     LOOP_TYPES,
     MAIN_PROCESS_ID,
     NODE_TYPES,
     SERVICE_OPERATIONS,
+    TIMER_KINDS,
     decisionIdsOfDmn,
     defaultApprover,
     fromBpmnXml,
@@ -207,8 +209,18 @@ export class WorkflowDesigner extends Component {
                             </t>
                             <t t-if="this.selectedNode.type === 'timer'">
                                 <label class="o_wf_field">
-                                    <span><t t-out="this.texts.duration"/></span>
-                                    <input type="text" class="form-control" placeholder="PT1H" t-att-value="this.selectedNode.duration"
+                                    <span><t t-out="this.texts.timerKind"/></span>
+                                    <select class="form-select" t-on-change="(ev) => this.setTimerKind(this.selectedNode, ev.target.value)">
+                                        <option t-foreach="this.timerKinds" t-as="kind" t-key="kind"
+                                                t-att-value="kind" t-att-selected="this.selectedNode.timerKind === kind">
+                                            <t t-out="this.timerKindLabels[kind]"/>
+                                        </option>
+                                    </select>
+                                </label>
+                                <label class="o_wf_field">
+                                    <span><t t-out="this.texts.time"/></span>
+                                    <input type="text" class="form-control" t-att-placeholder="this.timerExample"
+                                           t-att-value="this.selectedNode.duration"
                                            t-on-change="(ev) => this.setDuration(this.selectedNode, ev.target.value.trim())"/>
                                 </label>
                             </t>
@@ -279,8 +291,21 @@ export class WorkflowDesigner extends Component {
         cardinality: _t("Number of runs"),
         decision: _t("Decision"),
         message: _t("Message name"),
-        duration: _t("Duration (ISO 8601, e.g. PT1H)"),
+        timerKind: _t("Timer type"),
+        time: _t("Time (quoted expression is added automatically)"),
     };
+    timerKinds = Object.keys(TIMER_KINDS);
+    timerKindLabels = Object.fromEntries(Object.entries(TIMER_KINDS).map(([kind, info]) => [kind, info.label]));
+
+    get timerExample() {
+        const kind = this.selectedNode?.timerKind || "duration";
+        return TIMER_KINDS[kind].example;
+    }
+
+    setTimerKind(node, kind) {
+        node.timerKind = kind;
+        node.duration = TIMER_KINDS[kind].example;
+    }
     approverTypes = APPROVER_TYPES;
     approverLabels = {
         submitter: _t("Submitter"),
@@ -400,12 +425,12 @@ export class WorkflowDesigner extends Component {
 
     get gatewayOfSelectedFlow() {
         const flow = this.selectedFlow;
-        return flow && this.scope.nodes.find((n) => n.id === flow.source)?.type === "exclusive";
+        return flow && CONDITIONAL_GATEWAYS.includes(this.scope.nodes.find((n) => n.id === flow.source)?.type);
     }
 
     get flowLabels() {
         return this.scope.flows
-            .filter((f) => this.scope.nodes.find((n) => n.id === f.source)?.type === "exclusive")
+            .filter((f) => CONDITIONAL_GATEWAYS.includes(this.scope.nodes.find((n) => n.id === f.source)?.type))
             .map((f) => {
                 const [x1, y1] = this.flowMidpoint(f);
                 const text = this.isDefault(f) ? _t("default") : f.condition || "?";
@@ -423,7 +448,7 @@ export class WorkflowDesigner extends Component {
 
     isDefault(flow) {
         const source = this.scope.nodes.find((n) => n.id === flow.source);
-        return source?.type === "exclusive" && source.defaultFlow === flow.id;
+        return CONDITIONAL_GATEWAYS.includes(source?.type) && source.defaultFlow === flow.id;
     }
 
     isApproval(node) {

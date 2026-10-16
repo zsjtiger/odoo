@@ -152,9 +152,14 @@ class WorkflowDefinition(models.Model):
     # 流程级允许的子元素 (节点与连线另行检查)
     DESIGNER_SCOPE_EXTRAS = {'laneSet', 'documentation', 'extensionElements', 'incoming', 'outgoing'}
     # 设计器支持的节点 (审批节点与定时器另行判断)
-    DESIGNER_NODE_TAGS = {'startEvent', 'endEvent', 'parallelGateway', 'exclusiveGateway', 'serviceTask',
-                          'subProcess', 'scriptTask', 'businessRuleTask', 'sendTask', 'receiveTask'}
+    DESIGNER_NODE_TAGS = {'startEvent', 'endEvent', 'parallelGateway', 'exclusiveGateway', 'inclusiveGateway',
+                          'eventBasedGateway', 'serviceTask', 'subProcess', 'scriptTask', 'businessRuleTask',
+                          'sendTask', 'receiveTask'}
+    # 只有这些节点可以有多条出线 (分支与并行必须经过网关)
+    DESIGNER_GATEWAYS = ('exclusiveGateway', 'inclusiveGateway', 'parallelGateway', 'eventBasedGateway')
     ISO_DURATION_RE = re.compile(r'^P(?!$)(\d+Y)?(\d+M)?(\d+W)?(\d+D)?(T(?=\d)(\d+H)?(\d+M)?(\d+S)?)?$')
+    ISO_DATETIME_RE = re.compile(r'^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d+)?)?(Z|[+-]\d{2}:\d{2})?$')
+    ISO_CYCLE_RE = re.compile(r'^R\d*/P(?!$)[0-9YMWDTHS.,]+$')
     BPMN_NS = 'http://www.omg.org/spec/BPMN/20100524/MODEL'
     CAMUNDA_NS = 'http://camunda.org/schema/1.0/bpmn'
 
@@ -217,13 +222,15 @@ class WorkflowDefinition(models.Model):
             if kind != 'endEvent' and node_id not in sources:
                 raise UserError(_("“%s” has no outgoing flow.", label))
             outgoing_count = len([f for f in flows if f.get('sourceRef') == node_id])
-            if kind not in ('exclusiveGateway', 'parallelGateway') and outgoing_count > 1:
+            if kind not in self.DESIGNER_GATEWAYS and outgoing_count > 1:
                 # 多条出线会被引擎当作隐式分支, 分支必须使用网关
                 raise UserError(_("“%s” can have only one outgoing flow; use a gateway to split the flow.", label))
             element = nodes[node_id]
             self._check_multi_instance(element, kind)
-            if kind == 'exclusiveGateway':
+            if kind in ('exclusiveGateway', 'inclusiveGateway'):
                 self._check_exclusive_gateway(element, [f for f in flows if f.get('sourceRef') == node_id])
+            elif kind == 'eventBasedGateway':
+                self._check_event_based_gateway(element, [f for f in flows if f.get('sourceRef') == node_id], kinds)
             elif kind == 'serviceTask':
                 self._check_service_task(element, SERVICE_OPERATIONS)
             elif kind == 'scriptTask':
@@ -291,19 +298,41 @@ class WorkflowDefinition(models.Model):
         if not ref or not messages.get(ref):
             raise UserError(_("The message task “%s” needs a message.", label))
 
+    def _check_event_based_gateway(self, gateway, outgoing, kinds):
+        """事件网关: 之后只能是接收任务或定时器 (由先发生的事件决定走哪一条)"""
+        label = gateway.get('name') or gateway.get('id')
+        if len(outgoing) < 2:
+            raise UserError(_("The event-based gateway “%s” needs at least two outgoing flows.", label))
+        for flow in outgoing:
+            if kinds.get(flow.get('targetRef')) not in ('receiveTask', 'timer'):
+                raise UserError(_("After the event-based gateway “%s” only receive tasks and timers are allowed.",
+                                  label))
+
     def _check_timer_event(self, element):
-        """定时器的时长是 ISO 8601 时长, 以 Python 字符串表达式书写: 'PT1H'"""
+        """
+        定时器: 时长 timeDuration (ISO 8601 时长), 日期 timeDate (ISO 日期时间), 循环 timeCycle (R[n]/时长).
+        表达式以 Python 字符串书写, 如 'PT1H'.
+        """
         label = element.get('name') or element.get('id')
         timer = element.find(f'{{{self.BPMN_NS}}}timerEventDefinition')
-        duration = timer.find(f'{{{self.BPMN_NS}}}timeDuration')
-        text = (duration.text or '').strip() if duration is not None else ''
-        try:
-            value = ast.literal_eval(text)
-        except (ValueError, SyntaxError) as error:
-            raise UserError(_("The duration of “%s” must be an ISO 8601 duration in quotes, e.g. 'PT1H'.",
-                              label)) from error
-        if not isinstance(value, str) or not self.ISO_DURATION_RE.match(value):
-            raise UserError(_("The duration of “%s” must be an ISO 8601 duration, e.g. 'PT1H'.", label))
+        for tag, pattern, hint in (
+            ('timeDuration', self.ISO_DURATION_RE, "e.g. 'PT1H'"),
+            ('timeDate', self.ISO_DATETIME_RE, "e.g. '2030-01-01T09:00:00'"),
+            ('timeCycle', self.ISO_CYCLE_RE, "e.g. 'R3/PT1H'"),
+        ):
+            child = timer.find(f'{{{self.BPMN_NS}}}{tag}')
+            if child is None:
+                continue
+            text = (child.text or '').strip()
+            try:
+                value = ast.literal_eval(text)
+            except (ValueError, SyntaxError) as error:
+                raise UserError(_("The time of “%(task)s” must be a string in quotes, %(hint)s.",
+                                  task=label, hint=hint)) from error
+            if not isinstance(value, str) or not pattern.match(value):
+                raise UserError(_("The time of “%(task)s” is not valid, %(hint)s.", task=label, hint=hint))
+            return
+        raise UserError(_("The timer “%s” has no time.", label))
 
     def _check_exclusive_gateway(self, gateway, outgoing):
         label = gateway.get('name') or gateway.get('id')

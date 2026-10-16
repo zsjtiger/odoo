@@ -1618,3 +1618,61 @@ msgstr ""
 #. module: snow_workflow
 msgid "“%s” can have only one outgoing flow; use a gateway to split the flow."
 msgstr ""
+
+#. module: snow_workflow
+msgid "Inclusive gateway"
+msgstr ""
+
+#. module: snow_workflow
+msgid "Event-based gateway"
+msgstr ""
+
+#. module: snow_workflow
+msgid "Duration"
+msgstr ""
+
+#. module: snow_workflow
+msgid "Date and time"
+msgstr ""
+
+#. module: snow_workflow
+msgid "Cycle"
+msgstr ""
+
+#. module: snow_workflow
+msgid "Timer type"
+msgstr ""
+
+#. module: snow_workflow
+msgid "Time (quoted expression is added automatically)"
+msgstr ""
+
+#. module: snow_workflow
+msgid "The event-based gateway “%s” needs at least two outgoing flows."
+msgstr ""
+
+#. module: snow_workflow
+msgid ""
+"After the event-based gateway “%s” only receive tasks and timers are "
+"allowed."
+msgstr ""
+
+#. module: snow_workflow
+msgid "The time of “%(task)s” is not valid, e.g. %(example)s."
+msgstr ""
+
+#. module: snow_workflow
+msgid "The time of “%s” must be a string in quotes, %(hint)s."
+msgstr ""
+
+#. module: snow_workflow
+msgid "The time of “%(task)s” must be a string in quotes, %(hint)s."
+msgstr ""
+
+#. module: snow_workflow
+msgid "The time of “%(task)s” is not valid, %(hint)s."
+msgstr ""
+
+#. module: snow_workflow
+msgid "The timer “%s” has no time."
+msgstr ""

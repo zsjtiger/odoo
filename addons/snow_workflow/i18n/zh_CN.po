@@ -1559,5 +1559,66 @@ msgstr "工作流动作混入"
 msgid "“%s” can have only one outgoing flow; use a gateway to split the flow."
 msgstr "“%s”只能有一条出线；需要分支请使用网关。"
 
+#. module: snow_workflow
+#: static/src/designer/bpmn_model.js:40
+msgid "Inclusive gateway"
+msgstr "包容网关"
+
+#. module: snow_workflow
+#: static/src/designer/bpmn_model.js:41
+msgid "Event-based gateway"
+msgstr "事件网关"
+
+#. module: snow_workflow
+#: static/src/designer/workflow_designer.js:224
+msgid "Duration"
+msgstr "时长"
+
+#. module: snow_workflow
+#: static/src/designer/bpmn_model.js:60
+msgid "Date and time"
+msgstr "日期时间"
+
+#. module: snow_workflow
+#: static/src/designer/bpmn_model.js:61
+msgid "Cycle"
+msgstr "循环"
+
+#. module: snow_workflow
+#: static/src/designer/workflow_designer.js:294
+msgid "Timer type"
+msgstr "定时器类型"
+
+#. module: snow_workflow
+#: static/src/designer/workflow_designer.js:295
+msgid "Time (quoted expression is added automatically)"
+msgstr "时间（自动加引号）"
+
+#. module: snow_workflow
+msgid "The event-based gateway “%s” needs at least two outgoing flows."
+msgstr "事件网关“%s”至少需要两条出线。"
+
+#. module: snow_workflow
+msgid ""
+"After the event-based gateway “%s” only receive tasks and timers are "
+"allowed."
+msgstr "事件网关“%s”之后只能接接收任务和定时器。"
+
+#. module: snow_workflow
+msgid "The time of “%(task)s” is not valid, e.g. %(example)s."
+msgstr "“%(task)s”的时间无效，例如 %(example)s。"
+
+#. module: snow_workflow
+msgid "The time of “%(task)s” must be a string in quotes, %(hint)s."
+msgstr "“%(task)s”的时间必须是带引号的字符串，%(hint)s。"
+
+#. module: snow_workflow
+msgid "The time of “%(task)s” is not valid, %(hint)s."
+msgstr "“%(task)s”的时间无效，%(hint)s。"
+
+#. module: snow_workflow
+msgid "The timer “%s” has no time."
+msgstr "定时器“%s”没有时间。"
+
 #~ msgid "Seach Definition"
 #~ msgstr ""

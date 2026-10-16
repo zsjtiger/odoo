@@ -155,7 +155,9 @@
     }
 
     &.o_wf_node_parallel,
-    &.o_wf_node_exclusive {
+    &.o_wf_node_exclusive,
+    &.o_wf_node_inclusive,
+    &.o_wf_node_event_based {
         border-radius: 4px;
         transform: rotate(45deg);
         font-size: 0;

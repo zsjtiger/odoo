@@ -93,6 +93,43 @@ class InclusiveGateway(MultiChoice, UnstructuredJoin):
 
         return complete, waiting_tasks
 
+    def _split_outputs(self, my_task):
+        """
+        满足条件的分支; 默认分支 (没有条件) 只在没有任何分支满足时才执行.
+        MultiChoice 把无条件的分支当作总是匹配, 会导致默认分支与其它分支同时执行.
+        """
+        matched, default = [], []
+        for condition, output in self.cond_task_specs:
+            if self.choice is not None and output not in self.choice:
+                continue
+            spec = self._wf_spec.get_task_spec_from_name(output)
+            if condition is None:
+                default.append(spec)
+            elif condition._matches(my_task):
+                matched.append(spec)
+        return matched, default
+
+    def _get_matching_outputs(self, my_task):
+        matched, default = self._split_outputs(my_task)
+        return matched or default
+
+    def _predict_hook(self, my_task):
+        matched, default = self._split_outputs_for_prediction()
+        state = TaskState.MAYBE if my_task.state == TaskState.MAYBE else TaskState.LIKELY
+        my_task._sync_children(default, state)
+        for spec in matched:
+            my_task._add_child(spec, TaskState.MAYBE)
+
+    def _split_outputs_for_prediction(self):
+        """预测阶段无法求值, 所有条件分支都可能执行, 默认分支也可能执行"""
+        conditional, default = [], []
+        for condition, output in self.cond_task_specs:
+            if self.choice is not None and output not in self.choice:
+                continue
+            spec = self._wf_spec.get_task_spec_from_name(output)
+            (default if condition is None else conditional).append(spec)
+        return conditional, default
+
     def _run_hook(self, my_task):
         outputs = self._get_matching_outputs(my_task)
         if len(outputs) == 0:

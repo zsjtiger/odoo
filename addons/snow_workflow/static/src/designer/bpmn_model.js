@@ -37,6 +37,8 @@ export const NODE_TYPES = {
     group_approve_execution_and: { label: _t("Group approve (all)"), bpmn: "userTask", approval: true, size: [120, 60] },
     parallel: { label: _t("Parallel gateway"), bpmn: "parallelGateway", size: [50, 50] },
     exclusive: { label: _t("Exclusive gateway"), bpmn: "exclusiveGateway", size: [50, 50] },
+    inclusive: { label: _t("Inclusive gateway"), bpmn: "inclusiveGateway", size: [50, 50] },
+    event_based: { label: _t("Event-based gateway"), bpmn: "eventBasedGateway", size: [50, 50] },
     service: { label: _t("Service task"), bpmn: "serviceTask", size: [120, 60] },
     script: { label: _t("Script task"), bpmn: "scriptTask", size: [120, 60] },
     business_rule: { label: _t("Business rule task"), bpmn: "businessRuleTask", size: [120, 60] },
@@ -52,6 +54,13 @@ export const SERVICE_OPERATIONS = {
     write_record: { label: _t("Write fields to the business record"), parameters: [] },
 };
 
+/** 定时器的形式: duration 时长 / date 日期时间 / cycle 循环 */
+export const TIMER_KINDS = {
+    duration: { element: "timeDuration", label: _t("Duration"), example: "PT1H" },
+    date: { element: "timeDate", label: _t("Date and time"), example: "2030-01-01T09:00:00" },
+    cycle: { element: "timeCycle", label: _t("Cycle"), example: "R3/PT1H" },
+};
+
 /** 审批人规则: submitter (提交人) / users (指定用户) / script (脚本返回) */
 export const APPROVER_TYPES = ["submitter", "users", "script"];
 
@@ -62,11 +71,17 @@ const SCRIPT_KEY = /^[A-Za-z_][A-Za-z0-9_]*$/;
 const IDENTIFIER = /^[A-Za-z_][A-Za-z0-9_]*$/;
 /** 与 models/snow_workflow_model.py 中的 ISO_DURATION_RE 保持一致 */
 const ISO_DURATION = /^P(?!$)(\d+Y)?(\d+M)?(\d+W)?(\d+D)?(T(?=\d)(\d+H)?(\d+M)?(\d+S)?)?$/;
+/** 与 models/snow_workflow_model.py 中的 ISO_DATETIME_RE / ISO_CYCLE_RE 保持一致 */
+const ISO_DATETIME = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d+)?)?(Z|[+-]\d{2}:\d{2})?$/;
+const ISO_CYCLE = /^R\d*\/P(?!$)[0-9YMWDTHS.,]+$/;
 
 const SCOPE_ELEMENTS = [
-    "startEvent", "endEvent", "parallelGateway", "exclusiveGateway", "serviceTask", "subProcess",
-    "scriptTask", "businessRuleTask", "sendTask", "receiveTask",
+    "startEvent", "endEvent", "parallelGateway", "exclusiveGateway", "inclusiveGateway", "eventBasedGateway",
+    "serviceTask", "subProcess", "scriptTask", "businessRuleTask", "sendTask", "receiveTask",
 ];
+
+/** 条件网关: 分支带条件, 必须有默认分支 */
+export const CONDITIONAL_GATEWAYS = ["exclusive", "inclusive"];
 
 export function defaultApprover() {
     return { type: "submitter", users: [], script: "" };
@@ -97,6 +112,7 @@ export function initialProps(type) {
         props.message = "";
     }
     if (type === "timer") {
+        props.timerKind = "duration";
         props.duration = "PT1H";
     }
     if (LOOP_TYPES.includes(type)) {
@@ -221,8 +237,19 @@ function validateScope(scope, errors, decisions) {
                 errors.push(_t("The script key of “%s” is not valid.", label));
             }
         }
-        if (node.type === "exclusive") {
-            if (outgoing.length > 1 && !outgoing.some((f) => f.id === node.defaultFlow)) {
+        if (node.type === "event_based") {
+            if (outgoing.length < 2) {
+                errors.push(_t("The event-based gateway “%s” needs at least two outgoing flows.", label));
+            }
+            for (const flow of outgoing) {
+                const target = scope.nodes.find((n) => n.id === flow.target);
+                if (!["receive_message", "timer"].includes(target?.type)) {
+                    errors.push(_t("After the event-based gateway “%s” only receive tasks and timers are allowed.", label));
+                }
+            }
+        }
+        if (CONDITIONAL_GATEWAYS.includes(node.type)) {
+            if (!outgoing.some((f) => f.id === node.defaultFlow)) {
                 errors.push(_t("“%s” needs a default flow.", label));
             }
             for (const flow of outgoing) {
@@ -267,8 +294,17 @@ function validateScope(scope, errors, decisions) {
                 errors.push(_t("The message task “%s” needs a message name.", label));
             }
         }
-        if (node.type === "timer" && !ISO_DURATION.test(node.duration || "")) {
-            errors.push(_t("The duration of “%s” must be an ISO 8601 duration, e.g. PT1H.", label));
+        if (node.type === "timer") {
+            const kind = TIMER_KINDS[node.timerKind] || TIMER_KINDS.duration;
+            const valid = {
+                duration: ISO_DURATION,
+                date: ISO_DATETIME,
+                cycle: ISO_CYCLE,
+            }[node.timerKind || "duration"];
+            if (!valid.test(node.duration || "")) {
+                errors.push(_t("The time of “%(task)s” is not valid, e.g. %(example)s.",
+                    { task: label, example: kind.example }));
+            }
         }
         if (LOOP_TYPES.includes(node.type) && node.loop?.enabled && !(node.loop.cardinality || "").trim()) {
             errors.push(_t("The multi-instance task “%s” needs a cardinality.", label));
@@ -352,7 +388,7 @@ function scopeXml(scope, indent, lines) {
         } else if (node.type === "service" || node.name) {
             attrs.push(`name="${escapeXml(node.name || info.label)}"`);
         }
-        if (node.type === "exclusive" && node.defaultFlow) {
+        if (CONDITIONAL_GATEWAYS.includes(node.type) && node.defaultFlow) {
             attrs.push(`default="${escapeXml(node.defaultFlow)}"`);
         }
         if (node.type === "business_rule") {
@@ -379,8 +415,9 @@ function scopeXml(scope, indent, lines) {
         }
         children.push(...loopXml(node, pad));
         if (node.type === "timer") {
-            children.push(`${pad}  <bpmn:timerEventDefinition><bpmn:timeDuration>` +
-                `'${escapeXml(node.duration.trim())}'</bpmn:timeDuration></bpmn:timerEventDefinition>`);
+            const element = (TIMER_KINDS[node.timerKind] || TIMER_KINDS.duration).element;
+            children.push(`${pad}  <bpmn:timerEventDefinition><bpmn:${element}>` +
+                `'${escapeXml(node.duration.trim())}'</bpmn:${element}></bpmn:timerEventDefinition>`);
         }
         for (const flow of scope.flows.filter((f) => f.target === node.id)) {
             children.push(`${pad}  <bpmn:incoming>${escapeXml(flow.id)}</bpmn:incoming>`);
@@ -591,6 +628,8 @@ export function fromBpmnXml(xml) {
                     endEvent: "end",
                     parallelGateway: "parallel",
                     exclusiveGateway: "exclusive",
+                    inclusiveGateway: "inclusive",
+                    eventBasedGateway: "event_based",
                     serviceTask: "service",
                     subProcess: "subprocess",
                     scriptTask: "script",
@@ -627,10 +666,16 @@ export function fromBpmnXml(xml) {
                 node.message = messageNames[el.getAttribute("messageRef")] || "";
                 node.name = el.getAttribute("name") || "";
             } else if (type === "timer") {
-                const duration = childrenNamed(childrenNamed(el, "timerEventDefinition")[0], "timeDuration")[0];
-                node.duration = durationOfText(duration?.textContent);
+                // 时间元素决定定时器的形式 (时长 / 日期 / 循环)
+                const definition = childrenNamed(el, "timerEventDefinition")[0];
+                const timerKind = Object.entries(TIMER_KINDS).find(
+                    ([, info]) => childrenNamed(definition, info.element).length
+                )?.[0] || "duration";
+                const time = childrenNamed(definition, TIMER_KINDS[timerKind].element)[0];
+                node.timerKind = timerKind;
+                node.duration = durationOfText(time?.textContent);
                 node.name = el.getAttribute("name") || "";
-            } else if (type === "exclusive") {
+            } else if (CONDITIONAL_GATEWAYS.includes(type)) {
                 node.defaultFlow = el.getAttribute("default") || "";
                 node.name = el.getAttribute("name") || "";
             } else if (type === "subprocess") {
