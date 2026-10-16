@@ -29,12 +29,3 @@ class IrHttp(models.AbstractModel):
         if (user_scheme := user.res_users_settings_id.color_scheme) in ('light', 'dark'):
             return user_scheme
         return request.httprequest.cookies.get('color_scheme') or super().color_scheme()
-
-    def session_info(self):
-        result = super().session_info()
-        result['support_url'] = "https://www.odoo.com/help"
-        if self.env.user.has_group('base.group_system'):
-            result['warning'] = 'admin'
-        elif self.env.user._is_internal():
-            result['warning'] = 'user'
-        return result
