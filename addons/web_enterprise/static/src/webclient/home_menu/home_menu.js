@@ -10,29 +10,19 @@ import {
     useListener,
     useProps,
 } from "@odoo/owl";
-import { hasTouch, isIosApp, isMacOS } from "@web/core/services/browser/feature_detection";
+import { hasTouch, isIosApp } from "@web/core/services/browser/feature_detection";
 import { useDropzone } from "@web/core/components/dropzone/dropzone_hook";
 import { useHotkey } from "@web/core/services/hotkeys/hotkey_hook";
 import { _t } from "@web/core/data/l10n/translation";
 import { user } from "@web/core/services/user";
 import { useService } from "@web/core/utils/hooks";
 import { useSortable } from "@web/core/utils/sortable_owl";
+import { CommandPaletteFooter } from "./command_palette_footer";
+import { moveAppInOrder } from "./app_order";
 import { ExpirationPanel } from "./expiration_panel";
 import { SysAdminPanel } from "./sysadmin_panel";
 import { OfflinePlugin } from "@web/core/services/offline/offline_plugin";
 
-class FooterComponent extends Component {
-    static template = "web_enterprise.HomeMenu.CommandPalette.Footer";
-
-    props = useProps({
-        //prop added by the command palette
-        switchNamespace: t.function().optional(),
-    });
-
-    setup() {
-        this.controlKey = isMacOS() ? "COMMAND" : "CONTROL";
-    }
-}
 /**
  * Home menu
  *
@@ -298,20 +288,11 @@ export class HomeMenu extends Component {
      * @param {HTMLElement} params.previous
      */
     _sortAppDrop({ element, previous }) {
-        const order = this.props.apps.map((app) => app.xmlid);
-        const elementId = element.children[0].dataset.menuXmlid;
-        const elementIndex = order.indexOf(elementId);
-        // first remove dragged element
-        order.splice(elementIndex, 1);
-        if (previous) {
-            const prevIndex = order.indexOf(previous.children[0].dataset.menuXmlid);
-            // insert dragged element after previous element
-            order.splice(prevIndex + 1, 0, elementId);
-        } else {
-            // insert dragged element at beginning if no previous element
-            order.splice(0, 0, elementId);
-        }
-        // apply new order
+        const order = moveAppInOrder(
+            this.props.apps.map((app) => app.xmlid),
+            element.children[0].dataset.menuXmlid,
+            previous?.children[0].dataset.menuXmlid
+        );
         this.props.reorderApps(order);
         user.setUserSettings("homemenu_config", JSON.stringify(order));
     }
@@ -373,7 +354,7 @@ export class HomeMenu extends Component {
     }
 
     _onInputClick() {
-        this.command.openMainPalette({ searchValue: "/", FooterComponent });
+        this.command.openMainPalette({ searchValue: "/", FooterComponent: CommandPaletteFooter });
     }
 
     _onInputSearch() {
@@ -382,7 +363,7 @@ export class HomeMenu extends Component {
         };
         const searchValue = this.compositionStart ? "/" : `/${this.inputRef().value.trim()}`;
         this.compositionStart = false;
-        this.command.openMainPalette({ searchValue, FooterComponent }, onClose);
+        this.command.openMainPalette({ searchValue, FooterComponent: CommandPaletteFooter }, onClose);
         this.inputRef().value = "";
     }
 

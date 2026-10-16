@@ -23,3 +23,18 @@ export function reorderApps(apps, order) {
         return aIndex - bIndex; // sort by order array
     });
 }
+
+/**
+ * Returns a new order where the given app is placed right after the previous one,
+ * or first when there is no previous app.
+ *
+ * @param {Array<string>} order xmlids in their current order
+ * @param {string} xmlid xmlid of the moved app
+ * @param {string} [previousXmlid] xmlid of the app it was dropped after
+ * @returns {Array<string>}
+ */
+export function moveAppInOrder(order, xmlid, previousXmlid) {
+    const newOrder = order.filter((id) => id !== xmlid);
+    newOrder.splice(previousXmlid ? newOrder.indexOf(previousXmlid) + 1 : 0, 0, xmlid);
+    return newOrder;
+}

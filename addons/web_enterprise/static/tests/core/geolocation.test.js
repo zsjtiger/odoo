@@ -8,7 +8,7 @@ import {
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 import { session } from "@web/boot/session";
-import { Geolocation } from "@web_enterprise/core/utils/geolocation";
+import { Geolocation } from "@web_enterprise/core/geolocation/geolocation";
 
 const MAP_BOX_TOKEN = "token";
 

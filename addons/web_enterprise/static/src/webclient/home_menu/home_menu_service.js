@@ -5,7 +5,7 @@ import { user } from "@web/core/services/user";
 import { Mutex } from "@web/core/utils/concurrency";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { computeAppsAndMenuItems } from "@web/webclient/menus/menu_helpers";
-import { reorderApps } from "@web_enterprise/webclient/home_menu/reorder_apps";
+import { reorderApps } from "@web_enterprise/webclient/home_menu/app_order";
 import {
     ControllerNotFoundError,
     standardActionServiceProps,

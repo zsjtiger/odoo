@@ -27,7 +27,7 @@ import { OfflinePlugin } from "@web/core/services/offline/offline_plugin";
 import { registry } from "@web/core/framework/registry";
 import { range } from "@web/core/utils/numbers";
 import { session } from "@web/boot/session";
-import { reorderApps } from "@web_enterprise/webclient/home_menu/reorder_apps";
+import { reorderApps } from "@web_enterprise/webclient/home_menu/app_order";
 import { ShareTargetItem } from "@web/webclient/share_target/share_target_item";
 import { shareTargetService } from "@web/webclient/share_target/share_target_service";
 import { HomeMenu } from "@web_enterprise/webclient/home_menu/home_menu";
