@@ -3,7 +3,12 @@ from lxml import etree
 
 from odoo.tests import TransactionCase, tagged
 
-CHART_FIELDS = {'chart_bar', 'chart_line', 'chart_pie', 'chart_gauge', 'chart_radar', 'chart_card'}
+CHART_FIELDS = {
+    'chart_bar', 'chart_line', 'chart_pie', 'chart_gauge', 'chart_radar', 'chart_card',
+    'chart_smooth', 'chart_stacked', 'chart_marked', 'chart_pie_line', 'chart_polar_radial',
+    'chart_polar_tangential', 'chart_polar_end_angle', 'chart_bar_horizontal',
+    'chart_bar_axis_break', 'chart_bar_gradient',
+}
 
 
 @tagged('post_install', '-at_install')
