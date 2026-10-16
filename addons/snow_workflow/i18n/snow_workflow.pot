@@ -331,6 +331,12 @@ msgstr ""
 #. module: snow_workflow
 #. odoo-javascript
 #: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "Target record (Python expression, empty = inside this process)"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
 msgid "Message name"
 msgstr ""
 
@@ -1675,4 +1681,34 @@ msgstr ""
 
 #. module: snow_workflow
 msgid "The timer “%s” has no time."
+msgstr ""
+
+#. module: snow_workflow
+msgid "Boundary timer"
+msgstr ""
+
+#. module: snow_workflow
+msgid "Attached to"
+msgstr ""
+
+#. module: snow_workflow
+msgid ""
+"The boundary timer “%s” must be attached to a service, script, business "
+"rule, send or receive task."
+msgstr ""
+
+#. module: snow_workflow
+msgid "Intermediate event"
+msgstr ""
+
+#. module: snow_workflow
+msgid "Call activity"
+msgstr ""
+
+#. module: snow_workflow
+msgid "Process to call"
+msgstr ""
+
+#. module: snow_workflow
+msgid "Choose the process that “%s” calls."
 msgstr ""

@@ -5,6 +5,7 @@ import { useService } from "@web/core/utils/hooks";
 import { standardActionServiceProps } from "@web/webclient/actions/action_plugin";
 import {
     APPROVER_TYPES,
+    BOUNDARY_HOSTS,
     CONDITIONAL_GATEWAYS,
     LOOP_TYPES,
     MAIN_PROCESS_ID,
@@ -207,7 +208,39 @@ export class WorkflowDesigner extends Component {
                                     </datalist>
                                 </label>
                             </t>
-                            <t t-if="this.selectedNode.type === 'timer'">
+                            <t t-if="this.selectedNode.type === 'send_message'">
+                                <label class="o_wf_field">
+                                    <span><t t-out="this.texts.targetRecord"/></span>
+                                    <input type="text" class="form-control" t-att-value="this.selectedNode.targetRecord"
+                                           placeholder="record.id" t-on-change="(ev) => this.setTargetRecord(this.selectedNode, ev.target.value.trim())"/>
+                                </label>
+                            </t>
+                            <t t-if="this.selectedNode.type === 'call_activity'">
+                                <label class="o_wf_field">
+                                    <span><t t-out="this.texts.calledProcess"/></span>
+                                    <select class="form-select" t-on-change="(ev) => this.setCalledDefinition(this.selectedNode, ev.target.value)">
+                                        <option value="" t-att-selected="!this.selectedNode.calledDefinition">-</option>
+                                        <option t-foreach="this.state.definitions" t-as="definition" t-key="definition.id"
+                                                t-att-value="String(definition.id)"
+                                                t-att-selected="this.selectedNode.calledDefinition === String(definition.id)">
+                                            <t t-out="definition.name"/>
+                                        </option>
+                                    </select>
+                                </label>
+                            </t>
+                            <t t-if="this.selectedNode.type === 'boundary_timer'">
+                                <label class="o_wf_field">
+                                    <span><t t-out="this.texts.attachedTo"/></span>
+                                    <select class="form-select" t-on-change="(ev) => this.setAttachedTo(this.selectedNode, ev.target.value)">
+                                        <option value="" t-att-selected="!this.selectedNode.attachedTo">-</option>
+                                        <option t-foreach="this.attachableNodes" t-as="host" t-key="host.id"
+                                                t-att-value="host.id" t-att-selected="this.selectedNode.attachedTo === host.id">
+                                            <t t-out="this.labelOf(host)"/>
+                                        </option>
+                                    </select>
+                                </label>
+                            </t>
+                            <t t-if="this.selectedNode.type === 'timer' || this.selectedNode.type === 'boundary_timer'">
                                 <label class="o_wf_field">
                                     <span><t t-out="this.texts.timerKind"/></span>
                                     <select class="form-select" t-on-change="(ev) => this.setTimerKind(this.selectedNode, ev.target.value)">
@@ -291,7 +324,10 @@ export class WorkflowDesigner extends Component {
         cardinality: _t("Number of runs"),
         decision: _t("Decision"),
         message: _t("Message name"),
+        targetRecord: _t("Target record (Python expression, empty = inside this process)"),
         timerKind: _t("Timer type"),
+        attachedTo: _t("Attached to"),
+        calledProcess: _t("Process to call"),
         time: _t("Time (quoted expression is added automatically)"),
     };
     timerKinds = Object.keys(TIMER_KINDS);
@@ -300,6 +336,19 @@ export class WorkflowDesigner extends Component {
     get timerExample() {
         const kind = this.selectedNode?.timerKind || "duration";
         return TIMER_KINDS[kind].example;
+    }
+
+    /** 边界定时器可以挂接的自动节点 (当前作用域中) */
+    get attachableNodes() {
+        return this.scope.nodes.filter((n) => BOUNDARY_HOSTS.includes(n.type));
+    }
+
+    setCalledDefinition(node, id) {
+        node.calledDefinition = id;
+    }
+
+    setAttachedTo(node, id) {
+        node.attachedTo = id;
     }
 
     setTimerKind(node, kind) {
@@ -326,6 +375,7 @@ export class WorkflowDesigner extends Component {
         selected: null,
         users: [],
         decisions: [],
+        definitions: [],
         saving: false,
         tmpLine: null,
     });
@@ -366,6 +416,9 @@ export class WorkflowDesigner extends Component {
                 { type: "warning", sticky: true }
             );
         }
+        // 调用活动可以调用其它流程定义 (不包括本流程)
+        this.state.definitions = await this.orm.searchRead("snow.workflow.definition",
+            [["id", "!=", this.definitionId], ["active", "=", true]], ["name"], { order: "name" });
         this.state.users = await this.orm.searchRead("res.users", [["active", "=", true]], ["name"], {
             limit: 500,
             order: "name",
@@ -714,6 +767,10 @@ export class WorkflowDesigner extends Component {
 
     setMessage(node, value) {
         node.message = value;
+    }
+
+    setTargetRecord(node, value) {
+        node.targetRecord = value;
     }
 
     setDuration(node, value) {

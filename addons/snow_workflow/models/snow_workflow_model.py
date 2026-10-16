@@ -154,7 +154,9 @@ class WorkflowDefinition(models.Model):
     # 设计器支持的节点 (审批节点与定时器另行判断)
     DESIGNER_NODE_TAGS = {'startEvent', 'endEvent', 'parallelGateway', 'exclusiveGateway', 'inclusiveGateway',
                           'eventBasedGateway', 'serviceTask', 'subProcess', 'scriptTask', 'businessRuleTask',
-                          'sendTask', 'receiveTask'}
+                          'sendTask', 'receiveTask', 'callActivity'}
+    # 边界定时器可以挂在这些自动节点上 (审批节点不行: 取消时无法同步审批记录)
+    BOUNDARY_HOSTS = ('serviceTask', 'scriptTask', 'businessRuleTask', 'sendTask', 'receiveTask')
     # 只有这些节点可以有多条出线 (分支与并行必须经过网关)
     DESIGNER_GATEWAYS = ('exclusiveGateway', 'inclusiveGateway', 'parallelGateway', 'eventBasedGateway')
     ISO_DURATION_RE = re.compile(r'^P(?!$)(\d+Y)?(\d+M)?(\d+W)?(\d+D)?(T(?=\d)(\d+H)?(\d+M)?(\d+S)?)?$')
@@ -171,6 +173,22 @@ class WorkflowDefinition(models.Model):
         root = etree.fromstring(content.encode('utf-8'))
         process = next(el for el in root.iter() if etree.QName(el).localname == 'process')
         self._check_designer_scope(process)
+
+    # 调用活动: calledElement="call_<定义 id>"; 被调用的定义只能是一层 (不能再调用其它流程)
+    CALL_PREFIX = 'call_'
+    CALLED_ELEMENT_RE = re.compile(r'calledElement="call_(\d+)"')
+
+    def _called_definition_ids(self, content):
+        return sorted({int(i) for i in self.CALLED_ELEMENT_RE.findall(content or '')})
+
+    def _called_extras(self):
+        """调用活动需要的被调用流程 (bpmn, dmn): 流程 id 改为 call_<定义 id>, 避免与主流程冲突"""
+        extras = []
+        for called in self.browse(self._called_definition_ids(self.content)).sudo():
+            xml = re.sub(r'(<bpmn:process\b[^>]*\bid=")main_process(")',
+                         lambda m: f'{m.group(1)}{self.CALL_PREFIX}{called.id}{m.group(2)}', called.content, count=1)
+            extras.append((xml, called.dmn_content))
+        return extras
 
     def _dmn_decision_ids(self):
         """定义中 DMN 的决策 id (业务规则任务的 decisionRef 只能引用这些)"""
@@ -195,7 +213,12 @@ class WorkflowDefinition(models.Model):
             name = local(child)
             if name == 'userTask' and child.get('name') in self.DESIGNER_APPROVAL_TYPES:
                 nodes[child.get('id')] = child
-            elif name == 'intermediateCatchEvent' and child.find(f'{{{self.BPMN_NS}}}timerEventDefinition') is not None:
+            elif name in ('intermediateCatchEvent', 'boundaryEvent') and child.find(
+                    f'{{{self.BPMN_NS}}}timerEventDefinition') is not None:
+                nodes[child.get('id')] = child
+            elif name == 'intermediateThrowEvent' and not len(
+                    [c for c in child if isinstance(c.tag, str) and etree.QName(c).localname.endswith('EventDefinition')]):
+                # 中间抛出事件 (无定义): 直接通过, 不发送消息
                 nodes[child.get('id')] = child
             elif name in self.DESIGNER_NODE_TAGS:
                 nodes[child.get('id')] = child
@@ -206,6 +229,12 @@ class WorkflowDefinition(models.Model):
                                   f"{name} ({child.get('name') or child.get('id')})"))
 
         kinds = {node_id: self._designer_kind(el) for node_id, el in nodes.items()}
+        for node_id, el in nodes.items():
+            if kinds[node_id] == 'boundary_timer':
+                host = el.get('attachedToRef')
+                if host not in nodes or kinds[host] not in self.BOUNDARY_HOSTS:
+                    raise UserError(_("The boundary timer “%s” must be attached to a service, script, "
+                                      "business rule, send or receive task.", el.get('name') or node_id))
         starts = [i for i, k in kinds.items() if k == 'startEvent']
         ends = [i for i, k in kinds.items() if k == 'endEvent']
         if len(starts) != 1:
@@ -217,7 +246,7 @@ class WorkflowDefinition(models.Model):
         sources = {f.get('sourceRef') for f in flows}
         for node_id, kind in kinds.items():
             label = nodes[node_id].get('name') or node_id
-            if kind != 'startEvent' and node_id not in targets:
+            if kind not in ('startEvent', 'boundary_timer') and node_id not in targets:
                 raise UserError(_("“%s” has no incoming flow.", label))
             if kind != 'endEvent' and node_id not in sources:
                 raise UserError(_("“%s” has no outgoing flow.", label))
@@ -239,16 +268,20 @@ class WorkflowDefinition(models.Model):
                 self._check_business_rule_task(element, decisions)
             elif kind in ('sendTask', 'receiveTask'):
                 self._check_message_task(element, messages)
-            elif kind == 'timer':
+            elif kind in ('timer', 'boundary_timer'):
                 self._check_timer_event(element)
+            elif kind == 'callActivity':
+                self._check_call_activity(element)
             elif kind == 'subProcess':
                 self._check_designer_scope(element)
 
     def _designer_kind(self, element):
-        """节点在设计器中的类型: 定时器是带 timerEventDefinition 的中间捕获事件"""
+        """节点在设计器中的类型: 定时器是带 timerEventDefinition 的中间捕获事件或边界事件"""
         name = etree.QName(element).localname
         if name == 'intermediateCatchEvent':
             return 'timer'
+        if name == 'boundaryEvent':
+            return 'boundary_timer'
         return name
 
     def _check_multi_instance(self, element, kind):
@@ -292,11 +325,37 @@ class WorkflowDefinition(models.Model):
             raise UserError(_("The decision “%(decision)s” of “%(task)s” is not defined in the DMN decisions.",
                               decision=ref, task=label))
 
+    def _check_call_activity(self, element):
+        label = element.get('name') or element.get('id')
+        ref = element.get('calledElement') or ''
+        match = re.match(r'^call_(\d+)$', ref)
+        if not match:
+            raise UserError(_("The call activity “%s” needs a process to call.", label))
+        called = self.browse(int(match.group(1))).sudo()
+        if not called.exists() or called.id == self.id:
+            raise UserError(_("The call activity “%s” must call another existing process.", label))
+        if self._called_definition_ids(called.content):
+            raise UserError(_("The process called by “%s” cannot call other processes.", label))
+
     def _check_message_task(self, element, messages):
         label = element.get('name') or element.get('id')
         ref = element.get('messageRef')
         if not ref or not messages.get(ref):
             raise UserError(_("The message task “%s” needs a message.", label))
+        target = self._target_record_expression(element)
+        if target is not None:
+            try:
+                ast.parse(target, mode='eval')
+            except SyntaxError as error:
+                raise UserError(_("The target record of “%(task)s” is not valid: %(error)s",
+                                  task=label, error=error.msg)) from error
+
+    def _target_record_expression(self, element):
+        """发送消息的目标记录表达式 (camunda:property targetRecord); 没有则返回 None"""
+        for prop in element.iter(f'{{{self.CAMUNDA_NS}}}property'):
+            if prop.get('name') == 'targetRecord':
+                return (prop.get('value') or '').strip() or None
+        return None
 
     def _check_event_based_gateway(self, gateway, outgoing, kinds):
         """事件网关: 之后只能是接收任务或定时器 (由先发生的事件决定走哪一条)"""
@@ -399,7 +458,7 @@ class WorkflowDefinition(models.Model):
         self.ensure_one()
         self.check_access('write')
         try:
-            engine = BpmnWorkflowEngine(xml_str=content, dmn_str=self.dmn_content)
+            engine = BpmnWorkflowEngine(xml_str=content, dmn_str=self.dmn_content, called=self._called_extras())
             process_ids = engine.parser.get_process_ids()
             engine._get_workflow_all_specs_from_xml_parser()
         except Exception as error:

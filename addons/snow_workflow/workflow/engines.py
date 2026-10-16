@@ -26,7 +26,7 @@ class BpmnWorkflowEngine(object):
     3. Json <--> Task Object
     """
 
-    def __init__(self, xml_str=None, json_str=None, dmn_str=None):
+    def __init__(self, xml_str=None, json_str=None, dmn_str=None, called=None):
         # 填充xml_str与json_str
         self.xml_str = xml_str
         self.json_str = json_str
@@ -41,6 +41,11 @@ class BpmnWorkflowEngine(object):
             self.parser.add_bpmn_str(xml_str)
             if dmn_str:
                 self.parser.add_dmn_str(_strip_xml_declaration(dmn_str))
+            # 调用活动引用的流程: (bpmn 内容, dmn 内容), bpmn 中的流程 id 已改为 call_<id>
+            for called_xml, called_dmn in called or []:
+                self.parser.add_bpmn_str(called_xml)
+                if called_dmn:
+                    self.parser.add_dmn_str(_strip_xml_declaration(called_dmn))
 
     @staticmethod
     def dmn_decision_ids(dmn_str):

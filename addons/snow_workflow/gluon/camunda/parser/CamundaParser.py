@@ -11,6 +11,8 @@ from ...bpmn.specs.SubWorkflowTask import CallActivity, TransactionSubprocess
 from ...dmn.parser.BpmnDmnParser import BpmnDmnParser
 from ...dmn.specs.BusinessRuleTask import BusinessRuleTask
 from ...camunda.specs.UserTask import UserTask
+from ...camunda.specs.events.send_task import CrossRecordSendTask
+from ...camunda.parser.send_task_parser import CamundaSendTaskParser
 from ...spiff.specs.service_task import ServiceTask as SpiffServiceTask
 from ...camunda.parser.task_spec import (
     CamundaTaskParser,
@@ -46,6 +48,7 @@ class CamundaParser(BpmnDmnParser):
         full_tag('intermediateCatchEvent'): (CamundaIntermediateCatchEventParser, IntermediateCatchEvent),
         full_tag('intermediateThrowEvent'): (CamundaIntermediateThrowEventParser, IntermediateThrowEvent),
         full_tag('boundaryEvent'): (CamundaBoundaryEventParser, BoundaryEvent),
+        full_tag('sendTask'): (CamundaSendTaskParser, CrossRecordSendTask),
         full_tag('businessRuleTask'): (BusinessRuleTaskParser, BusinessRuleTask),
         full_tag('task'): (CamundaTaskParser, NoneTask),
         full_tag('manualTask'): (CamundaTaskParser, ManualTask),

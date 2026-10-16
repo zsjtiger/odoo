@@ -276,6 +276,18 @@ test("the message id is derived from the message name", () => {
     expect(messageId("go")).toBe("Message_go");
 });
 
+test("a send task keeps its target record expression, and one without a target has none", () => {
+    const withTarget = nodesModel();
+    withTarget.nodes.find((n) => n.id === "sm").targetRecord = "record.id";
+    const xml = toBpmnXml(withTarget);
+    expect(xml).toInclude('<camunda:property name="targetRecord" value="record.id"/>');
+    expect(fromBpmnXml(xml).nodes.find((n) => n.id === "sm").targetRecord).toBe("record.id");
+
+    const withoutTarget = toBpmnXml(nodesModel());
+    expect(withoutTarget).not.toInclude('name="targetRecord"');
+    expect(fromBpmnXml(withoutTarget).nodes.find((n) => n.id === "sm").targetRecord).toBe("");
+});
+
 test("script, business rule, timer, message and multi-instance nodes survive the XML round trip", () => {
     const xml = toBpmnXml(nodesModel());
     const loaded = fromBpmnXml(xml);

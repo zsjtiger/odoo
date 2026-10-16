@@ -10,6 +10,7 @@ from .attendee import TaskAttendee
 from .status import WorkflowStatus
 from .vision import SnowWorkflowVision
 from .engines import BpmnWorkflowEngine
+from ..gluon.camunda.specs.events.send_task import TARGET_RECORD_KEY
 from .util import SnowWorkflowRecordUtil
 from .exceptions import SnowWorkflowValidationError, SnowWorkflowRuntimeError
 from . import APPROVE_EXECUTION_TASKS, GROUP_APPROVE_EXECUTION_TASKS
@@ -99,7 +100,8 @@ class SnowBaseWorkflow(metaclass=SnowWorkflowMeta):
         wf_def = workflow_definition.fetch_definition(model, record)
         if not wf_def:
             raise SnowWorkflowValidationError("Can not find target Workflow Definition")
-        bpmn_workflow_engine = BpmnWorkflowEngine(xml_str=wf_def.content, dmn_str=wf_def.dmn_content)
+        bpmn_workflow_engine = BpmnWorkflowEngine(xml_str=wf_def.content, dmn_str=wf_def.dmn_content,
+                                                   called=wf_def._called_extras())
         workflow = bpmn_workflow_engine.get_workflow_obj_from_xml_parser()
         self.main_workflow = workflow
         # 初始化时，给脚本带入环境参数
@@ -120,6 +122,8 @@ class SnowBaseWorkflow(metaclass=SnowWorkflowMeta):
             if subprocess is not None:
                 subprocess.do_engine_steps()
                 sub_workflow = subprocess
+        # 初始化推进中发出的消息投递给其他记录 (此时本流程尚未创建, 无需排除)
+        self._dispatch_outbound_messages(workflow, model)
         # 推进后的流保存为json，存入execution
         wf_json = bpmn_workflow_engine.save_workflow_obj_to_json_str(workflow)
         # 将初始化未定义的参数补齐，为自动处理做准备
@@ -605,6 +609,8 @@ class SnowBaseWorkflow(metaclass=SnowWorkflowMeta):
             # 子流程直接结束，无需外网关等配置
             self.main_workflow.refresh_waiting_tasks()
             self.main_workflow.do_engine_steps()
+            self._dispatch_outbound_messages(self.main_workflow, instance_record.object,
+                                             exclude_instance=instance_record)
 
         self._do_db_operation(task_record, task, user_action, action_user, node_finished)
 
@@ -664,7 +670,7 @@ class SnowBaseWorkflow(metaclass=SnowWorkflowMeta):
         before = engine.save_workflow_obj_to_json_str(self.main_workflow)
         self.main_workflow.refresh_waiting_tasks()
         self.main_workflow.do_engine_steps()
-        self._log_outbound_messages(self.main_workflow)
+        self._dispatch_outbound_messages_of_instance()
         if engine.save_workflow_obj_to_json_str(self.main_workflow) == before:
             return False
         self._sync_after_engine_steps()
@@ -689,15 +695,68 @@ class SnowBaseWorkflow(metaclass=SnowWorkflowMeta):
             raise UserError(_("The process is not waiting for the message “%s”.", message_name))
         self.main_workflow.catch(event)
         self.main_workflow.do_engine_steps()
-        self._log_outbound_messages(self.main_workflow)
+        self._dispatch_outbound_messages_of_instance()
         self._sync_after_engine_steps()
 
-    def _log_outbound_messages(self, workflow):
+    def waits_for_message(self, message_name):
         """
-        流程发出、但流程内没有接收任务消费的消息: 当前没有外部订阅者, 只记录日志
+        流程当前是否有接收任务正在等待该消息
+
+        :param message_name: BPMN 消息名
+        """
+        from ..gluon.bpmn.specs.events.event_definitions import MessageEventDefinition
+
+        event = MessageEventDefinition(message_name)
+        return any(t.task_spec.event_definition == event for t in self.main_workflow.get_waiting_tasks())
+
+    def _dispatch_outbound_messages_of_instance(self):
+        self._dispatch_outbound_messages(self.main_workflow, self.workflow_instance.object,
+                                         exclude_instance=self.workflow_instance)
+
+    def _dispatch_outbound_messages(self, workflow, model, exclude_instance=None):
+        """
+        投递流程发出的消息:
+        - 设置了目标记录的消息 (发送任务的 targetRecord) 投递给同模型、目标记录上正在等待该消息的流程;
+          目标记录没有运行中的流程、未在等待该消息、或已挂起时, 消息被丢弃并记录日志 (不缓存、不重试)
+        - 没有目标记录的消息只在流程内被接收任务消费, 没有外部接收者, 只记录日志
+
+        :param workflow: 发出消息的主流程
+        :param model: 发送方的业务模型 (目标记录必须是同一模型)
+        :param exclude_instance: 发送方的流程实例, 消息不投递给自己
         """
         for message in workflow.get_bpmn_messages():
-            logger.info("Workflow message %s has no receiver inside the process", message.name)
+            if TARGET_RECORD_KEY not in message.correlations:
+                logger.info("Workflow message %s has no receiver inside the process", message.name)
+                continue
+            target_record = message.correlations[TARGET_RECORD_KEY]
+            # 投递由系统完成, 不以发送人的权限检查 (与定时器推进一致)
+            target_env = self.env(su=True)
+            target = self._find_message_target(target_env, model, target_record, message.name, exclude_instance)
+            if target is None:
+                logger.info("Workflow message %s to %s %s dropped: no process waits for it",
+                            message.name, model, target_record)
+                continue
+            SnowWorkflow(target_env, target).receive_message(message.name, message.payload)
+
+    @staticmethod
+    def _find_message_target(env, model, target_record, message_name, exclude_instance=None):
+        """
+        找到目标记录上正在等待该消息的运行中流程, 没有则返回空
+        """
+        try:
+            record_id = int(target_record)
+        except (TypeError, ValueError):
+            return None
+        instance = env['snow.workflow.instance'].sudo().search([
+            ('object', '=', model),
+            ('record_id', '=', record_id),
+            ('is_complete', '=', False),
+        ], limit=1)
+        if not instance or instance == exclude_instance or instance.suspend_info:
+            return None
+        if not SnowWorkflow(env, instance).waits_for_message(message_name):
+            return None
+        return instance
 
     def _sync_after_engine_steps(self):
         """

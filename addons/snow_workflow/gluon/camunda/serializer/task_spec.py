@@ -2,10 +2,11 @@
 #
 
 from ...bpmn.serializer.helpers.spec import TaskSpecConverter
-from ...bpmn.serializer.task_spec import MultiInstanceTaskConverter
+from ...bpmn.serializer.task_spec import MultiInstanceTaskConverter, EventConverter
 
 from ...camunda.specs.UserTask import UserTask, Form
 from ...camunda.specs.multiinstance_task import ParallelMultiInstanceTask, SequentialMultiInstanceTask
+from ...camunda.specs.events.send_task import CrossRecordSendTask
 
 class UserTaskConverter(TaskSpecConverter):
 
@@ -46,3 +47,12 @@ class ParallelMultiInstanceTaskConverter(MultiInstanceTaskConverter):
 class SequentialMultiInstanceTaskConverter(MultiInstanceTaskConverter):
     def __init__(self, registry):
         super().__init__(SequentialMultiInstanceTask, registry)
+
+class CrossRecordSendTaskConverter(EventConverter):
+    def __init__(self, registry):
+        super().__init__(CrossRecordSendTask, registry)
+
+    def to_dict(self, spec):
+        dct = super().to_dict(spec)
+        dct['target_record'] = spec.target_record
+        return dct

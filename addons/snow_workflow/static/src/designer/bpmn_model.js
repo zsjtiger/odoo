@@ -45,6 +45,9 @@ export const NODE_TYPES = {
     send_message: { label: _t("Send message"), bpmn: "sendTask", size: [120, 60] },
     receive_message: { label: _t("Receive message"), bpmn: "receiveTask", size: [120, 60] },
     timer: { label: _t("Timer"), bpmn: "intermediateCatchEvent", size: [36, 36] },
+    boundary_timer: { label: _t("Boundary timer"), bpmn: "boundaryEvent", size: [36, 36] },
+    throw_event: { label: _t("Intermediate event"), bpmn: "intermediateThrowEvent", size: [36, 36] },
+    call_activity: { label: _t("Call activity"), bpmn: "callActivity", size: [120, 60] },
     subprocess: { label: _t("Subprocess"), bpmn: "subProcess", size: [160, 90], container: true },
 };
 
@@ -83,6 +86,9 @@ const SCOPE_ELEMENTS = [
 /** 条件网关: 分支带条件, 必须有默认分支 */
 export const CONDITIONAL_GATEWAYS = ["exclusive", "inclusive"];
 
+/** 边界定时器可以挂在这些自动节点上 (审批节点不行: 取消时无法同步审批记录) */
+export const BOUNDARY_HOSTS = ["service", "script", "business_rule", "send_message", "receive_message"];
+
 export function defaultApprover() {
     return { type: "submitter", users: [], script: "" };
 }
@@ -111,9 +117,19 @@ export function initialProps(type) {
     if (type === "send_message" || type === "receive_message") {
         props.message = "";
     }
-    if (type === "timer") {
+    if (type === "send_message") {
+        // 目标记录的表达式 (Python), 为空则消息只在本流程内被接收任务消费
+        props.targetRecord = "";
+    }
+    if (type === "timer" || type === "boundary_timer") {
         props.timerKind = "duration";
         props.duration = "PT1H";
+    }
+    if (type === "boundary_timer") {
+        props.attachedTo = "";
+    }
+    if (type === "call_activity") {
+        props.calledDefinition = "";
     }
     if (LOOP_TYPES.includes(type)) {
         props.loop = defaultLoop();
@@ -220,8 +236,17 @@ function validateScope(scope, errors, decisions) {
         const label = node.name || NODE_TYPES[node.type].label;
         const incoming = scope.flows.filter((f) => f.target === node.id);
         const outgoing = scope.flows.filter((f) => f.source === node.id);
-        if (node.type !== "start" && !incoming.length) {
+        if (node.type !== "start" && node.type !== "boundary_timer" && !incoming.length) {
             errors.push(_t("“%s” has no incoming flow.", label));
+        }
+        if (node.type === "call_activity" && !node.calledDefinition) {
+            errors.push(_t("Choose the process that “%s” calls.", label));
+        }
+        if (node.type === "boundary_timer") {
+            const host = scope.nodes.find((n) => n.id === node.attachedTo);
+            if (!host || !BOUNDARY_HOSTS.includes(host.type)) {
+                errors.push(_t("The boundary timer “%s” must be attached to a service, script, business rule, send or receive task.", label));
+            }
         }
         if (node.type !== "end" && !outgoing.length) {
             errors.push(_t("“%s” has no outgoing flow.", label));
@@ -294,7 +319,7 @@ function validateScope(scope, errors, decisions) {
                 errors.push(_t("The message task “%s” needs a message name.", label));
             }
         }
-        if (node.type === "timer") {
+        if (node.type === "timer" || node.type === "boundary_timer") {
             const kind = TIMER_KINDS[node.timerKind] || TIMER_KINDS.duration;
             const valid = {
                 duration: ISO_DURATION,
@@ -410,11 +435,22 @@ function scopeXml(scope, indent, lines) {
                 `<camunda:property name="serviceTaskOperator" value="${escapeXml(operatorJson(node.operator))}"/>` +
                 "</camunda:properties></bpmn:extensionElements>");
         }
+        if (node.type === "send_message" && (node.targetRecord || "").trim()) {
+            children.push(`${pad}  <bpmn:extensionElements><camunda:properties>` +
+                `<camunda:property name="targetRecord" value="${escapeXml(node.targetRecord.trim())}"/>` +
+                "</camunda:properties></bpmn:extensionElements>");
+        }
         if (node.type === "script") {
             children.push(`${pad}  <bpmn:script>${escapeXml(node.script.trim())}</bpmn:script>`);
         }
         children.push(...loopXml(node, pad));
-        if (node.type === "timer") {
+        if (node.type === "boundary_timer") {
+            attrs.push(`attachedToRef="${escapeXml(node.attachedTo)}"`);
+        }
+        if (node.type === "call_activity") {
+            attrs.push(`calledElement="call_${escapeXml(node.calledDefinition)}"`);
+        }
+        if (node.type === "timer" || node.type === "boundary_timer") {
             const element = (TIMER_KINDS[node.timerKind] || TIMER_KINDS.duration).element;
             children.push(`${pad}  <bpmn:timerEventDefinition><bpmn:${element}>` +
                 `'${escapeXml(node.duration.trim())}'</bpmn:${element}></bpmn:timerEventDefinition>`);
@@ -620,8 +656,14 @@ export function fromBpmnXml(xml) {
                     unsupported.push(`userTask (${el.getAttribute("name") || ""})`);
                     continue;
                 }
-            } else if (bpmn === "intermediateCatchEvent" && childrenNamed(el, "timerEventDefinition").length) {
-                type = "timer";
+            } else if (["intermediateCatchEvent", "boundaryEvent"].includes(bpmn)
+                && childrenNamed(el, "timerEventDefinition").length) {
+                type = bpmn === "boundaryEvent" ? "boundary_timer" : "timer";
+            } else if (bpmn === "callActivity") {
+                type = "call_activity";
+            } else if (bpmn === "intermediateThrowEvent" && !childrenNamed(el, "messageEventDefinition").length
+                && !childrenNamed(el, "signalEventDefinition").length) {
+                type = "throw_event";
             } else if (SCOPE_ELEMENTS.includes(bpmn)) {
                 type = {
                     startEvent: "start",
@@ -662,10 +704,21 @@ export function fromBpmnXml(xml) {
                 node.decision = camundaAttr(el, "decisionRef");
                 node.resultVariable = camundaAttr(el, "resultVariable");
                 node.name = el.getAttribute("name") || "";
+            } else if (type === "call_activity") {
+                node.calledDefinition = (el.getAttribute("calledElement") || "").replace(/^call_/, "");
+                node.name = el.getAttribute("name") || "";
             } else if (type === "send_message" || type === "receive_message") {
                 node.message = messageNames[el.getAttribute("messageRef")] || "";
                 node.name = el.getAttribute("name") || "";
-            } else if (type === "timer") {
+                if (type === "send_message") {
+                    const property = descendantsNamed(el, "property")
+                        .find((p) => p.getAttribute("name") === "targetRecord");
+                    node.targetRecord = property?.getAttribute("value") || "";
+                }
+            } else if (type === "timer" || type === "boundary_timer") {
+                if (type === "boundary_timer") {
+                    node.attachedTo = el.getAttribute("attachedToRef") || "";
+                }
                 // 时间元素决定定时器的形式 (时长 / 日期 / 循环)
                 const definition = childrenNamed(el, "timerEventDefinition")[0];
                 const timerKind = Object.entries(TIMER_KINDS).find(

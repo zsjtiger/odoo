@@ -1373,6 +1373,11 @@ msgstr "时长（ISO 8601，如 PT1H）"
 
 #. module: snow_workflow
 #: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "Target record (Python expression, empty = inside this process)"
+msgstr "目标记录（Python 表达式，留空则只在本流程内）"
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
 msgid "Message name"
 msgstr "消息名"
 
@@ -1619,6 +1624,36 @@ msgstr "“%(task)s”的时间无效，%(hint)s。"
 #. module: snow_workflow
 msgid "The timer “%s” has no time."
 msgstr "定时器“%s”没有时间。"
+
+#. module: snow_workflow
+msgid "Boundary timer"
+msgstr "边界定时器"
+
+#. module: snow_workflow
+msgid "Attached to"
+msgstr "挂接到"
+
+#. module: snow_workflow
+msgid ""
+"The boundary timer “%s” must be attached to a service, script, business "
+"rule, send or receive task."
+msgstr "边界定时器“%s”必须挂接在服务、脚本、业务规则、发送或接收任务上。"
+
+#. module: snow_workflow
+msgid "Intermediate event"
+msgstr "中间事件"
+
+#. module: snow_workflow
+msgid "Call activity"
+msgstr "调用活动"
+
+#. module: snow_workflow
+msgid "Process to call"
+msgstr "被调用的流程"
+
+#. module: snow_workflow
+msgid "Choose the process that “%s” calls."
+msgstr "请选择“%s”调用的流程。"
 
 #~ msgid "Seach Definition"
 #~ msgstr ""

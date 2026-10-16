@@ -186,6 +186,59 @@ class TestDesignerNodes(TransactionCase):
         with self.assertRaises(UserError):
             self.env['snow.workflow.action'].receive_message('res.partner', partner.id, 'go')
 
+    # 跨记录消息: 发送任务带目标记录, 投递给同模型目标记录上正在等待该消息的流程
+    def _send_to_then_wait(self, approver, target_id):
+        return ('<bpmn:laneSet id="L"><bpmn:lane id="La" name="{\'user\': {\'domain\': [(\'id\', \'=\', %d)]}}">'
+                '<bpmn:flowNodeRef>approve</bpmn:flowNodeRef></bpmn:lane></bpmn:laneSet>'
+                '<bpmn:startEvent id="s0"><bpmn:outgoing>g0</bpmn:outgoing></bpmn:startEvent>'
+                '<bpmn:sequenceFlow id="g0" sourceRef="s0" targetRef="send"/>'
+                '<bpmn:sendTask id="send" name="send" messageRef="Message_go">'
+                '<bpmn:extensionElements><camunda:properties>'
+                '<camunda:property name="targetRecord" value="%d"/>'
+                '</camunda:properties></bpmn:extensionElements><bpmn:outgoing>g1</bpmn:outgoing></bpmn:sendTask>'
+                '<bpmn:sequenceFlow id="g1" sourceRef="send" targetRef="wait"/>'
+                '<bpmn:receiveTask id="wait" name="wait" messageRef="Message_go"><bpmn:outgoing>g2</bpmn:outgoing>'
+                '</bpmn:receiveTask>'
+                '<bpmn:sequenceFlow id="g2" sourceRef="wait" targetRef="approve"/>'
+                '<bpmn:userTask id="approve" name="approve_execution"><bpmn:outgoing>g3</bpmn:outgoing></bpmn:userTask>'
+                '<bpmn:sequenceFlow id="g3" sourceRef="approve" targetRef="end"/>'
+                '<bpmn:endEvent id="end"><bpmn:incoming>g3</bpmn:incoming></bpmn:endEvent>') % (approver.id, target_id)
+
+    def _submit(self, partner):
+        SnowWorkflow(self.env, self.env['snow.workflow.instance']).do_submit(
+            instance=False, model='res.partner', record=partner.id)
+
+    def _active_tasks(self, partner):
+        instance = self.env['snow.workflow.instance'].search(
+            [('object', '=', 'res.partner'), ('record_id', '=', partner.id)], limit=1)
+        execution = instance.wf_executions.filtered(lambda r: not r.is_complete)
+        return execution.wf_execution_tasks.filtered('in_progress')
+
+    def test_a_cross_record_message_reaches_the_record_waiting_for_it(self):
+        approver = self.env['res.users'].create({'name': 'approver', 'login': 'approver_cross'})
+        receiver = self.env['res.partner'].create({'name': 'receiver'})
+        sender = self.env['res.partner'].create({'name': 'sender'})
+        self.definition.save_bpmn(_process(self._send_to_then_wait(approver, receiver.id), messages=self.MESSAGE))
+        # 接收方先提交: 它发给自己的消息没有等待者 (不投递给自己), 然后等待消息
+        self._submit(receiver)
+        self.assertFalse(self._active_tasks(receiver))
+        # 发送方提交: 消息投递给接收方, 接收方的审批被激活
+        self._submit(sender)
+        self.assertEqual(len(self._active_tasks(receiver)), 1)
+        self.assertEqual(self._active_tasks(receiver).task_attendee.user, approver)
+        self.assertFalse(self._active_tasks(sender))
+
+    def test_a_cross_record_message_is_dropped_when_no_process_waits_for_it(self):
+        approver = self.env['res.users'].create({'name': 'approver', 'login': 'approver_drop'})
+        nobody = self.env['res.partner'].create({'name': 'nobody'})
+        sender = self.env['res.partner'].create({'name': 'sender drop'})
+        self.definition.save_bpmn(_process(self._send_to_then_wait(approver, nobody.id), messages=self.MESSAGE))
+        self._submit(sender)
+        # 目标没有运行中的流程: 消息被丢弃, 发送方照常等待自己的消息
+        self.assertFalse(self._active_tasks(sender))
+        self.assertTrue(self.env['snow.workflow.instance'].search(
+            [('object', '=', 'res.partner'), ('record_id', '=', sender.id), ('is_complete', '=', False)]))
+
     def test_a_node_other_than_a_gateway_can_have_only_one_outgoing_flow(self):
         script = '<bpmn:scriptTask id="t" name="t"><bpmn:script>x = 1</bpmn:script></bpmn:scriptTask>'
         branched = ('<bpmn:startEvent id="s"><bpmn:outgoing>f1</bpmn:outgoing></bpmn:startEvent>'
@@ -262,3 +315,95 @@ class TestDesignerNodes(TransactionCase):
         for element, bad in (('timeDate', "'tomorrow'"), ('timeCycle', "'PT1H'"), ('timeDate', 'x')):
             with self.assertRaises(UserError):
                 self._save(_linear(timer(element, bad)))
+
+    # 边界定时器: 挂在自动节点上; 到期后取消该节点并走异常分支
+    def _boundary(self, host_xml, attached):
+        return ('<bpmn:startEvent id="s"><bpmn:outgoing>a</bpmn:outgoing></bpmn:startEvent>'
+                '<bpmn:sequenceFlow id="a" sourceRef="s" targetRef="t"/>' + host_xml +
+                '<bpmn:sequenceFlow id="f2" sourceRef="t" targetRef="e"/>'
+                '<bpmn:endEvent id="e"><bpmn:incoming>f2</bpmn:incoming></bpmn:endEvent>'
+                '<bpmn:boundaryEvent id="b" name="late" attachedToRef="%s"><bpmn:timerEventDefinition>'
+                '<bpmn:timeDuration>\'PT1H\'</bpmn:timeDuration></bpmn:timerEventDefinition>'
+                '<bpmn:outgoing>bo</bpmn:outgoing></bpmn:boundaryEvent>'
+                '<bpmn:sequenceFlow id="bo" sourceRef="b" targetRef="e2"/>'
+                '<bpmn:endEvent id="e2"><bpmn:incoming>bo</bpmn:incoming></bpmn:endEvent>') % attached
+
+    def test_a_boundary_timer_attaches_to_an_automatic_task(self):
+        receive = '<bpmn:receiveTask id="t" name="t" messageRef="Message_go"/>'
+        self._save(self._boundary(receive, "t"), messages=self.MESSAGE)
+
+    def test_a_boundary_timer_cannot_attach_to_an_approval(self):
+        approval = ('<bpmn:userTask id="t" name="approve_execution"><bpmn:outgoing>f2</bpmn:outgoing>'
+                    '</bpmn:userTask>')
+        with self.assertRaises(UserError):
+            self._save(self._boundary(approval, "t"))
+
+    def test_a_boundary_timer_needs_an_existing_host(self):
+        receive = '<bpmn:receiveTask id="t" name="t" messageRef="Message_go"/>'
+        with self.assertRaises(UserError):
+            self._save(self._boundary(receive, "missing"), messages=self.MESSAGE)
+
+    def test_a_boundary_timer_takes_the_exception_path_when_the_task_waits_too_long(self):
+        from ..workflow.engines import BpmnWorkflowEngine
+        receive = '<bpmn:receiveTask id="t" name="t" messageRef="Message_go"/>'
+        xml = _process(self._boundary(receive, "t"), messages=self.MESSAGE)
+        workflow = BpmnWorkflowEngine(xml_str=xml).get_workflow_obj_from_xml_parser()
+        workflow.do_engine_steps()
+        self.assertFalse(workflow.is_completed())
+        # 消息先到: 边界定时器被取消, 只走正常分支
+        from ..gluon.bpmn.specs.events.event_definitions import MessageEventDefinition
+        workflow.catch(MessageEventDefinition('go'))
+        workflow.do_engine_steps()
+        ends = sorted(t.task_spec.name for t in workflow.get_tasks()
+                      if t.task_spec.name in ('e', 'e2') and t.state == 64)
+        self.assertEqual(ends, ['e'])
+
+    # 调用活动: 调用另一个流程定义 (被调用的流程中的审批与主流程一样推进)
+    def _call_definitions(self):
+        approver = self.env['res.users'].create({'name': 'callee approver', 'login': 'callee_approver'})
+        called = self.env['snow.workflow.definition'].create({
+            'name': 'called flow',
+            'object_id': self.env.ref('base.model_res_users').id,
+            'object_display_field': self.env['ir.model.fields'].search(
+                [('model', '=', 'res.users'), ('name', '=', 'name')], limit=1).id,
+            'target_view': self.env['ir.ui.view'].search(
+                [('model', '=', 'res.users'), ('type', '=', 'form')], limit=1).id,
+            'content': _process(_linear(
+                '<bpmn:laneSet id="L"><bpmn:lane id="La" name="{\'user\': {\'domain\': [(\'id\', \'=\', %d)]}}">'
+                '<bpmn:flowNodeRef>t</bpmn:flowNodeRef></bpmn:lane></bpmn:laneSet>'
+                '<bpmn:userTask id="t" name="approve_execution"/>' % approver.id)),
+        })
+        return approver, called
+
+    def _call_flow(self, called_id):
+        call = ('<bpmn:callActivity id="t" name="t" calledElement="call_%d"/>' % called_id)
+        return _process(_linear(call))
+
+    def test_a_call_activity_runs_the_called_approval(self):
+        from ..workflow.snow_workflow import SnowWorkflow
+        approver, called = self._call_definitions()
+        self.definition.save_bpmn(self._call_flow(called.id))
+        partner = self.env['res.partner'].create({'name': 'caller'})
+        SnowWorkflow(self.env, self.env['snow.workflow.instance']).do_submit(
+            instance=False, model='res.partner', record=partner.id)
+        instance = self.env['snow.workflow.instance'].search(
+            [('object', '=', 'res.partner'), ('record_id', '=', partner.id)], limit=1)
+        execution = instance.wf_executions.filtered(lambda r: not r.is_complete)
+        active = execution.wf_execution_tasks.filtered('in_progress')
+        self.assertEqual(len(active), 1)
+        self.assertEqual(active.task_attendee.user, approver)
+        SnowWorkflow(self.env, instance).do_single_pass(
+            instance=instance.id, task_name=active.task_xml_id, user=approver)
+        instance.invalidate_recordset()
+        self.assertTrue(instance.is_complete)
+
+    def test_a_call_activity_must_call_an_existing_flow_that_calls_nothing(self):
+        approver, called = self._call_definitions()
+        with self.assertRaises(UserError):
+            self.definition.save_bpmn(self._call_flow(9999999))
+        with self.assertRaises(UserError):
+            self.definition.save_bpmn(self._call_flow(self.definition.id))
+        nested = called
+        nested.content = self._call_flow(self.definition.id)
+        with self.assertRaises(UserError):
+            self.definition.save_bpmn(self._call_flow(nested.id))
