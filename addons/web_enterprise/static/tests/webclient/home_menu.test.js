@@ -1,5 +1,6 @@
 import {
     advanceTime,
+    after,
     animationFrame,
     click,
     drag,
@@ -408,6 +409,7 @@ test("home keynav not triggering when navigating a dropdown", async () => {
 test.tags("desktop");
 test("Drop file on HomeMenu should trigger the share target dialog if having share target items", async () => {
     registry.category("share_target_items").add("fake_share_target", ShareTargetItem);
+    after(() => registry.category("share_target_items").remove("fake_share_target"));
     const files = [new File([new Uint8Array(1)], "text.png", { type: "image/png" })];
     patchWithCleanup(shareTargetService, {
         _displayShareTarget() {
