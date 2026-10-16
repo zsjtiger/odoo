@@ -1,10 +1,12 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { patchTranslations } from "@web/../tests/_framework/translation_test_helpers";
 import {
+    decisionIdsOfDmn,
     defaultApprover,
     fromBpmnXml,
     approverOfLaneName,
     laneNameOf,
+    messageId,
     toBpmnXml,
     validateModel,
 } from "@snow_workflow/designer/bpmn_model";
@@ -240,4 +242,108 @@ test("a node without incoming or outgoing flows is an error", () => {
     const errors = validateModel(lonely);
     expect(errors.some((e) => e.includes("Lonely") && e.includes("incoming"))).toBe(true);
     expect(errors.some((e) => e.includes("Lonely") && e.includes("outgoing"))).toBe(true);
+});
+
+/** 一个流程: 脚本任务 -> 业务规则 -> 定时器 -> 发送消息 -> 接收消息 -> 服务任务 (多实例) */
+function nodesModel() {
+    const node = (id, type, props = {}) => ({
+        id, type, name: "", x: 0, y: 0, approver: defaultApprover(), ...props,
+    });
+    return {
+        processId: "main_process",
+        nodes: [
+            node("s1", "start"),
+            node("sc", "script", { script: "amount = 3\nprint(amount)", loop: { enabled: false, sequential: false, cardinality: "" } }),
+            node("br", "business_rule", { name: "Grade", decision: "grade", resultVariable: "grade" }),
+            node("tm", "timer", { duration: "PT1H" }),
+            node("sm", "send_message", { message: "go" }),
+            node("rm", "receive_message", { message: "reply" }),
+            node("sv", "service", {
+                operator: { name: "evaluate", parameters: [{ name: "value", expression: "2" }], resultVariable: "x" },
+                loop: { enabled: true, sequential: true, cardinality: "len(items)" },
+            }),
+            node("e1", "end"),
+        ],
+        flows: ["s1:sc", "sc:br", "br:tm", "tm:sm", "sm:rm", "rm:sv", "sv:e1"].map((pair, i) => {
+            const [source, target] = pair.split(":");
+            return { id: `f${i}`, source, target, condition: "" };
+        }),
+    };
+}
+
+test("the message id is derived from the message name", () => {
+    expect(messageId("order paid")).toBe("Message_order_paid");
+    expect(messageId("go")).toBe("Message_go");
+});
+
+test("script, business rule, timer, message and multi-instance nodes survive the XML round trip", () => {
+    const xml = toBpmnXml(nodesModel());
+    const loaded = fromBpmnXml(xml);
+    expect(loaded.unsupported).toEqual([]);
+    const byId = Object.fromEntries(loaded.nodes.map((n) => [n.id, n]));
+    expect(byId.sc.script).toBe("amount = 3\nprint(amount)");
+    expect(byId.br.decision).toBe("grade");
+    expect(byId.br.resultVariable).toBe("grade");
+    expect(byId.tm.duration).toBe("PT1H");
+    expect(byId.sm.message).toBe("go");
+    expect(byId.rm.message).toBe("reply");
+    expect(byId.sv.loop).toEqual({ enabled: true, sequential: true, cardinality: "len(items)" });
+    expect(byId.sc.loop.enabled).toBe(false);
+});
+
+test("the XML declares each message once and quotes the timer duration", () => {
+    const xml = toBpmnXml(nodesModel());
+    expect(xml).toInclude('<bpmn:message id="Message_go" name="go"/>');
+    expect(xml).toInclude('<bpmn:message id="Message_reply" name="reply"/>');
+    expect(xml).toInclude("<bpmn:timeDuration>'PT1H'</bpmn:timeDuration>");
+    expect(xml).toInclude('<bpmn:multiInstanceLoopCharacteristics isSequential="true">');
+    expect(xml).toInclude('camunda:decisionRef="grade"');
+});
+
+test("a message used twice is declared once", () => {
+    const model = nodesModel();
+    model.nodes.find((n) => n.id === "rm").message = "go";
+    const xml = toBpmnXml(model);
+    expect(xml.split('<bpmn:message id="Message_go"').length - 1).toBe(1);
+});
+
+test("a business rule needs a decision that the DMN defines", () => {
+    const model = nodesModel();
+    expect(validateModel(model, [], []).some((e) => e.includes("grade"))).toBe(true);
+    expect(validateModel(model, [], ["grade"])).toEqual([]);
+});
+
+test("a timer needs an ISO 8601 duration", () => {
+    const model = nodesModel();
+    model.nodes.find((n) => n.id === "tm").duration = "1 hour";
+    expect(validateModel(model, [], ["grade"]).some((e) => e.includes("ISO 8601"))).toBe(true);
+});
+
+test("a script task needs a script, a message task needs a message name", () => {
+    const model = nodesModel();
+    model.nodes.find((n) => n.id === "sc").script = "  ";
+    model.nodes.find((n) => n.id === "sm").message = "";
+    const errors = validateModel(model, [], ["grade"]);
+    expect(errors.some((e) => e.includes("script"))).toBe(true);
+    expect(errors.some((e) => e.includes("message"))).toBe(true);
+});
+
+test("a multi-instance task needs a cardinality when it is enabled", () => {
+    const model = nodesModel();
+    model.nodes.find((n) => n.id === "sv").loop.cardinality = "";
+    expect(validateModel(model, [], ["grade"]).some((e) => e.includes("cardinality"))).toBe(true);
+});
+
+test("the decisions are read from the DMN text of the definition", () => {
+    const dmn = '<?xml version="1.0"?><definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/">' +
+        '<decision id="grade"/><decision id="risk"/></definitions>';
+    expect(decisionIdsOfDmn(dmn)).toEqual(["grade", "risk"]);
+    expect(decisionIdsOfDmn("")).toEqual([]);
+    expect(decisionIdsOfDmn("<definitions>")).toEqual([]);
+});
+
+test("a node other than a gateway can have only one outgoing flow", () => {
+    const model = nodesModel();
+    model.flows.push({ id: "fx", source: "sc", target: "e1", condition: "" });
+    expect(validateModel(model, [], ["grade"]).some((e) => e.includes("gateway"))).toBe(true);
 });

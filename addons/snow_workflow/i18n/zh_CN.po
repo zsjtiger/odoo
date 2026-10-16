@@ -1336,5 +1336,228 @@ msgstr "恢复"
 msgid "Search Definition"
 msgstr "搜索流程定义"
 
+#. module: snow_workflow
+#: model:ir.model,name:snow_workflow.model_ir_access
+msgid "Access"
+msgstr "访问权限"
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "Business rule task"
+msgstr "业务规则任务"
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "Choose the decision of “%s”."
+msgstr "请选择“%s”的决策。"
+
+#. module: snow_workflow
+#: model:ir.model.fields,help:snow_workflow.field_snow_workflow_definition__dmn_content
+msgid "DMN XML with the decision tables used by business rule tasks."
+msgstr "业务规则任务使用的决策表（DMN XML）。"
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__dmn_content
+msgid "DMN decisions"
+msgstr "DMN 决策"
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "Decision"
+msgstr "决策"
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "Duration (ISO 8601, e.g. PT1H)"
+msgstr "时长（ISO 8601，如 PT1H）"
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "Message name"
+msgstr "消息名"
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid ""
+"Multi-instance is only supported on service and script tasks, not on “%s”."
+msgstr "多实例只能用于服务任务和脚本任务，“%s”不支持。"
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "Number of runs"
+msgstr "执行次数"
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "One after another"
+msgstr "依次执行"
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid "Only system administrators can add script tasks to a process."
+msgstr "只有系统管理员可以在流程中添加脚本任务。"
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "Receive message"
+msgstr "接收消息"
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "Run once for each item (multi-instance)"
+msgstr "按项目多次执行（多实例）"
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "Script (Python)"
+msgstr "脚本（Python）"
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "Script task"
+msgstr "脚本任务"
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "Send message"
+msgstr "发送消息"
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid "The DMN decisions are not valid: %s"
+msgstr "DMN 决策无效：%s"
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/models/snow_workflow_actions.py:0
+msgid "The approval process of this record is suspended."
+msgstr "该记录的审批流程已挂起。"
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid "The business rule task “%s” needs a decision."
+msgstr "业务规则任务“%s”需要指定决策。"
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid "The cardinality “%(expr)s” of “%(task)s” is not valid: %(error)s"
+msgstr "“%(task)s”的执行次数“%(expr)s”无效：%(error)s"
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid ""
+"The decision “%(decision)s” of “%(task)s” is not defined in the DMN "
+"decisions."
+msgstr "“%(task)s”的决策“%(decision)s”在 DMN 决策中未定义。"
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid ""
+"The duration of “%s” must be an ISO 8601 duration in quotes, e.g. 'PT1H'."
+msgstr "“%s”的时长必须是带引号的 ISO 8601 时长，如 'PT1H'。"
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid "The duration of “%s” must be an ISO 8601 duration, e.g. 'PT1H'."
+msgstr "“%s”的时长必须是 ISO 8601 时长，如 'PT1H'。"
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "The duration of “%s” must be an ISO 8601 duration, e.g. PT1H."
+msgstr "“%s”的时长必须是 ISO 8601 时长，如 PT1H。"
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/workflow/service_operations.py:0
+msgid "The field “%(field)s” does not exist on %(model)s."
+msgstr "%(model)s 上不存在字段“%(field)s”。"
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/workflow/service_operations.py:0
+msgid "The field “%(field)s” of %(model)s cannot be written by a workflow."
+msgstr "流程不能写入 %(model)s 的字段“%(field)s”。"
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "The message task “%s” needs a message name."
+msgstr "消息任务“%s”需要消息名。"
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid "The message task “%s” needs a message."
+msgstr "消息任务“%s”需要指定消息。"
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid ""
+"The messages “%(first)s” and “%(second)s” cannot be told apart, rename one "
+"of them."
+msgstr "消息“%(first)s”和“%(second)s”无法区分，请重命名其中之一。"
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "The multi-instance task “%s” needs a cardinality."
+msgstr "多实例任务“%s”需要指定执行次数。"
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/workflow/snow_workflow.py:0
+msgid "The process is not waiting for the message “%s”."
+msgstr "流程当前不在等待消息“%s”。"
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/models/snow_workflow_actions.py:0
+msgid "The record has no running approval process."
+msgstr "该记录没有进行中的审批流程。"
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid "The script of “%(task)s” is not valid Python: %(error)s"
+msgstr "“%(task)s”的脚本不是合法的 Python：%(error)s"
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "The script task “%s” needs a script."
+msgstr "脚本任务“%s”需要脚本。"
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid "The sequential flag of “%s” must be true or false."
+msgstr "“%s”的顺序执行标记必须是 true 或 false。"
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/static/src/fields/workflow_warning.js:0
+msgid "The submission description cannot exceed 200 characters"
+msgstr "提交说明不能超过 200 个字符"
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/static/src/fields/workflow_warning.js:0
+msgid "The submission description is required."
+msgstr "提交说明为必填项。"
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "Timer"
+msgstr "定时器"
+
+#. module: snow_workflow
+#: model:ir.actions.server,name:snow_workflow.ir_cron_snow_workflow_advance_timers_ir_actions_server
+msgid "Workflow: advance timers"
+msgstr "工作流：推进定时器"
+
+#. module: snow_workflow
+#: code:addons/snow_workflow/static/src/fields/workflow_warning.js:0
+msgid "You must click read and agree!"
+msgstr "必须阅读并同意！"
+
+#. module: snow_workflow
+#: model:ir.model,name:snow_workflow.model_snow_workflow_action_mixin
+msgid "workflow action mixin"
+msgstr "工作流动作混入"
+
+#. module: snow_workflow
+msgid "“%s” can have only one outgoing flow; use a gateway to split the flow."
+msgstr "“%s”只能有一条出线；需要分支请使用网关。"
+
 #~ msgid "Seach Definition"
 #~ msgstr ""

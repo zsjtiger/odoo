@@ -5,12 +5,14 @@ import { useService } from "@web/core/utils/hooks";
 import { standardActionServiceProps } from "@web/webclient/actions/action_plugin";
 import {
     APPROVER_TYPES,
+    LOOP_TYPES,
     MAIN_PROCESS_ID,
     NODE_TYPES,
     SERVICE_OPERATIONS,
+    decisionIdsOfDmn,
     defaultApprover,
-    defaultOperator,
     fromBpmnXml,
+    initialProps,
     newId,
     toBpmnXml,
     validateModel,
@@ -149,6 +151,67 @@ export class WorkflowDesigner extends Component {
                                            t-on-change="(ev) => this.setResultVariable(this.selectedNode, ev.target.value)"/>
                                 </label>
                             </t>
+                            <t t-if="this.selectedNode.type === 'script'">
+                                <label class="o_wf_field">
+                                    <span><t t-out="this.texts.script"/></span>
+                                    <textarea class="form-control o_wf_code" rows="6" t-att-value="this.selectedNode.script"
+                                              t-on-change="(ev) => this.setScriptText(this.selectedNode, ev.target.value)"/>
+                                </label>
+                            </t>
+                            <t t-if="this.isLoopable(this.selectedNode)">
+                                <label class="o_wf_check">
+                                    <input type="checkbox" t-att-checked="this.selectedNode.loop.enabled"
+                                           t-on-change="(ev) => this.setLoop(this.selectedNode, 'enabled', ev.target.checked)"/>
+                                    <span><t t-out="this.texts.multiInstance"/></span>
+                                </label>
+                                <t t-if="this.selectedNode.loop.enabled">
+                                    <label class="o_wf_check">
+                                        <input type="checkbox" t-att-checked="this.selectedNode.loop.sequential"
+                                               t-on-change="(ev) => this.setLoop(this.selectedNode, 'sequential', ev.target.checked)"/>
+                                        <span><t t-out="this.texts.sequential"/></span>
+                                    </label>
+                                    <label class="o_wf_field">
+                                        <span><t t-out="this.texts.cardinality"/></span>
+                                        <input type="text" class="form-control" placeholder="len(items)"
+                                               t-att-value="this.selectedNode.loop.cardinality"
+                                               t-on-change="(ev) => this.setLoop(this.selectedNode, 'cardinality', ev.target.value.trim())"/>
+                                    </label>
+                                </t>
+                            </t>
+                            <t t-if="this.selectedNode.type === 'business_rule'">
+                                <label class="o_wf_field">
+                                    <span><t t-out="this.texts.decision"/></span>
+                                    <select class="form-select" t-on-change="(ev) => this.setDecision(this.selectedNode, ev.target.value)">
+                                        <option value="" t-att-selected="!this.selectedNode.decision">-</option>
+                                        <option t-foreach="this.state.decisions" t-as="decision" t-key="decision"
+                                                t-att-value="decision" t-att-selected="this.selectedNode.decision === decision">
+                                            <t t-out="decision"/>
+                                        </option>
+                                    </select>
+                                </label>
+                                <label class="o_wf_field">
+                                    <span><t t-out="this.texts.resultVariable"/></span>
+                                    <input type="text" class="form-control" t-att-value="this.selectedNode.resultVariable"
+                                           t-on-change="(ev) => this.setBusinessResult(this.selectedNode, ev.target.value.trim())"/>
+                                </label>
+                            </t>
+                            <t t-if="this.isMessageTask(this.selectedNode)">
+                                <label class="o_wf_field">
+                                    <span><t t-out="this.texts.message"/></span>
+                                    <input type="text" class="form-control" list="o_wf_messages" t-att-value="this.selectedNode.message"
+                                           t-on-change="(ev) => this.setMessage(this.selectedNode, ev.target.value.trim())"/>
+                                    <datalist id="o_wf_messages">
+                                        <option t-foreach="this.messageNames" t-as="name" t-key="name" t-att-value="name"/>
+                                    </datalist>
+                                </label>
+                            </t>
+                            <t t-if="this.selectedNode.type === 'timer'">
+                                <label class="o_wf_field">
+                                    <span><t t-out="this.texts.duration"/></span>
+                                    <input type="text" class="form-control" placeholder="PT1H" t-att-value="this.selectedNode.duration"
+                                           t-on-change="(ev) => this.setDuration(this.selectedNode, ev.target.value.trim())"/>
+                                </label>
+                            </t>
                             <t t-if="this.selectedNode.type === 'subprocess'">
                                 <button type="button" class="btn btn-secondary" t-on-click="() => this.enterSubprocess(this.selectedNode)">
                                     <t t-out="this.texts.open"/>
@@ -210,6 +273,13 @@ export class WorkflowDesigner extends Component {
         defaultFlow: _t("Default flow"),
         condition: _t("Condition"),
         noSelection: _t("Select a node or a flow to edit it."),
+        script: _t("Script (Python)"),
+        multiInstance: _t("Run once for each item (multi-instance)"),
+        sequential: _t("One after another"),
+        cardinality: _t("Number of runs"),
+        decision: _t("Decision"),
+        message: _t("Message name"),
+        duration: _t("Duration (ISO 8601, e.g. PT1H)"),
     };
     approverTypes = APPROVER_TYPES;
     approverLabels = {
@@ -230,6 +300,7 @@ export class WorkflowDesigner extends Component {
         path: [],
         selected: null,
         users: [],
+        decisions: [],
         saving: false,
         tmpLine: null,
     });
@@ -253,9 +324,10 @@ export class WorkflowDesigner extends Component {
 
     async load() {
         const [definition] = await this.orm.read("snow.workflow.definition", [this.definitionId], [
-            "name", "content",
+            "name", "content", "dmn_content",
         ]);
         this.state.name = definition.name;
+        this.state.decisions = decisionIdsOfDmn(definition.dmn_content);
         if (definition.content) {
             const model = fromBpmnXml(definition.content);
             this.unsupported = model.unsupported;
@@ -442,11 +514,8 @@ export class WorkflowDesigner extends Component {
             name: "",
             x: Math.max(0, Math.round(x)),
             y: Math.max(0, Math.round(y)),
-            approver: defaultApprover(),
+            ...initialProps(type),
         };
-        if (type === "service") {
-            node.operator = defaultOperator();
-        }
         if (type === "subprocess") {
             node.children = { nodes: [], flows: [] };
             node.children.nodes.push({ id: newId("n"), type: "start", name: "", x: 30, y: 30, approver: defaultApprover() });
@@ -577,6 +646,55 @@ export class WorkflowDesigner extends Component {
         node.approver.script = value.trim();
     }
 
+    setScriptText(node, value) {
+        node.script = value;
+    }
+
+    isLoopable(node) {
+        return LOOP_TYPES.includes(node.type);
+    }
+
+    setLoop(node, field, value) {
+        node.loop = { ...node.loop, [field]: value };
+    }
+
+    isMessageTask(node) {
+        return node.type === "send_message" || node.type === "receive_message";
+    }
+
+    /** 模型中已经使用的消息名 (用于接收/发送任务的选择) */
+    get messageNames() {
+        const names = new Set();
+        const visit = (scope) => {
+            for (const node of scope.nodes) {
+                if (this.isMessageTask(node) && node.message) {
+                    names.add(node.message);
+                }
+                if (node.type === "subprocess") {
+                    visit(node.children);
+                }
+            }
+        };
+        visit(this.state.model);
+        return [...names];
+    }
+
+    setDecision(node, value) {
+        node.decision = value;
+    }
+
+    setBusinessResult(node, value) {
+        node.resultVariable = value;
+    }
+
+    setMessage(node, value) {
+        node.message = value;
+    }
+
+    setDuration(node, value) {
+        node.duration = value;
+    }
+
     setOperation(node, name) {
         node.operator.name = name;
         if (name === "evaluate" && !node.operator.parameters.some((p) => p.name === "value")) {
@@ -643,7 +761,7 @@ export class WorkflowDesigner extends Component {
     // ----- 保存与返回 -----
 
     async save() {
-        const errors = validateModel(this.state.model, this.unsupported);
+        const errors = validateModel(this.state.model, this.unsupported, this.state.decisions);
         if (errors.length) {
             this.notification.add(errors.join("\n"), { type: "danger", sticky: true });
             return;

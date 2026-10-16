@@ -185,3 +185,14 @@ class TestDesignerNodes(TransactionCase):
         partner = self.env['res.partner'].create({'name': 'no process'})
         with self.assertRaises(UserError):
             self.env['snow.workflow.action'].receive_message('res.partner', partner.id, 'go')
+
+    def test_a_node_other_than_a_gateway_can_have_only_one_outgoing_flow(self):
+        script = '<bpmn:scriptTask id="t" name="t"><bpmn:script>x = 1</bpmn:script></bpmn:scriptTask>'
+        branched = ('<bpmn:startEvent id="s"><bpmn:outgoing>f1</bpmn:outgoing></bpmn:startEvent>'
+                    '<bpmn:sequenceFlow id="f1" sourceRef="s" targetRef="t"/>' + script +
+                    '<bpmn:sequenceFlow id="f2" sourceRef="t" targetRef="e"/>'
+                    '<bpmn:sequenceFlow id="f3" sourceRef="t" targetRef="e2"/>'
+                    '<bpmn:endEvent id="e"><bpmn:incoming>f2</bpmn:incoming></bpmn:endEvent>'
+                    '<bpmn:endEvent id="e2"><bpmn:incoming>f3</bpmn:incoming></bpmn:endEvent>')
+        with self.assertRaises(UserError):
+            self._save(branched)

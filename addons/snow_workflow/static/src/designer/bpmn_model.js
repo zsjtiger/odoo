@@ -8,6 +8,11 @@ import { _t } from "@web/core/data/l10n/translation";
  *  - 连线 condition: 排他网关分支的条件表达式 (Python)
  *  - 排他网关 defaultFlow: 默认分支的连线 id
  *  - 服务任务 operator: { name, parameters: [{name, expression}], resultVariable }
+ *  - 脚本任务 script: Python 脚本 (仅系统管理员可编辑, 保存时在服务端检查)
+ *  - 业务规则任务 decision / resultVariable: 定义中 DMN 的决策 id 与结果变量
+ *  - 发送/接收消息 message: 消息名; 保存时生成 <bpmn:message> 定义
+ *  - 定时器 duration: ISO 8601 时长, 如 PT1H (XML 中以字符串表达式书写)
+ *  - 服务/脚本任务 loop: 多实例 { enabled, sequential, cardinality }
  *
  * 引擎约定 (workflow/attendee.py, workflow/util.py, workflow/service_operations.py):
  *  - 审批节点是 userTask, 其 name 为任务类型 (approve_execution / group_approve_execution_or / ..._and)
@@ -33,6 +38,11 @@ export const NODE_TYPES = {
     parallel: { label: _t("Parallel gateway"), bpmn: "parallelGateway", size: [50, 50] },
     exclusive: { label: _t("Exclusive gateway"), bpmn: "exclusiveGateway", size: [50, 50] },
     service: { label: _t("Service task"), bpmn: "serviceTask", size: [120, 60] },
+    script: { label: _t("Script task"), bpmn: "scriptTask", size: [120, 60] },
+    business_rule: { label: _t("Business rule task"), bpmn: "businessRuleTask", size: [120, 60] },
+    send_message: { label: _t("Send message"), bpmn: "sendTask", size: [120, 60] },
+    receive_message: { label: _t("Receive message"), bpmn: "receiveTask", size: [120, 60] },
+    timer: { label: _t("Timer"), bpmn: "intermediateCatchEvent", size: [36, 36] },
     subprocess: { label: _t("Subprocess"), bpmn: "subProcess", size: [160, 90], container: true },
 };
 
@@ -45,11 +55,17 @@ export const SERVICE_OPERATIONS = {
 /** 审批人规则: submitter (提交人) / users (指定用户) / script (脚本返回) */
 export const APPROVER_TYPES = ["submitter", "users", "script"];
 
+/** 可以设置多实例的节点 (审批节点的多人审批由审批模型处理, 不做多实例) */
+export const LOOP_TYPES = ["service", "script"];
+
 const SCRIPT_KEY = /^[A-Za-z_][A-Za-z0-9_]*$/;
 const IDENTIFIER = /^[A-Za-z_][A-Za-z0-9_]*$/;
+/** 与 models/snow_workflow_model.py 中的 ISO_DURATION_RE 保持一致 */
+const ISO_DURATION = /^P(?!$)(\d+Y)?(\d+M)?(\d+W)?(\d+D)?(T(?=\d)(\d+H)?(\d+M)?(\d+S)?)?$/;
 
 const SCOPE_ELEMENTS = [
     "startEvent", "endEvent", "parallelGateway", "exclusiveGateway", "serviceTask", "subProcess",
+    "scriptTask", "businessRuleTask", "sendTask", "receiveTask",
 ];
 
 export function defaultApprover() {
@@ -58,6 +74,35 @@ export function defaultApprover() {
 
 export function defaultOperator() {
     return { name: "evaluate", parameters: [{ name: "value", expression: "" }], resultVariable: "" };
+}
+
+export function defaultLoop() {
+    return { enabled: false, sequential: false, cardinality: "" };
+}
+
+/** 新建节点时各类型的专有属性 */
+export function initialProps(type) {
+    const props = { approver: defaultApprover() };
+    if (type === "service") {
+        props.operator = defaultOperator();
+    }
+    if (type === "script") {
+        props.script = "";
+    }
+    if (type === "business_rule") {
+        props.decision = "";
+        props.resultVariable = "";
+    }
+    if (type === "send_message" || type === "receive_message") {
+        props.message = "";
+    }
+    if (type === "timer") {
+        props.duration = "PT1H";
+    }
+    if (LOOP_TYPES.includes(type)) {
+        props.loop = defaultLoop();
+    }
+    return props;
 }
 
 /** 审批人规则 -> lane 的 name (Python 字典字面量) */
@@ -120,12 +165,33 @@ function operatorOfJson(text) {
     };
 }
 
+/** 消息的 BPMN id: 由消息名生成, 同一名字总是得到同一个 id */
+export function messageId(name) {
+    return `Message_${name.replace(/[^A-Za-z0-9_]/g, "_")}`;
+}
+
+/** 定时器时长去掉引号后的文本 (XML 中为 'PT1H') */
+function durationOfText(text) {
+    return (text || "").trim().replace(/^'(.*)'$/, "$1");
+}
+
 function sizeOf(node) {
     return NODE_TYPES[node.type].size;
 }
 
+/** 所有作用域中的节点 (包括子流程中的), 用于收集消息等 */
+function allNodes(scope, out = []) {
+    for (const node of scope.nodes) {
+        out.push(node);
+        if (node.type === "subprocess") {
+            allNodes(node.children, out);
+        }
+    }
+    return out;
+}
+
 /** 校验一个作用域 (流程或子流程), 返回错误信息 */
-function validateScope(scope, errors) {
+function validateScope(scope, errors, decisions) {
     const starts = scope.nodes.filter((n) => n.type === "start");
     const ends = scope.nodes.filter((n) => n.type === "end");
     if (starts.length !== 1) {
@@ -143,6 +209,9 @@ function validateScope(scope, errors) {
         }
         if (node.type !== "end" && !outgoing.length) {
             errors.push(_t("“%s” has no outgoing flow.", label));
+        }
+        if (!["exclusive", "parallel"].includes(node.type) && outgoing.length > 1) {
+            errors.push(_t("“%s” can have only one outgoing flow; use a gateway to split the flow.", label));
         }
         if (NODE_TYPES[node.type].approval) {
             if (node.approver.type === "users" && !node.approver.users.length) {
@@ -179,8 +248,33 @@ function validateScope(scope, errors) {
                 errors.push(_t("The result variable of “%s” must be a valid name.", label));
             }
         }
+        if (node.type === "script" && !(node.script || "").trim()) {
+            errors.push(_t("The script task “%s” needs a script.", label));
+        }
+        if (node.type === "business_rule") {
+            if (!node.decision) {
+                errors.push(_t("Choose the decision of “%s”.", label));
+            } else if (decisions && !decisions.includes(node.decision)) {
+                errors.push(_t("The decision “%(decision)s” of “%(task)s” is not defined in the DMN decisions.",
+                    { decision: node.decision, task: label }));
+            }
+            if (node.resultVariable && !IDENTIFIER.test(node.resultVariable)) {
+                errors.push(_t("The result variable of “%s” must be a valid name.", label));
+            }
+        }
+        if (node.type === "send_message" || node.type === "receive_message") {
+            if (!(node.message || "").trim()) {
+                errors.push(_t("The message task “%s” needs a message name.", label));
+            }
+        }
+        if (node.type === "timer" && !ISO_DURATION.test(node.duration || "")) {
+            errors.push(_t("The duration of “%s” must be an ISO 8601 duration, e.g. PT1H.", label));
+        }
+        if (LOOP_TYPES.includes(node.type) && node.loop?.enabled && !(node.loop.cardinality || "").trim()) {
+            errors.push(_t("The multi-instance task “%s” needs a cardinality.", label));
+        }
         if (node.type === "subprocess") {
-            validateScope(node.children, errors);
+            validateScope(node.children, errors, decisions);
         }
     }
 }
@@ -189,10 +283,27 @@ function validateScope(scope, errors) {
  * 校验设计结果, 返回错误信息列表 (空表示可以保存)
  * @param {Object} model
  * @param {string[]} unsupported 载入时发现的不支持元素
+ * @param {string[]|null} decisions 定义中 DMN 的决策 id (null 表示不检查)
  */
-export function validateModel(model, unsupported = []) {
+export function validateModel(model, unsupported = [], decisions = null) {
     const errors = unsupported.map((name) => _t("The element “%s” is not supported by the designer yet.", name));
-    validateScope(model, errors);
+    validateScope(model, errors, decisions);
+    const messageIds = {};
+    for (const node of allNodes(model)) {
+        if (node.type !== "send_message" && node.type !== "receive_message") {
+            continue;
+        }
+        const name = (node.message || "").trim();
+        if (!name) {
+            continue;
+        }
+        const id = messageId(name);
+        if (messageIds[id] && messageIds[id] !== name) {
+            errors.push(_t("The messages “%(first)s” and “%(second)s” cannot be told apart, rename one of them.",
+                { first: messageIds[id], second: name }));
+        }
+        messageIds[id] = name;
+    }
     return errors;
 }
 
@@ -217,6 +328,19 @@ function allApprovals(scope, out = []) {
     return out;
 }
 
+/** 多实例子元素 */
+function loopXml(node, pad) {
+    if (!LOOP_TYPES.includes(node.type) || !node.loop?.enabled) {
+        return [];
+    }
+    const sequential = node.loop.sequential ? "true" : "false";
+    return [
+        `${pad}  <bpmn:multiInstanceLoopCharacteristics isSequential="${sequential}">` +
+        `<bpmn:loopCardinality>${escapeXml(node.loop.cardinality.trim())}</bpmn:loopCardinality>` +
+        "</bpmn:multiInstanceLoopCharacteristics>",
+    ];
+}
+
 function scopeXml(scope, indent, lines) {
     const byId = Object.fromEntries(scope.nodes.map((n) => [n.id, n]));
     for (const node of scope.nodes) {
@@ -225,13 +349,20 @@ function scopeXml(scope, indent, lines) {
         const attrs = [`id="${escapeXml(node.id)}"`];
         if (info.approval) {
             attrs.push(`name="${escapeXml(node.type)}"`);
-        } else if (node.type === "service") {
+        } else if (node.type === "service" || node.name) {
             attrs.push(`name="${escapeXml(node.name || info.label)}"`);
-        } else if (node.name) {
-            attrs.push(`name="${escapeXml(node.name)}"`);
         }
         if (node.type === "exclusive" && node.defaultFlow) {
             attrs.push(`default="${escapeXml(node.defaultFlow)}"`);
+        }
+        if (node.type === "business_rule") {
+            attrs.push(`camunda:decisionRef="${escapeXml(node.decision)}"`);
+            if (node.resultVariable) {
+                attrs.push(`camunda:resultVariable="${escapeXml(node.resultVariable)}"`);
+            }
+        }
+        if (node.type === "send_message" || node.type === "receive_message") {
+            attrs.push(`messageRef="${escapeXml(messageId(node.message.trim()))}"`);
         }
         const children = [];
         if (info.approval && node.name) {
@@ -242,6 +373,14 @@ function scopeXml(scope, indent, lines) {
             children.push(`${pad}  <bpmn:extensionElements><camunda:properties>` +
                 `<camunda:property name="serviceTaskOperator" value="${escapeXml(operatorJson(node.operator))}"/>` +
                 "</camunda:properties></bpmn:extensionElements>");
+        }
+        if (node.type === "script") {
+            children.push(`${pad}  <bpmn:script>${escapeXml(node.script.trim())}</bpmn:script>`);
+        }
+        children.push(...loopXml(node, pad));
+        if (node.type === "timer") {
+            children.push(`${pad}  <bpmn:timerEventDefinition><bpmn:timeDuration>` +
+                `'${escapeXml(node.duration.trim())}'</bpmn:timeDuration></bpmn:timerEventDefinition>`);
         }
         for (const flow of scope.flows.filter((f) => f.target === node.id)) {
             children.push(`${pad}  <bpmn:incoming>${escapeXml(flow.id)}</bpmn:incoming>`);
@@ -303,7 +442,7 @@ function diagramXml(scope, lines) {
 }
 
 /**
- * 设计模型 -> BPMN XML (包含 lane, 子流程, 服务任务与 BPMNDiagram 坐标)
+ * 设计模型 -> BPMN XML (包含 lane, 消息定义, 子流程, 服务任务与 BPMNDiagram 坐标)
  */
 export function toBpmnXml(model) {
     const lines = [];
@@ -311,6 +450,18 @@ export function toBpmnXml(model) {
     lines.push(`<bpmn:definitions xmlns:bpmn="${BPMN_NS}" xmlns:bpmndi="${BPMNDI_NS}" ` +
         `xmlns:dc="${DC_NS}" xmlns:di="${DI_NS}" xmlns:camunda="${CAMUNDA_NS}" ` +
         `id="Definitions_${escapeXml(model.processId)}" targetNamespace="http://snow.workflow/bpmn">`);
+
+    // 消息定义: 发送/接收任务引用的消息名 (同名只生成一次)
+    const messages = {};
+    for (const node of allNodes(model)) {
+        if ((node.type === "send_message" || node.type === "receive_message") && node.message.trim()) {
+            messages[messageId(node.message.trim())] = node.message.trim();
+        }
+    }
+    for (const [id, name] of Object.entries(messages)) {
+        lines.push(`  <bpmn:message id="${escapeXml(id)}" name="${escapeXml(name)}"/>`);
+    }
+
     lines.push(`  <bpmn:process id="${escapeXml(model.processId)}" isExecutable="true">`);
 
     const approvals = allApprovals(model);
@@ -347,6 +498,35 @@ function descendantsNamed(root, name) {
     return [...root.getElementsByTagName("*")].filter((el) => localName(el) === name);
 }
 
+/** 读取带命名空间的属性 (camunda:decisionRef 等) */
+function camundaAttr(el, name) {
+    return el.getAttributeNS(CAMUNDA_NS, name) || "";
+}
+
+function loopOf(el) {
+    const loop = childrenNamed(el, "multiInstanceLoopCharacteristics")[0];
+    if (!loop) {
+        return defaultLoop();
+    }
+    return {
+        enabled: true,
+        sequential: loop.getAttribute("isSequential") === "true",
+        cardinality: childrenNamed(loop, "loopCardinality")[0]?.textContent || "",
+    };
+}
+
+/** DMN 文本中的决策 id; 无法解析时返回空列表 */
+export function decisionIdsOfDmn(dmnXml) {
+    if (!dmnXml) {
+        return [];
+    }
+    const doc = new DOMParser().parseFromString(dmnXml, "text/xml");
+    if (doc.getElementsByTagName("parsererror").length) {
+        return [];
+    }
+    return descendantsNamed(doc, "decision").map((el) => el.getAttribute("id")).filter(Boolean);
+}
+
 /**
  * BPMN XML -> 设计模型. 不支持的元素收集在 unsupported 中 (保存时同样会被拒绝).
  */
@@ -369,6 +549,10 @@ export function fromBpmnXml(xml) {
         for (const ref of descendantsNamed(lane, "flowNodeRef")) {
             laneOf[ref.textContent] = approver;
         }
+    }
+    const messageNames = {};
+    for (const message of descendantsNamed(doc, "message")) {
+        messageNames[message.getAttribute("id")] = message.getAttribute("name") || "";
     }
 
     const unsupported = [];
@@ -399,6 +583,8 @@ export function fromBpmnXml(xml) {
                     unsupported.push(`userTask (${el.getAttribute("name") || ""})`);
                     continue;
                 }
+            } else if (bpmn === "intermediateCatchEvent" && childrenNamed(el, "timerEventDefinition").length) {
+                type = "timer";
             } else if (SCOPE_ELEMENTS.includes(bpmn)) {
                 type = {
                     startEvent: "start",
@@ -407,6 +593,10 @@ export function fromBpmnXml(xml) {
                     exclusiveGateway: "exclusive",
                     serviceTask: "service",
                     subProcess: "subprocess",
+                    scriptTask: "script",
+                    businessRuleTask: "business_rule",
+                    sendTask: "send_message",
+                    receiveTask: "receive_message",
                 }[bpmn];
             } else {
                 unsupported.push(bpmn);
@@ -423,6 +613,22 @@ export function fromBpmnXml(xml) {
                 const property = descendantsNamed(el, "property")
                     .find((p) => p.getAttribute("name") === "serviceTaskOperator");
                 node.operator = operatorOfJson(property?.getAttribute("value"));
+                node.name = el.getAttribute("name") || "";
+                node.loop = loopOf(el);
+            } else if (type === "script") {
+                node.script = childrenNamed(el, "script")[0]?.textContent || "";
+                node.name = el.getAttribute("name") || "";
+                node.loop = loopOf(el);
+            } else if (type === "business_rule") {
+                node.decision = camundaAttr(el, "decisionRef");
+                node.resultVariable = camundaAttr(el, "resultVariable");
+                node.name = el.getAttribute("name") || "";
+            } else if (type === "send_message" || type === "receive_message") {
+                node.message = messageNames[el.getAttribute("messageRef")] || "";
+                node.name = el.getAttribute("name") || "";
+            } else if (type === "timer") {
+                const duration = childrenNamed(childrenNamed(el, "timerEventDefinition")[0], "timeDuration")[0];
+                node.duration = durationOfText(duration?.textContent);
                 node.name = el.getAttribute("name") || "";
             } else if (type === "exclusive") {
                 node.defaultFlow = el.getAttribute("default") || "";

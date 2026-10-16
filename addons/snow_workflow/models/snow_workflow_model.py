@@ -216,6 +216,10 @@ class WorkflowDefinition(models.Model):
                 raise UserError(_("“%s” has no incoming flow.", label))
             if kind != 'endEvent' and node_id not in sources:
                 raise UserError(_("“%s” has no outgoing flow.", label))
+            outgoing_count = len([f for f in flows if f.get('sourceRef') == node_id])
+            if kind not in ('exclusiveGateway', 'parallelGateway') and outgoing_count > 1:
+                # 多条出线会被引擎当作隐式分支, 分支必须使用网关
+                raise UserError(_("“%s” can have only one outgoing flow; use a gateway to split the flow.", label))
             element = nodes[node_id]
             self._check_multi_instance(element, kind)
             if kind == 'exclusiveGateway':
