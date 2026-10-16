@@ -26,3 +26,4 @@ from . import test_ai_image_tools
 from . import test_ai_composer
 from . import test_tool_create_records
 from . import test_markdown_formatting
+from . import test_llm_unit
