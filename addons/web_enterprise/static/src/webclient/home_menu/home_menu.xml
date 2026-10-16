@@ -22,9 +22,6 @@
             autocomplete="off"
         />
         <div class="container px-0 position-relative z-1">
-            <!-- When the subscription has expired, the expiration panel is show over the whole UI instead of here -->
-            <ExpirationPanel t-if="this.subscription.warningType and !this.subscription.isWarningHidden and this.subscription.daysLeft &lt;= 30 and this.subscription.daysLeft > 0 and !this.subscription.sysadmin.replace"/>
-            <SysAdminPanel t-if="this.subscription.daysLeft > 0 and this.subscription.sysadmin.message"/>
             <div t-if="this.displayedApps.length" role="listbox" class="o_apps row user-select-none mt-md-4 mx-0">
                 <div t-foreach="this.displayedApps" t-as="app" t-key="app.id" class="col-3 col-md-2 o_draggable mb-3 px-0">
                     <a t-att-id="'result_app_' + app_index"

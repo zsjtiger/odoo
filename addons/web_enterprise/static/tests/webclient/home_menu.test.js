@@ -4,7 +4,6 @@ import {
     click,
     drag,
     expect,
-    mockDate,
     mockTouch,
     pointerDown,
     press,
@@ -26,13 +25,11 @@ import {
 import { OfflinePlugin } from "@web/core/services/offline/offline_plugin";
 import { registry } from "@web/core/framework/registry";
 import { range } from "@web/core/utils/numbers";
-import { session } from "@web/boot/session";
 import { reorderApps } from "@web_enterprise/webclient/home_menu/app_order";
 import { ShareTargetItem } from "@web/webclient/share_target/share_target_item";
 import { shareTargetService } from "@web/webclient/share_target/share_target_service";
 import { HomeMenu } from "@web_enterprise/webclient/home_menu/home_menu";
 import { WebClientEnterprise } from "@web_enterprise/webclient/webclient";
-import { mockExpirationParams } from "./expiration_helpers";
 
 /**
  * @param {Iterable<{
@@ -115,32 +112,6 @@ test("Click on an app", async () => {
     expect.verifySteps(["selectMenu 1"]);
 });
 
-test("Display Expiration Panel (no module installed)", async () => {
-    mockDate("2019-10-09T00:00:00");
-
-    patchWithCleanup(session, {
-        isMailInstalled: false,
-        warning: "admin",
-    });
-
-    mockExpirationParams({ date: "2019-11-01 12:00:00", reason: "" });
-    await mountWithCleanup(HomeMenu, {
-        props: getDefaultHomeMenuProps(),
-    });
-
-    expect(".database_expiration_panel").toHaveCount(1);
-    expect(".database_expiration_panel .oe_instance_register").toHaveText(
-        "You will be able to register your database once you have installed your first app.",
-        { message: "There should be an expiration panel displayed" }
-    );
-
-    // Close the expiration panel
-    await click(".database_expiration_panel .oe_instance_hide_panel");
-    await animationFrame();
-    expect(".database_expiration_panel").toHaveCount(0);
-});
-
-test.tags("desktop");
 test("Navigation (only apps, only one line)", async () => {
     expect.assertions(8);
 

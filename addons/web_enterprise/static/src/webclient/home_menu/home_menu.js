@@ -19,8 +19,6 @@ import { useService } from "@web/core/utils/hooks";
 import { useSortable } from "@web/core/utils/sortable_owl";
 import { CommandPaletteFooter } from "./command_palette_footer";
 import { moveAppInOrder } from "./app_order";
-import { ExpirationPanel } from "./expiration_panel";
-import { SysAdminPanel } from "./sysadmin_panel";
 import { OfflinePlugin } from "@web/core/services/offline/offline_plugin";
 
 /**
@@ -32,7 +30,6 @@ import { OfflinePlugin } from "@web/core/services/offline/offline_plugin";
  */
 export class HomeMenu extends Component {
     static template = "web_enterprise.HomeMenu";
-    static components = { ExpirationPanel, SysAdminPanel };
 
     props = useProps({
         apps: t.array(
@@ -84,7 +81,6 @@ export class HomeMenu extends Component {
         this.command = useService("command");
         this.menus = useService("menu");
         this.homeMenuService = useService("home_menu");
-        this.subscription = useService("enterprise_subscription");
         this.ui = useService("ui");
         this.shareTarget = useService("share_target");
         this.offlinePlugin = usePlugin(OfflinePlugin);
