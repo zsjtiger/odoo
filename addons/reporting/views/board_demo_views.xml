@@ -307,6 +307,197 @@
         <field name="target">current</field>
     </record>
 
+    <record id="board_demo_view_doughnut" model="ir.ui.view">
+        <field name="name">reporting.demo.doughnut.form</field>
+        <field name="model">reporting.demo</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="chart_doughnut" widget="board_dashboard_doughnut"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="board_demo_view_doughnut_rounded" model="ir.ui.view">
+        <field name="name">reporting.demo.doughnut_rounded.form</field>
+        <field name="model">reporting.demo</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="chart_doughnut_rounded" widget="board_dashboard_doughnut_rounded"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="board_demo_view_doughnut_half" model="ir.ui.view">
+        <field name="name">reporting.demo.doughnut_half.form</field>
+        <field name="model">reporting.demo</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="chart_doughnut_half" widget="board_dashboard_doughnut_half"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="board_demo_view_pie_pad" model="ir.ui.view">
+        <field name="name">reporting.demo.pie_pad.form</field>
+        <field name="model">reporting.demo</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="chart_pie_pad" widget="board_dashboard_pie_pad_angle"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="board_demo_view_scatter" model="ir.ui.view">
+        <field name="name">reporting.demo.scatter.form</field>
+        <field name="model">reporting.demo</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="chart_scatter" widget="board_dashboard_scatter"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="board_demo_view_scatter_quartet" model="ir.ui.view">
+        <field name="name">reporting.demo.scatter_quartet.form</field>
+        <field name="model">reporting.demo</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="chart_scatter_quartet" widget="board_dashboard_scatter_quartet"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="board_demo_view_scatter_cluster" model="ir.ui.view">
+        <field name="name">reporting.demo.scatter_cluster.form</field>
+        <field name="model">reporting.demo</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="chart_scatter_cluster" widget="board_dashboard_scatter_cluster"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="board_demo_view_scatter_cluster_process" model="ir.ui.view">
+        <field name="name">reporting.demo.scatter_cluster_process.form</field>
+        <field name="model">reporting.demo</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="chart_scatter_cluster_process" widget="board_dashboard_scatter_cluster_process"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="board_demo_view_scatter_regression" model="ir.ui.view">
+        <field name="name">reporting.demo.scatter_regression.form</field>
+        <field name="model">reporting.demo</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="chart_scatter_regression" widget="board_dashboard_scatter_regression"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="board_demo_view_scatter_effect" model="ir.ui.view">
+        <field name="name">reporting.demo.scatter_effect.form</field>
+        <field name="model">reporting.demo</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="chart_scatter_effect" widget="board_dashboard_scatter_effect"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="board_demo_action_doughnut" model="ir.actions.act_window">
+        <field name="name">Doughnut</field>
+        <field name="res_model">reporting.demo</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="board_demo_view_doughnut"/>
+        <field name="res_id" ref="board_demo_record"/>
+        <field name="target">current</field>
+    </record>
+    <record id="board_demo_action_doughnut_rounded" model="ir.actions.act_window">
+        <field name="name">Rounded Doughnut</field>
+        <field name="res_model">reporting.demo</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="board_demo_view_doughnut_rounded"/>
+        <field name="res_id" ref="board_demo_record"/>
+        <field name="target">current</field>
+    </record>
+    <record id="board_demo_action_doughnut_half" model="ir.actions.act_window">
+        <field name="name">Half Doughnut</field>
+        <field name="res_model">reporting.demo</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="board_demo_view_doughnut_half"/>
+        <field name="res_id" ref="board_demo_record"/>
+        <field name="target">current</field>
+    </record>
+    <record id="board_demo_action_pie_pad" model="ir.actions.act_window">
+        <field name="name">Pie Pad Angle</field>
+        <field name="res_model">reporting.demo</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="board_demo_view_pie_pad"/>
+        <field name="res_id" ref="board_demo_record"/>
+        <field name="target">current</field>
+    </record>
+    <record id="board_demo_action_scatter" model="ir.actions.act_window">
+        <field name="name">Scatter</field>
+        <field name="res_model">reporting.demo</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="board_demo_view_scatter"/>
+        <field name="res_id" ref="board_demo_record"/>
+        <field name="target">current</field>
+    </record>
+    <record id="board_demo_action_scatter_quartet" model="ir.actions.act_window">
+        <field name="name">Scatter Quartet</field>
+        <field name="res_model">reporting.demo</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="board_demo_view_scatter_quartet"/>
+        <field name="res_id" ref="board_demo_record"/>
+        <field name="target">current</field>
+    </record>
+    <record id="board_demo_action_scatter_cluster" model="ir.actions.act_window">
+        <field name="name">Scatter Cluster</field>
+        <field name="res_model">reporting.demo</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="board_demo_view_scatter_cluster"/>
+        <field name="res_id" ref="board_demo_record"/>
+        <field name="target">current</field>
+    </record>
+    <record id="board_demo_action_scatter_cluster_process" model="ir.actions.act_window">
+        <field name="name">Scatter Cluster Process</field>
+        <field name="res_model">reporting.demo</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="board_demo_view_scatter_cluster_process"/>
+        <field name="res_id" ref="board_demo_record"/>
+        <field name="target">current</field>
+    </record>
+    <record id="board_demo_action_scatter_regression" model="ir.actions.act_window">
+        <field name="name">Scatter Regression</field>
+        <field name="res_model">reporting.demo</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="board_demo_view_scatter_regression"/>
+        <field name="res_id" ref="board_demo_record"/>
+        <field name="target">current</field>
+    </record>
+    <record id="board_demo_action_scatter_effect" model="ir.actions.act_window">
+        <field name="name">Scatter Effect</field>
+        <field name="res_model">reporting.demo</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="board_demo_view_scatter_effect"/>
+        <field name="res_id" ref="board_demo_record"/>
+        <field name="target">current</field>
+    </record>
+
     <record id="board_demo_action" model="ir.actions.act_window">
         <field name="name">Chart Demo</field>
         <field name="res_model">reporting.demo</field>

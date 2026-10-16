@@ -8,6 +8,16 @@ CHART_FIELDS = {
     'chart_smooth', 'chart_stacked', 'chart_marked', 'chart_pie_line', 'chart_polar_radial',
     'chart_polar_tangential', 'chart_polar_end_angle', 'chart_bar_horizontal',
     'chart_bar_axis_break', 'chart_bar_gradient',
+    'chart_doughnut',
+    'chart_doughnut_rounded',
+    'chart_doughnut_half',
+    'chart_pie_pad',
+    'chart_scatter',
+    'chart_scatter_quartet',
+    'chart_scatter_cluster',
+    'chart_scatter_cluster_process',
+    'chart_scatter_regression',
+    'chart_scatter_effect',
 }
 
 

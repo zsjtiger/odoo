@@ -16,6 +16,16 @@ GALLERY = {
     'chart_bar_horizontal': 'board_dashboard_bar_horizontal',
     'chart_bar_axis_break': 'board_dashboard_bar_axis_break',
     'chart_bar_gradient': 'board_dashboard_bar_gradient',
+    'chart_doughnut': 'board_dashboard_doughnut',
+    'chart_doughnut_rounded': 'board_dashboard_doughnut_rounded',
+    'chart_doughnut_half': 'board_dashboard_doughnut_half',
+    'chart_pie_pad': 'board_dashboard_pie_pad_angle',
+    'chart_scatter': 'board_dashboard_scatter',
+    'chart_scatter_quartet': 'board_dashboard_scatter_quartet',
+    'chart_scatter_cluster': 'board_dashboard_scatter_cluster',
+    'chart_scatter_cluster_process': 'board_dashboard_scatter_cluster_process',
+    'chart_scatter_regression': 'board_dashboard_scatter_regression',
+    'chart_scatter_effect': 'board_dashboard_scatter_effect',
 }
 
 

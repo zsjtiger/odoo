@@ -10,6 +10,7 @@ import { DashBoardMapWidget } from "@reporting/widget/dashboard_map/dashboard_ma
 import { DashBoardPieWidget } from "@reporting/widget/dashboard_pie/dashboard_pie";
 import { DashBoardRadarWidget } from "@reporting/widget/dashboard_radar/dashboard_radar";
 import { GALLERY_WIDGETS } from "@reporting/widget/gallery/gallery_charts";
+import { GALLERY_WIDGETS_2 } from "@reporting/widget/gallery/gallery_charts_2";
 
 /**
  * 移动端的图表部件: 继承桌面端 reporting 的图表部件 (数据转换, echarts 配置都复用),
@@ -85,7 +86,7 @@ const CHART_WIDGETS = {
 };
 
 // 扩展图表 (平滑/堆叠/标注折线, 饼图联动, 极坐标柱, 横向柱, 断轴柱, 渐变柱) 与桌面端共用同一个部件名
-Object.assign(CHART_WIDGETS, GALLERY_WIDGETS);
+Object.assign(CHART_WIDGETS, GALLERY_WIDGETS, GALLERY_WIDGETS_2);
 
 for (const [name, Base] of Object.entries(CHART_WIDGETS)) {
     mobileFieldRegistry.add(name, mobileChart(Base));
