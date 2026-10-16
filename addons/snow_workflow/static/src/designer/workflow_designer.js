@@ -49,7 +49,7 @@ export class WorkflowDesigner extends Component {
                     <div class="o_wf_palette">
                         <div class="o_wf_palette_title"><t t-out="this.texts.palette"/></div>
                         <t t-foreach="this.palette" t-as="item" t-key="item.type">
-                            <div class="o_wf_palette_item" draggable="true" t-att-data-type="item.type"
+                            <div t-attf-class="o_wf_palette_item o_wf_node_{{ item.type }}" draggable="true" t-att-data-type="item.type"
                                  t-on-dragstart="(ev) => this.onPaletteDragStart(ev, item.type)">
                                 <t t-out="item.label"/>
                             </div>
@@ -73,9 +73,6 @@ export class WorkflowDesigner extends Component {
                             </t>
                             <path t-if="this.state.tmpLine" class="o_wf_flow o_wf_flow_temp" t-att-d="this.tmpPath()"/>
                         </svg>
-                        <t t-foreach="this.flowLabels" t-as="label" t-key="label.id">
-                            <div class="o_wf_flow_label" t-att-style="label.style"><t t-out="label.text"/></div>
-                        </t>
                         <t t-foreach="this.scope.nodes" t-as="node" t-key="node.id">
                             <div t-attf-class="o_wf_node o_wf_node_{{ node.type }} {{ this.isSelectedNode(node) ? 'is_selected' : '' }}"
                                  t-att-data-node-id="node.id" t-att-style="this.nodeStyle(node)"
@@ -85,6 +82,9 @@ export class WorkflowDesigner extends Component {
                                 <span t-if="node.type !== 'end'" class="o_wf_port"
                                       t-on-pointerdown="(ev) => this.onPortPointerDown(ev, node)"/>
                             </div>
+                        </t>
+                        <t t-foreach="this.flowLabels" t-as="label" t-key="label.id">
+                            <div class="o_wf_flow_label" t-att-style="label.style"><t t-out="label.text"/></div>
                         </t>
                     </div>
                     <div class="o_wf_properties">
