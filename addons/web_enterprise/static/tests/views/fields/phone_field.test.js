@@ -12,9 +12,9 @@ import {
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 
-import { browser } from "@web/core/browser/browser";
-import { callPhoneNumber } from "@web/core/phone/phone_call";
-import { user } from "@web/core/user";
+import { browser } from "@web/core/services/browser/browser";
+import { callPhoneNumber } from "@web/core/components/phone/phone_call";
+import { user } from "@web/core/services/user";
 
 class Partner extends models.Model {
     phone = fields.Char();

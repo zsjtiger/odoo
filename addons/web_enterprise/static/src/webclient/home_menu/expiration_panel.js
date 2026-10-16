@@ -1,6 +1,6 @@
 import { useService } from "@web/core/utils/hooks";
-import { Transition } from "@web/core/transition";
-import { _t } from "@web/core/l10n/translation";
+import { Transition } from "@web/core/framework/transition";
+import { _t } from "@web/core/data/l10n/translation";
 import { Component, proxy, signal } from "@odoo/owl";
 
 const { DateTime } = luxon;

@@ -1,12 +1,12 @@
-import { registry } from "@web/core/registry";
-import { session } from "@web/session";
-import { location } from "@web/core/browser/browser";
-import { deserializeDateTime, serializeDate, formatDate } from "@web/core/l10n/dates";
+import { registry } from "@web/core/framework/registry";
+import { session } from "@web/boot/session";
+import { location } from "@web/core/services/browser/browser";
+import { deserializeDateTime, serializeDate, formatDate } from "@web/core/data/l10n/dates";
 import { useService } from "@web/core/utils/hooks";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { ExpirationPanel } from "./expiration_panel";
-import { cookie } from "@web/core/browser/cookie";
-import { rpc } from "@web/core/network/rpc";
+import { cookie } from "@web/core/services/browser/cookie";
+import { rpc } from "@web/core/services/network/rpc";
 import { SysAdminPanel } from "./sysadmin_panel";
 
 const { DateTime } = luxon;

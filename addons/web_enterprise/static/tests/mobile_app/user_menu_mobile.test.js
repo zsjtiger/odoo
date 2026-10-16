@@ -10,9 +10,9 @@ import {
 import { queryAll } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 
-import { download } from "@web/core/network/download";
+import { download } from "@web/core/services/network/download";
 import { methods as mobileNativeMethods } from "@web_enterprise/mobile_app/js/services/core";
-import { config as transitionConfig } from "@web/core/transition";
+import { config as transitionConfig } from "@web/core/framework/transition";
 import { WebClient } from "@web/webclient/webclient";
 
 beforeEach(async () => patchWithCleanup(transitionConfig, { disabled: true }));

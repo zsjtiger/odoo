@@ -1,7 +1,7 @@
-import { render } from "@web/owl2/utils";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
-import { user } from "@web/core/user";
+import { render } from "@web/core/owl/utils";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
+import { user } from "@web/core/services/user";
 import { Mutex } from "@web/core/utils/concurrency";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { computeAppsAndMenuItems, reorderApps } from "@web/webclient/menus/menu_helpers";

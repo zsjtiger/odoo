@@ -1,6 +1,6 @@
 import { NavBar } from "@web/webclient/navbar/navbar";
 import { useService, useBus } from "@web/core/utils/hooks";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { onMounted, onPatched, signal } from "@odoo/owl";
 
 export class EnterpriseNavBar extends NavBar {

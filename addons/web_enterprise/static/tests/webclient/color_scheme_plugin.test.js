@@ -6,10 +6,10 @@ import {
     patchWithCleanup,
     webModels,
 } from "@web/../tests/web_test_helpers";
-import { location } from "@web/core/browser/browser";
-import { cookie } from "@web/core/browser/cookie";
-import { MainComponentsContainer } from "@web/core/main_components_container";
-import { _makeUser, user } from "@web/core/user";
+import { location } from "@web/core/services/browser/browser";
+import { cookie } from "@web/core/services/browser/cookie";
+import { MainComponentsContainer } from "@web/core/framework/main_components_container";
+import { _makeUser, user } from "@web/core/services/user";
 
 class ResUsersSettings extends webModels.ResUsersSettings {
     color_scheme = fields.Selection({

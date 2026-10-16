@@ -1,6 +1,6 @@
-import { browser } from "@web/core/browser/browser";
+import { browser } from "@web/core/services/browser/browser";
 import mobile from "@web_enterprise/mobile_app/js/services/core";
-import { download, downloadFile } from "@web/core/network/download";
+import { download, downloadFile } from "@web/core/services/network/download";
 
 function extractPathFromUrl(url) {
     const parsedUrl = URL.parse(url);

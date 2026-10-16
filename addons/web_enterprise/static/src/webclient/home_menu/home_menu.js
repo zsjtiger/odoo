@@ -10,16 +10,16 @@ import {
     useListener,
     useProps,
 } from "@odoo/owl";
-import { hasTouch, isIosApp, isMacOS } from "@web/core/browser/feature_detection";
-import { useDropzone } from "@web/core/dropzone/dropzone_hook";
-import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
-import { _t } from "@web/core/l10n/translation";
-import { user } from "@web/core/user";
+import { hasTouch, isIosApp, isMacOS } from "@web/core/services/browser/feature_detection";
+import { useDropzone } from "@web/core/components/dropzone/dropzone_hook";
+import { useHotkey } from "@web/core/services/hotkeys/hotkey_hook";
+import { _t } from "@web/core/data/l10n/translation";
+import { user } from "@web/core/services/user";
 import { useService } from "@web/core/utils/hooks";
 import { useSortable } from "@web/core/utils/sortable_owl";
 import { ExpirationPanel } from "./expiration_panel";
 import { SysAdminPanel } from "./sysadmin_panel";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
+import { OfflinePlugin } from "@web/core/services/offline/offline_plugin";
 
 class FooterComponent extends Component {
     static template = "web_enterprise.HomeMenu.CommandPalette.Footer";

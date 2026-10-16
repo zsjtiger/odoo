@@ -23,10 +23,10 @@ import {
     onRpc,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
-import { registry } from "@web/core/registry";
+import { OfflinePlugin } from "@web/core/services/offline/offline_plugin";
+import { registry } from "@web/core/framework/registry";
 import { range } from "@web/core/utils/numbers";
-import { session } from "@web/session";
+import { session } from "@web/boot/session";
 import { reorderApps } from "@web/webclient/menus/menu_helpers";
 import { ShareTargetItem } from "@web/webclient/share_target/share_target_item";
 import { shareTargetService } from "@web/webclient/share_target/share_target_service";

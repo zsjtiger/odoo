@@ -17,8 +17,8 @@ import {
     serverState,
 } from "@web/../tests/web_test_helpers";
 
-import { location } from "@web/core/browser/browser";
-import { session } from "@web/session";
+import { location } from "@web/core/services/browser/browser";
+import { session } from "@web/boot/session";
 import { WebClientEnterprise } from "@web_enterprise/webclient/webclient";
 
 test("Expiration Panel one app installed", async () => {

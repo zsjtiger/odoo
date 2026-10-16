@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import mobile from "@web_enterprise/mobile_app/js/services/core";
 
 function mobileErrorHandler(env, error, originalError) {

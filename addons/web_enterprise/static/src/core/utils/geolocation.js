@@ -1,7 +1,7 @@
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { delay } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
-import { session } from "@web/session";
+import { session } from "@web/boot/session";
 
 const MB_ERROR_MESSAGES = {
     "Route exceeds maximum distance limitation": _t("Some routing points are too far apart"),

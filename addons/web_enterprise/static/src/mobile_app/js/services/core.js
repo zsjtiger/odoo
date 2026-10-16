@@ -2,8 +2,8 @@
 /* global OdooDevicePolyfill */
 
 import { uniqueId } from "@web/core/utils/functions";
-import { location, browser } from "@web/core/browser/browser";
-import { parseSearchQuery } from "@web/core/browser/router";
+import { location, browser } from "@web/core/services/browser/browser";
+import { parseSearchQuery } from "@web/core/services/browser/router";
 import { patch } from "@web/core/utils/patch";
 import { BackButtonManager } from "@web/core/utils/hooks";
 

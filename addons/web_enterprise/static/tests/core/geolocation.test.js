@@ -7,7 +7,7 @@ import {
     onRpc,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-import { session } from "@web/session";
+import { session } from "@web/boot/session";
 import { Geolocation } from "@web_enterprise/core/utils/geolocation";
 
 const MAP_BOX_TOKEN = "token";

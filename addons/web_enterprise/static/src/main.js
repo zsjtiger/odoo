@@ -1,4 +1,4 @@
-import { startWebClient } from "@web/start";
+import { startWebClient } from "@web/boot/start";
 import { WebClientEnterprise } from "./webclient/webclient";
 
 /**

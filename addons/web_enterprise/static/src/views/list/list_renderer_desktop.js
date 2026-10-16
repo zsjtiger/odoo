@@ -1,10 +1,10 @@
-import { isMobileOS } from "@web/core/browser/feature_detection";
-import { user } from "@web/core/user";
+import { isMobileOS } from "@web/core/services/browser/feature_detection";
+import { user } from "@web/core/services/user";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { PromoteStudioDialog } from "@web_enterprise/webclient/promote_studio/promote_studio_dialog";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 
 export const patchListRendererDesktop = () => ({
     setup() {

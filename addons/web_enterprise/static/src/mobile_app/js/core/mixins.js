@@ -1,7 +1,7 @@
-import { user } from "@web/core/user";
-import { session } from "@web/session";
+import { user } from "@web/core/services/user";
+import { session } from "@web/boot/session";
 import mobile from "@web_enterprise/mobile_app/js/services/core";
-import { isIosApp } from "@web/core/browser/feature_detection";
+import { isIosApp } from "@web/core/services/browser/feature_detection";
 import { url } from "@web/core/utils/urls";
 
 const DEFAULT_AVATAR_SIZE = 128;

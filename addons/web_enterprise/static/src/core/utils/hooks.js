@@ -1,6 +1,6 @@
 import { proxy, untrack } from "@odoo/owl";
 import { couldBeScrollableY } from "@web/core/utils/scrolling";
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/core/owl/utils";
 
 /**
  * This file contains various custom enterprise hooks.

@@ -1,9 +1,9 @@
-import { registry } from "@web/core/registry";
-import { location, browser } from "@web/core/browser/browser";
-import { cookie } from "@web/core/browser/cookie";
-import { user } from "@web/core/user";
+import { registry } from "@web/core/framework/registry";
+import { location, browser } from "@web/core/services/browser/browser";
+import { cookie } from "@web/core/services/browser/cookie";
+import { user } from "@web/core/services/user";
 import { computed, onWillStart, Plugin, usePlugin } from "@odoo/owl";
-import { services } from "@web/core/services";
+import { services } from "@web/core/framework/services";
 
 export class ColorSchemePlugin extends Plugin {
     colorScheme = computed(() => {

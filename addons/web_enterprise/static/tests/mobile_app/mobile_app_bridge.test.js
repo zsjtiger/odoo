@@ -18,10 +18,10 @@ import {
     mountWithCleanup,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-import { Popover } from "@web/core/popover/popover";
-import { user } from "@web/core/user";
+import { Popover } from "@web/core/components/popover/popover";
+import { user } from "@web/core/services/user";
 import { useBackButton } from "@web/core/utils/hooks";
-import { session } from "@web/session";
+import { session } from "@web/boot/session";
 import { accountMethodsForMobile } from "@web_enterprise/mobile_app/js/core/mixins";
 import { methods as mobileNativeMethods } from "@web_enterprise/mobile_app/js/services/core";
 

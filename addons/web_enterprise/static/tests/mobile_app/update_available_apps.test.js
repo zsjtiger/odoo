@@ -7,8 +7,8 @@ import {
     mountWithCleanup,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-import { registry } from "@web/core/registry";
-import { user } from "@web/core/user";
+import { registry } from "@web/core/framework/registry";
+import { user } from "@web/core/services/user";
 import { WebClientEnterprise } from "@web_enterprise/webclient/webclient";
 
 import mobile from "@web_enterprise/mobile_app/js/services/core";

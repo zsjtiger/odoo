@@ -5,7 +5,7 @@ import { defineActions, defineMenus, mountWithCleanup } from "@web/../tests/web_
 
 import { Component, onMounted, useProps, xml } from "@odoo/owl";
 
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { WebClientEnterprise } from "@web_enterprise/webclient/webclient";
 
 const actionRegistry = registry.category("actions");

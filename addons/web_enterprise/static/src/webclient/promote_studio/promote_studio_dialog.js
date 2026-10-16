@@ -1,5 +1,5 @@
-import { location, browser } from "@web/core/browser/browser";
-import { Dialog } from "@web/core/dialog/dialog";
+import { location, browser } from "@web/core/services/browser/browser";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
 
 import { Component, signal, t, useListener, useProps } from "@odoo/owl";
