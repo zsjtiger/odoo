@@ -7,7 +7,8 @@ from unittest.mock import patch
 from freezegun import freeze_time
 
 from odoo.http.session import session_store
-from odoo.tests import HttpCase, mute_logger, new_test_user
+from odoo.tests import HttpCase, new_test_user
+from odoo.tools import mute_logger
 from odoo.tools import SQL
 from odoo.tools.lru import LRU
 

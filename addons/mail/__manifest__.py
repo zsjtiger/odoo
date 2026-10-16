@@ -258,12 +258,12 @@ For more specific needs, you may also assign custom-defined actions
         'mail.assets_public': [
             ('include', 'web._assets_helpers'),
             ('include', 'web._assets_backend_helpers'),
-            'web/static/src/scss/pre_variables.scss',
+            'web/static/src/scss/variables/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
             'web/static/lib/bootstrap/scss/_variables-dark.scss',
             'web/static/lib/bootstrap/scss/_maps.scss',
             ('include', 'web._assets_bootstrap_backend'),
-            'web/static/src/scss/bootstrap_overridden.scss',
+            'web/static/src/scss/bootstrap/bootstrap_overridden.scss',
             ('include', 'web.icons_fonts'),
             'web/static/src/scss/animation.scss',
             'web/static/src/webclient/webclient.scss',
@@ -316,12 +316,12 @@ For more specific needs, you may also assign custom-defined actions
         'im_livechat.assets_embed_external': [
             ('include', 'web._assets_helpers'),
             ('include', 'web._assets_backend_helpers'),
-            'web/static/src/scss/pre_variables.scss',
+            'web/static/src/scss/variables/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
             'web/static/lib/bootstrap/scss/_variables-dark.scss',
             'web/static/lib/bootstrap/scss/_maps.scss',
             ('include', 'web._assets_bootstrap_backend'),
-            'web/static/src/scss/bootstrap_overridden.scss',
+            'web/static/src/scss/bootstrap/bootstrap_overridden.scss',
             'web/static/src/scss/ui.scss',
             ('include', 'web.icons_fonts'),
             'web/static/src/scss/animation.scss',
@@ -342,7 +342,7 @@ For more specific needs, you may also assign custom-defined actions
         'im_livechat.assets_embed_cors': [
             ('include', 'im_livechat.assets_embed_external'),
             ('remove', 'mail/static/src/core/common/out_of_focus_service_patch.js'),
-            ('remove', 'web/static/src/core/browser/title_plugin.js'),
+            ('remove', 'web/static/src/core/services/browser/title_plugin.js'),
         ],
         'im_livechat.embed_assets_unit_tests_setup': [
             ('include', 'web.assets_unit_tests_setup'),
