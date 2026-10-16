@@ -22,10 +22,13 @@ const BLACKLISTED_MENUS = new Set([
     "hr_attendance.menu_hr_attendance_onboarding", // same here (tablet mode)
     "mrp_workorder.menu_mrp_workorder_root", // same here (tablet mode)
     "pos_enterprise.menu_point_kitchen_display_root", // conditional menu that may leads to frontend
+    "mail.menu_settings", // menu that leads to another App
     "website_sale.menu_open_shop", // menu that opens a website editor
 ]);
 
 const BLACKLISTED_NEW_RECORD = new Set([
+    "ai_agentic.ai_agent_menu_action", // The new button creates the agent and opens its chat in Discuss, not a form view
+    "ai_agentic.ai_menu_root", // same here, no form view is opened
     "website_hr_recruitment.menu_job_pages", // The new button opens a website editor, not a form
     "stock.menu_action_warehouse_form", // It opens an error dialog : Creating a new warehouse will automatically activate the Storage Locations setting.
 ]);
@@ -80,6 +83,19 @@ const EXCEPTION_RECORD_ACTIONS = {
     "sale.report_sales_team": {
         kanban: {
             toCheck: ".o_graph_view",
+            toGoBack: ".o_back_button",
+        },
+    },
+    "ai_agentic.ai_agent_menu_action": {
+        // an agent card opens the agent's chat in Discuss, not a form
+        kanban: {
+            toCheck: ".o-mail-Discuss",
+            toGoBack: ".o_back_button",
+        },
+    },
+    "ai_agentic.ai_menu_root": {
+        kanban: {
+            toCheck: ".o-mail-Discuss",
             toGoBack: ".o_back_button",
         },
     },
