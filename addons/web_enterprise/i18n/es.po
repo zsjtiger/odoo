@@ -732,3 +732,27 @@ msgstr "— puede abrirme donde quiera con"
 
 #~ msgid "Customize Reports"
 #~ msgstr "Personalizar informes"
+
+#. module: web_enterprise
+#. odoo-javascript
+#: code:addons/web_enterprise/static/src/mobile_app/js/user_menu_items.js:0
+msgid "Add to Home Screen"
+msgstr "Añadir a pantalla de inicio"
+
+#. module: web_enterprise
+#: model:ir.model.fields,field_description:web_enterprise.field_res_partner__image_medium
+#: model:ir.model.fields,field_description:web_enterprise.field_res_users__image_medium
+msgid "Medium-sized image"
+msgstr "Imagen de tamaño mediano"
+
+#. module: web_enterprise
+#. odoo-javascript
+#: code:addons/web_enterprise/static/src/mobile_app/js/user_menu_items.js:0
+msgid "No shortcut for Home Menu"
+msgstr "No hay acceso rápido para el menú de inicio"
+
+#. module: web_enterprise
+#. odoo-javascript
+#: code:addons/web_enterprise/static/src/mobile_app/js/user_menu_items.js:0
+msgid "Switch/Add Account"
+msgstr "Cambiar/añadir cuenta"

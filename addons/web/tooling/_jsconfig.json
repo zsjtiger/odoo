@@ -17,7 +17,6 @@
             "@web_gantt/*": ["./web_gantt/static/src/*"],
             "@web_cohort/*": ["./web_cohort/static/src/*"],
             "@web_map/*": ["./web_map/static/src/*"],
-            "@web_mobile/*": ["./web_mobile/static/src/*"],
             "@web_grid/*": ["./web_grid/static/src/*"],
             "@web_studio/*": ["./web_studio/static/src/*"],
             "@bus/*": ["./addons/bus/static/src/*"],

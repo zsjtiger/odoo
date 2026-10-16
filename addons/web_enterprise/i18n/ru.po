@@ -720,3 +720,27 @@ msgstr ""
 
 #~ msgid "Customize Reports"
 #~ msgstr "Настройка отчетов"
+
+#. module: web_enterprise
+#. odoo-javascript
+#: code:addons/web_enterprise/static/src/mobile_app/js/user_menu_items.js:0
+msgid "Add to Home Screen"
+msgstr "Добавить на экран"
+
+#. module: web_enterprise
+#: model:ir.model.fields,field_description:web_enterprise.field_res_partner__image_medium
+#: model:ir.model.fields,field_description:web_enterprise.field_res_users__image_medium
+msgid "Medium-sized image"
+msgstr "Изображение среднего размера"
+
+#. module: web_enterprise
+#. odoo-javascript
+#: code:addons/web_enterprise/static/src/mobile_app/js/user_menu_items.js:0
+msgid "No shortcut for Home Menu"
+msgstr "Отсутствие ярлыка для главного меню"
+
+#. module: web_enterprise
+#. odoo-javascript
+#: code:addons/web_enterprise/static/src/mobile_app/js/user_menu_items.js:0
+msgid "Switch/Add Account"
+msgstr "Переключение/добавление учетной записи"

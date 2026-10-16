@@ -7,6 +7,8 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     contact_address_complete = fields.Char(compute='_compute_complete_address', store=True)
+    # related for backward compatibility with < 13.0
+    image_medium = fields.Binary(string="Medium-sized image", related='avatar_128', store=False, readonly=True)
 
     @api.depends(lambda self: self._display_address_depends())
     def _compute_complete_address(self):

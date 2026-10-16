@@ -725,3 +725,27 @@ msgstr "— åbn mig, hvor du vil, med"
 
 #~ msgid "Customize Reports"
 #~ msgstr "Tilpas rapporter"
+
+#. module: web_enterprise
+#. odoo-javascript
+#: code:addons/web_enterprise/static/src/mobile_app/js/user_menu_items.js:0
+msgid "Add to Home Screen"
+msgstr "Føj til hjemmeskærm"
+
+#. module: web_enterprise
+#: model:ir.model.fields,field_description:web_enterprise.field_res_partner__image_medium
+#: model:ir.model.fields,field_description:web_enterprise.field_res_users__image_medium
+msgid "Medium-sized image"
+msgstr "Mellemstort billede"
+
+#. module: web_enterprise
+#. odoo-javascript
+#: code:addons/web_enterprise/static/src/mobile_app/js/user_menu_items.js:0
+msgid "No shortcut for Home Menu"
+msgstr "Ingen genvej for startmenu"
+
+#. module: web_enterprise
+#. odoo-javascript
+#: code:addons/web_enterprise/static/src/mobile_app/js/user_menu_items.js:0
+msgid "Switch/Add Account"
+msgstr "Skift/tilføj konto"

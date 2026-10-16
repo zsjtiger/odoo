@@ -700,3 +700,27 @@ msgstr ""
 #: code:addons/web_enterprise/static/src/webclient/home_menu/home_menu.xml:0
 msgid "— open me anywhere with"
 msgstr ""
+
+#. module: web_enterprise
+#. odoo-javascript
+#: code:addons/web_enterprise/static/src/mobile_app/js/user_menu_items.js:0
+msgid "Add to Home Screen"
+msgstr "เพิ่มไปที่หน้าจอหลัก"
+
+#. module: web_enterprise
+#: model:ir.model.fields,field_description:web_enterprise.field_res_partner__image_medium
+#: model:ir.model.fields,field_description:web_enterprise.field_res_users__image_medium
+msgid "Medium-sized image"
+msgstr "รูปภาพขนาดกลาง"
+
+#. module: web_enterprise
+#. odoo-javascript
+#: code:addons/web_enterprise/static/src/mobile_app/js/user_menu_items.js:0
+msgid "No shortcut for Home Menu"
+msgstr "ไม่มีทางลัดสำหรับเมนูหน้าแรก"
+
+#. module: web_enterprise
+#. odoo-javascript
+#: code:addons/web_enterprise/static/src/mobile_app/js/user_menu_items.js:0
+msgid "Switch/Add Account"
+msgstr "สลับ/เพิ่มบัญชี"

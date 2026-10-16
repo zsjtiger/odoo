@@ -736,3 +736,27 @@ msgstr "— öffnen Sie mich überall mit"
 
 #~ msgid "Customize Reports"
 #~ msgstr "Berichte anpassen"
+
+#. module: web_enterprise
+#. odoo-javascript
+#: code:addons/web_enterprise/static/src/mobile_app/js/user_menu_items.js:0
+msgid "Add to Home Screen"
+msgstr "Zum Startbildschirm hinzufügen"
+
+#. module: web_enterprise
+#: model:ir.model.fields,field_description:web_enterprise.field_res_partner__image_medium
+#: model:ir.model.fields,field_description:web_enterprise.field_res_users__image_medium
+msgid "Medium-sized image"
+msgstr "Mittelgroßes Bild"
+
+#. module: web_enterprise
+#. odoo-javascript
+#: code:addons/web_enterprise/static/src/mobile_app/js/user_menu_items.js:0
+msgid "No shortcut for Home Menu"
+msgstr "Kein Tastenkürzel für das Startmenü"
+
+#. module: web_enterprise
+#. odoo-javascript
+#: code:addons/web_enterprise/static/src/mobile_app/js/user_menu_items.js:0
+msgid "Switch/Add Account"
+msgstr "Konto wechseln/hinzufügen"

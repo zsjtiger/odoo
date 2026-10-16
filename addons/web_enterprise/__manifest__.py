@@ -9,23 +9,23 @@ Odoo Enterprise Web Client.
 
 This module modifies the web addon to provide Enterprise design and responsiveness.
         """,
-    'depends': ['web', 'base_setup'],
+    'depends': ['base', 'web'],
     'auto_install': ['web'],
     'data': [
         'views/webclient_templates.xml',
-        'views/res_config_settings.xml',
         'views/res_users_views.xml',
+        'views/res_users_mobile_views.xml',
     ],
     'assets': {
         'web._assets_primary_variables': [
-            ('after', 'web/static/src/scss/primary_variables.scss', 'web_enterprise/static/src/**/*.variables.scss'),
-            ('before', 'web/static/src/scss/primary_variables.scss', 'web_enterprise/static/src/scss/primary_variables.scss'),
+            ('after', 'web/static/src/scss/variables/primary_variables.scss', 'web_enterprise/static/src/**/*.variables.scss'),
+            ('before', 'web/static/src/scss/variables/primary_variables.scss', 'web_enterprise/static/src/scss/primary_variables.scss'),
         ],
         'web._assets_secondary_variables': [
-            ('before', 'web/static/src/scss/secondary_variables.scss', 'web_enterprise/static/src/scss/secondary_variables.scss'),
+            ('before', 'web/static/src/scss/variables/secondary_variables.scss', 'web_enterprise/static/src/scss/secondary_variables.scss'),
         ],
         'web._assets_backend_helpers': [
-            ('before', 'web/static/src/scss/bootstrap_overridden.scss', 'web_enterprise/static/src/scss/bootstrap_overridden.scss'),
+            ('before', 'web/static/src/scss/bootstrap/bootstrap_overridden.scss', 'web_enterprise/static/src/scss/bootstrap_overridden.scss'),
         ],
         'web.assets_frontend': [
             'web_enterprise/static/src/webclient/home_menu/home_menu_background.scss', # used by login page
@@ -37,6 +37,7 @@ This module modifies the web addon to provide Enterprise design and responsivene
 
             'web_enterprise/static/src/core/**/*',
             'web_enterprise/static/src/webclient/**/*.js',
+            'web_enterprise/static/src/mobile_app/**/*',
             ('after', 'web/static/src/views/list/list_renderer.xml', 'web_enterprise/static/src/views/list/list_renderer_desktop.xml'),
             ('after', 'web/static/src/views/kanban/kanban_renderer.xml', 'web_enterprise/static/src/views/kanban/kanban_renderer.xml'),
             ('after', 'web/static/src/views/kanban/kanban_header.xml', 'web_enterprise/static/src/views/kanban/kanban_header.xml'),
@@ -66,7 +67,7 @@ This module modifies the web addon to provide Enterprise design and responsivene
             ('after', 'web/static/lib/bootstrap/scss/_functions.scss', 'web_enterprise/static/src/scss/bs_functions_overridden.dark.scss'),
         ],
         'web.assets_web': [
-            ('replace', 'web/static/src/main.js', 'web_enterprise/static/src/main.js'),
+            ('replace', 'web/static/src/boot/main.js', 'web_enterprise/static/src/main.js'),
         ],
         # ========= Dark Mode =========
         "web.dark_mode_variables": [
