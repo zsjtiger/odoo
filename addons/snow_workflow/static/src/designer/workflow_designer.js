@@ -505,7 +505,8 @@ export class WorkflowDesigner extends Component {
         return this.scope.flows
             .filter((f) => CONDITIONAL_GATEWAYS.includes(this.scope.nodes.find((n) => n.id === f.source)?.type))
             .map((f) => {
-                const [x1, y1] = this.flowMidpoint(f);
+                // 条件标签靠近网关出口, 避免压在目标节点上
+                const [x1, y1] = this.flowPoint(f, 0.35);
                 const text = this.isDefault(f) ? _t("default") : f.condition || "?";
                 return { id: f.id, text, style: `left:${x1}px;top:${y1 - 22}px;` };
             });
@@ -561,6 +562,11 @@ export class WorkflowDesigner extends Component {
     flowMidpoint(flow) {
         const ends = this.flowEnds(flow);
         return ends ? [(ends[0][0] + ends[1][0]) / 2, (ends[0][1] + ends[1][1]) / 2] : [0, 0];
+    }
+
+    flowPoint(flow, t) {
+        const ends = this.flowEnds(flow);
+        return ends ? [ends[0][0] + (ends[1][0] - ends[0][0]) * t, ends[0][1] + (ends[1][1] - ends[0][1]) * t] : [0, 0];
     }
 
     flowPath(flow) {

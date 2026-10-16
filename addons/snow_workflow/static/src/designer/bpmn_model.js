@@ -763,8 +763,8 @@ export function newId(prefix) {
 export function layoutScope(scope) {
     const LEFT = 60;
     const TOP = 60;
-    const COLUMN_GAP = 90;
-    const ROW_GAP = 40;
+    const COLUMN_GAP = 140;
+    const ROW_GAP = 64;
     const GRID = 10;
     const snap = (value) => Math.max(0, Math.round(value / GRID) * GRID);
     const sizeOf = (node) => NODE_TYPES[node.type].size;
