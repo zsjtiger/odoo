@@ -273,6 +273,31 @@ class WorkflowAction(models.AbstractModel):
         return button
 
     @api.model
+    def receive_message(self, model_name, record_id, message_name, payload=None):
+        """
+        业务模块向流程投递消息 (如 服务器动作、接口): 消息与业务记录关联, 只投递给该记录正在等待的接收任务
+
+        :param model_name: 业务模型
+        :param record_id: 业务记录 id
+        :param message_name: BPMN 消息名 (设计器中接收任务选择的消息)
+        :param payload: dict, 消息内容
+        :return: True
+        """
+        # 投递消息等同于读取该记录: 没有读取权限的记录不能被推进
+        self.env[model_name].browse(record_id).check_access('read')
+        instance = self.env['snow.workflow.instance'].sudo().search([
+            ('object', '=', model_name),
+            ('record_id', '=', record_id),
+            ('is_complete', '=', False),
+        ], limit=1)
+        if not instance:
+            raise UserError(_("The record has no running approval process."))
+        if instance.suspend_info:
+            raise UserError(_("The approval process of this record is suspended."))
+        SnowWorkflow(self.env, instance).receive_message(message_name, payload)
+        return True
+
+    @api.model
     def get_process_json(self, model_name, record_id):
         """
         获得审批进度json

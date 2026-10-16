@@ -99,7 +99,7 @@ class SnowBaseWorkflow(metaclass=SnowWorkflowMeta):
         wf_def = workflow_definition.fetch_definition(model, record)
         if not wf_def:
             raise SnowWorkflowValidationError("Can not find target Workflow Definition")
-        bpmn_workflow_engine = BpmnWorkflowEngine(xml_str=wf_def.content)
+        bpmn_workflow_engine = BpmnWorkflowEngine(xml_str=wf_def.content, dmn_str=wf_def.dmn_content)
         workflow = bpmn_workflow_engine.get_workflow_obj_from_xml_parser()
         self.main_workflow = workflow
         # 初始化时，给脚本带入环境参数
@@ -664,12 +664,42 @@ class SnowBaseWorkflow(metaclass=SnowWorkflowMeta):
         before = engine.save_workflow_obj_to_json_str(self.main_workflow)
         self.main_workflow.refresh_waiting_tasks()
         self.main_workflow.do_engine_steps()
+        self._log_outbound_messages(self.main_workflow)
         if engine.save_workflow_obj_to_json_str(self.main_workflow) == before:
             return False
-        self._sync_after_timer()
+        self._sync_after_engine_steps()
         return True
 
-    def _sync_after_timer(self):
+    def receive_message(self, message_name, payload=None):
+        """
+        外部消息到达 (由业务模块通过 snow.workflow.action.receive_message 调用):
+        投递给正在等待该消息的接收任务, 推进流程并同步数据库.
+        消息与业务记录关联: 只有同一业务记录的运行中流程会收到.
+
+        :param message_name: BPMN 消息名
+        :param payload: 消息内容 (dict), 写入接收任务的数据
+        """
+        from ..gluon.bpmn.specs.events.event_definitions import MessageEventDefinition
+
+        event = MessageEventDefinition(message_name)
+        event.payload = payload or {}
+        waiting = [t for t in self.main_workflow.get_waiting_tasks()
+                   if t.task_spec.event_definition == event]
+        if not waiting:
+            raise UserError(_("The process is not waiting for the message “%s”.", message_name))
+        self.main_workflow.catch(event)
+        self.main_workflow.do_engine_steps()
+        self._log_outbound_messages(self.main_workflow)
+        self._sync_after_engine_steps()
+
+    def _log_outbound_messages(self, workflow):
+        """
+        流程发出、但流程内没有接收任务消费的消息: 当前没有外部订阅者, 只记录日志
+        """
+        for message in workflow.get_bpmn_messages():
+            logger.info("Workflow message %s has no receiver inside the process", message.name)
+
+    def _sync_after_engine_steps(self):
         """
         定时器推进后同步数据库: 激活已就绪的审批任务, 更新执行与实例状态, 通知下一位审批人
         """

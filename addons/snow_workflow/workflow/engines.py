@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
+import re
 
 from ..gluon.bpmn.workflow import BpmnWorkflow
 from ..gluon.camunda.parser.CamundaParser import CamundaParser
@@ -11,6 +12,11 @@ from .exceptions import (SnowWorkflowValidationError,
                          SnowWorkflowEngineNoJsonStringError)
 
 
+def _strip_xml_declaration(text):
+    """lxml 不接受带编码声明的 unicode 字符串"""
+    return re.sub(r'^\s*<\?xml[^>]*\?>', '', text)
+
+
 class BpmnWorkflowEngine(object):
     """
     Engine的核心功能:
@@ -20,7 +26,7 @@ class BpmnWorkflowEngine(object):
     3. Json <--> Task Object
     """
 
-    def __init__(self, xml_str=None, json_str=None):
+    def __init__(self, xml_str=None, json_str=None, dmn_str=None):
         # 填充xml_str与json_str
         self.xml_str = xml_str
         self.json_str = json_str
@@ -29,10 +35,23 @@ class BpmnWorkflowEngine(object):
         wf_spec_converter = BpmnWorkflowSerializer.configure_workflow_spec_converter(CAMUNDA_SPEC_CONFIG)
         self.serializer = BpmnWorkflowSerializer(wf_spec_converter)
 
-        # 配置CamundaParser
+        # 配置CamundaParser; 业务规则任务需要的 DMN 决策表与流程一起加载
         if self.xml_str is not None:
             self.parser = CamundaParser()
             self.parser.add_bpmn_str(xml_str)
+            if dmn_str:
+                self.parser.add_dmn_str(_strip_xml_declaration(dmn_str))
+
+    @staticmethod
+    def dmn_decision_ids(dmn_str):
+        """
+        DMN 文本中定义的决策 id; 决策表有错误时抛出异常
+        """
+        parser = CamundaParser()
+        parser.add_dmn_str(_strip_xml_declaration(dmn_str))
+        for decision_id in parser.dmn_parsers:
+            parser.get_engine(decision_id, None)
+        return set(parser.dmn_parsers)
 
     def _get_workflow_all_specs_from_xml_parser(self):
         """

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import ast
 import json
+import re
 import logging
 
 from lxml import etree
@@ -43,6 +44,18 @@ class WorkflowDefinition(models.Model):
                                   ondelete='cascade')
     content = fields.Text(string="process content", required=True, widget='definition_content',
                           default=lambda self: EMPTY_PROCESS_BPMN)
+    dmn_content = fields.Text(string="DMN decisions",
+                              help="DMN XML with the decision tables used by business rule tasks.")
+
+    @api.constrains('dmn_content')
+    def _check_dmn_content(self):
+        for record in self:
+            if not record.dmn_content:
+                continue
+            try:
+                BpmnWorkflowEngine.dmn_decision_ids(record.dmn_content)
+            except Exception as error:
+                raise ValidationError(_("The DMN decisions are not valid: %s", error)) from error
     version = fields.Integer(string="version")
     deployed_on = fields.Datetime(string='deployed on', required=True, default=fields.Datetime.now)
     active = fields.Boolean(string='active', default=True)
@@ -138,6 +151,10 @@ class WorkflowDefinition(models.Model):
                                'group_approve_execution_and'}
     # 流程级允许的子元素 (节点与连线另行检查)
     DESIGNER_SCOPE_EXTRAS = {'laneSet', 'documentation', 'extensionElements', 'incoming', 'outgoing'}
+    # 设计器支持的节点 (审批节点与定时器另行判断)
+    DESIGNER_NODE_TAGS = {'startEvent', 'endEvent', 'parallelGateway', 'exclusiveGateway', 'serviceTask',
+                          'subProcess', 'scriptTask', 'businessRuleTask', 'sendTask', 'receiveTask'}
+    ISO_DURATION_RE = re.compile(r'^P(?!$)(\d+Y)?(\d+M)?(\d+W)?(\d+D)?(T(?=\d)(\d+H)?(\d+M)?(\d+S)?)?$')
     BPMN_NS = 'http://www.omg.org/spec/BPMN/20100524/MODEL'
     CAMUNDA_NS = 'http://camunda.org/schema/1.0/bpmn'
 
@@ -150,11 +167,21 @@ class WorkflowDefinition(models.Model):
         process = next(el for el in root.iter() if etree.QName(el).localname == 'process')
         self._check_designer_scope(process)
 
+    def _dmn_decision_ids(self):
+        """定义中 DMN 的决策 id (业务规则任务的 decisionRef 只能引用这些)"""
+        if not self.dmn_content:
+            return set()
+        return BpmnWorkflowEngine.dmn_decision_ids(self.dmn_content)
+
     def _check_designer_scope(self, scope):
         from ..workflow.service_operations import SERVICE_OPERATIONS
 
         def local(el):
             return etree.QName(el).localname
+
+        root = scope.getroottree().getroot()
+        messages = {m.get('id'): m.get('name') for m in root.iter(f'{{{self.BPMN_NS}}}message')}
+        decisions = self._dmn_decision_ids()
 
         nodes, flows = {}, []
         for child in scope:
@@ -163,8 +190,9 @@ class WorkflowDefinition(models.Model):
             name = local(child)
             if name == 'userTask' and child.get('name') in self.DESIGNER_APPROVAL_TYPES:
                 nodes[child.get('id')] = child
-            elif name in ('startEvent', 'endEvent', 'parallelGateway', 'exclusiveGateway',
-                          'serviceTask', 'subProcess'):
+            elif name == 'intermediateCatchEvent' and child.find(f'{{{self.BPMN_NS}}}timerEventDefinition') is not None:
+                nodes[child.get('id')] = child
+            elif name in self.DESIGNER_NODE_TAGS:
                 nodes[child.get('id')] = child
             elif name == 'sequenceFlow':
                 flows.append(child)
@@ -172,7 +200,7 @@ class WorkflowDefinition(models.Model):
                 raise UserError(_("These elements are not supported by the process designer: %s",
                                   f"{name} ({child.get('name') or child.get('id')})"))
 
-        kinds = {node_id: local(el) for node_id, el in nodes.items()}
+        kinds = {node_id: self._designer_kind(el) for node_id, el in nodes.items()}
         starts = [i for i, k in kinds.items() if k == 'startEvent']
         ends = [i for i, k in kinds.items() if k == 'endEvent']
         if len(starts) != 1:
@@ -188,12 +216,90 @@ class WorkflowDefinition(models.Model):
                 raise UserError(_("“%s” has no incoming flow.", label))
             if kind != 'endEvent' and node_id not in sources:
                 raise UserError(_("“%s” has no outgoing flow.", label))
+            element = nodes[node_id]
+            self._check_multi_instance(element, kind)
             if kind == 'exclusiveGateway':
-                self._check_exclusive_gateway(nodes[node_id], [f for f in flows if f.get('sourceRef') == node_id])
+                self._check_exclusive_gateway(element, [f for f in flows if f.get('sourceRef') == node_id])
             elif kind == 'serviceTask':
-                self._check_service_task(nodes[node_id], SERVICE_OPERATIONS)
+                self._check_service_task(element, SERVICE_OPERATIONS)
+            elif kind == 'scriptTask':
+                self._check_script_task(element)
+            elif kind == 'businessRuleTask':
+                self._check_business_rule_task(element, decisions)
+            elif kind in ('sendTask', 'receiveTask'):
+                self._check_message_task(element, messages)
+            elif kind == 'timer':
+                self._check_timer_event(element)
             elif kind == 'subProcess':
-                self._check_designer_scope(nodes[node_id])
+                self._check_designer_scope(element)
+
+    def _designer_kind(self, element):
+        """节点在设计器中的类型: 定时器是带 timerEventDefinition 的中间捕获事件"""
+        name = etree.QName(element).localname
+        if name == 'intermediateCatchEvent':
+            return 'timer'
+        return name
+
+    def _check_multi_instance(self, element, kind):
+        """多实例只用于自动任务 (服务任务、脚本任务): 审批节点的多人审批由审批模型处理, 不做多实例"""
+        loop = element.find(f'{{{self.BPMN_NS}}}multiInstanceLoopCharacteristics')
+        if loop is None:
+            return
+        label = element.get('name') or element.get('id')
+        if kind not in ('serviceTask', 'scriptTask'):
+            raise UserError(_("Multi-instance is only supported on service and script tasks, not on “%s”.", label))
+        if loop.get('isSequential') not in (None, 'true', 'false'):
+            raise UserError(_("The sequential flag of “%s” must be true or false.", label))
+        cardinality = loop.find(f'{{{self.BPMN_NS}}}loopCardinality')
+        text = (cardinality.text or '').strip() if cardinality is not None else ''
+        if not text:
+            raise UserError(_("The multi-instance task “%s” needs a cardinality.", label))
+        try:
+            ast.parse(text, mode='eval')
+        except SyntaxError as error:
+            raise UserError(_("The cardinality “%(expr)s” of “%(task)s” is not valid: %(error)s",
+                              expr=text, task=label, error=error.msg)) from error
+
+    def _check_script_task(self, element):
+        label = element.get('name') or element.get('id')
+        script = element.find(f'{{{self.BPMN_NS}}}script')
+        text = (script.text or '').strip() if script is not None else ''
+        if not text:
+            raise UserError(_("The script task “%s” needs a script.", label))
+        try:
+            compile(text, label, 'exec')
+        except SyntaxError as error:
+            raise UserError(_("The script of “%(task)s” is not valid Python: %(error)s",
+                              task=label, error=error.msg)) from error
+
+    def _check_business_rule_task(self, element, decisions):
+        label = element.get('name') or element.get('id')
+        ref = element.get(f'{{{self.CAMUNDA_NS}}}decisionRef')
+        if not ref:
+            raise UserError(_("The business rule task “%s” needs a decision.", label))
+        if ref not in decisions:
+            raise UserError(_("The decision “%(decision)s” of “%(task)s” is not defined in the DMN decisions.",
+                              decision=ref, task=label))
+
+    def _check_message_task(self, element, messages):
+        label = element.get('name') or element.get('id')
+        ref = element.get('messageRef')
+        if not ref or not messages.get(ref):
+            raise UserError(_("The message task “%s” needs a message.", label))
+
+    def _check_timer_event(self, element):
+        """定时器的时长是 ISO 8601 时长, 以 Python 字符串表达式书写: 'PT1H'"""
+        label = element.get('name') or element.get('id')
+        timer = element.find(f'{{{self.BPMN_NS}}}timerEventDefinition')
+        duration = timer.find(f'{{{self.BPMN_NS}}}timeDuration')
+        text = (duration.text or '').strip() if duration is not None else ''
+        try:
+            value = ast.literal_eval(text)
+        except (ValueError, SyntaxError) as error:
+            raise UserError(_("The duration of “%s” must be an ISO 8601 duration in quotes, e.g. 'PT1H'.",
+                              label)) from error
+        if not isinstance(value, str) or not self.ISO_DURATION_RE.match(value):
+            raise UserError(_("The duration of “%s” must be an ISO 8601 duration, e.g. 'PT1H'.", label))
 
     def _check_exclusive_gateway(self, gateway, outgoing):
         label = gateway.get('name') or gateway.get('id')
@@ -218,6 +324,8 @@ class WorkflowDefinition(models.Model):
                                   condition=text, error=error.msg)) from error
 
     def _check_service_task(self, task, operations):
+        from ..workflow.service_operations import check_writable_field
+
         label = task.get('name') or task.get('id')
         raw = None
         for prop in task.iter(f'{{{self.CAMUNDA_NS}}}property'):
@@ -243,6 +351,8 @@ class WorkflowDefinition(models.Model):
             except SyntaxError as error:
                 raise UserError(_("The expression “%(expr)s” is not valid: %(error)s",
                                   expr=param['value'], error=error.msg)) from error
+            if operator['name'] == 'write_record':
+                check_writable_field(self.env, self.object_id.model, name)
         result = operator.get('resultVariable')
         if result is not None and not (isinstance(result, str) and result.isidentifier()):
             raise UserError(_("The result variable of “%s” must be a valid name.", label))
@@ -256,7 +366,7 @@ class WorkflowDefinition(models.Model):
         self.ensure_one()
         self.check_access('write')
         try:
-            engine = BpmnWorkflowEngine(xml_str=content)
+            engine = BpmnWorkflowEngine(xml_str=content, dmn_str=self.dmn_content)
             process_ids = engine.parser.get_process_ids()
             engine._get_workflow_all_specs_from_xml_parser()
         except Exception as error:
@@ -264,6 +374,9 @@ class WorkflowDefinition(models.Model):
         if 'main_process' not in process_ids:
             raise UserError(_("The diagram must contain the process with id “main_process”."))
         self._check_designer_limits(content)
+        if 'scriptTask' in content and not self.env.user.has_group('base.group_system'):
+            # 脚本任务执行任意 Python, 只允许系统管理员编辑
+            raise UserError(_("Only system administrators can add script tasks to a process."))
         self.write({'content': content})
         return True
 

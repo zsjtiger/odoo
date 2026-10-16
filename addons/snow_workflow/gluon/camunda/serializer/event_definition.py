@@ -8,7 +8,8 @@ from ..specs.events.event_definitions import MessageEventDefinition
 class MessageEventDefinitionConverter(EventDefinitionConverter):
 
     def __init__(self, registry):
-        super().__init__(MessageEventDefinition, registry)
+        # 与 bpmn 的 MessageEventDefinition 类名相同, 必须使用独立的 typename, 否则互相覆盖
+        super().__init__(MessageEventDefinition, registry, typename='CamundaMessageEventDefinition')
 
     def to_dict(self, event_definition):
         dct = super().to_dict(event_definition)
