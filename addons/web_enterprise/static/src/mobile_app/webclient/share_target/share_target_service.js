@@ -1,6 +1,6 @@
 import { patch } from "@web/core/utils/patch";
 import { shareTargetService } from "@web/webclient/share_target/share_target_service";
-import mobile from "@web_enterprise/mobile_app/js/services/core";
+import mobile from "@web_enterprise/mobile_app/services/core";
 
 patch(shareTargetService, {
     async _getShareTargetFiles() {

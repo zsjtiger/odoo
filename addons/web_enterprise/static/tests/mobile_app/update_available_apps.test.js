@@ -11,7 +11,7 @@ import { registry } from "@web/core/framework/registry";
 import { user } from "@web/core/services/user";
 import { WebClientEnterprise } from "@web_enterprise/webclient/webclient";
 
-import mobile from "@web_enterprise/mobile_app/js/services/core";
+import mobile from "@web_enterprise/mobile_app/services/core";
 
 const PNG_BASE64 = "iVBORw0KGgo=";
 

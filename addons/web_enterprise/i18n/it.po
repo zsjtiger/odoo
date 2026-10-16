@@ -747,7 +747,7 @@ msgstr ", puoi accedere ovunque con"
 
 #. module: web_enterprise
 #. odoo-javascript
-#: code:addons/web_enterprise/static/src/mobile_app/js/user_menu_items.js:0
+#: code:addons/web_enterprise/static/src/mobile_app/user_menu_items.js:0
 msgid "Add to Home Screen"
 msgstr "Aggiungi alla schermata principale"
 
@@ -759,12 +759,12 @@ msgstr "Immagine di media dimensione"
 
 #. module: web_enterprise
 #. odoo-javascript
-#: code:addons/web_enterprise/static/src/mobile_app/js/user_menu_items.js:0
+#: code:addons/web_enterprise/static/src/mobile_app/user_menu_items.js:0
 msgid "No shortcut for Home Menu"
 msgstr "Nessuna scorciatoia per il menù principale"
 
 #. module: web_enterprise
 #. odoo-javascript
-#: code:addons/web_enterprise/static/src/mobile_app/js/user_menu_items.js:0
+#: code:addons/web_enterprise/static/src/mobile_app/user_menu_items.js:0
 msgid "Switch/Add Account"
 msgstr "Cambia/Aggiungi account"

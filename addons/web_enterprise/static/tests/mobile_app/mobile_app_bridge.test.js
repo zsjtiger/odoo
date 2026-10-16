@@ -22,8 +22,8 @@ import { Popover } from "@web/core/components/popover/popover";
 import { user } from "@web/core/services/user";
 import { useBackButton } from "@web/core/utils/hooks";
 import { session } from "@web/boot/session";
-import { accountMethodsForMobile } from "@web_enterprise/mobile_app/js/core/mixins";
-import { methods as mobileNativeMethods } from "@web_enterprise/mobile_app/js/services/core";
+import { accountMethodsForMobile } from "@web_enterprise/mobile_app/core/mixins";
+import { methods as mobileNativeMethods } from "@web_enterprise/mobile_app/services/core";
 
 const MY_IMAGE =
     "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";

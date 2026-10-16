@@ -705,7 +705,7 @@ msgstr ""
 
 #. module: web_enterprise
 #. odoo-javascript
-#: code:addons/web_enterprise/static/src/mobile_app/js/user_menu_items.js:0
+#: code:addons/web_enterprise/static/src/mobile_app/user_menu_items.js:0
 msgid "Add to Home Screen"
 msgstr ""
 
@@ -717,12 +717,12 @@ msgstr "Srednje velika slika"
 
 #. module: web_enterprise
 #. odoo-javascript
-#: code:addons/web_enterprise/static/src/mobile_app/js/user_menu_items.js:0
+#: code:addons/web_enterprise/static/src/mobile_app/user_menu_items.js:0
 msgid "No shortcut for Home Menu"
 msgstr ""
 
 #. module: web_enterprise
 #. odoo-javascript
-#: code:addons/web_enterprise/static/src/mobile_app/js/user_menu_items.js:0
+#: code:addons/web_enterprise/static/src/mobile_app/user_menu_items.js:0
 msgid "Switch/Add Account"
 msgstr ""

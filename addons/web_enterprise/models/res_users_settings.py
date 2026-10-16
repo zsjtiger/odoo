@@ -16,6 +16,6 @@ class ResUsersSettings(models.Model):
     )
 
     def write(self, vals):
-        if not vals.get("color_scheme", "system"):
-            vals.pop("color_scheme")
+        if 'color_scheme' in vals and not vals['color_scheme']:
+            vals.pop('color_scheme')
         return super().write(vals)

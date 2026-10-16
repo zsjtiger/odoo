@@ -4,7 +4,7 @@ import { beforeEach, expect, test } from "@odoo/hoot";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/services/browser/browser";
 
-import mobile from "@web_enterprise/mobile_app/js/services/core";
+import mobile from "@web_enterprise/mobile_app/services/core";
 import { downloadFile } from "@web/core/services/network/download";
 
 beforeEach(() => {

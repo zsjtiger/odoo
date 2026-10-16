@@ -728,7 +728,7 @@ msgstr "— åbn mig, hvor du vil, med"
 
 #. module: web_enterprise
 #. odoo-javascript
-#: code:addons/web_enterprise/static/src/mobile_app/js/user_menu_items.js:0
+#: code:addons/web_enterprise/static/src/mobile_app/user_menu_items.js:0
 msgid "Add to Home Screen"
 msgstr "Føj til hjemmeskærm"
 
@@ -740,12 +740,12 @@ msgstr "Mellemstort billede"
 
 #. module: web_enterprise
 #. odoo-javascript
-#: code:addons/web_enterprise/static/src/mobile_app/js/user_menu_items.js:0
+#: code:addons/web_enterprise/static/src/mobile_app/user_menu_items.js:0
 msgid "No shortcut for Home Menu"
 msgstr "Ingen genvej for startmenu"
 
 #. module: web_enterprise
 #. odoo-javascript
-#: code:addons/web_enterprise/static/src/mobile_app/js/user_menu_items.js:0
+#: code:addons/web_enterprise/static/src/mobile_app/user_menu_items.js:0
 msgid "Switch/Add Account"
 msgstr "Skift/tilføj konto"

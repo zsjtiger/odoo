@@ -11,5 +11,10 @@
         <xpath expr="//meta[@name='theme-color']" position="replace">
             <meta name="theme-color" t-att-content="'#242733' if color_scheme == 'dark' else '#714B67'"/>
         </xpath>
+        <xpath expr="//t[@t-call-assets='web.assets_web'][@t-css='false']" position="after">
+            <t t-if="request.env['ir.http'].is_odoo_mobile_app()">
+                <t t-call-assets="web_enterprise.assets_mobile_app" t-css="false"/>
+            </t>
+        </xpath>
     </template>
 </odoo>

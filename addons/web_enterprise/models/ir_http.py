@@ -3,6 +3,7 @@
 
 import json
 import logging
+import re
 
 from odoo import models
 from odoo.http import request
@@ -11,8 +12,15 @@ from odoo.tools import html_sanitize
 _logger = logging.getLogger(__name__)
 
 
+MOBILE_APP_USER_AGENT = re.compile(r'OdooMobile \(iOS\)|OdooMobile.+Android', re.IGNORECASE)
+
+
 class IrHttp(models.AbstractModel):
     _inherit = 'ir.http'
+
+    def is_odoo_mobile_app(self):
+        """Whether the request comes from the Odoo Mobile app (same check as isIosApp/isAndroidApp)."""
+        return bool(MOBILE_APP_USER_AGENT.search(request.httprequest.user_agent.string or ''))
 
     @classmethod
     def _post_logout(cls):
@@ -20,15 +28,12 @@ class IrHttp(models.AbstractModel):
         request.future_response.set_cookie('color_scheme', max_age=0)
 
     def color_scheme(self):
-        cookie_scheme = request.httprequest.cookies.get('color_scheme')
-        scheme = cookie_scheme if cookie_scheme else super().color_scheme()
-        if user := request.env.user:
-            if user._is_public():
-                return super().color_scheme()
-            if user_scheme := user.res_users_settings_id.color_scheme:
-                if user_scheme in ('light', 'dark'):
-                    return user_scheme
-        return scheme
+        user = request.env.user
+        if user._is_public():
+            return super().color_scheme()
+        if (user_scheme := user.res_users_settings_id.color_scheme) in ('light', 'dark'):
+            return user_scheme
+        return request.httprequest.cookies.get('color_scheme') or super().color_scheme()
 
     def session_info(self):
         ICP = self.env['ir.config_parameter'].sudo()
@@ -46,9 +51,9 @@ class IrHttp(models.AbstractModel):
             result['warning'] = warn_enterprise
             result['expiration_date'] = ICP.get_str('database.expiration_date')
             result['expiration_reason'] = ICP.get_str('database.expiration_reason')
-            if ICP.get_str('sysadmin.message'):
+            if raw_message := ICP.get_str('sysadmin.message'):
                 try:
-                    sysadmin_message = json.loads(ICP.get_str('sysadmin.message'))
+                    sysadmin_message = json.loads(raw_message)
                     if 'message' in sysadmin_message:
                         sysadmin_message['message'] = html_sanitize(sysadmin_message['message'], sanitize_tags=False)
                     result['sysadmin_message'] = sysadmin_message

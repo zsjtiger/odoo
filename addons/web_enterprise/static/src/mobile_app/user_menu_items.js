@@ -1,6 +1,6 @@
 import { _t } from "@web/core/data/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import mobile from "@web_enterprise/mobile_app/js/services/core";
+import mobile from "@web_enterprise/mobile_app/services/core";
 
 export function shortcutItem() {
     const menu = useService("menu");

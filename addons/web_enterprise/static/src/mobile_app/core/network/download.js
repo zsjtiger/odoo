@@ -1,5 +1,5 @@
 import { browser } from "@web/core/services/browser/browser";
-import mobile from "@web_enterprise/mobile_app/js/services/core";
+import mobile from "@web_enterprise/mobile_app/services/core";
 import { download, downloadFile } from "@web/core/services/network/download";
 
 function extractPathFromUrl(url) {

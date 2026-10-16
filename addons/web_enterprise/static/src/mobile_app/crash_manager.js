@@ -1,5 +1,5 @@
 import { registry } from "@web/core/framework/registry";
-import mobile from "@web_enterprise/mobile_app/js/services/core";
+import mobile from "@web_enterprise/mobile_app/services/core";
 
 function mobileErrorHandler(env, error, originalError) {
     if (mobile.methods.crashManager) {

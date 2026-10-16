@@ -739,7 +739,7 @@ msgstr "— öffnen Sie mich überall mit"
 
 #. module: web_enterprise
 #. odoo-javascript
-#: code:addons/web_enterprise/static/src/mobile_app/js/user_menu_items.js:0
+#: code:addons/web_enterprise/static/src/mobile_app/user_menu_items.js:0
 msgid "Add to Home Screen"
 msgstr "Zum Startbildschirm hinzufügen"
 
@@ -751,12 +751,12 @@ msgstr "Mittelgroßes Bild"
 
 #. module: web_enterprise
 #. odoo-javascript
-#: code:addons/web_enterprise/static/src/mobile_app/js/user_menu_items.js:0
+#: code:addons/web_enterprise/static/src/mobile_app/user_menu_items.js:0
 msgid "No shortcut for Home Menu"
 msgstr "Kein Tastenkürzel für das Startmenü"
 
 #. module: web_enterprise
 #. odoo-javascript
-#: code:addons/web_enterprise/static/src/mobile_app/js/user_menu_items.js:0
+#: code:addons/web_enterprise/static/src/mobile_app/user_menu_items.js:0
 msgid "Switch/Add Account"
 msgstr "Konto wechseln/hinzufügen"

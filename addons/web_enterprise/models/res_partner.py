@@ -7,7 +7,7 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     contact_address_complete = fields.Char(compute='_compute_complete_address', store=True)
-    # related for backward compatibility with < 13.0
+    # Read by the native mobile app to fetch avatars (mobile_app/core/mixins.js)
     image_medium = fields.Binary(string="Medium-sized image", related='avatar_128', store=False, readonly=True)
 
     @api.depends(lambda self: self._display_address_depends())
@@ -33,12 +33,13 @@ class ResPartner(models.Model):
             if 'id' in partner and 'partner_latitude' in partner and 'partner_longitude' in partner:
                 partners_data[partner['partner_latitude'], partner['partner_longitude']].append(partner['id'])
 
+        is_internal = self.env.user.has_group('base.group_user')
         for coordinates, partner_ids in partners_data.items():
-            partners = self.browse(partner_ids)
-            if self.env.user.has_group('base.group_user'):
-                partners = partners.sudo()
+            records = self.browse(partner_ids)
+            if is_internal:
+                records = records.sudo()
             # NOTE this should be done in sudo if internal user to avoid crashing as soon as the view is used
-            partners.write({
+            records.write({
                 'partner_latitude': coordinates[0],
                 'partner_longitude': coordinates[1],
             })

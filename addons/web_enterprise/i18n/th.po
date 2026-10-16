@@ -703,7 +703,7 @@ msgstr ""
 
 #. module: web_enterprise
 #. odoo-javascript
-#: code:addons/web_enterprise/static/src/mobile_app/js/user_menu_items.js:0
+#: code:addons/web_enterprise/static/src/mobile_app/user_menu_items.js:0
 msgid "Add to Home Screen"
 msgstr "เพิ่มไปที่หน้าจอหลัก"
 
@@ -715,12 +715,12 @@ msgstr "รูปภาพขนาดกลาง"
 
 #. module: web_enterprise
 #. odoo-javascript
-#: code:addons/web_enterprise/static/src/mobile_app/js/user_menu_items.js:0
+#: code:addons/web_enterprise/static/src/mobile_app/user_menu_items.js:0
 msgid "No shortcut for Home Menu"
 msgstr "ไม่มีทางลัดสำหรับเมนูหน้าแรก"
 
 #. module: web_enterprise
 #. odoo-javascript
-#: code:addons/web_enterprise/static/src/mobile_app/js/user_menu_items.js:0
+#: code:addons/web_enterprise/static/src/mobile_app/user_menu_items.js:0
 msgid "Switch/Add Account"
 msgstr "สลับ/เพิ่มบัญชี"

@@ -1,11 +1,11 @@
-import { HookEventBus } from "@web_enterprise/mobile_app/js/hook_event_bus";
+import { HookEventBus } from "@web_enterprise/mobile_app/hook_event_bus";
 import { Plugin, usePlugin } from "@odoo/owl";
 import { services } from "@web/core/framework/services";
 import { registry } from "@web/core/framework/registry";
 import { session } from "@web/boot/session";
 import { useEnv } from "@web/core/owl/utils";
 
-import mobile from "@web_enterprise/mobile_app/js/services/core";
+import mobile from "@web_enterprise/mobile_app/services/core";
 import { shortcutItem, switchAccountItem } from "./user_menu_items";
 
 const userMenuRegistry = registry.category("user_menuitems");

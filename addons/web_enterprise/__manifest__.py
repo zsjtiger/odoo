@@ -37,7 +37,11 @@ This module modifies the web addon to provide Enterprise design and responsivene
 
             'web_enterprise/static/src/core/**/*',
             'web_enterprise/static/src/webclient/**/*.js',
-            'web_enterprise/static/src/mobile_app/**/*',
+            # Native-app bridge pieces that are inert in a browser; the desktop
+            # preferences form uses the view class registered in the last one.
+            'web_enterprise/static/src/mobile_app/services/core.js',
+            'web_enterprise/static/src/mobile_app/core/mixins.js',
+            'web_enterprise/static/src/mobile_app/views/user_preferences_form_view.js',
             ('after', 'web/static/src/views/list/list_renderer.xml', 'web_enterprise/static/src/views/list/list_renderer_desktop.xml'),
             ('after', 'web/static/src/views/kanban/kanban_renderer.xml', 'web_enterprise/static/src/views/kanban/kanban_renderer.xml'),
             ('after', 'web/static/src/views/kanban/kanban_header.xml', 'web_enterprise/static/src/views/kanban/kanban_header.xml'),
@@ -55,6 +59,15 @@ This module modifies the web addon to provide Enterprise design and responsivene
 
             # Don't include dark mode files in light mode
             ('remove', 'web_enterprise/static/src/**/*.dark.scss'),
+        ],
+        # Loaded only for the Odoo Mobile apps (see webclient_templates.xml)
+        'web_enterprise.assets_mobile_app': [
+            'web_enterprise/static/src/mobile_app/mobile_plugin.js',
+            'web_enterprise/static/src/mobile_app/hook_event_bus.js',
+            'web_enterprise/static/src/mobile_app/crash_manager.js',
+            'web_enterprise/static/src/mobile_app/user_menu_items.js',
+            'web_enterprise/static/src/mobile_app/core/network/download.js',
+            'web_enterprise/static/src/mobile_app/webclient/share_target/share_target_service.js',
         ],
         'web.assets_backend_lazy': [
             'web_enterprise/static/src/views/pivot/**',
@@ -91,6 +104,7 @@ This module modifies the web addon to provide Enterprise design and responsivene
         # Unit test files
         'web.assets_unit_tests': [
             'web_enterprise/static/tests/**/*.test.js',
+            'web_enterprise/static/src/mobile_app/**/*',
         ],
     },
     'author': 'Odoo S.A.',

@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 
-import { HookEventBus } from "@web_enterprise/mobile_app/js/hook_event_bus";
+import { HookEventBus } from "@web_enterprise/mobile_app/hook_event_bus";
 
 test("HookEventBus: Test callback", async () => {
     const eventBus = new HookEventBus({
