@@ -18,3 +18,4 @@ access_ai_session_event_system,access_ai_session_event_system,ai.session.event,b
 attachment_rule_access_read,read res_model,ai.attachment.vacuum,base.group_user,r,"['|', ('attachment_id.public', '=', True), ('attachment_id.res_access_read', '=', True)]"
 attachment_rule_access_write,write res_model,ai.attachment.vacuum,base.group_user,cud,"[('attachment_id.res_access_write', '=', True)]"
 discuss_channel_rule_ai_chat_unlink,discuss.channel: user can delete own ai chats,discuss.channel,base.group_user,d,"[('channel_type', '=', 'ai_chat'), ('is_member', '=', True)]"
+access_ai_llm_job_system,access_ai_llm_job_system,ai.llm.job,base.group_system,crud,

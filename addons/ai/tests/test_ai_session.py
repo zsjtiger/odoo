@@ -513,10 +513,10 @@ class TestAISession(TestAICallbackCommon, BusCase):
         self.assertEqual(transport_mock.call_count, 3)
         subagent_tool_names = set(subagent_tools.mapped('ai_tool_name'))
         for call in transport_mock.call_args_list:
-            tool_names = {tool['name'] for tool in call.args[2]['tools']}
+            tool_names = {tool['name'] for tool in call.args[0]['tools']}
             self.assertFalse(tool_names & subagent_tool_names)
         for call in transport_mock.call_args_list[1:]:
-            self.assertIn(self.tool.ai_tool_name, {tool['name'] for tool in call.args[2]['tools']})
+            self.assertIn(self.tool.ai_tool_name, {tool['name'] for tool in call.args[0]['tools']})
         self.assertIn(self.skill.id, session.state['loaded_skills'])
         self.assertFalse(set(session.state['available_tools']) & set(subagent_tools.ids))
         self.assertFalse(self.env['ai.session'].sudo().search([('parent_session_id', '=', session.id)]))
@@ -1254,8 +1254,8 @@ class TestAISession(TestAICallbackCommon, BusCase):
             config["enable_resources_only"] = False
             self._post_user_message_on_session(session, "4", ai_session_config=config)
 
-        self.assertIn(dedent(RESTRICT_TO_SOURCES), request.call_args_list[0].args[2]['instructions'])
-        self.assertNotIn(dedent(RESTRICT_TO_SOURCES), request.call_args_list[1].args[2]['instructions'])
+        self.assertIn(dedent(RESTRICT_TO_SOURCES), request.call_args_list[0].args[0]['instructions'])
+        self.assertNotIn(dedent(RESTRICT_TO_SOURCES), request.call_args_list[1].args[0]['instructions'])
 
     def test_think_longer_option(self):
         session = self._create_ai_session(self.agent)
@@ -1270,8 +1270,8 @@ class TestAISession(TestAICallbackCommon, BusCase):
             self._post_user_message_on_session(session, "3", ai_session_config={"enable_think_longer": True})
             self._post_user_message_on_session(session, "4", ai_session_config={"enable_think_longer": False})
 
-        self.assertTrue(request.call_args_list[0].args[2]['boost_reasoning'])
-        self.assertFalse(request.call_args_list[1].args[2]['boost_reasoning'])
+        self.assertTrue(request.call_args_list[0].args[0]['boost_reasoning'])
+        self.assertFalse(request.call_args_list[1].args[0]['boost_reasoning'])
 
     def test_websearch_option(self):
         session = self._create_ai_session(self.agent)
@@ -1286,7 +1286,7 @@ class TestAISession(TestAICallbackCommon, BusCase):
                     session, "3", ai_session_config={"enable_web_search": enable_web_search}
                 )
 
-            return [tool["name"] for tool in request.call_args_list[0].args[2]["tools"]]
+            return [tool["name"] for tool in request.call_args_list[0].args[0]["tools"]]
 
         tool_names = post_message_and_get_tool_names(True)
         self.assertIn(search_tool.ai_tool_name, tool_names)

@@ -3,7 +3,6 @@ import ast
 import calendar
 import enum
 import json
-import logging
 import re
 from ast import literal_eval
 from collections import defaultdict
@@ -23,7 +22,7 @@ from odoo.tools.misc import format_date, format_datetime, submap
 
 from odoo.addons.ai.utils.ai_image_tools import field_to_image_path
 from odoo.addons.ai.utils.custom_markdown import CustomMarkdown
-from odoo.addons.iap.tools import iap_tools
+from odoo.addons.ai.llm import client_from_params
 
 from .types import AIMessageParts
 
@@ -67,59 +66,9 @@ BOUNDARY_TIME_RESETS = {
         'day': {'hour': 23, 'minute': 59, 'second': 59, 'microsecond': 999999},
     },
 }
-DEFAULT_ODOO_AI_ENDPOINT = 'https://ai.api.odoo.com'
-IAP_TRANSPORT_TIMEOUT = 5
-ODOO_AI_COMPLETION_CALLBACK_PATH = '/ai/completion_result_ready'
-
-_logger = logging.getLogger(__name__)
-
-
-def get_odoo_ai_connection_data(env, add_iap_token=True):
-    """Snapshot the ORM-bound IAP connection data into plain scalars."""
-    connection = {
-        'endpoint': env['ir.config_parameter'].sudo().get_str('ai.endpoint') or DEFAULT_ODOO_AI_ENDPOINT,
-    }
-    if add_iap_token:
-        allowed_company_ids = env.companies.ids
-        account = env['iap.account'].sudo().with_context(
-            allowed_company_ids=allowed_company_ids,
-        ).get('odoo_ai')
-        connection['account_token'] = account.account_token
-        connection['dbuuid'] = env['ir.config_parameter'].sudo().get_str('database.uuid')
-    return connection
-
-
-def call_odoo_ai_transport(
-    connection, route, params, timeout=30, *, raise_user_error=True,
-):
-    """Call a code-owned IAP route on a snapshotted administrator endpoint."""
-    transport_params = dict(params)
-    if 'account_token' in connection:
-        transport_params['account_token'] = connection['account_token']
-        transport_params['dbuuid'] = connection['dbuuid']
-    url = f"{connection['endpoint']}/api/odoo_ai/{route}"
-    return iap_tools.iap_jsonrpc(
-        url,
-        params=transport_params,
-        timeout=timeout,
-        raise_user_error=raise_user_error,
-    )
-
-
-def call_odoo_ai(env, route, params, add_iap_token=True, timeout=60):
-    """Call IAP with the current environment's connection settings."""
-    connection = get_odoo_ai_connection_data(env, add_iap_token=add_iap_token)
-    try:
-        return call_odoo_ai_transport(connection, route, params, timeout=timeout)
-    except iap_tools.InsufficientCreditError:
-        _logger.info("Insufficient credit for Odoo AI")
-        from_cron = bool(env.context.get('cron_id'))
-        if not from_cron and env.context.get('show_odoo_ai_no_credit_notification', True):
-            env['iap.account']._send_no_credit_notification(
-                service_name='odoo_ai',
-                title=env._("Not enough credits to use Odoo AI"),
-            )
-        raise
+def get_llm_client(env):
+    """Return the OpenAI-compatible client configured for this database."""
+    return client_from_params(env['ir.config_parameter'].sudo().get_str)
 
 
 class UserInputResponse(enum.StrEnum):

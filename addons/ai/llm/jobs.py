@@ -37,6 +37,7 @@ def run_job(client, kind, payload):
             mimetype=payload.get('mimetype') or 'audio/mp3',
             language=payload.get('language'),
             model=payload.get('model'),
+            response_format=payload.get('response_format') or 'json',
         )
         return {'text': text}
     raise LLMError(f"Unsupported job kind: {kind}")

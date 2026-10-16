@@ -11,7 +11,7 @@ from odoo.exceptions import MissingError, UserError, ValidationError
 from odoo.tools import BinaryBytes, SQL, file_open, is_html_empty
 from odoo.tools.misc import mute_logger
 
-from odoo.addons.iap import InsufficientCreditError
+from odoo.addons.ai.llm import LLMError
 from odoo.addons.mail.tools.discuss import Store
 
 from odoo.addons.ai.models.ai_agent_source import AIAgentSource
@@ -214,9 +214,8 @@ class AIAgent(models.Model):
             response = self.env['ai.embedding']._get_embeddings(
                 input=[{'content': prompt}],
                 model=embedding_model,
-                mode='query',
             )
-        except InsufficientCreditError:
+        except LLMError:
             return None
 
         embedding = response['embeddings'][0]

@@ -1,4 +1,3 @@
-import base64
 import logging
 
 from dateutil.relativedelta import relativedelta
@@ -9,9 +8,8 @@ from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.tools import SQL
 
-from odoo.addons.iap import InsufficientCreditError
-
-from ..utils.ai_utils import call_odoo_ai
+from ..llm import LLMError
+from ..utils.ai_utils import get_llm_client
 
 _logger = logging.getLogger(__name__)
 
@@ -130,17 +128,14 @@ class MailCallArtifact(models.Model):
             return {'status': 'no_media'}
 
         try:
-            params = {
-                'audio': base64.b64encode(data).decode('utf-8'),
-                'response_format': 'vtt',
-                'mimetype': self.media_id.mimetype,
-            }
-            text_vtt = call_odoo_ai(self.env, '1/get_transcription', params)['text']
+            text_vtt = get_llm_client(self.env).transcribe(
+                data, mimetype=self.media_id.mimetype, response_format='vtt',
+            )
             if text_vtt is None:
                 return {'status': 'err'}
             return {'status': 'ok', 'transcript': text_vtt}
 
-        except (InsufficientCreditError, UserError):
+        except (LLMError, UserError):
             _logger.error("Transcription attempt failed for call.artifact %s", self.id)
             return {'status': 'err'}
 

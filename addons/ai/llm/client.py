@@ -8,6 +8,7 @@ from .converters import from_openai_message, to_openai_messages, to_openai_tools
 from .errors import LLMError
 
 DEFAULT_API_BASE = 'https://api.openai.com/v1'
+TEXT_FORMATS = ('text', 'vtt', 'srt')
 
 
 class OpenAICompatibleClient:
@@ -42,6 +43,21 @@ class OpenAICompatibleClient:
         except ValueError as e:
             raise LLMError("The language model service returned an invalid response") from e
 
+    def _request_text(self, method, path, **kwargs):
+        headers = {'Authorization': f'Bearer {self.api_key}'}
+        try:
+            response = requests.request(
+                method, self._url(path), headers=headers, timeout=self.timeout, **kwargs,
+            )
+        except requests.RequestException as e:
+            raise LLMError(f"The language model service is unreachable: {e}") from e
+        if response.status_code >= 400:
+            raise LLMError(
+                f"The language model service returned {response.status_code}: {response.text[:200]}",
+                status_code=response.status_code,
+            )
+        return response.text
+
     def chat_completion(self, messages, instructions=None, tools=None, options=None):
         """Return an AssistantMessage for the given conversation."""
         body = {
@@ -75,17 +91,23 @@ class OpenAICompatibleClient:
         except (KeyError, TypeError) as e:
             raise LLMError("The language model service returned no embeddings") from e
 
-    def transcribe(self, audio, mimetype='audio/mp3', language=None, model=None):
-        """Return the text of an audio file."""
+    def transcribe(self, audio, mimetype='audio/mp3', language=None, model=None, response_format='json'):
+        """Return the transcript of an audio file.
+
+        ``text``, ``vtt`` and ``srt`` are returned as plain text; ``json`` and
+        ``verbose_json`` are read from the ``text`` field of the response.
+        """
         extension = mimetype.split('/')[-1] or 'mp3'
-        form = {'model': model or self.transcription_model}
+        form = {'model': model or self.transcription_model, 'response_format': response_format}
         if language:
             form['language'] = language
-        data = self._request(
-            'POST', '/audio/transcriptions',
-            files={'file': (f'audio.{extension}', audio, mimetype)},
-            data=form,
-        )
+        files = {'file': (f'audio.{extension}', audio, mimetype)}
+        if response_format in TEXT_FORMATS:
+            text = self._request_text('POST', '/audio/transcriptions', files=files, data=form)
+            if not text:
+                raise LLMError("The language model service returned no transcription")
+            return text
+        data = self._request('POST', '/audio/transcriptions', files=files, data=form)
         try:
             return data['text']
         except (KeyError, TypeError) as e:

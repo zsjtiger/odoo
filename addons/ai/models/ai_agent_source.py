@@ -264,10 +264,7 @@ class AIAgentSource(models.Model):
                     continue
                 failed_embeddings = records.embedding_ids.filtered("has_embedding_generation_failed")
                 if failed_embeddings:
-                    if any(e.embedding_error == "iap_credit_error" for e in failed_embeddings):
-                        source.error_details = self.env._("Not enough credits to use Odoo AI.")
-                    else:
-                        source.error_details = self.env._("Odoo AI failed to index this source.")
+                    source.error_details = self.env._("The AI service failed to index this source.")
 
     @api.depends('child_ids.is_active')
     def _compute_is_active(self):

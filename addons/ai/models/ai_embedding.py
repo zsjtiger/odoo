@@ -2,15 +2,13 @@
 import logging
 from collections import defaultdict
 
-from requests.exceptions import RequestException
-
 from odoo import api, fields, models, modules
 from odoo.exceptions import RedirectWarning, UserError
 from odoo.tools import SQL
 
 from odoo.addons.ai.orm.field_vector import Vector
-from odoo.addons.ai.utils.ai_utils import call_odoo_ai
-from odoo.addons.iap import InsufficientCreditError
+from odoo.addons.ai.llm import LLMError
+from odoo.addons.ai.utils.ai_utils import get_llm_client
 
 MAX_BATCH_SIZE = 100
 MAX_TOKENS = 10000
@@ -144,7 +142,6 @@ class AIEmbedding(models.Model):
         _logger.info("Starting embedding update - missing %s embeddings.", len(missing_embedding_records))
         self.env['ir.cron']._commit_progress(remaining=len(missing_embedding_records))
         failed_embeddings = self.env[self._name]
-        iap_credit_error_embeddings = self.env[self._name]
 
         # Process each model group separately
         for model, embeddings in embeddings_by_model.items():
@@ -180,7 +177,6 @@ class AIEmbedding(models.Model):
                     response = self._get_embeddings(
                         input=[{'title': embedding_titles.get((emb.res_model, emb.res_id)), 'content': emb.content} for emb in batch],
                         model=model,
-                        mode="document",
                     )
                     vectors = response['embeddings']
 
@@ -199,36 +195,34 @@ class AIEmbedding(models.Model):
                     if not self.env['ir.cron']._commit_progress(len(batch)):
                         break
 
-                except (RedirectWarning, RequestException, UserError, AttributeError) as e:
+                except (RedirectWarning, LLMError, UserError, AttributeError) as e:
                     _logger.error(
                         "Failed to process batch %s/%s: %s",
                         batch_idx + 1, len(batches), e,
                     )
                     # Mark all embeddings in failed batch as failed
                     failed_embeddings |= batch
-                except InsufficientCreditError:
-                    for remaining_batch in batches[batch_idx:]:
-                        iap_credit_error_embeddings |= remaining_batch
-                    break  # The next requests will also fail with an IAP credit error, so it can be skipped
 
-        all_failed_embeddings = failed_embeddings | iap_credit_error_embeddings
-        if all_failed_embeddings:
-            all_failed_embeddings.has_embedding_generation_failed = True
-            if iap_credit_error_embeddings:
-                iap_credit_error_embeddings.embedding_error = "iap_credit_error"
-            self.env["ir.cron"]._commit_progress(len(all_failed_embeddings))
+        if failed_embeddings:
+            failed_embeddings.has_embedding_generation_failed = True
+            failed_embeddings.embedding_error = "request_error"
+            self.env["ir.cron"]._commit_progress(len(failed_embeddings))
 
-    @api.ormcache()
+    @api.model
     def _get_default_embedding_model(self):
         if modules.module.current_test:
             return 'dummy'
-        return call_odoo_ai(self.env, "1/get_default_embedding_model", {}, add_iap_token=False)
+        model = self.env['ir.config_parameter'].sudo().get_str('openai.embedding_model')
+        if not model:
+            raise UserError(self.env._("No embedding model is configured. Set the system parameter openai.embedding_model."))
+        return model
 
-    @api.ormcache()
+    @api.model
     def _get_supported_embedding_models(self):
+        # The configured model is the only one used; the others are deprecated.
         if modules.module.current_test:
             return 'dummy'
-        return call_odoo_ai(self.env, "1/get_supported_embedding_models", {}, add_iap_token=False)
+        return [self._get_default_embedding_model()]
 
     def _estimate_tokens(self, text):
         """Estimate token count based on text length.
@@ -270,13 +264,14 @@ class AIEmbedding(models.Model):
         return batches
 
     @api.model
-    def _get_embeddings(self, input, model, mode):
-        params = {
-            'input': input,
-            'model': model,
-            'mode': mode,
-        }
-        return call_odoo_ai(self.env, "1/get_embeddings", params)
+    def _get_embeddings(self, input, model=None):
+        """Return ``{'embeddings': [vector, ...]}``, one vector per input, in order."""
+        texts = [
+            f"{item['title']}\n{item['content']}" if item.get('title') else item['content']
+            for item in input
+        ]
+        vectors = get_llm_client(self.env).embeddings(texts, model=model)
+        return {'embeddings': vectors}
 
     def _cron_update_deprecated_embedding_models(self, batch_size: int = 100_000):
         supported_embedding_models = self._get_supported_embedding_models()

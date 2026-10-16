@@ -49,9 +49,6 @@ export class VoiceTranscription extends Component {
         this.shouldCommit = false;
         this.supportedLanguages = [];
 
-        this.iapTransactionToken = null;
-        this.usage = {};
-
         const currentLanguage = user.lang.replace("-", "_");
         const hasSummary = this.descendants.summaryContent.textContent.trim() !== "";
         this.state = proxy({
@@ -82,8 +79,8 @@ export class VoiceTranscription extends Component {
 
         this.realtimeClient = RealtimeClient.getInstance();
 
-        // To take care of the case where the user closes the tab while the transcription is active
-        useListener(browser, "pagehide", () => this.resetIAPTracking());
+        // The realtime connection is browser-direct: close it if the user leaves the page
+        useListener(browser, "pagehide", () => this.realtimeClient.disconnect());
 
         // Subscribe to event for the RealtimeClient
         useBus(transcriptionBus, AITranscriptionEvent.REALTIME_CLIENT_MESSAGE, (event) => {
@@ -92,11 +89,6 @@ export class VoiceTranscription extends Component {
             }
             const data = event.detail;
             if (data.type === "conversation.item.input_audio_transcription.completed") {
-                this.usage["input_tokens"]["text"] += data.usage.input_token_details?.text_tokens || 0;
-                this.usage["input_tokens"]["audio"] += data.usage.input_token_details?.audio_tokens || 0;
-                this.usage["output_tokens"] += data.usage.output_tokens || 0;
-                this.usage["duration_seconds"] += data.usage.duration || 0;
-
                 this.props.onTranscriptionUpdated(
                     "delta",
                     this.descendants.transcriptContent,
@@ -172,34 +164,12 @@ export class VoiceTranscription extends Component {
         });
 
         onWillUnmount(() => {
-            this.resetIAPTracking();
+            this.realtimeClient.disconnect();
         });
 
         onWillDestroy(() => {
             this.summaryObserver.disconnect();
         });
-    }
-
-    async resetIAPTracking() {
-        if (this.iapTransactionToken !== null) {
-            try {
-                await rpc("/ai/transcription/report_realtime_session_usage", {
-                    "iap_transaction_token": this.iapTransactionToken,
-                    "usage": this.usage,
-                });
-            } catch (e) {
-                console.error("Failed to report usage to IAP", e);
-            }
-        }
-        this.iapTransactionToken = null;
-        this.usage = {
-            "input_tokens": {
-                "text": 0,
-                "audio": 0,
-            },
-            "output_tokens": 0,
-            "duration_seconds": 0,
-        };
     }
 
     setCurrentTab(tabName) {
@@ -218,8 +188,6 @@ export class VoiceTranscription extends Component {
                 });
                 if (response["status"] === "success") {
                     const sessionToken = response["session_token"];
-                    await this.resetIAPTracking();
-                    this.iapTransactionToken = response["iap_transaction_token"];
                     this.realtimeClient.connect(sessionToken);
                     this.state.status = "recording";
                     this.props.onTranscriptionStarted(
@@ -228,11 +196,6 @@ export class VoiceTranscription extends Component {
                     );
                     await this.audioProcessor.start();
                     this.setCurrentTab("transcript");
-                }
-                else if (response["status"] === "insufficient_credit") {
-                    // The notification is already handled by call_odoo_ai
-                    this.state.status = "idle";
-                    this.state.isRecording = false;
                 }
             } catch (error) {
                 this.state.status = "idle";
@@ -262,7 +225,6 @@ export class VoiceTranscription extends Component {
                 }
             }
         } else if (this.state.status === "recording") {
-            await this.resetIAPTracking();
             this.audioProcessor.stop();
             this.realtimeClient.disconnect();
             this.props.onTranscriptionUpdated("stopped", this.descendants.transcriptContent);

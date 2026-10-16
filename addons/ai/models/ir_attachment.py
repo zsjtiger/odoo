@@ -8,7 +8,7 @@ from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.http.router import root
 from odoo.tools.pdf import OdooPdfFileReader, OdooPdfFileWriter, to_pdf_stream, PdfReadError
-from odoo.tools.image import ImageProcess
+from odoo.tools.files.image import ImageProcess
 
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.ai.utils.ai_image_tools import retrieve_image_data_from_record, field_to_image_path, closest_aspect_ratio, AI_SUPPORTED_IMG_TYPES

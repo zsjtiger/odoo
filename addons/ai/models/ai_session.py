@@ -11,26 +11,20 @@ from typing import Literal, Unpack
 
 from odoo import api, Command, fields, models
 from odoo.exceptions import AccessError, ConcurrencyError, MissingError, UserError, ValidationError
-from odoo.modules.registry import Registry
-from odoo.sql_db import PG_CONCURRENCY_EXCEPTIONS_TO_RETRY
+from odoo.orm.database.sql_db import PG_CONCURRENCY_EXCEPTIONS_TO_RETRY
 from odoo.tools import html_sanitize
-from odoo.tools.urls import urljoin as url_join
 
-from odoo.addons.iap import InsufficientCreditError
 from odoo.addons.mail.tools.discuss import Store
 
 from ..utils.ai_citation import apply_web_citations
+from ..llm import JOB_COMPLETION, LLMError
 from ..utils.ai_utils import (
-    call_odoo_ai,
-    call_odoo_ai_transport,
     disable_skills,
     enable_tools,
     format_tool_result,
     format_tool_summary,
-    get_odoo_ai_connection_data,
-    IAP_TRANSPORT_TIMEOUT,
+    get_llm_client,
     markdown_format,
-    ODOO_AI_COMPLETION_CALLBACK_PATH,
     get_text_from_parts,
     UserInputResponse,
 )
@@ -57,7 +51,7 @@ class AiSessionEvent(models.Model):
     """
     _name = 'ai.session.event'
     _description = 'AI Session Event'
-    _order = 'create_date desc, id desc'
+    _order = 'id desc'
 
     ai_session_id = fields.Many2one('ai.session', ondelete='cascade', index='btree_not_null')
     metadata = fields.Json('json representation of the event', required=True)
@@ -110,7 +104,6 @@ class AiSession(models.Model):
         ("waiting_child", "Waiting for Child Session"),
     ], required=True, default="ready", index=True)
     request_uuid = fields.Char()
-    request_webhook_secret = fields.Char(groups=fields.NO_ACCESS)
     request_payload = fields.Json()
     request_round = fields.Integer()
     request_round_limit = fields.Integer()
@@ -120,7 +113,7 @@ class AiSession(models.Model):
     resume_token = fields.Char()
 
     _request_uuid_unique = models.UniqueIndex(
-        "(request_uuid)", "The active IAP request UUID must be unique.",
+        "(request_uuid)", "The active request UUID must be unique.",
     )
     _valid_request_round = models.Constraint(
         "CHECK(loop_state = 'ready' OR (request_round IS NOT NULL AND request_round_limit IS NOT NULL "
@@ -129,8 +122,7 @@ class AiSession(models.Model):
     )
     _complete_request_data = models.Constraint(
         "CHECK(loop_state = 'ready' OR (request_uuid IS NOT NULL AND request_payload IS NOT NULL "
-        "AND request_user_id IS NOT NULL "
-        "AND request_webhook_secret IS NOT NULL))",
+        "AND request_user_id IS NOT NULL))",
         "An active AI exchange must retain its complete model request data.",
     )
     _complete_interaction_wait = models.Constraint(
@@ -512,7 +504,6 @@ class AiSession(models.Model):
         vals = {
             "loop_state": "waiting_model",
             "request_uuid": str(uuid.uuid4()),
-            "request_webhook_secret": uuid.uuid4().hex,
             "request_round": request_round,
             "request_round_limit": request_round_limit,
             "request_payload": payload,
@@ -526,81 +517,27 @@ class AiSession(models.Model):
         vals["state"] = state
         self.write(vals)
         self._publish_response_state()
-        connection = get_odoo_ai_connection_data(self.env)
-        use_webhook = self.env['ir.config_parameter'].sudo().get_bool('ai.use_webhook', True)
-        request_uuid = vals['request_uuid']
-        params = copy.deepcopy(payload)
-        if use_webhook:
-            route = '1/get_completions'
-            timeout = IAP_TRANSPORT_TIMEOUT
-            params.update({
-                'request_uuid': request_uuid,
-                'webhook_url': url_join(
-                    self.env['ir.config_parameter'].sudo().get_str('ai.webhook_url', self.get_base_url()),
-                    ODOO_AI_COMPLETION_CALLBACK_PATH,
-                ),
-                'webhook_secret': vals['request_webhook_secret'],
-                'webhook_dbname': self.env.cr.dbname,
-                'llm_retry': False,
-            })
-        else:
-            route = '1/get_completions_sync'
-            # timeout can be overridden in _get_model_round_options
-            timeout = params.pop('timeout', 120)
-        dbname = self.env.cr.dbname
-        user_id = self.env.uid
-        guest_id = vals["request_guest_id"]
-        context = vals["request_context"]
+        self.env['ai.llm.job'].enqueue(
+            uuid=vals['request_uuid'],
+            kind=JOB_COMPLETION,
+            payload={
+                'messages': payload['messages'],
+                'instructions': payload.get('instructions'),
+                'tools': payload.get('tools'),
+                'options': {k: v for k, v in payload.items() if k not in ('messages', 'instructions', 'tools', 'timeout')},
+            },
+            callback_model='ai.session',
+        )
 
-        @self.env.cr.postcommit.add
-        def submit():
-            def rescue_session(send_credit_notif=False):
-                try:
-                    with Registry(dbname).cursor() as cr:
-                        env = api.Environment(cr, user_id, context)
-                        if guest_id:
-                            env = env(context={**env.context, 'guest': env['mail.guest'].browse(guest_id)})
-                        session = env['ai.session'].sudo().search([('request_uuid', '=', request_uuid)])
-                        if session:
-                            if callback_type == 'channel_name':
-                                session.unlink()
-                                return
-                            if send_credit_notif:
-                                error_msg = env._("Not enough credits to use Odoo AI")
-                            else:
-                                error_msg = env._("Odoo AI is currently unreachable. Please try again later.")
-
-                            if send_credit_notif and not env.context.get('cron_id'):
-                                env['iap.account']._send_no_credit_notification(
-                                    service_name='odoo_ai', title=error_msg,
-                                )
-                            session._finish_exchange('failed', content=error_msg if session.parent_session_id else None)
-                except Exception:  # noqa: BLE001
-                    _logger.exception("Failed to clean up failed AI session submission %s", request_uuid)
-
-            try:
-                result = call_odoo_ai_transport(
-                    connection, route, params,
-                    timeout=timeout, raise_user_error=False,
-                )
-            except InsufficientCreditError:
-                _logger.info("Insufficient credit for Odoo AI")
-                rescue_session(send_credit_notif=True)
-                return
-            except Exception:  # noqa: BLE001
-                _logger.exception("Failed to submit AI request %s", request_uuid)
-                rescue_session()
-                return
-
-            if not use_webhook:
-                with Registry(dbname).cursor() as cr:
-                    env = api.Environment(cr, user_id, context)
-                    session = env['ai.session'].sudo().search([
-                        ('request_uuid', '=', request_uuid),
-                        ('loop_state', '=', 'waiting_model'),
-                    ], limit=1)
-                    if session:
-                        session._process_completion_result(result)
+    @api.model
+    def _on_llm_job_done(self, request_uuid, llm_result):
+        """Called by the job worker with the outcome of a completion job."""
+        session = self.search([
+            ('request_uuid', '=', request_uuid),
+            ('loop_state', '=', 'waiting_model'),
+        ], limit=1)
+        if session:
+            session._process_completion_result(llm_result)
 
     def _submit_agent_request(self, message=None) -> None:
         """If no message, it's for the succeeding round."""
@@ -1290,8 +1227,8 @@ class AiSession(models.Model):
                     formatted_tools,
                     **completion_options,
                 )
-            except InsufficientCreditError:
-                return  # Stop the loop
+            except LLMError as e:
+                raise UserError(str(e)) from e
 
             output_message = response['result']
             messages.append(output_message)
@@ -1328,13 +1265,14 @@ class AiSession(models.Model):
         tools: list[Tool] | None = None,
         **options: Unpack[CompletionOptions],
     ) -> CompletionResponse:
-        params = {
-            'messages': messages,
-            'instructions': instructions,
-            'tools': tools,
-            **options,
-        }
-        return call_odoo_ai(self.env, "1/get_completions_sync", params)
+        try:
+            message = get_llm_client(self.env).chat_completion(
+                messages, instructions=instructions, tools=tools,
+                options=dict(options),
+            )
+        except LLMError as e:
+            raise UserError(str(e)) from e
+        return {'result': message}
 
     @api.model
     def _get_last_user_message(self, messages: list[Message]):

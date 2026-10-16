@@ -1,10 +1,10 @@
 import logging
 from datetime import UTC, datetime
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 from odoo import fields
 from odoo.addons.mail.tests.common import mail_new_test_user
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import AccessError
 from odoo.tests import tagged
 from odoo.tests.common import (
     HttpCase,
@@ -14,6 +14,7 @@ from odoo.tests.common import (
 )
 from odoo.tools import mute_logger
 
+from odoo.addons.ai.llm import LLMError
 from odoo.addons.mail.tools import discuss, jwt
 
 _logger = logging.getLogger(__name__)
@@ -216,8 +217,8 @@ class TestMailCallArtifactAI(TransactionCase):
         with (
             self.enter_registry_test_mode(),
             patch(
-                "odoo.addons.ai.models.mail_call_artifact.call_odoo_ai",
-                side_effect=[{"text": None}, {"text": ""}],
+                "odoo.addons.ai.models.mail_call_artifact.get_llm_client",
+                return_value=Mock(**{"transcribe.side_effect": [None, ""]}),
             ),
             patch.object(self.env.cr, "commit"),
             patch.object(
@@ -249,8 +250,8 @@ class TestMailCallArtifactAI(TransactionCase):
         with (
             self.enter_registry_test_mode(),
             patch(
-                'odoo.addons.ai.utils.ai_utils.call_odoo_ai',
-                side_effect=UserError("Mocked API Error")
+                'odoo.addons.ai.models.mail_call_artifact.get_llm_client',
+                return_value=Mock(**{"transcribe.side_effect": LLMError("Mocked API Error")}),
             ),
             patch.object(self.env.cr, 'commit')
         ):

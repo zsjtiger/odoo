@@ -194,6 +194,10 @@ class AIWebPage(models.Model):
             'fetch_failed': self.env._("Failed to fetch the content of this URL."),
             'invalid_payload': self.env._("Failed to process the content of this URL."),
             'empty_content': self.env._("No text content could be extracted from this URL."),
+            'blocked_url': self.env._("This URL is not allowed to be fetched."),
+            'robots_disallowed': self.env._("The website's robots.txt does not allow fetching this URL."),
+            'too_large': self.env._("This URL's content is too large to be processed."),
+            'unsupported_content': self.env._("This URL does not point to a text page."),
         }
         for error_key, sources in sources_by_error.items():
             sources.write({

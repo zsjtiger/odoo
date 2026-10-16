@@ -6,13 +6,41 @@ from unittest.mock import Mock, patch
 
 from odoo.fields import Command
 from odoo.tests import HttpCase, TransactionCase, tagged
-from odoo.tools import hmac
 
 from odoo.addons.ai.models.ai_agent import AIAgent
 from odoo.addons.ai.models.ai_embedding import AIEmbedding
+from odoo.addons.ai.models.ai_llm_job import AiLlmJob
 from odoo.addons.ai.models.ai_session import AiSession
 from odoo.addons.ai.models.ir_actions_server import IrActionsServer
 from odoo.addons.ai.utils.ai_utils import UserInputResponse
+
+
+class FakeLLMClient:
+    """Stand-in for the OpenAI-compatible client, answering chat completions from a queue.
+
+    Every completion request (except the chat-title ones, which are answered
+    on their own) is recorded on ``transport`` as one dict holding the messages,
+    the instructions, the tools and the request options.
+    """
+
+    def __init__(self, replies, channel_name='Test conversation'):
+        self.replies = deque(replies)
+        self.channel_name = channel_name
+        self.transport = Mock(name='chat_completion')
+
+    def chat_completion(self, messages, instructions=None, tools=None, options=None):
+        options = options or {}
+        if options.get('usage') == 'channel_name':
+            return {'role': 'assistant', 'content': [{'type': 'text', 'text': self.channel_name}], 'provider_metadata': {}}
+        self.transport(copy.deepcopy({
+            'messages': messages,
+            'instructions': instructions,
+            'tools': tools,
+            **options,
+        }))
+        if not self.replies:
+            raise AssertionError("Unexpected completion request: no reply was prepared for it.")
+        return {'role': 'assistant', 'content': self.replies.popleft(), 'provider_metadata': {}}
 
 
 class TestAICommon(TransactionCase):
@@ -80,7 +108,6 @@ class TestAICommon(TransactionCase):
 
     def mock_completion_request(self, responses):
         return patch.object(AiSession, '_get_completions', side_effect=({
-            'status': 'success',
             'result': {
                 'role': 'assistant',
                 'content': parts,
@@ -90,7 +117,6 @@ class TestAICommon(TransactionCase):
 
     def mock_embedding_request(self):
         return patch.object(AIEmbedding, '_get_embeddings', side_effect=lambda self, input, *args, **kwargs: {
-            'status': 'success',
             'embeddings': [[0.1] * 1536 for _ in range(len(input))],
         }, autospec=True)
 
@@ -159,7 +185,7 @@ class TestAICommon(TransactionCase):
 
 @tagged("post_install", "-at_install")
 class TestAICallbackCommon(HttpCase, TestAICommon):
-    """Exercise session endpoints with a fake IAP transport."""
+    """Exercise session endpoints with the asynchronous LLM job queue."""
 
     @classmethod
     def setUpClass(cls):
@@ -170,56 +196,21 @@ class TestAICallbackCommon(HttpCase, TestAICommon):
         agent = agent.with_env(self.env)
         return self.env["ai.session"].sudo().create({
             "agent_id": agent.id,
-            # These tests supply conversation replies, not channel-title replies.
             "channel_id": agent._create_ai_chat_channel("Test conversation").id,
         })
 
     @contextmanager
-    def mock_callback_completions(self, responses, *, channel_name="Test conversation"):
-        self._iap_requests = deque()
-        self._iap_replies = iter(responses)
-        self._iap_channel_name = channel_name
-        conversation_transport = Mock()
+    def mock_callback_completions(self, responses, *, channel_name='Test conversation'):
+        """Answer the completion jobs of the test with ``responses``, in order."""
+        client = FakeLLMClient(responses, channel_name=channel_name)
+        with patch("odoo.addons.ai.models.ai_llm_job.get_llm_client", return_value=client):
+            yield client.transport
 
-        def accept_request(connection, route, params, **kwargs):
-            self.assertEqual(route, "1/get_completions")
-            self._iap_requests.append(copy.deepcopy(params))
-            if params["usage"] != "channel_name":
-                conversation_transport(connection, route, params, **kwargs)
-            return {}
-
-        with patch(
-            "odoo.addons.ai.models.ai_session.call_odoo_ai_transport",
-            side_effect=accept_request,
-        ):
-            yield conversation_transport
-        self.assertFalse(self._iap_requests)
-
-    def _deliver_iap_callbacks(self):
-        while self._iap_requests:
-            submitted = self._iap_requests.popleft()
-            if submitted["usage"] == "channel_name":
-                content = self.mock_text_response(self._iap_channel_name)
-            else:
-                content = next(self._iap_replies)
-            llm_result = {"result": {
-                "role": "assistant",
-                "content": content,
-                "provider_metadata": {},
-            }}
-            response = self.url_open(
-                "/ai/completion_result_ready",
-                json={
-                    "request_uuid": submitted["request_uuid"],
-                    "llm_result": llm_result,
-                    "llm_error": False,
-                    "signature": hmac(None, "odoo_ai-webhook", (
-                        submitted["request_uuid"], llm_result, False,
-                    ), secret=submitted["webhook_secret"]),
-                },
-            )
-            self.assertEqual(response.status_code, 200, response.text)
-            self.assertIsNone(response.json())
+    def _deliver_llm_jobs(self):
+        """Run the job queue until no job is pending, as the cron worker would."""
+        Job = self.env["ai.llm.job"].sudo()
+        while Job.search_count([("state", "=", "pending")]):
+            Job._cron_run_pending()
         self.env.invalidate_all()
 
     def _call_ai_endpoint(self, route, params):
@@ -228,7 +219,7 @@ class TestAICallbackCommon(HttpCase, TestAICommon):
             "context": {"allowed_company_ids": self.env.companies.ids},
         })
         acknowledgement = self.make_jsonrpc_request(route, params)
-        self._deliver_iap_callbacks()
+        self._deliver_llm_jobs()
         return acknowledgement
 
     def _post_user_message_on_session(self, session: AiSession, body: str, ai_session_config=None):
@@ -257,34 +248,20 @@ class TestAICallbackCommon(HttpCase, TestAICommon):
 
 
 @contextmanager
-def mock_iap_results(env, return_values, *, channel_name="test_channel"):
-    """Send signed mocked IAP replies to the admin tour over the bus."""
-    responses = iter(return_values)
+def mock_llm_results(env, return_values, *, channel_name='test_channel'):
+    """Answer the completion jobs of a browser tour with ``return_values``.
 
-    def submit(connection, route, params, **kwargs):
-        assert route == "1/get_completions"
-        if params["usage"] == "channel_name":
-            content = [{"type": "text", "text": channel_name}]
-        else:
-            content = next(responses)
+    Each job is run as soon as it is enqueued, so that the result is delivered
+    to the browser within the same request.
+    """
+    client = FakeLLMClient(return_values, channel_name=channel_name)
+    enqueue = AiLlmJob.enqueue
 
-        llm_result = {"result": {
-            "role": "assistant",
-            "content": content,
-            "provider_metadata": {},
-        }}
-        env.ref("base.user_admin")._bus_send("ai.test/callbacks_ready", {
-            "request_uuid": params["request_uuid"],
-            "llm_result": llm_result,
-            "llm_error": False,
-            "signature": hmac(None, "odoo_ai-webhook", (
-                params["request_uuid"], llm_result, False,
-            ), secret=params["webhook_secret"]),
-        })
-        # Submission is already in postcommit; dispatch this test notification explicitly.
-        env.cr.precommit.run()
-        env.cr.postcommit.run()
-        return {}
+    def run_now(self, **kwargs):
+        job = enqueue(self, **kwargs)
+        self.sudo()._cron_run_pending()
+        return job
 
-    with patch("odoo.addons.ai.models.ai_session.call_odoo_ai_transport", side_effect=submit):
+    with patch("odoo.addons.ai.models.ai_llm_job.get_llm_client", return_value=client), \
+            patch.object(AiLlmJob, "enqueue", run_now):
         yield

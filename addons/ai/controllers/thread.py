@@ -8,9 +8,9 @@ from odoo import http
 from odoo.addons.mail.controllers.thread import ThreadController
 from odoo.addons.mail.tools.discuss import add_guest_to_context
 from odoo.exceptions import AccessError, MissingError, UserError
-from odoo.tools import hmac, str2bool
+from odoo.tools import str2bool
 
-from ..utils.ai_utils import ODOO_AI_COMPLETION_CALLBACK_PATH, UserInputResponse
+from ..utils.ai_utils import UserInputResponse
 from ..utils.types import PendingInteractionResponse, SessionResponse
 
 
@@ -119,29 +119,6 @@ class AIThreadController(ThreadController):
             except Exception:  # noqa: BLE001
                 _logger.exception("Failed to submit the AI channel name request")
         return {'loop_state': session.loop_state}
-
-    @http.route(
-        ODOO_AI_COMPLETION_CALLBACK_PATH,
-        type='json2',
-        auth='public',
-        methods=['POST'],
-        save_session=False,
-    )
-    def completion_result_ready(self, request_uuid: str, llm_result, llm_error, signature):
-        session = self.env['ai.session'].sudo().search([
-            ('request_uuid', '=', request_uuid),
-            ('loop_state', '=', 'waiting_model'),
-        ], limit=1)
-        if not session:
-            return None
-        expected_signature = hmac(None, "odoo_ai-webhook", (
-            request_uuid,
-            llm_result,
-            llm_error,
-        ), secret=session.request_webhook_secret)
-        if not signature or not secrets.compare_digest(signature, expected_signature):
-            return None
-        session._process_completion_result(llm_result)
 
     @http.route(
         "/ai/resume_pending_interaction",

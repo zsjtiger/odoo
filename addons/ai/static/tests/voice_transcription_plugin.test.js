@@ -53,19 +53,7 @@ beforeEach(() => {
         return {
             'status': 'success',
             'session_token': 'some_session_token',
-            'iap_transaction_token': 'some_transaction_token',
         }
-    });
-    onRpc("/ai/transcription/report_realtime_session_usage", ({ args }) => {
-        expect(args.iapTransactionToken).toBe("some_transaction_token");
-        expect(args.usage).toEqual({
-            "input_tokens": {
-                "text": 1,
-                "audio": 1,
-            },
-            "output_tokens": 1,
-            "duration_seconds": 1,
-        });
     });
 
     patchWithCleanup(RealtimeClient.prototype, {

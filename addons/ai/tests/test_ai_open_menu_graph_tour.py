@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.addons.ai.tests.common import mock_iap_results, TestAICommon
+from odoo.addons.ai.tests.common import mock_llm_results, TestAICommon
 from odoo.tests import HttpCase, tagged
 
 
@@ -58,14 +58,14 @@ class TestAIOpenMenuGraphTour(HttpCase, TestAICommon):
             'order': 'ASC',
             'search': [],
         }
-        iap_results = [
+        llm_results = [
             self.mock_tool_response(self.open_menu_graph_tool, args=tool_args),
             self.mock_text_response("Here is your graph"),
         ]
 
         # open_menu_graph is skill-gated in production; expose it as a default tool here.
         with self.mock_default_tools(self.open_menu_graph_tool), \
-             mock_iap_results(self.env, iap_results):
+             mock_llm_results(self.env, llm_results):
             self.start_tour(
                 "/odoo",
                 "ai_open_menu_graph_tour",

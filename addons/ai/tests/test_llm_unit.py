@@ -176,8 +176,14 @@ class TestClient(unittest.TestCase):
             text = self.client.transcribe(b'audio-bytes', mimetype='audio/mp3', language='en')
         self.assertEqual(text, 'hello')
         kwargs = request.call_args.kwargs
-        self.assertEqual(kwargs['data'], {'model': 'stt-model', 'language': 'en'})
+        self.assertEqual(kwargs['data'], {'model': 'stt-model', 'language': 'en', 'response_format': 'json'})
         self.assertEqual(kwargs['files']['file'], ('audio.mp3', b'audio-bytes', 'audio/mp3'))
+
+    def test_subtitle_transcription_returns_the_raw_text(self):
+        with patch.object(llm_client.requests, 'request', return_value=_response(text='WEBVTT\n\n00:00.000 --> 00:01.000\nHi')) as request:
+            text = self.client.transcribe(b'audio-bytes', mimetype='audio/mp3', response_format='vtt')
+        self.assertEqual(text, 'WEBVTT\n\n00:00.000 --> 00:01.000\nHi')
+        self.assertEqual(request.call_args.kwargs['data']['response_format'], 'vtt')
 
     def test_transcription_session_request(self):
         session = {'client_secret': {'value': 'ephemeral'}}

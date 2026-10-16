@@ -5,6 +5,7 @@ from . import ai_tool
 from . import ai_agent
 from . import ai_agent_source
 from . import ai_embedding
+from . import ai_llm_job
 from . import ai_embedding_mixin
 from . import ai_session
 from . import ai_web_scraper_batch

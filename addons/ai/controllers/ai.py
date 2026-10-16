@@ -1,12 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import base64
 from werkzeug.exceptions import BadRequest, NotFound
 
 from odoo import http
 from odoo.http import request
 
-from odoo.addons.iap import InsufficientCreditError
+from odoo.exceptions import UserError
 
-from ..utils.ai_utils import call_odoo_ai, get_text_from_parts, markdown_format
+from ..llm import LLMError
+from ..utils.ai_utils import get_llm_client, get_text_from_parts, markdown_format
 
 
 class AIController(http.Controller):
@@ -54,51 +56,27 @@ class AIController(http.Controller):
 
     @http.route(["/ai/transcription/session"], methods=["POST"], type="jsonrpc", auth="user", readonly=True)
     def get_session_token(self, language: str, prompt: str):
-        params = {
-            'language': language,
-            'prompt': prompt,
-        }
+        """Return a short-lived token the browser uses to open a realtime transcription session."""
         try:
-            response = call_odoo_ai(self.env, '1/get_realtime_session_token', params)
-            return {
-                'status': 'success',
-                'session_token': response['session_token'],
-                'iap_transaction_token': response['iap_transaction_token'],
-            }
-        except InsufficientCreditError:
-            return {
-                'status': 'insufficient_credit',
-            }
-
-    @http.route("/ai/transcription/report_realtime_session_usage", type="jsonrpc", auth="user", methods=["POST"])
-    def report_usage(self, iap_transaction_token, usage):
-        params = {
-            'iap_transaction_token': iap_transaction_token,
-            'usage': usage,
+            session = get_llm_client(request.env).create_transcription_session(language=language, prompt=prompt)
+        except LLMError as e:
+            raise UserError(str(e)) from e
+        return {
+            'status': 'success',
+            'session_token': session['client_secret']['value'],
         }
-        call_odoo_ai(self.env, '1/report_realtime_session_usage', params, add_iap_token=False, timeout=5)
 
     @http.route("/ai/transcription", type="jsonrpc", auth="user")
     def transcribe(self, audio_base64, language=None):
         if not audio_base64:
             raise BadRequest("No audio data provided")
-
-        params = {
-            'audio': audio_base64,
-            'mimetype': 'audio/mp3',
-        }
-        if language:
-            params['language'] = language
         try:
-            response = call_odoo_ai(self.env, '1/get_transcription', params)
-            return {
-                'status': 'success',
-                'text': response['text'],
-            }
-        except InsufficientCreditError:
-            return {
-                'status': 'insufficient_credit',
-            }
+            text = get_llm_client(request.env).transcribe(
+                base64.b64decode(audio_base64), mimetype='audio/mp3', language=language,
+            )
+        except LLMError as e:
+            raise UserError(str(e)) from e
+        return {'status': 'success', 'text': text}
 
     @http.route("/ai/transcription/call", type="jsonrpc", auth="user", methods=["POST"])
     def transcribe_call(self, call_model, call_id):
@@ -125,15 +103,3 @@ class AIController(http.Controller):
         if pending_artifacts:
             pending_artifacts.action_transcribe_gevent()
         return "OK"
-
-    @http.route(['/ai/url_scraper_result_ready/<batch_uuid>'], type='http', auth='public', methods=['POST'], csrf=False)
-    def url_scraper_result_ready(self, batch_uuid):
-        # This route is called by the website scraper server to notify the client that the result is ready.
-        batch = request.env['ai.web.scraper.batch'].sudo().search([
-            ('uuid', '=', batch_uuid),
-            ('state', '=', 'submitted'),
-        ], limit=1)
-        if not batch:
-            raise NotFound()
-
-        request.env.ref('ai.ir_cron_run_web_scraper')._trigger()

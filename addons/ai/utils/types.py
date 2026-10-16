@@ -151,4 +151,3 @@ class TranscriptionResponse(TypedDict):
 
 class RealtimeTranscriptionResponse(TypedDict):
     session_token: str
-    iap_transaction_token: str

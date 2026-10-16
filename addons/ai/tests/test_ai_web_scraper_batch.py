@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import timedelta
 from unittest.mock import patch
 
-from odoo import fields
 from odoo.tests import TransactionCase, tagged
 from odoo.tools import mute_logger
+
+from odoo.addons.ai.utils.web_fetch import WebFetchError
 
 
 @tagged('post_install', '-at_install')
@@ -19,14 +19,14 @@ class TestAIWebScraperBatch(TransactionCase):
                 {'name': name} for name in ('Before', 'Failure', 'After')
             ])
             batches = env['ai.web.scraper.batch'].create([
-                {'state': 'done', 'callback_model': 'ai.web.page', 'uuid': str(partner.id)}
+                {'state': 'done', 'callback_model': 'ai.web.page', 'url_payloads': [{'url': str(partner.id)}]}
                 for partner in partners
             ])
             visited = []
 
             def callback(pages, batch):
                 visited.append(batch.id)
-                partner = pages.env['res.partner'].browse(int(batch.uuid))
+                partner = pages.env['res.partner'].browse(int(batch.url_payloads[0]['url']))
                 partner.name = 'Processed'
                 partner.flush_recordset(['name'])
                 if batch == batches[1]:
@@ -43,25 +43,6 @@ class TestAIWebScraperBatch(TransactionCase):
             cr.rollback()
             self.assertEqual(batches.exists(), batches[1])
             self.assertEqual(partners.mapped('name'), ['Processed', 'Failure', 'Processed'])
-
-    @mute_logger('odoo.addons.ai.models.ai_web_scraper_batch')
-    def test_dispatch_preserves_timeout_when_first_callback_fails(self):
-        with self.registry_test_mode(), self.registry.cursor() as cr:
-            env = self.env(cr=cr)
-            batch = env['ai.web.scraper.batch'].create({
-                'state': 'submitted',
-                'callback_model': 'ai.web.page',
-                'timeout_at': fields.Datetime.now() - timedelta(seconds=1),
-            })
-            with (
-                patch.object(self.registry['ai.web.scraper.batch'], '_poll'),
-                patch.object(self.registry['ai.web.page'], '_web_scraper_result_ready', side_effect=ValueError('Failed')),
-            ):
-                env['ai.web.scraper.batch']._cron_run_web_scraper()
-
-            self.assertTrue(batch.exists())
-            self.assertEqual(batch.state, 'failed')
-            self.assertEqual(batch.error, 'Web scraping did not finish before the timeout.')
 
     @mute_logger('odoo.addons.ai.models.ai_web_scraper_batch')
     def test_dispatch_rolls_back_when_flush_fails(self):
@@ -125,3 +106,36 @@ class TestAIWebScraperBatch(TransactionCase):
 
             callback.assert_called_once()
             self.assertEqual(batches.exists(), batches)
+
+    @mute_logger('odoo.addons.ai.models.ai_web_scraper_batch')
+    def test_process_records_text_and_failure_per_url(self):
+        batch = self.env['ai.web.scraper.batch'].create({
+            'callback_model': 'ai.web.page',
+            'url_payloads': [
+                {'url': 'https://example.com/ok', 'check_robots_txt': True},
+                {'url': 'https://example.com/blocked', 'check_robots_txt': False},
+            ],
+        })
+
+        def fetch(url, check_robots_txt):
+            if url.endswith('blocked'):
+                raise WebFetchError('blocked_url')
+            self.assertTrue(check_robots_txt)
+            return 'Some text'
+
+        with patch('odoo.addons.ai.models.ai_web_scraper_batch.fetch_page_text', side_effect=fetch):
+            batch._process()
+
+        self.assertEqual(batch.state, 'done')
+        self.assertEqual(batch.result['pages']['https://example.com/ok']['payload'], '{"text": "Some text"}')
+        self.assertEqual(batch.result['pages']['https://example.com/blocked'], {'failed': True, 'reason': 'blocked_url'})
+
+    @mute_logger('odoo.addons.ai.models.ai_web_scraper_batch')
+    def test_process_turns_unexpected_errors_into_fetch_failures(self):
+        batch = self.env['ai.web.scraper.batch'].create({
+            'callback_model': 'ai.web.page',
+            'url_payloads': [{'url': 'https://example.com/crash', 'check_robots_txt': True}],
+        })
+        with patch('odoo.addons.ai.models.ai_web_scraper_batch.fetch_page_text', side_effect=RuntimeError('boom')):
+            batch._process()
+        self.assertEqual(batch.result['pages']['https://example.com/crash'], {'failed': True, 'reason': 'fetch_failed'})

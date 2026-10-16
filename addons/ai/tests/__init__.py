@@ -9,7 +9,7 @@ from . import test_ai_message_parts
 from . import test_ai_methods
 from . import test_ai_open_menu_graph_tour
 from . import test_ai_session
-from . import test_ai_url_scraper_controller
+from . import test_ai_web_fetch
 from . import test_ai_web_page
 from . import test_ai_web_scraper_batch
 from . import test_mail_call_artifact_ai

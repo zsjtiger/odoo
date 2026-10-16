@@ -7,7 +7,7 @@ from odoo.addons.ai.utils.ai_utils import make_records_update_preview
 from odoo.tools.mail import html_to_inner_content
 from odoo.tools.misc import format_datetime
 from odoo.tests import users
-from odoo.sql_db import _logger as sql_logger
+from odoo.orm.database.sql_db.cursor import _logger as sql_logger
 
 
 class TestAiToolUpdateRecords(TestAICallbackCommon):

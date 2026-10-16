@@ -4,11 +4,10 @@
     'category': 'Hidden',
     'summary': """Base module for AI features""",
     'description': """AI-related features are accessible with limited configurability.""",
-    'depends': ['mail', 'iap'],
+    'depends': ['mail'],
     'data': [
         'data/ir_config_parameter_data.xml',
         'data/ir_actions_server_data.xml',
-        'data/iap_service_data.xml',
         'data/ai_skill_data.xml',
         'views/ir_actions_server_views.xml',
         'views/mail_scheduled_message_views.xml',
@@ -77,5 +76,4 @@
     'pre_init_hook': "_pre_init_ai",
     'author': 'Odoo S.A.',
     'license': 'OEEL-1',
-    'iap_paid_service': True,
 }
