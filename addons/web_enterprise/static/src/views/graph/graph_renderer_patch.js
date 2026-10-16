@@ -4,7 +4,7 @@ import {
     darkenColor,
     getCustomColor,
     lightenColor,
-} from "@web/core/utils/colors";
+} from "@web/core/components/colors/colors";
 import { cookie } from "@web/core/services/browser/cookie";
 import { sortBy } from "@web/core/utils/arrays";
 
