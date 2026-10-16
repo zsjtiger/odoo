@@ -4,6 +4,7 @@ import { animationFrame } from "@odoo/hoot-mock";
 import { mountWithCleanup } from "@web/../tests/_framework/component_test_helpers";
 import { getFieldWidget } from "@mobile_web/fields/field_widget";
 import { DashBoardBarWidget } from "@reporting/widget/dashboard_bar/dashboard_bar";
+import { DashBoardCommonWidget } from "@reporting/widget/common/dashboard_widget";
 import { fieldProps, recordOf } from "@mobile_web/../tests/helpers/field_props";
 
 describe.current.tags("mobile");
@@ -51,4 +52,12 @@ test("clicking a chart opens the list of the records behind the clicked value", 
     expect(actions[0].res_model).toBe("reporting.demo");
     expect(actions[0].views).toEqual([[false, "list"]]);
     expect(actions[0].domain).toEqual([["month", "=", "2"]]);
+});
+
+test("the gallery chart names resolve to the mobile chart widgets", () => {
+    for (const name of ["board_dashboard_polar_radial", "board_dashboard_bar_axis_break"]) {
+        const widget = getFieldWidget({ widget: name }, { type: "text" });
+        expect(widget).not.toBe(undefined);
+        expect(widget.prototype instanceof DashBoardCommonWidget).toBe(true);
+    }
 });
