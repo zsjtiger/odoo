@@ -32,6 +32,7 @@ import { ShareTargetItem } from "@web/webclient/share_target/share_target_item";
 import { shareTargetService } from "@web/webclient/share_target/share_target_service";
 import { HomeMenu } from "@web_enterprise/webclient/home_menu/home_menu";
 import { WebClientEnterprise } from "@web_enterprise/webclient/webclient";
+import { mockExpirationParams } from "./expiration_helpers";
 
 /**
  * @param {Iterable<{
@@ -118,12 +119,11 @@ test("Display Expiration Panel (no module installed)", async () => {
     mockDate("2019-10-09T00:00:00");
 
     patchWithCleanup(session, {
-        expiration_date: "2019-11-01 12:00:00",
-        expiration_reason: "",
         isMailInstalled: false,
         warning: "admin",
     });
 
+    mockExpirationParams({ date: "2019-11-01 12:00:00", reason: "" });
     await mountWithCleanup(HomeMenu, {
         props: getDefaultHomeMenuProps(),
     });

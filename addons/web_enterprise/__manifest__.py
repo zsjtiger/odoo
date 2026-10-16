@@ -104,6 +104,7 @@ This module modifies the web addon to provide Enterprise design and responsivene
         # Unit test files
         'web.assets_unit_tests': [
             'web_enterprise/static/tests/**/*.test.js',
+            'web_enterprise/static/tests/webclient/expiration_helpers.js',
             'web_enterprise/static/src/mobile_app/**/*',
         ],
     },

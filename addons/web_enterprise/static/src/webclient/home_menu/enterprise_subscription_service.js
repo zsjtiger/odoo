@@ -22,13 +22,9 @@ export class SubscriptionManager {
         this.env = env;
         this.orm = orm;
         this.notification = notification;
-        if (session.expiration_date) {
-            this.expirationDate = deserializeDateTime(session.expiration_date);
-        } else {
-            // If no date found, assume 1 month and hope for the best
-            this.expirationDate = DateTime.utc().plus({ days: 30 });
-        }
-        this.expirationReason = session.expiration_reason;
+        // Until loadExpiration() has run, assume 1 month and hope for the best
+        this.expirationDate = DateTime.utc().plus({ days: 30 });
+        this.expirationReason = null;
         // Hack: we need to know if there is at least one app installed (except from App and
         // Settings). We use mail to do that, as it is a dependency of almost every addon. To
         // determine whether mail is installed or not, we check for the presence of the key
@@ -42,6 +38,20 @@ export class SubscriptionManager {
         if (this.sysadmin.message) {
             this.sysadmin.message = markup(this.sysadmin.message);
         }
+    }
+
+    /**
+     * Reads the expiration date and reason stored on the database.
+     */
+    async loadExpiration() {
+        const [expirationDate, expirationReason] = await Promise.all([
+            this.orm.call("ir.config_parameter", "get_str", ["database.expiration_date"]),
+            this.orm.call("ir.config_parameter", "get_str", ["database.expiration_reason"]),
+        ]);
+        if (expirationDate) {
+            this.expirationDate = deserializeDateTime(expirationDate);
+        }
+        this.expirationReason = expirationReason || null;
     }
 
     get formattedExpirationDate() {
@@ -187,11 +197,16 @@ class ExpiredSubscriptionBlockUI extends Component {
 export const enterpriseSubscriptionService = {
     name: "enterprise_subscription",
     dependencies: ["orm", "notification"],
-    start(env, { orm, notification }) {
+    async start(env, { orm, notification }) {
         registry
             .category("main_components")
             .add("expired_subscription_block_ui", { Component: ExpiredSubscriptionBlockUI });
-        return proxy(new SubscriptionManager(env, { orm, notification }));
+        const manager = new SubscriptionManager(env, { orm, notification });
+        if (session.warning) {
+            // Only admins and internal users are warned about the subscription
+            await manager.loadExpiration();
+        }
+        return proxy(manager);
     },
 };
 

@@ -20,16 +20,16 @@ import {
 import { location } from "@web/core/services/browser/browser";
 import { session } from "@web/boot/session";
 import { WebClientEnterprise } from "@web_enterprise/webclient/webclient";
+import { mockExpirationParams } from "./expiration_helpers";
 
 test("Expiration Panel one app installed", async () => {
     mockDate("2019-10-10T12:00:00");
 
     patchWithCleanup(session, {
-        expiration_date: "2019-11-09 12:00:00",
-        expiration_reason: "",
         storeData: true, // used by subscription service to know whether mail is installed
         warning: "admin",
     });
+    mockExpirationParams({ date: "2019-11-09 12:00:00", reason: "" });
     await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
     await getService("action").doAction("menu");
@@ -51,12 +51,11 @@ test("Expiration Panel one app installed, buy subscription", async () => {
 
     mockDate("2019-10-10T12:00:00");
     patchWithCleanup(session, {
-        expiration_date: "2019-10-24 12:00:00",
-        expiration_reason: "demo",
         storeData: true, // used by subscription service to know whether mail is installed
         warning: "admin",
     });
     onRpc("res.users", "search_count", () => 7);
+    mockExpirationParams({ date: "2019-10-24 12:00:00", reason: "demo" });
     await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
     await runAllTimers();
@@ -85,15 +84,13 @@ test("Expiration Panel one app installed, buy subscription", async () => {
 });
 
 test("Expiration Panel one app installed, try several times to register subscription", async () => {
-    expect.assertions(33);
+    expect.assertions(34);
 
     mockDate("2019-10-10T12:00:00");
 
     let callToGetParamCount = 0;
 
     patchWithCleanup(session, {
-        expiration_date: "2019-10-15 12:00:00",
-        expiration_reason: "trial",
         storeData: true, // used by subscription service to know whether mail is installed
         warning: "admin",
     });
@@ -104,6 +101,9 @@ test("Expiration Panel one app installed, try several times to register subscrip
         },
     });
     onRpc("get_str", ({ args }) => {
+        if (args[0] === "database.expiration_reason") {
+            return "trial";
+        }
         expect.step("get_str");
         if (args[0] === "database.already_linked_subscription_url") {
             return false;
@@ -113,7 +113,7 @@ test("Expiration Panel one app installed, try several times to register subscrip
         }
         expect(args[0]).toBe("database.expiration_date");
         callToGetParamCount++;
-        if (callToGetParamCount <= 3) {
+        if (callToGetParamCount <= 4) {
             return "2019-10-15 12:00:00";
         } else {
             return "2019-11-15 12:00:00";
@@ -122,7 +122,7 @@ test("Expiration Panel one app installed, try several times to register subscrip
     onRpc("set_str", ({ args }) => {
         expect.step("set_str");
         expect(args[0]).toBe("database.enterprise_code");
-        if (callToGetParamCount === 1) {
+        if (callToGetParamCount === 2) {
             expect(args[1]).toBe("ABCDEF");
         } else {
             expect(args[1]).toBe("ABC");
@@ -218,6 +218,7 @@ test("Expiration Panel one app installed, try several times to register subscrip
     });
 
     expect.verifySteps([
+        "get_str", // read on service start
         // second try to submit
         "get_str",
         "set_str",
@@ -248,8 +249,6 @@ test("Expiration Panel one app installed, subscription already linked", async ()
     let getExpirationDateCount = 0;
 
     patchWithCleanup(session, {
-        expiration_date: "2019-10-15 12:00:00",
-        expiration_reason: "trial",
         storeData: true, // used by subscription service to know whether mail is installed
         warning: "admin",
     });
@@ -258,10 +257,13 @@ test("Expiration Panel one app installed, subscription already linked", async ()
         reason: "By design",
     }));
     onRpc("get_str", ({ args }) => {
+        if (args[0] === "database.expiration_reason") {
+            return "trial";
+        }
         expect.step("get_str");
         if (args[0] === "database.expiration_date") {
             getExpirationDateCount++;
-            if (getExpirationDateCount === 1) {
+            if (getExpirationDateCount <= 2) {
                 return "2019-10-15 12:00:00";
             } else {
                 return "2019-11-17 12:00:00";
@@ -314,6 +316,7 @@ test("Expiration Panel one app installed, subscription already linked", async ()
     );
 
     expect.verifySteps([
+        "get_str", // read on service start
         "get_str",
         "set_str",
         "update_notification",
@@ -332,8 +335,6 @@ test("One app installed, database expired", async () => {
     let callToGetParamCount = 0;
 
     patchWithCleanup(session, {
-        expiration_date: "2019-10-08 12:00:00",
-        expiration_reason: "trial",
         storeData: true, // used by subscription service to know whether mail is installed
         warning: "admin",
     });
@@ -342,11 +343,17 @@ test("One app installed, database expired", async () => {
         reason: "By design",
     }));
     onRpc("get_str", ({ args }) => {
+        if (args[0] === "database.expiration_reason") {
+            return "trial";
+        }
         if (args[0] === "database.already_linked_subscription_url") {
             return false;
         }
         callToGetParamCount++;
         if (callToGetParamCount === 1) {
+            return "2019-10-08 12:00:00";
+        }
+        if (callToGetParamCount === 2) {
             return "2019-10-09 12:00:00";
         } else {
             return "2019-11-09 12:00:00";
@@ -392,8 +399,6 @@ test("One app installed, renew", async () => {
     mockDate("2019-10-10T12:00:00");
 
     patchWithCleanup(session, {
-        expiration_date: "2019-10-20 12:00:00",
-        expiration_reason: "renewal",
         storeData: true, // used by subscription service to know whether mail is installed
         warning: "admin",
     });
@@ -402,6 +407,7 @@ test("One app installed, renew", async () => {
         expect(args[0]).toBe("database.enterprise_code");
         return "ABC";
     });
+    mockExpirationParams({ date: "2019-10-20 12:00:00", reason: "renewal" });
     await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
 
@@ -429,20 +435,17 @@ test("One app installed, renew", async () => {
 });
 
 test("One app installed, check status and get success", async () => {
-    expect.assertions(4);
+    expect.assertions(3);
 
     mockDate("2019-10-10T12:00:00");
 
     patchWithCleanup(session, {
-        expiration_date: "2019-10-20 12:00:00",
-        expiration_reason: "renewal",
         storeData: true, // used by subscription service to know whether mail is installed
         warning: "admin",
     });
-    onRpc("get_str", ({ args }) => {
-        expect.step("get_str");
-        expect(args[0]).toBe("database.expiration_date");
-        return "2019-10-24 12:00:00";
+    mockExpirationParams({
+        date: ["2019-10-20 12:00:00", "2019-10-24 12:00:00"],
+        reason: "renewal",
     });
     onRpc("update_notification", () => {
         expect.step("update_notification");
@@ -460,7 +463,7 @@ test("One app installed, check status and get success", async () => {
         "Your subscription was updated and is valid until October 24, 2019."
     );
 
-    expect.verifySteps(["update_notification", "get_str"]);
+    expect.verifySteps(["update_notification"]);
 });
 
 // Why would we want to reload the page when we check the status and it hasn't changed?
@@ -499,8 +502,6 @@ test("One app installed, upgrade database", async () => {
     mockDate("2019-10-10T12:00:00");
 
     patchWithCleanup(session, {
-        expiration_date: "2019-10-20 12:00:00",
-        expiration_reason: "upsell",
         storeData: true, // used by subscription service to know whether mail is installed
         warning: "admin",
     });
@@ -514,6 +515,7 @@ test("One app installed, upgrade database", async () => {
         return 13;
     });
     onRpc("update_notification", () => true);
+    mockExpirationParams({ date: "2019-10-20 12:00:00", reason: "upsell" });
     await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
     await runAllTimers();
@@ -528,7 +530,7 @@ test("One app installed, upgrade database", async () => {
     await click("a.oe_instance_upsell");
     await animationFrame();
 
-    expect.verifySteps(["get_str", "search_count"]);
+    expect.verifySteps(["search_count", "get_str"]);
     expect(location.href).toBe(
         "https://www.odoo.com/odoo-enterprise/upsell?num_users=13&contract=ABC"
     );
@@ -540,11 +542,10 @@ test("One app installed, message for non admin user", async () => {
     mockDate("2019-10-10T12:00:00");
 
     patchWithCleanup(session, {
-        expiration_date: "2019-11-08 12:00:00",
-        expiration_reason: "",
         storeData: true, // used by subscription service to know whether mail is installed
         warning: "user",
     });
+    mockExpirationParams({ date: "2019-11-08 12:00:00", reason: "" });
     await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
 
@@ -563,8 +564,6 @@ test("One app installed, navigation to renewal page", async () => {
     mockDate("2019-11-10T00:00:00");
 
     patchWithCleanup(session, {
-        expiration_date: "2019-10-20 12:00:00",
-        expiration_reason: "renewal",
         storeData: true, // used by subscription service to know whether mail is installed
         warning: "admin",
     });
@@ -577,6 +576,7 @@ test("One app installed, navigation to renewal page", async () => {
         expect.step("update_notification");
         return true;
     });
+    mockExpirationParams({ date: "2019-10-20 12:00:00", reason: "renewal" });
     await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
     await runAllTimers();
@@ -608,14 +608,16 @@ test("One app installed, different locale (arabic)", async () => {
     mockDate("2019-25-09T12:00:00");
 
     patchWithCleanup(session, {
-        expiration_date: "2019-10-20 12:00:00",
-        expiration_reason: "renewal",
         storeData: true, // used by subscription service to know whether mail is installed
         warning: "admin",
     });
     serverState.lang = "ar-001";
     onRpc("get_str", () => "2019-11-09 12:00:00");
     onRpc("update_notification", () => true);
+    mockExpirationParams({
+        date: ["2019-10-20 12:00:00", "2019-11-09 12:00:00"],
+        reason: "renewal",
+    });
     await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
 
