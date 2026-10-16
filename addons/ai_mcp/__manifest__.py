@@ -23,7 +23,6 @@
         'data/ir_config_parameter_data.xml',
         'views/ir_actions_server_views.xml',
         'views/res_users_views.xml',
-        'views/res_config_settings_views.xml',
         'views/oauth_client_views.xml',
         'views/oauth_consent_templates.xml',
         'data/ir_actions_server_data.xml',
