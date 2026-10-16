@@ -1331,6 +1331,7 @@ msgstr ""
 msgid "unsuspend"
 msgstr ""
 
+#. module: snow_workflow
 #: views/workflow_definition_views.xml:85
 msgid "Search Definition"
 msgstr ""

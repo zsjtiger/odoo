@@ -1331,6 +1331,7 @@ msgstr "该记录没有配置审批流程。"
 msgid "unsuspend"
 msgstr "恢复"
 
+#. module: snow_workflow
 #: views/workflow_definition_views.xml:85
 msgid "Search Definition"
 msgstr "搜索流程定义"
