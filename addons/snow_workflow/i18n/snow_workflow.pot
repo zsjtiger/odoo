@@ -1192,3 +1192,111 @@ msgstr ""
 #. module: snow_workflow
 msgid "These elements are not supported by the process designer: %s"
 msgstr ""
+
+#. module: snow_workflow
+msgid "A process or subprocess needs at least one end event."
+msgstr ""
+
+#. module: snow_workflow
+msgid "A process or subprocess needs exactly one start event."
+msgstr ""
+
+#. module: snow_workflow
+msgid "Add a parameter"
+msgstr ""
+
+#. module: snow_workflow
+msgid "Choose an operation for “%s”."
+msgstr ""
+
+#. module: snow_workflow
+msgid "Condition"
+msgstr ""
+
+#. module: snow_workflow
+msgid "Default flow"
+msgstr ""
+
+#. module: snow_workflow
+msgid "Drag a node onto the canvas. Drag from the dot on the right of a node to another node to connect them. Double-click a subprocess to edit it."
+msgstr ""
+
+#. module: snow_workflow
+msgid "Evaluate an expression"
+msgstr ""
+
+#. module: snow_workflow
+msgid "Open subprocess"
+msgstr ""
+
+#. module: snow_workflow
+msgid "Operation"
+msgstr ""
+
+#. module: snow_workflow
+msgid "Process"
+msgstr ""
+
+#. module: snow_workflow
+msgid "Result variable"
+msgstr ""
+
+#. module: snow_workflow
+msgid "Service task"
+msgstr ""
+
+#. module: snow_workflow
+msgid "Subprocess"
+msgstr ""
+
+#. module: snow_workflow
+msgid "The condition “%(condition)s” is not a valid expression: %(error)s"
+msgstr ""
+
+#. module: snow_workflow
+msgid "The default flow of “%s” is not one of its outgoing flows."
+msgstr ""
+
+#. module: snow_workflow
+msgid "The expression “%(expr)s” is not valid: %(error)s"
+msgstr ""
+
+#. module: snow_workflow
+msgid "The flow of “%s” needs a condition."
+msgstr ""
+
+#. module: snow_workflow
+msgid "The operation of “%s” needs a value."
+msgstr ""
+
+#. module: snow_workflow
+msgid "The parameter “%s” of “%s” needs an expression."
+msgstr ""
+
+#. module: snow_workflow
+msgid "The result variable of “%s” must be a valid name."
+msgstr ""
+
+#. module: snow_workflow
+msgid "The service task “%s” needs an operation."
+msgstr ""
+
+#. module: snow_workflow
+msgid "Unknown service operation “%(operation)s” of “%(task)s”."
+msgstr ""
+
+#. module: snow_workflow
+msgid "Up"
+msgstr ""
+
+#. module: snow_workflow
+msgid "Write fields to the business record"
+msgstr ""
+
+#. module: snow_workflow
+msgid "default"
+msgstr ""
+
+#. module: snow_workflow
+msgid "“%s” needs a default flow."
+msgstr ""

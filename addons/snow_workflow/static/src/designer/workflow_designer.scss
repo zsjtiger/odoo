@@ -209,3 +209,56 @@
         font-size: 13px;
     }
 }
+
+// 新增元素: 面包屑, 排他网关的分支标签与默认分支, 服务任务的参数, 子流程
+
+.o_wf_breadcrumb {
+    color: #5a6a7a;
+    font-size: 13px;
+}
+
+.o_wf_flow.is_default {
+    stroke-dasharray: 2 4;
+}
+
+.o_wf_flow_label {
+    position: absolute;
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: #fff;
+    border: 1px solid #d6dbe1;
+    font-size: 12px;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+.o_wf_node.o_wf_node_service {
+    border-color: #6b5ce7;
+    background: #f5f3ff;
+}
+
+.o_wf_node.o_wf_node_subprocess {
+    background: #f8fafc;
+    border-style: dashed;
+    border-color: #3d6b8e;
+    font-weight: 600;
+}
+
+.o_wf_params {
+    margin-bottom: 10px;
+
+    .o_wf_param {
+        display: grid;
+        grid-template-columns: 1fr 2fr auto;
+        gap: 4px;
+        margin-bottom: 6px;
+    }
+}
+
+.o_wf_check {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 10px;
+    font-size: 13px;
+}

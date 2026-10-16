@@ -11,8 +11,10 @@ from ...bpmn.specs.SubWorkflowTask import CallActivity, TransactionSubprocess
 from ...dmn.parser.BpmnDmnParser import BpmnDmnParser
 from ...dmn.specs.BusinessRuleTask import BusinessRuleTask
 from ...camunda.specs.UserTask import UserTask
+from ...spiff.specs.service_task import ServiceTask as SpiffServiceTask
 from ...camunda.parser.task_spec import (
     CamundaTaskParser,
+    CamundaServiceTaskParser,
     BusinessRuleTaskParser,
     UserTaskParser,
     CallActivityParser,
@@ -48,6 +50,7 @@ class CamundaParser(BpmnDmnParser):
         full_tag('task'): (CamundaTaskParser, NoneTask),
         full_tag('manualTask'): (CamundaTaskParser, ManualTask),
         full_tag('scriptTask'): (ScriptTaskParser, ScriptTask),
+        full_tag('serviceTask'): (CamundaServiceTaskParser, SpiffServiceTask),
         full_tag('subProcess'): (SubWorkflowParser, CallActivity),
         full_tag('callActivity'): (CallActivityParser, CallActivity),
         full_tag('transaction'): (SubWorkflowParser, TransactionSubprocess),

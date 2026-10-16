@@ -1197,3 +1197,111 @@ msgstr "“%s”没有出线。"
 #. module: snow_workflow
 msgid "These elements are not supported by the process designer: %s"
 msgstr "流程设计器暂不支持以下元素：%s"
+
+#. module: snow_workflow
+msgid "A process or subprocess needs at least one end event."
+msgstr "流程或子流程至少需要一个结束事件。"
+
+#. module: snow_workflow
+msgid "A process or subprocess needs exactly one start event."
+msgstr "流程或子流程需要且只能有一个开始事件。"
+
+#. module: snow_workflow
+msgid "Add a parameter"
+msgstr "添加参数"
+
+#. module: snow_workflow
+msgid "Choose an operation for “%s”."
+msgstr "请为“%s”选择操作。"
+
+#. module: snow_workflow
+msgid "Condition"
+msgstr "条件"
+
+#. module: snow_workflow
+msgid "Default flow"
+msgstr "默认分支"
+
+#. module: snow_workflow
+msgid "Drag a node onto the canvas. Drag from the dot on the right of a node to another node to connect them. Double-click a subprocess to edit it."
+msgstr "从左侧拖拽节点到画布上。从节点右侧的圆点拖到另一个节点即可连线。双击子流程可以编辑其内部。"
+
+#. module: snow_workflow
+msgid "Evaluate an expression"
+msgstr "计算表达式"
+
+#. module: snow_workflow
+msgid "Open subprocess"
+msgstr "打开子流程"
+
+#. module: snow_workflow
+msgid "Operation"
+msgstr "操作"
+
+#. module: snow_workflow
+msgid "Process"
+msgstr "流程"
+
+#. module: snow_workflow
+msgid "Result variable"
+msgstr "结果变量"
+
+#. module: snow_workflow
+msgid "Service task"
+msgstr "服务任务"
+
+#. module: snow_workflow
+msgid "Subprocess"
+msgstr "子流程"
+
+#. module: snow_workflow
+msgid "The condition “%(condition)s” is not a valid expression: %(error)s"
+msgstr "条件“%(condition)s”不是有效的表达式：%(error)s"
+
+#. module: snow_workflow
+msgid "The default flow of “%s” is not one of its outgoing flows."
+msgstr "“%s”的默认分支不是它的出线之一。"
+
+#. module: snow_workflow
+msgid "The expression “%(expr)s” is not valid: %(error)s"
+msgstr "表达式“%(expr)s”无效：%(error)s"
+
+#. module: snow_workflow
+msgid "The flow of “%s” needs a condition."
+msgstr "“%s”的分支需要一个条件。"
+
+#. module: snow_workflow
+msgid "The operation of “%s” needs a value."
+msgstr "“%s”的操作需要一个 value 参数。"
+
+#. module: snow_workflow
+msgid "The parameter “%s” of “%s” needs an expression."
+msgstr "参数“%s”需要一个表达式（所在任务：“%s”）。"
+
+#. module: snow_workflow
+msgid "The result variable of “%s” must be a valid name."
+msgstr "“%s”的结果变量必须是有效的名称。"
+
+#. module: snow_workflow
+msgid "The service task “%s” needs an operation."
+msgstr "服务任务“%s”需要一个操作。"
+
+#. module: snow_workflow
+msgid "Unknown service operation “%(operation)s” of “%(task)s”."
+msgstr "“%(task)s”的服务操作“%(operation)s”未知。"
+
+#. module: snow_workflow
+msgid "Up"
+msgstr "上一级"
+
+#. module: snow_workflow
+msgid "Write fields to the business record"
+msgstr "把字段写入业务记录"
+
+#. module: snow_workflow
+msgid "default"
+msgstr "默认"
+
+#. module: snow_workflow
+msgid "“%s” needs a default flow."
+msgstr "“%s”需要一个默认分支。"

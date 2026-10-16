@@ -7,7 +7,9 @@ import {
     APPROVER_TYPES,
     MAIN_PROCESS_ID,
     NODE_TYPES,
+    SERVICE_OPERATIONS,
     defaultApprover,
+    defaultOperator,
     fromBpmnXml,
     newId,
     toBpmnXml,
@@ -16,13 +18,21 @@ import {
 
 const CANVAS_MIN_SIZE = { width: 2000, height: 1200 };
 
-/** 流程设计器: 从左侧拖拽节点到画布, 拖动节点移动, 从节点右侧的端点拖到另一个节点连线 */
+/** 流程设计器: 从左侧拖拽节点到画布, 拖动节点移动, 从节点右侧的端点拖到另一个节点连线.
+ *  双击子流程进入其内部画布. 排他网关的分支可以设置条件与默认分支. */
 export class WorkflowDesigner extends Component {
     static template = xml`
         <t t-name="snow_workflow.WorkflowDesigner">
             <div class="o_wf_designer">
                 <div class="o_wf_designer_toolbar">
                     <span class="o_wf_designer_title"><t t-out="this.state.name"/></span>
+                    <span class="o_wf_breadcrumb" t-if="this.state.path.length">
+                        <t t-out="this.texts.main"/>
+                        <t t-foreach="this.breadcrumb" t-as="crumb" t-key="crumb.id"> / <t t-out="crumb.label"/></t>
+                    </span>
+                    <button t-if="this.state.path.length" type="button" class="btn btn-secondary" t-on-click="this.leaveSubprocess">
+                        <t t-out="this.texts.up"/>
+                    </button>
                     <button type="button" class="btn btn-primary" t-att-disabled="this.state.saving" t-on-click="this.save">
                         <t t-out="this.texts.save"/>
                     </button>
@@ -51,18 +61,21 @@ export class WorkflowDesigner extends Component {
                                     <path d="M 0 0 L 10 5 L 0 10 z" fill="#5a6a7a"/>
                                 </marker>
                             </defs>
-                            <t t-foreach="this.state.flows" t-as="flow" t-key="flow.id">
+                            <t t-foreach="this.scope.flows" t-as="flow" t-key="flow.id">
                                 <path class="o_wf_flow_hit" t-att-d="this.flowPath(flow)" t-on-pointerdown="(ev) => this.selectFlow(ev, flow)"/>
-                                <path t-attf-class="o_wf_flow {{ this.isSelectedFlow(flow) ? 'is_selected' : '' }}"
+                                <path t-attf-class="o_wf_flow {{ this.isSelectedFlow(flow) ? 'is_selected' : '' }} {{ this.isDefault(flow) ? 'is_default' : '' }}"
                                       t-att-d="this.flowPath(flow)" marker-end="url(#o_wf_arrow)"/>
                             </t>
-                            <path t-if="this.state.tmpLine" class="o_wf_flow o_wf_flow_temp"
-                                  t-att-d="this.tmpPath()"/>
+                            <path t-if="this.state.tmpLine" class="o_wf_flow o_wf_flow_temp" t-att-d="this.tmpPath()"/>
                         </svg>
-                        <t t-foreach="this.state.nodes" t-as="node" t-key="node.id">
+                        <t t-foreach="this.flowLabels" t-as="label" t-key="label.id">
+                            <div class="o_wf_flow_label" t-att-style="label.style"><t t-out="label.text"/></div>
+                        </t>
+                        <t t-foreach="this.scope.nodes" t-as="node" t-key="node.id">
                             <div t-attf-class="o_wf_node o_wf_node_{{ node.type }} {{ this.isSelectedNode(node) ? 'is_selected' : '' }}"
                                  t-att-data-node-id="node.id" t-att-style="this.nodeStyle(node)"
-                                 t-on-pointerdown="(ev) => this.onNodePointerDown(ev, node)">
+                                 t-on-pointerdown="(ev) => this.onNodePointerDown(ev, node)"
+                                 t-on-dblclick="(ev) => this.onNodeDoubleClick(ev, node)">
                                 <span class="o_wf_node_label"><t t-out="this.labelOf(node)"/></span>
                                 <span t-if="node.type !== 'end'" class="o_wf_port"
                                       t-on-pointerdown="(ev) => this.onPortPointerDown(ev, node)"/>
@@ -106,12 +119,60 @@ export class WorkflowDesigner extends Component {
                                     </label>
                                 </t>
                             </t>
+                            <t t-if="this.selectedNode.type === 'service'">
+                                <label class="o_wf_field">
+                                    <span><t t-out="this.texts.operation"/></span>
+                                    <select class="form-select" t-on-change="(ev) => this.setOperation(this.selectedNode, ev.target.value)">
+                                        <option t-foreach="this.operationNames" t-as="op" t-key="op"
+                                                t-att-value="op" t-att-selected="this.selectedNode.operator.name === op">
+                                            <t t-out="this.operationLabels[op]"/>
+                                        </option>
+                                    </select>
+                                </label>
+                                <div class="o_wf_params">
+                                    <t t-foreach="this.selectedNode.operator.parameters" t-as="param" t-key="param_index">
+                                        <div class="o_wf_param">
+                                            <input type="text" class="form-control" t-att-value="param.name" placeholder="name"
+                                                   t-on-change="(ev) => this.setParamName(this.selectedNode, param_index, ev.target.value)"/>
+                                            <input type="text" class="form-control" t-att-value="param.expression" placeholder="expression"
+                                                   t-on-change="(ev) => this.setParamExpression(this.selectedNode, param_index, ev.target.value)"/>
+                                            <button type="button" class="btn btn-sm btn-outline-danger" t-on-click="() => this.removeParam(this.selectedNode, param_index)">×</button>
+                                        </div>
+                                    </t>
+                                    <button type="button" class="btn btn-sm btn-secondary" t-on-click="() => this.addParam(this.selectedNode)">
+                                        <t t-out="this.texts.addParam"/>
+                                    </button>
+                                </div>
+                                <label class="o_wf_field">
+                                    <span><t t-out="this.texts.resultVariable"/></span>
+                                    <input type="text" class="form-control" t-att-value="this.selectedNode.operator.resultVariable"
+                                           t-on-change="(ev) => this.setResultVariable(this.selectedNode, ev.target.value)"/>
+                                </label>
+                            </t>
+                            <t t-if="this.selectedNode.type === 'subprocess'">
+                                <button type="button" class="btn btn-secondary" t-on-click="() => this.enterSubprocess(this.selectedNode)">
+                                    <t t-out="this.texts.open"/>
+                                </button>
+                            </t>
                             <button type="button" class="btn btn-outline-danger" t-on-click="this.deleteSelected">
                                 <t t-out="this.texts.delete"/>
                             </button>
                         </t>
                         <t t-elif="this.selectedFlow">
                             <div class="o_wf_properties_title"><t t-out="this.texts.flow"/></div>
+                            <t t-if="this.gatewayOfSelectedFlow">
+                                <label class="o_wf_check">
+                                    <input type="checkbox" t-att-checked="this.isDefault(this.selectedFlow)"
+                                           t-on-change="(ev) => this.setDefault(this.selectedFlow, ev.target.checked)"/>
+                                    <span><t t-out="this.texts.defaultFlow"/></span>
+                                </label>
+                                <label t-if="!this.isDefault(this.selectedFlow)" class="o_wf_field">
+                                    <span><t t-out="this.texts.condition"/></span>
+                                    <input type="text" class="form-control" t-att-value="this.selectedFlow.condition"
+                                           placeholder="amount &gt; 100"
+                                           t-on-change="(ev) => this.setCondition(this.selectedFlow, ev.target.value)"/>
+                                </label>
+                            </t>
                             <button type="button" class="btn btn-outline-danger" t-on-click="this.deleteSelected">
                                 <t t-out="this.texts.delete"/>
                             </button>
@@ -131,15 +192,23 @@ export class WorkflowDesigner extends Component {
     canvasRef = signal.ref();
 
     texts = {
+        main: _t("Process"),
+        up: _t("Up"),
         save: _t("Save"),
         back: _t("Back"),
         palette: _t("Nodes"),
-        hint: _t("Drag a node onto the canvas. Drag from the dot on the right of a node to another node to connect them."),
+        hint: _t("Drag a node onto the canvas. Drag from the dot on the right of a node to another node to connect them. Double-click a subprocess to edit it."),
         nodeName: _t("Name"),
         approver: _t("Approver"),
         scriptKey: _t("Script key"),
+        operation: _t("Operation"),
+        addParam: _t("Add a parameter"),
+        resultVariable: _t("Result variable"),
+        open: _t("Open subprocess"),
         delete: _t("Delete"),
         flow: _t("Sequence flow"),
+        defaultFlow: _t("Default flow"),
+        condition: _t("Condition"),
         noSelection: _t("Select a node or a flow to edit it."),
     };
     approverTypes = APPROVER_TYPES;
@@ -148,14 +217,17 @@ export class WorkflowDesigner extends Component {
         users: _t("Specific users"),
         script: _t("Script"),
     };
+    operationNames = Object.keys(SERVICE_OPERATIONS);
+    operationLabels = Object.fromEntries(
+        Object.entries(SERVICE_OPERATIONS).map(([name, info]) => [name, info.label])
+    );
     palette = Object.entries(NODE_TYPES).map(([type, info]) => ({ type, label: info.label }));
     canvasSize = { ...CANVAS_MIN_SIZE };
 
     state = proxy({
         name: "",
-        processId: "",
-        nodes: [],
-        flows: [],
+        model: { processId: MAIN_PROCESS_ID, nodes: [], flows: [] },
+        path: [],
         selected: null,
         users: [],
         saving: false,
@@ -165,6 +237,7 @@ export class WorkflowDesigner extends Component {
     setup() {
         this.connectFrom = null;
         this.dragging = null;
+        this.unsupported = [];
         onWillStart(() => this.load());
         const onKeyDown = (ev) => this.onKeyDown(ev);
         window.addEventListener("keydown", onKeyDown);
@@ -180,45 +253,92 @@ export class WorkflowDesigner extends Component {
 
     async load() {
         const [definition] = await this.orm.read("snow.workflow.definition", [this.definitionId], [
-            "name", "process_id", "content",
+            "name", "content",
         ]);
         this.state.name = definition.name;
-        let model;
         if (definition.content) {
-            model = fromBpmnXml(definition.content);
+            const model = fromBpmnXml(definition.content);
+            this.unsupported = model.unsupported;
+            this.state.model = { processId: model.processId, nodes: model.nodes, flows: model.flows };
         } else {
-            model = {
-                processId: MAIN_PROCESS_ID,
-                nodes: [{ id: newId("n"), type: "start", name: "", x: 60, y: 120, approver: defaultApprover() }],
-                flows: [],
-            };
+            this.state.model.nodes = [{ id: newId("n"), type: "start", name: "", x: 60, y: 120, approver: defaultApprover() }];
         }
-        this.state.processId = model.processId;
-        this.unsupported = model.unsupported || [];
         if (this.unsupported.length) {
             this.notification.add(
                 this.unsupported.map((name) => _t("The element “%s” is not supported by the designer yet.", name)).join("\n"),
                 { type: "warning", sticky: true }
             );
         }
-        this.state.nodes = model.nodes;
-        this.state.flows = model.flows;
         this.state.users = await this.orm.searchRead("res.users", [["active", "=", true]], ["name"], {
             limit: 500,
             order: "name",
         });
     }
 
+    // ----- 作用域 (流程 / 子流程) -----
+
+    /** 当前正在编辑的作用域 {nodes, flows} */
+    get scope() {
+        let scope = this.state.model;
+        for (const id of this.state.path) {
+            scope = scope.nodes.find((n) => n.id === id).children;
+        }
+        return scope;
+    }
+
+    get breadcrumb() {
+        const crumbs = [];
+        let scope = this.state.model;
+        for (const id of this.state.path) {
+            const node = scope.nodes.find((n) => n.id === id);
+            crumbs.push({ id, label: node.name || NODE_TYPES.subprocess.label });
+            scope = node.children;
+        }
+        return crumbs;
+    }
+
+    enterSubprocess(node) {
+        this.state.path.push(node.id);
+        this.state.selected = null;
+    }
+
+    leaveSubprocess() {
+        this.state.path.pop();
+        this.state.selected = null;
+    }
+
+    onNodeDoubleClick(ev, node) {
+        if (node.type === "subprocess") {
+            ev.stopPropagation();
+            this.enterSubprocess(node);
+        }
+    }
+
     // ----- 渲染辅助 -----
 
     get selectedNode() {
         const selected = this.state.selected;
-        return selected?.kind === "node" ? this.state.nodes.find((n) => n.id === selected.id) : null;
+        return selected?.kind === "node" ? this.scope.nodes.find((n) => n.id === selected.id) : null;
     }
 
     get selectedFlow() {
         const selected = this.state.selected;
-        return selected?.kind === "flow" ? this.state.flows.find((f) => f.id === selected.id) : null;
+        return selected?.kind === "flow" ? this.scope.flows.find((f) => f.id === selected.id) : null;
+    }
+
+    get gatewayOfSelectedFlow() {
+        const flow = this.selectedFlow;
+        return flow && this.scope.nodes.find((n) => n.id === flow.source)?.type === "exclusive";
+    }
+
+    get flowLabels() {
+        return this.scope.flows
+            .filter((f) => this.scope.nodes.find((n) => n.id === f.source)?.type === "exclusive")
+            .map((f) => {
+                const [x1, y1] = this.flowMidpoint(f);
+                const text = this.isDefault(f) ? _t("default") : f.condition || "?";
+                return { id: f.id, text, style: `left:${x1}px;top:${y1 - 22}px;` };
+            });
     }
 
     isSelectedNode(node) {
@@ -227,6 +347,11 @@ export class WorkflowDesigner extends Component {
 
     isSelectedFlow(flow) {
         return this.state.selected?.kind === "flow" && this.state.selected.id === flow.id;
+    }
+
+    isDefault(flow) {
+        const source = this.scope.nodes.find((n) => n.id === flow.source);
+        return source?.type === "exclusive" && source.defaultFlow === flow.id;
     }
 
     isApproval(node) {
@@ -257,14 +382,23 @@ export class WorkflowDesigner extends Component {
         return [node.x, node.y + h / 2];
     }
 
+    flowEnds(flow) {
+        const source = this.scope.nodes.find((n) => n.id === flow.source);
+        const target = this.scope.nodes.find((n) => n.id === flow.target);
+        return source && target ? [this.anchorRight(source), this.anchorLeft(target)] : null;
+    }
+
+    flowMidpoint(flow) {
+        const ends = this.flowEnds(flow);
+        return ends ? [(ends[0][0] + ends[1][0]) / 2, (ends[0][1] + ends[1][1]) / 2] : [0, 0];
+    }
+
     flowPath(flow) {
-        const source = this.state.nodes.find((n) => n.id === flow.source);
-        const target = this.state.nodes.find((n) => n.id === flow.target);
-        if (!source || !target) {
+        const ends = this.flowEnds(flow);
+        if (!ends) {
             return "";
         }
-        const [x1, y1] = this.anchorRight(source);
-        const [x2, y2] = this.anchorLeft(target);
+        const [[x1, y1], [x2, y2]] = ends;
         return `M ${x1} ${y1} L ${x2} ${y2}`;
     }
 
@@ -310,7 +444,15 @@ export class WorkflowDesigner extends Component {
             y: Math.max(0, Math.round(y)),
             approver: defaultApprover(),
         };
-        this.state.nodes.push(node);
+        if (type === "service") {
+            node.operator = defaultOperator();
+        }
+        if (type === "subprocess") {
+            node.children = { nodes: [], flows: [] };
+            node.children.nodes.push({ id: newId("n"), type: "start", name: "", x: 30, y: 30, approver: defaultApprover() });
+            node.children.nodes.push({ id: newId("n"), type: "end", name: "", x: 300, y: 30, approver: defaultApprover() });
+        }
+        this.scope.nodes.push(node);
         this.state.selected = { kind: "node", id: node.id };
     }
 
@@ -374,8 +516,8 @@ export class WorkflowDesigner extends Component {
     };
 
     connect(sourceId, targetId) {
-        const source = this.state.nodes.find((n) => n.id === sourceId);
-        const target = this.state.nodes.find((n) => n.id === targetId);
+        const source = this.scope.nodes.find((n) => n.id === sourceId);
+        const target = this.scope.nodes.find((n) => n.id === targetId);
         if (!source || !target || source.id === target.id) {
             return;
         }
@@ -383,11 +525,11 @@ export class WorkflowDesigner extends Component {
             this.notification.add(_t("A flow cannot start at an end event or end at the start event."), { type: "warning" });
             return;
         }
-        if (this.state.flows.some((f) => f.source === sourceId && f.target === targetId)) {
+        if (this.scope.flows.some((f) => f.source === sourceId && f.target === targetId)) {
             return;
         }
-        const flow = { id: newId("f"), source: sourceId, target: targetId };
-        this.state.flows.push(flow);
+        const flow = { id: newId("f"), source: sourceId, target: targetId, condition: "" };
+        this.scope.flows.push(flow);
         this.state.selected = { kind: "flow", id: flow.id };
     }
 
@@ -413,7 +555,7 @@ export class WorkflowDesigner extends Component {
         }
     }
 
-    // ----- 属性与删除 -----
+    // ----- 属性 -----
 
     setNodeName(node, value) {
         node.name = value.trim();
@@ -435,6 +577,42 @@ export class WorkflowDesigner extends Component {
         node.approver.script = value.trim();
     }
 
+    setOperation(node, name) {
+        node.operator.name = name;
+        if (name === "evaluate" && !node.operator.parameters.some((p) => p.name === "value")) {
+            node.operator.parameters.unshift({ name: "value", expression: "" });
+        }
+    }
+
+    setParamName(node, index, value) {
+        node.operator.parameters[index].name = value.trim();
+    }
+
+    setParamExpression(node, index, value) {
+        node.operator.parameters[index].expression = value.trim();
+    }
+
+    addParam(node) {
+        node.operator.parameters.push({ name: "", expression: "" });
+    }
+
+    removeParam(node, index) {
+        node.operator.parameters.splice(index, 1);
+    }
+
+    setResultVariable(node, value) {
+        node.operator.resultVariable = value.trim();
+    }
+
+    setDefault(flow, checked) {
+        const gateway = this.scope.nodes.find((n) => n.id === flow.source);
+        gateway.defaultFlow = checked ? flow.id : "";
+    }
+
+    setCondition(flow, value) {
+        flow.condition = value.trim();
+    }
+
     onKeyDown(ev) {
         if (ev.key !== "Delete" || ["INPUT", "TEXTAREA", "SELECT"].includes(ev.target.tagName)) {
             return;
@@ -447,30 +625,32 @@ export class WorkflowDesigner extends Component {
         if (!selected) {
             return;
         }
+        const scope = this.scope;
         if (selected.kind === "node") {
-            this.state.nodes = this.state.nodes.filter((n) => n.id !== selected.id);
-            this.state.flows = this.state.flows.filter((f) => f.source !== selected.id && f.target !== selected.id);
+            scope.nodes = scope.nodes.filter((n) => n.id !== selected.id);
+            scope.flows = scope.flows.filter((f) => f.source !== selected.id && f.target !== selected.id);
         } else {
-            this.state.flows = this.state.flows.filter((f) => f.id !== selected.id);
+            scope.flows = scope.flows.filter((f) => f.id !== selected.id);
+            for (const gateway of scope.nodes) {
+                if (gateway.defaultFlow === selected.id) {
+                    gateway.defaultFlow = "";
+                }
+            }
         }
         this.state.selected = null;
     }
 
     // ----- 保存与返回 -----
 
-    get model() {
-        return { processId: this.state.processId, nodes: this.state.nodes, flows: this.state.flows };
-    }
-
     async save() {
-        const errors = validateModel(this.model, this.unsupported || []);
+        const errors = validateModel(this.state.model, this.unsupported);
         if (errors.length) {
             this.notification.add(errors.join("\n"), { type: "danger", sticky: true });
             return;
         }
         this.state.saving = true;
         try {
-            await this.orm.call("snow.workflow.definition", "save_bpmn", [this.definitionId, toBpmnXml(this.model)]);
+            await this.orm.call("snow.workflow.definition", "save_bpmn", [this.definitionId, toBpmnXml(this.state.model)]);
             this.notification.add(_t("The process has been saved."), { type: "success" });
             this.back();
         } finally {

@@ -102,7 +102,7 @@ class SnowBaseWorkflow(metaclass=SnowWorkflowMeta):
         for task in workflow.get_tasks():
             task.set_data(model=model)
             task.set_data(record=record)
-            if task.task_spec.spec_type == 'Script Task':
+            if task.task_spec.spec_type in ('Script Task', 'Service Task'):
                 task.set_data(script_env=self.env)
         workflow.do_engine_steps()
         workflow.refresh_waiting_tasks()

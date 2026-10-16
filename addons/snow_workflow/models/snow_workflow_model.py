@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+import ast
+import json
+
 from lxml import etree
 
 from odoo import _, models, fields, api
@@ -126,42 +129,119 @@ class WorkflowDefinition(models.Model):
             'params': {'definition_id': self.id},
         }
 
-    # 设计器支持的流程元素与审批任务类型 (与 static/src/designer/bpmn_model.js 保持一致)
-    DESIGNER_PROCESS_CHILDREN = {'startEvent', 'endEvent', 'parallelGateway', 'sequenceFlow',
-                                 'laneSet', 'documentation', 'extensionElements'}
+    # 设计器支持的审批任务类型 (与 static/src/designer/bpmn_model.js 保持一致)
     DESIGNER_APPROVAL_TYPES = {'approve_execution', 'group_approve_execution_or',
                                'group_approve_execution_and'}
-    DESIGNER_FLOW_NODES = {'startEvent', 'endEvent', 'parallelGateway', 'userTask'}
+    # 流程级允许的子元素 (节点与连线另行检查)
+    DESIGNER_SCOPE_EXTRAS = {'laneSet', 'documentation', 'extensionElements', 'incoming', 'outgoing'}
+    BPMN_NS = 'http://www.omg.org/spec/BPMN/20100524/MODEL'
+    CAMUNDA_NS = 'http://camunda.org/schema/1.0/bpmn'
 
     def _check_designer_limits(self, content):
         """
-        设计器的限制: 只允许支持的元素, 除开始与结束外的节点必须有入线与出线
+        设计器的限制: 只允许支持的元素; 每个流程/子流程有且只有一个开始事件、至少一个结束事件;
+        除开始与结束外的节点必须有入线与出线; 排他网关的条件合法, 服务任务的操作已注册
         """
         root = etree.fromstring(content.encode('utf-8'))
-        process = next((el for el in root.iter() if etree.QName(el).localname == 'process'), None)
-        unsupported = []
-        nodes, targets, sources = {}, set(), set()
-        for child in process:
+        process = next(el for el in root.iter() if etree.QName(el).localname == 'process')
+        self._check_designer_scope(process)
+
+    def _check_designer_scope(self, scope):
+        from ..workflow.service_operations import SERVICE_OPERATIONS
+
+        def local(el):
+            return etree.QName(el).localname
+
+        nodes, flows = {}, []
+        for child in scope:
             if not isinstance(child.tag, str):
                 continue
-            name = etree.QName(child).localname
+            name = local(child)
             if name == 'userTask' and child.get('name') in self.DESIGNER_APPROVAL_TYPES:
-                nodes[child.get('id')] = name
-            elif name in self.DESIGNER_FLOW_NODES:
-                nodes[child.get('id')] = name
+                nodes[child.get('id')] = child
+            elif name in ('startEvent', 'endEvent', 'parallelGateway', 'exclusiveGateway',
+                          'serviceTask', 'subProcess'):
+                nodes[child.get('id')] = child
             elif name == 'sequenceFlow':
-                targets.add(child.get('targetRef'))
-                sources.add(child.get('sourceRef'))
-            elif name not in self.DESIGNER_PROCESS_CHILDREN:
-                unsupported.append(f"{name} ({child.get('name') or child.get('id')})")
-        if unsupported:
-            raise UserError(_("These elements are not supported by the process designer: %s",
-                              ", ".join(unsupported)))
-        for node_id, name in nodes.items():
-            if name != 'startEvent' and node_id not in targets:
-                raise UserError(_("“%s” has no incoming flow.", node_id))
-            if name != 'endEvent' and node_id not in sources:
-                raise UserError(_("“%s” has no outgoing flow.", node_id))
+                flows.append(child)
+            elif name not in self.DESIGNER_SCOPE_EXTRAS:
+                raise UserError(_("These elements are not supported by the process designer: %s",
+                                  f"{name} ({child.get('name') or child.get('id')})"))
+
+        kinds = {node_id: local(el) for node_id, el in nodes.items()}
+        starts = [i for i, k in kinds.items() if k == 'startEvent']
+        ends = [i for i, k in kinds.items() if k == 'endEvent']
+        if len(starts) != 1:
+            raise UserError(_("A process or subprocess needs exactly one start event."))
+        if not ends:
+            raise UserError(_("A process or subprocess needs at least one end event."))
+
+        targets = {f.get('targetRef') for f in flows}
+        sources = {f.get('sourceRef') for f in flows}
+        for node_id, kind in kinds.items():
+            label = nodes[node_id].get('name') or node_id
+            if kind != 'startEvent' and node_id not in targets:
+                raise UserError(_("“%s” has no incoming flow.", label))
+            if kind != 'endEvent' and node_id not in sources:
+                raise UserError(_("“%s” has no outgoing flow.", label))
+            if kind == 'exclusiveGateway':
+                self._check_exclusive_gateway(nodes[node_id], [f for f in flows if f.get('sourceRef') == node_id])
+            elif kind == 'serviceTask':
+                self._check_service_task(nodes[node_id], SERVICE_OPERATIONS)
+            elif kind == 'subProcess':
+                self._check_designer_scope(nodes[node_id])
+
+    def _check_exclusive_gateway(self, gateway, outgoing):
+        label = gateway.get('name') or gateway.get('id')
+        if not outgoing:
+            raise UserError(_("“%s” has no outgoing flow.", label))
+        default = gateway.get('default')
+        if len(outgoing) > 1 and not default:
+            raise UserError(_("“%s” needs a default flow.", label))
+        if default and default not in {f.get('id') for f in outgoing}:
+            raise UserError(_("The default flow of “%s” is not one of its outgoing flows.", label))
+        for flow in outgoing:
+            if flow.get('id') == default:
+                continue
+            condition = flow.find(f'{{{self.BPMN_NS}}}conditionExpression')
+            text = (condition.text or '').strip() if condition is not None else ''
+            if not text:
+                raise UserError(_("The flow of “%s” needs a condition.", label))
+            try:
+                ast.parse(text, mode='eval')
+            except SyntaxError as error:
+                raise UserError(_("The condition “%(condition)s” is not a valid expression: %(error)s",
+                                  condition=text, error=error.msg)) from error
+
+    def _check_service_task(self, task, operations):
+        label = task.get('name') or task.get('id')
+        raw = None
+        for prop in task.iter(f'{{{self.CAMUNDA_NS}}}property'):
+            if prop.get('name') == 'serviceTaskOperator':
+                raw = prop.get('value')
+        try:
+            operator = json.loads(raw or 'null')
+        except ValueError:
+            operator = None
+        if not isinstance(operator, dict) or not operator.get('name'):
+            raise UserError(_("The service task “%s” needs an operation.", label))
+        if operator['name'] not in operations:
+            raise UserError(_("Unknown service operation “%(operation)s” of “%(task)s”.",
+                              operation=operator['name'], task=label))
+        parameters = operator.get('parameters') or {}
+        if operator['name'] == 'evaluate' and 'value' not in parameters:
+            raise UserError(_("The operation of “%s” needs a value.", label))
+        for name, param in parameters.items():
+            if not isinstance(param, dict) or not isinstance(param.get('value'), str):
+                raise UserError(_("The parameter “%s” of “%s” needs an expression.", name, label))
+            try:
+                ast.parse(param['value'], mode='eval')
+            except SyntaxError as error:
+                raise UserError(_("The expression “%(expr)s” is not valid: %(error)s",
+                                  expr=param['value'], error=error.msg)) from error
+        result = operator.get('resultVariable')
+        if result is not None and not (isinstance(result, str) and result.isidentifier()):
+            raise UserError(_("The result variable of “%s” must be a valid name.", label))
 
     def save_bpmn(self, content):
         """

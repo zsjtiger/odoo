@@ -5,6 +5,7 @@ from ..gluon.bpmn.workflow import BpmnWorkflow
 from ..gluon.camunda.parser.CamundaParser import CamundaParser
 from ..gluon.camunda.serializer.config import CAMUNDA_SPEC_CONFIG
 from ..gluon.bpmn.serializer.workflow import BpmnWorkflowSerializer
+from .service_operations import SnowScriptEngine
 from .exceptions import (SnowWorkflowValidationError,
                          SnowWorkflowEngineNoXmlStringError,
                          SnowWorkflowEngineNoJsonStringError)
@@ -59,7 +60,8 @@ class BpmnWorkflowEngine(object):
 
         main_process_spec = self.parser.get_spec('main_process')
         subprocess_specs = self.parser.get_subprocess_specs('main_process')
-        return BpmnWorkflow(top_level_spec=main_process_spec, subprocess_specs=subprocess_specs)
+        return BpmnWorkflow(top_level_spec=main_process_spec, subprocess_specs=subprocess_specs,
+                            script_engine=SnowScriptEngine())
 
     def load_workflow_from_json_str(self):
         """
@@ -68,7 +70,9 @@ class BpmnWorkflowEngine(object):
         if self.json_str is None:
             raise SnowWorkflowEngineNoJsonStringError
 
-        return self.serializer.deserialize_json(json.loads(self.json_str))
+        workflow = self.serializer.deserialize_json(json.loads(self.json_str))
+        workflow.script_engine = SnowScriptEngine()
+        return workflow
 
     def save_workflow_obj_to_json_str(self, workflow):
         """

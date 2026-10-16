@@ -1,3 +1,4 @@
+import json
 # Copyright 2023 The CrossNow.inc Authors.
 #
 
@@ -12,6 +13,7 @@ from ...bpmn.parser.task_parsers import SubprocessParser
 from ...dmn.specs.BusinessRuleTask import BusinessRuleTask
 
 from ...camunda.specs.multiinstance_task import SequentialMultiInstanceTask, ParallelMultiInstanceTask
+from ...spiff.specs.service_task import ServiceTask as SpiffServiceTask
 
 CAMUNDA_MODEL_NS = 'http://camunda.org/schema/1.0/bpmn'
 
@@ -182,3 +184,26 @@ class ScriptTaskParser(TaskParser):
             raise ValidationException(
                 f"Invalid Script Task.  No Script Provided. " + str(ae),
                 node=self.node, file_name=self.filename)
+
+
+class CamundaServiceTaskParser(CamundaTaskParser):
+    """
+    serviceTask: 操作名、参数与结果变量由 camunda:property serviceTaskOperator 给出 (JSON):
+    {"name": "<操作名>", "parameters": {"<参数名>": {"value": "<表达式>"}}, "resultVariable": "<变量名>"}
+    """
+
+    def create_task(self):
+        extensions = self.parse_extensions()
+        try:
+            operator = json.loads(extensions.get('serviceTaskOperator') or 'null')
+        except ValueError:
+            operator = None
+        if not isinstance(operator, dict) or not operator.get('name'):
+            self.raise_validation_exception('A service task needs a serviceTaskOperator with a name')
+        return SpiffServiceTask(
+            self.spec, self.get_task_spec_name(),
+            operator['name'], operator.get('parameters') or {}, operator.get('resultVariable'),
+            description=self.node.get('name', None),
+            lane=self.lane, position=self.position,
+            prescript=extensions.get('preScript'),
+            postscript=extensions.get('postScript'))
