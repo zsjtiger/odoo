@@ -1,6 +1,7 @@
 import json
 import logging
 from odoo import models, api, _
+from odoo.exceptions import UserError
 from ..workflow.button import ButtonCompute
 from ..workflow.snow_workflow import SnowWorkflow
 
@@ -40,14 +41,18 @@ class WorkflowAction(models.AbstractModel):
         }
 
     def _popup_action(self):
-        button_name = self.env.context.get('button_name')
-        name = f"{button_name.capitalize()} Operation" if button_name else 'information'
         """
         返回PC端弹窗的action
         :return:
         """
+        titles = {
+            'pass': _('Pass Operation'),
+            'reject': _('Reject Operation'),
+            'withdraw': _('Withdraw Operation'),
+        }
+        button_name = self.env.context.get('button_name')
         return {
-            'name': _(name),
+            'name': titles.get(button_name, _('information')),
             'type': 'ir.actions.act_window',
             'res_model': 'snow.workflow.instance',
             'view_mode': 'form',
@@ -164,19 +169,35 @@ class WorkflowAction(models.AbstractModel):
             context.update(
                 {'verify_confirm': {'model': 'snow.workflow.alert', 'method':
                     'write_and_verify_data'}})
-            self.env.context = context
+        # 上下文只作用于本次调用, 不修改共享的 env
+        self = self.with_context(context)
+        if context.get('trigger_function') == 'do_submit':
             action = self.risk_warning_action()
         elif is_dialog:
             # 需要弹出窗口的，窗口的确认按钮绑定到本类方法中做进一步处理
-            self.env.context = context
             action = self._popup_action()
         elif add_attendee:
-            self.env.context = context
             action = self.add_attendee_action()
         else:
-            self.env.context = context
             action = self.do_workflow_action()
         return action
+
+    @api.model
+    def _allowed_action_kwargs(self, model_name, record_id, trigger_function, client_kwargs):
+        """
+        校验当前用户能否执行该操作: 只有按钮计算结果中存在同名操作时才允许, 返回服务端按钮上的参数
+
+        :param client_kwargs: 前端回传的参数, 只用于匹配实例和任务
+        :return: dict 服务端计算的操作参数
+        """
+        for button in ButtonCompute(self.env).get_available_buttons(model_name, record_id):
+            server_kwargs = button.get('kwargs') or {}
+            if button.get('trigger_function') != trigger_function:
+                continue
+            if all(server_kwargs.get(key) == client_kwargs.get(key)
+                   for key in ('instance', 'task_name') if key in client_kwargs):
+                return server_kwargs
+        raise UserError(_("This action is not available to you now, the task may have been handled already."))
 
     @api.model
     def do_workflow_action(self):
@@ -190,13 +211,16 @@ class WorkflowAction(models.AbstractModel):
         keep_context = {}
         if 'context' in self.env.context and 'execution_id' in self.env.context['context']:
             keep_context = {'execution_id': self.env.context['context'].get('execution_id')}
+        # 操作与参数以服务端按当前用户算出的按钮为准, 前端回传的参数只用来匹配
+        kwargs = self._allowed_action_kwargs(context.get('model_name'), context.get('record_id'),
+                                             context.get('trigger_function'),
+                                             context.get('kwargs') or {})
         wf_instance_record = self.env['snow.workflow.instance'].sudo().search([
             ('object', '=', context.get('model_name')),
             ('record_id', '=', context.get('record_id'))
         ])
         snow_workflow = SnowWorkflow(self.env, wf_instance_record)
         method = context.get('trigger_function')
-        kwargs = context.get('kwargs')
         # 若有comment则入库
         if ('submit_info' in self.env.context and self.env.context['submit_info']
                 and 'instance' in kwargs and kwargs['instance']):
@@ -206,9 +230,10 @@ class WorkflowAction(models.AbstractModel):
                 self.env.context['submit_info'], self.env.user)
 
         # 执行审批动作
-        if hasattr(snow_workflow, method):
-            snow_workflow_method = getattr(snow_workflow, method)
-            snow_workflow_method(**kwargs)
+        snow_workflow_method = getattr(snow_workflow, method, None)
+        if not callable(snow_workflow_method):
+            raise UserError(_("Unknown workflow action: %s", method))
+        snow_workflow_method(**kwargs)
         # 获取定义时的target_view
         definition = self.env['snow.workflow.definition'].fetch_definition(
             context.get('model_name'), context.get('record_id'))

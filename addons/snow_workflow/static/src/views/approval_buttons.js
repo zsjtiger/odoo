@@ -6,6 +6,11 @@ import { useService } from "@web/core/utils/hooks";
 // 连续点击的间隔小于该值时只执行第一次 (防止双击重复提交)
 const CLICK_DEBOUNCE_MS = 300;
 
+/** 从 RPC 错误中取出可展示给用户的文本 */
+function errorMessage(error) {
+    return error?.data?.message || error?.message || String(error);
+}
+
 /**
  * 表单状态栏中的审批按钮: 只读时显示当前可执行的审批操作, 编辑时显示"保存并提交".
  * 仅对 session 中 approval_models 包含的模型生效, 且审批流开关开启时显示.
@@ -25,6 +30,7 @@ export class ApprovalButtons extends Component {
     props = useProps({ record: t.object() });
     orm = useService("orm");
     actionService = useService("action");
+    notification = useService("notification");
     state = proxy({ buttons: [] });
     lastClick = 0;
     loadedKey = null;
@@ -53,15 +59,25 @@ export class ApprovalButtons extends Component {
         const resId = record.resId || false;
         const context = record.context;
         let values;
-        if (record.isInEdition) {
-            const button = await this.orm.call(
-                "snow.workflow.action", "get_save_and_submit_button", [record.resModel, resId], { context }
-            );
-            values = button ? [button] : [];
-        } else {
-            values = await this.orm.call(
-                "snow.workflow.action", "get_status", [record.resModel, resId], { context }
-            );
+        try {
+            if (record.isInEdition) {
+                const button = await this.orm.call(
+                    "snow.workflow.action", "get_save_and_submit_button", [record.resModel, resId], { context }
+                );
+                values = button ? [button] : [];
+            } else {
+                values = await this.orm.call(
+                    "snow.workflow.action", "get_status", [record.resModel, resId], { context }
+                );
+            }
+        } catch (error) {
+            // 加载失败不能影响表单显示: 清空按钮, 允许下次重新加载, 并提示原因
+            if (key === this.loadedKey) {
+                this.loadedKey = null;
+            }
+            this.state.buttons = [];
+            this.notification.add(errorMessage(error), { type: "danger" });
+            return;
         }
         if (key !== this.loadedKey) {
             return; // 已有更新的加载结果
@@ -114,6 +130,8 @@ export class ApprovalButtons extends Component {
         await record.model.load();
         if (result) {
             this.actionService.doAction(result);
+        } else {
+            this.notification.add(_t("No approval workflow is defined for this record."), { type: "warning" });
         }
     }
 }

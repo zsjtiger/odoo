@@ -195,6 +195,8 @@ class ButtonCompute:
         :return: 按钮列表
         """
         button_names = set()
+        # 调用方不传 options 时 (如界面的 get_status), 各按钮按默认配置计算
+        options = options or {}
         if not model_name or not record_id:
             return list()
 

@@ -12,7 +12,7 @@ msgstr ""
 "POT-Creation-Date: 2024-09-29 10:38+0000\n"
 "PO-Revision-Date: 2024-09-29 10:38+0000\n"
 "Last-Translator: Han Zhongshan, 2024\n"
-"Language-Team: Chinese (China) \n"
+"Language-Team: Chinese (China)\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,12 +22,12 @@ msgstr ""
 #. module: snow_workflow
 #: model:ir.model.fields,field_description:snow_workflow.field_ir_model_access__perm_approval
 msgid "Approval Access"
-msgstr ""
+msgstr "审批权限"
 
 #. module: snow_workflow
 #: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_carbon_copy__copy_user
 msgid "Copy User"
-msgstr ""
+msgstr "抄送人"
 
 #. module: snow_workflow
 #: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_attendee_selection__create_uid
@@ -46,7 +46,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_action__create_uid
 #: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_mapping__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "创建人"
 
 #. module: snow_workflow
 #: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_attendee_selection__create_date
@@ -65,12 +65,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_action__create_date
 #: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_mapping__create_date
 msgid "Created on"
-msgstr ""
+msgstr "创建时间"
 
 #. module: snow_workflow
 #: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_data__data_owner
 msgid "Data Owner"
-msgstr ""
+msgstr "数据所有者"
 
 #. module: snow_workflow
 #: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_attendee_selection__display_name
@@ -89,12 +89,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_action__display_name
 #: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_mapping__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "显示名称"
 
 #. module: snow_workflow
 #: model:ir.model,name:snow_workflow.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "HTTP 路由"
 
 #. module: snow_workflow
 #: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_attendee_selection__id
@@ -114,7 +114,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_action__id
 #: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_mapping__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: snow_workflow
 #: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_attendee_selection__write_uid
@@ -133,7 +133,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_action__write_uid
 #: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_mapping__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "最后更新人"
 
 #. module: snow_workflow
 #: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_attendee_selection__write_date
@@ -152,40 +152,35 @@ msgstr ""
 #: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_action__write_date
 #: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_mapping__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "最后更新时间"
 
 #. module: snow_workflow
 #: model:ir.model,name:snow_workflow.model_ir_ui_menu
 msgid "Menu"
-msgstr ""
+msgstr "菜单"
 
 #. module: snow_workflow
 #: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__object
 msgid "Model"
-msgstr ""
+msgstr "模型"
 
 #. module: snow_workflow
 #: model:ir.model,name:snow_workflow.model_ir_model_access
 msgid "Model Access"
-msgstr ""
-
-#. module: snow_workflow
-#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_definition_filter
-msgid "Seach Definition"
-msgstr ""
+msgstr "模型访问权限"
 
 #. module: snow_workflow
 #: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution__status_owner
 #: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance__status_owner
 msgid "Status Owner"
-msgstr ""
+msgstr "状态所有者"
 
 #. module: snow_workflow
 #: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task__submitter_name
 #: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_attendee__submitter_name
 #: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_history__submitter_name
 msgid "Submitter"
-msgstr ""
+msgstr "提交人"
 
 #. module: snow_workflow
 #: model:ir.model,name:snow_workflow.model_snow_workflow_execution_task_data
@@ -235,27 +230,27 @@ msgstr "确定"
 #. module: snow_workflow
 #: model:ir.model,name:snow_workflow.model_res_users
 msgid "User"
-msgstr ""
+msgstr "用户"
 
 #. module: snow_workflow
 #: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution__wf_execution_tasks
 msgid "Wf Execution Tasks"
-msgstr ""
+msgstr "执行任务"
 
 #. module: snow_workflow
 #: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution__wf_execution_tasks_history
 msgid "Wf Execution Tasks History"
-msgstr ""
+msgstr "执行任务历史"
 
 #. module: snow_workflow
 #: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_data__wf_task_history
 msgid "Wf Task History"
-msgstr ""
+msgstr "任务历史"
 
 #. module: snow_workflow
 #: model:ir.model,name:snow_workflow.model_snow_workflow_attendee_selection
 msgid "Workflow Attendee Selection"
-msgstr ""
+msgstr "加签选择"
 
 #. module: snow_workflow
 #: model:ir.model,name:snow_workflow.model_snow_workflow_instance
@@ -265,12 +260,12 @@ msgstr "Workflow实例"
 #. module: snow_workflow
 #: model:ir.model,name:snow_workflow.model_snow_workflow_action
 msgid "snow.workflow.action"
-msgstr ""
+msgstr "审批动作"
 
 #. module: snow_workflow
 #: model:ir.model,name:snow_workflow.model_snow_workflow_notification
 msgid "snow.workflow.notification"
-msgstr ""
+msgstr "审批通知"
 
 #. module: snow_workflow
 #: code:addons/snow_workflow/models/snow_workflow_actions.py:0
@@ -1091,7 +1086,9 @@ msgid "Delete"
 msgstr "删除"
 
 #. module: snow_workflow
-msgid "Drag a node onto the canvas. Drag from the dot on the right of a node to another node to connect them."
+msgid ""
+"Drag a node onto the canvas. Drag from the dot on the right of a node to "
+"another node to connect them."
 msgstr "从左侧拖拽节点到画布上。从节点右侧的圆点拖到另一个节点即可连线。"
 
 #. module: snow_workflow
@@ -1223,7 +1220,9 @@ msgid "Default flow"
 msgstr "默认分支"
 
 #. module: snow_workflow
-msgid "Drag a node onto the canvas. Drag from the dot on the right of a node to another node to connect them. Double-click a subprocess to edit it."
+msgid ""
+"Drag a node onto the canvas. Drag from the dot on the right of a node to "
+"another node to connect them. Double-click a subprocess to edit it."
 msgstr "从左侧拖拽节点到画布上。从节点右侧的圆点拖到另一个节点即可连线。双击子流程可以编辑其内部。"
 
 #. module: snow_workflow
@@ -1305,3 +1304,36 @@ msgstr "默认"
 #. module: snow_workflow
 msgid "“%s” needs a default flow."
 msgstr "“%s”需要一个默认分支。"
+
+#. module: snow_workflow
+msgid ""
+"This action is not available to you now, the task may have been handled "
+"already."
+msgstr "当前无法执行该操作，任务可能已被处理，请刷新页面。"
+
+#. module: snow_workflow
+msgid "Unknown workflow action: %s"
+msgstr "未知的工作流操作：%s"
+
+#. module: snow_workflow
+msgid "Withdraw Operation"
+msgstr "撤销审批"
+
+#. module: snow_workflow
+msgid "The task is no longer waiting for approval, please refresh the page."
+msgstr "该任务已不在等待审批，请刷新页面。"
+
+#. module: snow_workflow
+msgid "No approval workflow is defined for this record."
+msgstr "该记录没有配置审批流程。"
+
+#. module: snow_workflow
+msgid "unsuspend"
+msgstr "恢复"
+
+#: views/workflow_definition_views.xml:85
+msgid "Search Definition"
+msgstr "搜索流程定义"
+
+#~ msgid "Seach Definition"
+#~ msgstr ""

@@ -82,7 +82,7 @@
     <field name="name">snow.workflow.definition.select</field>
     <field name="model">snow.workflow.definition</field>
     <field name="arch" type="xml">
-      <search string="Seach Definition">
+      <search string="Search Definition">
         <filter name="description"/>
         <field name="name"/>
       </search>

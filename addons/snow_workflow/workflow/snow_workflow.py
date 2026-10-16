@@ -4,6 +4,7 @@ import logging
 import datetime
 import functools
 
+from odoo import _
 from odoo.exceptions import UserError
 from .attendee import TaskAttendee
 from .status import WorkflowStatus
@@ -76,6 +77,9 @@ class SnowBaseWorkflow(metaclass=SnowWorkflowMeta):
     def get_task_from_name(self, name):
         tasks = [t for t in self.main_workflow.get_tasks() if
                  t.get_name() == name and t.get_state_name() == 'READY']
+        if not tasks:
+            raise SnowWorkflowValidationError(
+                _("The task is no longer waiting for approval, please refresh the page."))
         if len(tasks) > 1:
             logger.warning('Find multiple tasks with the same name whose status is ready')
         return tasks[0]

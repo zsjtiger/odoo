@@ -186,6 +186,19 @@ test("an existing record opens in view mode, with the values as text", async () 
     expect(queryOne(".m_form_edit")).toBeEnabled();
 });
 
+test("a form with edit=\"false\" has no edit button", async () => {
+    const arch = `<form edit="false"><sheet><group><field name="name"/><field name="email"/></group></sheet></form>`;
+    await mountWithCleanup(MobileFormView, { props: formProps({ arch }) });
+    expect(queryAll(".m_form_edit").length).toBe(0);
+    expect(queryAll(".m_form_field input").length).toBe(0);
+});
+
+test("edit=\"0\" also hides the edit button, and the default still shows it", async () => {
+    const arch = `<form edit="0"><sheet><group><field name="name"/></group></sheet></form>`;
+    await mountWithCleanup(MobileFormView, { props: formProps({ arch }) });
+    expect(queryAll(".m_form_edit").length).toBe(0);
+});
+
 test("titled form groups render as bands with their fields", async () => {
     const arch = `<form>
         <sheet>
