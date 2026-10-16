@@ -754,3 +754,116 @@ export function fromBpmnXml(xml) {
 export function newId(prefix) {
     return `${prefix}_${Math.random().toString(36).slice(2, 10)}`;
 }
+
+/**
+ * 整理一个作用域 (流程或子流程) 的布局: 按流程顺序从左到右分列 (列 = 最长路径层数),
+ * 同一列的节点上下排开并居中对齐, 单个节点的列落在同一条中线上; 边界定时器放在所挂接节点的正下方.
+ * 环路只影响分列时忽略回边, 不改变连线. 返回 节点 id -> {x, y}.
+ */
+export function layoutScope(scope) {
+    const LEFT = 60;
+    const TOP = 60;
+    const COLUMN_GAP = 90;
+    const ROW_GAP = 40;
+    const GRID = 10;
+    const snap = (value) => Math.max(0, Math.round(value / GRID) * GRID);
+    const sizeOf = (node) => NODE_TYPES[node.type].size;
+
+    const main = scope.nodes.filter((n) => n.type !== "boundary_timer");
+    const boundaries = scope.nodes.filter((n) => n.type === "boundary_timer");
+    const ids = new Set(main.map((n) => n.id));
+    const edges = scope.flows.filter((f) => ids.has(f.source) && ids.has(f.target) && f.source !== f.target);
+    const outgoing = Object.fromEntries(main.map((n) => [n.id, []]));
+    const incomingCount = Object.fromEntries(main.map((n) => [n.id, 0]));
+    for (const edge of edges) {
+        outgoing[edge.source].push(edge.target);
+        incomingCount[edge.target] += 1;
+    }
+
+    // 去掉回边: 深度优先搜索时, 指向仍在栈上的节点的边视为回边
+    const acyclic = Object.fromEntries(main.map((n) => [n.id, []]));
+    const state = {};
+    const visit = (id) => {
+        state[id] = "open";
+        for (const target of outgoing[id]) {
+            if (state[target] === "open") {
+                continue;
+            }
+            acyclic[id].push(target);
+            if (!state[target]) {
+                visit(target);
+            }
+        }
+        state[id] = "done";
+    };
+    // 从没有入线的节点开始, 保证开始事件在最左边
+    const starts = main.filter((n) => incomingCount[n.id] === 0);
+    for (const node of [...starts, ...main]) {
+        if (!state[node.id]) {
+            visit(node.id);
+        }
+    }
+
+    // 列 = 无环图中从起点出发的最长路径
+    const layer = Object.fromEntries(main.map((n) => [n.id, 0]));
+    for (let pass = 0; pass < main.length; pass++) {
+        for (const id of Object.keys(acyclic)) {
+            for (const target of acyclic[id]) {
+                layer[target] = Math.max(layer[target], layer[id] + 1);
+            }
+        }
+    }
+
+    // 每列内的顺序: 按前驱节点在上一列中的平均位置排序, 减少交叉
+    const byLayer = [];
+    for (const node of main) {
+        (byLayer[layer[node.id]] ||= []).push(node);
+    }
+    const columns = byLayer.filter((column) => column && column.length);
+    const position = {};
+    columns.forEach((column, index) => {
+        if (index > 0) {
+            const previous = columns[index - 1];
+            const rank = Object.fromEntries(previous.map((n, i) => [n.id, i]));
+            const original = Object.fromEntries(column.map((n, i) => [n.id, i]));
+            // 没有前驱的节点排在最后, 保持原来的相对顺序
+            const barycenter = (node) => {
+                const preds = previous.filter((p) => acyclic[p.id].includes(node.id)).map((p) => rank[p.id]);
+                return preds.length ? preds.reduce((a, b) => a + b, 0) / preds.length : 1e9 + original[node.id];
+            };
+            column.sort((a, b) => barycenter(a) - barycenter(b));
+        }
+    });
+
+    // 所有列共用一条中线, 列宽由最宽的节点决定
+    const heights = columns.map((column) =>
+        column.reduce((sum, n) => sum + sizeOf(n)[1], 0) + ROW_GAP * Math.max(0, column.length - 1));
+    const centerY = TOP + Math.max(0, ...heights) / 2;
+    let columnX = LEFT;
+    columns.forEach((column, index) => {
+        const width = Math.max(...column.map((n) => sizeOf(n)[0]));
+        let y = centerY - heights[index] / 2;
+        for (const node of column) {
+            const [w, h] = sizeOf(node);
+            position[node.id] = { x: snap(columnX + (width - w) / 2), y: snap(y) };
+            y += h + ROW_GAP;
+        }
+        columnX += width + COLUMN_GAP;
+    });
+
+    // 边界定时器: 在所挂接节点的正下方居中
+    for (const node of boundaries) {
+        const host = main.find((n) => n.id === node.attachedTo);
+        if (!host) {
+            position[node.id] = { x: node.x, y: node.y };
+            continue;
+        }
+        const [hostW, hostH] = sizeOf(host);
+        const [w] = sizeOf(node);
+        position[node.id] = {
+            x: snap(position[host.id].x + (hostW - w) / 2),
+            y: snap(position[host.id].y + hostH + 16),
+        };
+    }
+    return position;
+}

@@ -1891,5 +1891,29 @@ msgstr "“%s”调用的流程不能再调用其他流程。"
 msgid "The target record of “%(task)s” is not valid: %(error)s"
 msgstr "“%(task)s”的目标记录无效：%(error)s"
 
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "Format diagram"
+msgstr "整理布局"
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "The diagram has been formatted."
+msgstr "画布已整理。"
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "The process is valid."
+msgstr "流程验证通过。"
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "Validate"
+msgstr "验证"
+
 #~ msgid "Seach Definition"
 #~ msgstr ""

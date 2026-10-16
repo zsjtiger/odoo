@@ -117,6 +117,18 @@ class TestDesignerNodes(TransactionCase):
         with self.assertRaises(ValidationError):
             self.definition.dmn_content = broken_output
 
+    def test_validate_reports_the_problem_without_saving(self):
+        script = '<bpmn:scriptTask id="t" name="t"><bpmn:script>x = 1</bpmn:script></bpmn:scriptTask>'
+        before = self.definition.content
+        result = self.definition.validate_bpmn(_process(_linear(script)))
+        self.assertTrue(result['valid'])
+        self.assertEqual(self.definition.content, before)
+        broken = self.definition.validate_bpmn(_process(_linear(
+            '<bpmn:scriptTask id="t" name="t"><bpmn:script>x = (</bpmn:script></bpmn:scriptTask>')))
+        self.assertFalse(broken['valid'])
+        self.assertIn('not valid Python', broken['message'])
+        self.assertEqual(self.definition.content, before)
+
     # 定时器
     def test_a_timer_needs_a_quoted_iso_duration(self):
         def timer(text):

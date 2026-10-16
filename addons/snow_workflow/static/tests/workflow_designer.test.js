@@ -4,6 +4,7 @@ import {
     decisionIdsOfDmn,
     defaultApprover,
     fromBpmnXml,
+    layoutScope,
     approverOfLaneName,
     laneNameOf,
     messageId,
@@ -424,4 +425,62 @@ test("after an event-based gateway only receive tasks and timers are allowed", (
     expect(validateModel(model, [], []).some((e) => e.includes("only receive tasks"))).toBe(false);
     model.flows.push({ id: "g3", source: "eg", target: "e1", condition: "" });
     expect(validateModel(model, [], []).some((e) => e.includes("only receive tasks"))).toBe(true);
+});
+
+const layoutNode = (id, type, props = {}) => ({
+    id, type, name: "", x: 0, y: 0, approver: defaultApprover(), ...props,
+});
+
+test("formatting puts the nodes of a flow in columns from left to right and centres them", () => {
+    const scope = {
+        nodes: [
+            layoutNode("s", "start"),
+            layoutNode("a", "approve_execution"),
+            layoutNode("b", "script", { script: "x = 1" }),
+            layoutNode("c", "send_message", { message: "go" }),
+            layoutNode("e", "end"),
+        ],
+        flows: [
+            { id: "1", source: "s", target: "a" },
+            { id: "2", source: "a", target: "b" },
+            { id: "3", source: "a", target: "c" },
+            { id: "4", source: "b", target: "e" },
+            { id: "5", source: "c", target: "e" },
+        ],
+    };
+    const pos = layoutScope(scope);
+    expect(pos.s.x).toBeLessThan(pos.a.x);
+    expect(pos.a.x).toBeLessThan(pos.b.x);
+    expect(pos.b.x).toBe(pos.c.x);
+    expect(pos.e.x).toBeGreaterThan(pos.b.x);
+    // 同一列的两个节点不重叠
+    expect(Math.abs(pos.b.y - pos.c.y) > 59).toBe(true);
+    // 所有坐标对齐到网格
+    for (const p of Object.values(pos)) {
+        expect(p.x % 10).toBe(0);
+        expect(p.y % 10).toBe(0);
+    }
+});
+
+test("formatting handles loops and puts a boundary timer under its host", () => {
+    const scope = {
+        nodes: [
+            layoutNode("s", "start"),
+            layoutNode("a", "approve_execution"),
+            layoutNode("b", "script", { script: "x = 1" }),
+            layoutNode("bt", "boundary_timer", { attachedTo: "b", duration: "PT1H" }),
+            layoutNode("e", "end"),
+        ],
+        flows: [
+            { id: "1", source: "s", target: "a" },
+            { id: "2", source: "a", target: "b" },
+            { id: "3", source: "b", target: "a" },
+            { id: "4", source: "b", target: "e" },
+        ],
+    };
+    const pos = layoutScope(scope);
+    expect(Object.keys(pos).length).toBe(5);
+    expect(pos.bt.y).toBeGreaterThan(pos.b.y);
+    expect(pos.bt.x >= pos.b.x).toBe(true);
+    expect(pos.s.x).toBeLessThan(pos.a.x);
 });

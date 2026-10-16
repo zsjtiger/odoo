@@ -16,6 +16,7 @@ import {
     defaultApprover,
     fromBpmnXml,
     initialProps,
+    layoutScope,
     newId,
     toBpmnXml,
     validateModel,
@@ -38,6 +39,9 @@ export class WorkflowDesigner extends Component {
                     <button t-if="this.state.path.length" type="button" class="btn btn-secondary" t-on-click="this.leaveSubprocess">
                         <t t-out="this.texts.up"/>
                     </button>
+                    <button type="button" class="btn btn-secondary" t-on-click="this.validate">
+                        <t t-out="this.texts.validate"/>
+                    </button>
                     <button type="button" class="btn btn-primary" t-att-disabled="this.state.saving" t-on-click="this.save">
                         <t t-out="this.texts.save"/>
                     </button>
@@ -59,7 +63,8 @@ export class WorkflowDesigner extends Component {
                     <div class="o_wf_canvas" t-ref="this.canvasRef"
                          t-att-style="this.canvasStyle"
                          t-on-dragover="this.onCanvasDragOver" t-on-drop="this.onCanvasDrop"
-                         t-on-pointerdown="this.onCanvasPointerDown">
+                         t-on-pointerdown="this.onCanvasPointerDown"
+                         t-on-contextmenu="this.onCanvasContextMenu">
                         <svg class="o_wf_edges" t-att-width="this.canvasSize.width" t-att-height="this.canvasSize.height">
                             <defs>
                                 <marker id="o_wf_arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
@@ -83,6 +88,16 @@ export class WorkflowDesigner extends Component {
                                       t-on-pointerdown="(ev) => this.onPortPointerDown(ev, node)"/>
                             </div>
                         </t>
+                        <div t-if="this.state.menu" class="o_wf_context_menu"
+                             t-att-style="'left:' + this.state.menu.x + 'px;top:' + this.state.menu.y + 'px;'"
+                             t-on-pointerdown="(ev) => ev.stopPropagation()">
+                            <button type="button" class="o_wf_context_item" t-on-click="this.formatDiagram">
+                                <t t-out="this.texts.format"/>
+                            </button>
+                            <button type="button" class="o_wf_context_item" t-on-click="this.validate">
+                                <t t-out="this.texts.validate"/>
+                            </button>
+                        </div>
                         <t t-foreach="this.flowLabels" t-as="label" t-key="label.id">
                             <div class="o_wf_flow_label" t-att-style="label.style"><t t-out="label.text"/></div>
                         </t>
@@ -329,6 +344,10 @@ export class WorkflowDesigner extends Component {
         attachedTo: _t("Attached to"),
         calledProcess: _t("Process to call"),
         time: _t("Time (quoted expression is added automatically)"),
+        format: _t("Format diagram"),
+        validate: _t("Validate"),
+        valid: _t("The process is valid."),
+        formatted: _t("The diagram has been formatted."),
     };
     timerKinds = Object.keys(TIMER_KINDS);
     timerKindLabels = Object.fromEntries(Object.entries(TIMER_KINDS).map(([kind, info]) => [kind, info.label]));
@@ -378,6 +397,7 @@ export class WorkflowDesigner extends Component {
         definitions: [],
         saving: false,
         tmpLine: null,
+        menu: null,
     });
 
     setup() {
@@ -605,6 +625,43 @@ export class WorkflowDesigner extends Component {
 
     onCanvasPointerDown() {
         this.state.selected = null;
+        this.state.menu = null;
+    }
+
+    onCanvasContextMenu(ev) {
+        ev.preventDefault();
+        const [x, y] = this.canvasPoint(ev);
+        this.state.menu = { x, y };
+    }
+
+    /** 右键菜单: 按流程顺序整理节点的位置 */
+    formatDiagram() {
+        this.state.menu = null;
+        const positions = layoutScope(this.scope);
+        for (const node of this.scope.nodes) {
+            if (positions[node.id]) {
+                Object.assign(node, positions[node.id]);
+            }
+        }
+        this.notification.add(this.texts.formatted, { type: "success" });
+    }
+
+    /** 验证按钮: 先检查画布上的结构, 再由服务器用保存时同样的检查验证, 不写入 */
+    async validate() {
+        this.state.menu = null;
+        const errors = validateModel(this.state.model, this.unsupported, this.state.decisions);
+        if (errors.length) {
+            this.notification.add(errors.join("\n"), { type: "danger", sticky: true });
+            return false;
+        }
+        const result = await this.orm.call("snow.workflow.definition", "validate_bpmn",
+            [this.definitionId, toBpmnXml(this.state.model)]);
+        if (!result.valid) {
+            this.notification.add(result.message, { type: "danger", sticky: true });
+            return false;
+        }
+        this.notification.add(this.texts.valid, { type: "success" });
+        return true;
     }
 
     onNodePointerDown(ev, node) {
@@ -814,6 +871,10 @@ export class WorkflowDesigner extends Component {
     }
 
     onKeyDown(ev) {
+        if (ev.key === "Escape") {
+            this.state.menu = null;
+            return;
+        }
         if (ev.key !== "Delete" || ["INPUT", "TEXTAREA", "SELECT"].includes(ev.target.tagName)) {
             return;
         }

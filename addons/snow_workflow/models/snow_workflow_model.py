@@ -498,6 +498,29 @@ class WorkflowDefinition(models.Model):
         """
         self.ensure_one()
         self.check_access('write')
+        self._check_bpmn_content(content)
+        self.write({'content': content})
+        return True
+
+    def validate_bpmn(self, content):
+        """
+        流程设计器的验证按钮: 与保存相同的检查, 但不写入. 报告第一个问题 (检查在第一个错误处停止).
+
+        :param content: BPMN XML 字符串
+        :return: {'valid': bool, 'message': str}
+        """
+        self.ensure_one()
+        self.check_access('read')
+        try:
+            self._check_bpmn_content(content)
+        except UserError as error:
+            return {'valid': False, 'message': error.args[0]}
+        return {'valid': True, 'message': ''}
+
+    def _check_bpmn_content(self, content):
+        """
+        保存与验证共用的检查: 引擎能解析、有 main_process、设计器的限制、脚本任务的权限
+        """
         try:
             engine = BpmnWorkflowEngine(xml_str=content, dmn_str=self.dmn_content, called=self._called_extras())
             process_ids = engine.parser.get_process_ids()
@@ -510,8 +533,6 @@ class WorkflowDefinition(models.Model):
         if 'scriptTask' in content and not self.env.user.has_group('base.group_system'):
             # 脚本任务执行任意 Python, 只允许系统管理员编辑
             raise UserError(_("Only system administrators can add script tasks to a process."))
-        self.write({'content': content})
-        return True
 
 
 class WorkflowExternalManagers(models.Model):
