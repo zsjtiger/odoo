@@ -179,6 +179,8 @@ msgstr "状态所有者"
 #: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task__submitter_name
 #: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_attendee__submitter_name
 #: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_history__submitter_name
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
 msgid "Submitter"
 msgstr "提交人"
 
@@ -198,30 +200,35 @@ msgid "Task Attendee History"
 msgstr "Task参与者历史"
 
 #. module: snow_workflow
+#. odoo-javascript
 #. crossnow-web
 #: code:addons/snow_workflow/static/src/js/workflow_warning.js:0
 msgid "<div>The submission description cannot exceed 200 characters</div>"
 msgstr "<div>提交的描述不能超过200个字符</div>"
 
 #. module: snow_workflow
+#. odoo-javascript
 #. crossnow-web
 #: code:addons/snow_workflow/static/src/js/workflow_warning.js:0
 msgid "<div>The submission description is required.</div>"
 msgstr "<div>提交描述是必填项</div>"
 
 #. module: snow_workflow
+#. odoo-javascript
 #. crossnow-web
 #: code:addons/snow_workflow/static/src/js/workflow_warning.js:0
 msgid "<div>You must click read and agree!</div>"
 msgstr "<div>你需要勾选阅读并同意！</div>"
 
 #. module: snow_workflow
+#. odoo-javascript
 #. crossnow-web
 #: code:addons/snow_workflow/static/src/js/workflow_warning.js:0
 msgid "information"
 msgstr "信息"
 
 #. module: snow_workflow
+#. odoo-javascript
 #. crossnow-web
 #: code:addons/snow_workflow/static/src/js/workflow_warning.js:0
 msgid "OK"
@@ -316,30 +323,35 @@ msgid "Send notifications at the platform level: {}"
 msgstr "平台级发送通知: {}"
 
 #. module: snow_workflow
+#. odoo-javascript
 #. crossnow-web
 #: code:addons/snow_workflow/static/src/js/workflow_process.js:0
 msgid "Please enter the reason for refusal"
 msgstr "请输入拒绝理由"
 
 #. module: snow_workflow
+#. odoo-javascript
 #. crossnow-web
 #: code:addons/snow_workflow/static/src/js/workflow_process.js:0
 msgid "save and submit"
 msgstr "保存并提交"
 
 #. module: snow_workflow
+#. odoo-javascript
 #. crossnow-web
 #: code:addons/snow_workflow/static/src/js/workflow_process.js:0
 msgid "pass"
 msgstr "审批通过"
 
 #. module: snow_workflow
+#. odoo-javascript
 #. crossnow-web
 #: code:addons/snow_workflow/static/src/js/workflow_process.js:0
 msgid "reject"
 msgstr "审批拒绝"
 
 #. module: snow_workflow
+#. odoo-javascript
 #. crossnow-web
 #: code:addons/snow_workflow/static/src/js/workflow_process.js:0
 #, python-format
@@ -347,42 +359,49 @@ msgid "submit for approval"
 msgstr "提交审批"
 
 #. module: snow_workflow
+#. odoo-javascript
 #. crossnow-web
 #: code:addons/snow_workflow/static/src/js/workflow_process.js:0
 msgid "withdraw"
 msgstr "撤销"
 
 #. module: snow_workflow
+#. odoo-javascript
 #. crossnow-web
 #: code:addons/snow_workflow/static/src/js/workflow_process.js:0
 msgid "suspend"
 msgstr "挂起"
 
 #. module: snow_workflow
+#. odoo-javascript
 #. crossnow-web
 #: code:addons/snow_workflow/static/src/js/workflow_process.js:0
 msgid "suspended recovery"
 msgstr "挂起恢复"
 
 #. module: snow_workflow
+#. odoo-javascript
 #. crossnow-web
 #: code:addons/snow_workflow/static/src/js/workflow_process.js:0
 msgid "under approval"
 msgstr "审批中"
 
 #. module: snow_workflow
+#. odoo-javascript
 #. crossnow-web
 #: code:addons/snow_workflow/static/src/js/workflow_process.js:0
 msgid "wait"
 msgstr "等待"
 
 #. module: snow_workflow
+#. odoo-javascript
 #. crossnow-web
 #: code:addons/snow_workflow/static/src/js/workflow_process.js:0
 msgid "add attendee"
 msgstr "加签"
 
 #. module: snow_workflow
+#. odoo-javascript
 #. crossnow-web
 #: code:addons/snow_workflow/static/src/js/workflow_process.js:0
 msgid "withdrawn"
@@ -407,6 +426,7 @@ msgid "【Signed by One】"
 msgstr "【或签】"
 
 #. module: snow_workflow
+#. odoo-javascript
 #. crossnow-web
 #: code:addons/snow_workflow/static/src/xml/workflow_process.xml:0
 #: code:addons/snow_workflow/static/src/js/workflow_process.js:0
@@ -968,12 +988,16 @@ msgstr "通过提示"
 #. module: snow_workflow
 #. crossnow-web
 #: code:addons/snow_workflow/static/src/xml/workflow_warning.xml:0
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/fields/workflow_warning.js:0
 msgid "cancel"
 msgstr "取消"
 
 #. module: snow_workflow
 #. crossnow-web
 #: code:addons/snow_workflow/static/src/xml/workflow_warning.xml:0
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/fields/workflow_warning.js:0
 msgid "submit"
 msgstr "确认提交"
 
@@ -986,6 +1010,8 @@ msgstr "请输入提交说明"
 #. module: snow_workflow
 #. crossnow-web
 #: code:addons/snow_workflow/static/src/xml/workflow_warning.xml:0
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/fields/workflow_warning.js:0
 msgid "Read and agree to this statement"
 msgstr "阅读并同意此声明"
 
@@ -1036,6 +1062,8 @@ msgstr "跟随第一次审批结果"
 #. module: snow_workflow
 #: model_terms:ir.ui.view,arch_db:snow_workflow.workflow_add_attendee
 #: model:ir.actions.act_window,name:snow_workflow.model_snow_workflow_actions
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_actions.py:0
 msgid "select user"
 msgstr "选择加签用户"
 
@@ -1062,26 +1090,38 @@ msgid "Reject Operation"
 msgstr "审批拒绝操作"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
 msgid "A flow cannot start at an end event or end at the start event."
 msgstr "结束事件不能发出连线, 开始事件不能作为连线的终点。"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "Approve"
 msgstr "审批"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
 msgid "Approver"
 msgstr "审批人"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
 msgid "Back"
 msgstr "返回"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "Choose the approvers of “%s”."
 msgstr "请选择“%s”的审批人。"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
 msgid "Delete"
 msgstr "删除"
 
@@ -1092,26 +1132,38 @@ msgid ""
 msgstr "从左侧拖拽节点到画布上。从节点右侧的圆点拖到另一个节点即可连线。"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "End"
 msgstr "结束"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "Exclusive gateway"
 msgstr "排他网关"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "Group approve (all)"
 msgstr "会签（全部通过）"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "Group approve (any)"
 msgstr "或签（任一通过）"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
 msgid "Name"
 msgstr "名称"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
 msgid "Nodes"
 msgstr "节点"
 
@@ -1120,102 +1172,152 @@ msgid "Open process designer"
 msgstr "打开流程设计器"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "Parallel gateway"
 msgstr "并行网关"
 
 #. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
 msgid "Process designer"
 msgstr "流程设计器"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
 msgid "Save"
 msgstr "保存"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
 msgid "Script"
 msgstr "脚本"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
 msgid "Script key"
 msgstr "脚本键名"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
 msgid "Select a node or a flow to edit it."
 msgstr "选择节点或连线进行编辑。"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
 msgid "Sequence flow"
 msgstr "连线"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
 msgid "Specific users"
 msgstr "指定用户"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "Start"
 msgstr "开始"
 
 #. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
 msgid "The diagram must contain the process with id “main_process”."
 msgstr "图中必须包含 id 为“main_process”的流程。"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
 msgid "The process has been saved."
 msgstr "流程已保存。"
 
 #. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
 msgid "The process is not a valid BPMN diagram: %s"
 msgstr "流程不是有效的 BPMN 图：%s"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "The process needs at least one end event."
 msgstr "流程至少需要一个结束事件。"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "The process needs exactly one start event."
 msgstr "流程需要且只能有一个开始事件。"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "The script key of “%s” is not valid."
 msgstr "“%s”的脚本键名无效。"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
 msgid "The element “%s” is not supported by the designer yet."
 msgstr "设计器暂不支持元素“%s”。"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "“%s” has no incoming flow."
 msgstr "“%s”没有入线。"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "“%s” has no outgoing flow."
 msgstr "“%s”没有出线。"
 
 #. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
 msgid "These elements are not supported by the process designer: %s"
 msgstr "流程设计器暂不支持以下元素：%s"
 
 #. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
 msgid "A process or subprocess needs at least one end event."
 msgstr "流程或子流程至少需要一个结束事件。"
 
 #. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
 msgid "A process or subprocess needs exactly one start event."
 msgstr "流程或子流程需要且只能有一个开始事件。"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
 msgid "Add a parameter"
 msgstr "添加参数"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "Choose an operation for “%s”."
 msgstr "请为“%s”选择操作。"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
 msgid "Condition"
 msgstr "条件"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
 msgid "Default flow"
 msgstr "默认分支"
 
@@ -1226,82 +1328,130 @@ msgid ""
 msgstr "从左侧拖拽节点到画布上。从节点右侧的圆点拖到另一个节点即可连线。双击子流程可以编辑其内部。"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "Evaluate an expression"
 msgstr "计算表达式"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
 msgid "Open subprocess"
 msgstr "打开子流程"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
 msgid "Operation"
 msgstr "操作"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
 msgid "Process"
 msgstr "流程"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
 msgid "Result variable"
 msgstr "结果变量"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "Service task"
 msgstr "服务任务"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "Subprocess"
 msgstr "子流程"
 
 #. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
 msgid "The condition “%(condition)s” is not a valid expression: %(error)s"
 msgstr "条件“%(condition)s”不是有效的表达式：%(error)s"
 
 #. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
 msgid "The default flow of “%s” is not one of its outgoing flows."
 msgstr "“%s”的默认分支不是它的出线之一。"
 
 #. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
 msgid "The expression “%(expr)s” is not valid: %(error)s"
 msgstr "表达式“%(expr)s”无效：%(error)s"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "The flow of “%s” needs a condition."
 msgstr "“%s”的分支需要一个条件。"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "The operation of “%s” needs a value."
 msgstr "“%s”的操作需要一个 value 参数。"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "The parameter “%s” of “%s” needs an expression."
 msgstr "参数“%s”需要一个表达式（所在任务：“%s”）。"
 
 #. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid "The expression “%s” is not valid Python."
+msgstr "“%s”不是合法的 Python 表达式。"
+
+#. module: snow_workflow
+#. odoo-javascript
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "The result variable of “%s” must be a valid name."
 msgstr "“%s”的结果变量必须是有效的名称。"
 
 #. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
 msgid "The service task “%s” needs an operation."
 msgstr "服务任务“%s”需要一个操作。"
 
 #. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
 msgid "Unknown service operation “%(operation)s” of “%(task)s”."
 msgstr "“%(task)s”的服务操作“%(operation)s”未知。"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
 msgid "Up"
 msgstr "上一级"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "Write fields to the business record"
 msgstr "把字段写入业务记录"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
 msgid "default"
 msgstr "默认"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "“%s” needs a default flow."
 msgstr "“%s”需要一个默认分支。"
 
@@ -1312,18 +1462,26 @@ msgid ""
 msgstr "当前无法执行该操作，任务可能已被处理，请刷新页面。"
 
 #. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_actions.py:0
 msgid "Unknown workflow action: %s"
 msgstr "未知的工作流操作：%s"
 
 #. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_actions.py:0
 msgid "Withdraw Operation"
 msgstr "撤销审批"
 
 #. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/workflow/snow_workflow.py:0
 msgid "The task is no longer waiting for approval, please refresh the page."
 msgstr "该任务已不在等待审批，请刷新页面。"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/views/approval_buttons.js:0
 msgid "No approval workflow is defined for this record."
 msgstr "该记录没有配置审批流程。"
 
@@ -1342,11 +1500,13 @@ msgid "Access"
 msgstr "访问权限"
 
 #. module: snow_workflow
+#. odoo-javascript
 #: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "Business rule task"
 msgstr "业务规则任务"
 
 #. module: snow_workflow
+#. odoo-javascript
 #: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "Choose the decision of “%s”."
 msgstr "请选择“%s”的决策。"
@@ -1362,21 +1522,25 @@ msgid "DMN decisions"
 msgstr "DMN 决策"
 
 #. module: snow_workflow
+#. odoo-javascript
 #: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
 msgid "Decision"
 msgstr "决策"
 
 #. module: snow_workflow
+#. odoo-javascript
 #: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
 msgid "Duration (ISO 8601, e.g. PT1H)"
 msgstr "时长（ISO 8601，如 PT1H）"
 
 #. module: snow_workflow
+#. odoo-javascript
 #: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
 msgid "Target record (Python expression, empty = inside this process)"
 msgstr "目标记录（Python 表达式，留空则只在本流程内）"
 
 #. module: snow_workflow
+#. odoo-javascript
 #: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
 msgid "Message name"
 msgstr "消息名"
@@ -1388,11 +1552,13 @@ msgid ""
 msgstr "多实例只能用于服务任务和脚本任务，“%s”不支持。"
 
 #. module: snow_workflow
+#. odoo-javascript
 #: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
 msgid "Number of runs"
 msgstr "执行次数"
 
 #. module: snow_workflow
+#. odoo-javascript
 #: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
 msgid "One after another"
 msgstr "依次执行"
@@ -1403,26 +1569,31 @@ msgid "Only system administrators can add script tasks to a process."
 msgstr "只有系统管理员可以在流程中添加脚本任务。"
 
 #. module: snow_workflow
+#. odoo-javascript
 #: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "Receive message"
 msgstr "接收消息"
 
 #. module: snow_workflow
+#. odoo-javascript
 #: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
 msgid "Run once for each item (multi-instance)"
 msgstr "按项目多次执行（多实例）"
 
 #. module: snow_workflow
+#. odoo-javascript
 #: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
 msgid "Script (Python)"
 msgstr "脚本（Python）"
 
 #. module: snow_workflow
+#. odoo-javascript
 #: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "Script task"
 msgstr "脚本任务"
 
 #. module: snow_workflow
+#. odoo-javascript
 #: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "Send message"
 msgstr "发送消息"
@@ -1448,6 +1619,7 @@ msgid "The cardinality “%(expr)s” of “%(task)s” is not valid: %(error)s"
 msgstr "“%(task)s”的执行次数“%(expr)s”无效：%(error)s"
 
 #. module: snow_workflow
+#. odoo-javascript
 #: code:addons/snow_workflow/models/snow_workflow_model.py:0
 #: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid ""
@@ -1467,6 +1639,7 @@ msgid "The duration of “%s” must be an ISO 8601 duration, e.g. 'PT1H'."
 msgstr "“%s”的时长必须是 ISO 8601 时长，如 'PT1H'。"
 
 #. module: snow_workflow
+#. odoo-javascript
 #: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "The duration of “%s” must be an ISO 8601 duration, e.g. PT1H."
 msgstr "“%s”的时长必须是 ISO 8601 时长，如 PT1H。"
@@ -1482,6 +1655,7 @@ msgid "The field “%(field)s” of %(model)s cannot be written by a workflow."
 msgstr "流程不能写入 %(model)s 的字段“%(field)s”。"
 
 #. module: snow_workflow
+#. odoo-javascript
 #: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "The message task “%s” needs a message name."
 msgstr "消息任务“%s”需要消息名。"
@@ -1492,6 +1666,7 @@ msgid "The message task “%s” needs a message."
 msgstr "消息任务“%s”需要指定消息。"
 
 #. module: snow_workflow
+#. odoo-javascript
 #: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid ""
 "The messages “%(first)s” and “%(second)s” cannot be told apart, rename one "
@@ -1499,6 +1674,7 @@ msgid ""
 msgstr "消息“%(first)s”和“%(second)s”无法区分，请重命名其中之一。"
 
 #. module: snow_workflow
+#. odoo-javascript
 #: code:addons/snow_workflow/models/snow_workflow_model.py:0
 #: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "The multi-instance task “%s” needs a cardinality."
@@ -1520,6 +1696,7 @@ msgid "The script of “%(task)s” is not valid Python: %(error)s"
 msgstr "“%(task)s”的脚本不是合法的 Python：%(error)s"
 
 #. module: snow_workflow
+#. odoo-javascript
 #: code:addons/snow_workflow/models/snow_workflow_model.py:0
 #: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "The script task “%s” needs a script."
@@ -1531,16 +1708,19 @@ msgid "The sequential flag of “%s” must be true or false."
 msgstr "“%s”的顺序执行标记必须是 true 或 false。"
 
 #. module: snow_workflow
+#. odoo-javascript
 #: code:addons/snow_workflow/static/src/fields/workflow_warning.js:0
 msgid "The submission description cannot exceed 200 characters"
 msgstr "提交说明不能超过 200 个字符"
 
 #. module: snow_workflow
+#. odoo-javascript
 #: code:addons/snow_workflow/static/src/fields/workflow_warning.js:0
 msgid "The submission description is required."
 msgstr "提交说明为必填项。"
 
 #. module: snow_workflow
+#. odoo-javascript
 #: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "Timer"
 msgstr "定时器"
@@ -1551,6 +1731,7 @@ msgid "Workflow: advance timers"
 msgstr "工作流：推进定时器"
 
 #. module: snow_workflow
+#. odoo-javascript
 #: code:addons/snow_workflow/static/src/fields/workflow_warning.js:0
 msgid "You must click read and agree!"
 msgstr "必须阅读并同意！"
@@ -1561,45 +1742,56 @@ msgid "workflow action mixin"
 msgstr "工作流动作混入"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "“%s” can have only one outgoing flow; use a gateway to split the flow."
 msgstr "“%s”只能有一条出线；需要分支请使用网关。"
 
 #. module: snow_workflow
-#: static/src/designer/bpmn_model.js:40
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "Inclusive gateway"
 msgstr "包容网关"
 
 #. module: snow_workflow
-#: static/src/designer/bpmn_model.js:41
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "Event-based gateway"
 msgstr "事件网关"
 
 #. module: snow_workflow
-#: static/src/designer/workflow_designer.js:224
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
 msgid "Duration"
 msgstr "时长"
 
 #. module: snow_workflow
-#: static/src/designer/bpmn_model.js:60
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "Date and time"
 msgstr "日期时间"
 
 #. module: snow_workflow
-#: static/src/designer/bpmn_model.js:61
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "Cycle"
 msgstr "循环"
 
 #. module: snow_workflow
-#: static/src/designer/workflow_designer.js:294
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
 msgid "Timer type"
 msgstr "定时器类型"
 
 #. module: snow_workflow
-#: static/src/designer/workflow_designer.js:295
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
 msgid "Time (quoted expression is added automatically)"
 msgstr "时间（自动加引号）"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "The event-based gateway “%s” needs at least two outgoing flows."
 msgstr "事件网关“%s”至少需要两条出线。"
 
@@ -1610,26 +1802,38 @@ msgid ""
 msgstr "事件网关“%s”之后只能接接收任务和定时器。"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "The time of “%(task)s” is not valid, e.g. %(example)s."
 msgstr "“%(task)s”的时间无效，例如 %(example)s。"
 
 #. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
 msgid "The time of “%(task)s” must be a string in quotes, %(hint)s."
 msgstr "“%(task)s”的时间必须是带引号的字符串，%(hint)s。"
 
 #. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
 msgid "The time of “%(task)s” is not valid, %(hint)s."
 msgstr "“%(task)s”的时间无效，%(hint)s。"
 
 #. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
 msgid "The timer “%s” has no time."
 msgstr "定时器“%s”没有时间。"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "Boundary timer"
 msgstr "边界定时器"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
 msgid "Attached to"
 msgstr "挂接到"
 
@@ -1640,20 +1844,52 @@ msgid ""
 msgstr "边界定时器“%s”必须挂接在服务、脚本、业务规则、发送或接收任务上。"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "Intermediate event"
 msgstr "中间事件"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "Call activity"
 msgstr "调用活动"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
 msgid "Process to call"
 msgstr "被调用的流程"
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "Choose the process that “%s” calls."
 msgstr "请选择“%s”调用的流程。"
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid "The call activity “%s” must call another existing process."
+msgstr "调用活动“%s”必须调用另一个已存在的流程。"
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid "The call activity “%s” needs a process to call."
+msgstr "调用活动“%s”需要指定要调用的流程。"
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid "The process called by “%s” cannot call other processes."
+msgstr "“%s”调用的流程不能再调用其他流程。"
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid "The target record of “%(task)s” is not valid: %(error)s"
+msgstr "“%(task)s”的目标记录无效：%(error)s"
 
 #~ msgid "Seach Definition"
 #~ msgstr ""

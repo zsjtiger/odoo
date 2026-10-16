@@ -6,14 +6,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 20.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 03:21+0000\n"
-"PO-Revision-Date: 2026-10-16 03:21+0000\n"
+"POT-Creation-Date: 2026-10-16 06:26+0000\n"
+"PO-Revision-Date: 2026-10-16 06:26+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: snow_workflow
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_definition_from
+msgid "<definitions>...</definitions>"
+msgstr ""
 
 #. module: snow_workflow
 #. odoo-javascript
@@ -45,6 +50,16 @@ msgid "Add a parameter"
 msgstr ""
 
 #. module: snow_workflow
+#. odoo-javascript
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid ""
+"After the event-based gateway “%s” only receive tasks and timers are "
+"allowed."
+msgstr ""
+
+#. module: snow_workflow
 #: model:ir.model.fields,field_description:snow_workflow.field_ir_access__perm_approval
 msgid "Approval Access"
 msgstr ""
@@ -69,13 +84,31 @@ msgstr ""
 #. module: snow_workflow
 #. odoo-javascript
 #: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "Attached to"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
 msgid "Back"
 msgstr ""
 
 #. module: snow_workflow
 #. odoo-javascript
 #: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "Boundary timer"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "Business rule task"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "Call activity"
 msgstr ""
 
 #. module: snow_workflow
@@ -94,6 +127,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "Choose the decision of “%s”."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "Choose the process that “%s” calls."
 msgstr ""
 
 #. module: snow_workflow
@@ -146,6 +185,12 @@ msgid "Created on"
 msgstr ""
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "Cycle"
+msgstr ""
+
+#. module: snow_workflow
 #: model:ir.model.fields,help:snow_workflow.field_snow_workflow_definition__dmn_content
 msgid "DMN XML with the decision tables used by business rule tasks."
 msgstr ""
@@ -158,6 +203,12 @@ msgstr ""
 #. module: snow_workflow
 #: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_data__data_owner
 msgid "Data Owner"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "Date and time"
 msgstr ""
 
 #. module: snow_workflow
@@ -214,8 +265,8 @@ msgstr ""
 
 #. module: snow_workflow
 #. odoo-javascript
-#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
-msgid "Duration (ISO 8601, e.g. PT1H)"
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "Duration"
 msgstr ""
 
 #. module: snow_workflow
@@ -228,6 +279,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "Evaluate an expression"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "Event-based gateway"
 msgstr ""
 
 #. module: snow_workflow
@@ -286,6 +343,18 @@ msgid "ID"
 msgstr ""
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "Inclusive gateway"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "Intermediate event"
+msgstr ""
+
+#. module: snow_workflow
 #: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_attendee_selection__write_uid
 #: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_carbon_copy__write_uid
 #: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__write_uid
@@ -326,12 +395,6 @@ msgstr ""
 #. module: snow_workflow
 #: model:ir.model,name:snow_workflow.model_ir_ui_menu
 msgid "Menu"
-msgstr ""
-
-#. module: snow_workflow
-#. odoo-javascript
-#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
-msgid "Target record (Python expression, empty = inside this process)"
 msgstr ""
 
 #. module: snow_workflow
@@ -432,6 +495,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/snow_workflow/models/snow_workflow_model.py:0
 msgid "Process designer"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "Process to call"
 msgstr ""
 
 #. module: snow_workflow
@@ -572,6 +641,12 @@ msgid "Subprocess"
 msgstr ""
 
 #. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "Target record (Python expression, empty = inside this process)"
+msgstr ""
+
+#. module: snow_workflow
 #: model:ir.model,name:snow_workflow.model_snow_workflow_execution_task_attendee
 msgid "Task Attendee"
 msgstr ""
@@ -599,9 +674,31 @@ msgid "The approval process of this record is suspended."
 msgstr ""
 
 #. module: snow_workflow
+#. odoo-javascript
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid ""
+"The boundary timer “%s” must be attached to a service, script, business "
+"rule, send or receive task."
+msgstr ""
+
+#. module: snow_workflow
 #. odoo-python
 #: code:addons/snow_workflow/models/snow_workflow_model.py:0
 msgid "The business rule task “%s” needs a decision."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid "The call activity “%s” must call another existing process."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid "The call activity “%s” needs a process to call."
 msgstr ""
 
 #. module: snow_workflow
@@ -639,25 +736,6 @@ msgid "The diagram must contain the process with id “main_process”."
 msgstr ""
 
 #. module: snow_workflow
-#. odoo-python
-#: code:addons/snow_workflow/models/snow_workflow_model.py:0
-msgid ""
-"The duration of “%s” must be an ISO 8601 duration in quotes, e.g. 'PT1H'."
-msgstr ""
-
-#. module: snow_workflow
-#. odoo-python
-#: code:addons/snow_workflow/models/snow_workflow_model.py:0
-msgid "The duration of “%s” must be an ISO 8601 duration, e.g. 'PT1H'."
-msgstr ""
-
-#. module: snow_workflow
-#. odoo-javascript
-#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
-msgid "The duration of “%s” must be an ISO 8601 duration, e.g. PT1H."
-msgstr ""
-
-#. module: snow_workflow
 #. odoo-javascript
 #: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 #: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
@@ -665,9 +743,23 @@ msgid "The element “%s” is not supported by the designer yet."
 msgstr ""
 
 #. module: snow_workflow
+#. odoo-javascript
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "The event-based gateway “%s” needs at least two outgoing flows."
+msgstr ""
+
+#. module: snow_workflow
 #. odoo-python
 #: code:addons/snow_workflow/models/snow_workflow_model.py:0
 msgid "The expression “%(expr)s” is not valid: %(error)s"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid "The expression “%s” is not valid Python."
 msgstr ""
 
 #. module: snow_workflow
@@ -732,6 +824,12 @@ msgstr ""
 #: code:addons/snow_workflow/models/snow_workflow_model.py:0
 #: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "The parameter “%s” of “%s” needs an expression."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid "The process called by “%s” cannot call other processes."
 msgstr ""
 
 #. module: snow_workflow
@@ -824,8 +922,38 @@ msgstr ""
 
 #. module: snow_workflow
 #. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid "The target record of “%(task)s” is not valid: %(error)s"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
 #: code:addons/snow_workflow/workflow/snow_workflow.py:0
 msgid "The task is no longer waiting for approval, please refresh the page."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid "The time of “%(task)s” is not valid, %(hint)s."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "The time of “%(task)s” is not valid, e.g. %(example)s."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid "The time of “%(task)s” must be a string in quotes, %(hint)s."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid "The timer “%s” has no time."
 msgstr ""
 
 #. module: snow_workflow
@@ -844,8 +972,20 @@ msgstr ""
 
 #. module: snow_workflow
 #. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "Time (quoted expression is added automatically)"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
 #: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "Timer"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "Timer type"
 msgstr ""
 
 #. module: snow_workflow
@@ -1597,6 +1737,14 @@ msgstr ""
 #. odoo-python
 #: code:addons/snow_workflow/models/snow_workflow_model.py:0
 #: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "“%s” can have only one outgoing flow; use a gateway to split the flow."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
 msgid "“%s” has no incoming flow."
 msgstr ""
 
@@ -1619,96 +1767,4 @@ msgstr ""
 #. module: snow_workflow
 #: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance__object_name
 msgid "模块名"
-msgstr ""
-
-#. module: snow_workflow
-msgid "“%s” can have only one outgoing flow; use a gateway to split the flow."
-msgstr ""
-
-#. module: snow_workflow
-msgid "Inclusive gateway"
-msgstr ""
-
-#. module: snow_workflow
-msgid "Event-based gateway"
-msgstr ""
-
-#. module: snow_workflow
-msgid "Duration"
-msgstr ""
-
-#. module: snow_workflow
-msgid "Date and time"
-msgstr ""
-
-#. module: snow_workflow
-msgid "Cycle"
-msgstr ""
-
-#. module: snow_workflow
-msgid "Timer type"
-msgstr ""
-
-#. module: snow_workflow
-msgid "Time (quoted expression is added automatically)"
-msgstr ""
-
-#. module: snow_workflow
-msgid "The event-based gateway “%s” needs at least two outgoing flows."
-msgstr ""
-
-#. module: snow_workflow
-msgid ""
-"After the event-based gateway “%s” only receive tasks and timers are "
-"allowed."
-msgstr ""
-
-#. module: snow_workflow
-msgid "The time of “%(task)s” is not valid, e.g. %(example)s."
-msgstr ""
-
-#. module: snow_workflow
-msgid "The time of “%s” must be a string in quotes, %(hint)s."
-msgstr ""
-
-#. module: snow_workflow
-msgid "The time of “%(task)s” must be a string in quotes, %(hint)s."
-msgstr ""
-
-#. module: snow_workflow
-msgid "The time of “%(task)s” is not valid, %(hint)s."
-msgstr ""
-
-#. module: snow_workflow
-msgid "The timer “%s” has no time."
-msgstr ""
-
-#. module: snow_workflow
-msgid "Boundary timer"
-msgstr ""
-
-#. module: snow_workflow
-msgid "Attached to"
-msgstr ""
-
-#. module: snow_workflow
-msgid ""
-"The boundary timer “%s” must be attached to a service, script, business "
-"rule, send or receive task."
-msgstr ""
-
-#. module: snow_workflow
-msgid "Intermediate event"
-msgstr ""
-
-#. module: snow_workflow
-msgid "Call activity"
-msgstr ""
-
-#. module: snow_workflow
-msgid "Process to call"
-msgstr ""
-
-#. module: snow_workflow
-msgid "Choose the process that “%s” calls."
 msgstr ""

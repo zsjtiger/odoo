@@ -107,6 +107,16 @@ class TestDesignerNodes(TransactionCase):
         with self.assertRaises(ValidationError):
             self.definition.dmn_content = '<definitions><decision id="x"></definitions>'
 
+    def test_a_decision_expression_must_be_valid_python(self):
+        # 输入条目的比较 ("> 5") 与输出条目的字符串是合法的
+        self.definition.dmn_content = DMN
+        broken_input = DMN.replace('<text>x</text>', '<text>x +</text>')
+        with self.assertRaises(ValidationError):
+            self.definition.dmn_content = broken_input
+        broken_output = DMN.replace('<text>"big"</text>', '<text>"big</text>')
+        with self.assertRaises(ValidationError):
+            self.definition.dmn_content = broken_output
+
     # 定时器
     def test_a_timer_needs_a_quoted_iso_duration(self):
         def timer(text):
@@ -238,6 +248,12 @@ class TestDesignerNodes(TransactionCase):
         self.assertFalse(self._active_tasks(sender))
         self.assertTrue(self.env['snow.workflow.instance'].search(
             [('object', '=', 'res.partner'), ('record_id', '=', sender.id), ('is_complete', '=', False)]))
+
+    def test_data_objects_are_rejected_because_nothing_runs_them(self):
+        script = '<bpmn:scriptTask id="t" name="t"><bpmn:script>x = 1</bpmn:script></bpmn:scriptTask>'
+        data = '<bpmn:dataObjectReference id="d" dataObjectRef="o" name="doc"/><bpmn:dataObject id="o"/>'
+        with self.assertRaises(UserError):
+            self._save(_linear(script) + data)
 
     def test_a_node_other_than_a_gateway_can_have_only_one_outgoing_flow(self):
         script = '<bpmn:scriptTask id="t" name="t"><bpmn:script>x = 1</bpmn:script></bpmn:scriptTask>'

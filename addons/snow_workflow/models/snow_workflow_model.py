@@ -56,6 +56,44 @@ class WorkflowDefinition(models.Model):
                 BpmnWorkflowEngine.dmn_decision_ids(record.dmn_content)
             except Exception as error:
                 raise ValidationError(_("The DMN decisions are not valid: %s", error)) from error
+            error = record._dmn_expression_error(record.dmn_content)
+            if error:
+                raise ValidationError(_("The DMN decisions are not valid: %s", error))
+
+    @staticmethod
+    def _dmn_expression_error(dmn_str):
+        """
+        决策表的表达式在运行时按 Python 求值: 输入表达式与输出条目必须是表达式; 输入条目可以是比较
+        (如 "> 5", 与引擎一致在前面补上变量), 或含 "?" 占位的表达式. 返回第一个错误的说明, 没有错误返回空.
+        """
+        def parses(candidate):
+            try:
+                ast.parse(candidate, mode='eval')
+                return True
+            except SyntaxError:
+                return False
+
+        root = etree.fromstring(dmn_str.encode('utf-8'))
+        for element in root.iter():
+            if not isinstance(element.tag, str):
+                continue
+            name = etree.QName(element).localname
+            if name not in ('inputExpression', 'inputEntry', 'outputEntry'):
+                continue
+            texts = [c for c in element if isinstance(c.tag, str) and etree.QName(c).localname == 'text']
+            text = (texts[0].text or '').strip() if texts else ''
+            if not text:
+                # 空的输入条目表示匹配任何值
+                continue
+            if name == 'inputEntry':
+                condition = text.replace('?', 'dmninputexpr')
+                valid = parses(condition) or parses('v ' + condition)
+            else:
+                valid = parses(text)
+            if not valid:
+                return _("The expression “%s” is not valid Python.", text)
+        return None
+
     version = fields.Integer(string="version")
     deployed_on = fields.Datetime(string='deployed on', required=True, default=fields.Datetime.now)
     active = fields.Boolean(string='active', default=True)
@@ -324,6 +362,9 @@ class WorkflowDefinition(models.Model):
         if ref not in decisions:
             raise UserError(_("The decision “%(decision)s” of “%(task)s” is not defined in the DMN decisions.",
                               decision=ref, task=label))
+        result = element.get(f'{{{self.CAMUNDA_NS}}}resultVariable')
+        if result is not None and not result.isidentifier():
+            raise UserError(_("The result variable of “%s” must be a valid name.", label))
 
     def _check_call_activity(self, element):
         label = element.get('name') or element.get('id')
