@@ -1,8 +1,14 @@
-// 页面高度 = 视口减去底部标签栏; 安全区域(刘海/底部横条)由输入区域的内边距留出
+// 页面高度 = 视口减去底部标签栏; 输入区域的底部内边距留出安全区域(刘海/底部横条)
 .m_ai_page {
     display: flex;
     flex-direction: column;
     height: 100%;
+
+    .m_ai_header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
 
     .m_ai_body {
         display: flex;
@@ -11,35 +17,16 @@
         min-height: 0;
     }
 
-    .m_ai_messages {
+    .m_ai_thread {
         flex: 1 1 auto;
         min-height: 0;
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
-        padding: 8px 0;
-    }
-
-    .m_ai_message {
-        max-width: 85%;
-        margin: 6px 0;
-        padding: 8px 12px;
-        border-radius: 12px;
-        white-space: pre-wrap;
-        overflow-wrap: anywhere;
-    }
-
-    .m_ai_message_user {
-        margin-left: auto;
-        background-color: $theme-color;
-        color: $white-color;
-    }
-
-    .m_ai_message_assistant {
-        background-color: #f1f1f1;
     }
 
     .m_ai_pending {
         opacity: 0.6;
+        padding: 4px 0;
     }
 
     .m_ai_composer {

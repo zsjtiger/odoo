@@ -4,4 +4,3 @@ import "@mobile_web/pages/home/home_page";
 import "@mobile_web/pages/todo/todo_page";
 import "@mobile_web/pages/schedule/schedule_page";
 import "@mobile_web/pages/my/my_page";
-import "@mobile_web/pages/ai/ai_page";
