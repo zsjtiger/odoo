@@ -1,3 +1,4 @@
+import { isSystrayItemVisible } from "@web/webclient/navbar/systray_visibility";
 import { FileViewer as WebFileViewer } from "@web/core/components/file_viewer/file_viewer";
 import { patch } from "@web/core/utils/patch";
 import { _t } from "@web/core/data/l10n/translation";
@@ -9,6 +10,10 @@ patch(WebFileViewer.prototype, {
         super.setup();
         this.aiChatLauncher = useService("aiChatLauncher");
         this.notification = useService("notification");
+    },
+
+    get aiEnabled() {
+        return isSystrayItemVisible("ai");
     },
 
     async openAIChat() {

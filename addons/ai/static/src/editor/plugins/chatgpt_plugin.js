@@ -1,3 +1,4 @@
+import { isSystrayItemVisible } from "@web/webclient/navbar/systray_visibility";
 import { _t } from "@web/core/data/l10n/translation";
 import { Plugin } from "@html_editor/plugin";
 import {
@@ -34,7 +35,7 @@ export class ChatGPTPlugin extends Plugin {
                 title: _t("AI"),
                 description: _t("Generate or transform content with AI"),
                 run: this.openDialog.bind(this),
-                isAvailable: () => user.isInternalUser,
+                isAvailable: () => user.isInternalUser && isSystrayItemVisible("ai"),
             },
         ],
         toolbar_groups: withSequence(50, {

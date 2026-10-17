@@ -1,3 +1,4 @@
+import { isSystrayItemVisible } from "@web/webclient/navbar/systray_visibility";
 import { getInnerHtml } from "@mail/utils/common/html";
 
 import { registry } from "@web/core/framework/registry";
@@ -53,6 +54,10 @@ export class MailComposerChatGPT extends Component {
             channelTitle: this.props.record.data.subject,
             aiChatSourceId: this.props.record.id,
         });
+    }
+
+    get aiEnabled() {
+        return isSystrayItemVisible("ai");
     }
 
     // Getter so subclasses can override the key.

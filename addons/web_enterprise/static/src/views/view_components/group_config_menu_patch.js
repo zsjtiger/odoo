@@ -1,3 +1,4 @@
+import { isSystrayItemVisible } from "@web/webclient/navbar/systray_visibility";
 import { _t } from "@web/core/data/l10n/translation";
 import { registry } from "@web/core/framework/registry";
 import { user } from "@web/core/services/user";
@@ -40,7 +41,7 @@ registry.category("group_config_items").add(
     {
         label: _t("Automations"),
         method: "openAutomations",
-        isVisible: ({ permissions }) => permissions.canEditAutomations,
+        isVisible: ({ permissions }) => permissions.canEditAutomations && isSystrayItemVisible("studio"),
         class: "o_column_automations",
         icon: "wand_stars",
     },

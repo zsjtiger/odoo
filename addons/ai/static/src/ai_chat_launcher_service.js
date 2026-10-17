@@ -1,3 +1,4 @@
+import { isSystrayItemVisible } from "@web/webclient/navbar/systray_visibility";
 import { _t } from "@web/core/data/l10n/translation";
 import { registry } from "@web/core/framework/registry";
 import { rpc } from "@web/core/services/network/rpc";
@@ -89,6 +90,7 @@ export const aiChatLauncherService = {
         }
 
         return {
+            isEnabled: () => isSystrayItemVisible("ai"),
             async launchAIChat({
                 interfaceKey,
                 channelTitle,
@@ -102,6 +104,9 @@ export const aiChatLauncherService = {
                 referenceImagePath = null,
                 context = null,
             }) {
+                if (!isSystrayItemVisible("ai")) {
+                    return null;
+                }
                 // make the insert button target the component that called the AI
                 if (aiChatSourceId) {
                     services["mail.store"].aiInsertButtonTarget = aiChatSourceId;

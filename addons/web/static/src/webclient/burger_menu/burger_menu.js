@@ -1,3 +1,4 @@
+import { isSystrayItemVisible } from "@web/webclient/navbar/systray_visibility";
 import { registry } from "@web/core/framework/registry";
 import { Transition } from "@web/core/framework/transition";
 import { user } from "@web/core/services/user";
@@ -23,6 +24,10 @@ export class BurgerMenu extends Component {
         MobileSwitchCompanyMenu,
         Transition,
     };
+
+    get showCompanySwitch() {
+        return isSystrayItemVisible("company");
+    }
 
     setup() {
         this.user = user;

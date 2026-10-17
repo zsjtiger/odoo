@@ -1,3 +1,4 @@
+import { isSystrayItemVisible } from "@web/webclient/navbar/systray_visibility";
 import { Component, markRaw, t, useProps } from "@odoo/owl";
 import { CommandPalette, defaultCommandItemProps } from "@web/core/services/commands/command_palette";
 import { _t } from "@web/core/data/l10n/translation";
@@ -17,6 +18,9 @@ class AskAICommand extends Component {
 }
 
 async function askAIProvide(aiChatLauncher, options) {
+    if (!aiChatLauncher.isEnabled()) {
+        return [];
+    }
     return [
         {
             action: async () => {

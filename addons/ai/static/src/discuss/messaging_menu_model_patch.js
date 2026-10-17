@@ -1,3 +1,4 @@
+import { isSystrayItemVisible } from "@web/webclient/navbar/systray_visibility";
 import {
     MENU_TABS,
     MessagingMenu,
@@ -15,7 +16,7 @@ patch(MessagingMenu.prototype, {
         super.setup(...arguments);
         this.aiChatTab = fields.One("MessagingMenuTab", {
             compute() {
-                if (!user.isInternalUser) {
+                if (!user.isInternalUser || !isSystrayItemVisible("ai")) {
                     return;
                 }
                 return {

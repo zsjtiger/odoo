@@ -1,3 +1,4 @@
+import { isSystrayItemVisible } from "@web/webclient/navbar/systray_visibility";
 import { isMobileOS } from "@web/core/services/browser/feature_detection";
 import { user } from "@web/core/services/user";
 import { useService } from "@web/core/utils/hooks";
@@ -56,7 +57,8 @@ export const patchListRendererDesktop = () => ({
             return Boolean(resModel);
         };
 
-        this.studioEditable = isPotentiallyEditable && computeStudioEditable();
+        this.studioEditable =
+            isPotentiallyEditable && computeStudioEditable() && isSystrayItemVisible("studio");
     },
 
     isStudioEditable() {
