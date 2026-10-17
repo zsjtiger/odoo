@@ -1,11 +1,15 @@
 import { markup, onWillStart, proxy, xml } from "@odoo/owl";
 import { Thread } from "@mail/core/common/thread";
+import { useVoiceRecorder } from "@mail/discuss/voice_message/common/voice_recorder";
 import { MobilePage } from "@mobile_web/pages/shared/components/mobile_page";
 import { mobilePageRegistry } from "@mobile_web/pages/shared/page_registry";
 import { PAGE_KEYS } from "@mobile_web/pages/shared/page_keys";
 import { Unavailable } from "@mobile_web/pages/shared/components/unavailable";
 import { isModelAvailable } from "@mobile_web/pages/shared/data/model_access";
+import { rpc } from "@web/core/services/network/rpc";
+import { user } from "@web/core/services/user";
 import { useService } from "@web/core/utils/hooks";
+import { getDataURLFromFile } from "@web/core/utils/urls";
 import { _t } from "@web/core/data/l10n/translation";
 
 // 界面文字, 由 _t 包装并通过 i18n/*.po 翻译(模板中用 this.texts 引用)
@@ -19,6 +23,8 @@ const TEXTS = {
     thinking: _t("Thinking…"),
     sendFailed: _t("Failed to send, please try again"),
     channelTitle: _t("AI chat"),
+    voiceStop: _t("Stop recording"),
+    transcriptionFailed: _t("Transcription failed."),
 };
 
 /** AI 助手: 需要安装 ai 模块 */
@@ -58,7 +64,8 @@ export class AIPage extends MobilePage {
     static components = { Thread, Unavailable };
     orm = useService("orm");
     store = useService("mail.store");
-    state = proxy({ available: null, channel: null, draft: "", error: false });
+    state = proxy({ available: null, channel: null, draft: "", error: false, isTranscribing: false });
+    notification = useService("notification");
 
     static template = xml`
         <t t-name="mobile_ai.AIPage">
@@ -84,7 +91,11 @@ export class AIPage extends MobilePage {
                                     t-att-disabled="!this.state.draft.trim() or this.state.channel.isAiGenerating">
                                 <svg viewBox="0 0 24 24" class="m_ai_icon"><path d="M20 6v7H6.8l3.6-3.6M10.4 16.4 6.8 13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                             </button>
-                            <button type="button" class="m_ai_composer_btn" t-att-title="this.texts.voice" disabled="disabled">
+                            <button type="button" class="m_ai_composer_btn m_ai_voice"
+                                    t-att-class="{ 'm_ai_recording': this.voiceRecorder.recording }"
+                                    t-att-title="this.voiceRecorder.recording ? this.texts.voiceStop : this.texts.voice"
+                                    t-att-disabled="this.state.isTranscribing"
+                                    t-on-click="this.voiceRecorder.onClick">
                                 <svg viewBox="0 0 24 24" class="m_ai_icon"><rect x="9" y="3" width="6" height="11" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
                             </button>
                         </div>
@@ -95,6 +106,11 @@ export class AIPage extends MobilePage {
     `;
 
     setup() {
+        // 与网页端相同的录音方式: 录音结束后转写, 文字插入到输入框
+        this.voiceRecorder = useVoiceRecorder({
+            maxDuration: 300,
+            onRecordReady: (file) => this.transcribe(file),
+        });
         onWillStart(async () => {
             this.state.available = await isModelAvailable(this.orm, MODEL);
             if (this.state.available) {
@@ -125,6 +141,30 @@ export class AIPage extends MobilePage {
         const channel = await this.store["discuss.channel"].getOrFetch(result.ai_channel_id);
         storeChannelId(channel.id);
         return channel;
+    }
+
+    /** 与网页端相同的转写接口, 转写结果追加到输入框 */
+    async transcribe(file) {
+        this.state.isTranscribing = true;
+        try {
+            const dataUrl = await getDataURLFromFile(file);
+            const response = await rpc(
+                "/ai/transcription",
+                {
+                    audio_base64: dataUrl.split(",")[1],
+                    language: user.lang?.replace("-", "_").split("_")[0],
+                },
+                { silent: true }
+            );
+            if (response.status === "success") {
+                const prefix = this.state.draft ? " " : "";
+                this.state.draft += prefix + response.text;
+            }
+        } catch {
+            this.notification.add(this.texts.transcriptionFailed, { type: "danger" });
+        } finally {
+            this.state.isTranscribing = false;
+        }
     }
 
     async newChat() {

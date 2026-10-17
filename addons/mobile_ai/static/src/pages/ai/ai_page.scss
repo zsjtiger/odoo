@@ -84,3 +84,8 @@
     }
 
 }
+
+// 录音中: 麦克风变为红色, 表示点击将停止录音
+.m_ai_page .m_ai_composer_btn.m_ai_recording {
+    color: #d93025;
+}
