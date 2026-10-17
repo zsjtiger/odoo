@@ -111,7 +111,7 @@ class AIComposer(models.Model):
 
         elif self.interface_key == "file_viewer_ai_button":
             # add file
-            if not res_model == 'ir.attachment' or not res_id or not (attachment := self.env[res_model].search([('id', '=', res_id)])):
+            if res_model != 'ir.attachment' or not res_id or not (attachment := self.env[res_model].search([('id', '=', res_id)])):
                 error_message = "The record must be a valid attachment"
                 raise ValueError(error_message)
             context_parts.extend(attachment._ai_read()[1])
