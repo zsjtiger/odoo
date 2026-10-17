@@ -5,7 +5,14 @@ import { NotEditableActionError } from "../../studio_service";
 import { IconCreatorDialog } from "./icon_creator_dialog/icon_creator_dialog";
 
 import { onMounted, onWillUnmount, proxy } from "@odoo/owl";
+const MODELS_BUTTON = {
+    id: "o_studio_models_button",
+    isModelsButton: true,
+    label: _t("Models"),
+    webIconData: "/web_studio/static/src/img/default_icon_app.png",
+};
 const NEW_APP_BUTTON = {
+    id: "o_studio_new_app_button",
     isNewAppButton: true,
     label: _t("New App"),
     webIconData: "/web_studio/static/src/img/default_icon_app.png",
@@ -64,7 +71,7 @@ export class StudioHomeMenu extends HomeMenu {
     //--------------------------------------------------------------------------
 
     get displayedApps() {
-        return [...super.displayedApps, NEW_APP_BUTTON];
+        return [MODELS_BUTTON, ...super.displayedApps, NEW_APP_BUTTON];
     }
 
     //--------------------------------------------------------------------------
@@ -75,6 +82,8 @@ export class StudioHomeMenu extends HomeMenu {
         if (menu.isNewAppButton) {
             this.canEditIcons = false;
             return this.studio.setParams({ mode: this.studio.MODES.APP_CREATOR });
+        } else if (menu.isModelsButton) {
+            return this.studio.setParams({ mode: this.studio.MODES.MODELS });
         } else {
             try {
                 await this.studio.open(this.studio.MODES.EDITOR, menu.actionID);

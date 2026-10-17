@@ -6,8 +6,9 @@ import {
     viewTypeToString,
 } from "@web_studio/studio_service";
 import { designerState } from "../designer_state";
-import { FieldDetailPanel } from "./field_detail_panel";
+import { FieldDetailPage } from "./field_detail_page";
 import { getFieldTypeLabels } from "./field_types";
+import { ModelButtons } from "./model_buttons";
 import { NewFieldDialog } from "./new_field_dialog";
 
 const PAGE_SIZE = 100;
@@ -16,7 +17,7 @@ const LAYOUT_PRIORITY = ["form", "list"];
 
 export class ModelDetail extends Component {
     static template = "web_studio.ModelDetail";
-    static components = { FieldDetailPanel };
+    static components = { FieldDetailPage, ModelButtons };
 
     props = useProps({
         model: t.object(),
@@ -36,7 +37,6 @@ export class ModelDetail extends Component {
             search: "",
             typeFilter: "all",
             limit: PAGE_SIZE,
-            selectedFieldId: null,
         });
 
         this.filteredFields = computed(() => {
@@ -60,14 +60,10 @@ export class ModelDetail extends Component {
 
         this.visibleFields = computed(() => this.filteredFields().slice(0, this.state.limit));
 
-        this.selectedField = computed(() =>
-            this.state.fields.find((field) => field.id === this.state.selectedFieldId)
-        );
-
         onWillStart(() => this.loadFields(this.props.model));
         onWillUpdateProps((nextProps) => {
             if (nextProps.model.id !== this.props.model.id) {
-                this.state.selectedFieldId = null;
+                this.designerState.selectedFieldId = null;
                 this.state.limit = PAGE_SIZE;
                 this.state.loading = true;
                 return this.loadFields(nextProps.model);
@@ -110,11 +106,8 @@ export class ModelDetail extends Component {
     }
 
     selectField(field) {
-        this.state.selectedFieldId = field.id;
-    }
-
-    closeFieldPanel() {
-        this.state.selectedFieldId = null;
+        this.designerState.selectedFieldId = field.id;
+        this.designerState.section = "field";
     }
 
     /** Called by the field panel after a save or a delete. */
@@ -139,11 +132,20 @@ export class ModelDetail extends Component {
     }
 
     get isFieldsSection() {
-        return this.designerState.section === "fields";
+        return this.designerState.section === "fields" || this.designerState.section === "field";
+    }
+
+    get section() {
+        return this.designerState.section;
     }
 
     showSection(section) {
         this.designerState.section = section;
+        this.designerState.selectedFieldId = null;
+    }
+
+    get selectedFieldId() {
+        return this.designerState.selectedFieldId;
     }
 
     onSearchInput(ev) {
@@ -154,6 +156,8 @@ export class ModelDetail extends Component {
     back() {
         this.designerState.selectedModelId = null;
         this.designerState.selectedModel = null;
+        this.designerState.section = "fields";
+        this.designerState.selectedFieldId = null;
     }
 
     /**
@@ -165,7 +169,7 @@ export class ModelDetail extends Component {
         const action = model.actionId
             ? await this.action.loadAction(model.actionId)
             : defaultActionForModel({ model: model.model, view_type: viewType });
-        this.studio.setParams({ action, viewType, editorTab: "views" });
+        this.studio.setParams({ action, viewType, mode: this.studio.MODES.EDITOR, editorTab: "views" });
     }
 
     openNewField() {

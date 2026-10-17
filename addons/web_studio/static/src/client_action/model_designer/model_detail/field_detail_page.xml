@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+<t t-name="web_studio.FieldDetailPage">
+    <div class="o_web_studio_field_page d-flex flex-column flex-grow-1 min-h-0 overflow-hidden">
+        <div class="o_web_studio_field_page_header px-4 pt-3 pb-2">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-1">
+                    <li class="breadcrumb-item">
+                        <a href="#" class="o_web_studio_field_back_models" t-on-click.prevent="this.backToModels">Models</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#" class="o_web_studio_field_back_model" t-on-click.prevent="this.backToModel" t-out="this.props.model.name"/>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#" class="o_web_studio_field_back_fields" t-on-click.prevent="this.backToFields">Fields &amp; Relationships</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page" t-out="this.state.field and this.state.field.label"/>
+                </ol>
+            </nav>
+            <div t-if="this.state.field" class="d-flex flex-wrap align-items-center gap-3">
+                <h2 class="o_web_studio_field_page_title m-0" t-out="this.state.field.label"/>
+                <span t-if="this.isCustom" class="badge text-bg-primary">Custom</span>
+                <span t-else="" class="badge text-bg-secondary">Standard</span>
+                <span class="text-muted" t-out="this.state.field.typeLabel"/>
+                <code class="text-muted" t-out="this.state.field.name"/>
+            </div>
+        </div>
+
+        <div t-if="this.state.loading" class="text-center p-5">
+            <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>
+        </div>
+
+        <div t-else="" class="o_web_studio_field_page_body flex-grow-1 overflow-auto px-4 pb-4">
+            <div class="row g-4">
+                <div class="col-12 col-xl-7">
+                    <div class="card mb-4 o_web_studio_field_information">
+                        <div class="card-header fw-bold">Field Information</div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label" for="o_web_studio_field_page_label">Field Label</label>
+                                <input id="o_web_studio_field_page_label" class="form-control o_web_studio_field_label"
+                                    t-att-value="this.state.label"
+                                    t-on-input="this.onLabelInput"/>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label" for="o_web_studio_field_page_name">API Name</label>
+                                    <input id="o_web_studio_field_page_name" class="form-control" readonly="1" t-att-value="this.state.field.name"/>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label" for="o_web_studio_field_page_type">Data Type</label>
+                                    <input id="o_web_studio_field_page_type" class="form-control" readonly="1" t-att-value="this.state.field.typeLabel"/>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="o_web_studio_field_page_help">Field Help</label>
+                                <textarea id="o_web_studio_field_page_help" class="form-control o_web_studio_field_help" rows="3"
+                                    t-on-input="this.onHelpInput"><t t-out="this.state.help"/></textarea>
+                            </div>
+                            <div class="form-check">
+                                <input id="o_web_studio_field_page_required" type="checkbox" class="form-check-input o_web_studio_field_required"
+                                    t-att-checked="this.state.required"
+                                    t-att-disabled="!this.isCustom"
+                                    t-on-change="this.onRequiredChange"/>
+                                <label class="form-check-label" for="o_web_studio_field_page_required">Required</label>
+                            </div>
+                            <p t-if="!this.isCustom" class="text-muted small mt-3 mb-0">
+                                Standard fields can be renamed and documented. Their other properties are defined by their module.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div t-if="this.isRelation" class="card mb-4 o_web_studio_field_relationship">
+                        <div class="card-header fw-bold">Relationship</div>
+                        <div class="card-body">
+                            <div class="mb-2">Related object: <code t-out="this.state.field.relation"/></div>
+                            <div t-if="this.state.field.relationTable">Junction table: <code t-out="this.state.field.relationTable"/></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div t-if="this.isSelection" class="col-12 col-xl-5">
+                    <div class="card o_web_studio_picklist">
+                        <div class="card-header fw-bold">Picklist Values</div>
+                        <div class="card-body">
+                            <table class="table table-sm align-middle mb-3">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Label</th>
+                                        <th scope="col">Value</th>
+                                        <th scope="col" class="text-end">Order</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="this.state.options" t-as="option" t-key="option_index">
+                                        <tr class="o_web_studio_picklist_row">
+                                            <td>
+                                                <input class="form-control form-control-sm o_web_studio_picklist_name"
+                                                    t-att-value="option.name"
+                                                    t-att-readonly="!this.isCustom"
+                                                    t-on-input="(ev) => this.onOptionNameInput(option, ev)"/>
+                                            </td>
+                                            <td><code t-out="option.value or '-'"/></td>
+                                            <td class="text-end text-nowrap">
+                                                <t t-if="this.isCustom">
+                                                    <button type="button" class="btn btn-sm btn-link o_web_studio_picklist_up text-decoration-none" aria-label="Move up"
+                                                        t-on-click="() => this.moveOption(option_index, -1)">↑</button>
+                                                    <button type="button" class="btn btn-sm btn-link o_web_studio_picklist_down" aria-label="Move down"
+                                                        t-on-click="() => this.moveOption(option_index, 1)">↓</button>
+                                                    <button type="button" class="btn btn-sm btn-link text-danger o_web_studio_picklist_remove" aria-label="Remove"
+                                                        t-on-click="() => this.removeOption(option_index)">×</button>
+                                                </t>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <tr t-if="!this.state.options.length">
+                                        <td colspan="3" class="text-muted text-center">No value yet.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <button t-if="this.isCustom" type="button" class="btn btn-outline-primary btn-sm o_web_studio_picklist_add" t-on-click="this.addOption">Add Value</button>
+                            <p t-else="" class="text-muted small mb-0">Standard picklist values are defined by their module.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div t-if="!this.state.loading" class="o_web_studio_field_page_footer border-top bg-white px-4 py-3 d-flex gap-2">
+            <button type="button" class="btn btn-primary o_web_studio_save_field"
+                t-att-disabled="!this.canSave()" t-on-click="this.save">Save</button>
+            <button t-if="this.isCustom" type="button" class="btn btn-outline-danger o_web_studio_delete_field"
+                t-on-click="this.remove">Delete</button>
+        </div>
+    </div>
+</t>
+
+</templates>

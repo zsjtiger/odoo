@@ -6,6 +6,7 @@ import { standardActionServiceProps } from "@web/webclient/actions/action_plugin
 import { computeAppsAndMenuItems } from "@web/webclient/menus/menu_helpers";
 
 import { AppCreator } from "./app_creator/app_creator";
+import { ModelDesigner } from "./model_designer/model_designer";
 import { Editor } from "./editor/editor";
 import { StudioNavbar } from "./navbar/navbar";
 import { StudioHomeMenu } from "./studio_home_menu/studio_home_menu";
@@ -20,6 +21,7 @@ export class StudioClientAction extends Component {
         StudioHomeMenu,
         Editor,
         AppCreator,
+        ModelDesigner,
     };
 
     props = useProps(standardActionServiceProps);

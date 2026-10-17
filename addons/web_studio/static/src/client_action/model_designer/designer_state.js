@@ -6,5 +6,7 @@ export const designerState = proxy({
     selectedModelId: null,
     // Snapshot of the selected model, used by the editor breadcrumb: { id, name, model }
     selectedModel: null,
+    // "fields" | "field" | "layouts" | "buttons"
     section: "fields",
+    selectedFieldId: null,
 });

@@ -18,6 +18,7 @@ export const MODES = {
     EDITOR: "editor",
     HOME_MENU: "home_menu",
     APP_CREATOR: "app_creator",
+    MODELS: "models",
 };
 
 export class NotEditableActionError extends Error {}

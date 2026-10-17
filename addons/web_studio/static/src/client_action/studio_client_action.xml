@@ -8,6 +8,7 @@
         <StudioHomeMenu t-if="this.studio.mode === this.studio.MODES.HOME_MENU" apps="this.homeMenuProps.apps" />
         <AppCreator t-elif="this.studio.mode === this.studio.MODES.APP_CREATOR" onNewAppCreated.bind="this.onNewAppCreated"/>
         <Editor t-elif="this.studio.mode === this.studio.MODES.EDITOR" />
+        <ModelDesigner t-elif="this.studio.mode === this.studio.MODES.MODELS" />
     </div>
 </t>
 

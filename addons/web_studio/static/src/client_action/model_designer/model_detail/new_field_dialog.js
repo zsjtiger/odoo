@@ -16,7 +16,7 @@ const SIMPLE_TYPES = [
     "date",
     "datetime",
 ];
-const RELATION_TYPES = ["many2one", "selection"];
+const RELATION_TYPES = ["many2one", "many2many", "selection"];
 
 /**
  * Turns a label into a technical name, the way Studio names custom fields.
@@ -40,6 +40,23 @@ function slugify(text) {
         .replace(/[̀-ͯ]/g, "")
         .replace(/[^a-z0-9]+/g, "_")
         .replace(/^_+|_+$/g, "");
+}
+
+/**
+ * Name of the junction table of a many2many field, unique among the given tables.
+ * @param {string} model technical name of the model that owns the field
+ * @param {string} relation technical name of the related model
+ * @param {string[]} takenTables
+ * @returns {string}
+ */
+export function relationTableName(model, relation, takenTables) {
+    const base = `x_${model.replace(/\./g, "_")}_${relation.replace(/\./g, "_")}_rel`.slice(0, 55);
+    let name = base;
+    let suffix = 2;
+    while (takenTables.includes(name)) {
+        name = `${base}_${suffix++}`;
+    }
+    return name;
 }
 
 /**
@@ -91,18 +108,19 @@ export class NewFieldDialog extends Component {
             saving: false,
         });
 
+        this.takenTables = [];
         onWillStart(async () => {
-            this.state.models = await this.orm.searchRead(
-                "ir.model",
-                [["transient", "=", false]],
-                ["name", "model"],
-                { order: "name ASC" }
-            );
+            [this.state.models, this.takenTables] = await Promise.all([
+                this.orm.searchRead("ir.model", [["transient", "=", false]], ["name", "model"], {
+                    order: "name ASC",
+                }),
+                this.orm.searchRead("ir.model.fields", [["ttype", "=", "many2many"]], ["relation_table"]),
+            ]).then(([models, fields]) => [models, fields.map((field) => field.relation_table)]);
         });
     }
 
     get isLookup() {
-        return this.state.type === "many2one";
+        return this.state.type === "many2one" || this.state.type === "many2many";
     }
 
     get isPicklist() {
@@ -155,6 +173,13 @@ export class NewFieldDialog extends Component {
         };
         if (this.isLookup) {
             values.relation = this.state.relation;
+        }
+        if (this.state.type === "many2many") {
+            values.relation_table = relationTableName(
+                this.props.model.model,
+                this.state.relation,
+                this.takenTables
+            );
         }
         if (this.isPicklist) {
             values.selection_ids = parsePicklistValues(this.state.picklist).map(

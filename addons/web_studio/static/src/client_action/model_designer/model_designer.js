@@ -1,8 +1,5 @@
-import { Component, computed, onWillStart, proxy, useProps } from "@odoo/owl";
-import { _t } from "@web/core/data/l10n/translation";
-import { registry } from "@web/core/framework/registry";
+import { Component, computed, onWillStart, proxy } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-import { standardActionServiceProps } from "@web/webclient/actions/action_plugin";
 import { viewTypeToString } from "@web_studio/studio_service";
 import { designerState } from "./designer_state";
 import { ModelDetail } from "./model_detail/model_detail";
@@ -14,8 +11,6 @@ import { ModelDetail } from "./model_detail/model_detail";
 export class ModelDesigner extends Component {
     static template = "web_studio.ModelDesigner";
     static components = { ModelDetail };
-
-    props = useProps(standardActionServiceProps);
 
     setup() {
         this.orm = useService("orm");
@@ -105,8 +100,3 @@ export class ModelDesigner extends Component {
         designerState.section = "fields";
     }
 }
-
-registry
-    .category("web_studio.editor_tabs")
-    .add("models", { name: _t("Models"), action: "web_studio.model_designer" }, { sequence: 5 });
-registry.category("actions").add("web_studio.model_designer", ModelDesigner);

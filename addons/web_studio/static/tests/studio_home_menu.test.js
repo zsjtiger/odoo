@@ -21,7 +21,8 @@ test("simple rendering", async () => {
 
     expect(".o_app").toHaveCount(4);
     await contains(".o_web_studio_navbar_item").click();
-    expect(".o_app").toHaveCount(5);
+    // The Models tile is added to the apps of the Studio home menu
+    expect(".o_app").toHaveCount(6);
 
     expect(".o_app[data-menu-xmlid=app_1] .o_app_icon").toHaveAttribute(
         "data-src",

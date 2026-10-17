@@ -3,7 +3,7 @@
 
 <t t-name="web_studio.ModelDetail">
     <div class="o_web_studio_model_detail d-flex flex-column h-100 w-100 overflow-hidden">
-        <div class="o_web_studio_model_detail_header px-4 pt-3 pb-2">
+        <div t-if="this.section !== 'field'" class="o_web_studio_model_detail_header px-4 pt-3 pb-2">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-1">
                     <li class="breadcrumb-item">
@@ -25,12 +25,16 @@
                 <button type="button" class="o_web_studio_model_section btn w-100 text-start mb-1"
                     t-att-class="this.isFieldsSection ? 'btn-primary' : 'btn-light'"
                     t-on-click="() => this.showSection('fields')">Fields &amp; Relationships</button>
-                <button type="button" class="o_web_studio_model_section btn w-100 text-start"
-                    t-att-class="this.isFieldsSection ? 'btn-light' : 'btn-primary'"
+                <button type="button" class="o_web_studio_model_section btn w-100 text-start mb-1"
+                    t-att-class="this.section === 'layouts' ? 'btn-primary' : 'btn-light'"
                     t-on-click="() => this.showSection('layouts')">Page Layouts</button>
+                <button type="button" class="o_web_studio_model_section btn w-100 text-start"
+                    t-att-class="this.section === 'buttons' ? 'btn-primary' : 'btn-light'"
+                    t-on-click="() => this.showSection('buttons')">Buttons, Links, and Actions</button>
             </nav>
 
-            <section t-if="this.isFieldsSection" class="o_web_studio_model_fields d-flex flex-grow-1 overflow-hidden">
+
+            <section t-if="this.section === 'fields'" class="o_web_studio_model_fields d-flex flex-grow-1 overflow-hidden">
                 <div class="o_web_studio_model_fields_list flex-grow-1 p-4 overflow-auto">
                     <div class="d-flex flex-wrap align-items-center gap-3 mb-3">
                         <h3 class="m-0 me-auto">Fields &amp; Relationships</h3>
@@ -53,7 +57,7 @@
                     </div>
 
                     <div t-if="this.state.loading" class="text-center p-5">
-                        <i class="fa fa-circle-o-notch fa-spin fa-2x"/>
+                        <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>
                     </div>
                     <div t-else="">
                         <table class="o_web_studio_field_table table table-hover bg-view align-middle mb-0">
@@ -74,8 +78,8 @@
                                         <td class="fw-bold" t-out="field.label"/>
                                         <td><code t-out="field.name"/></td>
                                         <td t-out="field.typeLabel"/>
-                                        <td><i t-if="field.required" class="fa fa-check text-success"/></td>
-                                        <td><i t-if="field.isCustom" class="fa fa-check text-primary"/></td>
+                                        <td><span t-if="field.required" class="text-success fw-bold" aria-label="Yes">✓</span></td>
+                                        <td><span t-if="field.isCustom" class="text-primary fw-bold" aria-label="Yes">✓</span></td>
                                     </tr>
                                 </t>
                                 <tr t-if="!this.filteredFields().length" class="o_web_studio_field_empty">
@@ -88,13 +92,12 @@
                         </div>
                     </div>
                 </div>
-                <FieldDetailPanel t-if="this.selectedField()"
-                    field="this.selectedField()"
-                    onChanged.bind="this.onFieldsChanged"
-                    onClose.bind="this.closeFieldPanel"/>
             </section>
 
-            <section t-else="" class="o_web_studio_model_layouts flex-grow-1 p-4 overflow-auto">
+            <FieldDetailPage t-elif="this.section === 'field'" model="this.props.model" fieldId="this.selectedFieldId" onChanged.bind="this.onFieldsChanged"/>
+            <ModelButtons t-elif="this.section === 'buttons'" model="this.props.model"/>
+
+            <section t-elif="this.section === 'layouts'" class="o_web_studio_model_layouts flex-grow-1 p-4 overflow-auto">
                 <h3 class="mb-1">Page Layouts</h3>
                 <p class="text-muted mb-3">Choose the layout to edit. Fields, buttons and sections are placed in the view editor.</p>
                 <div class="row g-3">
@@ -104,7 +107,7 @@
                                 <div class="card-body d-flex flex-column">
                                     <h5 class="card-title" t-out="this.viewLabel(viewType)"/>
                                     <p class="card-text text-muted small mb-3">
-                                        The <t t-esc="this.viewLabel(viewType).toLowerCase()"/> view of <t t-esc="this.props.model.name"/>.
+                                        The <t t-out="this.viewLabel(viewType).toLowerCase()"/> view of <t t-out="this.props.model.name"/>.
                                     </p>
                                     <button type="button" class="btn btn-outline-primary mt-auto o_web_studio_edit_layout"
                                         t-att-data-view-type="viewType"
@@ -156,7 +159,7 @@
             <div t-if="this.isPicklist">
                 <label class="form-label" for="o_web_studio_new_field_picklist">Values</label>
                 <textarea id="o_web_studio_new_field_picklist" class="form-control o_web_studio_new_field_picklist" rows="4"
-                    placeholder="One value per line" t-on-input="this.onPicklistInput"><t t-esc="this.state.picklist"/></textarea>
+                    placeholder="One value per line" t-on-input="this.onPicklistInput"><t t-out="this.state.picklist"/></textarea>
             </div>
         </div>
         <t t-set-slot="footer">

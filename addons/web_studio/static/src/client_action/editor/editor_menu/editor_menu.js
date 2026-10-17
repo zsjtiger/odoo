@@ -27,10 +27,9 @@ class Breadcrumbs extends Component {
         const currentTab = this.props.currentTab;
         const model = designerState.selectedModel;
         const isModelContext =
-            model &&
-            (currentTab.id === "models" ||
-                (currentTab.id === "views" && this.studio.editedAction?.res_model === model.model));
+            model && currentTab.id === "views" && this.studio.editedAction?.res_model === model.model;
         if (isModelContext) {
+            const { MODELS } = this.studio.MODES;
             return [
                 {
                     id: "__models__",
@@ -38,13 +37,13 @@ class Breadcrumbs extends Component {
                     handler: () => {
                         designerState.selectedModelId = null;
                         designerState.selectedModel = null;
-                        this.props.switchTab({ tab: "models" });
+                        this.studio.setParams({ mode: MODELS });
                     },
                 },
                 {
                     id: `__model__${model.id}`,
                     data: { name: model.name },
-                    handler: () => this.props.switchTab({ tab: "models" }),
+                    handler: () => this.studio.setParams({ mode: MODELS }),
                 },
             ];
         }

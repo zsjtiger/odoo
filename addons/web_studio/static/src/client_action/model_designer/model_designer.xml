@@ -26,7 +26,7 @@
         </div>
 
         <div t-if="this.state.loading" class="o_web_studio_model_designer_loading text-center p-5">
-            <i class="fa fa-circle-o-notch fa-spin fa-2x"/>
+            <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>
         </div>
 
         <div t-else="" class="px-4 pb-4">
@@ -44,10 +44,10 @@
                         <tr class="o_web_studio_model_row">
                             <td>
                                 <a href="#" class="o_web_studio_model_name fw-bold" t-on-click.prevent="() => this.selectModel(model)">
-                                    <t t-esc="model.name"/>
+                                    <t t-out="model.name"/>
                                 </a>
                             </td>
-                            <td><code t-esc="model.model"/></td>
+                            <td><code t-out="model.model"/></td>
                             <td>
                                 <span t-if="model.isCustom" class="badge text-bg-primary">Custom</span>
                                 <span t-else="" class="badge text-bg-secondary">Standard</span>
@@ -55,7 +55,7 @@
                             <td>
                                 <t t-if="model.viewTypes.length">
                                     <t t-foreach="model.viewTypes" t-as="viewType" t-key="viewType">
-                                        <span class="badge bg-white text-dark border me-1" t-esc="this.viewLabel(viewType)"/>
+                                        <span class="badge bg-white text-dark border me-1" t-out="this.viewLabel(viewType)"/>
                                     </t>
                                 </t>
                                 <span t-else="" class="text-muted">No action yet</span>
