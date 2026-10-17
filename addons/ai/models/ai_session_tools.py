@@ -33,6 +33,29 @@ SUBAGENT_TOOL_XMLIDS = (
 )
 
 
+def _resolve_pending_response(response, tool_call):
+    """Return the (tool result, failed) of a response to a pending tool call.
+
+    Returns None when the response does not resolve the call, which must then run.
+    """
+    match response['kind']:
+        case 'client_result':
+            return format_tool_result(tool_call, result=response['value']), False
+        case 'client_error':
+            return format_tool_result(tool_call, error=response['value']), True
+        case 'question':
+            return format_tool_result(tool_call, result=f"USER ANSWER: {','.join(response['value'])}"), False
+    return None
+
+
+def _reset_tool_context(tools_context):
+    """Clear what a previous tool call left in the context before running the next one."""
+    tools_context['user_input_request'] = None
+    tools_context['await_external_result'] = False
+    tools_context['external_wait_message'] = None
+    tools_context['result'] = None
+
+
 class AiSessionToolsMixin(models.AbstractModel):
     """Methods of AiSession that run and resume tool calls."""
     _name = 'ai.session.tools.mixin'
@@ -392,15 +415,10 @@ class AiSessionToolsMixin(models.AbstractModel):
             )
             if pending_tool_response:
                 response, pending_tool_response = pending_tool_response, None
-                if response['kind'] == 'client_result':
-                    tool_results.append(format_tool_result(tool_call, result=response['value']))
-                    continue
-                if response['kind'] == 'client_error':
-                    tool_results.append(format_tool_result(tool_call, error=response['value']))
-                    failed_tool_call = True
-                    continue
-                if response['kind'] == 'question':
-                    tool_results.append(format_tool_result(tool_call, result=f"USER ANSWER: {','.join(response['value'])}"))
+                if resolved := _resolve_pending_response(response, tool_call):
+                    result, failed = resolved
+                    tool_results.append(result)
+                    failed_tool_call = failed_tool_call or failed
                     continue
             tools_context['final_message'] = None
             if tool_call['name'] not in tools_by_name:
@@ -408,10 +426,7 @@ class AiSessionToolsMixin(models.AbstractModel):
                 tool_results.append(format_tool_result(tool_call, error=f"Unknown tool '{tool_call['name']}'"))
                 failed_tool_call = True
                 continue
-            tools_context['user_input_request'] = None
-            tools_context['await_external_result'] = False
-            tools_context['external_wait_message'] = None
-            tools_context['result'] = None
+            _reset_tool_context(tools_context)
             tool = tools_by_name[tool_call['name']]
             tools_context['tool_call_id'] = tool_call['call_id']
             tool_args = dict(tool_call['args'])

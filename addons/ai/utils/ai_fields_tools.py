@@ -35,21 +35,8 @@ class UnresolvedQuery(UserError):
     pass
 
 
-def get_ai_value(record, field_descripiton, user_prompt, context_fields, allowed_values):
-    """Query a LLM with the given prompt and return the cast value.
-
-    :param record: the record for which the value should be obtained
-    :param field: the field/property description for which the response should be cast
-    :param user_prompt: the "user prompt" to pass to the LLM (the request)
-    :param context_fields: list of field paths that needs to be included in the context dict
-    :param allowed_values: a dict containing the values that are allowed
-
-    :return: the value with the type expected for the given field type, or False if the value
-        could not be cast or is not in allowed_values
-    """
-    field_type = field_descripiton['type']
-    if field_type in ('many2many', 'many2one', 'selection', 'tags') and not allowed_values:
-        raise UnresolvedQuery(record.env._("No allowed values are provided in the prompt."))
+def _build_ai_message_parts(record, user_prompt, field_descripiton, context_fields, allowed_values):
+    """Return the message parts of a field request: the prompt, the context and the file attachments."""
     record_context, file_parts = record._get_ai_context(context_fields)
     context = f"# Context\n## Current date\n{datetime.now(UTC).astimezone().replace(second=0, microsecond=0).isoformat()}"
     context += f'\n## Field info\n{json.dumps(field_descripiton)}'
@@ -60,6 +47,11 @@ def get_ai_value(record, field_descripiton, user_prompt, context_fields, allowed
         context += f"\n## Allowed Values\n{json.dumps(allowed_values)}"
     msg_parts = [{'type': 'text', 'text': f"# Action request\n{user_prompt}\n{context}"}]
     msg_parts.extend(file_parts)
+    return msg_parts
+
+
+def _field_value_schema(field_type, allowed_values):
+    """Return the JSON schema of the value the LLM must give for a field of the given type."""
     if field_type == 'boolean':
         field_schema = {
             'type': 'boolean',
@@ -134,6 +126,26 @@ def get_ai_value(record, field_descripiton, user_prompt, context_fields, allowed
         }
     else:
         field_schema = {'type': 'text', 'description': 'The value to assign to the field'}
+    return field_schema
+
+
+def get_ai_value(record, field_descripiton, user_prompt, context_fields, allowed_values):
+    """Query a LLM with the given prompt and return the cast value.
+
+    :param record: the record for which the value should be obtained
+    :param field: the field/property description for which the response should be cast
+    :param user_prompt: the "user prompt" to pass to the LLM (the request)
+    :param context_fields: list of field paths that needs to be included in the context dict
+    :param allowed_values: a dict containing the values that are allowed
+
+    :return: the value with the type expected for the given field type, or False if the value
+        could not be cast or is not in allowed_values
+    """
+    field_type = field_descripiton['type']
+    if field_type in ('many2many', 'many2one', 'selection', 'tags') and not allowed_values:
+        raise UnresolvedQuery(record.env._("No allowed values are provided in the prompt."))
+    msg_parts = _build_ai_message_parts(record, user_prompt, field_descripiton, context_fields, allowed_values)
+    field_schema = _field_value_schema(field_type, allowed_values)
 
     schema = {
         'type': 'object',

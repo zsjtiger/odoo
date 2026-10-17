@@ -26,40 +26,37 @@ def serialize_search_view_info(model_fields, search_view_arch):
     if not search_view_arch:
         return ""
 
-    # Parse XML
     tree = etree.fromstring(search_view_arch)
+    regular_groupbys, date_groupbys = _collect_groupbys(tree, model_fields)
+    sections = [
+        _format_searchable_fields(tree),
+        _format_filters(_filter_groups(tree)),
+        _format_groupbys("Groupbys:", regular_groupbys),
+        _format_groupbys("Date groupbys:", date_groupbys, with_interval=True),
+    ]
+    return "\n\n".join(section for section in sections if section)
 
-    sections = []
 
-    # 1. Searchable fields
+def _format_searchable_fields(tree):
     searchable_fields = []
     for field in tree.xpath(".//field[@name and not(@invisible='1') and not(ancestor::group)]"):
-        field_info = {"name": field.get("name")}
+        field_parts = [field.get("name")]
         if field.get("string"):
-            field_info["string"] = field.get("string")
+            field_parts.append(field.get("string"))
         if field.get("filter_domain"):
-            field_info["filter_domain"] = field.get("filter_domain")
+            field_parts.append(f'filter_domain="{field.get("filter_domain")}"')
         if field.get("operator"):
-            field_info["operator"] = field.get("operator")
-        searchable_fields.append(field_info)
+            field_parts.append(f"operator={field.get('operator')}")
+        searchable_fields.append(f"  - {', '.join(field_parts)}")
+    if not searchable_fields:
+        return ""
+    return "\n".join(["Searchable fields:", *searchable_fields])
 
-    if searchable_fields:
-        lines = ["Searchable fields:"]
-        for field in searchable_fields:
-            field_parts = [field["name"]]
-            if "string" in field:
-                field_parts.append(field["string"])
-            if "filter_domain" in field:
-                field_parts.append(f'filter_domain="{field["filter_domain"]}"')
-            if "operator" in field:
-                field_parts.append(f"operator={field['operator']}")
-            lines.append(f"  - {', '.join(field_parts)}")
-        sections.append("\n".join(lines))
 
-    # 2. Filters grouped by separators (including date filters)
+def _filter_groups(tree):
+    """Filters at the top level of the view, split into groups by separators."""
     filter_groups = []
     current_group = []
-
     for elem in tree:
         if elem.tag == "separator":
             if current_group:
@@ -67,67 +64,67 @@ def serialize_search_view_info(model_fields, search_view_arch):
                 current_group = []
         elif elem.tag == "filter" and elem.get("name") and elem.get("invisible") != "1":
             if elem.getparent().tag != "group":
-                filter_info = {"name": elem.get("name")}
-                if elem.get("string"):
-                    filter_info["string"] = elem.get("string")
-
-                # Check if this is a date filter
-                if elem.get("date"):
-                    filter_info["is_date_filter"] = True
-                    filter_info["field_name"] = elem.get("date")
-                    filter_info["start_year"] = elem.get("start_year", "-2")
-                    filter_info["end_year"] = elem.get("end_year", "0")
-                    filter_info["start_month"] = elem.get("start_month", "-2")
-                    filter_info["end_month"] = elem.get("end_month", "0")
-
-                    # Extract custom options (prefix with "custom_" as done by client)
-                    child_filters = elem.xpath("./filter[@name]")
-                    if child_filters:
-                        filter_info["options"] = [
-                            {"name": f"custom_{child.get('name')}", "string": child.get("string")}
-                            for child in child_filters
-                        ]
-                else:
-                    # Regular filter
-                    if elem.get("domain"):
-                        filter_info["domain"] = elem.get("domain")
-
-                current_group.append(filter_info)
-
+                current_group.append(_filter_info(elem))
     if current_group:
         filter_groups.append(current_group)
+    return filter_groups
 
-    if filter_groups:
-        lines = ["Filters:"]
-        for group_idx, group in enumerate(filter_groups, 1):
-            lines.append(f"  [Group {group_idx}]")
-            for filter_item in group:
-                if filter_item.get("is_date_filter"):
-                    # Date filter: [DATE FILTER] field_name, label, year_range, month_range, options
-                    parts = [f"[DATE FILTER] {filter_item['field_name']}"]
 
-                    if "string" in filter_item:
-                        parts.append(filter_item["string"])
+def _filter_info(elem):
+    filter_info = {"name": elem.get("name")}
+    if elem.get("string"):
+        filter_info["string"] = elem.get("string")
+    if elem.get("date"):
+        filter_info["is_date_filter"] = True
+        filter_info["field_name"] = elem.get("date")
+        filter_info["start_year"] = elem.get("start_year", "-2")
+        filter_info["end_year"] = elem.get("end_year", "0")
+        filter_info["start_month"] = elem.get("start_month", "-2")
+        filter_info["end_month"] = elem.get("end_month", "0")
+        # Extract custom options (prefix with "custom_" as done by client)
+        child_filters = elem.xpath("./filter[@name]")
+        if child_filters:
+            filter_info["options"] = [
+                {"name": f"custom_{child.get('name')}", "string": child.get("string")}
+                for child in child_filters
+            ]
+    elif elem.get("domain"):
+        filter_info["domain"] = elem.get("domain")
+    return filter_info
 
-                    parts.append(f'year_range=[{filter_item["start_year"]} to {filter_item["end_year"]}]')
-                    parts.append(f'month_range=[{filter_item["start_month"]} to {filter_item["end_month"]}]')
 
-                    if "options" in filter_item:
-                        option_strs = [f'{opt["name"]}="{opt["string"]}"' for opt in filter_item["options"]]
-                        parts.append(f'options=[{", ".join(option_strs)}]')
+def _format_filters(filter_groups):
+    if not filter_groups:
+        return ""
+    lines = ["Filters:"]
+    for group_idx, group in enumerate(filter_groups, 1):
+        lines.append(f"  [Group {group_idx}]")
+        lines.extend(f"    - {_format_filter_item(item)}" for item in group)
+    return "\n".join(lines)
 
-                    lines.append(f"    - {', '.join(parts)}")
-                else:
-                    # Regular filter
-                    filter_parts = [filter_item["name"]]
-                    if "string" in filter_item:
-                        filter_parts.append(filter_item["string"])
-                    if "domain" in filter_item:
-                        filter_parts.append(f'domain="{filter_item["domain"]}"')
-                    lines.append(f"    - {', '.join(filter_parts)}")
-        sections.append("\n".join(lines))
 
-    # 3. Groupbys (regular and date)
+def _format_filter_item(filter_item):
+    if filter_item.get("is_date_filter"):
+        # Date filter: [DATE FILTER] field_name, label, year_range, month_range, options
+        parts = [f"[DATE FILTER] {filter_item['field_name']}"]
+        if "string" in filter_item:
+            parts.append(filter_item["string"])
+        parts.append(f'year_range=[{filter_item["start_year"]} to {filter_item["end_year"]}]')
+        parts.append(f'month_range=[{filter_item["start_month"]} to {filter_item["end_month"]}]')
+        if "options" in filter_item:
+            option_strs = [f'{opt["name"]}="{opt["string"]}"' for opt in filter_item["options"]]
+            parts.append(f'options=[{", ".join(option_strs)}]')
+        return ', '.join(parts)
+    filter_parts = [filter_item["name"]]
+    if "string" in filter_item:
+        filter_parts.append(filter_item["string"])
+    if "domain" in filter_item:
+        filter_parts.append(f'domain="{filter_item["domain"]}"')
+    return ', '.join(filter_parts)
+
+
+def _collect_groupbys(tree, model_fields):
+    """Return the (regular, date) groupbys offered by the view's filters."""
     regular_groupbys = []
     date_groupbys = []
 
@@ -139,45 +136,34 @@ def serialize_search_view_info(model_fields, search_view_arch):
     for group in tree.xpath(".//group"):
         for filter_elem in group.xpath(".//filter[@name and not(@invisible='1')]"):
             if filter_elem.get("context") and "group_by" in filter_elem.get("context"):
-                context_str = filter_elem.get("context")
-                context_dict = literal_eval(context_str)
+                context_dict = literal_eval(filter_elem.get("context"))
                 raw_group_by = context_dict.get("group_by")
                 group_bys = [raw_group_by] if isinstance(raw_group_by, str) else raw_group_by or []
-
                 for group_by in group_bys:
                     groupby_info = {
                         "name": filter_elem.get("name"),
                         "string": filter_elem.get("string") or ""
                     }
-
                     if is_date_groupby(group_by):
                         field_name, *interval = group_by.split(":", 1)
-                        interval = interval[0] if interval else "month"
                         groupby_info["field_name"] = field_name
-                        groupby_info["default_interval"] = interval
+                        groupby_info["default_interval"] = interval[0] if interval else "month"
                         date_groupbys.append(groupby_info)
                     else:
                         groupby_info["field_name"] = group_by
                         regular_groupbys.append(groupby_info)
+    return regular_groupbys, date_groupbys
 
-    if regular_groupbys:
-        lines = ["Groupbys:"]
-        for groupby in regular_groupbys:
-            parts = [groupby["field_name"]]
-            if groupby["string"]:
-                parts.append(groupby["string"])
-            lines.append(f"  - {', '.join(parts)}")
-        sections.append("\n".join(lines))
 
-    if date_groupbys:
-        lines = ["Date groupbys:"]
-        for groupby in date_groupbys:
-            parts = [groupby["field_name"]]
-            if groupby["string"]:
-                parts.append(groupby["string"])
+def _format_groupbys(title, groupbys, with_interval=False):
+    if not groupbys:
+        return ""
+    lines = [title]
+    for groupby in groupbys:
+        parts = [groupby["field_name"]]
+        if groupby["string"]:
+            parts.append(groupby["string"])
+        if with_interval:
             parts.append(f"default_interval={groupby['default_interval']}")
-            lines.append(f"  - {', '.join(parts)}")
-        sections.append("\n".join(lines))
-
-    result = "\n\n".join(sections)
-    return result
+        lines.append(f"  - {', '.join(parts)}")
+    return "\n".join(lines)

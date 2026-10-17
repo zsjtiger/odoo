@@ -333,91 +333,86 @@ def _compute_date_apply_pin(working_dt, pin):
     - pin.time: string in HH:MM or HH:MM:SS format
     """
     result = working_dt
-
-    # Apply day pin
     if "day" in pin and pin["day"] is not None:
-        day_value = pin["day"]
-
-        if isinstance(day_value, int):
-            # Simple day of month
-            if not (1 <= day_value <= 31):
-                raise ValueError("pin.day must be between 1 and 31")
-
-            day = day_value
-            max_day = calendar.monthrange(result.year, result.month)[1]
-            if not (1 <= day <= max_day):
-                raise ValueError(
-                    f"pin.day must be between 1 and {max_day} for {result.year}-{result.month:02d}",
-                )
-            result = result.replace(day=day)
-
-        elif isinstance(day_value, dict):
-            # Weekday selector: {weekday: int, occurrence?: int}
-            if "weekday" not in day_value:
-                raise ValueError(
-                    f"pin.day object must have 'weekday' field. Got: {day_value}"
-                )
-
-            target_weekday = day_value["weekday"]
-            if not isinstance(target_weekday, int):
-                raise TypeError("pin.day.weekday must be an integer (0=Monday, 6=Sunday)")
-            if not (0 <= target_weekday <= 6):
-                raise ValueError("pin.day.weekday must be between 0 (Monday) and 6 (Sunday)")
-
-            if "occurrence" in day_value and day_value["occurrence"] is not None:
-                occurrence = day_value["occurrence"]
-                if not isinstance(occurrence, int):
-                    raise ValueError("pin.day.occurrence must be an integer")
-                if not (1 <= occurrence <= 5):
-                    raise ValueError("pin.day.occurrence must be between 1 and 5")
-
-                first_of_month = result.replace(day=1)
-                first_weekday = first_of_month.weekday()
-                days_to_first = (target_weekday - first_weekday) % 7
-                first_occurrence = first_of_month + timedelta(days=days_to_first)
-                target_day = first_occurrence + timedelta(weeks=occurrence - 1)
-
-                if target_day.month != result.month:
-                    raise ValueError(
-                        f"The {occurrence}th occurrence of weekday {target_weekday} does not exist in month {result.month}",
-                    )
-
-                result = result.replace(day=target_day.day)
-            else:
-                # Just find the weekday without occurrence
-                current_weekday = result.weekday()
-                days_diff = target_weekday - current_weekday
-                result = result + timedelta(days=days_diff)
-        else:
-            raise ValueError("pin.day must be an integer (1-31) or object {weekday, occurrence?}")
-
-    # Apply time pin
+        result = _pin_day(result, pin["day"])
     if "time" in pin and pin["time"] is not None:
-        time_str = pin["time"]
-        if not isinstance(time_str, str):
-            raise ValueError("pin.time must be a string in 'HH:MM' or 'HH:MM:SS' format")
-
-        time_parts = time_str.split(":")
-        if len(time_parts) not in [2, 3]:
-            raise ValueError("pin.time must be in 'HH:MM' or 'HH:MM:SS' format")
-
-        try:
-            hour = int(time_parts[0])
-            minute = int(time_parts[1])
-            second = int(time_parts[2]) if len(time_parts) == 3 else 0
-        except ValueError:
-            raise ValueError("pin.time components must be integers") from None
-
-        if not (0 <= hour <= 23):
-            raise ValueError("pin.time hour must be between 0 and 23")
-        if not (0 <= minute <= 59):
-            raise ValueError("pin.time minute must be between 0 and 59")
-        if not (0 <= second <= 59):
-            raise ValueError("pin.time second must be between 0 and 59")
-
-        result = result.replace(hour=hour, minute=minute, second=second, microsecond=0)
-
+        result = _pin_time(result, pin["time"])
     return result
+
+
+def _pin_day(result, day_value):
+    """Anchor the day: a day of the month, or a weekday with an optional occurrence."""
+    if isinstance(day_value, int):
+        return _pin_day_of_month(result, day_value)
+    if isinstance(day_value, dict):
+        return _pin_weekday(result, day_value)
+    raise ValueError("pin.day must be an integer (1-31) or object {weekday, occurrence?}")
+
+
+def _pin_day_of_month(result, day):
+    if not (1 <= day <= 31):
+        raise ValueError("pin.day must be between 1 and 31")
+    max_day = calendar.monthrange(result.year, result.month)[1]
+    if not (1 <= day <= max_day):
+        raise ValueError(
+            f"pin.day must be between 1 and {max_day} for {result.year}-{result.month:02d}",
+        )
+    return result.replace(day=day)
+
+
+def _pin_weekday(result, day_value):
+    """Weekday selector: {weekday: int, occurrence?: int}."""
+    if "weekday" not in day_value:
+        raise ValueError(
+            f"pin.day object must have 'weekday' field. Got: {day_value}"
+        )
+    target_weekday = day_value["weekday"]
+    if not isinstance(target_weekday, int):
+        raise TypeError("pin.day.weekday must be an integer (0=Monday, 6=Sunday)")
+    if not (0 <= target_weekday <= 6):
+        raise ValueError("pin.day.weekday must be between 0 (Monday) and 6 (Sunday)")
+    if "occurrence" in day_value and day_value["occurrence"] is not None:
+        return _pin_weekday_occurrence(result, target_weekday, day_value["occurrence"])
+    # Just find the weekday without occurrence
+    return result + timedelta(days=target_weekday - result.weekday())
+
+
+def _pin_weekday_occurrence(result, target_weekday, occurrence):
+    if not isinstance(occurrence, int):
+        raise ValueError("pin.day.occurrence must be an integer")
+    if not (1 <= occurrence <= 5):
+        raise ValueError("pin.day.occurrence must be between 1 and 5")
+    first_of_month = result.replace(day=1)
+    days_to_first = (target_weekday - first_of_month.weekday()) % 7
+    first_occurrence = first_of_month + timedelta(days=days_to_first)
+    target_day = first_occurrence + timedelta(weeks=occurrence - 1)
+    if target_day.month != result.month:
+        raise ValueError(
+            f"The {occurrence}th occurrence of weekday {target_weekday} does not exist in month {result.month}",
+        )
+    return result.replace(day=target_day.day)
+
+
+def _pin_time(result, time_str):
+    """Anchor the time to 'HH:MM' or 'HH:MM:SS'."""
+    if not isinstance(time_str, str):
+        raise ValueError("pin.time must be a string in 'HH:MM' or 'HH:MM:SS' format")
+    time_parts = time_str.split(":")
+    if len(time_parts) not in [2, 3]:
+        raise ValueError("pin.time must be in 'HH:MM' or 'HH:MM:SS' format")
+    try:
+        hour = int(time_parts[0])
+        minute = int(time_parts[1])
+        second = int(time_parts[2]) if len(time_parts) == 3 else 0
+    except ValueError:
+        raise ValueError("pin.time components must be integers") from None
+    if not (0 <= hour <= 23):
+        raise ValueError("pin.time hour must be between 0 and 23")
+    if not (0 <= minute <= 59):
+        raise ValueError("pin.time minute must be between 0 and 59")
+    if not (0 <= second <= 59):
+        raise ValueError("pin.time second must be between 0 and 59")
+    return result.replace(hour=hour, minute=minute, second=second, microsecond=0)
 
 
 def _validate_field_type(model, model_fields, field_name, allowed_types, error_list):

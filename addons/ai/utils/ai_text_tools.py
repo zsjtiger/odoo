@@ -109,36 +109,11 @@ def chunk_text(text, chunk_size=2000, margin=200, min_chunk_size=1500, max_chunk
     :return: List of text chunks
     :rtype: list[str]
     """
-    cleaned_text = _clean_text(text)
     chunks = []
-    paragraphs = cleaned_text.split('\n')
-
     current_chunk = []
     current_length = 0
 
-    def _add_chunk_enforcing_max_size(chunk_content):
-        """Add a chunk, splitting it if it exceeds max_chunk_size."""
-        if len(chunk_content) <= max_chunk_size:
-            chunks.append(chunk_content)
-        else:
-            # Force split oversized chunks by words
-            words = chunk_content.split()
-            temp_chunk = []
-            temp_length = 0
-            for word in words:
-                word_length = len(word) + 1
-                if temp_length + word_length > max_chunk_size:
-                    if temp_chunk:
-                        chunks.append(" ".join(temp_chunk))
-                    temp_chunk = [word]
-                    temp_length = len(word)
-                else:
-                    temp_chunk.append(word)
-                    temp_length += word_length
-            if temp_chunk:
-                chunks.append(" ".join(temp_chunk))
-
-    for para in paragraphs:
+    for para in _clean_text(text).split('\n'):
         para = para.strip()
         if not para:
             continue  # Skip empty lines
@@ -153,39 +128,20 @@ def chunk_text(text, chunk_size=2000, margin=200, min_chunk_size=1500, max_chunk
 
         # If the current chunk is large enough, store it
         if current_length >= chunk_size - margin:
-            _add_chunk_enforcing_max_size(" ".join(current_chunk))
+            _add_chunk(chunks, " ".join(current_chunk), max_chunk_size)
             current_chunk = [para]  # Start a new chunk
             current_length = para_length
+        elif para_length > chunk_size:
+            # The paragraph is too big to be merged: store what precedes it and split it by sentences
+            if current_chunk:
+                _add_chunk(chunks, " ".join(current_chunk), max_chunk_size)
+                current_chunk = []
+                current_length = 0
+            for sentence_chunk in _group_sentences(para, chunk_size):
+                _add_chunk(chunks, sentence_chunk, max_chunk_size)
         else:
-            # If chunk is too small but para itself is too big, split it
-            if para_length > chunk_size:
-                # First, store current chunk if it exists
-                if current_chunk:
-                    _add_chunk_enforcing_max_size(" ".join(current_chunk))
-                    current_chunk = []
-                    current_length = 0
-                # Split the large paragraph by sentences
-                sentences = re.split(r'(?<=[.!?])\s+', para)
-                temp_chunk = []
-                temp_length = 0
-
-                for sentence in sentences:
-                    sent_length = len(sentence)
-
-                    if temp_length + sent_length + 1 > chunk_size:
-                        if temp_chunk:
-                            _add_chunk_enforcing_max_size(" ".join(temp_chunk))
-                        temp_chunk = [sentence]
-                        temp_length = sent_length
-                    else:
-                        temp_chunk.append(sentence)
-                        temp_length += sent_length + 1
-
-                if temp_chunk:
-                    _add_chunk_enforcing_max_size(" ".join(temp_chunk))
-            else:
-                current_chunk.append(para)
-                current_length += para_length + 1
+            current_chunk.append(para)
+            current_length += para_length + 1
 
     # Handle the last chunk
     if current_chunk:
@@ -196,8 +152,50 @@ def chunk_text(text, chunk_size=2000, margin=200, min_chunk_size=1500, max_chunk
                 chunks[-1] += " " + last_chunk_content
             else:
                 # Can't merge, add as separate chunk
-                _add_chunk_enforcing_max_size(last_chunk_content)
+                _add_chunk(chunks, last_chunk_content, max_chunk_size)
         else:
-            _add_chunk_enforcing_max_size(last_chunk_content)
+            _add_chunk(chunks, last_chunk_content, max_chunk_size)
 
     return chunks
+
+
+def _add_chunk(chunks, chunk_content, max_chunk_size):
+    """Add a chunk, splitting it by words if it exceeds max_chunk_size."""
+    if len(chunk_content) <= max_chunk_size:
+        chunks.append(chunk_content)
+        return
+    # Force split oversized chunks by words
+    temp_chunk = []
+    temp_length = 0
+    for word in chunk_content.split():
+        word_length = len(word) + 1
+        if temp_length + word_length > max_chunk_size:
+            if temp_chunk:
+                chunks.append(" ".join(temp_chunk))
+            temp_chunk = [word]
+            temp_length = len(word)
+        else:
+            temp_chunk.append(word)
+            temp_length += word_length
+    if temp_chunk:
+        chunks.append(" ".join(temp_chunk))
+
+
+def _group_sentences(para, chunk_size):
+    """Group the sentences of a paragraph into texts of at most chunk_size characters."""
+    groups = []
+    temp_chunk = []
+    temp_length = 0
+    for sentence in re.split(r'(?<=[.!?])\s+', para):
+        sent_length = len(sentence)
+        if temp_length + sent_length + 1 > chunk_size:
+            if temp_chunk:
+                groups.append(" ".join(temp_chunk))
+            temp_chunk = [sentence]
+            temp_length = sent_length
+        else:
+            temp_chunk.append(sentence)
+            temp_length += sent_length + 1
+    if temp_chunk:
+        groups.append(" ".join(temp_chunk))
+    return groups
