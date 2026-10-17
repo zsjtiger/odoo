@@ -53,7 +53,7 @@ class TestAiFieldsAccess(HttpCase):
         embedding.write({'content': 'updated content'})
         self.assertEqual(
             self.env['ai.embedding'].search([('id', '=', embedding.id)]),
-            embedding
+            embedding,
         )
         embedding.unlink()
         self.assertFalse(embedding.exists())
@@ -98,7 +98,7 @@ class TestAiFieldsAccess(HttpCase):
         skill.write({'description': 'updated skill description'})
         self.assertEqual(
             self.env['ai.skill'].search([('id', '=', skill.id)]),
-            skill
+            skill,
         )
         skill.unlink()
         self.assertFalse(skill.exists())
@@ -131,7 +131,7 @@ class TestAiFieldsAccess(HttpCase):
         # remove res.partner read access from the user
         self.env['ir.access'].search([
             ('model_id.model', '=', 'res.partner'),
-            ('group_id', 'in', user.all_group_ids.ids)
+            ('group_id', 'in', user.all_group_ids.ids),
         ]).active = False
         self.env['ir.access'].create({
             'name': 'all except partner',
@@ -181,7 +181,7 @@ class TestAiFieldsAccess(HttpCase):
                 {
                     "interface_key": "systray_ai_button",
                     "prompt": "<p>Test prompt</p>",
-                }
+                },
             )
 
     def test_get_tool_params_requires_channel_access(self):

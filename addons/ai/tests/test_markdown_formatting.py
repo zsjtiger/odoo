@@ -24,9 +24,9 @@ class TestMarkdownFormatting(TransactionCase):
         self.assertEqual(markdown_format("Make it **bold**, please!"), "<p>Make it <strong>bold</strong>, please!</p>")
         self.assertEqual(
             markdown_format("Look at this **bold with *italic* inside**, cool? And here is *italic with **bold** inside*, interesting."),
-            "<p>Look at this <strong>bold with <em>italic</em> inside</strong>, cool? And here is <em>italic with <strong>bold</strong> inside</em>, interesting.</p>"
+            "<p>Look at this <strong>bold with <em>italic</em> inside</strong>, cool? And here is <em>italic with <strong>bold</strong> inside</em>, interesting.</p>",
         )
         self.assertEqual(
             markdown_format("Finally, ***bold and italic*** together!"),
-            "<p>Finally, <strong><em>bold and italic</em></strong> together!</p>"
+            "<p>Finally, <strong><em>bold and italic</em></strong> together!</p>",
         )

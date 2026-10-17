@@ -167,7 +167,7 @@ class AiSessionLoopMixin(models.AbstractModel):
         self.ensure_one()
         # Child activity stays in its session history; only the main agent posts progress.
         if self.parent_session_id:
-            return
+            return None
         last_event_id = self.event_ids[0].id
         message = Markup('<div class="o-ai-agent-step" data-id="%s">%s</div>') % (last_event_id, message)
         if self.env.user._is_internal():
@@ -179,12 +179,12 @@ class AiSessionLoopMixin(models.AbstractModel):
                 is_internal=True,
                 silent=True,
             )
-        else:
-            self.channel_id._message_log(
-                body=message,
-                author_id=self.agent_id.partner_id.id,
-                message_type=message_type
-            )
+        self.channel_id._message_log(
+            body=message,
+            author_id=self.agent_id.partner_id.id,
+            message_type=message_type,
+        )
+        return None
 
     def _format_final_message(self, response_parts):
         """Apply the existing visible final-message formatting outside the loop stack."""
@@ -243,7 +243,7 @@ class AiSessionLoopMixin(models.AbstractModel):
         for key in ('allowed_company_ids', 'active_company_ids'):
             if any(company_id not in accessible_company_ids for company_id in context.get(key, ())):
                 raise AccessError(env._(
-                    "Your company access changed while this AI response was running."
+                    "Your company access changed while this AI response was running.",
                 ))
         completion_result: CompletionSuccess | CompletionFailure
         if llm_result is False:
@@ -341,7 +341,7 @@ class AiSessionLoopMixin(models.AbstractModel):
             tools = self._get_round_tools(state)
         if tools and completion_options.get('web_grounding'):
             raise UserError(self.env._(
-                "The web grounding option is not supported with tools. Use the web search skill instead."
+                "The web grounding option is not supported with tools. Use the web search skill instead.",
             ))
         tools_by_name = {tool.ai_tool_name: tool for tool in tools}
         payload = {
@@ -475,7 +475,7 @@ class AiSessionLoopMixin(models.AbstractModel):
 
     def _get_direct_response(
         self, instructions: str, message: AIMessageParts, tools=None,
-        record=None, agent_id=None, on_item_callback=None, **completion_options: Unpack[CompletionOptions]
+        record=None, agent_id=None, on_item_callback=None, **completion_options: Unpack[CompletionOptions],
     ) -> AIMessageParts:
         """Gets a response from the LLM without managing conversation history/session state.
 
@@ -510,7 +510,7 @@ class AiSessionLoopMixin(models.AbstractModel):
             message=message,
             tools_context=tools_context,
             record=record,
-            **completion_options
+            **completion_options,
         )
         for item in response_generator:
             if on_item_callback is not None:
@@ -603,4 +603,5 @@ class AiSessionLoopMixin(models.AbstractModel):
         for msg in messages[::-1]:
             if msg['role'] == 'user' and any(part['type'] == 'text' for part in msg['content']):
                 return msg
-        raise ValueError("No valid user message found in list of messages")
+        error_message = "No valid user message found in list of messages"
+        raise ValueError(error_message)

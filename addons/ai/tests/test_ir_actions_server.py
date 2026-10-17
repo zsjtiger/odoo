@@ -57,7 +57,7 @@ class TestAiServerActions(TestAICommon):
         # Remove res.partner read access from the user
         access_records = self.env['ir.access'].search([
             ('model_id.model', '=', 'res.partner'),
-            ('group_id', 'in', user.all_group_ids.ids)
+            ('group_id', 'in', user.all_group_ids.ids),
         ])
         for access_record in access_records:
             if access_record.operation == 'r':
@@ -152,7 +152,8 @@ class TestAiServerActions(TestAICommon):
         self.assertEqual(partner.name, "new name", "Should not execute the action because it's not listed in the tools")
 
         def _patched_can_execute_action_on_records(*__):
-            raise AccessError("")
+            message = ""
+            raise AccessError(message)
 
         with (
             patch.object(
@@ -215,7 +216,7 @@ class TestAiServerActions(TestAICommon):
 
         mocked_responses = [
             self.mock_tool_response(ir_action_tool),
-            self.mock_text_response("Done")
+            self.mock_text_response("Done"),
         ]
 
         with self.mock_completion_request(mocked_responses) as mock_request:
@@ -249,7 +250,7 @@ class TestAiServerActions(TestAICommon):
 
         mocked_responses = [
             self.mock_tool_response(create_activity_action),
-            self.mock_text_response("Done")
+            self.mock_text_response("Done"),
         ]
         with self.mock_completion_request(mocked_responses):
             ai_action._ai_action_run(self.env.user.partner_id)

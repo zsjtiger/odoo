@@ -179,7 +179,7 @@ class AIAgent(models.Model):
                         'role': 'user',
                         'content': context_message,
                     },
-                })
+                }),
             ]
         self.env['ai.session'].sudo().create(create_vals)
 
@@ -191,13 +191,13 @@ class AIAgent(models.Model):
                 res.attr('are_prompts_from_local_storage', False),
                 res.from_method('_store_channel_fields'),
                 res.many('ai_prompt_buttons', ['id', 'name', 'prompt', 'sequence'], value=ai_composer._get_random_prompts(3, not model_has_thread)),
-            )
+            ),
         )
 
         return {
             'ai_channel_id': channel.id,
             'data': store,
-            'model_has_thread': model_has_thread
+            'model_has_thread': model_has_thread,
         }
 
     def _build_rag_context(self, prompt):
@@ -294,7 +294,7 @@ class AIAgent(models.Model):
 
         for container in prompt_containers:
             prompt_content_elements = container.xpath(
-                ".//div[hasclass('o_editor_prompt_content')]"
+                ".//div[hasclass('o_editor_prompt_content')]",
             )
 
             if remove_prompts:
@@ -333,10 +333,10 @@ class AIAgent(models.Model):
             self.env.cr.execute(SQL(
                 "SELECT pg_advisory_xact_lock(%s, %s) NOWAIT;",
                 guest.id if self.env.user._is_public() else self.env.user.partner_id.id,
-                self.id
+                self.id,
             ))
 
-        channel = self.env['discuss.channel'].sudo().create({
+        return self.env['discuss.channel'].sudo().create({
             "ai_agent_id": self.id,
             "channel_member_ids": [
                 Command.create({"guest_id": guest.id} if self.env.user._is_public() else {"partner_id": self.env.user.partner_id.id}),
@@ -346,7 +346,6 @@ class AIAgent(models.Model):
             # sudo() => visitor can set the name of the channel
             "name": channel_name if channel_name else "",
         })
-        return channel
 
     def _generate_single_response(
         self,
@@ -513,7 +512,7 @@ class AIAgent(models.Model):
                             "web_menu": web_menu,
                             "action": action,
                             "app_menu": app_menu,
-                        }
+                        },
                     )
 
         # Menus are already ordered by sequence from load_web_menus(), but we still need to sort

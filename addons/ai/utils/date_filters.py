@@ -323,12 +323,12 @@ def _compute_date_find_weekday(working_dt, target_weekday, direction):
         Datetime of the target weekday occurrence
     """
     if target_weekday < 0 or target_weekday > 6:
-        raise ValueError("weekday must be between 0 (Monday) and 6 (Sunday)")
+        message = "weekday must be between 0 (Monday) and 6 (Sunday)"
+        raise ValueError(message)
 
     current_weekday = working_dt.weekday()
     days_offset = (direction * (target_weekday - current_weekday)) % 7 or 7
-    result = working_dt + timedelta(days=days_offset * direction)
-    return result
+    return working_dt + timedelta(days=days_offset * direction)
 
 
 def _compute_date_apply_pin(working_dt, pin):
@@ -353,12 +353,14 @@ def _pin_day(result, day_value):
         return _pin_day_of_month(result, day_value)
     if isinstance(day_value, dict):
         return _pin_weekday(result, day_value)
-    raise ValueError("pin.day must be an integer (1-31) or object {weekday, occurrence?}")
+    message = "pin.day must be an integer (1-31) or object {weekday, occurrence?}"
+    raise ValueError(message)
 
 
 def _pin_day_of_month(result, day):
     if not (1 <= day <= 31):
-        raise ValueError("pin.day must be between 1 and 31")
+        message = "pin.day must be between 1 and 31"
+        raise ValueError(message)
     max_day = calendar.monthrange(result.year, result.month)[1]
     if not (1 <= day <= max_day):
         raise ValueError(
@@ -371,13 +373,15 @@ def _pin_weekday(result, day_value):
     """Weekday selector: {weekday: int, occurrence?: int}."""
     if "weekday" not in day_value:
         raise ValueError(
-            f"pin.day object must have 'weekday' field. Got: {day_value}"
+            f"pin.day object must have 'weekday' field. Got: {day_value}",
         )
     target_weekday = day_value["weekday"]
     if not isinstance(target_weekday, int):
-        raise TypeError("pin.day.weekday must be an integer (0=Monday, 6=Sunday)")
+        message = "pin.day.weekday must be an integer (0=Monday, 6=Sunday)"
+        raise TypeError(message)
     if not (0 <= target_weekday <= 6):
-        raise ValueError("pin.day.weekday must be between 0 (Monday) and 6 (Sunday)")
+        message = "pin.day.weekday must be between 0 (Monday) and 6 (Sunday)"
+        raise ValueError(message)
     if "occurrence" in day_value and day_value["occurrence"] is not None:
         return _pin_weekday_occurrence(result, target_weekday, day_value["occurrence"])
     # Just find the weekday without occurrence
@@ -386,9 +390,11 @@ def _pin_weekday(result, day_value):
 
 def _pin_weekday_occurrence(result, target_weekday, occurrence):
     if not isinstance(occurrence, int):
-        raise ValueError("pin.day.occurrence must be an integer")
+        message = "pin.day.occurrence must be an integer"
+        raise ValueError(message)
     if not (1 <= occurrence <= 5):
-        raise ValueError("pin.day.occurrence must be between 1 and 5")
+        message = "pin.day.occurrence must be between 1 and 5"
+        raise ValueError(message)
     first_of_month = result.replace(day=1)
     days_to_first = (target_weekday - first_of_month.weekday()) % 7
     first_occurrence = first_of_month + timedelta(days=days_to_first)
@@ -403,22 +409,28 @@ def _pin_weekday_occurrence(result, target_weekday, occurrence):
 def _pin_time(result, time_str):
     """Anchor the time to 'HH:MM' or 'HH:MM:SS'."""
     if not isinstance(time_str, str):
-        raise ValueError("pin.time must be a string in 'HH:MM' or 'HH:MM:SS' format")
+        message = "pin.time must be a string in 'HH:MM' or 'HH:MM:SS' format"
+        raise ValueError(message)
     time_parts = time_str.split(":")
     if len(time_parts) not in [2, 3]:
-        raise ValueError("pin.time must be in 'HH:MM' or 'HH:MM:SS' format")
+        message = "pin.time must be in 'HH:MM' or 'HH:MM:SS' format"
+        raise ValueError(message)
     try:
         hour = int(time_parts[0])
         minute = int(time_parts[1])
         second = int(time_parts[2]) if len(time_parts) == 3 else 0
     except ValueError:
-        raise ValueError("pin.time components must be integers") from None
+        message = "pin.time components must be integers"
+        raise ValueError(message) from None
     if not (0 <= hour <= 23):
-        raise ValueError("pin.time hour must be between 0 and 23")
+        message = "pin.time hour must be between 0 and 23"
+        raise ValueError(message)
     if not (0 <= minute <= 59):
-        raise ValueError("pin.time minute must be between 0 and 59")
+        message = "pin.time minute must be between 0 and 59"
+        raise ValueError(message)
     if not (0 <= second <= 59):
-        raise ValueError("pin.time second must be between 0 and 59")
+        message = "pin.time second must be between 0 and 59"
+        raise ValueError(message)
     return result.replace(hour=hour, minute=minute, second=second, microsecond=0)
 
 

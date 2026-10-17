@@ -47,17 +47,21 @@ def _resolve_public_addresses(url):
         parts = urlsplit(url)
         port = parts.port
     except ValueError as e:
-        raise WebFetchError('blocked_url') from e
+        message = 'blocked_url'
+        raise WebFetchError(message) from e
     if parts.scheme not in ALLOWED_SCHEMES or not parts.hostname:
-        raise WebFetchError('blocked_url')
+        message = 'blocked_url'
+        raise WebFetchError(message)
     if parts.username or parts.password or port not in ALLOWED_PORTS:
-        raise WebFetchError('blocked_url')
+        message = 'blocked_url'
+        raise WebFetchError(message)
 
     default_port = 443 if parts.scheme == 'https' else 80
     try:
         infos = socket.getaddrinfo(parts.hostname, port or default_port, proto=socket.IPPROTO_TCP)
     except (socket.gaierror, UnicodeError) as e:
-        raise WebFetchError('fetch_failed') from e
+        message = 'fetch_failed'
+        raise WebFetchError(message) from e
 
     addresses = set()
     for info in infos:
@@ -65,7 +69,8 @@ def _resolve_public_addresses(url):
         if isinstance(address, ipaddress.IPv6Address) and address.ipv4_mapped:
             address = address.ipv4_mapped
         if not address.is_global:
-            raise WebFetchError('blocked_url')
+            message = 'blocked_url'
+            raise WebFetchError(message)
         addresses.add(address)
     return addresses
 
@@ -96,23 +101,28 @@ def _safe_get(url):
         try:
             response = _get_once(current)
         except requests.RequestException as e:
-            raise WebFetchError('fetch_failed') from e
+            message = 'fetch_failed'
+            raise WebFetchError(message) from e
         with response:
             if response.status_code in (301, 302, 303, 307, 308):
                 location = response.headers.get('Location')
                 if not location:
-                    raise WebFetchError('fetch_failed')
+                    message = 'fetch_failed'
+                    raise WebFetchError(message)
                 current = urljoin(current, location)
                 continue
             if response.status_code >= 400:
-                raise WebFetchError('fetch_failed')
+                message = 'fetch_failed'
+                raise WebFetchError(message)
             body = bytearray()
             for chunk in response.iter_content(chunk_size=64 * 1024):
                 body.extend(chunk)
                 if len(body) > MAX_BYTES:
-                    raise WebFetchError('too_large')
+                    message = 'too_large'
+                    raise WebFetchError(message)
             return response, bytes(body)
-    raise WebFetchError('fetch_failed')
+    message = 'fetch_failed'
+    raise WebFetchError(message)
 
 
 def _is_allowed_by_robots(url):
@@ -155,9 +165,11 @@ def fetch_page_text(url, check_robots_txt=True):
     :raises WebFetchError: when the URL is blocked, cannot be fetched or is not text
     """
     if check_robots_txt and not _is_allowed_by_robots(url):
-        raise WebFetchError('robots_disallowed')
+        message = 'robots_disallowed'
+        raise WebFetchError(message)
     response, body = _safe_get(url)
     content_type = (response.headers.get('Content-Type') or '').split(';')[0].strip().lower()
     if content_type not in TEXT_CONTENT_TYPES:
-        raise WebFetchError('unsupported_content')
+        message = 'unsupported_content'
+        raise WebFetchError(message)
     return _extract_text(content_type, body)

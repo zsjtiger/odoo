@@ -235,12 +235,11 @@ class OauthServerController(http.Controller):
         if not client_record or not client_record.active:
             self._raise_oauth_error('invalid_client', "Invalid client credentials", status=401)
 
-        client_data = {
+        return {
             'client_name': client_record.client_name,
             'client_id': client_record.client_id,
             'redirect_uris': [uri.strip() for uri in client_record.redirect_uris.splitlines() if uri.strip()],
         }
-        return client_data
 
     def _raise_oauth_error(self, error: str, description: str | None = None, status: int = 400) -> None:
         body = {'error': error}

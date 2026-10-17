@@ -122,10 +122,12 @@ class AITool(models.AbstractModel):
 
     def _get_model_fields(self, model_name):
         if not isinstance(model_name, str):
-            raise TypeError("Model name must be a string.")
+            message = "Model name must be a string."
+            raise TypeError(message)
 
         if not model_name:
-            raise ValueError("Model name must be provided.")
+            message = "Model name must be provided."
+            raise ValueError(message)
 
         if model_name not in self.env:
             raise ValueError(f"The model '{model_name}' doesn't exist.")
@@ -194,14 +196,15 @@ class AITool(models.AbstractModel):
             messages.append(
                 Markup("<span>%s</span>") % (
                     self.env._("has created %s", link) if mode == 'create' else self.env._("has updated %s", link)
-                )
+                ),
             )
         return messages
 
     def _get_calling_agent(self, tool_context: dict):
         agent = self.env['ai.agent'].browse(tool_context["agent_id"])
         if not agent.exists():
-            raise LookupError("Could not find the calling agent.")
+            message = "Could not find the calling agent."
+            raise LookupError(message)
         return agent
 
     def _ai_tool_get_models(self) -> dict:
@@ -235,7 +238,7 @@ class AITool(models.AbstractModel):
 
         # Sort apps by their menu sequence, with unknown apps at the end
         sorted_apps = sorted(
-            models_by_app.keys(), key=lambda x: (app_sequence.get(x, 999), x)
+            models_by_app.keys(), key=lambda x: (app_sequence.get(x, 999), x),
         )
 
         for app in sorted_apps:
@@ -288,7 +291,7 @@ class AITool(models.AbstractModel):
                     "id": model_rec.id,
                     "model": model_rec.model,
                     "description": (model_obj._explanation or model_rec.name or model_obj._description or "").replace('|', ' ').replace('\n', ' '),
-                }
+                },
             )
         return models_by_app
 
@@ -359,7 +362,7 @@ class AITool(models.AbstractModel):
                             "web_menu": web_menu,
                             "action": action,
                             "app_menu": app_menu,
-                        }
+                        },
                     )
 
         # Menus are already ordered by sequence from load_web_menus(), but we still need to sort
@@ -631,7 +634,6 @@ class AITool(models.AbstractModel):
         if view_type not in available_views:
             raise ValueError(f"{view_type.capitalize()} view is not available for the action associated with menu ID {menu_id}.")
 
-
     def _ai_tool_open_menu_graph(
         self, menu_id, model_name, selected_filters, selected_groupbys, measure, mode, order, search,
         stacked=False, cumulated=False, custom_domain=None):
@@ -748,10 +750,12 @@ class AITool(models.AbstractModel):
 
     def _ai_tool_get_menu_details(self, menu_ids, include_model_fields):
         if not isinstance(menu_ids, list):
-            raise TypeError("menu_ids must be a list of menu IDs.")
+            message = "menu_ids must be a list of menu IDs."
+            raise TypeError(message)
 
         if not menu_ids:
-            raise ValueError("At least one menu ID must be provided.")
+            message = "At least one menu ID must be provided."
+            raise ValueError(message)
 
         # Load all menus to validate IDs
         menus = self.env["ir.ui.menu"].load_menus(debug=self.env.context.get('debug', False))
@@ -762,7 +766,7 @@ class AITool(models.AbstractModel):
             if not isinstance(menu_id, (int, float)):
                 result_menus.append({
                     "menu_id": menu_id,
-                    "error": "Menu ID must be a number"
+                    "error": "Menu ID must be a number",
                 })
                 continue
 
@@ -772,7 +776,7 @@ class AITool(models.AbstractModel):
             if not menu:
                 result_menus.append({
                     "menu_id": menu_id,
-                    "error": "Menu not found"
+                    "error": "Menu not found",
                 })
                 continue
 
@@ -787,7 +791,7 @@ class AITool(models.AbstractModel):
             if not action.exists():
                 result_menus.append({
                     "menu_id": menu_id,
-                    "error": "Action not found"
+                    "error": "Action not found",
                 })
                 continue
 
@@ -805,7 +809,7 @@ class AITool(models.AbstractModel):
                 "model": action.res_model,
                 "context": context,
                 "domain": domain,
-                "search_view": search_view_info
+                "search_view": search_view_info,
             })
             if include_model_fields:
                 result_menus[-1]["model_fields"] = self._ai_tool_get_fields(action.res_model)['response']
@@ -939,19 +943,19 @@ class AITool(models.AbstractModel):
     def _ai_tool_load_skills(self, tool_context: dict, skill_ids: list[int]) -> dict:
         agent = self.env['ai.agent'].sudo().browse(tool_context["agent_id"])
         if not agent.exists():
-            raise LookupError("Could not find agent linked to the skills.")
+            message = "Could not find agent linked to the skills."
+            raise LookupError(message)
 
         available_skills = agent._get_available_skills()
         web_search_skill_id = self.env.ref('ai.ai_skill_web_search').id
         if (unauthorized_ids := set(skill_ids) - set(available_skills.ids)):
             raise ValueError(
                 f"skills {unauthorized_ids} are not linked to this agent. `load_skills` only "
-                "loads skills already linked to you (listed in available_skills)."
+                "loads skills already linked to you (listed in available_skills).",
             )
-        elif not tool_context["enable_web_search"] and web_search_skill_id in skill_ids:
-            raise ValueError(
-                "Web searching has been disabled by the user for this turn. Inform the user that web searching is turned off."
-            )
+        if not tool_context["enable_web_search"] and web_search_skill_id in skill_ids:
+            error_message = "Web searching has been disabled by the user for this turn. Inform the user that web searching is turned off."
+            raise ValueError(error_message)
 
         # Filter the agent's skills to keep selected ids only
         skills = available_skills.filtered(lambda skill: skill.id in skill_ids)
@@ -967,9 +971,11 @@ class AITool(models.AbstractModel):
 
     def _ai_tool_ask_user_question(self, tool_context, question, choices, multi_select=False, allow_free_text=True):
         if not isinstance(question, str) or not question.strip():
-            raise ValueError("A question must be provided.")
+            message = "A question must be provided."
+            raise ValueError(message)
         if not isinstance(choices, list) or not (2 <= len(choices) <= 4):
-            raise ValueError("Provide between two and four choices to select from.")
+            message = "Provide between two and four choices to select from."
+            raise ValueError(message)
         tool_context["user_input_request"] = {
             "type": "question",
             "body": markdown_format(question),
@@ -1013,7 +1019,7 @@ class AITool(models.AbstractModel):
                 self.env,
                 make_batch_update_preview(self.env, explanation, updates),
             )
-            return
+            return None
 
         updated_records = {}
         for update in updates:
@@ -1057,7 +1063,8 @@ class AITool(models.AbstractModel):
         model = self.env[model_name].sudo(False)
         parsed_domain = self._parse_domain(model_name, domain, operation='write')
         if parsed_domain in (True, []):
-            raise ValueError("You cannot update using a dummy truthy domain (e.g. [], True). To update all records, pass a domain that matches all records instead.")
+            message = "You cannot update using a dummy truthy domain (e.g. [], True). To update all records, pass a domain that matches all records instead."
+            raise ValueError(message)
         records = model.search(parsed_domain)
         if not records:
             raise ValueError(f"No records were found corresponding to the domain '{domain}'")
@@ -1186,7 +1193,7 @@ class AITool(models.AbstractModel):
             part = parts_by_checksum[attachment.checksum]
             part['metadata'] = {
                 'image_path': field_to_image_path(attachment, 'raw'),
-                'attachment_id': attachment.id
+                'attachment_id': attachment.id,
             }
         return result, attachments
 
@@ -1276,7 +1283,7 @@ class AITool(models.AbstractModel):
             Markup(
                 '<span class="o_ai_preview_link">'
                 '<a href="%s" target="_blank" rel="noopener noreferrer" data-oe-model="%s" data-oe-id="%s">%s</a>'
-                '</span>'
+                '</span>',
             ) % (item.get('preview_url', '#'), model_name, item['id'], item['preview_name'])
             for item in preview_metadata
         ]

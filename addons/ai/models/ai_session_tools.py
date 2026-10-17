@@ -146,7 +146,7 @@ class AiSessionToolsMixin(models.AbstractModel):
         pending_results = pending_batch.get('pending_results', [])
         child_marker = next((result for result in pending_results if result.get('child_session_id') == child.id), None)
         if not child_marker or child.parent_session_id != self:
-            return
+            return None
         tool_result = format_tool_result(
             {'name': child_marker['tool_name'], 'call_id': child_marker['tool_call_id']},
             result={'session_id': child.id, **result},
@@ -160,7 +160,7 @@ class AiSessionToolsMixin(models.AbstractModel):
 
         if self.loop_state != 'waiting_child' or pending_batch.get('call_id'):
             # Maybe a warning?
-            return
+            return None
         has_pending_children = any('child_session_id' in result for result in pending_results)
         if has_pending_children:
             return None
@@ -270,9 +270,10 @@ class AiSessionToolsMixin(models.AbstractModel):
             return self._finish_exchange(content=self._format_final_message(final_message))
         if self.request_round >= self.request_round_limit:
             return self._finish_exchange('failed', content=self.env._(
-                "The AI used too many successive tool rounds. Please try a more precise request."
+                "The AI used too many successive tool rounds. Please try a more precise request.",
             ))
         self._submit_agent_request()
+        return None
 
     def _resume_pending_interaction(
         self, response: PendingInteractionResponse,
@@ -286,12 +287,12 @@ class AiSessionToolsMixin(models.AbstractModel):
             if response['kind'] == 'skip':
                 return self._abort_pending_tools()
             if response['kind'] != 'async' or response['call_id'] != pending_tool_call['call_id']:
-                return
+                return None
         elif response['kind'] == 'async':
-            return
+            return None
         if unavailable_message := self._get_session_advance_unavailable_message():
             self._post_ai_response(unavailable_message)
-            return
+            return None
 
         if self.loop_state in ('waiting_confirmation', 'waiting_answer'):
             user_input_request = pending_tool_call['user_input_request']
@@ -528,7 +529,6 @@ class AiSessionToolsMixin(models.AbstractModel):
             return None, e
         return tool_result, None
 
-
     def _abort_pending_tools(self):
         """Decline the remaining tools, wait for launched children, and post the interruption note."""
         self.ensure_one()
@@ -597,7 +597,7 @@ class AiSessionToolsMixin(models.AbstractModel):
                 f'''<skill_content name="{skill.name}" type="{skill.type}">
                 {dedent(skill.instructions or "").strip()}
                 </skill_content>
-                '''
+                ''',
             )
         return self._append_instruction_block(base_instructions, "loaded_skills", skill_parts)
 

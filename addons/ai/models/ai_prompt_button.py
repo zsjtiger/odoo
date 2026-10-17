@@ -14,12 +14,12 @@ class AIPromptButton(models.Model):
     _description = "Default action prompt that can be attached to AI UI rules for quick access by the user."
 
     name = fields.Char(
-        "Title", help="The text shown on the button", required=True
+        "Title", help="The text shown on the button", required=True,
     )
     prompt = fields.Html(
         help="The prompt that will be sent to the AI when the button is clicked",
         render_engine='qweb', render_options={'post_process': True}, prefetch=True,
-        translate=True, sanitize=True, sanitize_output_method='xml'
+        translate=True, sanitize=True, sanitize_output_method='xml',
     )
     sequence = fields.Integer(string="Sequence", default=10)
     composer_id = fields.Many2one("ai.composer", index='btree_not_null')

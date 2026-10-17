@@ -69,7 +69,7 @@ class TestAISession(TestAICallbackCommon, BusCase):
                     },
                     "required": []
                 }
-            """)
+            """),
         }])
         cls.tool_with_summary = cls.env['ir.actions.server'].create({
             'model_id': cls.env['ir.model']._get_id('ai.agent'),
@@ -280,7 +280,7 @@ class TestAISession(TestAICallbackCommon, BusCase):
             [{'type': 'text', 'text': 'done'}],
         )
         agent_messages = session.channel_id.message_ids.filtered(
-            lambda message: message.author_id == self.agent.partner_id
+            lambda message: message.author_id == self.agent.partner_id,
         ).sorted('id')
         self.assertEqual(len(agent_messages), 3)
         # first the intermediary message
@@ -361,7 +361,7 @@ class TestAISession(TestAICallbackCommon, BusCase):
         self.assertLess(
             session_1_data['ai_channel_id'],
             session_2_data['ai_channel_id'],
-            "Each call to action_launch_ai_chat should open a new ai chat channel."
+            "Each call to action_launch_ai_chat should open a new ai chat channel.",
         )
         channel_2_data = next(
             channel_data
@@ -407,7 +407,7 @@ class TestAISession(TestAICallbackCommon, BusCase):
 
         with (
             self.mock_callback_completions(
-                [self.mock_tool_response(self.tool_w_confirm)]
+                [self.mock_tool_response(self.tool_w_confirm)],
             ),
             self.mock_default_tools(self.tool_w_confirm),
         ):
@@ -971,7 +971,7 @@ class TestAISession(TestAICallbackCommon, BusCase):
             [
                 {'result': [{'text': 'done', 'type': 'text'}], 'success': True, 'tool_call_id': 1, 'tool_name': 'tool'},
                 {'result': [{'text': 'done', 'type': 'text'}], 'success': True, 'tool_call_id': 2, 'tool_name': 'tool'},
-            ]
+            ],
         )
 
         # confirm tool request
@@ -1019,7 +1019,7 @@ class TestAISession(TestAICallbackCommon, BusCase):
 
         with (
             self.mock_callback_completions(mocked_responses),
-            self.mock_default_tools(self.tool_w_confirm)
+            self.mock_default_tools(self.tool_w_confirm),
         ):
             self._post_user_message_on_session(session, "hey")
 
@@ -1070,7 +1070,7 @@ class TestAISession(TestAICallbackCommon, BusCase):
                     'result': [{'type': 'text', 'text': 'Confirmed!'}],
                     'success': True,
                 },
-            ]
+            ],
         )
 
         # confirming the request
@@ -1127,7 +1127,7 @@ class TestAISession(TestAICallbackCommon, BusCase):
 
         self.assertFalse(session.pending_tool_call)
         prompt = session.channel_id.message_ids.filtered(
-            lambda message: 'ai_user_input_request' in (message.body or '')
+            lambda message: 'ai_user_input_request' in (message.body or ''),
         )
         self.assertIn("<p>Which one?</p>", prompt.body)
 
@@ -1152,7 +1152,7 @@ class TestAISession(TestAICallbackCommon, BusCase):
                 *self.mock_tool_response(self.tool, {'value': "val1"}),
                 *self.mock_tool_response(self.tool_w_confirm, {'value': "val2"}),
                 *self.mock_tool_response(self.tool, {'value': "val3"}),
-            ]
+            ],
         ]
         with (
             self.mock_callback_completions(mocked_responses),
@@ -1240,7 +1240,7 @@ class TestAISession(TestAICallbackCommon, BusCase):
         session = self._create_ai_session(self.agent_with_sources)
         config = {
             "enable_web_search": False,
-            "enable_resources_only": True
+            "enable_resources_only": True,
         }
 
         with (
@@ -1283,7 +1283,7 @@ class TestAISession(TestAICallbackCommon, BusCase):
                 self.mock_embedding_request(),
             ):
                 self._post_user_message_on_session(
-                    session, "3", ai_session_config={"enable_web_search": enable_web_search}
+                    session, "3", ai_session_config={"enable_web_search": enable_web_search},
                 )
 
             return [tool["name"] for tool in request.call_args_list[0].args[0]["tools"]]

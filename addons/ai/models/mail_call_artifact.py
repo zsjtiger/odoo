@@ -23,7 +23,7 @@ class MailCallArtifact(models.Model):
     is_stt = fields.Boolean(
         string="Is STT Artifact", default=False,
         help="Indicates if this artifact is for Speech-to-Text (STT). "
-             "If set, the media will be converted to a transcript."
+             "If set, the media will be converted to a transcript.",
     )
     transcription_state = fields.Selection(
         [
@@ -43,7 +43,7 @@ class MailCallArtifact(models.Model):
     def _get_matching_recording_artifacts(self):
         self.ensure_one()
         return self._get_related_call().artifact_ids.filtered(
-            lambda artifact: artifact.start_ms == self.start_ms and artifact.end_ms == self.end_ms
+            lambda artifact: artifact.start_ms == self.start_ms and artifact.end_ms == self.end_ms,
         )
 
     def _is_recording_available(self):
@@ -90,7 +90,7 @@ class MailCallArtifact(models.Model):
         # We use search() here instead of self.try_lock_for_update() directly to prevent
         # lock on the entire table if called on an empty recordset
         records = self.search(
-            search_domain, order="create_date desc", limit=batch_size
+            search_domain, order="create_date desc", limit=batch_size,
         ).try_lock_for_update()
         if not records:
             return []
@@ -168,7 +168,7 @@ class MailCallArtifact(models.Model):
     def _has_pending_stt_artifacts(self, call):
         """Check if the given call has any pending STT artifacts."""
         pending = call.artifact_ids.filtered(
-            lambda a: a.is_stt and a.transcription_state == 'pending'
+            lambda a: a.is_stt and a.transcription_state == 'pending',
         )
         return bool(pending)
 
@@ -185,7 +185,7 @@ class MailCallArtifact(models.Model):
             self.env.cr.execute("SET LOCAL lock_timeout = '3s'")
             self.env.cr.execute(SQL(
                 'SELECT 1 FROM %s WHERE id=%s FOR UPDATE',
-                SQL.identifier(self._table), self.id
+                SQL.identifier(self._table), self.id,
             ))
         except (LockNotAvailable, QueryCanceled) as e:
             _logger.warning("Could not write transcription results: %s", e)

@@ -54,7 +54,8 @@ class TestAIWebScraperBatch(TransactionCase):
             partner = env['res.partner'].create({'name': 'Before'})
 
             def fail():
-                raise ValueError('Flush failed')
+                message = 'Flush failed'
+                raise ValueError(message)
 
             def callback(pages, batch):
                 partner.name = 'Processed'
@@ -119,7 +120,8 @@ class TestAIWebScraperBatch(TransactionCase):
 
         def fetch(url, check_robots_txt):
             if url.endswith('blocked'):
-                raise WebFetchError('blocked_url')
+                message = 'blocked_url'
+                raise WebFetchError(message)
             self.assertTrue(check_robots_txt)
             return 'Some text'
 

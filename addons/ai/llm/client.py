@@ -41,7 +41,8 @@ class OpenAICompatibleClient:
         try:
             return response.json()
         except ValueError as e:
-            raise LLMError("The language model service returned an invalid response") from e
+            message = "The language model service returned an invalid response"
+            raise LLMError(message) from e
 
     def _request_text(self, method, path, **kwargs):
         headers = {'Authorization': f'Bearer {self.api_key}'}
@@ -76,7 +77,8 @@ class OpenAICompatibleClient:
         try:
             message = data['choices'][0]['message']
         except (KeyError, IndexError, TypeError) as e:
-            raise LLMError("The language model service returned no message") from e
+            error_message = "The language model service returned no message"
+            raise LLMError(error_message) from e
         return from_openai_message(message, model=data.get('model'), usage=data.get('usage'))
 
     def embeddings(self, inputs, model=None):
@@ -89,7 +91,8 @@ class OpenAICompatibleClient:
             items = sorted(data['data'], key=lambda item: item['index'])
             return [item['embedding'] for item in items]
         except (KeyError, TypeError) as e:
-            raise LLMError("The language model service returned no embeddings") from e
+            message = "The language model service returned no embeddings"
+            raise LLMError(message) from e
 
     def transcribe(self, audio, mimetype='audio/mp3', language=None, model=None, response_format='json'):
         """Return the transcript of an audio file.
@@ -105,13 +108,15 @@ class OpenAICompatibleClient:
         if response_format in TEXT_FORMATS:
             text = self._request_text('POST', '/audio/transcriptions', files=files, data=form)
             if not text:
-                raise LLMError("The language model service returned no transcription")
+                message = "The language model service returned no transcription"
+                raise LLMError(message)
             return text
         data = self._request('POST', '/audio/transcriptions', files=files, data=form)
         try:
             return data['text']
         except (KeyError, TypeError) as e:
-            raise LLMError("The language model service returned no transcription") from e
+            message = "The language model service returned no transcription"
+            raise LLMError(message) from e
 
     def create_transcription_session(self, language=None, prompt=None, model=None):
         """Create a realtime transcription session. The returned ``client_secret`` is used by the browser."""

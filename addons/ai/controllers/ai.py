@@ -17,13 +17,14 @@ class AIController(http.Controller):
     def get_direct_response(self, prompt, interface_key=None, record_model=None, enable_html_response=False, schema=None):
         ai_agent = self.env["ai.composer"]._get_composer_from_key_and_model(interface_key, record_model).ai_agent_id
         if enable_html_response and schema:
-            raise BadRequest("Cannot enable html response with structured outputs")
+            message = "Cannot enable html response with structured outputs"
+            raise BadRequest(message)
         if not ai_agent:
             raise NotFound()
         # todo: files/images?
         response_parts = ai_agent._generate_single_response(
             [{"type": "text", "text": prompt}],
-            schema=schema
+            schema=schema,
         )
         text_response = get_text_from_parts(response_parts)
         return markdown_format(text_response) if enable_html_response else text_response
@@ -40,7 +41,7 @@ class AIController(http.Controller):
         ai_prompt_button_context = ai_prompt_button_context or {}
         ai_prompt_button = next(
             (p for p in transcription_composer.available_prompt_ids if p.id == ai_prompt_button_context.get('ai_prompt_button_ref')),
-            self.env['ai.prompt.button']
+            self.env['ai.prompt.button'],
         )
         composer_default_prompt = transcription_composer.default_prompt or ""
         if ai_prompt_button:
@@ -70,7 +71,8 @@ class AIController(http.Controller):
     @http.route("/ai/transcription", type="jsonrpc", auth="user")
     def transcribe(self, audio_base64, language=None):
         if not audio_base64:
-            raise BadRequest("No audio data provided")
+            message = "No audio data provided"
+            raise BadRequest(message)
         try:
             text = get_llm_client(request.env).transcribe(
                 base64.b64decode(audio_base64), mimetype='audio/mp3', language=language,
@@ -99,7 +101,7 @@ class AIController(http.Controller):
         if not call:
             raise NotFound()
         pending_artifacts = call.artifact_ids.filtered(
-            lambda a: a.is_stt and a.transcription_state == "pending"
+            lambda a: a.is_stt and a.transcription_state == "pending",
         )
         if pending_artifacts:
             pending_artifacts.action_transcribe_gevent()

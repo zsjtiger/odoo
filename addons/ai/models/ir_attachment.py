@@ -169,8 +169,8 @@ class IrAttachment(models.Model):
             'data': base64.b64encode(raw_data).decode(),
             'metadata': {
                 'image_path': image_path,
-                'aspect_ratio': aspect_ratio
-            }
+                'aspect_ratio': aspect_ratio,
+            },
         }
 
     def _retrieve_image_src_and_mimetype(self):
@@ -182,7 +182,7 @@ class IrAttachment(models.Model):
             # stream the file right away.
             static_path = root.get_static_file(
                 self.url,
-                host=self.env.context.get('HTTP_HOST', '')
+                host=self.env.context.get('HTTP_HOST', ''),
             )
             if static_path:
                 result['path'] = static_path

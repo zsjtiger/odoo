@@ -7,7 +7,7 @@ class AIAttachmentVacuum(models.Model):
     _description = "AI Generated Attachments that aren't used and should be autovacuumed"
 
     attachment_id = fields.Many2one(
-        "ir.attachment", string="Attachment", required=True, ondelete="cascade"
+        "ir.attachment", string="Attachment", required=True, ondelete="cascade",
     )
 
     def _create_attachments_and_mark_unused(self, vals_list):

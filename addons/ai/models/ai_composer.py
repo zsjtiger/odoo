@@ -101,7 +101,8 @@ class AIComposer(models.Model):
         if self.interface_key == "mail_composer":
             # add previous mail.thread messages
             if not res_model or not res_id or not isinstance(self.env[res_model], self.pool['mail.thread']):
-                raise ValueError("The record must inherit from 'mail.thread'")
+                error_message = "The record must inherit from 'mail.thread'"
+                raise ValueError(error_message)
             record = self.env[res_model].browse(res_id)
             add_text_part(f"# Previous Messages of the record's chatter\n{record._ai_serialize_messages_data()}")
 
@@ -111,7 +112,8 @@ class AIComposer(models.Model):
         elif self.interface_key == "file_viewer_ai_button":
             # add file
             if not res_model == 'ir.attachment' or not res_id or not (attachment := self.env[res_model].search([('id', '=', res_id)])):
-                raise ValueError("The record must be a valid attachment")
+                error_message = "The record must be a valid attachment"
+                raise ValueError(error_message)
             context_parts.extend(attachment._ai_read()[1])
 
         elif self.interface_key == "media_dialog" and reference_image_path:

@@ -19,7 +19,7 @@ class TestDynamicClientRegistration(OauthServerCommon):
         response = self.url_open(
             '/oauth/register/mcp',
             data=json.dumps(params),
-            headers={'Content-Type': 'application/json'}
+            headers={'Content-Type': 'application/json'},
         )
         return response.json()
 
@@ -32,7 +32,7 @@ class TestDynamicClientRegistration(OauthServerCommon):
     def _get_authorization_server_metadata(self):
         with patch(
             'odoo.addons.ai_mcp.controllers.oauth_server_controller.oauth_base_url',
-            return_value='https://oauth.example.com'
+            return_value='https://oauth.example.com',
         ):
             response = self.url_open('/.well-known/oauth-authorization-server/oauth/mcp')
         self.assertEqual(response.status_code, 200)

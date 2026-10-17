@@ -40,7 +40,7 @@ IMAGE_PATH_FORMATS = [
     '/web/image/<int:id>-<string:unique>',
     '/web/image/<int:id>-<string:unique>/<string:filename>',
     '/web/image/<int:id>-<string:unique>/<int:width>x<int:height>',
-    '/web/image/<int:id>-<string:unique>/<int:width>x<int:height>/<string:filename>'
+    '/web/image/<int:id>-<string:unique>/<int:width>x<int:height>/<string:filename>',
 ]
 
 """
@@ -81,7 +81,7 @@ def retrieve_image_parts_from_path(env: Environment, image_path: str) -> AIMessa
             xmlid=args.get('xmlid'),
             res_model=args['model'],
             res_id=args['id'],
-            field=args['field']
+            field=args['field'],
         )
     except MissingError:
         return []
@@ -103,8 +103,8 @@ def _retrieve_image_parts_from_file(image_file_path: str) -> AIMessageParts:
                 'data': base64.b64encode(content).decode(),
                 'metadata': {
                     'image_path': image_file_path,
-                    'aspect_ratio': _get_aspect_ratio_from_raw(content)
-                }
+                    'aspect_ratio': _get_aspect_ratio_from_raw(content),
+                },
             }]
     except FileNotFoundError:
         return []
@@ -141,8 +141,8 @@ def _retrieve_image_parts_from_record(record, field_name: str, image_path=None) 
         'data': base64.b64encode(image_data['content']).decode(),
         'metadata': {
             'image_path': image_path if image_path else field_to_image_path(record, field_name),
-            'aspect_ratio': _get_aspect_ratio_from_raw(image_data['content'])
-        }
+            'aspect_ratio': _get_aspect_ratio_from_raw(image_data['content']),
+        },
     }]
 
 
@@ -182,7 +182,7 @@ def retrieve_image_data_from_record(record, field_name: str) -> dict:
         mimetype = guess_mimetype(content[:MIMETYPE_HEAD_SIZE], default='image/png')
     return {
         'content': content,
-        'mimetype': mimetype if content else 'application/x-empty'
+        'mimetype': mimetype if content else 'application/x-empty',
     }
 
 
@@ -218,13 +218,12 @@ def closest_aspect_ratio(*, width=None, height=None, aspect_ratio=None):
     supported_aspect_ratios = [
         '21:9', '16:9', '9:16',
         '5:4', '4:5', '4:3', '3:4',
-        '3:2', '2:3', '1:1'
+        '3:2', '2:3', '1:1',
     ]
-    result = min(
+    return min(
         supported_aspect_ratios,
-        key=lambda x: abs(int(x.split(':')[0]) / int(x.split(':')[1]) - int(aspect_ratio.split(':')[0]) / int(aspect_ratio.split(':')[1]))
+        key=lambda x: abs(int(x.split(':')[0]) / int(x.split(':')[1]) - int(aspect_ratio.split(':')[0]) / int(aspect_ratio.split(':')[1])),
     )
-    return result
 
 
 def _calculate_aspect_ratio(width, height):

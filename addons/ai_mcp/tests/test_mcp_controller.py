@@ -19,7 +19,7 @@ class TestMcpController(TestMcpCommon, HttpCase):
 
     def _mcp_post(self, method, params=None):
         payload = {'id': 1, 'method': method, 'params': params or {}}
-        response = self.url_open(
+        return self.url_open(
             '/mcp',
             data=json.dumps(payload),
             headers={
@@ -27,7 +27,6 @@ class TestMcpController(TestMcpCommon, HttpCase):
                 'Content-Type': 'application/json',
             },
         )
-        return response
 
     @users('user_internal')
     def test_rollback_on_exception(self):

@@ -35,7 +35,7 @@ class AiSessionEvent(models.Model):
             None,
         )
         if not tool_call:
-            return
+            return None
         # remove technical args
         return {k: v for k, v in tool_call['args'].items() if k not in {'tool_status', '__final_message', 'explanation'}}
 
@@ -176,7 +176,7 @@ class AiSession(models.Model):
             },
             "enable_resources_only": {
                 "enable_web_search": False,
-            }
+            },
         }
 
     def _set_pending_tool_call(self, pending_tool_call):
@@ -262,7 +262,7 @@ class AiSession(models.Model):
         for key, value in updated_config.items():
             if key not in session_config:
                 raise ValidationError(self.env._("Unrecognized AI session configuration key: %(key)s", key=key))
-            elif value != session_config[key]:
+            if value != session_config[key]:
                 valid_update_config[key] = value
 
         if not valid_update_config:

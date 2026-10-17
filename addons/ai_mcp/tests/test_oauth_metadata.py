@@ -11,7 +11,7 @@ class TestOauthServerMetadata(HttpCase):
     def test_protected_resource_metadata(self):
         with patch(
             'odoo.addons.ai_mcp.controllers.oauth_server_controller.oauth_base_url',
-            return_value=OAUTH_BASE_URL
+            return_value=OAUTH_BASE_URL,
         ):
             response = self.url_open('/.well-known/oauth-protected-resource/mcp')
             self.assertEqual(response.status_code, 200)
@@ -23,7 +23,7 @@ class TestOauthServerMetadata(HttpCase):
     def test_authorization_server_metadata(self):
         with patch(
             'odoo.addons.ai_mcp.controllers.oauth_server_controller.oauth_base_url',
-            return_value=OAUTH_BASE_URL
+            return_value=OAUTH_BASE_URL,
         ):
             response = self.url_open('/.well-known/oauth-authorization-server/oauth/mcp')
             self.assertEqual(response.status_code, 200)

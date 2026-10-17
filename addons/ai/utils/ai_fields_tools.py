@@ -68,29 +68,29 @@ def _relational_value_schema(field_type, allowed_values):
             'type': 'array',
             'items': {
                 'type': 'integer',
-                'enum': list(allowed_values)
+                'enum': list(allowed_values),
             },
-            'description': 'The list of IDs of the records to assign to the field. Leave empty to leave the field empty'
+            'description': 'The list of IDs of the records to assign to the field. Leave empty to leave the field empty',
         }
     if field_type == 'many2one':
         return {
             'type': ['integer', 'null'],
             'enum': list(allowed_values) + [None],
-            'description': 'The ID of the record to assign to the field. Use null to leave the field empty (eg. if no value matches the user query)'
+            'description': 'The ID of the record to assign to the field. Use null to leave the field empty (eg. if no value matches the user query)',
         }
     if field_type == 'selection':
         return {
             'type': ['string', 'null'],
             'enum': list(allowed_values) + [None],
-            'description': 'The key of the selection value to assign to the field. Use null to leave the field empty'
+            'description': 'The key of the selection value to assign to the field. Use null to leave the field empty',
         }
     return {
         'type': 'array',
         'items': {
             'type': 'string',
-            'enum': list(allowed_values)
+            'enum': list(allowed_values),
         },
-        'description': 'The list of keys of the tags to assign to the field. Leave empty to leave the field empty'
+        'description': 'The list of keys of the tags to assign to the field. Leave empty to leave the field empty',
     }
 
 
@@ -99,12 +99,12 @@ def _scalar_value_schema(field_type):
     if field_type == 'boolean':
         return {
             'type': 'boolean',
-            'description': 'The boolean to assign to the field'
+            'description': 'The boolean to assign to the field',
         }
     if field_type == 'char':
         return {
             'type': 'string',
-            'description': 'The string to assign to the field. Must be short, concise, without any Markdown formatting, and without any technical data (such as record IDs, field labels, ...)'
+            'description': 'The string to assign to the field. Must be short, concise, without any Markdown formatting, and without any technical data (such as record IDs, field labels, ...)',
         }
     if field_type == 'date':
         return {
@@ -116,27 +116,27 @@ def _scalar_value_schema(field_type):
         return {
             'type': ['string', 'null'],
             'format': 'date-time',
-            'description': 'The datetime to assign to the field. The year, month and day should be correct. The timezine must be included. Use null to leave the field empty'
+            'description': 'The datetime to assign to the field. The year, month and day should be correct. The timezine must be included. Use null to leave the field empty',
         }
     if field_type == 'integer':
         return {
             'type': 'integer',
-            'description': "The whole number to assign to the field. If a number is expressed in words (e.g. '6.67 billion'), it must be converted into its full numeric form (e.g. '6670000000')"
+            'description': "The whole number to assign to the field. If a number is expressed in words (e.g. '6.67 billion'), it must be converted into its full numeric form (e.g. '6670000000')",
         }
     if field_type in ('float', 'monetary'):
         return {
             'type': 'number',
-            'description': "The float to assign to the field"
+            'description': "The float to assign to the field",
         }
     if field_type == 'html':
         return {
             'type': 'string',
-            'description': 'The string to assign to the field. Must be well-structured Markdown, that may contain tables (the markdown will be converted to HTML after generation)'
+            'description': 'The string to assign to the field. Must be well-structured Markdown, that may contain tables (the markdown will be converted to HTML after generation)',
         }
     if field_type == 'text':
         return {
             'type': 'string',
-            'description': 'The string to assign to the field. Must be a few sentences, without any Markdown formatting, and without any technical data (such as record IDs, field labels, ...)'
+            'description': 'The string to assign to the field. Must be a few sentences, without any Markdown formatting, and without any technical data (such as record IDs, field labels, ...)',
         }
     return {'type': 'text', 'description': 'The value to assign to the field'}
 
@@ -165,15 +165,15 @@ def get_ai_value(record, field_descripiton, user_prompt, context_fields, allowed
             'value': field_schema,
             'could_not_resolve': {
                 'type': 'boolean',
-                'description': 'True if the model cannot confidently resolve a value, typically due to missing information, inherent ambiguity, or unverifiable entities in the input.'
+                'description': 'True if the model cannot confidently resolve a value, typically due to missing information, inherent ambiguity, or unverifiable entities in the input.',
             },
             'unresolved_cause': {
                 'type': ['string', 'null'],
-                'description': 'Short explanation of what is missing or why no value could be confidently resolved. Required if could_not_resolve is true.'
+                'description': 'Short explanation of what is missing or why no value could be confidently resolved. Required if could_not_resolve is true.',
             },
         },
         'required': ['value', 'could_not_resolve', 'unresolved_cause'],
-        'additionalProperties': False
+        'additionalProperties': False,
     }
 
     try:
@@ -350,7 +350,7 @@ def parse_ai_response(response, field_type, allowed_values):
         except ValueError:
             return False
         return response
-    elif field_type == 'date':
+    if field_type == 'date':
         if not response:
             return False
         try:
@@ -358,17 +358,16 @@ def parse_ai_response(response, field_type, allowed_values):
         except ValueError:
             return False
         return response
-    elif field_type in ('selection', 'many2one'):
+    if field_type in ('selection', 'many2one'):
         return response if response in allowed_values else False
-    elif field_type in ('tags', 'many2many'):
+    if field_type in ('tags', 'many2many'):
         return [value for value in response if value in allowed_values]
-    elif field_type == 'html':
+    if field_type == 'html':
         if markdown:
             raw_html = markdown(response, extras=['fenced-code-blocks', 'tables', 'strike', 'cuddled-lists']).rstrip('\n')
             return html_sanitize(raw_html or "")
         return html_sanitize(response or "")
-    else:
-        return response
+    return response
 
 
 def ai_field_insert(field_path, field_label):

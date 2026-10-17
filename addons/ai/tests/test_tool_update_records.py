@@ -50,8 +50,8 @@ class TestAiToolUpdateRecords(TestAICallbackCommon):
                         'changes': [{
                             'field': 'name',
                             'value': 'Jimmy',
-                        }]
-                    }
+                        }],
+                    },
                 ],
             }),
         ]
@@ -104,11 +104,11 @@ class TestAiToolUpdateRecords(TestAICallbackCommon):
                         'changes': [{
                             'field': 'name',
                             'value': 'Jimmy',
-                        }]
-                    }
+                        }],
+                    },
                 ],
             }),
-            self.mock_text_response("Not allowed")
+            self.mock_text_response("Not allowed"),
         ]
 
         with self.mock_callback_completions(mocked_responses), self.assertLogs(tool_logger, level='WARNING') as mock_tool_logger:
@@ -201,13 +201,13 @@ class TestAiToolUpdateRecords(TestAICallbackCommon):
         reaction1 = self.env['mail.message.reaction'].create({'content': "🗿", 'message_id': message.id, 'partner_id': self.env.user.partner_id.id})
         reaction2 = self.env['mail.message.reaction'].create({'content': "🥸", 'message_id': message.id, 'partner_id': self.env.user.partner_id.id})
         preview = make_records_update_preview(message, {
-            'reaction_ids': [Command.link(reaction1.id), Command.link(reaction2.id)]
+            'reaction_ids': [Command.link(reaction1.id), Command.link(reaction2.id)],
         })
 
         self.assertEqual(preview[0]['field_name'], 'Reactions')
         self.assertEqual(
             html_to_inner_content(preview[0]['new_val']),
-            f'Add "mail.message.reaction,{reaction1.id}"Add "mail.message.reaction,{reaction2.id}"'
+            f'Add "mail.message.reaction,{reaction1.id}"Add "mail.message.reaction,{reaction2.id}"',
         )
 
     def test_update_preview_x2m_create_command_not_allowed(self):

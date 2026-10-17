@@ -103,7 +103,7 @@ def fetch_client_metadata_document(env, client_id: str) -> dict:
     if client_id not in cimd_allowed_urls:
         raise ValidationError(env._(
             "CIMD URL %(url)s isn't allowed. If you want this client to be able to connect, allow its URL in the settings.",
-            url=client_id
+            url=client_id,
         ))
 
     try:
@@ -118,7 +118,7 @@ def fetch_client_metadata_document(env, client_id: str) -> dict:
     if cimd_document.get('client_id') != client_id:
         raise ValidationError(env._(
             "The client_id of the metadata document does not match the URL %(url)s it was fetched from.",
-            url=client_id
+            url=client_id,
         ))
 
     # Some clients like ChatGPT use private_key_jwt but also support none as token_endpoint_auth_method
@@ -160,7 +160,7 @@ def validate_redirect_uris(env, redirect_uris: list) -> None:
         if uri_parts.fragment:
             raise ValidationError(env._(
                 "Invalid redirect_uri %(uri)s: a redirect_uri must not include a fragment.",
-                uri=uri
+                uri=uri,
             ))
 
         is_uri_valid = (
@@ -171,7 +171,7 @@ def validate_redirect_uris(env, redirect_uris: list) -> None:
         if not is_uri_valid:
             raise ValidationError(env._(
                 "Invalid redirect_uri %(uri)s: only https:// URIs are allowed (or http:// for a loopback address).",
-                uri=uri
+                uri=uri,
             ))
 
 

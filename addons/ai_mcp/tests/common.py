@@ -26,5 +26,5 @@ class TestMcpCommon(TestAICommon):
     def _dispatch(self, method, params=None, sudo=False):
         env = self.env(user=SUPERUSER_ID) if sudo else self.env
         return env['ai.mcp.request.dispatcher']._mcp_dispatch(
-            {'id': 1, 'method': method, 'params': params or {}}
+            {'id': 1, 'method': method, 'params': params or {}},
         )

@@ -29,6 +29,7 @@ class TestInstanceValidation(TransactionCase):
                 required_parameters=required_parameters,
                 env=self.env,
             )
+        return None
 
     def test_missing_optional_parameter(self):
         '''
@@ -84,13 +85,13 @@ class TestInstanceValidation(TransactionCase):
             param_name: {
                 'type': param_type,
                 'description': 'the age of the user',
-            }
+            },
         }
         instance = {param_name: 'fifteen'}
         self.validate_instance_with_schema(
             schema=schema,
             instance=instance,
-            error_message=f"The type of the parameter '{param_name}' is incorrect. It should be '{param_type}'."
+            error_message=f"The type of the parameter '{param_name}' is incorrect. It should be '{param_type}'.",
         )
 
     def test_numeric_minimum(self):
@@ -130,13 +131,13 @@ class TestInstanceValidation(TransactionCase):
                 'type': 'string',
                 'description': 'the date of the meeting',
                 'pattern': param_pattern,
-            }
+            },
         }
         instance = {param_name: '2025-31-01'}
         self.validate_instance_with_schema(
             schema=schema,
             instance=instance,
-            error_message=f"The value '{instance[param_name]}' of the parameter '{param_name}' doesn't match the expected pattern '{param_pattern}'."
+            error_message=f"The value '{instance[param_name]}' of the parameter '{param_name}' doesn't match the expected pattern '{param_pattern}'.",
         )
 
     def test_wrong_type_array_item(self):
@@ -146,7 +147,7 @@ class TestInstanceValidation(TransactionCase):
                 'type': 'array',
                 'items': {'type': 'number'},
                 'description': 'the numbers whose sum is computed',
-            }
+            },
         }
         instance = {param_name: [15, 20, 'hello']}
         self.validate_instance_with_schema(
@@ -168,7 +169,7 @@ class TestInstanceValidation(TransactionCase):
                 'items': {'type': 'string'},
                 'description': 'the date of the meeting',
                 'pattern': param_pattern,
-            }
+            },
         }
         instance = {param_name: ['2025-01-31', '2024-05-29']}
         self.validate_instance_with_schema(
@@ -188,14 +189,14 @@ class TestInstanceValidation(TransactionCase):
                 'type': 'array',
                 'items': {'type': 'string', 'pattern': param_pattern},
                 'description': 'the date of the meeting',
-            }
+            },
         }
         invalid_value = '2025-31-01'
         instance = {param_name: ['2025-01-31', invalid_value]}
         self.validate_instance_with_schema(
             schema=schema,
             instance=instance,
-            error_message=f"The value '{invalid_value}' of the parameter 'meeting_date's item' doesn't match the expected pattern '{param_pattern}'."
+            error_message=f"The value '{invalid_value}' of the parameter 'meeting_date's item' doesn't match the expected pattern '{param_pattern}'.",
         )
 
     def test_missing_optional_object_property(self):
@@ -218,7 +219,7 @@ class TestInstanceValidation(TransactionCase):
                     },
                 },
                 'required': ['email'],
-            }
+            },
         }
         instance = {param_name: {'email': 'Mohamed@gmail.com'}}
         self.validate_instance_with_schema(
@@ -245,8 +246,8 @@ class TestInstanceValidation(TransactionCase):
                         'description': 'the phone number of the user',
                     },
                 },
-                'required': ['email']
-            }
+                'required': ['email'],
+            },
         }
         instance = {param_name: {'phone': '+32123456789'}}
         self.validate_instance_with_schema(
@@ -269,8 +270,8 @@ class TestInstanceValidation(TransactionCase):
                         'description': 'the email of the user',
                     },
                 },
-                'required': [property_name]
-            }
+                'required': [property_name],
+            },
         }
         instance = {param_name: {'email': 123}}
         self.validate_instance_with_schema(
@@ -299,8 +300,8 @@ class TestInstanceValidation(TransactionCase):
                         'pattern': property_pattern,
                     },
                 },
-                'required': [property_name]
-            }
+                'required': [property_name],
+            },
         }
         instance = {param_name: {property_name: property_value}}
         self.validate_instance_with_schema(

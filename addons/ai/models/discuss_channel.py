@@ -62,7 +62,7 @@ class DiscussChannel(models.Model):
             & (
                 Domain('last_interest_dt', '<', '-30d')
                 | (Domain('last_interest_dt', '<', '-1d') & Domain('has_message', '=', False))
-            )
+            ),
         ).unlink()
 
     def _store_channel_fields(self, res: Store.FieldList):

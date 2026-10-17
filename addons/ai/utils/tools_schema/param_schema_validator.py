@@ -5,7 +5,7 @@ class ParamSchemaValidator:
     REQUIRED_PARAMETER_ATTRIBUTES_BY_TYPE = {
         'array': ['items'],
         'string': ['maxLength'],
-        'object': ['properties', 'required']
+        'object': ['properties', 'required'],
     }
     OPTIONAL_PARAMETER_ATTRIBUTES = ['pattern', 'description', 'enum', 'anyOf', 'minimum']
 
@@ -38,7 +38,7 @@ class ParamSchemaValidator:
 
         if missing_required_attributes:
             raise ValueError(
-                f"The attributes '{missing_required_attributes}' must be defined for the parameter '{self.param_name}'."
+                f"The attributes '{missing_required_attributes}' must be defined for the parameter '{self.param_name}'.",
             )
 
     def _check_unsupported_attributes(self):
@@ -48,7 +48,7 @@ class ParamSchemaValidator:
         ]
         if unsupported_attributes:
             raise ValueError(
-                f"The attributes '{unsupported_attributes}' defined for the param '{self.param_name}' are not supported."
+                f"The attributes '{unsupported_attributes}' defined for the param '{self.param_name}' are not supported.",
             )
 
     def _get_supported_param_attributes(self):
@@ -63,7 +63,7 @@ class ParamSchemaValidator:
         if pattern and self.param_type not in ['string', 'array']:
             raise ValueError(
                 f"The pattern attribute cannot be defined for the parameter '{self.param_name}'. "
-                "The pattern attribute can only be defined for string parameters or arrays whose items are only of the type string."
+                "The pattern attribute can only be defined for string parameters or arrays whose items are only of the type string.",
             )
 
     def _check_minimum_only_with_allowed_types(self):
@@ -73,17 +73,17 @@ class ParamSchemaValidator:
         if self.param_type not in ('integer', 'number'):
             raise ValueError(
                 f"The minimum attribute cannot be defined for the parameter '{self.param_name}'. "
-                "The minimum attribute can only be defined for integer or number parameters."
+                "The minimum attribute can only be defined for integer or number parameters.",
             )
         if not isinstance(minimum, (int, float)) or isinstance(minimum, bool):
             raise TypeError(
-                f"The minimum attribute for the parameter '{self.param_name}' must be a number."
+                f"The minimum attribute for the parameter '{self.param_name}' must be a number.",
             )
 
     def _is_valid_param_type(self):
         if self.param_type not in self.AVAILABLE_TYPES:
             raise ValueError(
-                f"The type '{self.param_type}' of parameter '{self.param_name}' is wrong. The available types are '{self.AVAILABLE_TYPES}'."
+                f"The type '{self.param_type}' of parameter '{self.param_name}' is wrong. The available types are '{self.AVAILABLE_TYPES}'.",
             )
 
     def _perform_array_checks(self):
@@ -100,7 +100,7 @@ class ParamSchemaValidator:
         if missing_required_attributes:
             raise ValueError(
                 f"The attributes '{missing_required_attributes}' must be defined for a parameter of type '{self.param_type}'. "
-                f"They are missing for the parameter '{self.param_name}'."
+                f"They are missing for the parameter '{self.param_name}'.",
             )
 
     def _check_array_item_types(self):
@@ -113,18 +113,18 @@ class ParamSchemaValidator:
         array_item_schema = self.param_definition.get('items')
         if (
             not isinstance(array_item_schema, dict)
-            or array_item_schema.get('anyOf') and not isinstance(array_item_schema['anyOf'], list)
+            or (array_item_schema.get('anyOf') and not isinstance(array_item_schema['anyOf'], list))
             or ('anyOf' in array_item_schema and 'type' in array_item_schema)
         ):
             raise ValueError(
-                failure_message
+                failure_message,
             )
         allowed_array_types = set(self.AVAILABLE_TYPES) - {'array'}
         array_item_schemas = array_item_schema.get('anyOf') if 'anyOf' in array_item_schema else [array_item_schema]
         for item_schema in array_item_schemas:
             if not isinstance(item_schema, dict) or not item_schema.get('type'):
                 raise ValueError(
-                    failure_message
+                    failure_message,
                 )
             item_type = item_schema['type']
             if item_type not in allowed_array_types:
@@ -141,7 +141,7 @@ class ParamSchemaValidator:
         if pattern and not (len(array_item_types) == 1 and array_item_types[0]['type'] == 'string'):
             raise ValueError(
                 f"The pattern attribute cannot be defined for the parameter '{self.param_name}'. "
-                "The pattern attribute can only be defined for string parameters or arrays whose items are only of the type string."
+                "The pattern attribute can only be defined for string parameters or arrays whose items are only of the type string.",
             )
 
     def _perform_object_checks(self):
@@ -153,7 +153,7 @@ class ParamSchemaValidator:
         if not isinstance(self.param_definition['required'], list):
             raise TypeError(
                 f"The attribute 'required' for the object param '{self.param_name}' must be a 'list' containing "
-                "the required properties of the object or empty if all of them are not required."
+                "the required properties of the object or empty if all of them are not required.",
             )
 
     def _validate_object_properties(self):
@@ -172,7 +172,7 @@ class ParamSchemaValidator:
 
         if not isinstance(anyof_schemas, list) or not anyof_schemas:
             raise ValueError(
-                f"The 'anyOf' attribute for parameter '{self.param_name}' must be a non-empty list of schemas."
+                f"The 'anyOf' attribute for parameter '{self.param_name}' must be a non-empty list of schemas.",
             )
 
         # Validate each alternative schema
@@ -180,7 +180,7 @@ class ParamSchemaValidator:
             if not isinstance(schema, dict):
                 raise TypeError(
                     f"Each schema in 'anyOf' for parameter '{self.param_name}' must be an object. "
-                    f"Schema at index {idx} is not an object."
+                    f"Schema at index {idx} is not an object.",
                 )
 
             # Recursively validate each schema

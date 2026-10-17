@@ -63,10 +63,9 @@ class Model(models.AbstractModel):
                         len(linked_records) > 50
                     ):  # there have been cases were too many linked records have flooded the context - avoid that by filtering them out
                         continue
-                    else:
-                        result[field_name] = [
-                            {'id': record.id, field_value._rec_name: self._ai_truncate(record.display_name)} for record in linked_records
-                        ]
+                    result[field_name] = [
+                        {'id': record.id, field_value._rec_name: self._ai_truncate(record.display_name)} for record in linked_records
+                    ]
                 elif field_type == "binary":
                     continue  # we don't include binary fields in the record info JSON
                 else:
@@ -75,7 +74,7 @@ class Model(models.AbstractModel):
                         user_tz = ZoneInfo(self.env.user.tz or 'UTC')
                         result[field_name] = (
                             field_value.astimezone(user_tz).strftime(
-                                "%Y-%m-%d %H:%M:%S"
+                                "%Y-%m-%d %H:%M:%S",
                             )
                             if field_value
                             else None
@@ -186,8 +185,8 @@ class Model(models.AbstractModel):
                         'mimetype': mimetype,
                         'data': content or '',
                         'metadata': {
-                            'image_path': f'/web/image/{self._name}/{vals["id"]}/{fname}'
-                        }
+                            'image_path': f'/web/image/{self._name}/{vals["id"]}/{fname}',
+                        },
                     })
                 else:
                     files_checksums.add(checksum)

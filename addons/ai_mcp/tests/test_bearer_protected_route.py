@@ -20,7 +20,7 @@ class TestBearerProtectedRoute(OauthServerCommon):
     def test_access_token_of_inactive_user_is_rejected_on_a_bearer_protected_route(self):
         client_id = self.env['oauth.client'].create({
             'client_name': 'Test Client',
-            'redirect_uris': REDIRECT_URI
+            'redirect_uris': REDIRECT_URI,
         }).client_id
         self.authenticate('internal_user', 'internal_user')
         code = self._generate_auth_code(client_id=client_id)

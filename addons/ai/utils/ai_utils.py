@@ -39,6 +39,11 @@ def get_ai_int_param(env, key, default):
     return env['ir.config_parameter'].sudo().get_int(key, default)
 
 
+def get_ai_str_param(env, key):
+    """Return the string value of the AI config parameter ``key``, or ``False`` when unset."""
+    return env['ir.config_parameter'].sudo().get_str(key)
+
+
 class UserInputResponse(enum.StrEnum):
     """Pre-defined response values for user input requests."""
     CONFIRM_ONCE = 'confirm_once'
@@ -145,7 +150,7 @@ def add_binary_references(model, vals_list, binary_fields):
     attachments = {
         (attachment.res_field, attachment.res_id): attachment
         for attachment in model.env['ir.attachment']._get_field_attachments(
-            records, [fname for fname, field in binary_fields.items() if field.attachment]
+            records, [fname for fname, field in binary_fields.items() if field.attachment],
         )
     }
     for fname, field in binary_fields.items():

@@ -8,7 +8,7 @@ from odoo.tools import SQL
 
 from odoo.addons.ai.llm import LLMError
 from odoo.addons.ai.orm.field_vector import Vector
-from odoo.addons.ai.utils.ai_utils import get_llm_client
+from odoo.addons.ai.utils.ai_utils import get_ai_str_param, get_llm_client
 
 MAX_BATCH_SIZE = 100
 MAX_TOKENS = 10000
@@ -217,7 +217,7 @@ class AIEmbedding(models.Model):
     def _get_default_embedding_model(self):
         if modules.module.current_test:
             return 'dummy'
-        model = self.env['ir.config_parameter'].sudo().get_str('openai.embedding_model')
+        model = get_ai_str_param(self.env, 'openai.embedding_model')
         if not model:
             raise UserError(self.env._("No embedding model is configured. Set the system parameter openai.embedding_model."))
         return model

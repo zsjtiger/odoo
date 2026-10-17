@@ -17,9 +17,11 @@ SELF_UPDATE_SKILL_XMLID = 'ai_agentic.ai_skill_self_update'
 
 def check_automation_skill_is_loaded(env, tool_context):
     if not (automation_skill := env.ref('ai_agentic.ai_skill_automations', raise_if_not_found=False)):
-        raise ValueError("The Automations skill is required to write on base.automation records")
+        message = "The Automations skill is required to write on base.automation records"
+        raise ValueError(message)
     if not automation_skill.id in (tool_context['state'] or []).get('loaded_skills', []):
-        raise ValueError("The Automations skill needs to be loaded to update automations")
+        message = "The Automations skill needs to be loaded to update automations"
+        raise ValueError(message)
 
 
 class AITool(models.AbstractModel):
@@ -28,7 +30,7 @@ class AITool(models.AbstractModel):
     @api.model
     def _check_agent_model_access(self, model_name, operation='read'):
         if operation == 'read' and model_name in {'base.automation', 'ir.model', 'ir.model.fields', 'ir.model.fields.selection'}:
-            return
+            return None
         return super()._check_agent_model_access(model_name, operation)
 
     def _check_tool_scope(self, tool_context, tool_xmlid, model_names):
@@ -44,7 +46,7 @@ class AITool(models.AbstractModel):
             raise ValueError(
                 f"The Self Update skill only lets you read and change the AI configuration "
                 f"models, not {', '.join(out_of_scope)}. "
-                "Link a skill that provides this tool to use it on other records."
+                "Link a skill that provides this tool to use it on other records.",
             )
 
     def _ai_tool_update_records(self, tool_context, explanation, preview_menus, updates):
@@ -81,7 +83,7 @@ class AITool(models.AbstractModel):
         if not automation.trigger in TIME_TRIGGERS:
             raise ValueError(
                 f"'{automation.name}' is not a time based trigger, test it by "
-                "creating or updating a record that matches its trigger instead."
+                "creating or updating a record that matches its trigger instead.",
             )
         if not tool_context.get('tool_request_confirmed'):
             tool_context['user_input_request'] = {
@@ -104,12 +106,13 @@ class AITool(models.AbstractModel):
                 '"%s" ran. The full transcript is in its own chat, under the Automation tab.',
                 automation.name,
             ),
-            'summary': {'icon': 'flash_on', 'text': self.env._("Ran the trigger %(name)s", name=automation.name)}
+            'summary': {'icon': 'flash_on', 'text': self.env._("Ran the trigger %(name)s", name=automation.name)},
         }
 
     def _ai_tool_create_update_automation(self, tool_context, automation_id=None, name=None, description=None, active=None, trigger=None, ai_action_prompt=None, explanation=None):
         if not automation_id and not (name and description and trigger and ai_action_prompt):
-            raise ValueError("'name', 'description', 'trigger' and 'ai_action_prompt' are required when creating an automation")
+            message = "'name', 'description', 'trigger' and 'ai_action_prompt' are required when creating an automation"
+            raise ValueError(message)
         automation = self._get_automation_to_update(tool_context, automation_id)
         automation_vals = self._compute_automation_header_vals(automation, name, description, active)
         trigger_type = (trigger or {}).get('type') or automation.trigger
@@ -148,7 +151,8 @@ class AITool(models.AbstractModel):
         if not (automation := self.env['base.automation'].browse(automation_id).exists()):
             raise ValueError(f"The automation with id '{automation_id}' does not exist")
         if automation.ai_agent_id.id != tool_context['agent_id']:
-            raise ValueError("You can only update your own automations.")
+            message = "You can only update your own automations."
+            raise ValueError(message)
         return automation
 
     def _compute_automation_header_vals(self, automation, name, description, active):
@@ -216,7 +220,8 @@ class AITool(models.AbstractModel):
                 observed_field_ids.append(fid)
             if trigger_type == 'on_change':
                 if not fnames and not automation.on_change_field_ids:
-                    raise ValueError("Trigger of type 'on_change' requires at least one observed field")
+                    message = "Trigger of type 'on_change' requires at least one observed field"
+                    raise ValueError(message)
                 if observed_field_ids != automation.on_change_field_ids.ids:
                     vals['on_change_field_ids'] = observed_field_ids
             elif fnames and observed_field_ids != automation.trigger_field_ids.ids:
@@ -225,7 +230,8 @@ class AITool(models.AbstractModel):
             fname = fnames[0] if fnames else False
             if not fname:
                 if not automation.trg_date_id:
-                    raise ValueError("Trigger of type 'on_time' requires a date(time) field to observe")
+                    message = "Trigger of type 'on_time' requires a date(time) field to observe"
+                    raise ValueError(message)
                 if (trg_name := automation.trg_date_id.name) not in self.env[model_name]._fields:
                     raise ValueError(f"Observed field {trg_name} does not exist on '{model_name}'")
             else:
@@ -257,7 +263,8 @@ class AITool(models.AbstractModel):
             if automation.trg_date_range_mode != 'after':
                 vals['trg_date_range_mode'] = 'after'
             if not (next_trigger_date := date_params.get('next_trigger_date')) and not automation.ai_next_trigger_date:
-                raise ValueError("`on_schedule` requires a `next_trigger_date`")
+                message = "`on_schedule` requires a `next_trigger_date`"
+                raise ValueError(message)
             if next_trigger_date != automation.ai_next_trigger_date:
                 vals['ai_next_trigger_date'] = next_trigger_date
         if (amount := date_params.get('amount')) and amount != automation.trg_date_range:

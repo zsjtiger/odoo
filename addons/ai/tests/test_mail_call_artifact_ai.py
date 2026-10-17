@@ -193,7 +193,7 @@ class TestMailCallArtifactAI(TransactionCase):
             'transcript': '\n'.join(('WEBVTT',  # noqa: FLY002
                 '',
                 '00:00.000 --> 00:05.000',
-                'Have you seen Mark'
+                'Have you seen Mark',
             )),
         })
 
@@ -205,7 +205,7 @@ class TestMailCallArtifactAI(TransactionCase):
             'transcript': '\n'.join(('WEBVTT',  # noqa: FLY002
                 '',
                 '00:06.000 --> 00:08.000',
-                'Hello Rob! Yes, he sweeps the saloon'
+                'Hello Rob! Yes, he sweeps the saloon',
             )),
         })
 
@@ -253,7 +253,7 @@ class TestMailCallArtifactAI(TransactionCase):
                 'odoo.addons.ai.models.mail_call_artifact.get_llm_client',
                 return_value=Mock(**{"transcribe.side_effect": LLMError("Mocked API Error")}),
             ),
-            patch.object(self.env.cr, 'commit')
+            patch.object(self.env.cr, 'commit'),
         ):
 
             # 1st attempt
@@ -429,7 +429,7 @@ class TestMailCallArtifactController(HttpCase):
         no_access_user = new_test_user(
             self.env,
             login='no_access_user',
-            groups='base.group_portal'
+            groups='base.group_portal',
         )
         private_channel = self.env['discuss.channel'].create({'name': 'Private Channel', 'channel_type': 'chat'})
         private_call = self.env['discuss.call.history'].create({
@@ -446,7 +446,7 @@ class TestMailCallArtifactController(HttpCase):
         user = new_test_user(
             self.env,
             login='standard_user',
-            groups='base.group_user'
+            groups='base.group_user',
         )
         public_channel = self.env['discuss.channel'].create({
             'name': 'Public Channel',

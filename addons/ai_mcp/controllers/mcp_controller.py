@@ -61,7 +61,7 @@ class McpController(http.Controller):
             else:
                 error_response['result'] = {
                     'content': [{'type': 'text', 'text': json.dumps(str(e), default=json_default, ensure_ascii=False)}],
-                    'isError': True
+                    'isError': True,
                 }
             raise InternalServerError(response=request.make_json_response(error_response))
 

@@ -156,7 +156,7 @@ class IrActionsServer(models.Model):
                 raise ValidationError(_(
                     "Oops, the tool name is incorrect. "
                     "The tool name must only contain letters (a–z, A–Z), digits (0–9), "
-                    "or underscores (_), and be at most 64 characters long."
+                    "or underscores (_), and be at most 64 characters long.",
                 ))
 
     @api.constrains("ai_tool_schema")
@@ -283,7 +283,7 @@ class IrActionsServer(models.Model):
             if tool_result['tool_name'] == web_search_tool.sudo().ai_tool_name and tool_result['success']:
                 source_links = Markup(", ").join(
                     Markup('<a href="{}" target="_blank" rel="noreferrer noopener">{}</a>').format(
-                        source["url"], source["source_name"]
+                        source["url"], source["source_name"],
                     )
                     for source in tools_context['state'].get('web_sources', {}).values()
                 )

@@ -10,7 +10,7 @@ from .custom_markdown import CustomMarkdown
 def markdown_format(text):
     if CustomMarkdown:
         raw_html = CustomMarkdown(
-            extras=['fenced-code-blocks', 'tables', 'strike', 'cuddled-lists', 'highlightjs-lang', 'break-on-newline']
+            extras=['fenced-code-blocks', 'tables', 'strike', 'cuddled-lists', 'highlightjs-lang', 'break-on-newline'],
         ).convert(text).strip()
         text = format_html_response(raw_html)
     return html_sanitize(text, sanitize_attributes=True, sanitize_style=True)
@@ -18,7 +18,7 @@ def markdown_format(text):
 
 def format_html_response(html_string):
     if not html_string:
-        return
+        return None
     html_tree = html.fromstring(html_string)
     class_map = {
         "table": "table o_table table-light table-hover o-scrollbar-thin table-bordered ai-table-response my-2",

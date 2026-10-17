@@ -40,7 +40,7 @@ class DiscussCallHistory(models.Model):
         email_artifact = artifact
         if artifact.has_media_output:
             email_artifact = artifact._get_matching_recording_artifacts().filtered(
-                lambda candidate: not candidate.is_stt
+                lambda candidate: not candidate.is_stt,
             )[:1]
         if email_artifact:
             email_artifact._send_recording_available_email()

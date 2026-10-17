@@ -82,13 +82,13 @@ def validate_measures(model, measures):
             raise ValueError(
                 f"Invalid measure syntax '{measure}' for model '{model}'. "
                 "Aggregation operators like ':sum' are not supported. "
-                "Use '<field_name>' or '<field_name> asc/desc' instead."
+                "Use '<field_name>' or '<field_name> asc/desc' instead.",
             )
         base_measure = parts[0]
         if base_measure not in valid_measures_dict:
             raise ValueError(
                 f"Measure '{base_measure}' is invalid for model '{model}'. "
-                f"The base field is not a recognized or aggregatable field."
+                f"The base field is not a recognized or aggregatable field.",
             )
 
 

@@ -203,7 +203,7 @@ class TestMcpAccess(TestMcpCommon):
         mcp_test_group = self.env['res.groups'].sudo().create({'name': 'MCP Test Group With User'})
         mcp_test_group.write({'user_ids': [(4, self.env.user.id)]})
         action_group_accessible = self._create_server_action_on_model(
-            'ai.session', action_name='MCP Group Accessible Action', group_ids=[(4, mcp_test_group.id)]
+            'ai.session', action_name='MCP Group Accessible Action', group_ids=[(4, mcp_test_group.id)],
         )
 
         tool_names = [t['name'] for t in self._dispatch('tools/list')['tools']]
@@ -216,7 +216,7 @@ class TestMcpAccess(TestMcpCommon):
         # Model access alone is not enough — group membership is required.
         group_without_user = self.env['res.groups'].sudo().create({'name': 'MCP Test Group Without User'})
         action_group_restricted = self._create_server_action_on_model(
-            'res.partner', action_name='MCP Group Restricted Action', group_ids=[(4, group_without_user.id)]
+            'res.partner', action_name='MCP Group Restricted Action', group_ids=[(4, group_without_user.id)],
         )
 
         tool_names = [t['name'] for t in self._dispatch('tools/list')['tools']]

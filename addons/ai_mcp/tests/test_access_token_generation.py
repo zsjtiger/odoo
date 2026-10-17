@@ -13,7 +13,7 @@ class TestAccessTokenGeneration(OauthServerCommon):
     def test_full_authorization_code_exchange_generates_access_token(self):
         client_id = self.env['oauth.client'].create({
             'client_name': 'Test Client',
-            'redirect_uris': REDIRECT_URI
+            'redirect_uris': REDIRECT_URI,
         }).client_id
         self.authenticate('internal_user', 'internal_user')
 
@@ -30,7 +30,7 @@ class TestAccessTokenGeneration(OauthServerCommon):
         """A client must not be able to label its key with a name it did not register."""
         client_id = self.env['oauth.client'].create({
             'client_name': 'Test Client',
-            'redirect_uris': REDIRECT_URI
+            'redirect_uris': REDIRECT_URI,
         }).client_id
         self.authenticate('internal_user', 'internal_user')
         code = self._generate_auth_code(client_id=client_id)
@@ -43,7 +43,7 @@ class TestAccessTokenGeneration(OauthServerCommon):
     def test_access_token_is_not_valid_for_another_scope(self):
         client_id = self.env['oauth.client'].create({
             'client_name': 'Test Client',
-            'redirect_uris': REDIRECT_URI
+            'redirect_uris': REDIRECT_URI,
         }).client_id
         self.authenticate('internal_user', 'internal_user')
         code = self._generate_auth_code(client_id=client_id)
@@ -54,7 +54,7 @@ class TestAccessTokenGeneration(OauthServerCommon):
     def test_missing_client_id_is_rejected(self):
         client_id = self.env['oauth.client'].create({
             'client_name': 'Test Client',
-            'redirect_uris': REDIRECT_URI
+            'redirect_uris': REDIRECT_URI,
         }).client_id
         self.authenticate('internal_user', 'internal_user')
         code = self._generate_auth_code(client_id=client_id)
@@ -65,7 +65,7 @@ class TestAccessTokenGeneration(OauthServerCommon):
     def test_token_endpoint_rejects_an_unknown_client_id(self):
         client_id = self.env['oauth.client'].create({
             'client_name': 'Test Client',
-            'redirect_uris': REDIRECT_URI
+            'redirect_uris': REDIRECT_URI,
         }).client_id
         token_result = {
             'access_token': 'access_token', 'token_type': 'Bearer', 'expires_in': 600, 'scope': 'mcp',
@@ -88,7 +88,7 @@ class TestAccessTokenGeneration(OauthServerCommon):
     def test_wrong_code_verifier_is_rejected(self):
         client_id = self.env['oauth.client'].create({
             'client_name': 'Test Client',
-            'redirect_uris': REDIRECT_URI
+            'redirect_uris': REDIRECT_URI,
         }).client_id
         self.authenticate('internal_user', 'internal_user')
         code = self._generate_auth_code(client_id=client_id)
@@ -101,7 +101,7 @@ class TestAccessTokenGeneration(OauthServerCommon):
     def test_code_cannot_be_redeemed_twice(self):
         client_id = self.env['oauth.client'].create({
             'client_name': 'Test Client',
-            'redirect_uris': REDIRECT_URI
+            'redirect_uris': REDIRECT_URI,
         }).client_id
         self.authenticate('internal_user', 'internal_user')
         code = self._generate_auth_code(client_id=client_id)
@@ -130,7 +130,7 @@ class TestAccessTokenGeneration(OauthServerCommon):
     def test_loopback_redirect_uri_port_must_match_exactly_at_token(self):
         client_id = self.env['oauth.client'].create({
             'client_name': 'Test Client',
-            'redirect_uris': 'http://127.0.0.1:8080/cb'
+            'redirect_uris': 'http://127.0.0.1:8080/cb',
         }).client_id
         self.authenticate('internal_user', 'internal_user')
 
@@ -152,7 +152,7 @@ class TestAccessTokenGeneration(OauthServerCommon):
     def test_access_denied_at_redemption_if_the_user_is_no_longer_internal(self):
         client_id = self.env['oauth.client'].create({
             'client_name': 'Test Client',
-            'redirect_uris': REDIRECT_URI
+            'redirect_uris': REDIRECT_URI,
         }).client_id
         self.authenticate('internal_user', 'internal_user')
         code = self._generate_auth_code(client_id=client_id)
@@ -166,7 +166,7 @@ class TestAccessTokenGeneration(OauthServerCommon):
     def test_revoke_removes_the_access_token(self):
         client_id = self.env['oauth.client'].create({
             'client_name': 'Test Client',
-            'redirect_uris': REDIRECT_URI
+            'redirect_uris': REDIRECT_URI,
         }).client_id
         self.authenticate('internal_user', 'internal_user')
         code = self._generate_auth_code(client_id=client_id)
@@ -186,7 +186,7 @@ class TestAccessTokenGeneration(OauthServerCommon):
     def test_removing_the_apikey_rejects_the_access_token(self):
         client_id = self.env['oauth.client'].create({
             'client_name': 'Test Client',
-            'redirect_uris': REDIRECT_URI
+            'redirect_uris': REDIRECT_URI,
         }).client_id
         self.authenticate('internal_user', 'internal_user')
         code = self._generate_auth_code(client_id=client_id)
@@ -201,7 +201,7 @@ class TestAccessTokenGeneration(OauthServerCommon):
     def test_single_client_can_generate_multiple_tokens_for_the_same_user(self):
         client_id = self.env['oauth.client'].create({
             'client_name': 'Test Client',
-            'redirect_uris': REDIRECT_URI
+            'redirect_uris': REDIRECT_URI,
         }).client_id
         self.authenticate('internal_user', 'internal_user')
 
@@ -218,7 +218,7 @@ class TestAccessTokenGeneration(OauthServerCommon):
     def test_single_client_can_generate_tokens_for_several_users(self):
         client_id = self.env['oauth.client'].create({
             'client_name': 'Test Client',
-            'redirect_uris': REDIRECT_URI
+            'redirect_uris': REDIRECT_URI,
         }).client_id
         other_user = new_test_user(self.env, login='other_internal_user', groups='base.group_user')
 
@@ -236,7 +236,7 @@ class TestAccessTokenGeneration(OauthServerCommon):
     def test_authorization_code_of_inactive_user_is_rejected(self):
         client_id = self.env['oauth.client'].create({
             'client_name': 'Test Client',
-            'redirect_uris': REDIRECT_URI
+            'redirect_uris': REDIRECT_URI,
         }).client_id
         self.authenticate('internal_user', 'internal_user')
         code = self._generate_auth_code(client_id=client_id)
@@ -255,7 +255,7 @@ class TestAccessTokenGeneration(OauthServerCommon):
     def test_authorization_code_of_inactive_client_is_rejected(self):
         client_id = self.env['oauth.client'].create({
             'client_name': 'Test Client',
-            'redirect_uris': REDIRECT_URI
+            'redirect_uris': REDIRECT_URI,
         }).client_id
         self.authenticate('internal_user', 'internal_user')
         code = self._generate_auth_code(client_id=client_id)
@@ -275,7 +275,7 @@ class TestAccessTokenGeneration(OauthServerCommon):
     def test_consented_duration_sets_the_apikey_expiration_date(self):
         client_id = self.env['oauth.client'].create({
             'client_name': 'Test Client',
-            'redirect_uris': REDIRECT_URI
+            'redirect_uris': REDIRECT_URI,
         }).client_id
         self.authenticate('regular_user', 'regular_user')
 
@@ -297,7 +297,7 @@ class TestAccessTokenGeneration(OauthServerCommon):
         # base.group_user_regular caps the API keys of a regular internal user at 90 days.
         client_id = self.env['oauth.client'].create({
             'client_name': 'Test Client',
-            'redirect_uris': REDIRECT_URI
+            'redirect_uris': REDIRECT_URI,
         }).client_id
         self.authenticate('regular_user', 'regular_user')
 
@@ -311,7 +311,7 @@ class TestAccessTokenGeneration(OauthServerCommon):
         self.env.ref('base.group_user').api_key_duration = 365
         client_id = self.env['oauth.client'].create({
             'client_name': 'Test Client',
-            'redirect_uris': REDIRECT_URI
+            'redirect_uris': REDIRECT_URI,
         }).client_id
         self.authenticate('internal_user', 'internal_user')
         code = self._generate_auth_code(client_id=client_id, duration='365')

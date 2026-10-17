@@ -39,7 +39,7 @@ class AiMcpRequestDispatcher(models.AbstractModel):
 
     def _mcp_tools_list(self, params):
         return {
-            'tools': [self._mcp_build_tool_definition(tool) for tool in _mcp_get_allowed_tools(self.env)]
+            'tools': [self._mcp_build_tool_definition(tool) for tool in _mcp_get_allowed_tools(self.env)],
         }
 
     def _mcp_build_tool_definition(self, tool):
@@ -60,8 +60,8 @@ class AiMcpRequestDispatcher(models.AbstractModel):
                 'destructiveHint': not tool.is_readonly,
             },
             'execution': {
-                'taskSupport': 'forbidden'
-            }
+                'taskSupport': 'forbidden',
+            },
         }
 
     def _mcp_tools_call(self, params):

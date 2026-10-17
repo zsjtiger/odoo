@@ -143,7 +143,7 @@ def _collect_groupbys(tree, model_fields):
                 for group_by in group_bys:
                     groupby_info = {
                         "name": filter_elem.get("name"),
-                        "string": filter_elem.get("string") or ""
+                        "string": filter_elem.get("string") or "",
                     }
                     if is_date_groupby(group_by):
                         field_name, *interval = group_by.split(":", 1)

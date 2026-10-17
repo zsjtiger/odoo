@@ -72,7 +72,7 @@ def make_records_update_preview(records, changes):
         }
         if not (
             field.type in ('one2many', 'many2many') or
-            len(records) > 1 and len(records.mapped(fname)) > 1 or
+            (len(records) > 1 and len(records.mapped(fname)) > 1) or
             fname == records._rec_name
         ):
             item['old_val'] = old_vals[fname] if old_vals[fname] not in (False, None) else env._("None")
@@ -107,7 +107,7 @@ def _make_x2m_preview_value(env, field, commands):
                 new_relations=Markup("<ul>%s</ul>") % Markup().join(
                     Markup("<li>%s</li>") % rec.display_name
                     for rec in comodel.browse(cmd[2])
-                )
+                ),
             ))
     if len(cmd_items) > 1:
         return Markup("<ul>%s</ul>") % Markup().join(Markup("<li>%s</li>") % i for i in cmd_items)
@@ -118,7 +118,8 @@ def _make_x2m_preview_value(env, field, commands):
 
 def make_batch_update_preview(env, explanation, updates):
     if len(updates) > 50:
-        raise ValueError("Max 50 updates at a time are authorized")
+        message = "Max 50 updates at a time are authorized"
+        raise ValueError(message)
 
     def _get_update_preview(update):
         model_name = update['model_name']
@@ -133,7 +134,8 @@ def make_batch_update_preview(env, explanation, updates):
         model = model.sudo(False)
         parsed_domain = env['ai.tool']._parse_domain(model_name, domain, operation='write')
         if parsed_domain in (True, []):
-            raise ValueError("You cannot update using a dummy truthy domain (e.g. [], True). To update all records, pass a domain that matches all records instead.")
+            message = "You cannot update using a dummy truthy domain (e.g. [], True). To update all records, pass a domain that matches all records instead."
+            raise ValueError(message)
         records = model.search(parsed_domain)
         records.check_access('write')
 
@@ -148,7 +150,7 @@ def make_batch_update_preview(env, explanation, updates):
         else:
             label = env._("%(nb_records)s records (%(record_model)s)",
                 nb_records=len(records),
-                record_model=records._description
+                record_model=records._description,
             )
 
         return {
@@ -158,7 +160,8 @@ def make_batch_update_preview(env, explanation, updates):
 
     sections = [p for u in updates if (p := _get_update_preview(u))]
     if not sections:
-        raise ValueError("No records matched the given domain. Try again with another domain")
+        message = "No records matched the given domain. Try again with another domain"
+        raise ValueError(message)
 
     return env['ir.qweb']._render('ai.ai_records_preview', {"template": "update", "explanation": explanation, 'sections': sections})
 
@@ -234,7 +237,7 @@ def make_record_create_preview(model: BaseModel, vals: dict):
                     {
                         "label": get_label(index),
                         "value": Markup('<i>"%s"</i> (existing)') % comodel.browse(val).display_name,
-                    }
+                    },
                 )
             elif isinstance(val, list):
                 for record in comodel.browse(val):
@@ -242,7 +245,7 @@ def make_record_create_preview(model: BaseModel, vals: dict):
                         {
                             "label": get_label(index),
                             "value": Markup('<i>"%s"</i> (existing)') % record.display_name,
-                        }
+                        },
                     )
                     index += 1
             index += 1

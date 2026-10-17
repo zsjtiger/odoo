@@ -358,7 +358,7 @@ class AIAgentSource(models.Model):
         # Non-folder sources: find all sources with the same content
         if self.type == 'url' and self.web_page_id:
             return self.env['ai.agent.source'].search([
-                ('web_page_id', '=', self.web_page_id.id)
+                ('web_page_id', '=', self.web_page_id.id),
             ])
         return self.env['ai.agent.source'].search([
             ('attachment_id.checksum', '=', self.attachment_id.checksum),
@@ -377,7 +377,7 @@ class AIAgentSource(models.Model):
         """Reprocess the index of the sources."""
         self.ensure_one()
         sources_to_reprocess = self._get_reindex_sources(
-            source_filter=lambda s: s.attachment_id
+            source_filter=lambda s: s.attachment_id,
         )
 
         if not sources_to_reprocess:
@@ -393,7 +393,7 @@ class AIAgentSource(models.Model):
             return
 
         sources_to_retry = self._get_reindex_sources(
-            source_filter=lambda s: s.status == 'failed' and not s.is_folder
+            source_filter=lambda s: s.status == 'failed' and not s.is_folder,
         )
         if not sources_to_retry:
             return

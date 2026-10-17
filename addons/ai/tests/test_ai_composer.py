@@ -100,5 +100,5 @@ class TestAIComposer(TestAICommon):
         context = composer._get_initial_context(res_model='ir.attachment', res_id=attachment.id)
         self.assertTrue(
             any("test attachment" in part['text'] for part in context),
-            "The attachment name should be present in the context parts"
+            "The attachment name should be present in the context parts",
         )

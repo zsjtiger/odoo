@@ -39,7 +39,8 @@ class FakeLLMClient:
             **options,
         }))
         if not self.replies:
-            raise AssertionError("Unexpected completion request: no reply was prepared for it.")
+            message = "Unexpected completion request: no reply was prepared for it."
+            raise AssertionError(message)
         return {'role': 'assistant', 'content': self.replies.popleft(), 'provider_metadata': {}}
 
 
@@ -93,7 +94,7 @@ class TestAICommon(TransactionCase):
             'name': f'tool_{i + 1}_',
             'ai_tool_name': f'tool_{i + 1}_',
             'use_in_ai': True,
-            'code': f"ai['result'] = 'tc_{i + 1}'"
+            'code': f"ai['result'] = 'tc_{i + 1}'",
         } for i in range(3)])
         cls.skill_loading_tool = cls.env.ref("ai.ir_actions_server_load_skills")
         cls.skill = cls.env['ai.skill'].create({

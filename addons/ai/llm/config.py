@@ -17,7 +17,7 @@ def client_from_params(get_param):
     model = get_param(PARAM_MODEL)
     if not api_key or not model:
         raise LLMNotConfigured(
-            f"The AI service is not configured. Set the system parameters {PARAM_API_KEY} and {PARAM_MODEL}."
+            f"The AI service is not configured. Set the system parameters {PARAM_API_KEY} and {PARAM_MODEL}.",
         )
     return OpenAICompatibleClient(
         api_key=api_key,

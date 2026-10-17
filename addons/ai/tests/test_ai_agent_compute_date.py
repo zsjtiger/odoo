@@ -46,7 +46,7 @@ class TestAIAgentComputeDate(TransactionCase):
         result = self.env['ai.tool']._ai_tool_compute_date(
             self.test_model,
             self.date_field,
-            operations=[{"type": "navigate", "period": "day", "offset": -1}]
+            operations=[{"type": "navigate", "period": "day", "offset": -1}],
         )['response']
         expected = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
         self.assertEqual(result, expected)
@@ -55,7 +55,7 @@ class TestAIAgentComputeDate(TransactionCase):
         result = self.env['ai.tool']._ai_tool_compute_date(
             self.test_model,
             self.date_field,
-            operations=[{"type": "navigate", "period": "day", "offset": 1}]
+            operations=[{"type": "navigate", "period": "day", "offset": 1}],
         )['response']
         expected = (datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d')
         self.assertEqual(result, expected)
@@ -64,7 +64,7 @@ class TestAIAgentComputeDate(TransactionCase):
         result = self.env['ai.tool']._ai_tool_compute_date(
             self.test_model,
             self.date_field,
-            operations=[{"type": "navigate", "period": "day", "offset": -3}]
+            operations=[{"type": "navigate", "period": "day", "offset": -3}],
         )['response']
         expected = (datetime.now() - timedelta(days=3)).strftime('%Y-%m-%d')
         self.assertEqual(result, expected)
@@ -76,7 +76,7 @@ class TestAIAgentComputeDate(TransactionCase):
             result = self.env['ai.tool']._ai_tool_compute_date(
                 self.test_model,
                 self.datetime_field,
-                operations=[{"type": "navigate", "period": "day", "offset": -1, "boundary": "start"}]
+                operations=[{"type": "navigate", "period": "day", "offset": -1, "boundary": "start"}],
             )['response']
             # Result should be in UTC
             # October 13, 2025 00:00:00 in user timezone
@@ -92,7 +92,7 @@ class TestAIAgentComputeDate(TransactionCase):
             result = self.env['ai.tool']._ai_tool_compute_date(
                 self.test_model,
                 self.date_field,
-                operations=[{"type": "navigate", "period": "week", "offset": 0, "boundary": "start"}]
+                operations=[{"type": "navigate", "period": "week", "offset": 0, "boundary": "start"}],
             )['response']
             # Start of week is Monday (ISO 8601), so October 13, 2025
             self.assertEqual(result, "2025-10-13")
@@ -102,7 +102,7 @@ class TestAIAgentComputeDate(TransactionCase):
             result = self.env['ai.tool']._ai_tool_compute_date(
                 self.test_model,
                 self.date_field,
-                operations=[{"type": "navigate", "period": "week", "offset": -1, "boundary": "end"}]
+                operations=[{"type": "navigate", "period": "week", "offset": -1, "boundary": "end"}],
             )['response']
             # End of last week is Sunday October 12, 2025
             self.assertEqual(result, "2025-10-12")
@@ -114,7 +114,7 @@ class TestAIAgentComputeDate(TransactionCase):
             result = self.env['ai.tool']._ai_tool_compute_date(
                 self.test_model,
                 self.date_field,
-                operations=[{"type": "navigate", "period": "month", "offset": 0, "boundary": "start"}]
+                operations=[{"type": "navigate", "period": "month", "offset": 0, "boundary": "start"}],
             )['response']
             self.assertEqual(result, "2025-10-01")
 
@@ -123,7 +123,7 @@ class TestAIAgentComputeDate(TransactionCase):
             result = self.env['ai.tool']._ai_tool_compute_date(
                 self.test_model,
                 self.date_field,
-                operations=[{"type": "navigate", "period": "month", "offset": -1, "boundary": "end"}]
+                operations=[{"type": "navigate", "period": "month", "offset": -1, "boundary": "end"}],
             )['response']
             self.assertEqual(result, "2025-09-30")
 
@@ -132,7 +132,7 @@ class TestAIAgentComputeDate(TransactionCase):
             result = self.env['ai.tool']._ai_tool_compute_date(
                 self.test_model,
                 self.date_field,
-                operations=[{"type": "navigate", "period": "month", "offset": 1}]
+                operations=[{"type": "navigate", "period": "month", "offset": 1}],
             )['response']
             # February 2025 has 28 days, so day should be clamped to 28
             self.assertEqual(result, "2025-02-28")
@@ -144,7 +144,7 @@ class TestAIAgentComputeDate(TransactionCase):
             result = self.env['ai.tool']._ai_tool_compute_date(
                 self.test_model,
                 self.date_field,
-                operations=[{"type": "navigate", "period": "quarter", "offset": 0, "boundary": "start"}]
+                operations=[{"type": "navigate", "period": "quarter", "offset": 0, "boundary": "start"}],
             )['response']
             self.assertEqual(result, "2025-10-01")
 
@@ -153,7 +153,7 @@ class TestAIAgentComputeDate(TransactionCase):
             result = self.env['ai.tool']._ai_tool_compute_date(
                 self.test_model,
                 self.date_field,
-                operations=[{"type": "navigate", "period": "quarter", "offset": -1, "boundary": "end"}]
+                operations=[{"type": "navigate", "period": "quarter", "offset": -1, "boundary": "end"}],
             )['response']
             self.assertEqual(result, "2025-09-30")
 
@@ -164,7 +164,7 @@ class TestAIAgentComputeDate(TransactionCase):
             result = self.env['ai.tool']._ai_tool_compute_date(
                 self.test_model,
                 self.date_field,
-                operations=[{"type": "navigate", "period": "year", "offset": 0, "boundary": "start"}]
+                operations=[{"type": "navigate", "period": "year", "offset": 0, "boundary": "start"}],
             )['response']
             self.assertEqual(result, "2025-01-01")
 
@@ -173,7 +173,7 @@ class TestAIAgentComputeDate(TransactionCase):
             result = self.env['ai.tool']._ai_tool_compute_date(
                 self.test_model,
                 self.date_field,
-                operations=[{"type": "navigate", "period": "year", "offset": -1, "boundary": "end"}]
+                operations=[{"type": "navigate", "period": "year", "offset": -1, "boundary": "end"}],
             )['response']
             self.assertEqual(result, "2024-12-31")
 
@@ -184,7 +184,7 @@ class TestAIAgentComputeDate(TransactionCase):
             result = self.env['ai.tool']._ai_tool_compute_date(
                 self.test_model,
                 self.date_field,
-                operations=[{"type": "find_previous", "weekday": 0}]  # Monday
+                operations=[{"type": "find_previous", "weekday": 0}],  # Monday
             )['response']
             # Previous Monday is October 13, 2025
             self.assertEqual(result, "2025-10-13")
@@ -195,7 +195,7 @@ class TestAIAgentComputeDate(TransactionCase):
             result = self.env['ai.tool']._ai_tool_compute_date(
                 self.test_model,
                 self.date_field,
-                operations=[{"type": "find_previous", "weekday": 4}]  # Friday
+                operations=[{"type": "find_previous", "weekday": 4}],  # Friday
             )['response']
             # Previous Friday is October 10, 2025
             self.assertEqual(result, "2025-10-10")
@@ -208,7 +208,7 @@ class TestAIAgentComputeDate(TransactionCase):
             result = self.env['ai.tool']._ai_tool_compute_date(
                 self.test_model,
                 self.date_field,
-                operations=[{"type": "find_next", "weekday": 0}]  # Monday
+                operations=[{"type": "find_next", "weekday": 0}],  # Monday
             )['response']
             # Next Monday is October 20, 2025
             self.assertEqual(result, "2025-10-20")
@@ -219,7 +219,7 @@ class TestAIAgentComputeDate(TransactionCase):
             result = self.env['ai.tool']._ai_tool_compute_date(
                 self.test_model,
                 self.date_field,
-                operations=[{"type": "find_next", "weekday": 4}]  # Friday
+                operations=[{"type": "find_next", "weekday": 4}],  # Friday
             )['response']
             # Next Friday is October 17, 2025
             self.assertEqual(result, "2025-10-17")
@@ -232,7 +232,7 @@ class TestAIAgentComputeDate(TransactionCase):
                 self.test_model,
                 self.datetime_field,
                 operations=[{"type": "navigate", "period": "day", "offset": -3}],
-                pin={"time": "12:00"}
+                pin={"time": "12:00"},
             )['response']
             # October 12, 2025 12:00:00 in user timezone
             expected_dt = datetime(2025, 10, 12, 12, 0, 0, tzinfo=ZoneInfo(self.env.user.tz or 'UTC'))
@@ -245,7 +245,7 @@ class TestAIAgentComputeDate(TransactionCase):
                 self.test_model,
                 self.datetime_field,
                 operations=[{"type": "navigate", "period": "day", "offset": 1}],
-                pin={"time": "17:00"}
+                pin={"time": "17:00"},
             )['response']
             expected_dt = datetime(2025, 10, 16, 17, 0, 0, tzinfo=ZoneInfo(self.env.user.tz or 'UTC'))
             expected_utc = expected_dt.astimezone(UTC)
@@ -259,7 +259,7 @@ class TestAIAgentComputeDate(TransactionCase):
                 self.test_model,
                 self.date_field,
                 operations=[{"type": "navigate", "period": "month", "offset": 0}],
-                pin={"day": 15}
+                pin={"day": 15},
             )['response']
             self.assertEqual(result, "2025-10-15")
 
@@ -325,7 +325,7 @@ class TestAIAgentComputeDate(TransactionCase):
                 self.test_model,
                 self.datetime_field,
                 operations=[{"type": "find_previous", "weekday": 0}],  # Monday
-                pin={"time": "17:00"}
+                pin={"time": "17:00"},
             )['response']
             expected_dt = datetime(2025, 10, 13, 17, 0, 0, tzinfo=ZoneInfo(self.env.user.tz or 'UTC'))
             expected_utc = expected_dt.astimezone(UTC)
@@ -338,7 +338,7 @@ class TestAIAgentComputeDate(TransactionCase):
             self.env['ai.tool']._ai_tool_compute_date(
                 self.test_model,
                 self.date_field,
-                operations=[{"type": "navigate", "period": "day", "offset": 101}]
+                operations=[{"type": "navigate", "period": "day", "offset": 101}],
             )
 
         # Test offset too small
@@ -346,7 +346,7 @@ class TestAIAgentComputeDate(TransactionCase):
             self.env['ai.tool']._ai_tool_compute_date(
                 self.test_model,
                 self.date_field,
-                operations=[{"type": "navigate", "period": "day", "offset": -101}]
+                operations=[{"type": "navigate", "period": "day", "offset": -101}],
             )
 
     def test_offset_none(self):
@@ -355,7 +355,7 @@ class TestAIAgentComputeDate(TransactionCase):
             result = self.env['ai.tool']._ai_tool_compute_date(
                 self.test_model,
                 self.date_field,
-                operations=[{"type": "navigate", "period": "day", "offset": None}]
+                operations=[{"type": "navigate", "period": "day", "offset": None}],
             )['response']
             self.assertEqual(result, "2025-10-15")
 
@@ -365,7 +365,7 @@ class TestAIAgentComputeDate(TransactionCase):
             result = self.env['ai.tool']._ai_tool_compute_date(
                 self.test_model,
                 self.datetime_field,
-                operations=[{"type": "navigate", "period": "day", "offset": 0, "boundary": "start"}]
+                operations=[{"type": "navigate", "period": "day", "offset": 0, "boundary": "start"}],
             )['response']
             # Result should be in UTC and contain time
             self.assertRegex(result, r'^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$')
@@ -376,7 +376,7 @@ class TestAIAgentComputeDate(TransactionCase):
             result = self.env['ai.tool']._ai_tool_compute_date(
                 self.test_model,
                 self.date_field,
-                operations=[{"type": "navigate", "period": "day", "offset": 0}]
+                operations=[{"type": "navigate", "period": "day", "offset": 0}],
             )['response']
             # Result should be date-only
             self.assertRegex(result, r'^\d{4}-\d{2}-\d{2}$')

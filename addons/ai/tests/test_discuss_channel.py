@@ -31,11 +31,11 @@ class TestDiscussChannel(HttpCase, TestAICommon):
                 Command.create(
                     {
                         "partner_id": self.env.user.partner_id.id,
-                    }
+                    },
                 ),
             ],
             "channel_type": "chat",
-            "name": "Non AI chat"
+            "name": "Non AI chat",
         })
 
         with self.assertRaises(AccessError):

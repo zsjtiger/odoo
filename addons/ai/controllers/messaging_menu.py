@@ -14,7 +14,7 @@ class AIMessagingMenuController(DiscussMessagingMenuController):
         # channel ACL and record rules still apply afterwards: this only resolves ids, the
         # caller runs the real, permission checked search on them.
         channel_ids = self.env["discuss.channel"].sudo()._search(
-            Domain("ai_agent_id", "=", agent_id)
+            Domain("ai_agent_id", "=", agent_id),
         )
         return Domain("id", "in", channel_ids)
 

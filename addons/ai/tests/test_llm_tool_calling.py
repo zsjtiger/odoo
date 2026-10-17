@@ -24,7 +24,7 @@ class TestLLMToolCalling(TestAICommon):
             'name': f'tool_{i + 1}',
             'ai_tool_name': f'tool_{i + 1}',
             'use_in_ai': True,
-            'code': f"ai['result'] = 'tc_{i + 1}'"
+            'code': f"ai['result'] = 'tc_{i + 1}'",
         } for i in range(3)])
 
     def test_tool_call_result_serializes_datetime(self):
@@ -60,11 +60,11 @@ class TestLLMToolCalling(TestAICommon):
             self.env['ai.session']._get_direct_response(
                 instructions="Do this",
                 message=[{'type': 'text', 'text': "test_prompt"}],
-                tools=self.tools
+                tools=self.tools,
             )
         self.assertEqual(
             str(e.exception),
-            "Number of successive API calls exceeded, please try again with a more precise request."
+            "Number of successive API calls exceeded, please try again with a more precise request.",
         )
 
         self.assertEqual(mock_request.call_count, max_calls)
@@ -122,7 +122,7 @@ class TestLLMToolCalling(TestAICommon):
                         'result': [{'type': 'text', 'text': 'Error: Not executed (tool call limit reached)'}],
                         'success': False,
                     },
-                ]
+                ],
             },
         ])
 
@@ -134,7 +134,7 @@ class TestLLMToolCalling(TestAICommon):
             # first answer: unknown tool
             mocked_tool_response,
             # second answer: final answer
-            self.mock_text_response("Final answer")
+            self.mock_text_response("Final answer"),
         ]
 
         with self.assertLogs(ai_session_logger, level='ERROR') as mock_session_logger, \

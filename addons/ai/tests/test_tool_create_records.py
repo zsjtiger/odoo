@@ -258,7 +258,7 @@ class TestAIToolCreateRecords(TestAICallbackCommon):
         """A preview message should be posted in the channel when a creation tool call is accepted"""
 
         action = self.env["ir.actions.act_window"].create({
-            "res_model": "ai.agent"
+            "res_model": "ai.agent",
         })
 
         menu = self.env["ir.ui.menu"].create({
@@ -329,7 +329,7 @@ class TestAIToolCreateRecords(TestAICallbackCommon):
         """Links should be properly formatted in the preview message when multiple records are created"""
 
         action = self.env["ir.actions.act_window"].create({
-            "res_model": "ai.agent"
+            "res_model": "ai.agent",
         })
 
         menu = self.env["ir.ui.menu"].create({

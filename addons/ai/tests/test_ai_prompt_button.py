@@ -40,7 +40,7 @@ class TestAIPromptButton(TestAICommon):
         button = self.env['ai.prompt.button'].sudo().create({
             'name': 'Button with empty prompt',
             'composer_id': self.composer_id.id,
-            'prompt': Markup('<p></p>')
+            'prompt': Markup('<p></p>'),
         })
         message_parts = button.sudo(False)._render_prompt(self.rendering_record.id)
         self.assertEqual(message_parts, [{'type': 'text', 'text': 'Button with empty prompt'}])
@@ -99,13 +99,13 @@ class TestAIPromptButton(TestAICommon):
                 'image_128': f'<file_{agent_image_checksum}/>',
                 'partner_id': {
                     'model': 'res.partner',
-                    'ids': [agent_partner_id]
-                }
+                    'ids': [agent_partner_id],
+                },
             }],
             'res.partner': [{
                 'id': agent_partner_id,
-                'name': 'Test record'
-            }]
+                'name': 'Test record',
+            }],
         }
         prompt_field_values = rendered_prompt_content.split('# field values\n')[1]
         self.assertEqual(field_values, json.loads(prompt_field_values))
