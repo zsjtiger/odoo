@@ -2,14 +2,14 @@
 """Date filters of the reporting tools: validation and computation of relative dates."""
 import calendar
 import re
-from datetime import datetime, timedelta, UTC
-from lxml import etree
+from datetime import UTC, datetime, timedelta
 from zoneinfo import ZoneInfo
+
+from lxml import etree
 
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 
 from .search_view import get_search_view
-
 
 VALID_INTERVALS = ['day', 'week', 'month', 'quarter', 'year']
 

@@ -2,7 +2,9 @@
 
 from odoo.fields import Domain
 
-from odoo.addons.mail.controllers.discuss.messaging_menu import DiscussMessagingMenuController
+from odoo.addons.mail.controllers.discuss.messaging_menu import (
+    DiscussMessagingMenuController,
+)
 
 
 class AIMessagingMenuController(DiscussMessagingMenuController):

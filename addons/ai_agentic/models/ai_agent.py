@@ -98,7 +98,9 @@ class AIAgent(models.Model):
 
     def _inverse_avatar_role(self):
         for agent in self.filtered('avatar_role'):
-            base = '-'.join(agent._avatar_attachment().name.split('-')[:2])
+            name = agent._avatar_attachment().name or ''
+            # An agent without a generated avatar starts from the default silhouette
+            base = '-'.join(name.split('-')[:2]) if name.startswith('Avatar') else f"Avatar{AVATAR_NUMBERS[0]}-{AVATAR_COLORS[0]}"
             agent._apply_avatar(f"{base}-{agent.avatar_role}")
 
     def write(self, vals):

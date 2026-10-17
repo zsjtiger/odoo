@@ -2,9 +2,14 @@
 from markupsafe import Markup
 
 from odoo import api, fields, models
-from odoo.addons.ai.utils.ai_utils import UserInputResponse, is_ai_internal_model
-from odoo.addons.ai.utils.previews import make_confirmation_request_preview, make_create_preview, make_records_update_preview
+
 from odoo.addons.ai.utils.ai_fields_tools import parse_ai_prompt_values
+from odoo.addons.ai.utils.ai_utils import UserInputResponse, is_ai_internal_model
+from odoo.addons.ai.utils.previews import (
+    make_confirmation_request_preview,
+    make_create_preview,
+    make_records_update_preview,
+)
 from odoo.addons.base_automation.models.base_automation import TIME_TRIGGERS
 
 SELF_UPDATE_SKILL_XMLID = 'ai_agentic.ai_skill_self_update'

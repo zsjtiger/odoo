@@ -3,27 +3,35 @@
 
 import logging
 import uuid
-from markupsafe import Markup
 from textwrap import dedent
 from typing import Literal, Unpack
 
-from odoo import Command, fields
-from odoo import models
+from markupsafe import Markup
+
+from odoo import Command, fields, models
 from odoo.exceptions import AccessError, UserError
 from odoo.tools import html_sanitize
 
-from odoo.addons.mail.tools.discuss import Store
-
-from ..utils.ai_citation import apply_web_citations
-from ..llm import JOB_COMPLETION, LLMError
-from ..utils.ai_utils import enable_tools, get_ai_int_param, get_llm_client, get_text_from_parts
-from ..utils.formatting import markdown_format
-from ..utils.types import (
-    AIMessageParts, CompletionFailure, CompletionOptions, CompletionResponse,
-    CompletionSuccess, Message, Tool,
-)
-
 from .ai_session_tools import SUBAGENT_TOOL_XMLIDS
+from odoo.addons.ai.llm import JOB_COMPLETION, LLMError
+from odoo.addons.ai.utils.ai_citation import apply_web_citations
+from odoo.addons.ai.utils.ai_utils import (
+    enable_tools,
+    get_ai_int_param,
+    get_llm_client,
+    get_text_from_parts,
+)
+from odoo.addons.ai.utils.formatting import markdown_format
+from odoo.addons.ai.utils.types import (
+    AIMessageParts,
+    CompletionFailure,
+    CompletionOptions,
+    CompletionResponse,
+    CompletionSuccess,
+    Message,
+    Tool,
+)
+from odoo.addons.mail.tools.discuss import Store
 
 _logger = logging.getLogger(__name__)
 

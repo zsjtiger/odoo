@@ -6,8 +6,8 @@ from odoo import api, fields, models, modules
 from odoo.exceptions import RedirectWarning, UserError
 from odoo.tools import SQL
 
-from odoo.addons.ai.orm.field_vector import Vector
 from odoo.addons.ai.llm import LLMError
+from odoo.addons.ai.orm.field_vector import Vector
 from odoo.addons.ai.utils.ai_utils import get_llm_client
 
 MAX_BATCH_SIZE = 100
@@ -133,6 +133,24 @@ class AIEmbedding(models.Model):
 
         return False
 
+    def _get_embedding_titles(self, embeddings):
+        """Return the display name of the records of ``embeddings``, keyed by ``(res_model, res_id)``."""
+        ids_per_model = defaultdict(set)
+        for emb in embeddings:
+            ids_per_model[emb.res_model].add(emb.res_id)
+
+        embedding_titles = {}
+        for res_model, res_ids in ids_per_model.items():
+            if res_model not in self.env:
+                continue
+            records = (
+                self.env[res_model]
+                .with_context(active_test=False)
+                .search([("id", "in", res_ids)])
+            )
+            embedding_titles |= {(res_model, record.id): record.display_name for record in records}
+        return embedding_titles
+
     def _generate_embeddings(self, missing_embedding_records):
         """Generate vectors for a batch of embedding records, grouped by model."""
         embeddings_by_model = defaultdict(list)
@@ -158,20 +176,7 @@ class AIEmbedding(models.Model):
                         batch_idx + 1, len(batches), len(batch),
                     )
 
-                    embedding_titles = {}
-                    ids_per_model = defaultdict(set)
-                    for idx, emb in enumerate(batch):
-                        ids_per_model[emb.res_model].add(emb.res_id)
-
-                    for res_model, res_ids in ids_per_model.items():
-                        if res_model not in self.env:
-                            continue
-                        records = (
-                            self.env[res_model]
-                            .with_context(active_test=False)
-                            .search([("id", "in", res_ids)])
-                        )
-                        embedding_titles |= {(res_model, record.id): record.display_name for record in records}
+                    embedding_titles = self._get_embedding_titles(batch)
 
                     # Get embeddings for the entire batch
                     response = self._get_embeddings(

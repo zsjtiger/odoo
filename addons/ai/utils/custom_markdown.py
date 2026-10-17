@@ -1,5 +1,6 @@
-import re
 import logging
+import re
+
 try:
     import markdown2
 except ImportError:

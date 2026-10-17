@@ -2,7 +2,8 @@
 import re
 
 from odoo.exceptions import ValidationError
-from odoo.tests import tagged, TransactionCase
+from odoo.tests import TransactionCase, tagged
+
 from odoo.addons.ai.utils.tools_schema import validators
 
 

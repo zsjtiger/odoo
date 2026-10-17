@@ -4,15 +4,13 @@ import secrets
 from textwrap import dedent
 
 from odoo import http
-
-from odoo.addons.mail.controllers.thread import ThreadController
-from odoo.addons.mail.tools.discuss import add_guest_to_context
 from odoo.exceptions import AccessError, MissingError, UserError
 from odoo.tools import str2bool
 
-from ..utils.ai_utils import UserInputResponse
-from ..utils.types import PendingInteractionResponse, SessionResponse
-
+from odoo.addons.ai.utils.ai_utils import UserInputResponse
+from odoo.addons.ai.utils.types import PendingInteractionResponse, SessionResponse
+from odoo.addons.mail.controllers.thread import ThreadController
+from odoo.addons.mail.tools.discuss import add_guest_to_context
 
 _logger = logging.getLogger(__name__)
 
@@ -102,23 +100,27 @@ class AIThreadController(ThreadController):
         session.update_session_config(ai_session_config)
         session._submit_agent_request(message)
         if should_name_channel:
-            try:
-                title_session = env["ai.session"].sudo().create({'parent_session_id': session.id})
-                title_session._save_and_submit_request(
-                    {
-                        "messages": [{"role": "user", "content": channel_name_message}],
-                        "instructions": CHANNEL_NAME_INSTRUCTIONS,
-                        "tools": [],
-                        "usage": "channel_name",
-                    },
-                    callback_type="channel_name",
-                    request_round=1,
-                    request_round_limit=1,
-                    state={},
-                )
-            except Exception:  # noqa: BLE001
-                _logger.exception("Failed to submit the AI channel name request")
+            self._submit_channel_name_request(session, channel_name_message)
         return {'loop_state': session.loop_state}
+
+    def _submit_channel_name_request(self, session, channel_name_message):
+        """Ask the LLM for a title of the chat, in a child session so that the main loop is untouched."""
+        try:
+            title_session = self.env["ai.session"].sudo().create({'parent_session_id': session.id})
+            title_session._save_and_submit_request(
+                {
+                    "messages": [{"role": "user", "content": channel_name_message}],
+                    "instructions": CHANNEL_NAME_INSTRUCTIONS,
+                    "tools": [],
+                    "usage": "channel_name",
+                },
+                callback_type="channel_name",
+                request_round=1,
+                request_round_limit=1,
+                state={},
+            )
+        except Exception:  # noqa: BLE001
+            _logger.exception("Failed to submit the AI channel name request")
 
     @http.route(
         "/ai/resume_pending_interaction",

@@ -2,8 +2,9 @@
 import unittest
 
 from odoo.tests import TransactionCase, tagged
-from odoo.addons.ai.utils.formatting import markdown_format
+
 from odoo.addons.ai.utils.custom_markdown import CustomMarkdown
+from odoo.addons.ai.utils.formatting import markdown_format
 
 
 @tagged("post_install", "-at_install")

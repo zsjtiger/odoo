@@ -3,7 +3,6 @@ from datetime import UTC, datetime
 from unittest.mock import Mock, patch
 
 from odoo import fields
-from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.exceptions import AccessError
 from odoo.tests import tagged
 from odoo.tests.common import (
@@ -15,6 +14,7 @@ from odoo.tests.common import (
 from odoo.tools import mute_logger
 
 from odoo.addons.ai.llm import LLMError
+from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mail.tools import discuss, jwt
 
 _logger = logging.getLogger(__name__)

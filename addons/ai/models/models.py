@@ -2,6 +2,7 @@
 import datetime
 import json
 from zoneinfo import ZoneInfo
+
 from lxml import html
 from lxml.etree import ParserError, XMLSyntaxError
 from markupsafe import Markup
@@ -14,6 +15,13 @@ from odoo.tools.mail import html_to_inner_content
 from odoo.tools.misc import formatLang
 
 from odoo.addons.ai.utils.ai_image_tools import AI_SUPPORTED_IMG_TYPES
+
+
+def _ai_context_json_default(obj):
+    """NewId is not json serializable, use its string representation"""
+    if isinstance(obj, NewId):
+        return obj.origin or str(obj)
+    return obj
 
 
 class Model(models.AbstractModel):
@@ -224,6 +232,19 @@ class Model(models.AbstractModel):
             }
         """
         self.ensure_one()
+        models = self._get_ai_context_models(field_paths)
+
+        snapshot = {}
+        files_parts = []  # files are sent separately to LLMs
+        files_checksums = set()
+        for model, info in models.items():
+            records = self.env[model].browse(info['ids'])
+            snapshot[model], files_parts, files_checksums = records._ai_read(list(info['fields']), files_parts, files_checksums)
+
+        return json.dumps(snapshot, default=_ai_context_json_default, ensure_ascii=False), files_parts
+
+    def _get_ai_context_models(self, field_paths):
+        """Return the ``{model: {fields, ids}}`` mapping of the fields to read for ``field_paths``."""
         models = {}
 
         def _map_to_models(records, path):
@@ -251,24 +272,9 @@ class Model(models.AbstractModel):
                         _map_to_models(self.env[ref_model].browse(ref_id), path[1:])
             models[model]['fields'].add(fname)
 
-        # get a mapping {model: {fields, ids}} to know which fields to read on which records
         for path in field_paths:
             _map_to_models(self, path.split("."))
-
-        snapshot = {}
-        files_parts = []  # files are sent separately to LLMs
-        files_checksums = set()
-        for model, info in models.items():
-            records = self.env[model].browse(info['ids'])
-            snapshot[model], files_parts, files_checksums = records._ai_read(list(info['fields']), files_parts, files_checksums)
-
-        def _ai_context_json_default(obj):
-            """NewId is not json serializable, use its string representation"""
-            if isinstance(obj, NewId):
-                return obj.origin or str(obj)
-            return obj
-
-        return json.dumps(snapshot, default=_ai_context_json_default, ensure_ascii=False), files_parts
+        return models
 
     def _ai_format_records(self):
         """Format what will be in the prompt when we inserted records.

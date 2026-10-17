@@ -8,8 +8,8 @@ from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.tools import SQL
 
-from ..llm import LLMError
-from ..utils.ai_utils import get_ai_int_param, get_llm_client
+from odoo.addons.ai.llm import LLMError
+from odoo.addons.ai.utils.ai_utils import get_ai_int_param, get_llm_client
 
 _logger = logging.getLogger(__name__)
 

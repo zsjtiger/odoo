@@ -4,7 +4,7 @@ from lxml import html
 
 from odoo.tools import html_sanitize
 
-from odoo.addons.ai.utils.custom_markdown import CustomMarkdown
+from .custom_markdown import CustomMarkdown
 
 
 def markdown_format(text):

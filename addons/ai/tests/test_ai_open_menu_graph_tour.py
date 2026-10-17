@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.addons.ai.tests.common import mock_llm_results, TestAICommon
 from odoo.tests import HttpCase, tagged
+
+from odoo.addons.ai.tests.common import TestAICommon, mock_llm_results
 
 
 @tagged("post_install", "-at_install")

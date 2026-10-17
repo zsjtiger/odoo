@@ -1,13 +1,15 @@
 import json
-import psycopg2
 from unittest.mock import patch
+
+import psycopg2
 
 from odoo import Command
 from odoo.exceptions import AccessError, ValidationError
 from odoo.tests import new_test_user, tagged
 from odoo.tools import mute_logger
-from odoo.addons.ai.tests.common import TestAICommon
+
 from odoo.addons.ai.models.ai_session_tools import _logger as tool_logger
+from odoo.addons.ai.tests.common import TestAICommon
 
 
 @tagged('post_install', '-at_install')

@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import re
 
-from odoo.tests import tagged, TransactionCase
-from odoo.addons.ai.utils.tools_schema.param_schema_validator import validate_schema
+from odoo.tests import TransactionCase, tagged
 
+from odoo.addons.ai.utils.tools_schema.param_schema_validator import validate_schema
 
 DUMMY_ATTRIBUTES = {'type': 'string', 'description': '...'}
 DUMMY_ARRAY_ATTRIBUTES = {

@@ -2,6 +2,7 @@ import json
 from contextlib import contextmanager
 from unittest.mock import Mock, patch
 from urllib.parse import parse_qs, urlsplit
+
 from odoo.tests import tagged
 
 from .oauth_common import REDIRECT_URI, OauthServerCommon

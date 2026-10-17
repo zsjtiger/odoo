@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 """Search view introspection: the filters and groupbys a search view offers."""
 from ast import literal_eval
+
 from lxml import etree
 
 

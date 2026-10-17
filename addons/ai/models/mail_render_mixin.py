@@ -1,9 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+
 import lxml.html
 
-from odoo import models, api
+from odoo import api, models
 
 _logger = logging.getLogger(__name__)
 

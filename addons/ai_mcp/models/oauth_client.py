@@ -3,7 +3,10 @@ import uuid
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 
-from odoo.addons.ai_mcp.utils.oauth_utils import normalize_localhost_to_ip, validate_redirect_uris
+from odoo.addons.ai_mcp.utils.oauth_utils import (
+    normalize_localhost_to_ip,
+    validate_redirect_uris,
+)
 
 
 class OauthClient(models.Model):

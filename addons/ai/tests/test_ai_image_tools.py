@@ -1,20 +1,19 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
-from unittest.mock import patch, MagicMock, mock_open
+from unittest.mock import MagicMock, mock_open, patch
 
-from odoo.tools import file_open
-from odoo.tests import TransactionCase
 from odoo.exceptions import AccessError
-
+from odoo.tests import TransactionCase
+from odoo.tools import file_open
 
 from odoo.addons.ai.utils.ai_image_tools import (
-    closest_aspect_ratio,
     _calculate_aspect_ratio,
-    field_to_image_path,
-    _retrieve_record_args_from_path,
     _retrieve_image_parts_from_file,
     _retrieve_image_src_and_mimetype_from_record,
+    _retrieve_record_args_from_path,
+    closest_aspect_ratio,
+    field_to_image_path,
     retrieve_image_data_from_record,
     retrieve_image_parts_from_path,
 )

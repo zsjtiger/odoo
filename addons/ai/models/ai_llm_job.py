@@ -4,8 +4,13 @@ from datetime import timedelta
 
 from odoo import api, fields, models
 
-from ..llm import JOB_COMPLETION, JOB_EMBEDDINGS, JOB_TRANSCRIPTION, job_outcome
-from ..utils.ai_utils import get_llm_client
+from odoo.addons.ai.llm import (
+    JOB_COMPLETION,
+    JOB_EMBEDDINGS,
+    JOB_TRANSCRIPTION,
+    job_outcome,
+)
+from odoo.addons.ai.utils.ai_utils import get_llm_client
 
 _logger = logging.getLogger(__name__)
 

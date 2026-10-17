@@ -7,13 +7,22 @@ import logging
 from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.http.router import root
-from odoo.tools.pdf import OdooPdfFileReader, OdooPdfFileWriter, to_pdf_stream, PdfReadError
 from odoo.tools.files.image import ImageProcess
+from odoo.tools.pdf import (
+    OdooPdfFileReader,
+    OdooPdfFileWriter,
+    PdfReadError,
+    to_pdf_stream,
+)
 
-from odoo.addons.mail.tools.discuss import Store
-from odoo.addons.ai.utils.ai_image_tools import retrieve_image_data_from_record, field_to_image_path, closest_aspect_ratio, AI_SUPPORTED_IMG_TYPES
+from odoo.addons.ai.utils.ai_image_tools import (
+    AI_SUPPORTED_IMG_TYPES,
+    closest_aspect_ratio,
+    field_to_image_path,
+    retrieve_image_data_from_record,
+)
 from odoo.addons.ai.utils.ai_text_tools import process_csv_text
-
+from odoo.addons.mail.tools.discuss import Store
 
 _logger = logging.getLogger(__name__)
 

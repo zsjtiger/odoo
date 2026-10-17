@@ -2,11 +2,12 @@
 """Previews shown to the user before the AI changes records."""
 import ast
 from collections import defaultdict
+
 from markupsafe import Markup
 
 from odoo.api import Environment
-from odoo.models import BaseModel
 from odoo.fields import Command
+from odoo.models import BaseModel
 from odoo.tools.mail import html_to_inner_content
 from odoo.tools.misc import format_date, format_datetime
 

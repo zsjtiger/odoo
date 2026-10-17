@@ -7,16 +7,19 @@ import logging
 import secrets
 from textwrap import dedent
 
-from odoo import Command
-from odoo import models
+from odoo import Command, models
 from odoo.exceptions import ConcurrencyError, UserError
 from odoo.orm.database.sql_db import PG_CONCURRENCY_EXCEPTIONS_TO_RETRY
 from odoo.tools import html_sanitize
 
-
-from ..utils.ai_utils import format_tool_result, format_tool_summary, get_ai_int_param, UserInputResponse
-from ..utils.formatting import markdown_format
-from ..utils.types import (
+from odoo.addons.ai.utils.ai_utils import (
+    UserInputResponse,
+    format_tool_result,
+    format_tool_summary,
+    get_ai_int_param,
+)
+from odoo.addons.ai.utils.formatting import markdown_format
+from odoo.addons.ai.utils.types import (
     PendingInteractionResponse,
 )
 
@@ -177,10 +180,7 @@ class AiSessionToolsMixin(models.AbstractModel):
         if pending.get('final_message'):
             tools_context['final_message'] = pending['final_message']
         tool_calls = self._get_last_tool_calls()
-        if self.request_round >= self.request_round_limit:
-            tools = self.env.ref("ai.ir_actions_server_ask_user_question").sudo()
-        else:
-            tools = self.env['ir.actions.server'].sudo().browse(tools_context['state']['available_tools']).exists()
+        tools = self._get_tool_batch_tools(tools_context)
         items = self._handle_tool_calls(
             tool_calls, {tool.ai_tool_name: tool for tool in tools},
             tools_context, self._get_related_record(), pending_tool_response,
@@ -214,30 +214,7 @@ class AiSessionToolsMixin(models.AbstractModel):
                     self._finish_tool_batch(tool_results, tools_context, final_message)
                 break
             else:
-                pending = item['pending_tool_call']
-                if tools_context['final_message']:
-                    pending['final_message'] = tools_context['final_message']
-                if 'client_tool' in item:
-                    pending['client_tool'] = item['client_tool']
-                    # A browser resume may come from a different tab than the last model request.
-                    pending['ai_session_identifier'] = self.env.context.get('ai_session_identifier')
-                    loop_state = 'waiting_client_result'
-                elif 'external_wait_message' in item:
-                    pending['await_external_result'] = True
-                    loop_state = 'waiting_external_result'
-                    self._post_ai_response(item['external_wait_message'])
-                else:
-                    pending['user_input_request'] = item['user_input_request']
-                    loop_state = {
-                        'confirmation': 'waiting_confirmation', 'question': 'waiting_answer',
-                    }[item['user_input_request']['type']]
-                self._set_pending_tool_call(pending)
-                self.write({
-                    'loop_state': loop_state,
-                    'resume_token': secrets.token_urlsafe(32),
-                    'state': tools_context['state'],
-                    'message_body_suffix': tools_context['message_body_suffix'],
-                })
+                self._suspend_tool_batch(item, tools_context)
                 break
 
         if client_tools:
@@ -247,6 +224,39 @@ class AiSessionToolsMixin(models.AbstractModel):
             })
         if 'pending_tool_call' in item:
             self._publish_response_state()
+
+    def _get_tool_batch_tools(self, tools_context):
+        """Return the tools a batch can call: the question tool once the turn limit is reached."""
+        if self.request_round >= self.request_round_limit:
+            return self.env.ref("ai.ir_actions_server_ask_user_question").sudo()
+        return self.env['ir.actions.server'].sudo().browse(tools_context['state']['available_tools']).exists()
+
+    def _suspend_tool_batch(self, item, tools_context):
+        """Persist the pending interaction of a tool batch: a client result, an external result or a user input."""
+        pending = item['pending_tool_call']
+        if tools_context['final_message']:
+            pending['final_message'] = tools_context['final_message']
+        if 'client_tool' in item:
+            pending['client_tool'] = item['client_tool']
+            # A browser resume may come from a different tab than the last model request.
+            pending['ai_session_identifier'] = self.env.context.get('ai_session_identifier')
+            loop_state = 'waiting_client_result'
+        elif 'external_wait_message' in item:
+            pending['await_external_result'] = True
+            loop_state = 'waiting_external_result'
+            self._post_ai_response(item['external_wait_message'])
+        else:
+            pending['user_input_request'] = item['user_input_request']
+            loop_state = {
+                'confirmation': 'waiting_confirmation', 'question': 'waiting_answer',
+            }[item['user_input_request']['type']]
+        self._set_pending_tool_call(pending)
+        self.write({
+            'loop_state': loop_state,
+            'resume_token': secrets.token_urlsafe(32),
+            'state': tools_context['state'],
+            'message_body_suffix': tools_context['message_body_suffix'],
+        })
 
     def _finish_tool_batch(self, tool_results, tools_context, final_message=None) -> None:
         self.write({

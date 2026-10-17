@@ -5,9 +5,9 @@ from textwrap import dedent
 from unittest.mock import patch
 
 from odoo import fields
+from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 from odoo.tools import mute_logger
-from odoo.exceptions import ValidationError
 
 from odoo.addons.ai.tests.common import TestAICallbackCommon
 from odoo.addons.ai.utils.agent_instructions_prompts import RESTRICT_TO_SOURCES

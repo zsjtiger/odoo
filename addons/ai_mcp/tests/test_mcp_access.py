@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import re
 
+from odoo.exceptions import AccessError
 from odoo.tests import tagged, users
 from odoo.tools import mute_logger
-from odoo.exceptions import AccessError
 
 from odoo.addons.ai_mcp.tests.common import TestMcpCommon
 

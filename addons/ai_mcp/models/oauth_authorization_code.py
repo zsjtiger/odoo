@@ -2,11 +2,16 @@ from datetime import timedelta
 
 from odoo import api, fields, models
 from odoo.exceptions import AccessDenied
-from odoo.addons.ai_mcp.utils.oauth_utils import (
-    _generate_hash, _generate_secret, _verify_hash, check_mcp_oauth_user_access,
-    OAUTH_SECRET_INDEX_SIZE, verifier_matches_challenge,
-)
 from odoo.tools import SQL
+
+from odoo.addons.ai_mcp.utils.oauth_utils import (
+    OAUTH_SECRET_INDEX_SIZE,
+    _generate_hash,
+    _generate_secret,
+    _verify_hash,
+    check_mcp_oauth_user_access,
+    verifier_matches_challenge,
+)
 
 
 class OauthAuthorizationCode(models.Model):

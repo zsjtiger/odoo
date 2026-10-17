@@ -9,7 +9,11 @@ import requests
 from odoo.addons.ai.llm import client as llm_client
 from odoo.addons.ai.llm import config as llm_config
 from odoo.addons.ai.llm import jobs as llm_jobs
-from odoo.addons.ai.llm.converters import from_openai_message, to_openai_messages, to_openai_tools
+from odoo.addons.ai.llm.converters import (
+    from_openai_message,
+    to_openai_messages,
+    to_openai_tools,
+)
 from odoo.addons.ai.llm.errors import LLMError, LLMNotConfigured
 
 

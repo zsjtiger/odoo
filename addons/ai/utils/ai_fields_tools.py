@@ -1,8 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+from datetime import UTC, datetime
+
 import requests
-from datetime import datetime, UTC
 from dateutil.parser import isoparse
 from lxml import html
 from markupsafe import Markup
@@ -17,7 +18,7 @@ from odoo.exceptions import UserError
 from odoo.tools import html_sanitize
 from odoo.tools.mail import html_to_inner_content
 
-from odoo.addons.ai.utils.ai_utils import get_text_from_parts
+from .ai_utils import get_text_from_parts
 
 AI_FIELDS_INSTRUCTIONS = (
 """You are a system responsible for generating a value on an Odoo record.
@@ -50,52 +51,20 @@ def _build_ai_message_parts(record, user_prompt, field_descripiton, context_fiel
     return msg_parts
 
 
+RELATIONAL_VALUE_SCHEMA_TYPES = ('many2many', 'many2one', 'selection', 'tags')
+
+
 def _field_value_schema(field_type, allowed_values):
     """Return the JSON schema of the value the LLM must give for a field of the given type."""
-    if field_type == 'boolean':
-        field_schema = {
-            'type': 'boolean',
-            'description': 'The boolean to assign to the field'
-        }
-    elif field_type == 'char':
-        field_schema = {
-            'type': 'string',
-            'description': 'The string to assign to the field. Must be short, concise, without any Markdown formatting, and without any technical data (such as record IDs, field labels, ...)'
-        }
-    elif field_type == 'date':
-        field_schema = {
-            'type': ['string', 'null'],
-            'format': 'date',
-            'description': 'The date to assign to the field. The year, month and day should be correct. Use null to leave the field empty',
-        }
-    elif field_type == 'datetime':
-        field_schema = {
-            'type': ['string', 'null'],
-            'format': 'date-time',
-            'description': 'The datetime to assign to the field. The year, month and day should be correct. The timezine must be included. Use null to leave the field empty'
-        }
-    elif field_type == 'integer':
-        field_schema = {
-            'type': 'integer',
-            'description': "The whole number to assign to the field. If a number is expressed in words (e.g. '6.67 billion'), it must be converted into its full numeric form (e.g. '6670000000')"
-        }
-    elif field_type in ('float', 'monetary'):
-        field_schema = {
-            'type': 'number',
-            'description': "The float to assign to the field"
-        }
-    elif field_type == 'html':
-        field_schema = {
-            'type': 'string',
-            'description': 'The string to assign to the field. Must be well-structured Markdown, that may contain tables (the markdown will be converted to HTML after generation)'
-        }
-    elif field_type == 'text':
-        field_schema = {
-            'type': 'string',
-            'description': 'The string to assign to the field. Must be a few sentences, without any Markdown formatting, and without any technical data (such as record IDs, field labels, ...)'
-        }
-    elif field_type == 'many2many':
-        field_schema = {
+    if field_type in RELATIONAL_VALUE_SCHEMA_TYPES:
+        return _relational_value_schema(field_type, allowed_values)
+    return _scalar_value_schema(field_type)
+
+
+def _relational_value_schema(field_type, allowed_values):
+    """Return the JSON schema for a field whose value is one of ``allowed_values``."""
+    if field_type == 'many2many':
+        return {
             'type': 'array',
             'items': {
                 'type': 'integer',
@@ -103,30 +72,73 @@ def _field_value_schema(field_type, allowed_values):
             },
             'description': 'The list of IDs of the records to assign to the field. Leave empty to leave the field empty'
         }
-    elif field_type == 'many2one':
-        field_schema = {
+    if field_type == 'many2one':
+        return {
             'type': ['integer', 'null'],
             'enum': list(allowed_values) + [None],
             'description': 'The ID of the record to assign to the field. Use null to leave the field empty (eg. if no value matches the user query)'
         }
-    elif field_type == 'selection':
-        field_schema = {
+    if field_type == 'selection':
+        return {
             'type': ['string', 'null'],
             'enum': list(allowed_values) + [None],
             'description': 'The key of the selection value to assign to the field. Use null to leave the field empty'
         }
-    elif field_type == 'tags':
-        field_schema = {
-            'type': 'array',
-            'items': {
-                'type': 'string',
-                'enum': list(allowed_values)
-            },
-            'description': 'The list of keys of the tags to assign to the field. Leave empty to leave the field empty'
+    return {
+        'type': 'array',
+        'items': {
+            'type': 'string',
+            'enum': list(allowed_values)
+        },
+        'description': 'The list of keys of the tags to assign to the field. Leave empty to leave the field empty'
+    }
+
+
+def _scalar_value_schema(field_type):
+    """Return the JSON schema for a field whose value is free, typed by its field type."""
+    if field_type == 'boolean':
+        return {
+            'type': 'boolean',
+            'description': 'The boolean to assign to the field'
         }
-    else:
-        field_schema = {'type': 'text', 'description': 'The value to assign to the field'}
-    return field_schema
+    if field_type == 'char':
+        return {
+            'type': 'string',
+            'description': 'The string to assign to the field. Must be short, concise, without any Markdown formatting, and without any technical data (such as record IDs, field labels, ...)'
+        }
+    if field_type == 'date':
+        return {
+            'type': ['string', 'null'],
+            'format': 'date',
+            'description': 'The date to assign to the field. The year, month and day should be correct. Use null to leave the field empty',
+        }
+    if field_type == 'datetime':
+        return {
+            'type': ['string', 'null'],
+            'format': 'date-time',
+            'description': 'The datetime to assign to the field. The year, month and day should be correct. The timezine must be included. Use null to leave the field empty'
+        }
+    if field_type == 'integer':
+        return {
+            'type': 'integer',
+            'description': "The whole number to assign to the field. If a number is expressed in words (e.g. '6.67 billion'), it must be converted into its full numeric form (e.g. '6670000000')"
+        }
+    if field_type in ('float', 'monetary'):
+        return {
+            'type': 'number',
+            'description': "The float to assign to the field"
+        }
+    if field_type == 'html':
+        return {
+            'type': 'string',
+            'description': 'The string to assign to the field. Must be well-structured Markdown, that may contain tables (the markdown will be converted to HTML after generation)'
+        }
+    if field_type == 'text':
+        return {
+            'type': 'string',
+            'description': 'The string to assign to the field. Must be a few sentences, without any Markdown formatting, and without any technical data (such as record IDs, field labels, ...)'
+        }
+    return {'type': 'text', 'description': 'The value to assign to the field'}
 
 
 def get_ai_value(record, field_descripiton, user_prompt, context_fields, allowed_values):
@@ -261,7 +273,19 @@ def parse_ai_prompt_values(env, prompt, comodel, replace_prompt=True):
         (used for validation, should not filter non-existing records to raise missing errors)
     """
     tree = html.fromstring(prompt)
+    prompt_fields = _mark_prompt_fields(tree, replace_prompt)
+    inserted_record_ids = set()
+    formatted_allowed_records = {}
+    if comodel:
+        inserted_record_ids, formatted_allowed_records = _process_inserted_records(env, comodel, tree, replace_prompt)
 
+    if replace_prompt:
+        return html_to_inner_content(html.tostring(tree, encoding='unicode')), prompt_fields, formatted_allowed_records
+    return prompt, prompt_fields, inserted_record_ids
+
+
+def _mark_prompt_fields(tree, replace_prompt):
+    """Return the field paths inserted in the prompt, replacing their elements by placeholders if asked."""
     prompt_fields = set()
     for prompt_field_element in tree.xpath('//span[@data-ai-field]'):
         field_path = prompt_field_element.attrib.get('data-ai-field')
@@ -271,35 +295,37 @@ def parse_ai_prompt_values(env, prompt, comodel, replace_prompt=True):
             else:
                 prompt_field_element.drop_tree()
         prompt_fields.add(field_path)
+    return prompt_fields
 
-    inserted_record_ids = set()
-    formatted_allowed_records = {}
-    if comodel:
-        inserted_record_elements = tree.xpath('//span[@data-ai-record-id]')
-        inserted_record_ids = {
-            int(record_id)
-            for inserted_record_element
-            in inserted_record_elements
-            if (record_id := inserted_record_element.attrib.get('data-ai-record-id'))
-        }
-        if replace_prompt:
-            allowed_records_by_id = env[comodel].browse(inserted_record_ids).exists().grouped("id")
-            for inserted_record_element in inserted_record_elements:
-                if allowed_record := allowed_records_by_id.get(int(inserted_record_element.attrib.get('data-ai-record-id'))):
-                    record_name_field = (
-                        allowed_record._ai_rec_name
-                        if hasattr(allowed_record, '_ai_rec_name')
-                        else 'display_name'
-                    )
-                    inserted_record_element.text = allowed_record._ai_truncate(
-                        allowed_record[record_name_field])
-                else:
-                    inserted_record_element.drop_tree()
-            formatted_allowed_records = env[comodel].browse(allowed_records_by_id.keys())._ai_format_records()
 
-    if replace_prompt:
-        return html_to_inner_content(html.tostring(tree, encoding='unicode')), prompt_fields, formatted_allowed_records
-    return prompt, prompt_fields, inserted_record_ids
+def _process_inserted_records(env, comodel, tree, replace_prompt):
+    """Return the ids of the records inserted in the prompt and, if ``replace_prompt``, their formatted names.
+
+    The elements of the records are replaced by their names, or removed when the record does not exist.
+    """
+    inserted_record_elements = tree.xpath('//span[@data-ai-record-id]')
+    inserted_record_ids = {
+        int(record_id)
+        for inserted_record_element
+        in inserted_record_elements
+        if (record_id := inserted_record_element.attrib.get('data-ai-record-id'))
+    }
+    if not replace_prompt:
+        return inserted_record_ids, {}
+    allowed_records_by_id = env[comodel].browse(inserted_record_ids).exists().grouped("id")
+    for inserted_record_element in inserted_record_elements:
+        if allowed_record := allowed_records_by_id.get(int(inserted_record_element.attrib.get('data-ai-record-id'))):
+            record_name_field = (
+                allowed_record._ai_rec_name
+                if hasattr(allowed_record, '_ai_rec_name')
+                else 'display_name'
+            )
+            inserted_record_element.text = allowed_record._ai_truncate(
+                allowed_record[record_name_field])
+        else:
+            inserted_record_element.drop_tree()
+    formatted_allowed_records = env[comodel].browse(allowed_records_by_id.keys())._ai_format_records()
+    return inserted_record_ids, formatted_allowed_records
 
 
 def parse_ai_response(response, field_type, allowed_values):

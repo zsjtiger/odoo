@@ -1,19 +1,20 @@
 import base64
 import math
 import mimetypes
-import requests
-from typing import Any
-from werkzeug.routing import Map, Rule
-from werkzeug.exceptions import HTTPException
-from urllib.parse import urlsplit
 from logging import getLogger
+from typing import Any
+from urllib.parse import urlsplit
+
+import requests
+from werkzeug.exceptions import HTTPException
+from werkzeug.routing import Map, Rule
 
 from odoo.api import Environment
 from odoo.exceptions import MissingError, UserError
 from odoo.http.router import root
-from odoo.tools.files.mimetypes import MIMETYPE_HEAD_SIZE, guess_mimetype
 from odoo.tools import file_open
 from odoo.tools.files.image import ImageProcess
+from odoo.tools.files.mimetypes import MIMETYPE_HEAD_SIZE, guess_mimetype
 
 from .types import AIMessageParts
 

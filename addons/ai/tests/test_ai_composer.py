@@ -1,8 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from psycopg2 import IntegrityError
+
 from odoo.tests import tagged
 from odoo.tools import mute_logger
+
 from .common import TestAICommon
 
 

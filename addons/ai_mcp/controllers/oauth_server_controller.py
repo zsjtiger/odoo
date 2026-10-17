@@ -1,17 +1,18 @@
 import datetime
+
 from werkzeug.exceptions import BadRequest, default_exceptions
 
 from odoo import fields, http
-from odoo.http import request
 from odoo.exceptions import AccessDenied, ValidationError
+from odoo.http import request
 
 from odoo.addons.ai_mcp.utils.oauth_utils import (
     check_mcp_oauth_user_access,
     fetch_client_metadata_document,
     is_redirect_uri_registered,
+    merge_params_in_redirect_url,
     normalize_localhost_to_ip,
     oauth_base_url,
-    merge_params_in_redirect_url,
 )
 
 

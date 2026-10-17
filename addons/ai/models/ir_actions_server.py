@@ -8,13 +8,15 @@ from datetime import UTC, datetime
 from markupsafe import Markup
 
 from odoo import api, fields, models
-from odoo.addons.ai.utils.ai_utils import get_text_from_parts
-from odoo.addons.ai.utils.ai_fields_tools import parse_ai_prompt_values
-from odoo.addons.ai.utils.tools_schema.validators import validate_params_llm_values_with_schema
-from odoo.addons.ai.utils.tools_schema.param_schema_validator import validate_schema
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import _, replace_exceptions
 
+from odoo.addons.ai.utils.ai_fields_tools import parse_ai_prompt_values
+from odoo.addons.ai.utils.ai_utils import get_text_from_parts
+from odoo.addons.ai.utils.tools_schema.param_schema_validator import validate_schema
+from odoo.addons.ai.utils.tools_schema.validators import (
+    validate_params_llm_values_with_schema,
+)
 
 _logger = logging.getLogger(__name__)
 

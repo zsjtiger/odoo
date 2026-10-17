@@ -3,7 +3,6 @@ from types import NoneType
 
 from odoo.exceptions import ValidationError
 
-
 JSON_SCHEMA_TO_PYTHON_TYPE = {
     'string': str,
     'integer': int,
@@ -32,20 +31,24 @@ def validate_params_llm_values_with_schema(instance, schema, required_parameters
     return instance
 
 
+def _validate_any_of(name, value, schema_options, env):
+    """Return the value validated by the first schema option it matches."""
+    for schema_option in schema_options:
+        try:
+            # Extract the validated value from the result dict
+            return validate_params_llm_values_with_schema({name: value}, {name: schema_option}, [name], env)[name]
+        except ValidationError:
+            continue
+    raise ValidationError(env._(
+        "The value of parameter '%(name)s' doesn't match any of the expected schemas.",
+        name=name,
+    ))
+
+
 def _validate_param(name, value, param_schema, env):
     """Validate one value against its schema and return the value to use (possibly adjusted)."""
-    # Handle anyOf schemas - try each schema option until one succeeds
     if 'anyOf' in param_schema:
-        for schema_option in param_schema['anyOf']:
-            try:
-                # Extract the validated value from the result dict
-                return validate_params_llm_values_with_schema({name: value}, {name: schema_option}, [name], env)[name]
-            except ValidationError:
-                continue
-        raise ValidationError(env._(
-            "The value of parameter '%(name)s' doesn't match any of the expected schemas.",
-            name=name,
-        ))
+        return _validate_any_of(name, value, param_schema['anyOf'], env)
 
     param_type = param_schema['type']
     invalid_type = (

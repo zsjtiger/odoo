@@ -2,6 +2,7 @@
 from unittest.mock import patch
 
 from odoo.tests import new_test_user, tagged, users
+
 from odoo.addons.ai.tests.common import TestAICommon
 from odoo.addons.ai.utils.ai_utils import AI_MODELS_BLOCKLIST
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase

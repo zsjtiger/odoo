@@ -2,7 +2,7 @@
 
 from odoo import models
 
-from ..utils.types import AIMessageParts
+from odoo.addons.ai.utils.types import AIMessageParts
 
 
 class MailMessage(models.Model):

@@ -2,16 +2,16 @@
 import enum
 import json
 import re
-from markupsafe import Markup
 from typing import Any
+
+from markupsafe import Markup
 
 from odoo.fields import Binary, Image
 from odoo.tools.json import json_default
 
-from odoo.addons.ai.utils.ai_image_tools import field_to_image_path
-from odoo.addons.ai.llm import client_from_params
-
+from .ai_image_tools import field_to_image_path
 from .types import AIMessageParts
+from odoo.addons.ai.llm import client_from_params
 
 AI_MODELS_BLOCKLIST = {
     'base.automation',

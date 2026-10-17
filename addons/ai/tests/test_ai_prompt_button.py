@@ -1,10 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+
 from markupsafe import Markup
 
-from odoo.addons.ai.tests.common import TestAICommon
 from odoo.tests import tagged, users
+
+from odoo.addons.ai.tests.common import TestAICommon
 
 
 @tagged("post_install", "-at_install")

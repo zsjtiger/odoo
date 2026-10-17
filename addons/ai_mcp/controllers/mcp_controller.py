@@ -1,7 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import time
 import json
+import time
 from logging import getLogger
+
 from werkzeug.exceptions import InternalServerError
 
 from odoo import http

@@ -1,15 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
+
 from werkzeug.exceptions import BadRequest, NotFound
 
 from odoo import http
+from odoo.exceptions import UserError
 from odoo.http import request
 
-from odoo.exceptions import UserError
-
-from ..llm import LLMError
-from ..utils.ai_utils import get_llm_client, get_text_from_parts
-from ..utils.formatting import markdown_format
+from odoo.addons.ai.llm import LLMError
+from odoo.addons.ai.utils.ai_utils import get_llm_client, get_text_from_parts
+from odoo.addons.ai.utils.formatting import markdown_format
 
 
 class AIController(http.Controller):

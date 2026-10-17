@@ -3,8 +3,9 @@ import binascii
 import hashlib
 import json
 import os
-import requests
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
+
+import requests
 
 from odoo.exceptions import AccessDenied, ValidationError
 from odoo.tools import consteq

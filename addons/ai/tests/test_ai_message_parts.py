@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.tests import TransactionCase, tagged
+
 from odoo.addons.ai.utils.ai_utils import get_text_from_parts
 
 

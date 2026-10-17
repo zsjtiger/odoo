@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import api, Command, fields, models
+from odoo import Command, api, fields, models
 
 SCHEDULE_TRIGGER = "on_schedule"
 SCHEDULE_MODEL = 'ai.automation.trigger'

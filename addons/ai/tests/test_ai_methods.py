@@ -2,10 +2,10 @@
 
 from freezegun import freeze_time
 
-from odoo.addons.ai.tests.common import TestAICommon
-
 from odoo.tests import HttpCase, tagged
 from odoo.tests.common import users
+
+from odoo.addons.ai.tests.common import TestAICommon
 
 
 @tagged("post_install", "-at_install")

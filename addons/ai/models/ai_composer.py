@@ -4,9 +4,9 @@ import random
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
+
 from odoo.addons.ai.utils.ai_image_tools import retrieve_image_parts_from_path
 from odoo.addons.mail.tools.discuss import Store
-
 
 INTERFACE_KEYS = [
     ("html_field_record", "Write in an HTML field"),

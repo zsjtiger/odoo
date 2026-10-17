@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import Command
 from odoo.exceptions import AccessError
-from odoo.tests import tagged, HttpCase, users
+from odoo.tests import HttpCase, tagged, users
 
 from .common import TestAICommon
 

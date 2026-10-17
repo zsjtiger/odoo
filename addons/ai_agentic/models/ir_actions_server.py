@@ -2,10 +2,10 @@
 from lxml import html as lxml_html
 
 from odoo import models
-from odoo.addons.ai.models.ir_actions_server import AI_ACTIONS_PROMPT
 from odoo.tools.mail import html_sanitize, html_to_inner_content
-from odoo.addons.ai_agentic.models.base_automation import SCHEDULE_MODEL
 
+from .base_automation import SCHEDULE_MODEL
+from odoo.addons.ai.models.ir_actions_server import AI_ACTIONS_PROMPT
 
 AI_AGENT_RUN_RULES = (
 """Execute EVERY step of the instructions. Any available tool may be used for any step: naming a tool for one step never makes the other tools off-limits, and a tool name that does not exist refers to the closest available one. Never report a step as skipped because a tool was not named for it.

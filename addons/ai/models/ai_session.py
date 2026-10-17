@@ -6,10 +6,8 @@ from odoo import api, fields, models
 from odoo.exceptions import AccessError, MissingError, ValidationError
 from odoo.tools import html_sanitize
 
+from odoo.addons.ai.utils.ai_utils import disable_skills
 from odoo.addons.mail.tools.discuss import Store
-
-
-from ..utils.ai_utils import disable_skills
 
 _logger = logging.getLogger(__name__)
 

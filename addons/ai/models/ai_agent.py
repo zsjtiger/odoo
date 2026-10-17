@@ -8,27 +8,26 @@ import lxml.html
 
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import MissingError, UserError, ValidationError
-from odoo.tools import BinaryBytes, SQL, file_open, is_html_empty
+from odoo.tools import SQL, BinaryBytes, file_open, is_html_empty
 from odoo.tools.misc import mute_logger
 
+from .ai_agent_source import AIAgentSource
 from odoo.addons.ai.llm import LLMError
-from odoo.addons.mail.tools.discuss import Store
-
-from odoo.addons.ai.models.ai_agent_source import AIAgentSource
+from odoo.addons.ai.utils.agent_instructions_prompts import (
+    DEFAULT_SYSTEM_PROMPT,
+    RAG_SOURCES_FORMAT,
+    RESTRICT_TO_SOURCES,
+    SKILLS_PROTOCOL,
+    get_global_protocol,
+)
 from odoo.addons.ai.utils.ai_citation import (
     apply_numeric_citations,
     get_sources_ids_from_text,
 )
-from ..utils.ai_utils import get_text_from_parts
-from ..utils.formatting import markdown_format
-from ..utils.agent_instructions_prompts import (
-    DEFAULT_SYSTEM_PROMPT,
-    get_global_protocol,
-    RAG_SOURCES_FORMAT,
-    RESTRICT_TO_SOURCES,
-    SKILLS_PROTOCOL,
-)
-from ..utils.types import AIMessageParts, CompletionOptions
+from odoo.addons.ai.utils.ai_utils import get_text_from_parts
+from odoo.addons.ai.utils.formatting import markdown_format
+from odoo.addons.ai.utils.types import AIMessageParts, CompletionOptions
+from odoo.addons.mail.tools.discuss import Store
 
 _logger = logging.getLogger(__name__)
 
