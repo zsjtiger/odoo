@@ -56,12 +56,14 @@
                     <button type="button" class="btn btn-link btn-sm p-0 o_web_studio_back_to_layouts" t-on-click="() => this.props.onBack()">Page Layouts</button>
                     <h4 class="m-0 me-auto" t-out="this.viewTitle"/>
                     <button t-if="this.props.viewType === 'form'" type="button" class="btn btn-outline-primary btn-sm o_web_studio_add_section" t-on-click="this.addSection">Add Section</button>
+                    <button type="button" class="btn btn-link btn-sm o_web_studio_toggle_advanced" t-on-click="this.toggleAdvanced"
+                        t-out="this.state.showAdvanced ? 'Hide advanced blocks' : 'Show advanced blocks'"/>
                     <button type="button" class="btn btn-link btn-sm o_web_studio_advanced_editor" t-on-click="() => this.props.onAdvanced()">Advanced editor</button>
                     <button type="button" class="btn btn-secondary btn-sm o_web_studio_discard" t-att-disabled="!this.isDirty()" t-on-click="this.discard">Discard</button>
                     <button type="button" class="btn btn-primary btn-sm o_web_studio_save_layout" t-att-disabled="!this.canSave" t-on-click="this.save">Save</button>
                 </div>
 
-                <div class="o_web_studio_header_zone card mb-3" t-on-dragover="this.onDragOver" t-on-drop="this.onDropOnHeader">
+                <div t-if="this.hasHeader" class="o_web_studio_header_zone card mb-3" t-on-dragover="this.onDragOver" t-on-drop="this.onDropOnHeader">
                     <div class="card-header small text-muted">Header Buttons</div>
                     <div class="card-body d-flex flex-wrap gap-2">
                         <t t-foreach="this.headerButtons" t-as="entry" t-key="entry.index">
@@ -71,7 +73,7 @@
                                     t-on-click="() => this.removeHeaderButton(entry.index)">×</button>
                             </span>
                         </t>
-                        <span t-if="!this.headerButtons.length" class="text-muted small">Drop a button here to show it in the header of the form.</span>
+                        <span t-if="!this.headerButtons.length" class="text-muted small" t-out="this.headerHint"/>
                     </div>
                 </div>
 
@@ -108,10 +110,11 @@
                                             <button type="button" class="btn btn-sm btn-link p-0 text-danger o_web_studio_field_remove" aria-label="Remove field"
                                                 t-on-click="() => this.removeField(entry, column, item_index)">×</button>
                                         </div>
-                                        <t t-else="">
-                                            <RawBlock block="item" editor="this"/>
-                                        </t>
+                                        <RawBlock t-elif="this.state.showAdvanced" block="item" editor="this"/>
                                     </t>
+                                    <div t-if="this.columnRawCount(column) and !this.state.showAdvanced" class="o_web_studio_layout_raw_summary small text-muted mb-2">
+                                        <t t-out="this.columnRawCount(column)"/> advanced block(s), hidden.
+                                    </div>
                                     <div t-if="!column.items.length" class="o_web_studio_layout_empty small text-muted text-center py-4">Drop fields here</div>
                                 </div>
                             </t>
@@ -121,14 +124,16 @@
                         </div>
                     </div>
 
-                    <t t-else="">
-                        <RawBlock block="entry" editor="this"/>
-                    </t>
+                    <RawBlock t-elif="this.state.showAdvanced" block="entry" editor="this"/>
                 </t>
 
                 <t t-foreach="this.state.layout.footer" t-as="entry" t-key="entry.id">
-                    <RawBlock block="entry" editor="this"/>
+                    <RawBlock t-if="this.state.showAdvanced" block="entry" editor="this"/>
                 </t>
+
+                <div t-if="this.outsideRawCount and !this.state.showAdvanced" class="o_web_studio_layout_raw_summary small text-muted mb-3">
+                    <t t-out="this.outsideRawCount"/> advanced block(s) outside the sections, hidden.
+                </div>
             </main>
         </t>
     </div>

@@ -104,7 +104,7 @@
 
             <section t-elif="this.section === 'layouts'" class="o_web_studio_model_layouts flex-grow-1 p-4 overflow-auto">
                 <h3 class="mb-1">Page Layouts</h3>
-                <p class="text-muted mb-3">Choose the layout to edit. Fields, buttons and sections are placed in the view editor.</p>
+                <p class="text-muted mb-3">Design the form, list, kanban and search layouts here. Other views open in the view editor.</p>
                 <div class="row g-3">
                     <t t-foreach="this.layoutTypes" t-as="viewType" t-key="viewType">
                         <div class="col-12 col-md-6 col-xl-4">
@@ -117,9 +117,9 @@
                                     <button t-if="viewType === 'form' or viewType === 'list' or viewType === 'kanban' or viewType === 'search'" type="button" class="btn btn-primary mt-auto o_web_studio_edit_page_layout"
                                         t-att-data-view-type="viewType"
                                         t-on-click="() => this.editPageLayout(viewType)">Edit Page Layout</button>
-                                    <button t-else="" type="button" class="btn btn-outline-primary mt-auto o_web_studio_edit_layout"
+                                    <button t-else="" type="button" class="btn btn-outline-secondary mt-auto o_web_studio_edit_layout"
                                         t-att-data-view-type="viewType"
-                                        t-on-click="() => this.openLayout(viewType)">Edit layout</button>
+                                        t-on-click="() => this.openLayout(viewType)">Open in view editor</button>
                                 </div>
                             </div>
                         </div>

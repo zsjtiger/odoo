@@ -9,7 +9,7 @@ const MODELS_BUTTON = {
     id: "o_studio_models_button",
     isModelsButton: true,
     label: _t("Models"),
-    webIconData: "/web_studio/static/src/img/default_icon_app.png",
+    webIcon: { backgroundColor: "#714B67", color: "#FFFFFF", icon: "database" },
 };
 const NEW_APP_BUTTON = {
     id: "o_studio_new_app_button",

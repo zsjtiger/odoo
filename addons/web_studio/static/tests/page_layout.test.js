@@ -316,6 +316,9 @@ describe("page layout editor", () => {
 
     test("an advanced block can be edited as XML", async () => {
         await mountEditor();
+        // The advanced blocks are hidden by default
+        expect(".o_web_studio_raw_edit").toHaveCount(0);
+        await contains(".o_web_studio_toggle_advanced").click();
         await click(queryOne(".o_web_studio_raw_edit"));
         await contains(".o_web_studio_raw_draft").edit('<div class="oe_edited"/>');
         await contains(".o_web_studio_raw_apply").click();

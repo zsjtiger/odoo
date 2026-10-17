@@ -193,6 +193,7 @@ test("every model has a search layout", async () => {
     await openContact();
     await contains(".o_web_studio_model_section:contains(Page Layouts)").click();
     expect(".o_web_studio_edit_page_layout[data-view-type=search]").toHaveCount(1);
+    expect(queryAllTexts(".o_web_studio_layout_card .card-text")[0]).toBe("The form view of Contact.");
 });
 
 test("the form and list layouts open the page layout editor", async () => {

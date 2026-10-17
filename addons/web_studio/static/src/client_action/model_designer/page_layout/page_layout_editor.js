@@ -69,6 +69,7 @@ export class PageLayoutEditor extends Component {
             activeSectionId: null,
             editingRawId: null,
             rawDraft: "",
+            showAdvanced: false,
             viewId: false,
             studioViewId: false,
             layout: null,
@@ -305,6 +306,31 @@ export class PageLayoutEditor extends Component {
     }
 
     // --- Advanced blocks ----------------------------------------------------
+
+    toggleAdvanced() {
+        this.state.showAdvanced = !this.state.showAdvanced;
+    }
+
+    /** Number of blocks of a column that are kept as XML. */
+    columnRawCount(column) {
+        return column.items.filter((item) => item.kind === "raw").length;
+    }
+
+    /** Number of blocks of the layout, outside of the sections, that are kept as XML. */
+    get outsideRawCount() {
+        return this.state.layout.body.filter((entry) => entry.kind !== "section").length + this.state.layout.footer.length;
+    }
+
+    /** Whether the header zone applies to the view: forms and lists have a header. */
+    get hasHeader() {
+        return this.props.viewType === "form" || this.props.viewType === "list";
+    }
+
+    get headerHint() {
+        return this.props.viewType === "list"
+            ? _t("Drop a button here to show it in the header of the list.")
+            : _t("Drop a button here to show it in the header of the form.");
+    }
 
     startRawEdit(block) {
         this.state.editingRawId = block.id;
