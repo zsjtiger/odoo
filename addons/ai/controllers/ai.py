@@ -8,7 +8,8 @@ from odoo.http import request
 from odoo.exceptions import UserError
 
 from ..llm import LLMError
-from ..utils.ai_utils import get_llm_client, get_text_from_parts, markdown_format
+from ..utils.ai_utils import get_llm_client, get_text_from_parts
+from ..utils.formatting import markdown_format
 
 
 class AIController(http.Controller):

@@ -18,16 +18,8 @@ from odoo.addons.mail.tools.discuss import Store
 
 from ..utils.ai_citation import apply_web_citations
 from ..llm import JOB_COMPLETION, LLMError
-from ..utils.ai_utils import (
-    disable_skills,
-    enable_tools,
-    format_tool_result,
-    format_tool_summary,
-    get_llm_client,
-    markdown_format,
-    get_text_from_parts,
-    UserInputResponse,
-)
+from ..utils.ai_utils import disable_skills, enable_tools, format_tool_result, format_tool_summary, get_llm_client, get_text_from_parts, UserInputResponse
+from ..utils.formatting import markdown_format
 from ..utils.types import (
     AIMessageParts, CompletionFailure, CompletionOptions, CompletionResponse,
     CompletionSuccess, Message, PendingInteractionResponse, Tool,

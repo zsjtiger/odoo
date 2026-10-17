@@ -3,7 +3,7 @@
 from odoo import Command
 from odoo.addons.ai.models.ai_session import _logger as tool_logger
 from odoo.addons.ai.tests.common import TestAICallbackCommon
-from odoo.addons.ai.utils.ai_utils import make_records_update_preview
+from odoo.addons.ai.utils.previews import make_records_update_preview
 from odoo.tools.mail import html_to_inner_content
 from odoo.tools.misc import format_datetime
 from odoo.tests import users

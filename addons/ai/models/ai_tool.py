@@ -21,25 +21,12 @@ from odoo.addons.ai.utils.ai_image_tools import (
     field_to_image_path,
     retrieve_image_parts_from_path,
 )
-from odoo.addons.ai.utils.ai_utils import (
-    AI_MODELS_BLOCKLIST,
-    add_binary_references,
-    compute_date,
-    compute_report_measures,
-    enable_skills,
-    get_search_view,
-    get_text_from_parts,
-    make_batch_update_preview,
-    make_confirmation_request_preview,
-    make_create_preview,
-    markdown_format,
-    serialize_search_view_info,
-    split_binary_fields,
-    validate_date_filters,
-    validate_groupbys,
-    validate_measures,
-    validate_search_terms,
-)
+from odoo.addons.ai.utils.ai_utils import AI_MODELS_BLOCKLIST, add_binary_references, enable_skills, get_text_from_parts, split_binary_fields
+from odoo.addons.ai.utils.date_filters import compute_date, validate_date_filters
+from odoo.addons.ai.utils.report_validation import compute_report_measures, validate_groupbys, validate_measures, validate_search_terms
+from odoo.addons.ai.utils.search_view import get_search_view, serialize_search_view_info
+from odoo.addons.ai.utils.previews import make_batch_update_preview, make_confirmation_request_preview, make_create_preview
+from odoo.addons.ai.utils.formatting import markdown_format
 from odoo.addons.web.controllers.utils import clean_action
 
 if TYPE_CHECKING:

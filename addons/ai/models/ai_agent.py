@@ -19,10 +19,8 @@ from odoo.addons.ai.utils.ai_citation import (
     apply_numeric_citations,
     get_sources_ids_from_text,
 )
-from ..utils.ai_utils import (
-    get_text_from_parts,
-    markdown_format,
-)
+from ..utils.ai_utils import get_text_from_parts
+from ..utils.formatting import markdown_format
 from ..utils.agent_instructions_prompts import (
     DEFAULT_SYSTEM_PROMPT,
     get_global_protocol,

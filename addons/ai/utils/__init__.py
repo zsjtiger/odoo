@@ -1,6 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from . import ai_citation
 from . import ai_utils
+from . import date_filters
+from . import search_view
+from . import report_validation
+from . import previews
+from . import formatting
 from . import tools_schema
 from . import ai_fields_tools
 from . import ai_image_tools
