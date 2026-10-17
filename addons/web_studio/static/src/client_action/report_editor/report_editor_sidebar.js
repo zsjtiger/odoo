@@ -11,8 +11,8 @@ import {
     useProps,
     xml,
 } from "@odoo/owl";
-import { Notebook } from "@web/core/notebook/notebook";
-import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
+import { Notebook } from "@web/core/components/notebook/notebook";
+import { ResizablePanel } from "@web/core/components/resizable_panel/resizable_panel";
 import { SaveDiscard } from "./report_editor_components";
 
 class ComponentList extends Component {

@@ -1,9 +1,9 @@
-import { render } from "@web/owl2/utils";
+import { render } from "@web/core/owl/utils";
 import { Component, useProps, proxy, signal, t } from "@odoo/owl";
-import { rpc, rpcBus } from "@web/core/network/rpc";
+import { rpc, rpcBus } from "@web/core/services/network/rpc";
 import { useBus, useService, useOwnedDialogs } from "@web/core/utils/hooks";
-import { Dialog, dialogProps } from "@web/core/dialog/dialog";
-import { user } from "@web/core/user";
+import { Dialog, dialogProps } from "@web/core/dialogs/dialog/dialog";
+import { user } from "@web/core/services/user";
 import { useNestedSortable } from "@web/core/utils/nested_sortable";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { MenuCreatorDialog } from "@web_studio/client_action/menu_creator/menu_creator";

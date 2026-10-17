@@ -1,5 +1,5 @@
 import { Component, useProps, t } from "@odoo/owl";
-import { Dropdown } from "@web/core/dropdown/dropdown";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
 
 export class ThumbnailItem extends Component {
     static template = "web_studio.ThumbnailItem";

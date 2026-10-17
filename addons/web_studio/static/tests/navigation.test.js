@@ -16,8 +16,8 @@ import {
     serverState,
     stepAllNetworkCalls,
 } from "@web/../tests/web_test_helpers";
-import { location, browser } from "@web/core/browser/browser";
-import { user } from "@web/core/user";
+import { location, browser } from "@web/core/services/browser/browser";
+import { user } from "@web/core/services/user";
 import { WebClientEnterprise } from "@web_enterprise/webclient/webclient";
 import { StudioClientAction } from "@web_studio/client_action/studio_client_action";
 import { FormEditorCompiler } from "@web_studio/client_action/view_editor/editors/form/form_editor_compiler";

@@ -1,7 +1,7 @@
 import { t } from "@odoo/owl";
-import { rpcBus } from "@web/core/network/rpc";
-import { UPDATE_METHODS } from "@web/core/orm_plugin";
-import { registry } from "@web/core/registry";
+import { rpcBus } from "@web/core/services/network/rpc";
+import { UPDATE_METHODS } from "@web/core/services/orm_plugin";
+import { registry } from "@web/core/framework/registry";
 import { patch } from "@web/core/utils/patch";
 import { ViewButton, viewButtonProps } from "@web/views/view_button/view_button";
 import { useViewButtonHandler } from "@web/views/view_button/view_button_hook";

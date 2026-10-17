@@ -13,7 +13,7 @@ import {
     onRpc,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-import { user } from "@web/core/user";
+import { user } from "@web/core/services/user";
 import { WebClientEnterprise } from "@web_enterprise/webclient/webclient";
 
 describe.current.tags("desktop");

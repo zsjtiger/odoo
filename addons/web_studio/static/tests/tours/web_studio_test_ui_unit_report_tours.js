@@ -1,9 +1,9 @@
-import { registry } from "@web/core/registry";
-import { download } from "@web/core/network/download";
+import { registry } from "@web/core/framework/registry";
+import { download } from "@web/core/services/network/download";
 import { patch } from "@web/core/utils/patch";
 import { parseXML, serializeXML } from "@web/core/utils/xml";
 import { assertEqual, stepNotInStudio, nextTick } from "@web_studio/../tests/tours/tour_helpers";
-import { cookie } from "@web/core/browser/cookie";
+import { cookie } from "@web/core/services/browser/cookie";
 import { editorsWeakMap } from "@html_editor/../tests/tours/helpers/editor";
 import { nodeSize } from "@html_editor/utils/position";
 

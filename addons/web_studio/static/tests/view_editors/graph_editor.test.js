@@ -13,7 +13,7 @@ import {
     patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
-import { CodeEditor } from "@web/core/code_editor/code_editor";
+import { CodeEditor } from "@web/core/components/code_editor/code_editor";
 import { WebClientEnterprise } from "@web_enterprise/webclient/webclient";
 import { editView, handleDefaultStudioRoutes } from "../view_editor_tests_utils";
 

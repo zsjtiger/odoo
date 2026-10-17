@@ -1,7 +1,7 @@
 import { Component, useProps, t } from "@odoo/owl";
-import { CheckBox } from "@web/core/checkbox/checkbox";
+import { CheckBox } from "@web/core/components/checkbox/checkbox";
 import { useOwnedDialogs } from "@web/core/utils/hooks";
-import { ExpressionEditorDialog } from "@web/core/expression_editor_dialog/expression_editor_dialog";
+import { ExpressionEditorDialog } from "@web/core/dialogs/expression_editor_dialog/expression_editor_dialog";
 import { ModifiersSimpleDialog } from "./modifiers_simple_dialog";
 
 export class ModifiersProperties extends Component {

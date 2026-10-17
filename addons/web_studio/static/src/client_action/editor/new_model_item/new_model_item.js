@@ -1,10 +1,10 @@
-import { render } from "@web/owl2/utils";
+import { render } from "@web/core/owl/utils";
 import { Component, proxy, t, useProps } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
-import { user } from "@web/core/user";
+import { _t } from "@web/core/data/l10n/translation";
+import { rpc } from "@web/core/services/network/rpc";
+import { user } from "@web/core/services/user";
 import { useBus, useService, useOwnedDialogs } from "@web/core/utils/hooks";
-import { Dialog } from "@web/core/dialog/dialog";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
 import { ModelConfiguratorDialog } from "../../model_configurator/model_configurator";
 import { useDialogConfirmation } from "../../utils";
 

@@ -1,11 +1,11 @@
 import { t } from "@odoo/owl";
 import { AiPrompt } from "@ai/ai_prompt/ai_prompt";
 import { patch } from "@web/core/utils/patch";
-import { PropertiesField } from "@web/views/fields/properties/properties_field";
+import { PropertiesField } from "@web/views/fields/special/properties/properties_field";
 import {
     PropertyDefinition,
     propertyDefinitionProps,
-} from "@web/views/fields/properties/property_definition";
+} from "@web/views/fields/special/properties/property_definition";
 
 propertyDefinitionProps.propertiesModel = t.string();
 

@@ -1,6 +1,6 @@
 import { onWillDestroy, onWillStart, proxy, useScope } from "@odoo/owl";
 import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
-import { useEnv, useSubEnv } from "@web/owl2/utils";
+import { useEnv, useSubEnv } from "@web/core/owl/utils";
 import {
     useEditorBreadcrumbs,
     useEditorMenuItem,

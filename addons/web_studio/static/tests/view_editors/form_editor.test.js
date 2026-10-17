@@ -37,11 +37,11 @@ import {
     patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
-import { RPCError } from "@web/core/network/rpc";
-import { registry } from "@web/core/registry";
+import { RPCError } from "@web/core/services/network/rpc";
+import { registry } from "@web/core/framework/registry";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
-import { charField } from "@web/views/fields/char/char_field";
-import { ImageField } from "@web/views/fields/image/image_field";
+import { charField } from "@web/views/fields/text/char/char_field";
+import { ImageField } from "@web/views/fields/media/image/image_field";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { Setting } from "@web/views/form/setting/setting";
 import { WebClient } from "@web/webclient/webclient";

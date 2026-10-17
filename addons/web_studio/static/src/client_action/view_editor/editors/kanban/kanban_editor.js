@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { omit } from "@web/core/utils/objects";
 import { kanbanView } from "@web/views/kanban/kanban_view";
 import { computeXpath } from "../xml_utils";

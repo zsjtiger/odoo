@@ -1,28 +1,28 @@
 import { HtmlField, htmlField } from "@html_editor/fields/html_field";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
-import { BooleanField, booleanField } from "@web/views/fields/boolean/boolean_field";
-import { CharField, charField } from "@web/views/fields/char/char_field";
-import { DateTimeField, dateField, dateTimeField } from "@web/views/fields/datetime/datetime_field";
-import { FloatField, floatField } from "@web/views/fields/float/float_field";
-import { IntegerField, integerField } from "@web/views/fields/integer/integer_field";
+import { BooleanField, booleanField } from "@web/views/fields/boolean/boolean/boolean_field";
+import { CharField, charField } from "@web/views/fields/text/char/char_field";
+import { DateTimeField, dateField, dateTimeField } from "@web/views/fields/date/datetime/datetime_field";
+import { FloatField, floatField } from "@web/views/fields/numeric/float/float_field";
+import { IntegerField, integerField } from "@web/views/fields/numeric/integer/integer_field";
 import {
     Many2ManyTagsAvatarField,
     many2ManyTagsAvatarField,
-} from "@web/views/fields/many2many_tags_avatar/many2many_tags_avatar_field";
+} from "@web/views/fields/relational/many2many_tags_avatar/many2many_tags_avatar_field";
 import {
     Many2ManyTagsField,
     many2ManyTagsField,
-} from "@web/views/fields/many2many_tags/many2many_tags_field";
+} from "@web/views/fields/relational/many2many_tags/many2many_tags_field";
 import {
     Many2OneAvatarField,
     many2OneAvatarField,
-} from "@web/views/fields/many2one_avatar/many2one_avatar_field";
-import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/many2one/many2one_field";
-import { MonetaryField, monetaryField } from "@web/views/fields/monetary/monetary_field";
-import { SelectionField, selectionField } from "@web/views/fields/selection/selection_field";
-import { TextField, textField } from "@web/views/fields/text/text_field";
+} from "@web/views/fields/relational/many2one_avatar/many2one_avatar_field";
+import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/relational/many2one/many2one_field";
+import { MonetaryField, monetaryField } from "@web/views/fields/numeric/monetary/monetary_field";
+import { SelectionField, selectionField } from "@web/views/fields/selection/selection/selection_field";
+import { TextField, textField } from "@web/views/fields/text/text/text_field";
 
 const AiFieldMixin = (fieldClass) => {
     return class extends fieldClass {

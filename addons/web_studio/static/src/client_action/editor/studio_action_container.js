@@ -1,8 +1,8 @@
-import { render } from "@web/owl2/utils";
+import { render } from "@web/core/owl/utils";
 import { actionContainerProps } from "@web/webclient/actions/action_container";
 import { useService } from "@web/core/utils/hooks";
-import { registry } from "@web/core/registry";
-import { rpc } from "@web/core/network/rpc";
+import { registry } from "@web/core/framework/registry";
+import { rpc } from "@web/core/services/network/rpc";
 import { KeepLast } from "@web/core/utils/concurrency";
 import {
     Component,

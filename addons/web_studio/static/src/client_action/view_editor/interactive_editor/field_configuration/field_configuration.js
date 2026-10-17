@@ -1,14 +1,14 @@
 import { Component, xml, proxy, t, usePlugin, useProps } from "@odoo/owl";
-import { Dialog } from "@web/core/dialog/dialog";
-import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
+import { ModelFieldSelector } from "@web/core/editors/model_field_selector/model_field_selector";
 import { useDialogConfirmation } from "@web_studio/client_action/utils";
 import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
-import { _t } from "@web/core/l10n/translation";
-import { DomainSelector } from "@web/core/domain_selector/domain_selector";
+import { _t } from "@web/core/data/l10n/translation";
+import { DomainSelector } from "@web/core/editors/domain_selector/domain_selector";
 import { SelectionContentDialog } from "@web_studio/client_action/view_editor/interactive_editor/field_configuration/selection_content_dialog";
-import { RecordSelector } from "@web/core/record_selectors/record_selector";
+import { RecordSelector } from "@web/core/editors/record_selectors/record_selector";
 import { ViewEditorModel } from "../../view_editor_model";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
 
 class SelectionValuesModel {
     selection = "[]";

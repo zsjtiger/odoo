@@ -1,5 +1,5 @@
-import { registry } from "@web/core/registry";
-import { user } from "@web/core/user";
+import { registry } from "@web/core/framework/registry";
+import { user } from "@web/core/services/user";
 import { useService } from "@web/core/utils/hooks";
 import "@web_enterprise/webclient/promote_studio/promote_studio_systray_item";
 

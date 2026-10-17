@@ -1,11 +1,11 @@
-import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
+import { _t } from "@web/core/data/l10n/translation";
+import { rpc } from "@web/core/services/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 import {
     ConfirmationDialog,
     confirmationDialogProps,
-} from "@web/core/confirmation_dialog/confirmation_dialog";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
+} from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
 
 import { onWillStart, useProps, proxy, t, usePlugin } from "@odoo/owl";
 

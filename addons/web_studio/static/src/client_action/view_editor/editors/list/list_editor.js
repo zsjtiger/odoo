@@ -1,6 +1,6 @@
 import { listView } from "@web/views/list/list_view";
 import { computeXpath } from "../xml_utils";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { omit } from "@web/core/utils/objects";
 
 import { ListEditorRenderer, columnsStyling } from "./list_editor_renderer";

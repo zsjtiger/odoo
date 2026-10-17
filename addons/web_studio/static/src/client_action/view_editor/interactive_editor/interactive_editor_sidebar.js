@@ -1,10 +1,10 @@
-import { render } from "@web/owl2/utils";
-import { _t } from "@web/core/l10n/translation";
+import { render } from "@web/core/owl/utils";
+import { _t } from "@web/core/data/l10n/translation";
 import { onWillStart, onWillUpdateProps, Component, proxy, signal, t, useProps } from "@odoo/owl";
 
-import { Notebook } from "@web/core/notebook/notebook";
+import { Notebook } from "@web/core/components/notebook/notebook";
 import { useBus } from "@web/core/utils/hooks";
-import { useActiveElement } from "@web/core/ui/ui_plugin";
+import { useActiveElement } from "@web/core/services/ui/ui_plugin";
 
 const tabsDisplay = {
     new: {

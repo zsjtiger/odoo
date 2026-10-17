@@ -1,6 +1,6 @@
-import { registry } from "@web/core/registry";
-import { LazyComponent } from "@web/core/lazy_component";
-import { cookie } from "@web/core/browser/cookie";
+import { registry } from "@web/core/framework/registry";
+import { LazyComponent } from "@web/core/framework/lazy_component";
+import { cookie } from "@web/core/services/browser/cookie";
 import { standardActionServiceProps } from "@web/webclient/actions/action_plugin";
 
 import { Component, t, useProps, xml } from "@odoo/owl";

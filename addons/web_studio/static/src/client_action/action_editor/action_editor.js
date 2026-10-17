@@ -1,27 +1,26 @@
 import { Component, usePlugin, useProps } from "@odoo/owl";
 import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
-import { rpc } from "@web/core/network/rpc";
-import { user } from "@web/core/user";
-import { registry } from "@web/core/registry";
-import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/services/network/rpc";
+import { user } from "@web/core/services/user";
+import { registry } from "@web/core/framework/registry";
+import { _t } from "@web/core/data/l10n/translation";
 import { sortBy } from "@web/core/utils/arrays";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
+import { AlertDialog } from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
 import { standardActionServiceProps } from "@web/webclient/actions/action_plugin";
 
 import { Record } from "@web/model/record";
 import {
     Many2ManyTagsField,
     many2ManyTagsField,
-} from "@web/views/fields/many2many_tags/many2many_tags_field";
-import { CharField } from "@web/views/fields/char/char_field";
-import { TextField } from "@web/views/fields/text/text_field";
+} from "@web/views/fields/relational/many2many_tags/many2many_tags_field";
+import { CharField } from "@web/views/fields/text/char/char_field";
+import { TextField } from "@web/views/fields/text/text/text_field";
 
 import { ThumbnailItem } from "@web_studio/client_action/components/thumbnail_item/thumbnail_item";
 import { viewTypeToString, useStudioServiceAsReactive } from "@web_studio/studio_service";
 import { NewViewDialog } from "../editor/new_view_dialogs/new_view_dialog";
-import { MapNewViewDialog } from "../editor/new_view_dialogs/map_new_view_dialog";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
 
 function getViewCategories() {
     return {
@@ -31,15 +30,15 @@ function getViewCategories() {
         },
         multiple: {
             title: _t("Multiple records views"),
-            viewTypes: ["list", "kanban", "map"],
+            viewTypes: ["list", "kanban"],
         },
         timeline: {
             title: _t("Timeline views"),
-            viewTypes: ["calendar", "gantt"],
+            viewTypes: ["calendar"],
         },
         reporting: {
             title: _t("Reporting views"),
-            viewTypes: ["graph", "pivot", "cohort"],
+            viewTypes: ["graph", "pivot"],
         },
     };
 }
@@ -186,11 +185,9 @@ class ActionEditor extends Component {
                     },
                     cancel: () => resolve(false),
                 };
-                if (["gantt", "calendar", "cohort"].includes(viewType)) {
+                if (viewType === "calendar") {
                     DialogClass = NewViewDialog;
                     dialogProps.viewType = viewType;
-                } else if (viewType === "map") {
-                    DialogClass = MapNewViewDialog;
                 } else {
                     this.addDialog(AlertDialog, {
                         body: _t(

@@ -1,8 +1,8 @@
-import { render } from "@web/owl2/utils";
-import { _t } from "@web/core/l10n/translation";
+import { render } from "@web/core/owl/utils";
+import { _t } from "@web/core/data/l10n/translation";
 import { onMounted, onWillUnmount } from "@odoo/owl";
 
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
 import { EnterpriseNavBar } from "@web_enterprise/webclient/navbar/navbar";
 import { HomeMenuCustomizer } from "./home_menu_customizer/home_menu_customizer";

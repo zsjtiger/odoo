@@ -13,7 +13,7 @@ import { FieldProperties } from "@web_studio/client_action/view_editor/interacti
 import { GroupProperties } from "@web_studio/client_action/view_editor/editors/form/form_editor_sidebar/properties/group_properties/group_properties";
 import { LabelProperties } from "@web_studio/client_action/view_editor/editors/form/form_editor_sidebar/properties/label_properties/label_properties";
 import { PageProperties } from "@web_studio/client_action/view_editor/editors/form/form_editor_sidebar/properties/page_properties/page_properties";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { SidebarViewToolbox } from "@web_studio/client_action/view_editor/interactive_editor/sidebar_view_toolbox/sidebar_view_toolbox";
 import { useEditNodeAttributes } from "@web_studio/client_action/view_editor/view_editor_model";
 import { WidgetProperties } from "@web_studio/client_action/view_editor/interactive_editor/properties/widget_properties/widget_properties";

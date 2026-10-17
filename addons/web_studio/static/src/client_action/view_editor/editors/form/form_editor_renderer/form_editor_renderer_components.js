@@ -1,5 +1,5 @@
 import { Component, computed, proxy, Resource, signal, t, useEffect, useProps } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { uniqueId } from "@web/core/utils/functions";
 import { useOwnedDialogs } from "@web/core/utils/hooks";
 import { formView } from "@web/views/form/form_view";

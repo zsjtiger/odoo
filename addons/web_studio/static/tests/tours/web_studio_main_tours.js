@@ -1,5 +1,5 @@
-import { browser } from "@web/core/browser/browser";
-import { registry } from "@web/core/registry";
+import { browser } from "@web/core/services/browser/browser";
+import { registry } from "@web/core/framework/registry";
 import { randomString } from "@web_studio/utils";
 import { assertEqual, stepNotInStudio } from "@web_studio/../tests/tours/tour_helpers";
 

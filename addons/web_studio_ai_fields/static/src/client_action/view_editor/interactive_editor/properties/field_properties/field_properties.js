@@ -1,9 +1,9 @@
 import { AiPrompt, AiPromptDialog } from "@ai/ai_prompt/ai_prompt";
 import { computed, signal } from "@odoo/owl";
-import { rpc } from "@web/core/network/rpc";
+import { rpc } from "@web/core/services/network/rpc";
 import { patch } from "@web/core/utils/patch";
 import { FieldProperties } from "@web_studio/client_action/view_editor/interactive_editor/properties/field_properties/field_properties";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { KeepLast, Mutex } from "@web/core/utils/concurrency";
 
 Object.assign(FieldProperties.components, { AiPrompt });

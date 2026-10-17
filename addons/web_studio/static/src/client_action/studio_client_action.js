@@ -1,6 +1,6 @@
-import { render } from "@web/owl2/utils";
-import { registry } from "@web/core/registry";
-import { user as originalUser } from "@web/core/user";
+import { render } from "@web/core/owl/utils";
+import { registry } from "@web/core/framework/registry";
+import { user as originalUser } from "@web/core/services/user";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { standardActionServiceProps } from "@web/webclient/actions/action_plugin";
 import { computeAppsAndMenuItems, reorderApps } from "@web/webclient/menus/menu_helpers";

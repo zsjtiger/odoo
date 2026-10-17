@@ -16,9 +16,9 @@ import {
     patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 // todo owl3 remove after the ListRenderer onWillRender is removed
-import { onWillRender } from "@web/owl2/utils";
+import { onWillRender } from "@web/core/owl/utils";
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { WebClientEnterprise } from "@web_enterprise/webclient/webclient";
 import { ListEditorRenderer } from "@web_studio/client_action/view_editor/editors/list/list_editor_renderer";

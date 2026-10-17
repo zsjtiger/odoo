@@ -3,7 +3,7 @@ import { getContent, setSelection } from "@html_editor/../tests/_helpers/selecti
 import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 import { before, describe, expect, test } from "@odoo/hoot";
 import { contains, defineModels, fields, models } from "@web/../tests/web_test_helpers";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { hover, queryAll, queryFirst, queryOne, waitFor } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 

@@ -1,5 +1,5 @@
 import { Component, computed, proxy, signal, t, usePlugin, useProps } from "@odoo/owl";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
 import { uniqueId } from "@web/core/utils/functions";
 import { StudioHook } from "../../editors/components/studio_hook_component";
 

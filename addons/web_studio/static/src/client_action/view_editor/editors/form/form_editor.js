@@ -2,7 +2,7 @@ import { formView } from "@web/views/form/form_view";
 import { FormEditorRenderer } from "./form_editor_renderer/form_editor_renderer";
 import { FormEditorController } from "./form_editor_controller/form_editor_controller";
 import { FormEditorCompiler } from "./form_editor_compiler";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { omit } from "@web/core/utils/objects";
 import {
     makeModelErrorResilient,

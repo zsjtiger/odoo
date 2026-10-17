@@ -1,4 +1,4 @@
-import { useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/core/owl/utils";
 import { getFixture } from "@odoo/hoot";
 import { waitFor } from "@odoo/hoot-dom";
 import { Component, onWillDestroy, usePlugin, xml } from "@odoo/owl";
@@ -15,16 +15,16 @@ import {
     parseViewProps,
     registerInlineViewArchs,
 } from "@web/../tests/web_test_helpers";
-import { useOwnDebugContext } from "@web/core/debug/debug_context";
+import { useOwnDebugContext } from "@web/core/services/debug/debug_context";
 
-import { MainComponentsContainer } from "@web/core/main_components_container";
-import { registry } from "@web/core/registry";
+import { MainComponentsContainer } from "@web/core/framework/main_components_container";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
 import { getDefaultConfig } from "@web/views/view";
 import { EditionFlow } from "@web_studio/client_action/editor/edition_flow";
 import { ViewEditor } from "@web_studio/client_action/view_editor/view_editor";
 import { useStudioServiceAsReactive } from "@web_studio/studio_service";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
 
 const serviceRegistry = registry.category("services");
 

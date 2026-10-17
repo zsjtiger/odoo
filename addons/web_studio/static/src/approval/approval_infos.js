@@ -1,6 +1,6 @@
-import { formatDate, deserializeDate } from "@web/core/l10n/dates";
-import { Dialog } from "@web/core/dialog/dialog";
-import { user } from "@web/core/user";
+import { formatDate, deserializeDate } from "@web/core/data/l10n/dates";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
+import { user } from "@web/core/services/user";
 
 import { Component, computed, proxy, t, useProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";

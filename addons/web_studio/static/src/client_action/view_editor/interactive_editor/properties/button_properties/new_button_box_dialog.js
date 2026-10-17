@@ -1,7 +1,7 @@
 import { Component, useProps, signal, validateType, computed, types as t } from "@odoo/owl";
-import { Dialog } from "@web/core/dialog/dialog";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { StudioIconSelector } from "@web_studio/client_action/components/icon_selector/icon_selector";
 import { ViewEditorModel } from "@web_studio/client_action/view_editor/view_editor_model";

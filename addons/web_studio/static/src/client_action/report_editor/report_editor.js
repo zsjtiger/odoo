@@ -1,5 +1,5 @@
 import { Component, providePlugins, usePlugin, useProps } from "@odoo/owl";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 import { BaseEditorTabComponent } from "@web_studio/client_action/editor/editor_menu/editor_menu";
 import { useReportEditorModel } from "@web_studio/client_action/report_editor/report_editor_model";
@@ -16,7 +16,7 @@ import { ReportEditorPreview } from "./report_editor_preview/report_editor_previ
 
 import { getCssFromPaperFormat } from "./utils";
 import { standardActionServiceProps } from "@web/webclient/actions/action_plugin";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { ReportEditorSidebar, ReportEditorSidebarPlugin } from "./report_editor_sidebar";
 import { ReportPrintButton, ReportRecordNavigation } from "./report_editor_components";
 

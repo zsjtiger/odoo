@@ -8,7 +8,7 @@ from odoo.addons.web_studio.controllers.keyed_xml_differ import (
     longest_increasing_subsequence,
 )
 from odoo.tests.common import tagged, BaseCase
-from odoo.tools.template_inheritance import apply_inheritance_specs
+from odoo.tools.xml.template_inheritance import apply_inheritance_specs
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install

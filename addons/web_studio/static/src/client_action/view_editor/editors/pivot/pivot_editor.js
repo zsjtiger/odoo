@@ -1,7 +1,7 @@
 import { Component, proxy, t, useProps } from "@odoo/owl";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { pivotView } from "@web/views/pivot/pivot_view";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 
 import { Property } from "@web_studio/client_action/view_editor/property/property";
 import { InteractiveEditorSidebar } from "@web_studio/client_action/view_editor/interactive_editor/interactive_editor_sidebar";
@@ -9,11 +9,11 @@ import { SidebarViewToolbox } from "@web_studio/client_action/view_editor/intera
 import * as operationUtils from "@web_studio/client_action/view_editor/operations_utils";
 import { fieldsToChoices } from "@web_studio/client_action/view_editor/editors/utils";
 
-import { Many2ManyTagsField } from "@web/views/fields/many2many_tags/many2many_tags_field";
+import { Many2ManyTagsField } from "@web/views/fields/relational/many2many_tags/many2many_tags_field";
 
 import { useEditNodeAttributes } from "@web_studio/client_action/view_editor/view_editor_model";
 import { computeReportMeasures } from "@web/views/utils";
-import { MultiRecordSelector } from "@web/core/record_selectors/multi_record_selector";
+import { MultiRecordSelector } from "@web/core/editors/record_selectors/multi_record_selector";
 
 function getFieldNameFromGroupby(str) {
     return str.split(":")[0];

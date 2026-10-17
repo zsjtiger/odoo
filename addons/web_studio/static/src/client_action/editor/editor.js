@@ -1,4 +1,4 @@
-import { useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/core/owl/utils";
 import {
     Component,
     EventBus,
@@ -11,10 +11,10 @@ import {
     providePlugins,
 } from "@odoo/owl";
 
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { useActionManager } from "@web/webclient/actions/action_plugin";
-import { GlobalBusPlugin } from "@web/core/global_bus_plugin";
-import { DialogPlugin } from "@web/core/dialog/dialog_plugin";
+import { GlobalBusPlugin } from "@web/core/services/global_bus_plugin";
+import { DialogPlugin } from "@web/core/dialogs/dialog/dialog_plugin";
 import { useBus, useService } from "@web/core/utils/hooks";
 
 import { StudioActionContainer } from "./studio_action_container";

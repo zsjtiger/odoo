@@ -1,6 +1,6 @@
-import { Dialog } from "@web/core/dialog/dialog";
-import { rpc } from "@web/core/network/rpc";
-import { user } from "@web/core/user";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
+import { rpc } from "@web/core/services/network/rpc";
+import { user } from "@web/core/services/user";
 import { useService } from "@web/core/utils/hooks";
 import { IconCreator } from "@web_studio/client_action/icon_creator/icon_creator";
 

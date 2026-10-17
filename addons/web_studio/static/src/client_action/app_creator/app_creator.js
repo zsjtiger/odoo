@@ -1,6 +1,6 @@
 import { Component, proxy, signal, t, useListener, useProps } from "@odoo/owl";
-import { rpc } from "@web/core/network/rpc";
-import { user } from "@web/core/user";
+import { rpc } from "@web/core/services/network/rpc";
+import { user } from "@web/core/services/user";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { ModelConfigurator } from "@web_studio/client_action/model_configurator/model_configurator";
 import { DEFAULT_ICON, IconCreator } from "../icon_creator/icon_creator";

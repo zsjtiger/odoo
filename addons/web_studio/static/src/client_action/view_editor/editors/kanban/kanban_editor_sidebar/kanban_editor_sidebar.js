@@ -1,5 +1,5 @@
 import { Component, onWillStart, computed, proxy, t, useProps } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { ViewStructures } from "@web_studio/client_action/view_editor/editors/components/view_structures";
 import { InteractiveEditorSidebar } from "@web_studio/client_action/view_editor/interactive_editor/interactive_editor_sidebar";
 import { ExistingFields } from "@web_studio/client_action/view_editor/editors/components/view_fields";

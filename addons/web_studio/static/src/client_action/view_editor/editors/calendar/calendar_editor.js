@@ -1,5 +1,5 @@
 import { calendarView } from "@web/views/calendar/calendar_view";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { omit } from "@web/core/utils/objects";
 
 import { Component, proxy, t, usePlugin, useProps } from "@odoo/owl";
@@ -12,7 +12,7 @@ import {
 } from "@web_studio/client_action/view_editor/editors/utils";
 import { SCALE_LABELS } from "@web/views/calendar/calendar_controller";
 import { useEditNodeAttributes } from "@web_studio/client_action/view_editor/view_editor_model";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
 
 export class CalendarEditorSidebar extends Component {
     static template = "web_studio.ViewEditor.CalendarEditorSidebar";

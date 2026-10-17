@@ -1,11 +1,11 @@
-import { _t } from "@web/core/l10n/translation";
-import { localization } from "@web/core/l10n/localization";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { localization } from "@web/core/data/l10n/localization";
+import { registry } from "@web/core/framework/registry";
 
 import { Component, computed, onWillStart, onWillUpdateProps, proxy, t, useProps } from "@odoo/owl";
 import { useStudioServiceAsReactive } from "@web_studio/studio_service";
 import { useService } from "@web/core/utils/hooks";
-import { useEnv } from "@web/owl2/utils";
+import { useEnv } from "@web/core/owl/utils";
 const editorTabRegistry = registry.category("web_studio.editor_tabs");
 
 class Breadcrumbs extends Component {
@@ -62,11 +62,6 @@ export class EditorMenu extends Component {
             icon: "oi_view-kanban",
         },
         {
-            title: _t("Map"),
-            type: "map",
-            icon: "location_on",
-        },
-        {
             title: _t("Calendar"),
             type: "calendar",
             icon: "calendar_today",
@@ -80,16 +75,6 @@ export class EditorMenu extends Component {
             title: _t("Pivot"),
             type: "pivot",
             icon: "oi_view-pivot",
-        },
-        {
-            title: _t("Gantt"),
-            type: "gantt",
-            icon: "view_timeline",
-        },
-        {
-            title: _t("Cohort"),
-            type: "cohort",
-            icon: "oi_view-cohort",
         },
         {
             title: _t("Activity"),

@@ -16,7 +16,7 @@ import {
     serverState,
     stepAllNetworkCalls,
 } from "@web/../tests/web_test_helpers";
-import { CodeEditor } from "@web/core/code_editor/code_editor";
+import { CodeEditor } from "@web/core/components/code_editor/code_editor";
 import { editView, handleDefaultStudioRoutes, mountViewEditor } from "../view_editor_tests_utils";
 
 describe.current.tags("desktop");

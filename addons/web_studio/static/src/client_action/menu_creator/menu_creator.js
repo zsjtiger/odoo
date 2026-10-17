@@ -1,12 +1,12 @@
 import { Component, useProps, proxy, signal, t } from "@odoo/owl";
 import { useOwnedDialogs, useAutofocus } from "@web/core/utils/hooks";
-import { Dialog } from "@web/core/dialog/dialog";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
 
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 
 import { useDialogConfirmation } from "@web_studio/client_action/utils";
 import { ModelConfiguratorDialog } from "../model_configurator/model_configurator";
-import { RecordSelector } from "@web/core/record_selectors/record_selector";
+import { RecordSelector } from "@web/core/editors/record_selectors/record_selector";
 
 export class MenuCreatorModel {
     constructor({ allowNoModel } = {}) {

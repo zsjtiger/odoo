@@ -1,5 +1,5 @@
 import { Component, proxy, signal, t, usePlugin, useProps } from "@odoo/owl";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { computeXpath } from "@web_studio/client_action/view_editor/editors/xml_utils";
 import { visitXML } from "@web/core/utils/xml";
 import { SidebarDraggableItem } from "@web_studio/client_action/components/sidebar_draggable_item/sidebar_draggable_item";
@@ -9,7 +9,7 @@ import { ExistingFields } from "@web_studio/client_action/view_editor/editors/co
 import { Property } from "@web_studio/client_action/view_editor/property/property";
 import { ModifiersProperties } from "@web_studio/client_action/view_editor/interactive_editor/properties/modifiers/modifiers_properties";
 import { SidebarViewToolbox } from "@web_studio/client_action/view_editor/interactive_editor/sidebar_view_toolbox/sidebar_view_toolbox";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { memoize } from "@web/core/utils/functions";
 import { useOwnedDialogs } from "@web/core/utils/hooks";
 import { SidebarPropertiesToolbox } from "@web_studio/client_action/view_editor/interactive_editor/properties/sidebar_properties_toolbox/sidebar_properties_toolbox";
@@ -19,7 +19,7 @@ import {
     FilterConfiguration,
 } from "@web_studio/client_action/view_editor/interactive_editor/field_configuration/field_configuration";
 import { fieldsToChoices, randomName } from "@web_studio/client_action/view_editor/editors/utils";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
 
 function getGroupByFieldNameFromString(str) {
     const matches = str.match(/(,\s*)?(["'])group_by\2\1(\s*:\s*)?\2(?<fieldName>.*)\2/);

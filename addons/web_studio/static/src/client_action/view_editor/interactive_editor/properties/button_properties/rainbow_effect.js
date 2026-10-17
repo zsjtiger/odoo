@@ -1,10 +1,10 @@
 import { Component, t, useProps } from "@odoo/owl";
-import { user } from "@web/core/user";
-import { FileInput } from "@web/core/file_input/file_input";
-import { SelectMenu } from "@web/core/select_menu/select_menu";
+import { user } from "@web/core/services/user";
+import { FileInput } from "@web/core/components/file_input/file_input";
+import { SelectMenu } from "@web/core/components/select_menu/select_menu";
 import { Property } from "@web_studio/client_action/view_editor/property/property";
-import { _t } from "@web/core/l10n/translation";
-import { evaluateExpr } from "@web/core/py_js/py";
+import { _t } from "@web/core/data/l10n/translation";
+import { evaluateExpr } from "@web/core/data/py_js/py";
 
 export class RainbowEffect extends Component {
     static template = "web_studio.ViewEditorSidebar.RainbowEffect";

@@ -1,4 +1,4 @@
-import { useEnv } from "@web/owl2/utils";
+import { useEnv } from "@web/core/owl/utils";
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, queryOne, test } from "@odoo/hoot";
 import { hover, waitFor } from "@odoo/hoot-dom";
@@ -20,7 +20,7 @@ import { ReportEditorModel } from "@web_studio/client_action/report_editor/repor
 import { defineStudioEnvironment } from "../../studio_tests_context";
 import { IrModel } from "@web/../tests/_framework/mock_server/mock_models/ir_model";
 import { patch } from "@web/core/utils/patch";
-import { location } from "@web/core/browser/browser";
+import { location } from "@web/core/services/browser/browser";
 import { setContent } from "@html_editor/../tests/_helpers/selection";
 
 describe.current.tags("desktop");

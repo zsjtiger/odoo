@@ -1,9 +1,9 @@
 import { Component, onWillStart, onWillUpdateProps, useProps, toRaw, t, proxy } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
-import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
-import { SelectMenu, selectMenuProps } from "@web/core/select_menu/select_menu";
-import { IrUiViewCodeEditor } from "@web/core/ir_ui_view_code_editor/code_editor";
+import { _t } from "@web/core/data/l10n/translation";
+import { rpc } from "@web/core/services/network/rpc";
+import { ResizablePanel } from "@web/core/components/resizable_panel/resizable_panel";
+import { SelectMenu, selectMenuProps } from "@web/core/components/select_menu/select_menu";
+import { IrUiViewCodeEditor } from "@web/core/editors/ir_ui_view_code_editor/code_editor";
 
 export async function loadResources({
     mainResourceId,

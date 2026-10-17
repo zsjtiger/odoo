@@ -1,10 +1,10 @@
 import { Component, proxy, signal, t, usePlugin, useProps } from "@odoo/owl";
-import { Dialog } from "@web/core/dialog/dialog";
-import { evaluateExpr } from "@web/core/py_js/py";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
+import { evaluateExpr } from "@web/core/data/py_js/py";
 import { useService } from "@web/core/utils/hooks";
-import { _t } from "@web/core/l10n/translation";
-import { user } from "@web/core/user";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
+import { _t } from "@web/core/data/l10n/translation";
+import { user } from "@web/core/services/user";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
 
 export class ModifiersSimpleDialog extends Component {
     static components = { Dialog };

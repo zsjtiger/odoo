@@ -1,4 +1,4 @@
-import { evaluateExpr } from "@web/core/py_js/py";
+import { evaluateExpr } from "@web/core/data/py_js/py";
 import { isComponentNode, appendAttr } from "@web/views/view_compiler";
 
 const nodeWeak = new WeakMap();

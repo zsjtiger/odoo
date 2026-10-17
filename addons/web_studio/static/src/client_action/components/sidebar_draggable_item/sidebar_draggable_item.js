@@ -1,5 +1,5 @@
 import { Component, t, usePlugin, useProps } from "@odoo/owl";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
 
 export class SidebarDraggableItem extends Component {
     static template = "web_studio.SidebarDraggableItem";

@@ -1,5 +1,5 @@
 import { useProps, proxy, types as t } from "@odoo/owl";
-import { useEnv, useSubEnv } from "@web/owl2/utils";
+import { useEnv, useSubEnv } from "@web/core/owl/utils";
 
 export function getFieldsInArch(xmlDoc) {
     const res = [];

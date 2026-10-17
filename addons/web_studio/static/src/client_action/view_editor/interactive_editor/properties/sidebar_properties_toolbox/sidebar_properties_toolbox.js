@@ -1,8 +1,8 @@
 import { Component, usePlugin } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { _t } from "@web/core/l10n/translation";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
+import { ConfirmationDialog } from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
+import { _t } from "@web/core/data/l10n/translation";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
 
 export class SidebarPropertiesToolbox extends Component {
     static template = "web_studio.ViewEditor.InteractiveEditorProperties.Toolbox";

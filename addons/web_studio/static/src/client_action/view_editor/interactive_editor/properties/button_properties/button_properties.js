@@ -8,17 +8,17 @@ import {
     usePlugin,
     useProps,
 } from "@odoo/owl";
-import { CheckBox } from "@web/core/checkbox/checkbox";
-import { Domain } from "@web/core/domain";
-import { DomainSelectorDialog } from "@web/core/domain_selector_dialog/domain_selector_dialog";
-import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
-import { SelectMenu } from "@web/core/select_menu/select_menu";
+import { CheckBox } from "@web/core/components/checkbox/checkbox";
+import { Domain } from "@web/core/data/domain";
+import { DomainSelectorDialog } from "@web/core/dialogs/domain_selector_dialog/domain_selector_dialog";
+import { _t } from "@web/core/data/l10n/translation";
+import { rpc } from "@web/core/services/network/rpc";
+import { SelectMenu } from "@web/core/components/select_menu/select_menu";
 import { Property } from "@web_studio/client_action/view_editor/property/property";
 import { useService } from "@web/core/utils/hooks";
 import { Record } from "@web/model/record";
-import { Many2OneField } from "@web/views/fields/many2one/many2one_field";
-import { Many2ManyTagsField } from "@web/views/fields/many2many_tags/many2many_tags_field";
+import { Many2OneField } from "@web/views/fields/relational/many2one/many2one_field";
+import { Many2ManyTagsField } from "@web/views/fields/relational/many2many_tags/many2many_tags_field";
 import { ClassAttribute } from "@web_studio/client_action/view_editor/interactive_editor/properties/class_attribute/class_attribute";
 import { ViewStructureProperties } from "@web_studio/client_action/view_editor/interactive_editor/properties/view_structure_properties/view_structure_properties";
 import { RainbowEffect } from "./rainbow_effect";
@@ -26,7 +26,7 @@ import { useEditNodeAttributes } from "@web_studio/client_action/view_editor/vie
 import { useSnackbarWrapper } from "@web_studio/client_action/view_editor/view_editor_hook";
 import { ModifiersProperties } from "@web_studio/client_action/view_editor/interactive_editor/properties/modifiers/modifiers_properties";
 import { buildApprovalKey } from "@web_studio/approval/approval_hook";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
 
 export class ButtonProperties extends Component {
     static template = "web_studio.ViewEditor.InteractiveEditorProperties.Button";

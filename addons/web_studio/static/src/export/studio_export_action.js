@@ -1,5 +1,5 @@
-import { registry } from "@web/core/registry";
-import { download } from "@web/core/network/download";
+import { registry } from "@web/core/framework/registry";
+import { download } from "@web/core/services/network/download";
 import { pick } from "@web/core/utils/objects";
 
 async function studioExportAction(_env, action) {

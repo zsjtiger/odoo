@@ -1,9 +1,9 @@
 import { Component, proxy, useProps } from "@odoo/owl";
-import { rpcBus } from "@web/core/network/rpc";
-import { registry } from "@web/core/registry";
+import { rpcBus } from "@web/core/services/network/rpc";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
-import { StatusBarField } from "@web/views/fields/statusbar/statusbar_field";
+import { StatusBarField } from "@web/views/fields/selection/statusbar/statusbar_field";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 
 class StudioStatusBarField extends Component {

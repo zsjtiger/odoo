@@ -1,6 +1,6 @@
 import { Component, computed, useProps, t } from "@odoo/owl";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { useDropdownState } from "@web/core/components/dropdown/dropdown_hooks";
 import { IconSelector } from "@html_editor/main/media/media_dialog/icon_selector";
 
 export class StudioIconSelector extends Component {

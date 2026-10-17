@@ -1,9 +1,9 @@
-import { useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/core/owl/utils";
 import { Component, t, toRaw, useProps } from "@odoo/owl";
 import { closest, touching } from "@web/core/utils/ui";
 import { useDraggable } from "@web/core/utils/draggable";
 import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import {
     isToXpathEquivalentFromXpath,
     cleanHooks,
@@ -12,7 +12,7 @@ import {
     getHooks,
     hookPositionTolerance,
 } from "@web_studio/client_action/view_editor/editors/utils";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { ConfirmationDialog } from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
 import {
     FieldConfigurationDialog,
     SelectionValuesEditor,
@@ -24,7 +24,7 @@ import {
     countPreviousSiblings,
 } from "@web_studio/client_action/view_editor/editors/xml_utils";
 import { DefaultViewSidebar } from "@web_studio/client_action/view_editor/default_view_sidebar/default_view_sidebar";
-import { waitUntil } from "@web/core/macro";
+import { waitUntil } from "@web/core/framework/macro";
 import { pick } from "@web/core/utils/objects";
 
 const NO_M2O_AVAILABLE = _t(

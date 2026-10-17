@@ -7,8 +7,8 @@ import {
     usePlugin,
     useProps,
 } from "@odoo/owl";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
-import { registry } from "@web/core/registry";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
+import { registry } from "@web/core/framework/registry";
 import { sortBy } from "@web/core/utils/arrays";
 import {
     SIDEBAR_SAFE_FIELDS,

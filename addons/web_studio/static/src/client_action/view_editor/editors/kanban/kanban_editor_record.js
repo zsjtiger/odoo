@@ -1,4 +1,4 @@
-import { useEnv } from "@web/owl2/utils";
+import { useEnv } from "@web/core/owl/utils";
 import { kanbanView } from "@web/views/kanban/kanban_view";
 import { FieldStudio } from "@web_studio/client_action/view_editor/editors/components/field_studio";
 import { WidgetStudio } from "@web_studio/client_action/view_editor/editors/components/widget_studio";

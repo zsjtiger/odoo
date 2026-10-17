@@ -12,7 +12,7 @@ from odoo import Command, _, api, http, models
 from odoo.http import request
 from odoo.http.dispatcher import serialize_exception
 from odoo.tools.safe_eval import safe_eval
-from odoo.tools.template_inheritance import apply_inheritance_specs
+from odoo.tools.xml.template_inheritance import apply_inheritance_specs
 
 from odoo.addons.web_studio.controllers import main
 from odoo.addons.web_studio.controllers.keyed_xml_differ import (

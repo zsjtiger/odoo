@@ -1,4 +1,4 @@
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { Component, t, useProps, xml } from "@odoo/owl";
 import { viewTypeToString } from "@web_studio/studio_service";
 

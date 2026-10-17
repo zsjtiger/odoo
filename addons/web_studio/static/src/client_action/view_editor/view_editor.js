@@ -1,8 +1,8 @@
-import { render, useSubEnv } from "@web/owl2/utils";
+import { render, useSubEnv } from "@web/core/owl/utils";
 import { Component, onWillUpdateProps, markRaw, useProps, proxy, signal, t } from "@odoo/owl";
 
 import { useBus, useService } from "@web/core/utils/hooks";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { StudioView } from "@web_studio/client_action/view_editor/studio_view";
 
 import { InteractiveEditor } from "./interactive_editor/interactive_editor";
@@ -15,7 +15,7 @@ import {
     xmlResourceEditorProps,
 } from "@web_studio/client_action/xml_resource_editor/xml_resource_editor";
 import { useSetupAction } from "@web/search/action_hook";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 
 class ViewXmlEditor extends XmlResourceEditor {
     props = useProps({ ...xmlResourceEditorProps, studioViewArch: t.string() });

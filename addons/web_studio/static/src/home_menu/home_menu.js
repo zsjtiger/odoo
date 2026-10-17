@@ -2,7 +2,7 @@ import { HomeMenu } from "@web_enterprise/webclient/home_menu/home_menu";
 import { url } from "@web/core/utils/urls";
 import { patch } from "@web/core/utils/patch";
 import { onMounted, onWillUnmount } from "@odoo/owl";
-import { user } from "@web/core/user";
+import { user } from "@web/core/services/user";
 
 patch(HomeMenu.prototype, {
     setup() {

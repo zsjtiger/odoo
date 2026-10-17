@@ -12,7 +12,7 @@ import {
     patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
-import { CodeEditor } from "@web/core/code_editor/code_editor";
+import { CodeEditor } from "@web/core/components/code_editor/code_editor";
 import { PivotEditorSidebar } from "@web_studio/client_action/view_editor/editors/pivot/pivot_editor";
 import { ViewEditorModel } from "@web_studio/client_action/view_editor/view_editor_model";
 import { editView, mountViewEditor } from "../view_editor_tests_utils";

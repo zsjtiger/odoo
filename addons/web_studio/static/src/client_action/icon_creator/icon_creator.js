@@ -1,7 +1,7 @@
 import { COLORS, BG_COLORS } from "@web_studio/utils";
-import { SelectMenu } from "@web/core/select_menu/select_menu";
-import { FileInput } from "@web/core/file_input/file_input";
-import { user } from "@web/core/user";
+import { SelectMenu } from "@web/core/components/select_menu/select_menu";
+import { FileInput } from "@web/core/components/file_input/file_input";
+import { user } from "@web/core/services/user";
 import { useService } from "@web/core/utils/hooks";
 import { StudioIconSelector } from "@web_studio/client_action/components/icon_selector/icon_selector";
 

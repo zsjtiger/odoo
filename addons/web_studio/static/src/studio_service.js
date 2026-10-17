@@ -1,13 +1,13 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { resetViewCompilerCache } from "@web/views/view_compiler";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 
 import { EventBus, onWillUnmount, proxy } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-import { router, routerBus } from "@web/core/browser/router";
+import { router, routerBus } from "@web/core/services/browser/router";
 import { Cache } from "@web/core/utils/cache";
-import { user } from "@web/core/user";
-import { rpcBus } from "@web/core/network/rpc";
+import { user } from "@web/core/services/user";
+import { rpcBus } from "@web/core/services/network/rpc";
 
 const URL_VIEW_KEY = "_view_type";
 const URL_TAB_KEY = "_tab";

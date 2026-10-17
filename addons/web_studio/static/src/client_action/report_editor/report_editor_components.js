@@ -1,9 +1,9 @@
 import { Component, useProps, proxy, t } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
-import { Pager } from "@web/core/pager/pager";
+import { _t } from "@web/core/data/l10n/translation";
+import { rpc } from "@web/core/services/network/rpc";
+import { Pager } from "@web/core/components/pager/pager";
 import { useService } from "@web/core/utils/hooks";
-import { RecordSelector } from "@web/core/record_selectors/record_selector";
+import { RecordSelector } from "@web/core/editors/record_selectors/record_selector";
 
 export class OptionsContainer extends Component {
     static template = "web_studio.OptionsContainer";

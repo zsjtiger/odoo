@@ -1,7 +1,7 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { stepNotInStudio, assertEqual } from "@web_studio/../tests/tours/tour_helpers";
-import { rpcBus } from "@web/core/network/rpc";
-import { DEBOUNCED_DELAY } from "@web/core/select_menu/select_menu";
+import { rpcBus } from "@web/core/services/network/rpc";
+import { DEBOUNCED_DELAY } from "@web/core/components/select_menu/select_menu";
 
 registry
     .category("web_tour.tours")

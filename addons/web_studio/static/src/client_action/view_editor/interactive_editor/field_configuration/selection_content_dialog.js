@@ -1,6 +1,6 @@
 import { Component, proxy, signal, t, usePlugin, useProps } from "@odoo/owl";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
-import { Dialog } from "@web/core/dialog/dialog";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
 import { useSortable } from "@web/core/utils/sortable_owl";
 
 export class SelectionContentDialog extends Component {

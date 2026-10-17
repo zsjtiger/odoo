@@ -1,10 +1,10 @@
-import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
-import { user } from "@web/core/user";
+import { _t } from "@web/core/data/l10n/translation";
+import { rpc } from "@web/core/services/network/rpc";
+import { user } from "@web/core/services/user";
 import { useService } from "@web/core/utils/hooks";
-import { location } from "@web/core/browser/browser";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { FileInput } from "@web/core/file_input/file_input";
+import { location } from "@web/core/services/browser/browser";
+import { ConfirmationDialog } from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
+import { FileInput } from "@web/core/components/file_input/file_input";
 
 import { Component } from "@odoo/owl";
 

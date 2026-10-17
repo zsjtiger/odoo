@@ -1,10 +1,10 @@
 import { Component, useProps, signal, t, useEffect, usePlugin } from "@odoo/owl";
-import { CheckBox } from "@web/core/checkbox/checkbox";
-import { DomainSelectorDialog } from "@web/core/domain_selector_dialog/domain_selector_dialog";
-import { SelectMenu } from "@web/core/select_menu/select_menu";
+import { CheckBox } from "@web/core/components/checkbox/checkbox";
+import { DomainSelectorDialog } from "@web/core/dialogs/domain_selector_dialog/domain_selector_dialog";
+import { SelectMenu } from "@web/core/components/select_menu/select_menu";
 import { useService } from "@web/core/utils/hooks";
 import { StudioIconSelector } from "@web_studio/client_action/components/icon_selector/icon_selector";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
 
 export class Property extends Component {
     static template = "web_studio.Property";

@@ -11,7 +11,7 @@ import random
 from odoo import api, models, _
 from odoo.exceptions import UserError, ValidationError
 from ..controllers.keyed_xml_differ import KeyedXmlDiffer
-from odoo.tools.template_inheritance import apply_inheritance_specs
+from odoo.tools.xml.template_inheritance import apply_inheritance_specs
 
 from odoo.addons.web_studio.controllers.report import get_report_view_copy
 
@@ -237,15 +237,9 @@ class IrUiView(models.Model):
         # calendar: only if x_studio_date
         if 'x_studio_date' in model._fields:
             views |= self.auto_calendar_view(res_model)
-        # gantt: only if x_studio_date_start & x_studio_date_stop
-        if 'x_studio_date_start' in model._fields and 'x_studio_date_stop' in model._fields:
-            views |= self.auto_gantt_view(res_model)
         # kanban: only if x_studio_stage_id
         if 'x_studio_stage_id' in model._fields:
             views |= self.auto_kanban_view(res_model)
-        # map: only if x_studio_partner_id
-        if 'x_studio_partner_id' in model._fields:
-            views |= self.auto_map_view(res_model)
         # pivot: only if x_studio_value
         if 'x_studio_value' in model._fields:
             views |= self.auto_pivot_view(res_model)
@@ -450,29 +444,6 @@ class IrUiView(models.Model):
             'model': res_model,
             'arch': arch,
             'name': "Default %s view for %s" % ('calendar', res_model),
-        })
-
-    def auto_gantt_view(self, res_model):
-        gantt = E.gantt(date_start='x_studio_date_start', date_stop='x_studio_date_stop')
-        arch = etree.tostring(gantt, encoding='unicode', pretty_print=True)
-
-        return self.create({
-            'type': 'gantt',
-            'model': res_model,
-            'arch': arch,
-            'name': "Default %s view for %s" % ('gantt', res_model),
-        })
-
-    def auto_map_view(self, res_model):
-        field = E.field(name='x_studio_partner_id', string=_('Partner'))
-        map_view = E.map(field, res_partner='x_studio_partner_id')
-        arch = etree.tostring(map_view, encoding='unicode', pretty_print=True)
-
-        return self.create({
-            'type': 'map',
-            'model': res_model,
-            'arch': arch,
-            'name': "Default %s view for %s" % ('map', res_model),
         })
 
     def auto_pivot_view(self, res_model):

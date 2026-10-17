@@ -1,7 +1,7 @@
-import { Dialog } from "@web/core/dialog/dialog";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
 import { Component, proxy, t, useProps } from "@odoo/owl";
-import { user } from "@web/core/user";
-import { _t } from "@web/core/l10n/translation";
+import { user } from "@web/core/services/user";
+import { _t } from "@web/core/data/l10n/translation";
 
 /** You might wonder why I defined all these strings here and not in the template.
  * The reason is that I wanted clear templates that use a single element to render an option,

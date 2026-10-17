@@ -1,5 +1,5 @@
-import { _t } from "@web/core/l10n/translation";
-import { x2ManyCommands } from "@web/core/orm_plugin";
+import { _t } from "@web/core/data/l10n/translation";
+import { x2ManyCommands } from "@web/core/services/orm_plugin";
 import { patch } from "@web/core/utils/patch";
 import { Record } from "@web/model/relational_model/record";
 import { parseServerValue } from "@web/model/relational_model/utils";

@@ -14,10 +14,10 @@ import {
 import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { throttleForAnimation } from "@web/core/utils/timing";
 
-import { _t } from "@web/core/l10n/translation";
-import { useCodeEditorState } from "@web/core/code_editor/code_editor";
-import { IrUiViewCodeEditor } from "@web/core/ir_ui_view_code_editor/code_editor";
-import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
+import { _t } from "@web/core/data/l10n/translation";
+import { useCodeEditorState } from "@web/core/components/code_editor/code_editor";
+import { IrUiViewCodeEditor } from "@web/core/editors/ir_ui_view_code_editor/code_editor";
+import { ResizablePanel } from "@web/core/components/resizable_panel/resizable_panel";
 
 import { loadResources } from "@web_studio/client_action/xml_resource_editor/xml_resource_editor";
 import { OptionsContainer, UndoRedo } from "../report_editor_components";

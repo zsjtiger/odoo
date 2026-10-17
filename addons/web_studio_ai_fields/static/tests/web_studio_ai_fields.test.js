@@ -13,7 +13,7 @@ import { editView, mountViewEditor } from "@web_studio/../tests/view_editor_test
 
 import { before, describe, expect, test } from "@odoo/hoot";
 import { queryOne, waitFor } from "@odoo/hoot-dom";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 
 describe.current.tags("desktop");

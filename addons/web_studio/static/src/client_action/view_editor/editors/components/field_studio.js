@@ -4,7 +4,7 @@ import { FieldContentOverlay } from "./field_content_overlay";
 
 import { useStudioRef, studioIsVisible } from "@web_studio/client_action/view_editor/editors/utils";
 
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 /*
  * Field:

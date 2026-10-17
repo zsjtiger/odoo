@@ -9,7 +9,7 @@ from odoo.http import route, request_var
 from odoo.tests import tagged
 from odoo.tests.common import HttpCase, TransactionCase
 from odoo.tools import DotDict, mute_logger
-from odoo.tools.translate import ParsedTranslation
+from odoo.tools.text.translate import ParsedTranslation
 
 from odoo.addons.base.models.ir_actions_report import IrActionsReport
 from odoo.addons.web_studio.controllers.main import WebStudioController

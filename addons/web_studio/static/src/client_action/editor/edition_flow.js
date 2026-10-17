@@ -1,10 +1,10 @@
-import { useEnv } from "@web/owl2/utils";
-import { _t } from "@web/core/l10n/translation";
-import { rpc, rpcBus } from "@web/core/network/rpc";
+import { useEnv } from "@web/core/owl/utils";
+import { _t } from "@web/core/data/l10n/translation";
+import { rpc, rpcBus } from "@web/core/services/network/rpc";
 import { effect, toRaw, onMounted, onWillUnmount, markRaw, proxy, signal } from "@odoo/owl";
 import { Reactive } from "@web_studio/client_action/utils";
 
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { ConfirmationDialog } from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
 import { KeepLast } from "@web/core/utils/concurrency";
 
 /**

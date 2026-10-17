@@ -19,13 +19,8 @@ Note: Only the admin user is allowed to make those customizations.
     'sequence': 75,
     'depends': [
         'base_automation',
-        'base_import_module',
         'mail',
         'html_editor',
-        'web_map',
-        'web_gantt',
-        'web_cohort',
-        'sms',
     ],
     'data': [
         'views/assets.xml',

@@ -14,16 +14,16 @@ import {
     useProps,
     useScope,
 } from "@odoo/owl";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
-import { DomainSelectorDialog } from "@web/core/domain_selector_dialog/domain_selector_dialog";
-import { _t } from "@web/core/l10n/translation";
+import { ConfirmationDialog } from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
+import { DomainSelectorDialog } from "@web/core/dialogs/domain_selector_dialog/domain_selector_dialog";
+import { _t } from "@web/core/data/l10n/translation";
 import { uniqueId } from "@web/core/utils/functions";
 import { useBus, useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { Record as _Record } from "@web/model/record";
-import { CharField } from "@web/views/fields/char/char_field";
-import { Many2ManyTagsField } from "@web/views/fields/many2many_tags/many2many_tags_field";
-import { Many2OneField } from "@web/views/fields/many2one/many2one_field";
+import { CharField } from "@web/views/fields/text/char/char_field";
+import { Many2ManyTagsField } from "@web/views/fields/relational/many2many_tags/many2many_tags_field";
+import { Many2OneField } from "@web/views/fields/relational/many2one/many2one_field";
 import { OptionsContainer, UndoRedo } from "../report_editor_components";
 import { ReportEditorIframe } from "../report_editor_iframe";
 import { ReportEditorSidebarPlugin } from "../report_editor_sidebar";
