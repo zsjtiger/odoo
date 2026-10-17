@@ -5,6 +5,7 @@ import { NotEditableActionError } from "../../studio_service";
 import { IconCreatorDialog } from "./icon_creator_dialog/icon_creator_dialog";
 
 import { onMounted, onWillUnmount, proxy } from "@odoo/owl";
+const STUDIO_MENU_XMLID = "web_studio.menu_studio_root";
 const MODELS_BUTTON = {
     id: "o_studio_models_button",
     isModelsButton: true,
@@ -71,7 +72,9 @@ export class StudioHomeMenu extends HomeMenu {
     //--------------------------------------------------------------------------
 
     get displayedApps() {
-        return [MODELS_BUTTON, ...super.displayedApps, NEW_APP_BUTTON];
+        // Studio itself is not an app that can be customized, it is hidden from the picker
+        const apps = super.displayedApps.filter((app) => app.xmlid !== STUDIO_MENU_XMLID);
+        return [MODELS_BUTTON, ...apps, NEW_APP_BUTTON];
     }
 
     //--------------------------------------------------------------------------

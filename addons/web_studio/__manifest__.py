@@ -26,6 +26,7 @@ Note: Only the admin user is allowed to make those customizations.
     'data': [
         'views/assets.xml',
         'views/actions.xml',
+        'views/studio_menus.xml',
         'views/ir_actions_report_xml.xml',
         'views/ir_model_data.xml',
         'views/base_automation_views.xml',

@@ -53,7 +53,13 @@ export class StudioClientAction extends Component {
             render(this);
         });
 
-        onWillStart(() => this.studio.ready);
+        onWillStart(async () => {
+            await this.studio.ready;
+            // Opened from the Studio app menu: there is no mode yet, start on the app picker
+            if (!this.studio.mode) {
+                this.studio.setParams({ mode: this.studio.MODES.HOME_MENU });
+            }
+        });
         onMounted(() => {
             document.body.classList.add("o_in_studio");
             this.studio.pushState();
