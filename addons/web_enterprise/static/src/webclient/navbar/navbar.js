@@ -66,11 +66,13 @@ export class EnterpriseNavBar extends NavBar {
     }
 
     /**
-     * @override
+     * The app launcher grid is not used anymore: the desktop logo button goes back to the first app,
+     * the apps are switched from the apps dropdown of the navbar.
      */
-    onAllAppsBtnClick() {
-        super.onAllAppsBtnClick();
-        this.hm.toggle(true);
-        this._closeAppMenuSidebar();
+    onDesktopMenuToggle() {
+        const firstApp = this.menuService.getMenu("root").children[0];
+        if (firstApp) {
+            this.menuService.selectMenu(firstApp);
+        }
     }
 }
