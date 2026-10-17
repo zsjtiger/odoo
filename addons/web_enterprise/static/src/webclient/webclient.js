@@ -12,6 +12,10 @@ export class WebClientEnterprise extends WebClient {
         this.hm = useService("home_menu");
     }
     _loadDefaultApp() {
+        // Land on the first app as the Community edition does, the app launcher (waffle button) stays one click away
+        if (this.menuService.getMenu("root").children.length) {
+            return super._loadDefaultApp();
+        }
         return this.hm.toggle(true);
     }
 }
