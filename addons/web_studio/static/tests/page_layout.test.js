@@ -184,6 +184,25 @@ test("the card of a kanban view is laid out as a flat section", () => {
     expect(serializeFormLayout(layout).includes('<field name="phone"/>')).toBe(true);
 });
 
+test("a search view is laid out as a flat set of fields and filters", () => {
+    const arch = `<search>
+        <field name="name"/>
+        <filter name="mine" string="Mine" domain="[('user_id', '=', uid)]"/>
+        <group><filter name="group_country" string="Country" context="{'group_by': 'country_id'}"/></group>
+    </search>`;
+    const layout = parseArch(arch);
+    expect(layout.body[0].flat).toBe(true);
+    const fieldNames = layout.body[0].columns[0].items
+        .filter((item) => item.kind === "field")
+        .map((item) => item.name);
+    expect(fieldNames).toEqual(["name"]);
+    const serialized = serializeFormLayout(layout);
+    expect(serialized.includes('<filter name="mine"')).toBe(true);
+    expect(serializeFormLayout(parseArch(serialized))).toBe(serialized);
+    addField(layout, layout.body[0].id, layout.body[0].columns[0].id, "email");
+    expect(serializeFormLayout(layout).includes('<field name="email"/>')).toBe(true);
+});
+
 test("advanced blocks are kept and their XML can be replaced", () => {
     const layout = parseFormArch(FORM_ARCH);
     const chatter = rawItems(layout).find((item) => item.node.getAttribute("class") === "oe_chatter");

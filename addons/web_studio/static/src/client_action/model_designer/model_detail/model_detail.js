@@ -119,13 +119,17 @@ export class ModelDetail extends Component {
     /** The layouts of the model: form and list first, then the other views of its action. */
     get layoutTypes() {
         const viewTypes = this.props.model.viewTypes.length
-            ? this.props.model.viewTypes
+            ? [...this.props.model.viewTypes]
             : ["form", "list"];
+        // Every model has a search view, which is laid out like the others
+        if (!viewTypes.includes("search")) {
+            viewTypes.push("search");
+        }
         const priority = (viewType) => {
             const index = LAYOUT_PRIORITY.indexOf(viewType);
             return index === -1 ? LAYOUT_PRIORITY.length : index;
         };
-        return [...viewTypes].sort((a, b) => priority(a) - priority(b));
+        return viewTypes.sort((a, b) => priority(a) - priority(b));
     }
 
     viewLabel(viewType) {

@@ -189,6 +189,12 @@ test("the type filter on fields separates standard and custom fields", async () 
     expect(queryAllTexts(".o_web_studio_field_row td:nth-child(1)")).toEqual(["Loyalty", "Stage"]);
 });
 
+test("every model has a search layout", async () => {
+    await openContact();
+    await contains(".o_web_studio_model_section:contains(Page Layouts)").click();
+    expect(".o_web_studio_edit_page_layout[data-view-type=search]").toHaveCount(1);
+});
+
 test("the form and list layouts open the page layout editor", async () => {
     await openContact();
     await contains(".o_web_studio_model_section:contains(Page Layouts)").click();

@@ -290,11 +290,16 @@ export class PageLayoutEditor extends Component {
     }
 
     get viewTitle() {
-        const titles = { form: _t("Form Page Layout"), list: _t("List Page Layout"), kanban: _t("Kanban Page Layout") };
+        const titles = {
+            form: _t("Form Page Layout"),
+            list: _t("List Page Layout"),
+            kanban: _t("Kanban Page Layout"),
+            search: _t("Search Page Layout"),
+        };
         return titles[this.props.viewType] || titles.form;
     }
 
-    /** The layout of a list or kanban view has a single flat section: no title, no columns. */
+    /** The layout of a list, kanban or search view has a single flat section: no title, no columns. */
     isFlat(section) {
         return Boolean(section.flat);
     }

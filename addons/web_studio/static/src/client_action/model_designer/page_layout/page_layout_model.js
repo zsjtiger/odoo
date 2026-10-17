@@ -156,8 +156,8 @@ function parseKanbanLayout(root) {
 
 /**
  * @param {string} arch arch of a form or a list view
- * @returns {Object} the layout of the view. A list view has a single flat
- *   section: its fields, without title nor columns.
+ * @returns {Object} the layout of the view. A list or a search view has a single
+ *   flat section: its fields, without title nor columns.
  */
 export function parseFormArch(arch) {
     const root = parseXml(arch);
@@ -167,7 +167,8 @@ export function parseFormArch(arch) {
     }
     const headerNode = children(root).find((child) => child.tagName === "header");
     const sheetNode = children(root).find((child) => child.tagName === "sheet");
-    const flat = root.tagName === "list";
+    // A list or a search view has a single flat set of fields and blocks
+    const flat = root.tagName === "list" || root.tagName === "search";
     const layout = {
         rootTag: root.tagName,
         rootAttributes: attributesOf(root),

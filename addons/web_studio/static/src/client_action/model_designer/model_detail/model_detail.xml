@@ -114,7 +114,7 @@
                                     <p class="card-text text-muted small mb-3">
                                         The <t t-out="this.viewLabel(viewType).toLowerCase()"/> view of <t t-out="this.props.model.name"/>.
                                     </p>
-                                    <button t-if="viewType === 'form' or viewType === 'list' or viewType === 'kanban'" type="button" class="btn btn-primary mt-auto o_web_studio_edit_page_layout"
+                                    <button t-if="viewType === 'form' or viewType === 'list' or viewType === 'kanban' or viewType === 'search'" type="button" class="btn btn-primary mt-auto o_web_studio_edit_page_layout"
                                         t-att-data-view-type="viewType"
                                         t-on-click="() => this.editPageLayout(viewType)">Edit Page Layout</button>
                                     <button t-else="" type="button" class="btn btn-outline-primary mt-auto o_web_studio_edit_layout"
