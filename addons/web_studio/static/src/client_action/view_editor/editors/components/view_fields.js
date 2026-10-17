@@ -60,6 +60,26 @@ export class ExistingFields extends Component {
             );
     }
 
+    /**
+     * The existing fields, grouped as Salesforce does in page layouts: the custom
+     * fields (created in Studio, technical name starting with "x_") come first.
+     */
+    get existingFieldGroups() {
+        const fields = this.existingFields;
+        return [
+            {
+                key: "custom",
+                title: _t("Custom Fields"),
+                fields: fields.filter((field) => field.name.startsWith("x_")),
+            },
+            {
+                key: "standard",
+                title: _t("Standard Fields"),
+                fields: fields.filter((field) => !field.name.startsWith("x_")),
+            },
+        ].filter((group) => group.fields.length);
+    }
+
     getDropInfo(field) {
         return {
             structure: "field",
