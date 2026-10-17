@@ -5,15 +5,15 @@ import { ChannelActionDialog } from "@mail/discuss/core/common/channel_action_di
 import { Component, onWillStart, proxy, signal, t, useProps } from "@odoo/owl";
 
 import { useSequential } from "@mail/utils/common/hooks";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { _t } from "@web/core/l10n/translation";
+import { ConfirmationDialog } from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
+import { _t } from "@web/core/data/l10n/translation";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
 
 /**
  * Open the channel invitation UI as a centered dialog, reusing {@link ChannelInvitation}.
  *
- * @param {import("@web/env").OdooEnv} env environment providing the dialog service.
+ * @param {import("@web/boot/env").OdooEnv} env environment providing the dialog service.
  * @param {import("models").DiscussChannel} [channel] channel to invite people to.
  * @returns {void}
  */

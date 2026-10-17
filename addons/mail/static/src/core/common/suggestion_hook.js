@@ -7,10 +7,10 @@ import {
 } from "@mail/utils/common/format";
 import { useSearch } from "@mail/utils/common/hooks";
 import { proxy, t, useProps, useScope } from "@odoo/owl";
-import { emojiType } from "@web/core/emoji_picker/emoji_loader";
-import { ConnectionAbortedError } from "@web/core/network/rpc";
+import { emojiType } from "@web/core/components/emoji_picker/emoji_loader";
+import { ConnectionAbortedError } from "@web/core/services/network/rpc";
 import { useService } from "@web/core/utils/hooks";
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/core/owl/utils";
 
 /**
  * Delimiters that trigger suggestion lists in the composer.
@@ -50,7 +50,7 @@ export const optionType = (store) =>
  * @typedef {import("models").ResPartner
  *   | import("models").ResRole
  *   | import("models").CannedResponse
- *   | import("@web/core/emoji_picker/emoji_picker").Emoji
+ *   | import("@web/core/components/emoji_picker/emoji_picker").Emoji
  *   | import("@mail/core/common/store_service").SpecialMention} Suggestion
  */
 
@@ -61,7 +61,7 @@ export class UseSuggestion {
     suggestionService = useService("mail.suggestion");
 
     /**
-     * @param {import("@web/env").OdooEnv} env
+     * @param {import("@web/boot/env").OdooEnv} env
      * @param {import("@odoo/owl").ReactiveValue<import("@html_editor/editor").Editor>} editor
      */
     constructor(env, editor) {

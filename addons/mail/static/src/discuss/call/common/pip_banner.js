@@ -1,4 +1,4 @@
-import { useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/core/owl/utils";
 import { Component, types, useProps } from "@odoo/owl";
 import { CallActionList } from "@mail/discuss/call/common/call_action_list";
 import { useService } from "@web/core/utils/hooks";

@@ -2,7 +2,7 @@ import { Discuss } from "@mail/core/public_web/discuss_app/discuss_app";
 
 import { AiAgentPanel } from "@ai_agentic/discuss/core/web/ai_agent_panel/ai_agent_panel";
 import { patch } from "@web/core/utils/patch";
-import { user } from "@web/core/user";
+import { user } from "@web/core/services/user";
 
 Discuss.components = { ...Discuss.components, AiAgentPanel };
 

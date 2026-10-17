@@ -1,6 +1,6 @@
 import { DYNAMIC_FIELD_PLUGINS } from "@html_editor/backend/dynamic_field/dynamic_field_plugin";
 import { isEmpty } from "@html_editor/utils/dom_info";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { isHtmlEmpty } from "@web/core/utils/html";
 import { renderToMarkup } from "@web/core/utils/render";

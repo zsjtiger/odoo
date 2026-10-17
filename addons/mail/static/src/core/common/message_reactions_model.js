@@ -1,5 +1,5 @@
 import { AND, fields, Record } from "@mail/model/export";
-import { rpc } from "@web/core/network/rpc";
+import { rpc } from "@web/core/services/network/rpc";
 
 export class MessageReactions extends Record {
     static id = AND("message", "content");

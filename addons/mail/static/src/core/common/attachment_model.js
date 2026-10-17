@@ -2,9 +2,9 @@ import { fields, Record } from "@mail/model/export";
 import { assignDefined } from "@mail/utils/common/misc";
 import { generatePdfThumbnail } from "@web/core/utils/pdfjs";
 
-import { FileModelMixin } from "@web/core/file_viewer/file_model";
-import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
+import { FileModelMixin } from "@web/core/components/file_viewer/file_model";
+import { _t } from "@web/core/data/l10n/translation";
+import { rpc } from "@web/core/services/network/rpc";
 import { imageUrl, url } from "@web/core/utils/urls";
 
 export class Attachment extends FileModelMixin(Record) {

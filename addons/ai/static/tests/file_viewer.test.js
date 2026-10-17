@@ -7,7 +7,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 describe.current.tags("desktop");
 defineMailModels();

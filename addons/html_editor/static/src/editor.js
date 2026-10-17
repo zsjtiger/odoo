@@ -6,7 +6,7 @@ import { isEmpty } from "./utils/dom_info";
 import { resourceSequenceSymbol, warnOfNamingConvention, withSequence } from "./utils/resource";
 import { fixInvalidHTML, initElementForEdition } from "./utils/sanitize";
 import { setElementContent } from "@web/core/utils/html";
-import { hasTouch } from "@web/core/browser/feature_detection";
+import { hasTouch } from "@web/core/services/browser/feature_detection";
 
 /** @typedef {import("plugins").EditorResources} EditorResources */
 /** @typedef {import("plugins").GlobalResources} GlobalResources */

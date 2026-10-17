@@ -1,4 +1,4 @@
-import { router } from "@web/core/browser/router";
+import { router } from "@web/core/services/browser/router";
 import { patch } from "@web/core/utils/patch";
 import AudioProcessor from "./audio/audio_processor";
 import RealtimeClient from "./realtime_client";

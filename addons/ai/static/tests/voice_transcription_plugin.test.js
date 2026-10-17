@@ -21,7 +21,7 @@ import { commit, tripleClick } from "@html_editor/../tests/_helpers/user_actions
 import { cleanHints } from "@html_editor/../tests/_helpers/dispatch";
 import { parseHTML } from "@html_editor/utils/html";
 import { setupEditor } from "@html_editor/../tests/_helpers/editor";
-import { user } from "@web/core/user";
+import { user } from "@web/core/services/user";
 import { EmbeddedComponentPlugin } from "@html_editor/others/embedded_component_plugin";
 import RealtimeClient from "../src/core/realtime_client";
 import AudioProcessor from "../src/core/audio/audio_processor";

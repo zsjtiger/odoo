@@ -1,4 +1,4 @@
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { Plugin } from "@html_editor/plugin";
 import {
     firstLeaf,
@@ -11,7 +11,7 @@ import { isContentEditable } from "@html_editor/utils/dom_info";
 import { nodeSize } from "@html_editor/utils/position";
 import { unwrapContents } from "@html_editor/utils/dom";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
-import { user } from "@web/core/user";
+import { user } from "@web/core/services/user";
 import { MAIL_CORE_PLUGINS } from "@mail/core/common/plugin/plugin_sets";
 
 export class ChatGPTPlugin extends Plugin {

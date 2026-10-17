@@ -1,7 +1,7 @@
 import { Component, markRaw, t, useProps } from "@odoo/owl";
-import { CommandPalette, defaultCommandItemProps } from "@web/core/commands/command_palette";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { CommandPalette, defaultCommandItemProps } from "@web/core/services/commands/command_palette";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
 import { highlightText } from "@web/core/utils/html";
 import { patch } from "@web/core/utils/patch";

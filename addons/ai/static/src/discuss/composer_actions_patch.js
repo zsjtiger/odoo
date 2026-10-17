@@ -7,7 +7,7 @@ import {
 import { VoiceRecorder } from "@mail/discuss/voice_message/common/voice_recorder";
 import { Component } from "@odoo/owl";
 import { AiSessionToggle } from "@ai/components/ai_composer_actions_selectors/ai_session_toggle";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 
 patch(ComposerAction.prototype, {
     _getAiComposerActions() {

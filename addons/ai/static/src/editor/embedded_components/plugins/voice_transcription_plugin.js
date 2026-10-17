@@ -2,7 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { EMBEDDED_COMPONENT_PLUGINS } from "@html_editor/plugin_sets";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { withSequence } from "@html_editor/utils/resource";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { createElementWithContent } from "@web/core/utils/html";
 import { renderToElement } from "@web/core/utils/render";
 

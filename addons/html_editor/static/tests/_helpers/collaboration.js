@@ -5,7 +5,7 @@ import { DIRECTIONS } from "@html_editor/utils/position";
 import { HistoryCommit } from "@html_editor/core/history_plugin";
 import { after, expect } from "@odoo/hoot";
 import { setupEditor } from "./editor";
-import { localeCompare } from "@web/core/l10n/utils";
+import { localeCompare } from "@web/core/data/l10n/utils";
 
 /**
  *

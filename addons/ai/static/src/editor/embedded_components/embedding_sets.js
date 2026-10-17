@@ -2,7 +2,7 @@ import {
     MAIN_EMBEDDINGS,
     READONLY_MAIN_EMBEDDINGS,
 } from "@html_editor/others/embedded_components/embedding_sets";
-import { user } from "@web/core/user";
+import { user } from "@web/core/services/user";
 import { aiVoiceTranscriptionEmbeddedComponent } from "./core/voice_transcription";
 import { aiReadonlyVoiceTranscriptionEmbeddedComponent } from "./core/readonly_voice_transcription";
 

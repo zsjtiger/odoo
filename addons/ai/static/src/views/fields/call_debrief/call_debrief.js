@@ -1,7 +1,7 @@
 import { signal } from "@odoo/owl";
 
-import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
-import { _t } from "@web/core/l10n/translation";
+import { useHotkey } from "@web/core/services/hotkeys/hotkey_hook";
+import { _t } from "@web/core/data/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 import { formatFloatTime } from "@web/views/fields/formatters";
 

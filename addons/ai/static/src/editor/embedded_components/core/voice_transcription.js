@@ -2,8 +2,8 @@ import {
     getEditableDescendants,
     useEditableDescendants,
 } from "@html_editor/others/embedded_component_utils";
-import { browser } from "@web/core/browser/browser";
-import { rpc, RPCError } from "@web/core/network/rpc";
+import { browser } from "@web/core/services/browser/browser";
+import { rpc, RPCError } from "@web/core/services/network/rpc";
 import {
     Component,
     markup,
@@ -15,12 +15,12 @@ import {
     t, useListener,
     useProps,
 } from "@odoo/owl";
-import { user } from "@web/core/user";
+import { user } from "@web/core/services/user";
 import { useBus, useService } from "@web/core/utils/hooks";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { AudioVisualizer } from "@ai/components/audio_visualizer/audio_visualizer";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
 import AudioProcessor, { ProcessorState } from "@ai/core/audio/audio_processor";
 import RealtimeClient from "@ai/core/realtime_client";
 import { AITranscriptionEvent, transcriptionBus } from "@ai/core/transcription_bus";

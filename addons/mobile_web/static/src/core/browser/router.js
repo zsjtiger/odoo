@@ -155,7 +155,7 @@ _router.urlToState = mobileUrlToState;
 // 重新执行startRouter, 确保覆盖生效, 并且刷新web闭包内的state变量
 startRouter();
 
-// 通过'@web/core/browser/router'提供的router变量, 屏蔽`_isMobile`属性
+// 通过'@web/core/services/browser/router'提供的router变量, 屏蔽`_isMobile`属性
 _router.hideKeyFromUrl('_isMobile');
 
 /** @type {Router} */

@@ -1,9 +1,9 @@
 import { AgentSourceAddDialog } from "@ai_agentic/components/agent_add_source_dialog/agent_add_source_dialog";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
-import { BooleanToggleField } from "@web/views/fields/boolean_toggle/boolean_toggle_field";
-import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
+import { BooleanToggleField } from "@web/views/fields/boolean/boolean_toggle/boolean_toggle_field";
+import { X2ManyField, x2ManyField } from "@web/views/fields/relational/x2many/x2many_field";
 import { AiAgentPanelListRenderer } from "@ai_agentic/discuss/core/web/ai_agent_panel/ai_agent_panel_list";
 import { AiAgentSourceRow } from "@ai_agentic/discuss/core/web/ai_agent_panel/ai_agent_panel_sources/ai_agent_source_row";
 import { AiAgentSourceFolderTreePlugin } from "@ai_agentic/discuss/core/web/ai_agent_panel/ai_agent_panel_sources/ai_agent_source_folder_tree_plugin";

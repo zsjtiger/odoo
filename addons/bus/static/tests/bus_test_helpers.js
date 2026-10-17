@@ -14,7 +14,7 @@ import { getWebSocketWorker, onWebsocketEvent } from "./mock_websocket";
 import { BusPlugin } from "@bus/services/bus_plugin";
 import { WEBSOCKET_CLOSE_CODES } from "@bus/workers/websocket_worker";
 import { runAllTimers, waitUntil } from "@odoo/hoot-dom";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { deepEqual } from "@web/core/utils/objects";
 import { patch } from "@web/core/utils/patch";
 import { useListener } from "@odoo/owl";
@@ -33,7 +33,7 @@ import { useListener } from "@odoo/owl";
  *
  * @typedef {Record<string, any>} NotificationPayload
  *
- * @typedef {import("@web/env").OdooEnv} OdooEnv
+ * @typedef {import("@web/boot/env").OdooEnv} OdooEnv
  * @typedef {import("@bus/workers/websocket_worker").WorkerAction} WorkerAction
  */
 

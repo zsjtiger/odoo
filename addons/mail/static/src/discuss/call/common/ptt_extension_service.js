@@ -2,9 +2,9 @@ import { parseVersion } from "@mail/utils/common/misc";
 
 import { markup, proxy } from "@odoo/owl";
 
-import { browser } from "@web/core/browser/browser";
-import { registry } from "@web/core/registry";
-import { _t } from "@web/core/l10n/translation";
+import { browser } from "@web/core/services/browser/browser";
+import { registry } from "@web/core/framework/registry";
+import { _t } from "@web/core/data/l10n/translation";
 
 /** In object so it's patchable */
 export const pttExtensionServiceInternal = {

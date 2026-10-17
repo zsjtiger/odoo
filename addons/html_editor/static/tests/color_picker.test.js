@@ -11,7 +11,7 @@ import { Component, proxy, t, useProps, xml } from "@odoo/owl";
 import { defineStyle, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { ColorPicker, DEFAULT_COLORS } from "@html_editor/components/color_picker/color_picker";
 import { CustomColorPicker } from "@html_editor/components/color_picker/custom_color_picker/custom_color_picker";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { getIframeInput } from "./_helpers/iframe_input";
 
 test("basic rendering", async () => {

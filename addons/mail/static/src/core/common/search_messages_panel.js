@@ -1,6 +1,6 @@
 import { Component, t, useOnChange, useProps } from "@odoo/owl";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { SearchMessageInput } from "@mail/core/common/search_message_input";
 import { SearchMessageResult } from "@mail/core/common/search_message_result";

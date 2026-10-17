@@ -1,6 +1,6 @@
 import { registerThreadAction } from "@mail/core/common/thread_actions";
 
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 
 export const expandDiscussSequenceGroup = 5;
 export const expandDiscussSequenceQuick = 0;

@@ -3,7 +3,7 @@ import {
     discussCallHistoryIndicatorsField,
 } from "@mail/views/fields/discuss_call_history_indicators/discuss_call_history_indicators_field";
 
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 
 discussCallHistoryIndicatorsField.fieldDependencies.push({

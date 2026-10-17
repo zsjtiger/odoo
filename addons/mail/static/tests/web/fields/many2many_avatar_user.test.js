@@ -10,7 +10,7 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { getOrigin } from "@web/core/utils/urls";
 
 defineMailModels();

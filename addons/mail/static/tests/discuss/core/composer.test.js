@@ -19,7 +19,7 @@ import { Thread } from "@mail/core/common/thread_model";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 import { getService, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
-import { deserializeDateTime } from "@web/core/l10n/dates";
+import { deserializeDateTime } from "@web/core/data/l10n/dates";
 import { getOrigin } from "@web/core/utils/urls";
 
 describe.current.tags("desktop");

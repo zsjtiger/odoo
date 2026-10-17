@@ -8,8 +8,8 @@ import {
     expandDiscussSequenceGroup,
     expandDiscussSequenceQuick,
 } from "@mail/discuss/core/web/thread_actions";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { _t } from "@web/core/l10n/translation";
+import { ConfirmationDialog } from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
+import { _t } from "@web/core/data/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 
 export const aiChatsActions = [

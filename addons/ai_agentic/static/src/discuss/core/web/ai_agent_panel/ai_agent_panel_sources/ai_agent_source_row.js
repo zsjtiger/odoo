@@ -1,6 +1,6 @@
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { _t } from "@web/core/l10n/translation";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
+import { _t } from "@web/core/data/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { SOURCE_ICON_CONFIGS, STATUS_BADGE_CLASS } from "./ai_agent_source_icons";
 import { AiAgentSourceFolderTreePlugin } from "./ai_agent_source_folder_tree_plugin";

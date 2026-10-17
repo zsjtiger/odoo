@@ -1,16 +1,16 @@
 import { useAssignUserCommand } from "@mail/views/web/fields/assign_user_command_hook";
 
 import { Component, t, useProps } from "@odoo/owl";
-import { registry } from "@web/core/registry";
-import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
+import { registry } from "@web/core/framework/registry";
+import { computeM2OProps, Many2One } from "@web/views/fields/relational/many2one/many2one";
 import {
     buildM2OFieldDescription,
     extractM2OFieldProps,
     many2OneFieldProps,
-} from "@web/views/fields/many2one/many2one_field";
+} from "@web/views/fields/relational/many2one/many2one_field";
 import { Avatar } from "../avatar/avatar";
 import { Many2XAvatarUserAutocomplete } from "../avatar_autocomplete/avatar_many2x_autocomplete";
-import { user } from "@web/core/user";
+import { user } from "@web/core/services/user";
 
 export class Many2OneAvatarUser extends Many2One {
     static components = {

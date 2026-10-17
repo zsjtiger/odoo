@@ -2,7 +2,7 @@ import { propSignal } from "@mail/utils/common/hooks";
 
 import { imageUrl } from "@web/core/utils/urls";
 import { Component, signal, t, useProps } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 

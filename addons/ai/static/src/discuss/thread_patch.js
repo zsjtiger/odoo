@@ -1,7 +1,7 @@
 import { aiChannelBus } from "@ai/utils/ai_channel_bus";
 import { AgentToolSummary } from "@ai/discuss/agent_tool_summary";
 import { Thread } from "@mail/core/common/thread";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 import { useBus } from "@web/core/utils/hooks";
 

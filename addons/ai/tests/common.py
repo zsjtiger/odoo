@@ -251,15 +251,23 @@ class TestAICallbackCommon(HttpCase, TestAICommon):
 def mock_llm_results(env, return_values, *, channel_name='test_channel'):
     """Answer the completion jobs of a browser tour with ``return_values``.
 
-    Each job is run as soon as it is enqueued, so that the result is delivered
-    to the browser within the same request.
+    The outermost enqueue runs the queue until it is empty, as the cron worker
+    would. Jobs enqueued by a callback are only stored and run afterwards, so
+    the callbacks never nest inside each other.
     """
     client = FakeLLMClient(return_values, channel_name=channel_name)
     enqueue = AiLlmJob.enqueue
+    running = []
 
     def run_now(self, **kwargs):
         job = enqueue(self, **kwargs)
-        self.sudo()._cron_run_pending()
+        if not running:
+            running.append(True)
+            try:
+                while self.env['ai.llm.job'].sudo().search_count([('state', '=', 'pending')]):
+                    self.env['ai.llm.job'].sudo()._cron_run_pending()
+            finally:
+                running.clear()
         return job
 
     with patch("odoo.addons.ai.models.ai_llm_job.get_llm_client", return_value=client), \

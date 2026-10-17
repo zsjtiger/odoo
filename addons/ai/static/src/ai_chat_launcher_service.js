@@ -1,6 +1,6 @@
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
-import { rpc } from "@web/core/network/rpc";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
+import { rpc } from "@web/core/services/network/rpc";
 
 // todo: make it a function? why is this a service
 export const aiChatLauncherService = {

@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { formView } from "@web/views/form/form_view";
 import { FormRendererWithHtmlExpander } from "./form_renderer_with_html_expander";
 import { FormControllerWithHTMLExpander } from "./form_controller_with_html_expander";

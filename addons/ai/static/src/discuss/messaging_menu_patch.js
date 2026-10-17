@@ -4,8 +4,8 @@ import { MENU_TABS } from "@mail/core/public_web/messaging_menu/messaging_menu_m
 
 import { useOnChange } from "@odoo/owl";
 
-import { CheckboxItem } from "@web/core/dropdown/checkbox_item";
-import { Dropdown } from "@web/core/dropdown/dropdown";
+import { CheckboxItem } from "@web/core/components/dropdown/checkbox_item";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
 import { patch } from "@web/core/utils/patch";
 
 MessagingMenu.components = { ...MessagingMenu.components, CheckboxItem, Dropdown, DiscussAvatar };

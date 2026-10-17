@@ -3,9 +3,9 @@ import {
     useEditableDescendants,
 } from "@html_editor/others/embedded_component_utils";
 import { Component, onMounted, onWillStart, proxy } from "@odoo/owl";
-import { isMobileOS } from "@web/core/browser/feature_detection";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { isMobileOS } from "@web/core/services/browser/feature_detection";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
 
 export class ReadonlyVoiceTranscription extends Component {
     static template = "ai.ReadonlyVoiceTranscription";

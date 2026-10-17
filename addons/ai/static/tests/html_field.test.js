@@ -11,7 +11,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
 import { insertText } from "@html_editor/../tests/_helpers/user_actions";
-import { _makeUser, user } from "@web/core/user";
+import { _makeUser, user } from "@web/core/services/user";
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 
 class Partner extends models.Model {

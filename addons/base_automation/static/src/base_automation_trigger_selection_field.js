@@ -1,8 +1,8 @@
 import { proxy } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { useRecordObserver } from "@web/model/relational_model/utils";
-import { selectionField, SelectionField } from "@web/views/fields/selection/selection_field";
+import { selectionField, SelectionField } from "@web/views/fields/selection/selection/selection_field";
 import { TRIGGER_FILTERS } from "./utils";
 import { useService } from "@web/core/utils/hooks";
 

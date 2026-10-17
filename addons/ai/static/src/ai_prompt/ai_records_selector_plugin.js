@@ -1,9 +1,9 @@
 import { RecordsSelectorPopover } from "@ai/records_selector_popover/records_selector_popover";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
-import { Domain } from "@web/core/domain";
-import { ERROR_INACCESSIBLE_OR_MISSING } from "@web/core/name_service";
-import { _t } from "@web/core/l10n/translation";
+import { Domain } from "@web/core/data/domain";
+import { ERROR_INACCESSIBLE_OR_MISSING } from "@web/core/services/name_service";
+import { _t } from "@web/core/data/l10n/translation";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 
 export const AI_RECORD_SELECTOR = "span[data-ai-record-id]";

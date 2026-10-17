@@ -1,13 +1,13 @@
 import { Record } from "@web/model/record";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { ConfirmationDialog } from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
 import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
-import { CharField } from "@web/views/fields/char/char_field";
+import { CharField } from "@web/views/fields/text/char/char_field";
 import { Field } from "@web/views/fields/field";
-import { ImageField } from "@web/views/fields/image/image_field";
+import { ImageField } from "@web/views/fields/media/image/image_field";
 import { FormArchParser } from "@web/views/form/form_arch_parser";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { parseXML } from "@web/core/utils/xml";
 import { useSetupAction } from "@web/search/action_hook";
 import { useService } from "@web/core/utils/hooks";
@@ -19,7 +19,7 @@ import "@ai_agentic/discuss/core/web/ai_agent_panel/ai_agent_panel_skills/ai_age
 import "@ai_agentic/discuss/core/web/ai_agent_panel/ai_agent_panel_sources/ai_agent_panel_sources";
 import "@ai_agentic/discuss/core/web/ai_agent_panel/ai_agent_panel_triggers/ai_agent_panel_triggers";
 
-import { browser } from "@web/core/browser/browser";
+import { browser } from "@web/core/services/browser/browser";
 
 import { Component, onWillStart, proxy, t, useProps } from "@odoo/owl";
 

@@ -5,10 +5,10 @@ import { incrementFn } from "@mail/utils/common/signal";
 
 import { Component, computed, signal, useEffect } from "@odoo/owl";
 
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
-import { registry } from "@web/core/registry";
-import { user } from "@web/core/user";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { useDropdownState } from "@web/core/components/dropdown/dropdown_hooks";
+import { registry } from "@web/core/framework/registry";
+import { user } from "@web/core/services/user";
 import { useService } from "@web/core/utils/hooks";
 
 export class MessagingMenuInDropdown extends Component {

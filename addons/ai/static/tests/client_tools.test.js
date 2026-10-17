@@ -18,7 +18,7 @@ import {
     onRpc,
     serverState,
 } from "@web/../tests/web_test_helpers";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { defineAIModels } from "./ai_test_helpers";
 
 describe.current.tags("desktop");

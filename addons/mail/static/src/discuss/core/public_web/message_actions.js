@@ -1,5 +1,5 @@
 import { registerMessageAction } from "@mail/core/common/message_actions";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 
 registerMessageAction("create-or-view-thread", {
     condition: ({ message, channel }) =>

@@ -1,10 +1,10 @@
 import { propComputed, propSignal, useHover } from "@mail/utils/common/hooks";
 import { Component, signal, t, useProps } from "@odoo/owl";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
-import { emojiLoader, useLoadEmoji } from "@web/core/emoji_picker/emoji_loader";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { useDropdownState } from "@web/core/components/dropdown/dropdown_hooks";
+import { emojiLoader, useLoadEmoji } from "@web/core/components/emoji_picker/emoji_loader";
 
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
 /** @param {import("models").Store} store */

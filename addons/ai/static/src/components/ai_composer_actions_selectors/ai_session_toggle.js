@@ -1,5 +1,5 @@
 import { Component, useProps, t } from "@odoo/owl";
-import { CheckBox } from "@web/core/checkbox/checkbox";
+import { CheckBox } from "@web/core/components/checkbox/checkbox";
 
 export class AiSessionToggle extends Component {
     static template = "ai.SessionToggle";

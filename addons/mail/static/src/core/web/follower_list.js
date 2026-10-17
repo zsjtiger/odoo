@@ -1,9 +1,9 @@
 import { Component, signal, types, useProps } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { useVisible } from "@mail/utils/common/hooks";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { DropdownState } from "@web/core/dropdown/dropdown_hooks";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
+import { DropdownState } from "@web/core/components/dropdown/dropdown_hooks";
 import { Follower } from "@mail/core/web/follower";
 import { FollowerSubtypeDialog } from "@mail/core/web/follower_subtype_dialog";
 

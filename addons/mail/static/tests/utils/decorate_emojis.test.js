@@ -6,7 +6,7 @@ import { beforeEach, expect, test } from "@odoo/hoot";
 import { markup } from "@odoo/owl";
 
 import { makeTestApp, preloadBundle } from "@web/../tests/web_test_helpers";
-import { emojiLoader } from "@web/core/emoji_picker/emoji_loader";
+import { emojiLoader } from "@web/core/components/emoji_picker/emoji_loader";
 
 const Markup = markup().constructor;
 

@@ -1,5 +1,5 @@
 import { useService } from "@web/core/utils/hooks";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 import { QuickVideoSettings } from "../common/quick_video_settings";
 

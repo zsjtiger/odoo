@@ -1,7 +1,7 @@
 import { AiModelFieldSelectorPopover } from "@ai/ai_model_field_selector/ai_model_field_selector_popover";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 
 export const AI_FIELD_SELECTOR = "span[data-ai-field]";

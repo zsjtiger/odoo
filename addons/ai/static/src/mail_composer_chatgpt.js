@@ -1,6 +1,6 @@
 import { getInnerHtml } from "@mail/utils/common/html";
 
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 import { Component, onMounted, onWillUnmount, useProps } from "@odoo/owl";

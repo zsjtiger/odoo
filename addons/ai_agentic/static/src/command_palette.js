@@ -1,8 +1,8 @@
 import { Component, t, usePlugin, useProps, useScope } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
-import { normalize } from "@web/core/l10n/utils";
-import { ORM } from "@web/core/orm_plugin";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { normalize } from "@web/core/data/l10n/utils";
+import { ORM } from "@web/core/services/orm_plugin";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
 import { imageUrl } from "@web/core/utils/urls";
 

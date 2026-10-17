@@ -12,7 +12,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import { advanceTime } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
 import { Command, mockService, serverState, withUser } from "@web/../tests/web_test_helpers";
-import { rpc } from "@web/core/network/rpc";
+import { rpc } from "@web/core/services/network/rpc";
 
 describe.current.tags("desktop");
 defineMailModels();

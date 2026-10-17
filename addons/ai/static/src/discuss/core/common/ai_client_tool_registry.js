@@ -1,5 +1,5 @@
 import { markup } from "@odoo/owl";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 /** Registry of browser-side tools that an AI session can invoke. */
 export const aiClientToolsRegistry = registry.category("ai.client_tools");

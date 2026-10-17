@@ -2,8 +2,8 @@ import { Component, t } from "@odoo/owl";
 import { Typing } from "@mail/discuss/typing/common/typing";
 import { attClassObjectToString } from "@mail/utils/common/format";
 import { propComputed } from "@mail/utils/common/hooks";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
 
 /** @typedef {import("registries").ImStatusData} ImStatusData */

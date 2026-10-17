@@ -2,7 +2,7 @@ import { DiscussClientAction } from "@mail/core/public_web/discuss_app/client_ac
 
 import { t, useOnChange, useProps } from "@odoo/owl";
 import { patch } from "@web/core/utils/patch";
-import { router } from "@web/core/browser/router";
+import { router } from "@web/core/services/browser/router";
 
 patch(DiscussClientAction.prototype, {
     setup() {

@@ -4,9 +4,9 @@ import {
     useToolbarDropdownFocus,
 } from "@html_editor/toolbar_dropdown_hook";
 import { Component, proxy, signal, t, useProps } from "@odoo/owl";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
+import { useDropdownState } from "@web/core/components/dropdown/dropdown_hooks";
 
 export class ImageAlignSelector extends Component {
     static template = "html_editor.ImageAlignSelector";

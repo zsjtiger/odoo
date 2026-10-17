@@ -4,9 +4,9 @@ import {
 } from "@mail/core/public_web/messaging_menu/messaging_menu_model";
 import { fields } from "@mail/model/export";
 
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { patch } from "@web/core/utils/patch";
-import { user } from "@web/core/user";
+import { user } from "@web/core/services/user";
 
 MENU_TABS.AI_AUTOMATION = "ai-automation";
 

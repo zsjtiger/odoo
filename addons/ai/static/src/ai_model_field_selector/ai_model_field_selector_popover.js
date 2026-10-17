@@ -1,8 +1,8 @@
 import {
     ModelFieldSelectorPopover,
     modelFieldSelectorPopoverProps,
-} from "@web/core/model_field_selector/model_field_selector_popover";
-import { user } from "@web/core/user";
+} from "@web/core/editors/model_field_selector/model_field_selector_popover";
+import { user } from "@web/core/services/user";
 import { useService } from "@web/core/utils/hooks";
 
 import { onWillStart, useProps, proxy, t } from "@odoo/owl";

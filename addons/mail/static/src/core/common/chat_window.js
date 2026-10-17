@@ -1,4 +1,4 @@
-import { useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/core/owl/utils";
 import { ActionList } from "@mail/core/common/action_list";
 import { Composer } from "@mail/core/common/composer";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
@@ -21,13 +21,13 @@ import {
     usePlugin,
 } from "@odoo/owl";
 
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { localization } from "@web/core/l10n/localization";
-import { _t } from "@web/core/l10n/translation";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { localization } from "@web/core/data/l10n/localization";
+import { _t } from "@web/core/data/l10n/translation";
 import { useBackButton, useService } from "@web/core/utils/hooks";
 import { Typing } from "@mail/discuss/typing/common/typing";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
-import { isMobileOS } from "@web/core/browser/feature_detection";
+import { getActiveHotkey } from "@web/core/services/hotkeys/hotkey_utils";
+import { isMobileOS } from "@web/core/services/browser/feature_detection";
 
 export class ChatWindow extends Component {
     static components = {

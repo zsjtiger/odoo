@@ -1,5 +1,5 @@
-import { ORM } from "@web/core/orm_plugin";
-import { user } from "@web/core/user";
+import { ORM } from "@web/core/services/orm_plugin";
+import { user } from "@web/core/services/user";
 
 import { Plugin, signal, types as t, useConfig, usePlugin } from "@odoo/owl";
 

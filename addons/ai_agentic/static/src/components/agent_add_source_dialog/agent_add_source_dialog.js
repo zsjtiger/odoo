@@ -1,6 +1,6 @@
 import { Component, proxy, signal, t, useProps } from "@odoo/owl";
-import { Dialog } from "@web/core/dialog/dialog";
-import { _t } from "@web/core/l10n/translation";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
+import { _t } from "@web/core/data/l10n/translation";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { getDataURLFromFile } from "@web/core/utils/urls";
 import { AiAgentPanelCard } from "@ai_agentic/components/ai_agent_panel_card/ai_agent_panel_card";

@@ -1,6 +1,6 @@
 import { DiscussClientAction } from "@mail/core/public_web/discuss_app/client_action";
 
-import { location, browser } from "@web/core/browser/browser";
+import { location, browser } from "@web/core/services/browser/browser";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 

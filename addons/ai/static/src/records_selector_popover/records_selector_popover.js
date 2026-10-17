@@ -1,4 +1,4 @@
-import { MultiRecordSelector } from "@web/core/record_selectors/multi_record_selector";
+import { MultiRecordSelector } from "@web/core/editors/record_selectors/multi_record_selector";
 
 import { Component, proxy, t, useProps } from "@odoo/owl";
 

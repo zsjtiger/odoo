@@ -1,6 +1,6 @@
 import { HtmlField, htmlField, htmlFieldProps } from "@html_editor/fields/html_field";
 import { AIFieldSelectorPlugin } from "@ai/ai_prompt/ai_field_selector_plugin";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 import { useProps, t } from "@odoo/owl";
 

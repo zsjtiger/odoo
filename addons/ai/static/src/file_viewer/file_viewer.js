@@ -1,6 +1,6 @@
-import { FileViewer as WebFileViewer } from "@web/core/file_viewer/file_viewer";
+import { FileViewer as WebFileViewer } from "@web/core/components/file_viewer/file_viewer";
 import { patch } from "@web/core/utils/patch";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
 

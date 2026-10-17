@@ -4,22 +4,22 @@ import { CallPermissionDialog } from "@mail/discuss/call/common/call_permission_
 import { CALL_GRID_LAYOUT } from "@mail/discuss/call/common/call_layout";
 import { monitorAudio } from "@mail/utils/common/media_monitoring";
 import { CallPermissionDeniedDialog } from "@mail/discuss/call/common/call_permission_denied_dialog";
-import { rpc } from "@web/core/network/rpc";
+import { rpc } from "@web/core/services/network/rpc";
 import { assignDefined, closeStream } from "@mail/utils/common/misc";
 
 import { markup, proxy, toRaw } from "@odoo/owl";
 
-import { browser } from "@web/core/browser/browser";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { browser } from "@web/core/services/browser/browser";
+import { ConfirmationDialog } from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { pick } from "@web/core/utils/objects";
 import { debounce } from "@web/core/utils/timing";
-import { loadBundle, loadJS } from "@web/core/assets";
+import { loadBundle, loadJS } from "@web/core/framework/assets";
 import { memoize } from "@web/core/utils/functions";
 import { htmlJoin, htmlSprintf } from "@web/core/utils/html";
 import { url } from "@web/core/utils/urls";
-import { isBrowserSafari, isMobileOS } from "@web/core/browser/feature_detection";
+import { isBrowserSafari, isMobileOS } from "@web/core/services/browser/feature_detection";
 import { CallAction } from "@mail/discuss/call/common/call_actions";
 import { ACTION_TAGS } from "@mail/core/common/action";
 
@@ -69,7 +69,7 @@ const getSequence = () => sequence++;
 /**
  * @typedef {Object} ToggleVideoOptions
  * @property {boolean} [force] if defined, bypass the toggle to force the state
- * @property {import("@web/env").OdooEnv} [env]
+ * @property {import("@web/boot/env").OdooEnv} [env]
  * @property {boolean} [refreshStream] if true, the stream be requested from the device again instead of
  *     potentially reusing the current stream.
  */
@@ -2479,7 +2479,7 @@ export class Rtc extends Record {
      * @param {String} type 'camera' or 'screen'
      * @param {Object} [options] options
      * @param {Boolean} [options.activateVideo=false] options
-     * @param {import("@web/env").OdooEnv} [options.env]
+     * @param {import("@web/boot/env").OdooEnv} [options.env]
      * @param {Boolean} [options.refreshStream] whether we are requesting a new stream
      */
     async setVideo(track, type, options) {
@@ -2975,7 +2975,7 @@ export const rtcService = {
         "presence",
     ],
     /**
-     * @param {import("@web/env").OdooEnv} env
+     * @param {import("@web/boot/env").OdooEnv} env
      * @param {import("services").ServiceFactories} services
      */
     start(env, services) {

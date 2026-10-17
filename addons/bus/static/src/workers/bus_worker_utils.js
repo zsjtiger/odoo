@@ -1,5 +1,5 @@
 /**
- * Copied from "@web/core/utils/timings" as the websocket worker should work with the
+ * Copied from "@web/core/utils/timing" as the websocket worker should work with the
  * minimal amount of dependencies.
  *
  * Creates and returns a new debounced version of the passed function (func) which will

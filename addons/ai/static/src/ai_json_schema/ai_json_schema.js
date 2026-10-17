@@ -1,6 +1,6 @@
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { Component, proxy, signal, useProps } from "@odoo/owl";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { useAutoresize } from "@web/core/utils/autoresize";
 import { useService } from "@web/core/utils/hooks";

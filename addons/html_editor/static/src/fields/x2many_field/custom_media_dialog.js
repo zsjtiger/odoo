@@ -1,7 +1,7 @@
 import { MediaDialog, mediaDialogProps } from "@html_editor/main/media/media_dialog/media_dialog";
 import { VideoSelector } from "@html_editor/main/media/media_dialog/video_selector";
 import { renderMedia } from "@html_editor/main/media/media_dialog/media_dialog_utils";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { useProps, t } from "@odoo/owl";
 
 export class CustomMediaDialog extends MediaDialog {

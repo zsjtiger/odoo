@@ -1,6 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { parseHTML } from "@html_editor/utils/html";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 
 export class StarPlugin extends Plugin {

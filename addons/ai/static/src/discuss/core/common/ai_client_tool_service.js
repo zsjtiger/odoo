@@ -1,7 +1,7 @@
 import { aiSessionIdentifier } from "@ai/utils/ai_session_identifier";
 import { runAiClientTool } from "@ai/discuss/core/common/ai_client_tool_registry";
 
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 export async function runOneWayClientToolBatch(store, payload) {
     if (payload.aiSessionIdentifier !== aiSessionIdentifier) {

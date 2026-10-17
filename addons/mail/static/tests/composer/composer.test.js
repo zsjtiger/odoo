@@ -1,4 +1,4 @@
-import { useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/core/owl/utils";
 import { pasteText, tripleClick } from "@html_editor/../tests/_helpers/user_actions";
 
 import {

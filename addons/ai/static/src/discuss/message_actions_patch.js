@@ -1,5 +1,5 @@
 import { patch } from "@web/core/utils/patch";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { registerMessageAction, MessageAction } from "@mail/core/common/message_actions";
 import { unwrapContents } from "@html_editor/utils/dom";
 import { setElementContent } from "@web/core/utils/html";

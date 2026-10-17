@@ -1,5 +1,5 @@
 import { Component, onMounted, proxy, signal, t, useListener, useProps } from "@odoo/owl";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
+import { getActiveHotkey } from "@web/core/services/hotkeys/hotkey_utils";
 import { useService } from "@web/core/utils/hooks";
 
 export class AIUserInputRequest extends Component {

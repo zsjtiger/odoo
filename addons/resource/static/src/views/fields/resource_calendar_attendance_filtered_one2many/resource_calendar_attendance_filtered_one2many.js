@@ -1,7 +1,7 @@
 import { t, useProps } from "@odoo/owl";
-import { registry } from "@web/core/registry";
-import { X2ManyField, x2ManyField, x2ManyFieldProps } from "@web/views/fields/x2many/x2many_field";
-import { Domain } from "@web/core/domain";
+import { registry } from "@web/core/framework/registry";
+import { X2ManyField, x2ManyField, x2ManyFieldProps } from "@web/views/fields/relational/x2many/x2many_field";
+import { Domain } from "@web/core/data/domain";
 
 export class ResourceCalendarAttendanceFilteredOne2Many extends X2ManyField {
     props = useProps({

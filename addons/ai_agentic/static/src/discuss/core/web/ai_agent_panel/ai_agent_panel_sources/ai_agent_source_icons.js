@@ -1,4 +1,4 @@
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 
 export const STATUS_BADGE_CLASS = {
     indexed: "text-bg-success",

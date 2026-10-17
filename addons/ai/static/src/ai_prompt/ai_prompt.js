@@ -12,10 +12,10 @@ import { CORE_PLUGINS } from "@html_editor/plugin_sets";
 import { childNodeIndex } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
 import { Wysiwyg } from "@html_editor/wysiwyg";
-import { Dialog } from "@web/core/dialog/dialog";
-import { localization } from "@web/core/l10n/localization";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
+import { localization } from "@web/core/data/l10n/localization";
 import { isHtmlEmpty } from "@web/core/utils/html";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
 
 import { Component, markup, proxy, onPatched, t, usePlugin, useProps } from "@odoo/owl";
 

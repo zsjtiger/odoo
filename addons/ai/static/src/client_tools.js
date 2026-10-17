@@ -1,6 +1,6 @@
 import { aiClientToolsRegistry } from "@ai/discuss/core/common/ai_client_tool_registry";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { _t } from "@web/core/l10n/translation";
+import { AlertDialog } from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
+import { _t } from "@web/core/data/l10n/translation";
 
 aiClientToolsRegistry.add("reload", async (thread, params) => {
     await thread.store.env.services.action.doAction({

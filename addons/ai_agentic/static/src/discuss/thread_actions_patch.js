@@ -1,7 +1,7 @@
 import { registerThreadAction } from "@mail/core/common/thread_actions";
 
-import { _t } from "@web/core/l10n/translation";
-import { user } from "@web/core/user";
+import { _t } from "@web/core/data/l10n/translation";
+import { user } from "@web/core/services/user";
 
 import { aiChatsActions } from "@ai/discuss/thread_actions_patch";
 import { AiAgentActionPanel } from "@ai_agentic/discuss/core/web/ai_agent_panel/ai_agent_action_panel";

@@ -1,7 +1,7 @@
 import { Component, onMounted, onWillDestroy, signal, t, useProps } from "@odoo/owl";
 import { uniqueId } from "@web/core/utils/functions";
 import { useSpellCheck } from "@web/core/utils/hooks";
-import { render } from "@web/owl2/utils";
+import { render } from "@web/core/owl/utils";
 import { useEditor } from "./editor";
 import { LocalOverlayContainer } from "./local_overlay_container";
 import { Toolbar } from "./main/toolbar/toolbar";

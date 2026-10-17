@@ -4,7 +4,7 @@ import { isAiResponseInProgress } from "@ai/discuss/core/common/ai_session_model
 import { patch } from "@web/core/utils/patch";
 import { getData } from "@ai/utils/bus_data_getter";
 import { fields } from "@mail/model/export";
-import { rpc } from "@web/core/network/rpc";
+import { rpc } from "@web/core/services/network/rpc";
 
 patch(Thread.prototype, {
     setup() {

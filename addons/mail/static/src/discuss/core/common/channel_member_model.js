@@ -1,12 +1,12 @@
 import { Store } from "@mail/core/common/store_service";
 import { fields, Record } from "@mail/model/export";
 
-import { browser } from "@web/core/browser/browser";
-import { deserializeDateTime } from "@web/core/l10n/dates";
-import { user } from "@web/core/user";
-import { rpc } from "@web/core/network/rpc";
-import { _t } from "@web/core/l10n/translation";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { browser } from "@web/core/services/browser/browser";
+import { deserializeDateTime } from "@web/core/data/l10n/dates";
+import { user } from "@web/core/services/user";
+import { rpc } from "@web/core/services/network/rpc";
+import { _t } from "@web/core/data/l10n/translation";
+import { ConfirmationDialog } from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
 
 const { DateTime } = luxon;
 
