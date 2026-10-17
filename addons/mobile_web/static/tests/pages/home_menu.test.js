@@ -45,13 +45,13 @@ function stubMenus(menus) {
     });
 }
 
-test("menus are laid out 15 per page, one dot per page", async () => {
+test("menus are laid out 10 per page (2 rows), one dot per page", async () => {
     stubMenus(makeMenus(32));
     await mountHomeMenu();
-    expect(queryAll(".m_home_menu_page").length).toBe(3);
-    expect(queryAll(".m_home_menu_dot").length).toBe(3);
-    expect(queryAll(".m_home_menu_page")[0].querySelectorAll(".m_home_menu_item").length).toBe(15);
-    expect(queryAll(".m_home_menu_page")[2].querySelectorAll(".m_home_menu_item").length).toBe(2);
+    expect(queryAll(".m_home_menu_page").length).toBe(4);
+    expect(queryAll(".m_home_menu_dot").length).toBe(4);
+    expect(queryAll(".m_home_menu_page")[0].querySelectorAll(".m_home_menu_item").length).toBe(10);
+    expect(queryAll(".m_home_menu_page")[3].querySelectorAll(".m_home_menu_item").length).toBe(2);
 });
 
 test("a single page shows no page dots", async () => {

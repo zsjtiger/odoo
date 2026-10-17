@@ -15,9 +15,9 @@ import { useService } from "@web/core/utils/hooks";
 
 const loadMenusUrl = `/mobile_web/webclient/load_menus`;
 
-// 5 列 x 3 行, 每页 15 个, 超出时左右滑动翻页
+// 5 列 x 2 行, 每页 10 个, 超出时左右滑动翻页
 const COLUMNS = 5;
-const ROWS_PER_PAGE = 3;
+const ROWS_PER_PAGE = 2;
 const MENUS_PER_PAGE = COLUMNS * ROWS_PER_PAGE;
 
 // 没有图标的应用使用的底色, 按 id 取色, 保证同一个应用颜色固定
