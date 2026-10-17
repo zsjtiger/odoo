@@ -15,6 +15,7 @@ using an AI model and a system prompt.
     'data': [
         'data/ir_cron_data.xml',
         'views/ir_model_views.xml',
+        'security/ir.access.csv',
     ],
     'assets': {
         'web.assets_backend': [

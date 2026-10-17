@@ -22,3 +22,4 @@ from . import studio_approval
 from . import ir_default
 from . import studio_export_model
 from . import models
+from . import test_models

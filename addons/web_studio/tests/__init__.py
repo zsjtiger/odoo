@@ -6,3 +6,8 @@ from . import test_view_normalization
 from . import test_view_editor
 from . import test_export
 from . import test_keyed_xml_differ
+from . import common_exports
+from . import test_approval_activity
+from . import test_approvals
+from . import test_exports
+from . import test_report

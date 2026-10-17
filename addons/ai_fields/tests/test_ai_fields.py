@@ -9,7 +9,7 @@ from odoo.tests import TransactionCase, tagged
 from odoo.tools import SQL
 
 from odoo.addons.ai.utils.ai_fields_tools import UnresolvedQuery
-from odoo.addons.test_ai_fields.tests.common import TestAIFieldsCommon
+from odoo.addons.ai_fields.tests.common import TestAIFieldsCommon
 from odoo.addons.base.tests.files import PNG_B64, PNG_RAW
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 

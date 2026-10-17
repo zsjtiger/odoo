@@ -467,7 +467,7 @@ class TestStudioExports(StudioExportCase):
             f"static/src/binary/ir_attachment/{attachment.id}-Someattachment",
         )
         self.assertManifest(
-            depends=["test_web_studio"],
+            depends=["web_studio"],
             data=["data/ir_attachment_pre.xml", "data/test_studio_export_model1.xml"],
         )
         self.assertXML(
@@ -519,7 +519,7 @@ class TestStudioExports(StudioExportCase):
             f"static/src/binary/ir_attachment/{attachment2.id}-Anotherattachment",
         )
         self.assertManifest(
-            depends=["test_web_studio"],
+            depends=["web_studio"],
             data=["data/test_studio_export_model1.xml", "data/ir_attachment_post.xml"],
         )
         self.assertXML(

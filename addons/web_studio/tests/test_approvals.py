@@ -785,7 +785,7 @@ class TestStudioApprovalsUIUnit(HttpCase):
         })
 
         url = f"/odoo/action-{self.testAction.id}/studio?mode=editor&_view_type=form&_tab=views&menu_id={self.testMenu.id}"
-        self.start_tour(url, "test_web_studio.test_disable_approvals", login="admin")
+        self.start_tour(url, "web_studio.test_disable_approvals", login="admin")
         self.assertEqual(rule.active, False)
 
     def test_disable_approvals_via_kanban(self):
@@ -798,7 +798,7 @@ class TestStudioApprovalsUIUnit(HttpCase):
         })
 
         url = f"/odoo/action-{self.testAction.id}/studio?mode=editor&_view_type=form&_tab=views&menu_id={self.testMenu.id}"
-        self.start_tour(url, "test_web_studio.test_disable_approvals_via_kanban", login="admin")
+        self.start_tour(url, "web_studio.test_disable_approvals_via_kanban", login="admin")
         self.assertEqual(rule.active, False)
 
     def test_account_validate_moves(self):

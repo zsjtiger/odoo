@@ -2,7 +2,7 @@
 
 from odoo import Command
 from odoo.addons.ai.utils.ai_fields_tools import UnresolvedQuery
-from odoo.addons.test_ai_fields.tests.common import TestAIFieldsCommon
+from odoo.addons.ai_fields.tests.common import TestAIFieldsCommon
 from odoo.exceptions import AccessError
 from odoo.tests import tagged
 
