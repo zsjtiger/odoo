@@ -1,3 +1,4 @@
+import { isSystrayItemVisible } from "@web/webclient/navbar/systray_visibility";
 import { useSubEnv } from "@web/core/owl/utils";
 import { Dropdown } from "@web/core/components/dropdown/dropdown";
 import { DropdownGroup } from "@web/core/components/dropdown/dropdown_group";
@@ -351,6 +352,7 @@ export class SwitchCompanyMenu extends Component {
 
 export const systrayItem = {
     Component: SwitchCompanyMenu,
+    isDisplayed: () => isSystrayItemVisible("company"),
 };
 
 registry.category("systray").add("SwitchCompanyMenu", systrayItem, { sequence: 1 });

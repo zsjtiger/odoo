@@ -1,6 +1,7 @@
 import { Component } from "@odoo/owl";
 import { registry } from "@web/core/framework/registry";
 import { user } from "@web/core/services/user";
+import { isSystrayItemVisible } from "@web/webclient/navbar/systray_visibility";
 import { useService } from "@web/core/utils/hooks";
 
 export default class SystrayAction extends Component {
@@ -29,7 +30,7 @@ registry.category("systray").add(
     {
         Component: SystrayAction,
         // A light user has no AI chat: it is not meant to drive the database.
-        isDisplayed: () => user.isRegularUser,
+        isDisplayed: () => user.isRegularUser && isSystrayItemVisible("ai"),
     },
     { sequence: 30 }
 );

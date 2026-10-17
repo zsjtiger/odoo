@@ -9,6 +9,7 @@ import { Domain } from "@web/core/data/domain";
 import { user } from "@web/core/services/user";
 import { useCommand } from "@web/core/services/commands/command_hook";
 import { _t } from "@web/core/data/l10n/translation";
+import { isSystrayItemVisible } from "@web/webclient/navbar/systray_visibility";
 
 export class ActivityMenu extends Component {
     static components = { Dropdown };
@@ -131,4 +132,8 @@ export class ActivityMenu extends Component {
 
 registry
     .category("systray")
-    .add("mail.activity_menu", { Component: ActivityMenu }, { sequence: 20 });
+    .add(
+        "mail.activity_menu",
+        { Component: ActivityMenu, isDisplayed: () => isSystrayItemVisible("activity") },
+        { sequence: 20 }
+    );

@@ -30,3 +30,4 @@ from . import test_pivot_export
 from . import test_res_partner_properties
 from . import test_action
 from . import test_gps
+from . import test_systray_preferences

@@ -1,6 +1,7 @@
 import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
 import { user } from "@web/core/services/user";
+import { isSystrayItemVisible } from "@web/webclient/navbar/systray_visibility";
 import { PromoteStudioDialog } from "@web_enterprise/webclient/promote_studio/promote_studio_dialog";
 import { _t } from "@web/core/data/l10n/translation";
 
@@ -22,7 +23,7 @@ export class PromoteStudioSystrayItem extends Component {
 
 export const promoteStudioSystrayItem = {
     Component: PromoteStudioSystrayItem,
-    isDisplayed: () => user.isSystem,
+    isDisplayed: () => user.isSystem && isSystrayItemVisible("studio"),
 };
 
 registry
