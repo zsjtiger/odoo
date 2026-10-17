@@ -9,7 +9,7 @@ from odoo.fields import Domain
 from odoo.tools import SQL
 
 from ..llm import LLMError
-from ..utils.ai_utils import get_llm_client
+from ..utils.ai_utils import get_ai_int_param, get_llm_client
 
 _logger = logging.getLogger(__name__)
 
@@ -262,7 +262,7 @@ class MailCallArtifact(models.Model):
             record._finalize_transcription(
                 lease_until,
                 result,
-                max_retries=self.env["ir.config_parameter"].sudo().get_int("ai.max_transcription_retries", 5),
+                max_retries=get_ai_int_param(self.env, "ai.max_transcription_retries", 5),
             )
             # Factorized in the model to be reused by both VoIP and Discuss integrations.
             self.env.cr.commit()  # nosemgrep: commit-in-models

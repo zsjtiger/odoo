@@ -14,7 +14,7 @@ from odoo.orm.database.sql_db import PG_CONCURRENCY_EXCEPTIONS_TO_RETRY
 from odoo.tools import html_sanitize
 
 
-from ..utils.ai_utils import format_tool_result, format_tool_summary, UserInputResponse
+from ..utils.ai_utils import format_tool_result, format_tool_summary, get_ai_int_param, UserInputResponse
 from ..utils.formatting import markdown_format
 from ..utils.types import (
     PendingInteractionResponse,
@@ -76,7 +76,7 @@ class AiSessionToolsMixin(models.AbstractModel):
 
     def _can_start_subsession(self) -> bool:
         self.ensure_one()
-        max_depth = max(1, self.env['ir.config_parameter'].sudo().get_int('ai.max_subsession_depth', 4))
+        max_depth = max(1, get_ai_int_param(self.env, 'ai.max_subsession_depth', 4))
         # Count agent levels, with the root agent at level one.
         ancestor, depth = self, 1
         while ancestor.parent_session_id:
@@ -125,7 +125,7 @@ class AiSessionToolsMixin(models.AbstractModel):
             ('agent_id', '!=', False),
             ('loop_state', '!=', 'ready'),
         ])
-        limit = self.env['ir.config_parameter'].sudo().get_int('ai.max_active_sessions', 20)
+        limit = get_ai_int_param(self.env, 'ai.max_active_sessions', 20)
         if active_sessions >= limit:
             raise UserError(self.env._("The session tree has reached its active-session limit."))
 
@@ -354,7 +354,7 @@ class AiSessionToolsMixin(models.AbstractModel):
             response = {'kind': 'question', 'value': ordered_values}
         # Resuming a pending tool starts a fresh allowance, as in the synchronous loop.
         self.request_round_limit = self.request_round + (
-            self.env['ir.config_parameter'].sudo().get_int('ai.max_successive_calls') or 30
+            get_ai_int_param(self.env, 'ai.max_successive_calls', 30) or 30
         )
         return self._advance_tool_batch(response)
 
@@ -391,7 +391,7 @@ class AiSessionToolsMixin(models.AbstractModel):
         :param previous_results: completed prefix of this provider batch, including child markers
         :return: tool_results
         """
-        max_tools_per_call = self.env["ir.config_parameter"].sudo().get_int("ai.max_tool_calls_per_call") or 20
+        max_tools_per_call = get_ai_int_param(self.env, "ai.max_tool_calls_per_call", 20) or 20
         tool_results = copy.deepcopy(previous_results or [])
         failed_tool_call = any(result.get('success') is False for result in tool_results)
         record_context = {

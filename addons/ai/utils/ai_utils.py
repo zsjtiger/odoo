@@ -31,6 +31,14 @@ def get_llm_client(env):
     return client_from_params(env['ir.config_parameter'].sudo().get_str)
 
 
+def get_ai_int_param(env, key, default):
+    """Return the integer value of the AI config parameter ``key``, or ``default`` when unset.
+
+    The parameter is read with sudo because the tool execution path runs as the end user.
+    """
+    return env['ir.config_parameter'].sudo().get_int(key, default)
+
+
 class UserInputResponse(enum.StrEnum):
     """Pre-defined response values for user input requests."""
     CONFIRM_ONCE = 'confirm_once'

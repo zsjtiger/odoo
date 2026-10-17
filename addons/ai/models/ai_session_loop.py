@@ -16,7 +16,7 @@ from odoo.addons.mail.tools.discuss import Store
 
 from ..utils.ai_citation import apply_web_citations
 from ..llm import JOB_COMPLETION, LLMError
-from ..utils.ai_utils import enable_tools, get_llm_client, get_text_from_parts
+from ..utils.ai_utils import enable_tools, get_ai_int_param, get_llm_client, get_text_from_parts
 from ..utils.formatting import markdown_format
 from ..utils.types import (
     AIMessageParts, CompletionFailure, CompletionOptions, CompletionResponse,
@@ -288,7 +288,7 @@ class AiSessionLoopMixin(models.AbstractModel):
             self._initialize_tool_state(state)
             self.message_body_suffix = False
             round_no = 1
-            round_limit = self.env['ir.config_parameter'].sudo().get_int('ai.max_successive_calls') or 30
+            round_limit = get_ai_int_param(self.env, 'ai.max_successive_calls', 30) or 30
 
         completion_options = self._get_model_round_options()
         messages = self._get_history()
@@ -510,7 +510,7 @@ class AiSessionLoopMixin(models.AbstractModel):
         Not meant to be called directly. Use `_get_direct_response` for one-shot
         requests. Stateful conversations use bounded session advances from persisted state.
         """
-        max_successive_calls = self.env["ir.config_parameter"].sudo().get_int("ai.max_successive_calls") or 30
+        max_successive_calls = get_ai_int_param(self.env, "ai.max_successive_calls", 30) or 30
         messages = []
         if message:
             messages.append({'role': 'user', 'content': message})

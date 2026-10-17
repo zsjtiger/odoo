@@ -4,7 +4,7 @@ import random
 from odoo import SUPERUSER_ID, _, api, fields, models
 from odoo.tools import BinaryBytes, file_open
 
-from odoo.addons.ai.utils.ai_utils import markdown_format
+from odoo.addons.ai.utils.formatting import markdown_format
 
 AVATAR_NUMBERS = (1, 2, 3)  # silhouettes per color, shared between naked and role variants
 AVATAR_COLORS = ('Purple', 'Blue', 'Red', 'Teal', 'Yellow')
