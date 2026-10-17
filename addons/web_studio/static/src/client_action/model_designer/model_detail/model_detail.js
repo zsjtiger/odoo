@@ -118,9 +118,11 @@ export class ModelDetail extends Component {
 
     /** The layouts of the model: form and list first, then the other views of its action. */
     get layoutTypes() {
-        const viewTypes = this.props.model.viewTypes.length
+        // The activity view is not designed here for now
+        const viewTypes = (this.props.model.viewTypes.length
             ? [...this.props.model.viewTypes]
-            : ["form", "list"];
+            : ["form", "list"]
+        ).filter((viewType) => viewType !== "activity");
         // Every model has a search view, which is laid out like the others
         if (!viewTypes.includes("search")) {
             viewTypes.push("search");
