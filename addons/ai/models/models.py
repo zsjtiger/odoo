@@ -115,44 +115,7 @@ class Model(models.AbstractModel):
         for fname in fnames:
             field = self._fields.get(fname)
             if field.type in ('binary', 'image'):
-                if field.attachment:
-                    attachments = self.env['ir.attachment']._get_field_attachments(self, [fname])
-                    __, files_parts, files_checksums = attachments._ai_read(None, files_parts, files_checksums)
-                for record, vals in zip(self, vals_list):
-                    raw = record[fname]
-                    if not raw:
-                        continue
-                    checksum = self.env['ir.attachment']._compute_checksum(raw)
-                    if checksum not in files_checksums:
-                        mimetype = raw.mimetype
-                        extension = mimetype.split("/")[-1]
-                        if (is_supported_mimetype := extension in (*AI_SUPPORTED_IMG_TYPES, 'pdf')):
-                            # todo: keep 5 pages max and resize images
-                            content = vals[fname]
-                            if content:
-                                content = content['content']
-                        else:
-                            try:
-                                content = self.env['ir.attachment']._index(raw, mimetype, checksum=checksum)
-                            except TypeError:
-                                content = self.env['ir.attachment']._index(raw, mimetype)
-                        if is_supported_mimetype:
-                            files_checksums.add(checksum)
-                            files_parts.append({
-                                'type': 'inline_data',
-                                'mimetype': mimetype,
-                                'data': content or '',
-                                'metadata': {
-                                    'image_path': f'/web/image/{self._name}/{vals["id"]}/{fname}'
-                                }
-                            })
-                        else:
-                            files_checksums.add(checksum)
-                            files_parts.append({
-                                'type': 'text',
-                                'text': content or '',
-                            })
-                    vals[fname] = f"<file_{checksum}/>"
+                files_parts, files_checksums = self._ai_read_file_field(fname, vals_list, files_parts, files_checksums)
             elif field.type in ('date', 'datetime'):
                 for vals in vals_list:
                     vals[fname] = field.to_string(vals[fname])
@@ -183,6 +146,50 @@ class Model(models.AbstractModel):
                     vals[fname] = self._ai_truncate(vals[fname])
 
         return vals_list, files_parts, files_checksums
+
+    def _ai_read_file_field(self, fname, vals_list, files_parts, files_checksums):
+        """Format a binary or image field: files are added to files_parts and the field is replaced by a reference."""
+        field = self._fields[fname]
+        if field.attachment:
+            attachments = self.env['ir.attachment']._get_field_attachments(self, [fname])
+            __, files_parts, files_checksums = attachments._ai_read(None, files_parts, files_checksums)
+        for record, vals in zip(self, vals_list):
+            raw = record[fname]
+            if not raw:
+                continue
+            checksum = self.env['ir.attachment']._compute_checksum(raw)
+            if checksum not in files_checksums:
+                mimetype = raw.mimetype
+                extension = mimetype.split("/")[-1]
+                if (is_supported_mimetype := extension in (*AI_SUPPORTED_IMG_TYPES, 'pdf')):
+                    # todo: keep 5 pages max and resize images
+                    content = vals[fname]
+                    if content:
+                        content = content['content']
+                else:
+                    try:
+                        content = self.env['ir.attachment']._index(raw, mimetype, checksum=checksum)
+                    except TypeError:
+                        content = self.env['ir.attachment']._index(raw, mimetype)
+                if is_supported_mimetype:
+                    files_checksums.add(checksum)
+                    files_parts.append({
+                        'type': 'inline_data',
+                        'mimetype': mimetype,
+                        'data': content or '',
+                        'metadata': {
+                            'image_path': f'/web/image/{self._name}/{vals["id"]}/{fname}'
+                        }
+                    })
+                else:
+                    files_checksums.add(checksum)
+                    files_parts.append({
+                        'type': 'text',
+                        'text': content or '',
+                    })
+            vals[fname] = f"<file_{checksum}/>"
+
+        return files_parts, files_checksums
 
     def _get_ai_context(self, field_paths):
         """ Get the json-encoded context dict for a record given a list of field paths.
