@@ -1,5 +1,5 @@
 import { htmlEscape, markup } from "@odoo/owl";
-import { formatList, normalizedMatches } from "@web/core/l10n/utils";
+import { formatList, normalizedMatches } from "@web/core/data/l10n/utils";
 import { unique } from "@web/core/utils/arrays";
 import { escapeRegExp, mapSubstitutions, sprintf } from "@web/core/utils/strings";
 

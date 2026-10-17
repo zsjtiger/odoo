@@ -1,6 +1,6 @@
 import { Component, t, useProps, xml } from "@odoo/owl";
 
-import { Dialog } from "@web/core/dialog/dialog";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
 
 export class ChannelActionDialog extends Component {
     static components = { Dialog };

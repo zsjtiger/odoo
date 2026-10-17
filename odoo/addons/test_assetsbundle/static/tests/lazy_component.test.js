@@ -1,7 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { Component, xml } from "@odoo/owl";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
-import { LazyComponent } from "@web/core/lazy_component";
+import { LazyComponent } from "@web/core/framework/lazy_component";
 
 test("LazyComponent loads the required bundle", async () => {
     class Test extends Component {

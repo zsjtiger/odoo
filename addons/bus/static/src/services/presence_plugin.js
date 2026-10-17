@@ -1,8 +1,8 @@
 import { EventBus, Plugin, signal, useListener, usePlugin } from "@odoo/owl";
-import { browser } from "@web/core/browser/browser";
-import { registry } from "@web/core/registry";
-import { services } from "@web/core/services";
-import { useEnv } from "@web/owl2/utils";
+import { browser } from "@web/core/services/browser/browser";
+import { registry } from "@web/core/framework/registry";
+import { services } from "@web/core/framework/services";
+import { useEnv } from "@web/core/owl/utils";
 
 const LOCAL_STORAGE_PREFIX = "presence";
 

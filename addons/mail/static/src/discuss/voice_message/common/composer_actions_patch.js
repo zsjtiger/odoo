@@ -1,5 +1,5 @@
 import { registerComposerAction } from "@mail/core/common/composer_actions";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { VoiceRecorder } from "./voice_recorder";
 
 registerComposerAction("voice-start", {

@@ -19,9 +19,9 @@ import {
     mountWithCleanup,
 } from "@web/../tests/web_test_helpers";
 import { SearchBar } from "@web/search/search_bar/search_bar";
-import { Domain } from "@web/core/domain";
+import { Domain } from "@web/core/data/domain";
 import { redirect } from "@web/core/utils/urls";
-import { browser } from "@web/core/browser/browser";
+import { browser } from "@web/core/services/browser/browser";
 import { WebClient } from "@web/webclient/webclient";
 
 class MockPurchaseOrders extends models.Model {

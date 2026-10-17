@@ -1,12 +1,12 @@
 import { after, createJobScopedGetter } from "@odoo/hoot";
-import { Domain } from "@web/core/domain";
+import { Domain } from "@web/core/data/domain";
 import {
     deserializeDate,
     deserializeDateTime,
     parseDateTime,
     serializeDate,
     serializeDateTime,
-} from "@web/core/l10n/dates";
+} from "@web/core/data/l10n/dates";
 import { ensureArray, intersection, isIterable, unique } from "@web/core/utils/arrays";
 import { deepCopy, isObject, pick } from "@web/core/utils/objects";
 import * as fields from "./mock_fields";
@@ -27,8 +27,8 @@ const { DEFAULT_FIELD_VALUES, DEFAULT_RELATIONAL_FIELD_VALUES, S_FIELD_REQUIRED_
  * @typedef {import("fields").INumerical["aggregator"]} Aggregator
  * @typedef {import("fields").FieldDefinition} FieldDefinition
  * @typedef {import("fields").FieldType} FieldType
- * @typedef {import("@web/core/context").Context} Context
- * @typedef {import("@web/core/domain").DomainListRepr} DomainListRepr
+ * @typedef {import("@web/core/data/context").Context} Context
+ * @typedef {import("@web/core/data/domain").DomainListRepr} DomainListRepr
  *
  * @typedef {{ fieldName: string; func: Aggregator; name: string }} AggregatedField
  *

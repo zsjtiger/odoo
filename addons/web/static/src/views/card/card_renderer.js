@@ -1,5 +1,5 @@
-import { evaluateBooleanExpr } from "@web/core/py_js/py";
-import { registry } from "@web/core/registry";
+import { evaluateBooleanExpr } from "@web/core/data/py_js/py";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
 import { Field } from "@web/views/fields/field";
 import { ViewButton } from "@web/views/view_button/view_button";
@@ -10,7 +10,7 @@ import { CARD_ATTRIBUTE } from "./card_arch_parser";
 import { CardCompiler } from "./card_compiler";
 
 import { Component, computed, onWillUpdateProps, usePlugin, proxy, t, useProps } from "@odoo/owl";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
+import { OfflinePlugin } from "@web/core/services/offline/offline_plugin";
 
 const formatters = registry.category("formatters");
 

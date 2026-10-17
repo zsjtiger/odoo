@@ -5,7 +5,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models
 from odoo.exceptions import AccessError
 from odoo.tools.constants import GC_UNLINK_LIMIT
-from odoo.tools.translate import _
+from odoo.tools.text.translate import _
 from odoo.addons.mail.tools.discuss import Store
 
 

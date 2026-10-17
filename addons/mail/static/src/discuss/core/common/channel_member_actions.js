@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import {
     Action,
     ACTION_TAGS,
@@ -7,9 +7,9 @@ import {
     UseActions,
 } from "@mail/core/common/action";
 import { InvitationSentDate } from "@mail/discuss/core/common/invitation_sent_date";
-import { _t } from "@web/core/l10n/translation";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { rpc } from "@web/core/network/rpc";
+import { _t } from "@web/core/data/l10n/translation";
+import { ConfirmationDialog } from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
+import { rpc } from "@web/core/services/network/rpc";
 import { markup } from "@odoo/owl";
 
 export const channelMemberActionsRegistry = registry.category("discuss.channel.member/actions");

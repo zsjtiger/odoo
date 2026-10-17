@@ -1,7 +1,7 @@
 import { NotificationItem } from "@mail/core/public_web/notification_item";
 import { MessagingMenu } from "@mail/core/public_web/messaging_menu/messaging_menu";
 import { attClassObjectToString } from "@mail/utils/common/format";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 

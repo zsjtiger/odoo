@@ -23,11 +23,11 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { selectDateRange } from "./calendar_test_helpers";
 
-import { Domain } from "@web/core/domain";
+import { Domain } from "@web/core/data/domain";
 import { range } from "@web/core/utils/numbers";
 import { CalendarModel } from "@web/views/calendar/calendar_model";
 import { WebClient } from "@web/webclient/webclient";
-import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
+import { NotificationPlugin } from "@web/core/services/notifications/notification_plugin";
 
 class Event extends models.Model {
     name = fields.Char();

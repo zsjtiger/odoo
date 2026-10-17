@@ -1,5 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
 import { withSequence } from "@html_editor/utils/resource";
 import { WhiteboardPopover } from "./whiteboard_popover";

@@ -1,0 +1,40 @@
+// 左滑删除: 内容层在上, 圆形删除按钮固定在右侧, 触控目标不小于 44px
+.m_swipe_row {
+    position: relative;
+    overflow: hidden;
+}
+
+.m_swipe_content {
+    position: relative;
+    background: $surface;
+    transition: transform 0.2s ease;
+}
+
+// 圆形的删除按钮: 半透明灰底, 白色图标, 垂直居中于行内, 右侧留出间距
+.m_swipe_delete {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: rgba(100, 100, 100, 0.75);
+    color: #fff;
+
+    &:disabled {
+        background: rgba(160, 160, 160, 0.5);
+        opacity: 0.6;
+    }
+}
+
+.m_swipe_delete_icon {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;
+}

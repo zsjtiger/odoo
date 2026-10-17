@@ -10,17 +10,17 @@ import {
     usePlugin,
     useProps,
 } from "@odoo/owl";
-import { AutoComplete } from "@web/core/autocomplete/autocomplete";
-import { browser } from "@web/core/browser/browser";
-import { CheckBox } from "@web/core/checkbox/checkbox";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
-import { Dialog } from "@web/core/dialog/dialog";
-import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
-import { x2ManyCommands } from "@web/core/orm_plugin";
-import { BadgeTag } from "@web/core/tags_list/badge_tag";
-import { TagsList } from "@web/core/tags_list/tags_list";
-import { user } from "@web/core/user";
+import { AutoComplete } from "@web/core/components/autocomplete/autocomplete";
+import { browser } from "@web/core/services/browser/browser";
+import { CheckBox } from "@web/core/components/checkbox/checkbox";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
+import { _t } from "@web/core/data/l10n/translation";
+import { rpc } from "@web/core/services/network/rpc";
+import { x2ManyCommands } from "@web/core/services/orm_plugin";
+import { BadgeTag } from "@web/core/components/tags_list/badge_tag";
+import { TagsList } from "@web/core/components/tags_list/tags_list";
+import { user } from "@web/core/services/user";
 import { unique } from "@web/core/utils/arrays";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { fuzzyLookup } from "@web/core/utils/search";

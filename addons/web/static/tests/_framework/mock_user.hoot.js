@@ -12,7 +12,7 @@ import { onServerStateChange } from "./mock_server_state.hoot";
  */
 export function mockUserFactory(name, { fn }) {
     return function mockUser(requireModule, ...args) {
-        const { session } = requireModule("@web/session");
+        const { session } = requireModule("@web/boot/session");
         const userModule = fn(requireModule, ...args);
 
         onServerStateChange(userModule.user, () => userModule._makeUser(session));

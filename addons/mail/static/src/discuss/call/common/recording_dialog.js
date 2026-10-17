@@ -1,7 +1,7 @@
 import { Component, signal, t, useEffect, useProps } from "@odoo/owl";
 
-import { CheckBox } from "@web/core/checkbox/checkbox";
-import { Dialog } from "@web/core/dialog/dialog";
+import { CheckBox } from "@web/core/components/checkbox/checkbox";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
 
 export class RecordingDialog extends Component {

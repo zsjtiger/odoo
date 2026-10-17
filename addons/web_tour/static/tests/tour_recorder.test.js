@@ -10,8 +10,8 @@ import {
     patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
-import { AutoComplete } from "@web/core/autocomplete/autocomplete";
-import { browser } from "@web/core/browser/browser";
+import { AutoComplete } from "@web/core/components/autocomplete/autocomplete";
+import { browser } from "@web/core/services/browser/browser";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { WebClient } from "@web/webclient/webclient";
 import { TourRecorder } from "@web_tour/tour_recorder/tour_recorder";

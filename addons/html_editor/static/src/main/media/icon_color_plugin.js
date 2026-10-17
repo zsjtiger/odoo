@@ -1,6 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { ColorSelector } from "../font/color_selector";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 

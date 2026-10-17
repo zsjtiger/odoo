@@ -1,9 +1,9 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { upgradeFrom } from "./upgrade_helpers";
 import { getCurrentLocalStorageVersion, LocalStorageEntry } from "@mail/utils/common/local_storage";
 import { parseVersion } from "@mail/utils/common/misc";
 import { Plugin, usePlugin } from "@odoo/owl";
-import { services } from "@web/core/services";
+import { services } from "@web/core/framework/services";
 
 export class DiscussUpgradePlugin extends Plugin {
     setup() {

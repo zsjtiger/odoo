@@ -8,8 +8,8 @@ import {
     normalize,
     normalizedMatch,
     pyToJsLocale,
-} from "@web/core/l10n/utils";
-import { user } from "@web/core/user";
+} from "@web/core/data/l10n/utils";
+import { user } from "@web/core/services/user";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("headless");

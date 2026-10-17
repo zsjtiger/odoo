@@ -44,8 +44,8 @@ import {
 } from "./graph_test_helpers";
 
 import { onPatched } from "@odoo/owl";
-import { DEFAULT_BG, getBorderWhite, getColors, lightenColor } from "@web/core/colors/colors";
-import { Domain } from "@web/core/domain";
+import { DEFAULT_BG, getBorderWhite, getColors, lightenColor } from "@web/core/components/colors/colors";
+import { Domain } from "@web/core/data/domain";
 import { SampleServer } from "@web/model/sample_server";
 import { GraphArchParser } from "@web/views/graph/graph_arch_parser";
 import { GraphRenderer } from "@web/views/graph/graph_renderer";

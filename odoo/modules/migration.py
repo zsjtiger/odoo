@@ -17,13 +17,13 @@ from os.path import join as opj
 import odoo.release as release
 import odoo.upgrade
 from odoo.modules.module import load_script
-from odoo.orm.registry import Registry
+from odoo.orm.models.registry import Registry
 from odoo.tools.misc import file_path
 from odoo.tools.parse_version import parse_version
 
 if typing.TYPE_CHECKING:
     from collections.abc import Iterator
-    from odoo.sql_db import Cursor
+    from odoo.orm.database.sql_db import Cursor
     from . import module_graph
 
 _logger = logging.getLogger(__name__)

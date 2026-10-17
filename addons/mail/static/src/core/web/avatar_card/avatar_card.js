@@ -3,9 +3,9 @@ import { ImStatus } from "@mail/core/common/im_status";
 
 import { Component, computed, signal, t, useListener, useProps } from "@odoo/owl";
 
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { usePopover } from "@web/core/popover/popover_hook";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
+import { usePopover } from "@web/core/components/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 
 export class AvatarCard extends Component {

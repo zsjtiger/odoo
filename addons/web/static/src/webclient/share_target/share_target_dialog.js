@@ -1,9 +1,9 @@
 import { Component, onWillDestroy, onWillStart, proxy, t, useProps } from "@odoo/owl";
-import { Dialog } from "@web/core/dialog/dialog";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
 import { generatePdfThumbnail } from "@web/core/utils/pdfjs";
 import { ShareTargetItem } from "@web/webclient/share_target/share_target_item";
 import { useService } from "@web/core/utils/hooks";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 export class ShareTargetDialog extends Component {
     static template = "web.ShareTargetDialog";

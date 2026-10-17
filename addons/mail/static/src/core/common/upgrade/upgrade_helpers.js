@@ -1,6 +1,6 @@
 import { getCurrentLocalStorageVersion, LocalStorageEntry } from "@mail/utils/common/local_storage";
 import { compareVersion, parseVersion } from "@mail/utils/common/misc";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 /**
  * @typedef {Object} UpgradeData

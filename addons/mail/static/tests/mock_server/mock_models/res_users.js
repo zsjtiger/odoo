@@ -1,7 +1,7 @@
 import { DISCUSS_ACTION_ID } from "@mail/../tests/mock_server/mail_mock_server";
 
 import { fields, serverState, webModels } from "@web/../tests/web_test_helpers";
-import { serializeDate, today } from "@web/core/l10n/dates";
+import { serializeDate, today } from "@web/core/data/l10n/dates";
 
 export class ResUsers extends webModels.ResUsers {
     im_status = fields.Selection({

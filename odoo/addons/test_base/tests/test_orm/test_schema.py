@@ -1,7 +1,7 @@
 from odoo.models import MetaModel
 from odoo.tests import Like, common, tagged
 from odoo.tools import SQL
-from odoo.tools.translate import FIELD_TRANSLATE
+from odoo.tools.text.translate import FIELD_TRANSLATE
 
 from odoo.addons.base.models.ir_model import field_xmlid, model_xmlid, selection_xmlid
 

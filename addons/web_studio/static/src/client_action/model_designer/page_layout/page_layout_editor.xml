@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+<t t-name="web_studio.PageLayoutEditor">
+    <div class="o_web_studio_page_layout d-flex flex-grow-1 min-h-0 overflow-hidden">
+        <div t-if="this.state.loading" class="text-center p-5 w-100">
+            <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>
+        </div>
+
+        <t t-else="">
+            <aside class="o_web_studio_page_layout_palette flex-shrink-0 p-3 overflow-auto">
+                <h5 class="mb-2">Fields</h5>
+                <input type="search" class="form-control form-control-sm mb-2 o_web_studio_palette_search"
+                    placeholder="Search fields"
+                    t-att-value="this.state.search"
+                    t-on-input="this.onSearchInput"/>
+
+                <div t-if="this.paletteCustomFields.length" class="o_web_studio_palette_group">
+                    <div class="o_web_studio_palette_group_title small text-muted text-uppercase mt-2">Custom Fields</div>
+                    <t t-foreach="this.paletteCustomFields" t-as="field" t-key="field.name">
+                        <div class="o_web_studio_palette_field d-flex align-items-center gap-1" draggable="true"
+                            t-on-dragstart="(ev) => this.onPaletteFieldDragStart(ev, field)">
+                            <span class="flex-grow-1 text-truncate" t-out="field.label"/>
+                            <button type="button" class="btn btn-sm btn-link p-0 o_web_studio_palette_add_field" aria-label="Add to section"
+                                t-on-click="() => this.addFieldFromPalette(field.name)">+</button>
+                        </div>
+                    </t>
+                </div>
+
+                <div t-if="this.paletteStandardFields.length" class="o_web_studio_palette_group">
+                    <div class="o_web_studio_palette_group_title small text-muted text-uppercase mt-2">Standard Fields</div>
+                    <t t-foreach="this.paletteStandardFields" t-as="field" t-key="field.name">
+                        <div class="o_web_studio_palette_field d-flex align-items-center gap-1" draggable="true"
+                            t-on-dragstart="(ev) => this.onPaletteFieldDragStart(ev, field)">
+                            <span class="flex-grow-1 text-truncate" t-out="field.label"/>
+                            <button type="button" class="btn btn-sm btn-link p-0 o_web_studio_palette_add_field" aria-label="Add to section"
+                                t-on-click="() => this.addFieldFromPalette(field.name)">+</button>
+                        </div>
+                    </t>
+                </div>
+
+                <h5 class="mt-4 mb-2">Buttons</h5>
+                <div t-if="!this.paletteButtons().length" class="small text-muted">No button left to place.</div>
+                <t t-foreach="this.paletteButtons()" t-as="button" t-key="button.id">
+                    <div class="o_web_studio_palette_button d-flex align-items-center gap-1" draggable="true"
+                        t-on-dragstart="(ev) => this.onPaletteButtonDragStart(ev, button)">
+                        <span class="flex-grow-1 text-truncate" t-out="button.name"/>
+                        <button type="button" class="btn btn-sm btn-link p-0 o_web_studio_palette_add_button" aria-label="Add to header"
+                            t-on-click="() => this.addButtonFromPalette(button)">+</button>
+                    </div>
+                </t>
+            </aside>
+
+            <main class="o_web_studio_page_layout_canvas flex-grow-1 overflow-auto p-4">
+                <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+                    <button type="button" class="btn btn-link btn-sm p-0 o_web_studio_back_to_layouts" t-on-click="() => this.props.onBack()">Page Layouts</button>
+                    <h4 class="m-0 me-auto" t-out="this.viewTitle"/>
+                    <button t-if="this.props.viewType === 'form'" type="button" class="btn btn-outline-primary btn-sm o_web_studio_add_section" t-on-click="this.addSection">Add Section</button>
+                    <button type="button" class="btn btn-link btn-sm o_web_studio_toggle_advanced" t-on-click="this.toggleAdvanced"
+                        t-out="this.state.showAdvanced ? 'Hide advanced blocks' : 'Show advanced blocks'"/>
+                    <button type="button" class="btn btn-link btn-sm o_web_studio_advanced_editor" t-on-click="() => this.props.onAdvanced()">Advanced editor</button>
+                    <button type="button" class="btn btn-secondary btn-sm o_web_studio_discard" t-att-disabled="!this.isDirty()" t-on-click="this.discard">Discard</button>
+                    <button type="button" class="btn btn-primary btn-sm o_web_studio_save_layout" t-att-disabled="!this.canSave" t-on-click="this.save">Save</button>
+                </div>
+
+                <div t-if="this.hasHeader" class="o_web_studio_header_zone card mb-3" t-on-dragover="this.onDragOver" t-on-drop="this.onDropOnHeader">
+                    <div class="card-header small text-muted">Header Buttons</div>
+                    <div class="card-body d-flex flex-wrap gap-2">
+                        <t t-foreach="this.headerButtons" t-as="entry" t-key="entry.index">
+                            <span class="o_web_studio_header_button badge bg-white text-dark border p-2 d-flex align-items-center gap-2">
+                                <span t-out="this.buttonLabel(entry.item.node)"/>
+                                <button type="button" class="btn btn-sm btn-link p-0 text-danger o_web_studio_remove_header_button" aria-label="Remove button"
+                                    t-on-click="() => this.removeHeaderButton(entry.index)">×</button>
+                            </span>
+                        </t>
+                        <span t-if="!this.headerButtons.length" class="text-muted small" t-out="this.headerHint"/>
+                    </div>
+                </div>
+
+                <t t-foreach="this.state.layout.body" t-as="entry" t-key="entry.id || ('raw_' + entry_index)">
+                    <div t-if="entry.kind === 'section'" class="o_web_studio_layout_section card mb-3" t-on-click="() => this.onSectionFocus(entry)">
+                        <div t-if="!this.isFlat(entry)" class="card-header d-flex flex-wrap align-items-center gap-2">
+                            <input type="text" class="form-control form-control-sm o_web_studio_section_title w-auto flex-grow-1"
+                                placeholder="Section title"
+                                t-att-value="entry.title"
+                                t-on-input="(ev) => this.onSectionTitle(entry, ev)"/>
+                            <select class="form-select form-select-sm o_web_studio_section_columns w-auto" t-on-change="(ev) => this.onColumnsChange(entry, ev)">
+                                <option value="1" t-att-selected="entry.columns.length === 1">1 column</option>
+                                <option value="2" t-att-selected="entry.columns.length === 2">2 columns</option>
+                            </select>
+                            <button type="button" class="btn btn-sm btn-link text-danger o_web_studio_remove_section" t-on-click="() => this.removeSection(entry)">Remove section</button>
+                        </div>
+                        <div class="card-body d-flex gap-3">
+                            <t t-foreach="entry.columns" t-as="column" t-key="column.id">
+                                <div class="o_web_studio_layout_column flex-grow-1 border rounded p-2"
+                                    t-on-dragover="this.onDragOver"
+                                    t-on-drop="(ev) => this.onDropOnColumn(ev, entry, column)">
+                                    <t t-foreach="column.items" t-as="item" t-key="item_index">
+                                        <div t-if="item.kind === 'field'" class="o_web_studio_layout_field d-flex align-items-center gap-2 border rounded bg-white p-2 mb-2"
+                                            draggable="true"
+                                            t-on-dragstart="(ev) => this.onLayoutFieldDragStart(ev, entry, column, item_index)"
+                                            t-on-dragover="this.onDragOver"
+                                            t-on-drop="(ev) => this.onDropOnColumn(ev, entry, column, item_index)">
+                                            <span class="flex-grow-1 text-truncate" t-out="this.fieldLabel(item.name)"/>
+                                            <code class="small" t-out="item.name"/>
+                                            <button type="button" class="btn btn-sm btn-link p-0 o_web_studio_field_up" aria-label="Move up"
+                                                t-on-click="() => this.moveFieldBy(entry, column, item_index, -1)">↑</button>
+                                            <button type="button" class="btn btn-sm btn-link p-0 o_web_studio_field_down" aria-label="Move down"
+                                                t-on-click="() => this.moveFieldBy(entry, column, item_index, 1)">↓</button>
+                                            <button type="button" class="btn btn-sm btn-link p-0 text-danger o_web_studio_field_remove" aria-label="Remove field"
+                                                t-on-click="() => this.removeField(entry, column, item_index)">×</button>
+                                        </div>
+                                        <RawBlock t-elif="this.state.showAdvanced" block="item" editor="this"/>
+                                    </t>
+                                    <div t-if="this.columnRawCount(column) and !this.state.showAdvanced" class="o_web_studio_layout_raw_summary small text-muted mb-2">
+                                        <t t-out="this.columnRawCount(column)"/> advanced block(s), hidden.
+                                    </div>
+                                    <div t-if="!column.items.length" class="o_web_studio_layout_empty small text-muted text-center py-4">Drop fields here</div>
+                                </div>
+                            </t>
+                        </div>
+                        <div t-if="entry.extra.length" class="card-footer small text-muted">
+                            <t t-out="entry.extra.length"/> advanced block(s) of this section are kept as they are.
+                        </div>
+                    </div>
+
+                    <RawBlock t-elif="this.state.showAdvanced" block="entry" editor="this"/>
+                </t>
+
+                <t t-foreach="this.state.layout.footer" t-as="entry" t-key="entry.id">
+                    <RawBlock t-if="this.state.showAdvanced" block="entry" editor="this"/>
+                </t>
+
+                <div t-if="this.outsideRawCount and !this.state.showAdvanced" class="o_web_studio_layout_raw_summary small text-muted mb-3">
+                    <t t-out="this.outsideRawCount"/> advanced block(s) outside the sections, hidden.
+                </div>
+            </main>
+        </t>
+    </div>
+</t>
+
+
+</templates>

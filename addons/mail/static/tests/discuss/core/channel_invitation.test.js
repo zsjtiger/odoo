@@ -12,8 +12,8 @@ import {
 import { describe, test } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
 import { Command, getService, serverState, withUser } from "@web/../tests/web_test_helpers";
-import { deserializeDateTime } from "@web/core/l10n/dates";
-import { user } from "@web/core/user";
+import { deserializeDateTime } from "@web/core/data/l10n/dates";
+import { user } from "@web/core/services/user";
 
 describe.current.tags("desktop");
 defineMailModels();

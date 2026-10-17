@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 const commandCategoryRegistry = registry.category("command_categories");
 // A shortcut conflict occurs when actions are bound to the same

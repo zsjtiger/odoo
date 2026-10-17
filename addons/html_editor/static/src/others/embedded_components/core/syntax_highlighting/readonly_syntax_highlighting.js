@@ -1,6 +1,6 @@
 import { Component, onMounted, onWillStart, t, useProps, xml } from "@odoo/owl";
-import { loadBundle } from "@web/core/assets";
-import { cookie } from "@web/core/browser/cookie";
+import { loadBundle } from "@web/core/framework/assets";
+import { cookie } from "@web/core/services/browser/cookie";
 import { DEFAULT_LANGUAGE_ID, getPreValue, highlightPre } from "./syntax_highlighting_utils";
 
 export class ReadonlySyntaxHighlightingComponent extends Component {

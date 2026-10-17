@@ -1,0 +1,1794 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* snow_workflow
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 20.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-16 07:10+0000\n"
+"PO-Revision-Date: 2026-10-16 07:10+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: snow_workflow
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_definition_from
+msgid "<definitions>...</definitions>"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "A flow cannot start at an end event or end at the start event."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid "A process or subprocess needs at least one end event."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid "A process or subprocess needs exactly one start event."
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model,name:snow_workflow.model_ir_access
+msgid "Access"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "Add a parameter"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid ""
+"After the event-based gateway “%s” only receive tasks and timers are "
+"allowed."
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_ir_access__perm_approval
+msgid "Approval Access"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__approval_alert_message
+msgid "Approval alert message"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "Approve"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "Approver"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "Attached to"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "Back"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "Boundary timer"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "Business rule task"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "Call activity"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "Choose an operation for “%s”."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "Choose the approvers of “%s”."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "Choose the decision of “%s”."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "Choose the process that “%s” calls."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "Condition"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_carbon_copy__copy_user
+msgid "Copy User"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_attendee_selection__create_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_carbon_copy__create_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__create_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution__create_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task__create_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_attendee__create_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_attendee_history__create_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_data__create_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_history__create_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_external_managers__create_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance__create_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance_suspend__create_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance_suspend_history__create_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_action__create_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_mapping__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_attendee_selection__create_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_carbon_copy__create_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__create_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution__create_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task__create_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_attendee__create_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_attendee_history__create_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_data__create_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_history__create_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_external_managers__create_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance__create_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance_suspend__create_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance_suspend_history__create_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_action__create_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_mapping__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "Cycle"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,help:snow_workflow.field_snow_workflow_definition__dmn_content
+msgid "DMN XML with the decision tables used by business rule tasks."
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__dmn_content
+msgid "DMN decisions"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_data__data_owner
+msgid "Data Owner"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "Date and time"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "Decision"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "Default flow"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "Delete"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_ir_access__display_name
+#: model:ir.model.fields,field_description:snow_workflow.field_ir_http__display_name
+#: model:ir.model.fields,field_description:snow_workflow.field_ir_ui_menu__display_name
+#: model:ir.model.fields,field_description:snow_workflow.field_res_users__display_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_action__display_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_action_mixin__display_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_attendee_selection__display_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_carbon_copy__display_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__display_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution__display_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task__display_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_attendee__display_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_attendee_history__display_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_data__display_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_history__display_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_external_managers__display_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance__display_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance_suspend__display_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance_suspend_history__display_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_notification__display_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_action__display_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_mapping__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid ""
+"Drag a node onto the canvas. Drag from the dot on the right of a node to "
+"another node to connect them. Double-click a subprocess to edit it."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "Duration"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "End"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "Evaluate an expression"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "Event-based gateway"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "Exclusive gateway"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model,name:snow_workflow.model_snow_workflow_execution_task
+msgid "Execution Task"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "Format diagram"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "Group approve (all)"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "Group approve (any)"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model,name:snow_workflow.model_ir_http
+msgid "HTTP Routing"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_ir_access__id
+#: model:ir.model.fields,field_description:snow_workflow.field_ir_http__id
+#: model:ir.model.fields,field_description:snow_workflow.field_ir_ui_menu__id
+#: model:ir.model.fields,field_description:snow_workflow.field_res_users__id
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_action__id
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_action_mixin__id
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_attendee_selection__id
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_carbon_copy__id
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__id
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution__id
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task__id
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_attendee__id
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_attendee_history__id
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_data__id
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_history__id
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_history__user_id
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_external_managers__id
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance__id
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance_suspend__id
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance_suspend_history__id
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_notification__id
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_action__id
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_mapping__id
+msgid "ID"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "Inclusive gateway"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "Intermediate event"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_attendee_selection__write_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_carbon_copy__write_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__write_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution__write_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task__write_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_attendee__write_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_attendee_history__write_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_data__write_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_history__write_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_external_managers__write_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance__write_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance_suspend__write_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance_suspend_history__write_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_action__write_uid
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_mapping__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_attendee_selection__write_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_carbon_copy__write_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__write_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution__write_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task__write_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_attendee__write_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_attendee_history__write_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_data__write_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_history__write_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_external_managers__write_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance__write_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance_suspend__write_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance_suspend_history__write_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_action__write_date
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_mapping__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model,name:snow_workflow.model_ir_ui_menu
+msgid "Menu"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "Message name"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__object
+msgid "Model"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid ""
+"Multi-instance is only supported on service and script tasks, not on “%s”."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "Name"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/views/approval_buttons.js:0
+msgid "No approval workflow is defined for this record."
+msgstr ""
+
+#. module: snow_workflow
+#: model_terms:ir.actions.act_window,help:snow_workflow.snow_workflow_definition_act
+msgid "No records found!"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "Nodes"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "Number of runs"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "One after another"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid "Only system administrators can add script tasks to a process."
+msgstr ""
+
+#. module: snow_workflow
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_definition_from
+msgid "Open process designer"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "Open subprocess"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "Operation"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "Parallel gateway"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_actions.py:0
+msgid "Pass Operation"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "Process"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid "Process designer"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "Process to call"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/fields/workflow_warning.js:0
+msgid "Read and agree to this statement"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "Receive message"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_actions.py:0
+msgid "Reject Operation"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__reject_alert_message
+msgid "Reject alert message"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "Result variable"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "Run once for each item (multi-instance)"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "Save"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "Script"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "Script (Python)"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "Script key"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "Script task"
+msgstr ""
+
+#. module: snow_workflow
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_definition_filter
+msgid "Search Definition"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "Select a node or a flow to edit it."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "Send message"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "Sequence flow"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "Service task"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__show_alert_before_approval
+msgid "Show alert before approval"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__show_alert_before_reject
+msgid "Show alert before reject"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "Specific users"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "Start"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution__status_owner
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance__status_owner
+msgid "Status Owner"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task__submitter_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_attendee__submitter_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_history__submitter_name
+msgid "Submitter"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "Subprocess"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "Target record (Python expression, empty = inside this process)"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model,name:snow_workflow.model_snow_workflow_execution_task_attendee
+msgid "Task Attendee"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model,name:snow_workflow.model_snow_workflow_execution_task_attendee_history
+msgid "Task Attendee History"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model,name:snow_workflow.model_snow_workflow_execution_task_data
+msgid "Task Execution Data"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid "The DMN decisions are not valid: %s"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_actions.py:0
+msgid "The approval process of this record is suspended."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid ""
+"The boundary timer “%s” must be attached to a service, script, business "
+"rule, send or receive task."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid "The business rule task “%s” needs a decision."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid "The call activity “%s” must call another existing process."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid "The call activity “%s” needs a process to call."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid "The cardinality “%(expr)s” of “%(task)s” is not valid: %(error)s"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid "The condition “%(condition)s” is not a valid expression: %(error)s"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid ""
+"The decision “%(decision)s” of “%(task)s” is not defined in the DMN "
+"decisions."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid "The default flow of “%s” is not one of its outgoing flows."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "The diagram has been formatted."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid "The diagram must contain the process with id “main_process”."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "The element “%s” is not supported by the designer yet."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "The event-based gateway “%s” needs at least two outgoing flows."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid "The expression “%(expr)s” is not valid: %(error)s"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid "The expression “%s” is not valid Python."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/workflow/service_operations.py:0
+msgid "The field “%(field)s” does not exist on %(model)s."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/workflow/service_operations.py:0
+msgid "The field “%(field)s” of %(model)s cannot be written by a workflow."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "The flow of “%s” needs a condition."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "The message task “%s” needs a message name."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid "The message task “%s” needs a message."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid ""
+"The messages “%(first)s” and “%(second)s” cannot be told apart, rename one "
+"of them."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "The multi-instance task “%s” needs a cardinality."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "The operation of “%s” needs a value."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "The parameter “%s” of “%s” needs an expression."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid "The process called by “%s” cannot call other processes."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "The process has been saved."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid "The process is not a valid BPMN diagram: %s"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/workflow/snow_workflow.py:0
+msgid "The process is not waiting for the message “%s”."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "The process is valid."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "The process needs at least one end event."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "The process needs exactly one start event."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_actions.py:0
+msgid "The record has no running approval process."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "The result variable of “%s” must be a valid name."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "The script key of “%s” is not valid."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid "The script of “%(task)s” is not valid Python: %(error)s"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "The script task “%s” needs a script."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid "The sequential flag of “%s” must be true or false."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid "The service task “%s” needs an operation."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/fields/workflow_warning.js:0
+msgid "The submission description cannot exceed 200 characters"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/fields/workflow_warning.js:0
+msgid "The submission description is required."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid "The target record of “%(task)s” is not valid: %(error)s"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/workflow/snow_workflow.py:0
+msgid "The task is no longer waiting for approval, please refresh the page."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid "The time of “%(task)s” is not valid, %(hint)s."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "The time of “%(task)s” is not valid, e.g. %(example)s."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid "The time of “%(task)s” must be a string in quotes, %(hint)s."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid "The timer “%s” has no time."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid "These elements are not supported by the process designer: %s"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_actions.py:0
+msgid ""
+"This action is not available to you now, the task may have been handled "
+"already."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "Time (quoted expression is added automatically)"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "Timer"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "Timer type"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+msgid "Unknown service operation “%(operation)s” of “%(task)s”."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_actions.py:0
+msgid "Unknown workflow action: %s"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "Up"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model,name:snow_workflow.model_res_users
+msgid "User"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "Validate"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution__wf_execution_tasks
+msgid "Wf Execution Tasks"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution__wf_execution_tasks_history
+msgid "Wf Execution Tasks History"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_data__wf_task_history
+msgid "Wf Task History"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_actions.py:0
+msgid "Withdraw Operation"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model,name:snow_workflow.model_snow_workflow_attendee_selection
+msgid "Workflow Attendee Selection"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model,name:snow_workflow.model_snow_workflow_instance
+msgid "Workflow Instance"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.actions.server,name:snow_workflow.ir_cron_snow_workflow_advance_timers_ir_actions_server
+msgid "Workflow: advance timers"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "Write fields to the business record"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/fields/workflow_warning.js:0
+msgid "You must click read and agree!"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_action__order
+msgid "action order"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__active
+msgid "active"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model,name:snow_workflow.model_snow_workflow_carbon_copy
+msgid "approval carbon copy"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.ui.menu,name:snow_workflow.snow_workflow_approval
+msgid "approval management"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance__object
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_carbon_copy_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_carbon_copy_list
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_execution_task_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_execution_task_list
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_my_submission_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_my_submission_tree
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_workflow_execution_task_history_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_workflow_execution_task_history_tree
+msgid "approval type"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_attendee__assigner_state
+msgid "assigner state"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__attendee_domain
+msgid "attendee domain"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance__business_deleted
+msgid "business data deleted"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_action__action
+msgid "callback function"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__can_add_attendee
+msgid "can add attendee"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/fields/workflow_warning.js:0
+msgid "cancel"
+msgstr ""
+
+#. module: snow_workflow
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_carbon_copy_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_carbon_copy_list
+msgid "copy date"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.actions.act_window,name:snow_workflow.snow_workflow_carbon_copy_act
+#: model:ir.ui.menu,name:snow_workflow.common_copy_to_me_menu
+msgid "copy to me"
+msgstr ""
+
+#. module: snow_workflow
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_execution_task_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_execution_task_list
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_my_submission_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_my_submission_tree
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_workflow_execution_task_history_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_workflow_execution_task_history_tree
+msgid "create date"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/designer/workflow_designer.js:0
+msgid "default"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_external_managers__definition_id
+msgid "definition id"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__deployed_by
+msgid "deployed by"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__deployed_on
+msgid "deployed on"
+msgstr ""
+
+#. module: snow_workflow
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_carbon_copy_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_carbon_copy_list
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_execution_task_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_execution_task_list
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_my_submission_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_my_submission_tree
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_workflow_execution_task_history_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_workflow_execution_task_history_tree
+msgid "detail"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields.selection,name:snow_workflow.selection__snow_workflow_definition__submit_warning_type__no
+msgid "direct submission"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields.selection,name:snow_workflow.selection__snow_workflow_definition__same_user_action__wait
+msgid "duplicate approval"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance__end_time
+msgid "end time"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance__wf_executions
+msgid "execution"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution__status
+msgid "execution status"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model,name:snow_workflow.model_snow_workflow_execution_task_history
+msgid "execution task history"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model,name:snow_workflow.model_snow_workflow_external_managers
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__external_managers
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_definition_from
+msgid "external manager"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task__in_progress
+msgid "in progress"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_actions.py:0
+#: code:addons/snow_workflow/static/src/fields/workflow_warning.js:0
+msgid "information"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__informed_consent
+#: model:ir.model.fields.selection,name:snow_workflow.selection__snow_workflow_definition__submit_warning_type__inform
+msgid "informed consent"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance__initiator
+msgid "initiator"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__instances
+msgid "instance"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_attendee__is_assigner
+msgid "is assigner"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution__is_complete
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance__is_complete
+msgid "is complete"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__is_external_suspend
+msgid "is external suspend"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__is_internal_suspend
+msgid "is internal suspend"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields.selection,name:snow_workflow.selection__snow_workflow_definition__same_user_action__follow
+msgid "like first time"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.ui.menu,name:snow_workflow.common_self_approval_menu
+msgid "my raised"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.actions.act_window,name:snow_workflow.action_my_submission_act
+msgid "my raised list"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__object_id
+msgid "object"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__object_display_field
+msgid "object display field"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_carbon_copy__object_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution__object_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task__object_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_history__object_name
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_definition_list
+msgid "object name"
+msgstr ""
+
+#. module: snow_workflow
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_definition_list
+msgid "object state"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/fields/workflow_process.js:0
+msgid "pass"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__content
+msgid "process content"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__description
+msgid "process description"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__process_id
+msgid "process id"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__name
+msgid "process name"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.ui.menu,name:snow_workflow.common_approved_menu
+msgid "processed"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.actions.act_window,name:snow_workflow.action_workflow_execution_task_history_act
+msgid "processed list"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_carbon_copy__record_id
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution__record_id
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task__record_id
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_attendee__record_id
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_history__record_id
+msgid "record id"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/fields/workflow_process.js:0
+msgid "reject"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task__wf_execution
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_history__wf_execution
+msgid "related execution"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task__wf_instance
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_history__wf_instance
+msgid "related instance"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_carbon_copy__object
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution__object
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task__object
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_history__object
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_action__object_id
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_mapping__object_id
+msgid "related object"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_mapping__object_field_name
+msgid "related object name"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_mapping__object_field_value
+msgid "related object value"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance__record_id
+msgid "related record id"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_actions.py:0
+#: code:addons/snow_workflow/workflow/button.py:0
+msgid "risk information"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields.selection,name:snow_workflow.selection__snow_workflow_definition__submit_warning_type__risk
+msgid "risk warning + informed consent"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__same_user_action
+msgid "same people action"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_actions.py:0
+#: model_terms:ir.ui.view,arch_db:snow_workflow.workflow_add_attendee
+msgid "select user"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/workflow/vision.py:0
+msgid "self approval"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model,name:snow_workflow.model_snow_workflow_action
+msgid "snow.workflow.action"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model,name:snow_workflow.model_snow_workflow_notification
+msgid "snow.workflow.notification"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.module.module,shortdesc:base.module_snow_workflow
+msgid "snow_workflow"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance__start_time
+msgid "start time"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_carbon_copy__status_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution__status_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task__status_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_history__status_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance__status_name
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_carbon_copy_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_carbon_copy_list
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_execution_task_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_execution_task_list
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_my_submission_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_my_submission_tree
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_workflow_execution_task_history_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_workflow_execution_task_history_tree
+msgid "status name"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/fields/workflow_warning.js:0
+msgid "submit"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/fields/workflow_process.js:0
+msgid "submit for approval"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_actions.py:0
+#: code:addons/snow_workflow/workflow/button.py:0
+msgid "submit information"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_carbon_copy__submitter_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution__submitter_name
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_carbon_copy_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_carbon_copy_list
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_execution_task_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_execution_task_list
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_my_submission_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_my_submission_tree
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_workflow_execution_task_history_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_workflow_execution_task_history_tree
+msgid "submitter"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/fields/workflow_process.js:0
+msgid "suspend"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance__suspend_info
+msgid "suspend info"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model,name:snow_workflow.model_snow_workflow_instance_suspend
+msgid "suspend instance"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance_suspend__suspend_time
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance_suspend_history__suspend_time
+msgid "suspend time"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance_suspend__suspend_user
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance_suspend_history__suspend_user
+msgid "suspend user"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/fields/workflow_process.js:0
+msgid "suspended recovery"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__target_view
+msgid "target view"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_attendee__wf_task
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_data__wf_task
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_history__wf_task
+msgid "task"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task__wf_task_json
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_history__wf_task_json
+msgid "task description json"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task__task_attendee
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_history__task_attendee_history
+msgid "task executor"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_attendee_history__wf_task_history
+msgid "task history"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_action_mixin__task_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_carbon_copy__task_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution__task_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task__task_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_history__task_name
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_carbon_copy_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_carbon_copy_list
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_execution_task_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_execution_task_list
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_my_submission_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_my_submission_tree
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_workflow_execution_task_history_kanban
+#: model_terms:ir.ui.view,arch_db:snow_workflow.view_workflow_execution_task_history_tree
+msgid "task name"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task__wf_task_spec_json
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_history__wf_task_spec_json
+msgid "task spec description json"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task__task_xml_id
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_history__task_xml_id
+msgid "task xml_id"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task__task_xml_name
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_history__task_xml_name
+msgid "task xml_name"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/fields/workflow_process.js:0
+msgid "under approval"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance_suspend_history__unsuspend_time
+msgid "unsuspend time"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_attendee__user
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_attendee_history__user
+msgid "user"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_attendee_history__action
+msgid "user action"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_external_managers__user_id
+msgid "user id"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_data__name
+msgid "variable name"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution_task_data__value
+msgid "variable value"
+msgstr ""
+
+#. module: snow_workflow
+#: model_terms:ir.ui.view,arch_db:snow_workflow.snow_workflow_risk_warning_form
+msgid "verification"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__version
+msgid "version"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution__vision_data
+msgid "vision data"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/fields/workflow_process.js:0
+msgid "wait"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.ui.menu,name:snow_workflow.common_pending_approval_menu
+msgid "wait my approval"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.actions.act_window,name:snow_workflow.snow_workflow_execution_task_act
+msgid "wait my approval list"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_definition__submit_warning_type
+msgid "warning type"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#: code:addons/snow_workflow/static/src/fields/workflow_process.js:0
+msgid "withdrawn"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.ui.menu,name:snow_workflow.snow_workflow_menu_root
+msgid "workflow"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model,name:snow_workflow.model_snow_workflow_action_mixin
+msgid "workflow action mixin"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.actions.act_window,name:snow_workflow.snow_workflow_definition_act
+#: model:ir.model,name:snow_workflow.model_snow_workflow_definition
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance__wf_definition
+#: model:ir.ui.menu,name:snow_workflow.snow_workflow_definition
+msgid "workflow definition"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution__wf_json
+msgid "workflow description JSON"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model,name:snow_workflow.model_snow_workflow_execution
+msgid "workflow execution"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_carbon_copy__wf_instance
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_execution__wf_instance
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance_suspend__wf_instance
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance_suspend_history__wf_instance
+msgid "workflow instance"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_mapping__instance_field_name
+msgid "workflow instance name"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model,name:snow_workflow.model_snow_workflow_instance_suspend_history
+msgid "workflow instance suspend history"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model,name:snow_workflow.model_snow_workflow_state_action
+msgid "workflow state action"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model,name:snow_workflow.model_snow_workflow_state_mapping
+msgid "workflow state mapping"
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance__status
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_action__wf_state
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_state_mapping__wf_state
+msgid "workflow status"
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "“%s” can have only one outgoing flow; use a gateway to split the flow."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "“%s” has no incoming flow."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "“%s” has no outgoing flow."
+msgstr ""
+
+#. module: snow_workflow
+#. odoo-javascript
+#. odoo-python
+#: code:addons/snow_workflow/models/snow_workflow_model.py:0
+#: code:addons/snow_workflow/static/src/designer/bpmn_model.js:0
+msgid "“%s” needs a default flow."
+msgstr ""
+
+#. module: snow_workflow
+#: model:ir.model.fields,field_description:snow_workflow.field_snow_workflow_instance__object_name
+msgid "模块名"
+msgstr ""

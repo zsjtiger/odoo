@@ -2,9 +2,9 @@ import { CreatePollOptionDialog } from "@mail/core/common/create_poll_option_dia
 
 import { Component, proxy, signal, types, useProps } from "@odoo/owl";
 
-import { Dialog } from "@web/core/dialog/dialog";
-import { EmojiPicker } from "@web/core/emoji_picker/emoji_picker";
-import { rpc } from "@web/core/network/rpc";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
+import { EmojiPicker } from "@web/core/components/emoji_picker/emoji_picker";
+import { rpc } from "@web/core/services/network/rpc";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 
 export class CreatePollDialog extends Component {

@@ -1,0 +1,20 @@
+.o_web_studio_model_designer {
+    background-color: $o-web-studio-bg-action;
+
+    .o_web_studio_model_designer_header {
+        .o_web_studio_model_search {
+            width: 280px;
+            max-width: 100%;
+        }
+    }
+
+    .o_web_studio_model_table {
+        th {
+            white-space: nowrap;
+        }
+
+        code {
+            font-size: 0.85em;
+        }
+    }
+}

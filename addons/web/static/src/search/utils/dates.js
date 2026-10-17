@@ -1,18 +1,18 @@
-import { _t } from "@web/core/l10n/translation";
-import { Domain } from "@web/core/domain";
+import { _t } from "@web/core/data/l10n/translation";
+import { Domain } from "@web/core/data/domain";
 import {
     formatLocalWeekRange,
     serializeDate,
     serializeDateTime,
     toLocaleDateString,
     today,
-} from "@web/core/l10n/dates";
-import { localization } from "@web/core/l10n/localization";
+} from "@web/core/data/l10n/dates";
+import { localization } from "@web/core/data/l10n/localization";
 import { clamp, range } from "@web/core/utils/numbers";
 import { pick } from "@web/core/utils/objects";
-import { condition, connector } from "@web/core/tree_editor/condition_tree";
-import { domainFromTree } from "@web/core/tree_editor/domain_from_tree";
-import { getRelativeRangeBounds, makeRelativeRange } from "@web/core/tree_editor/virtual_operators";
+import { condition, connector } from "@web/core/editors/tree_editor/condition_tree";
+import { domainFromTree } from "@web/core/editors/tree_editor/domain_from_tree";
+import { getRelativeRangeBounds, makeRelativeRange } from "@web/core/editors/tree_editor/virtual_operators";
 
 export const QUARTERS = {
     1: { description: _t("Q1"), coveredMonths: [1, 2, 3] },

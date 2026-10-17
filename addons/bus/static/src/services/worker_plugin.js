@@ -1,9 +1,9 @@
-import { browser } from "@web/core/browser/browser";
-import { registry } from "@web/core/registry";
-import { session } from "@web/session";
+import { browser } from "@web/core/services/browser/browser";
+import { registry } from "@web/core/framework/registry";
+import { session } from "@web/boot/session";
 import { Plugin, signal, usePlugin } from "@odoo/owl";
 import { BusParametersPlugin } from "@bus/bus_parameters_plugin";
-import { services } from "@web/core/services";
+import { services } from "@web/core/framework/services";
 
 export const WORKER_STATE = Object.freeze({
     UNINITIALIZED: "UNINITIALIZED",

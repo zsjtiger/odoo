@@ -1,6 +1,6 @@
-import { rpc } from "@web/core/network/rpc";
+import { rpc } from "@web/core/services/network/rpc";
 import { pick } from "@web/core/utils/objects";
-import { loadBundle } from "@web/core/assets";
+import { loadBundle } from "@web/core/framework/assets";
 import { getImageSrc } from "./image";
 
 // Fields returned by cropperjs 'getData' method, also need to be passed when

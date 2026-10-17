@@ -1,6 +1,6 @@
 import { ChannelMember } from "@mail/discuss/core/common/channel_member_model";
 
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { patch } from "@web/core/utils/patch";
 
 registry.category("web_tour.tours").add("discuss_call_invitation.js", {

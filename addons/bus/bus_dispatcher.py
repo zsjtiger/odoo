@@ -22,7 +22,8 @@ from psycopg2 import InterfaceError
 from psycopg2.pool import PoolError
 
 import odoo
-from odoo.service.server import CommonServer
+from odoo.service.server.common import CommonServer
+from odoo.orm.database.sql_db import db_connect
 from odoo.tools import config
 
 from .session_helpers import check_sessions
@@ -317,7 +318,7 @@ class BusDispatcher(threading.Thread):
         db_system = config["db_system"]
         _logger.info("Bus._listener_loop listen imbus on db %s", db_system)
         with (
-            odoo.sql_db.db_connect(db_system).cursor() as cr,
+            db_connect(db_system).cursor() as cr,
             selectors.DefaultSelector() as sel,
         ):
             cr.execute("listen imbus")

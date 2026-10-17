@@ -5,6 +5,7 @@ import os
 
 import odoo
 from odoo import api, fields, models
+from odoo.orm.database.sql_db import db_connect
 from odoo.tools import SQL, config
 from odoo.tools.misc import OrderedSet
 
@@ -159,7 +160,7 @@ class BusBus(models.Model):
                         "The imbus notification payload was too large, it's been split into %d payloads.",
                         len(payloads),
                     )
-                with odoo.sql_db.db_connect(config['db_system']).cursor() as cr:
+                with db_connect(config['db_system']).cursor() as cr:
                     for payload in payloads:
                         cr.execute(
                             SQL(

@@ -3,16 +3,16 @@ import { Gif } from "@mail/core/common/gif";
 import { MessageSearchState } from "@mail/core/common/message_search_hook";
 
 import { Component, signal, t, useProps } from "@odoo/owl";
-import { isMobileOS } from "@web/core/browser/feature_detection";
+import { isMobileOS } from "@web/core/services/browser/feature_detection";
 
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { downloadFile } from "@web/core/network/download";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { useFileViewer } from "@web/core/file_viewer/file_viewer_hook";
-import { formatDate, formatDateTime } from "@web/core/l10n/dates";
-import { _t } from "@web/core/l10n/translation";
+import { ConfirmationDialog } from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
+import { downloadFile } from "@web/core/services/network/download";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { useDropdownState } from "@web/core/components/dropdown/dropdown_hooks";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
+import { useFileViewer } from "@web/core/components/file_viewer/file_viewer_hook";
+import { formatDate, formatDateTime } from "@web/core/data/l10n/dates";
+import { _t } from "@web/core/data/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
 

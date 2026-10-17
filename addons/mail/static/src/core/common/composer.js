@@ -1,7 +1,7 @@
-import { useLayoutEffect, useSubEnv } from "@web/owl2/utils";
+import { useLayoutEffect, useSubEnv } from "@web/core/owl/utils";
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
-import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
+import { useCustomDropzone } from "@web/core/components/dropzone/dropzone_hook";
 import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzone";
 import { NavigableList } from "@mail/core/common/navigable_list";
 import { MAIL_PLUGINS, MAIL_SMALL_UI_PLUGINS } from "@mail/core/common/plugin/plugin_sets";
@@ -13,8 +13,8 @@ import { getInnerHtml } from "@mail/utils/common/html";
 import { isDragSourceExternalFile } from "@mail/utils/common/misc";
 import { Wysiwyg } from "@html_editor/wysiwyg";
 
-import { rpc } from "@web/core/network/rpc";
-import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
+import { rpc } from "@web/core/services/network/rpc";
+import { NotificationPlugin } from "@web/core/services/notifications/notification_plugin";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { useDebounced } from "@web/core/utils/timing";
 
@@ -37,7 +37,7 @@ import {
     useProps,
 } from "@odoo/owl";
 
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import {
     createDocumentFragmentFromContent,
@@ -54,16 +54,16 @@ import {
     isIOS,
     isMobileOS,
     isMacOS,
-} from "@web/core/browser/feature_detection";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+} from "@web/core/services/browser/feature_detection";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
 import { useComposerActions } from "@mail/core/common/composer_actions";
 import { ActionList } from "@mail/core/common/action_list";
 import { closestElement, lastLeaf } from "@html_editor/utils/dom_traversal";
 import { rightPos } from "@html_editor/utils/position";
 import { syntaxHighlightingEmbedding } from "@html_editor/others/embedded_components/backend/syntax_highlighting/syntax_highlighting";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { usePopover } from "@web/core/popover/popover_hook";
+import { ConfirmationDialog } from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
+import { usePopover } from "@web/core/components/popover/popover_hook";
 import { IndexedDB } from "@web/core/utils/indexed_db";
 
 const EDIT_CLICK_TYPE = {

@@ -12,8 +12,8 @@ from odoo.http import request
 from odoo.tools import BinaryBytes
 from odoo.tools.misc import str2bool
 from odoo.tools.constants import GC_UNLINK_LIMIT
-from odoo.tools.profiler import make_session
-from odoo.tools.speedscope import Speedscope
+from odoo.tools.profiling.profiler import make_session
+from odoo.tools.profiling.speedscope import Speedscope
 
 _logger = logging.getLogger(__name__)
 

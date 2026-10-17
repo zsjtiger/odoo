@@ -1,0 +1,300 @@
+import { describe, expect, test } from "@odoo/hoot";
+import { click, queryAll, queryOne } from "@odoo/hoot-dom";
+import { animationFrame } from "@odoo/hoot-mock";
+import { mountWithCleanup } from "@web/../tests/_framework/component_test_helpers";
+import { defineModels, fields, models, onRpc } from "@web/../tests/web_test_helpers";
+import { MobileListView } from "@mobile_web/views/list/mobile_list_view";
+import { MobileKanbanView } from "@mobile_web/views/kanban/mobile_kanban_view";
+import { MobileFormView } from "@mobile_web/views/form/mobile_form_view";
+
+describe.current.tags("mobile");
+
+class Partner extends models.Model {
+    _name = "res.partner";
+    name = fields.Char();
+    email = fields.Char();
+    active = fields.Boolean({ default: true });
+    parent_id = fields.Many2one({ relation: "res.partner" });
+    _records = [
+        { id: 1, name: "Alpha", email: "alpha@example.com", active: true, parent_id: false },
+        { id: 2, name: "Beta", email: false, active: false, parent_id: false },
+    ];
+}
+
+defineModels([Partner]);
+
+/** 移动端视图使用的字段定义(与 loadViews 返回的结构一致) */
+const FIELDS = {
+    name: { type: "char", string: "Name" },
+    email: { type: "char", string: "Email" },
+    active: { type: "boolean", string: "Active" },
+    parent_id: { type: "many2one", string: "Parent", relation: "res.partner" },
+    display_name: { type: "char", string: "Display name" },
+};
+
+const LIST_ARCH = `<list>
+    <field name="name" class="mobile_title"/>
+    <field name="email"/>
+    <field name="active"/>
+</list>`;
+
+const KANBAN_ARCH = `<kanban>
+    <templates>
+        <t t-name="card">
+            <div><field name="name" class="mobile_title"/></div>
+            <div><field name="email"/></div>
+        </t>
+    </templates>
+</kanban>`;
+
+const FORM_ARCH = `<form>
+    <sheet>
+        <group>
+            <field name="name"/>
+            <field name="email"/>
+            <field name="active"/>
+        </group>
+    </sheet>
+</form>`;
+
+/** 等待组件完成异步更新(onchange / RPC 之后的渲染) */
+async function settle() {
+    for (let i = 0; i < 5; i++) {
+        await animationFrame();
+    }
+}
+
+/** 在输入框中输入文本并触发 change, 与用户离开输入框时的行为一致 */
+function typeValue(input, value) {
+    input.value = value;
+    input.dispatchEvent(new Event("input"));
+    input.dispatchEvent(new Event("change"));
+}
+
+function listProps(overrides = {}) {
+    return {
+        resModel: "res.partner",
+        arch: LIST_ARCH,
+        fields: FIELDS,
+        domain: [],
+        // 不过滤归档记录, 让测试数据中的 Beta(active=false) 也显示
+        context: { active_test: false },
+        onSelect: () => {},
+        ...overrides,
+    };
+}
+
+test("list loads the records and shows one row per record", async () => {
+    await mountWithCleanup(MobileListView, { props: listProps() });
+    expect(queryAll(".m_list_row").length).toBe(2);
+});
+
+test("list shows the marked field as the bold title", async () => {
+    await mountWithCleanup(MobileListView, { props: listProps() });
+    expect(queryAll(".m_list_primary")[0]).toHaveText("Alpha");
+});
+
+test("list cards show the other fields as values in the bottom line, without labels", async () => {
+    await mountWithCleanup(MobileListView, { props: listProps() });
+    const text = queryAll(".m_list_card")[0].querySelector(".m_card_lines").textContent;
+    expect(text).toInclude("alpha@example.com");
+    expect(text).not.toInclude("Email");
+});
+
+test("marked fields are placed in the card: badge with its colour, subtitle, and the rest below", async () => {
+    const arch = `<list>
+        <field name="name" class="mobile_title"/>
+        <field name="email" class="mobile_subtitle"/>
+        <field name="active" class="mobile_badge" decoration-success="active == 'true'"/>
+    </list>`;
+    await mountWithCleanup(MobileListView, { props: listProps({ arch }) });
+    const card = queryAll(".m_list_card")[0];
+    expect(card.querySelector(".m_card_sub")).toHaveText("alpha@example.com");
+    const badge = card.querySelector(".m_card_badge");
+    expect(badge).toHaveClass("is_success");
+    expect(badge).toHaveText("Yes");
+    expect(card.querySelectorAll(".m_card_lines .m_card_line").length).toBe(0);
+});
+
+test("list hides empty values instead of showing placeholders", async () => {
+    await mountWithCleanup(MobileListView, { props: listProps() });
+    // Beta 没有 email, active 为 false 也不显示, 底部没有任何值
+    const lines = queryAll(".m_list_card")[1].querySelectorAll(".m_card_line");
+    expect(lines.length).toBe(0);
+});
+
+test("a single click on a row does not open the record", async () => {
+    const selected = [];
+    await mountWithCleanup(MobileListView, {
+        props: listProps({ onSelect: (id) => selected.push(id) }),
+    });
+    await click(queryAll(".m_list_row")[1]);
+    expect(selected).toEqual([]);
+});
+
+test("a double click on a row selects the record", async () => {
+    const selected = [];
+    await mountWithCleanup(MobileListView, {
+        props: listProps({ onSelect: (id) => selected.push(id) }),
+    });
+    await click(queryAll(".m_list_row")[1]);
+    await click(queryAll(".m_list_row")[1]);
+    expect(selected).toEqual([2]);
+});
+
+test("each value in the bottom line is its own item, without separators between them", async () => {
+    await mountWithCleanup(MobileListView, { props: listProps() });
+    const lines = queryAll(".m_list_card")[0].querySelectorAll(".m_card_lines > .m_card_line");
+    expect(lines.length).toBeGreaterThan(1);
+    expect(queryAll(".m_list_card")[0].textContent).not.toInclude("·");
+});
+
+test("kanban shows one card per record with the marked title", async () => {
+    await mountWithCleanup(MobileKanbanView, {
+        props: listProps({ arch: KANBAN_ARCH }),
+    });
+    expect(queryAll(".m_kanban_card").length).toBe(2);
+    expect(queryAll(".m_kanban_title")[0]).toHaveText("Alpha");
+});
+
+test("kanban card click selects the record", async () => {
+    const selected = [];
+    await mountWithCleanup(MobileKanbanView, {
+        props: listProps({ arch: KANBAN_ARCH, onSelect: (id) => selected.push(id) }),
+    });
+    await click(queryAll(".m_kanban_card")[0]);
+    expect(selected).toEqual([1]);
+});
+
+function formProps(overrides = {}) {
+    return {
+        resModel: "res.partner",
+        arch: FORM_ARCH,
+        fields: FIELDS,
+        resId: 1,
+        context: { active_test: false },
+        onSaved: () => {},
+        onDiscard: () => {},
+        ...overrides,
+    };
+}
+
+test("an existing record opens in view mode, with the values as text", async () => {
+    await mountWithCleanup(MobileFormView, { props: formProps() });
+    expect(queryAll(".m_form_title").length).toBe(0);
+    expect(queryAll(".m_form_field input").length).toBe(0);
+    expect(queryOne(".m_form_edit")).toBeEnabled();
+});
+
+test("a form with edit=\"false\" has no edit button", async () => {
+    const arch = `<form edit="false"><sheet><group><field name="name"/><field name="email"/></group></sheet></form>`;
+    await mountWithCleanup(MobileFormView, { props: formProps({ arch }) });
+    expect(queryAll(".m_form_edit").length).toBe(0);
+    expect(queryAll(".m_form_field input").length).toBe(0);
+});
+
+test("edit=\"0\" also hides the edit button, and the default still shows it", async () => {
+    const arch = `<form edit="0"><sheet><group><field name="name"/></group></sheet></form>`;
+    await mountWithCleanup(MobileFormView, { props: formProps({ arch }) });
+    expect(queryAll(".m_form_edit").length).toBe(0);
+});
+
+test("titled form groups render as bands with their fields", async () => {
+    const arch = `<form>
+        <sheet>
+            <field name="name"/>
+            <group string="基本信息">
+                <field name="email"/>
+                <field name="active"/>
+            </group>
+            <group string="其他信息">
+                <field name="parent_id"/>
+            </group>
+        </sheet>
+    </form>`;
+    await mountWithCleanup(MobileFormView, { props: formProps({ arch }) });
+    const bands = queryAll(".m_form_separator").map((el) => el.textContent);
+    expect(bands.includes("基本信息")).toBe(true);
+    expect(bands.includes("其他信息")).toBe(true);
+    const groups = queryAll(".m_form_group");
+    expect(groups.length).toBe(2);
+    expect(groups[0].querySelectorAll(".m_form_field").length).toBe(2);
+    expect(groups[1].querySelectorAll(".m_form_field").length).toBe(1);
+});
+
+test("view mode shows every field, empty ones included", async () => {
+    await mountWithCleanup(MobileFormView, { props: formProps({ resId: 2 }) });
+    const labels = queryAll(".m_form_field .m_form_label").map((el) => el.textContent);
+    expect(labels.length).toBe(3);
+    expect(labels.includes("Email")).toBe(true);
+});
+
+test("edit switches to edit mode with the values in the inputs", async () => {
+    await mountWithCleanup(MobileFormView, { props: formProps() });
+    await click(".m_form_edit");
+    await settle();
+    expect(queryAll(".m_form_field input")[0]).toHaveValue("Alpha");
+});
+
+test("form shows no unsaved status until a field is changed", async () => {
+    await mountWithCleanup(MobileFormView, { props: formProps() });
+    await click(".m_form_edit");
+    await settle();
+    expect(queryAll(".m_form_status").length).toBe(0);
+    expect(queryOne(".m_form_footer .m_btn_primary")).not.toBeEnabled();
+});
+
+test("editing a field marks the form dirty and save writes the change", async () => {
+    const writes = [];
+    onRpc("res.partner", "web_save", ({ args }) => {
+        writes.push(args[1]);
+    });
+    await mountWithCleanup(MobileFormView, { props: formProps() });
+    await click(".m_form_edit");
+    await settle();
+    typeValue(queryAll(".m_form_field input")[0], "Gamma");
+    await settle();
+    expect(queryOne(".m_form_status")).toHaveText("Unsaved changes");
+    await click(".m_form_footer .m_btn_primary");
+    await settle();
+    expect(writes).toEqual([{ name: "Gamma" }]);
+    expect(queryAll(".m_form_field input").length).toBe(0);
+});
+
+test("a required field left empty blocks the save and shows the message", async () => {
+    const writes = [];
+    onRpc("res.partner", "web_save", ({ args }) => {
+        writes.push(args[1]);
+    });
+    const required = { ...FIELDS, name: { ...FIELDS.name, required: true } };
+    await mountWithCleanup(MobileFormView, { props: formProps({ resId: false, fields: required }) });
+    typeValue(queryAll(".m_form_field input")[0], "");
+    await settle();
+    expect(queryAll(".m_form_required").length).toBe(1);
+    await click(".m_form_footer .m_btn_primary");
+    await settle();
+    expect(writes).toEqual([]);
+    expect(queryOne(".m_form_field.is_invalid .m_form_error")).toHaveText("This field is required");
+});
+
+test("a new record fills defaults and reports the saved id", async () => {
+    const saved = [];
+    await mountWithCleanup(MobileFormView, {
+        props: formProps({ resId: false, onSaved: (id) => saved.push(id) }),
+    });
+    expect(queryAll(".m_form_title").length).toBe(0);
+    typeValue(queryAll(".m_form_field input")[0], "Delta");
+    await settle();
+    await click(".m_form_footer .m_btn_primary");
+    await settle();
+    expect(saved.length).toBe(1);
+});
+
+test("discard on a new record calls onDiscard", async () => {
+    let discarded = false;
+    await mountWithCleanup(MobileFormView, {
+        props: formProps({ resId: false, onDiscard: () => (discarded = true) }),
+    });
+    await click(".m_form_footer .m_btn_secondary");
+    expect(discarded).toBe(true);
+});

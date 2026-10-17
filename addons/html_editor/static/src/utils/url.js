@@ -1,4 +1,4 @@
-import { session } from "@web/session";
+import { session } from "@web/boot/session";
 
 const ODOO_DOMAIN_REGEX = new RegExp(`^https?://${session.db}\\.odoo\\.com(/.*)?$`);
 

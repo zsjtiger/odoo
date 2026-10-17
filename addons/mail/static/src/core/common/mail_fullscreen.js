@@ -1,7 +1,7 @@
 import { Component, proxy, t, useProps } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 const DEFAULT_ID = Symbol("default");
 

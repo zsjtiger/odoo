@@ -1,9 +1,9 @@
 import { Plugin, signal, useListener, usePlugin } from "@odoo/owl";
 import { WORKER_STATE } from "@bus/workers/websocket_worker";
-import { browser } from "@web/core/browser/browser";
-import { registry } from "@web/core/registry";
+import { browser } from "@web/core/services/browser/browser";
+import { registry } from "@web/core/framework/registry";
 import { BusPlugin } from "@bus/services/bus_plugin";
-import { services } from "@web/core/services";
+import { services } from "@web/core/framework/services";
 
 /**
  * Detect lost connections to the bus. A connection is considered as lost if it

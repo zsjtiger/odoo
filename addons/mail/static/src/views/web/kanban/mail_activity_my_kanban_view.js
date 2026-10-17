@@ -1,6 +1,6 @@
 import { kanbanView } from "@web/views/kanban/kanban_view";
 import { MailActivityMyKanbanController } from "./mail_activity_my_kanban_controller";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 export const mailActivityMyKanbanView = {
     ...kanbanView,

@@ -4,7 +4,6 @@ import { isIterable } from "./arrays";
  * XML document to create new elements from. The fact that this is a "text/xml"
  * document ensures that tagNames and attribute names are case sensitive.
  */
-const serializer = new XMLSerializer();
 const parser = new DOMParser();
 const xmlDocument = parser.parseFromString("<templates/>", "text/xml");
 
@@ -24,14 +23,6 @@ export function parseXML(str) {
         );
     }
     return xml.documentElement;
-}
-
-/**
- * @param {Element} xml
- * @returns {string}
- */
-export function serializeXML(xml) {
-    return serializer.serializeToString(xml);
 }
 
 /**

@@ -1,7 +1,7 @@
-import { useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/core/owl/utils";
 import { TableOfContentManager } from "@html_editor/others/embedded_components/core/table_of_content/table_of_content_manager";
 import { Component, onMounted, onWillDestroy, xml } from "@odoo/owl";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { memoize } from "@web/core/utils/functions";
 import { Interaction } from "@web/public/interaction";
 import { PUBLIC_EMBEDDINGS } from "@html_editor/public/embedding_sets";

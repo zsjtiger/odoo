@@ -1,5 +1,5 @@
-import { ImageField, imageField } from "@web/views/fields/image/image_field";
-import { registry } from "@web/core/registry";
+import { ImageField, imageField } from "@web/views/fields/media/image/image_field";
+import { registry } from "@web/core/framework/registry";
 import { computed } from "@odoo/owl";
 
 export class ResourceAvatarField extends ImageField {

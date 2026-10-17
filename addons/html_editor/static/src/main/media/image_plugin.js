@@ -1,6 +1,6 @@
 import { proxy } from "@odoo/owl";
 import { Plugin } from "../../plugin";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { isImageUrl } from "@html_editor/utils/url";
 import { ImageToolbarDropdown } from "./image_toolbar_dropdown";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";

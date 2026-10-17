@@ -1,5 +1,5 @@
 import { t, useProps } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { Attachment, FileSelector, IMAGE_MIMETYPES } from "./file_selector";
 import { renderToElement } from "@web/core/utils/render";
 

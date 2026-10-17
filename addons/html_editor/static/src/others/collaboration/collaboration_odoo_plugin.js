@@ -1,12 +1,12 @@
 import { Plugin } from "@html_editor/plugin";
-import { rpc } from "@web/core/network/rpc";
-import { user } from "@web/core/user";
+import { rpc } from "@web/core/services/network/rpc";
+import { user } from "@web/core/services/user";
 import { Mutex } from "@web/core/utils/concurrency";
 import { debounce } from "@web/core/utils/timing";
 import { PeerToPeer, RequestError } from "./PeerToPeer";
 import { ancestors } from "@html_editor/utils/dom_traversal";
 import { childNodeIndex } from "@html_editor/utils/position";
-import { localeCompare } from "@web/core/l10n/utils";
+import { localeCompare } from "@web/core/data/l10n/utils";
 
 /**
  * @typedef {Object} CollaborationSelection

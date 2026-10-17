@@ -1,11 +1,11 @@
 import { Component, onWillStart, proxy, signal, t, useProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { loadLanguages } from "@web/core/l10n/translation";
-import { jsToPyLocale } from "@web/core/l10n/utils";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
+import { loadLanguages } from "@web/core/data/l10n/translation";
+import { jsToPyLocale } from "@web/core/data/l10n/utils";
 import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
-import { user } from "@web/core/user";
+import { user } from "@web/core/services/user";
 import { useDropdownAutoVisibility } from "@html_editor/toolbar_dropdown_hook";
 
 export class LanguageSelector extends Component {

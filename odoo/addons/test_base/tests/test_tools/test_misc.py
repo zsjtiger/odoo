@@ -339,7 +339,7 @@ class TestAddonsFileAccess(BaseCase):
         self.assertEqual(__file__, file_path(relpath))
 
         # files in root_path are allowed
-        self.assertTrue(file_path('tools/misc.py'))
+        self.assertTrue(file_path('tools/misc/files.py'))
 
         # absolute or relative inexisting files are ok
         self.assertTrue(file_path(config.root_path + '/__inexisting', check_exists=False))
@@ -386,7 +386,7 @@ class TestAddonsFileAccess(BaseCase):
         self.assertCanRead(relpath, test_needle)
 
         # files in root_path are allowed
-        self.assertCanRead('tools/misc.py')
+        self.assertCanRead('tools/misc/files.py')
 
         # absolute or relative inexisting files are ok
         self.assertCannotRead(config.root_path + '/__inexisting')

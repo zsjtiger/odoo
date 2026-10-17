@@ -1,7 +1,7 @@
-import { browser } from "@web/core/browser/browser";
-import { rpcBus } from "@web/core/network/rpc";
-import { registry } from "@web/core/registry";
-import { UPDATE_METHODS } from "@web/core/orm_plugin";
+import { browser } from "@web/core/services/browser/browser";
+import { rpcBus } from "@web/core/services/network/rpc";
+import { registry } from "@web/core/framework/registry";
+import { UPDATE_METHODS } from "@web/core/services/orm_plugin";
 
 // reload the page if changes are being done to `res.company`
 

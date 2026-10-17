@@ -21,14 +21,14 @@ import {
     makeTestApp,
 } from "@web/../tests/web_test_helpers";
 
-import { location, browser } from "@web/core/browser/browser";
-import { registry } from "@web/core/registry";
+import { location, browser } from "@web/core/services/browser/browser";
+import { registry } from "@web/core/framework/registry";
 import { WebClient } from "@web/webclient/webclient";
-import { router, routerBus, startRouter } from "@web/core/browser/router";
+import { router, routerBus, startRouter } from "@web/core/services/browser/router";
 import { redirect } from "@web/core/utils/urls";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
-import { _t as basic_t } from "@web/core/l10n/translation";
-import { user } from "@web/core/user";
+import { _t as basic_t } from "@web/core/data/l10n/translation";
+import { user } from "@web/core/services/user";
 
 function _t() {
     odoo.translationContext = "web";

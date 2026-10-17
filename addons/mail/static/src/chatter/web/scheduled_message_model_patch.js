@@ -1,7 +1,7 @@
 import { ScheduledMessage } from "@mail/chatter/common/scheduled_message_model";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
 
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 
 /** @type {import("models").ScheduledMessage} */

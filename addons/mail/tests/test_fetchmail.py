@@ -3,7 +3,8 @@
 from datetime import timedelta
 from unittest.mock import patch
 
-from odoo.tests import tagged, TransactionCase, mute_logger
+from odoo.tests import tagged, TransactionCase
+from odoo.tools import mute_logger
 
 
 class MockedConnection:

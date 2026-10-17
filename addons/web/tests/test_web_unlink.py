@@ -19,7 +19,7 @@ class TestWebUnlink(HttpCase):
     That error's dotted name is what gets the web client to show its
     dedicated dialog, from wherever `web_unlink()` was called, with no
     per-view wiring: it is registered against `UnlinkBlockedErrorDialog` in
-    `@web/core/errors/error_dialogs`. """
+    `@web/core/services/errors/error_dialogs`. """
 
     def _web_unlink_over_http(self, records):
         self.authenticate('admin', 'admin')

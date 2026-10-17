@@ -1,8 +1,8 @@
 import { usePlugin } from "@odoo/owl";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
-import { rpcBus } from "@web/core/network/rpc";
-import { UPDATE_METHODS } from "@web/core/orm_plugin";
-import { registry } from "@web/core/registry";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
+import { rpcBus } from "@web/core/services/network/rpc";
+import { UPDATE_METHODS } from "@web/core/services/orm_plugin";
+import { registry } from "@web/core/framework/registry";
 
 /**
  * @typedef {Object} IrFilter

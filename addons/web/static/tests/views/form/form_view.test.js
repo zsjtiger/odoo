@@ -20,7 +20,7 @@ import {
     tick,
     waitFor,
 } from "@odoo/hoot";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
+import { OfflinePlugin } from "@web/core/services/offline/offline_plugin";
 import {
     Component,
     EventBus,
@@ -62,24 +62,24 @@ import {
     toggleMenuItem,
     toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
-import { render } from "@web/owl2/utils";
+import { render } from "@web/core/owl/utils";
 
-import { browser } from "@web/core/browser/browser";
-import { makeErrorFromResponse } from "@web/core/network/rpc";
-import { registry } from "@web/core/registry";
-import { config as transitionConfig } from "@web/core/transition";
-import { SIZES } from "@web/core/ui/ui_utils";
+import { browser } from "@web/core/services/browser/browser";
+import { makeErrorFromResponse } from "@web/core/services/network/rpc";
+import { registry } from "@web/core/framework/registry";
+import { config as transitionConfig } from "@web/core/framework/transition";
+import { SIZES } from "@web/core/services/ui/ui_utils";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { redirect } from "@web/core/utils/urls";
-import { CharField } from "@web/views/fields/char/char_field";
-import { DateTimeField } from "@web/views/fields/datetime/datetime_field";
+import { CharField } from "@web/views/fields/text/char/char_field";
+import { DateTimeField } from "@web/views/fields/date/datetime/datetime_field";
 import { Field } from "@web/views/fields/field";
 import { FileUploader } from "@web/views/fields/file_handler";
-import { IntegerField } from "@web/views/fields/integer/integer_field";
-import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/many2one/many2one_field";
+import { IntegerField } from "@web/views/fields/numeric/integer/integer_field";
+import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/relational/many2one/many2one_field";
 import { useSpecialData } from "@web/views/fields/relational_utils";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
-import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
+import { X2ManyField, x2ManyField } from "@web/views/fields/relational/x2many/x2many_field";
 import { FormController } from "@web/views/form/form_controller";
 import { AttachDocumentWidget } from "@web/views/widgets/attach_document/attach_document";
 import { WebClient } from "@web/webclient/webclient";

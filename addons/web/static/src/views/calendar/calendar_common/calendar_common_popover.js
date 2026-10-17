@@ -1,5 +1,5 @@
-import { _t } from "@web/core/l10n/translation";
-import { is24HourFormat } from "@web/core/l10n/time";
+import { _t } from "@web/core/data/l10n/translation";
+import { is24HourFormat } from "@web/core/data/l10n/time";
 import { parseXML } from "@web/core/utils/xml";
 import { getColor, getFormattedDateSpan } from "@web/views/calendar/utils";
 import { CARD_ATTRIBUTE } from "@web/views/card/card_arch_parser";

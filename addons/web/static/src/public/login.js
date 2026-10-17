@@ -1,5 +1,5 @@
 import { Interaction } from "./interaction";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 import { addLoadingEffect } from "@web/core/utils/ui";
 

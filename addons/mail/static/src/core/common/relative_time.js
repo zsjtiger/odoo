@@ -3,7 +3,7 @@ import { computedUntilStale } from "@mail/utils/common/signal";
 
 import { Component, types, xml } from "@odoo/owl";
 
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 
 const MINUTE = 60 * 1000;
 const HOUR = 60 * MINUTE;

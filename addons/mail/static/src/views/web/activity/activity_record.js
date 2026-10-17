@@ -2,12 +2,12 @@ import { ActivityCompiler } from "@mail/views/web/activity/activity_compiler";
 
 import { Component, types, useProps } from "@odoo/owl";
 
-import { evaluateBooleanExpr } from "@web/core/py_js/py";
-import { user } from "@web/core/user";
+import { evaluateBooleanExpr } from "@web/core/data/py_js/py";
+import { user } from "@web/core/services/user";
 import { isHtmlEmpty } from "@web/core/utils/html";
 import { imageUrl } from "@web/core/utils/urls";
 import { Field } from "@web/views/fields/field";
-import { fileTypeMagicWordMap } from "@web/views/fields/image/image_field";
+import { fileTypeMagicWordMap } from "@web/views/fields/media/image/image_field";
 import { getFormattedRecord } from "@web/views/kanban/kanban_record";
 import { useViewCompiler } from "@web/views/view_compiler";
 import { Record } from "@web/model/relational_model/record";

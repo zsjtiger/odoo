@@ -1,7 +1,7 @@
 import { signal } from "@odoo/owl";
 import { CreatePollDialog } from "@mail/core/common/create_poll_dialog";
 
-import { EmojiPicker, useEmojiPickerStoreScroll } from "@web/core/emoji_picker/emoji_picker";
+import { EmojiPicker, useEmojiPickerStoreScroll } from "@web/core/components/emoji_picker/emoji_picker";
 
 import {
     Action,
@@ -12,9 +12,9 @@ import {
     UseActions,
 } from "@mail/core/common/action";
 import { SUGGESTION_DELIMITERS } from "@mail/core/common/suggestion_hook";
-import { _t } from "@web/core/l10n/translation";
-import { usePopover } from "@web/core/popover/popover_hook";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { usePopover } from "@web/core/components/popover/popover_hook";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
 import { markEventHandled } from "@web/core/utils/misc";
 

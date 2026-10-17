@@ -2,10 +2,10 @@ import { MessagePinDialog } from "@mail/core/common/message_pin_dialog";
 import { fields, Record } from "@mail/model/export";
 import { compareDatetime, nearestGreaterThanOrEqual } from "@mail/utils/common/misc";
 
-import { _t } from "@web/core/l10n/translation";
-import { formatList } from "@web/core/l10n/utils";
-import { rpc } from "@web/core/network/rpc";
-import { user } from "@web/core/user";
+import { _t } from "@web/core/data/l10n/translation";
+import { formatList } from "@web/core/data/l10n/utils";
+import { rpc } from "@web/core/services/network/rpc";
+import { user } from "@web/core/services/user";
 import { imageUrl } from "@web/core/utils/urls";
 
 const { DateTime } = luxon;

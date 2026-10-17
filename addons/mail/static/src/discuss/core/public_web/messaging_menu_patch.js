@@ -3,7 +3,7 @@ import { useSearch } from "@mail/utils/common/hooks";
 
 import { computed, useEffect } from "@odoo/owl";
 
-import { normalize } from "@web/core/l10n/utils";
+import { normalize } from "@web/core/data/l10n/utils";
 import { patch } from "@web/core/utils/patch";
 
 /** @type {MessagingMenu} */

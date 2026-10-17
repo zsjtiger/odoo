@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_studio_root"
+              name="Studio"
+              sequence="90"
+              action="action_web_studio_home"
+              web_icon="web_studio,static/description/icon.png"
+              groups="base.group_system"/>
+</odoo>

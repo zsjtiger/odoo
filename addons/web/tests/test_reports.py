@@ -10,7 +10,7 @@ from odoo.tools import mute_logger
 from odoo.tools.pdf import PdfReader
 
 from odoo.addons.base.tests.files import PNG_RAW
-from odoo.addons.http_routing.tests.common import MockRequest
+from odoo.addons.web.tests.common import MockRequest
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install

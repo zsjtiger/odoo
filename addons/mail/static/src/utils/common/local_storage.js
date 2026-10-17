@@ -1,5 +1,5 @@
-import { browser } from "@web/core/browser/browser";
-import { session } from "@web/session";
+import { browser } from "@web/core/services/browser/browser";
+import { session } from "@web/boot/session";
 
 const LOCAL_STORAGE_SUBVERSION = 1;
 

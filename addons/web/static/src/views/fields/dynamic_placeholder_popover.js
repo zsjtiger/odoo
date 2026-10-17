@@ -1,8 +1,8 @@
 import { Component, onWillStart, proxy, signal, usePlugin, useProps } from "@odoo/owl";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
-import { ModelFieldSelectorPopover } from "@web/core/model_field_selector/model_field_selector_popover";
-import { registry } from "@web/core/registry";
-import { user } from "@web/core/user";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
+import { ModelFieldSelectorPopover } from "@web/core/editors/model_field_selector/model_field_selector_popover";
+import { registry } from "@web/core/framework/registry";
+import { user } from "@web/core/services/user";
 import { useAutofocus } from "@web/core/utils/hooks";
 
 const allowedQwebExpressionsService = {

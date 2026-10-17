@@ -1,16 +1,16 @@
 import { computed, EventBus, proxy, toRaw, usePlugin } from "@odoo/owl";
-import { router } from "@web/core/browser/router";
-import { makeContext } from "@web/core/context";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
-import { Domain } from "@web/core/domain";
-import { getDefaultDomain } from "@web/core/domain_selector/utils";
-import { DomainSelectorDialog } from "@web/core/domain_selector_dialog/domain_selector_dialog";
-import { _t } from "@web/core/l10n/translation";
-import { rpcBus } from "@web/core/network/rpc";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
-import { evaluateExpr } from "@web/core/py_js/py";
-import { domainFromTree } from "@web/core/tree_editor/domain_from_tree";
-import { user } from "@web/core/user";
+import { router } from "@web/core/services/browser/router";
+import { makeContext } from "@web/core/data/context";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
+import { Domain } from "@web/core/data/domain";
+import { getDefaultDomain } from "@web/core/editors/domain_selector/utils";
+import { DomainSelectorDialog } from "@web/core/dialogs/domain_selector_dialog/domain_selector_dialog";
+import { _t } from "@web/core/data/l10n/translation";
+import { rpcBus } from "@web/core/services/network/rpc";
+import { OfflinePlugin } from "@web/core/services/offline/offline_plugin";
+import { evaluateExpr } from "@web/core/data/py_js/py";
+import { domainFromTree } from "@web/core/editors/tree_editor/domain_from_tree";
+import { user } from "@web/core/services/user";
 import { sortBy } from "@web/core/utils/arrays";
 import { useService } from "@web/core/utils/hooks";
 import { deepCopy } from "@web/core/utils/objects";
@@ -33,8 +33,8 @@ import { FACET_COLORS, FACET_ICONS } from "./utils/misc";
 const { DateTime } = luxon;
 
 /**
- * @typedef {import("@web/core/context").Context} Context
- * @typedef {import("@web/core/domain").DomainListRepr} DomainListRepr
+ * @typedef {import("@web/core/data/context").Context} Context
+ * @typedef {import("@web/core/data/domain").DomainListRepr} DomainListRepr
  * @typedef {import("@web/search/utils/order_by").OrderTerm} OrderTerm
  *
  * @typedef {{

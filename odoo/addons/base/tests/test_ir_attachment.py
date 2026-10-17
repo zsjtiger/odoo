@@ -14,7 +14,7 @@ from odoo.api import SUPERUSER_ID
 from odoo.exceptions import AccessError, ValidationError
 from odoo.tests import tagged
 from odoo.tools import BinaryBytes, file_open, file_path, mute_logger
-from odoo.tools.image import image_apply_opt
+from odoo.tools.files.image import image_apply_opt
 
 from odoo.addons.base.models.ir_attachment import IrAttachment
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo

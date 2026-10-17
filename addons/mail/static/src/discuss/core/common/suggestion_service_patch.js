@@ -1,8 +1,8 @@
 import { SUGGESTION_DELIMITERS } from "@mail/core/common/suggestion_hook";
 import { SuggestionService } from "@mail/core/common/suggestion_service";
 
-import { localeCompare, normalize } from "@web/core/l10n/utils";
-import { registry } from "@web/core/registry";
+import { localeCompare, normalize } from "@web/core/data/l10n/utils";
+import { registry } from "@web/core/framework/registry";
 import { patch } from "@web/core/utils/patch";
 
 const commandRegistry = registry.category("discuss.channel_commands");

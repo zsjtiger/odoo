@@ -2,8 +2,8 @@ import { expect, test } from "@odoo/hoot";
 import { press, waitFor } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { contains, onRpc, serverState } from "@web/../tests/web_test_helpers";
-import { loadLanguages } from "@web/core/l10n/translation";
-import { user } from "@web/core/user";
+import { loadLanguages } from "@web/core/data/l10n/translation";
+import { user } from "@web/core/services/user";
 import { setupEditor } from "./_helpers/editor";
 import { getContent } from "./_helpers/selection";
 

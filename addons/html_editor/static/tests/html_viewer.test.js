@@ -4,7 +4,7 @@ import { waitFor } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { markup } from "@odoo/owl";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { WebClient } from "@web/webclient/webclient";
 
 test(`XML-like self-closing elements are fixed in a standalone HtmlViewer`, async () => {

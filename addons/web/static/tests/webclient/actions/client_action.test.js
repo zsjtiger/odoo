@@ -12,9 +12,9 @@ import {
     stepAllNetworkCalls,
     webModels,
 } from "@web/../tests/web_test_helpers";
-import { browser, location } from "@web/core/browser/browser";
-import { Dialog } from "@web/core/dialog/dialog";
-import { registry } from "@web/core/registry";
+import { browser, location } from "@web/core/services/browser/browser";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
+import { registry } from "@web/core/framework/registry";
 import { redirect } from "@web/core/utils/urls";
 import { WebClient } from "@web/webclient/webclient";
 

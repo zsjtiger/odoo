@@ -11,8 +11,8 @@ import {
 import { mockDate } from "@odoo/hoot-mock";
 import { Component, proxy, xml } from "@odoo/owl";
 import { defineParams, isSmall, mountWithCleanup } from "@web/../tests/web_test_helpers";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { TimePicker } from "@web/core/time_picker/time_picker";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { TimePicker } from "@web/core/components/time_picker/time_picker";
 import { range } from "@web/core/utils/numbers";
 
 const { DateTime } = luxon;

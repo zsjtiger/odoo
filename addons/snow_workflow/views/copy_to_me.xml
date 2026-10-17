@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+  <record id="snow_workflow_carbon_copy_list" model="ir.ui.view">
+    <field name="name">snow.workflow.carbon.copy.tree</field>
+    <field name="model">snow.workflow.carbon.copy</field>
+    <field name="arch" type="xml">
+      <list create="0" delete="0" edit="1" export_xlsx="false" default_order="create_date desc">
+        <field name="task_name" string="task name"/>
+        <field name="object_name" string="approval type"/>
+        <field name="create_date" string="copy date"/>
+        <field name="status_name" string="status name"/>
+        <field name="submitter_name" string="submitter"/>
+        <button name="dynamic_redirect" type="object" string="detail" icon="fa-external-link"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="snow_workflow_carbon_copy_kanban" model="ir.ui.view">
+    <field name="name">snow.workflow.carbon.copy.kanban</field>
+    <field name="model">snow.workflow.carbon.copy</field>
+    <field name="arch" type="xml">
+      <kanban class="o_kanban_mobile" create="0" edit="0" delete="0" export_xlsx="false" default_order="create_date desc">
+          <field name="task_name" string="task name"/>
+          <field name="object_name" string="approval type"/>
+          <field name="create_date" string="copy date"/>
+          <field name="status_name" string="status name"/>
+          <field name="submitter_name" string="submitter"/>
+          <button name="dynamic_redirect" type="object" string="detail" icon="fa-external-link"/>
+      <templates><t t-name="card"><div class="o_kanban_record"><div class="fw-bold"><field name="task_name"/></div><div class="text-muted small"><field name="object_name"/></div><div class="text-muted small"><field name="create_date"/></div><div class="text-muted small"><field name="status_name"/></div><div class="text-muted small"><field name="submitter_name"/></div></div></t></templates></kanban>
+    </field>
+  </record>
+
+  <record id="snow_workflow_carbon_copy_act" model="ir.actions.act_window">
+    <field name="name">copy to me</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">snow.workflow.carbon.copy</field>
+    <field name="view_mode">list,kanban</field>
+    <field name="view_ids" eval="[(5,0,0),             (0,0,{'view_id':ref('snow_workflow_carbon_copy_list'),'view_mode':'list'}),             (0,0,{'view_id':ref('snow_workflow_carbon_copy_kanban'),'view_mode':'kanban'})]">
+    </field>
+    <field name="context">{"_type": "copy_to_me"}</field>
+  </record>
+</odoo>

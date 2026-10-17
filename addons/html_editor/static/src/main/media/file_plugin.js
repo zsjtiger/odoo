@@ -7,11 +7,11 @@ import { isEmpty } from "@html_editor/utils/dom_info";
 import { closestElement, firstLeaf, lastLeaf } from "@html_editor/utils/dom_traversal";
 import { nodeSize } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { DISABLED_NAMESPACE } from "../toolbar/toolbar_plugin";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { FileModel } from "@web/core/file_viewer/file_model";
-import { downloadFile } from "@web/core/network/download";
+import { AlertDialog } from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
+import { FileModel } from "@web/core/components/file_viewer/file_model";
+import { downloadFile } from "@web/core/services/network/download";
 import { isLinkSupported } from "../link/link_plugin";
 
 export class FilePlugin extends Plugin {
