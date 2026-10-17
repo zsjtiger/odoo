@@ -8,6 +8,7 @@ import {
 import { designerState } from "../designer_state";
 import { FieldDetailPage } from "./field_detail_page";
 import { getFieldTypeLabels } from "./field_types";
+import { PageLayoutEditor } from "../page_layout/page_layout_editor";
 import { ModelButtons } from "./model_buttons";
 import { NewFieldDialog } from "./new_field_dialog";
 
@@ -17,7 +18,7 @@ const LAYOUT_PRIORITY = ["form", "list"];
 
 export class ModelDetail extends Component {
     static template = "web_studio.ModelDetail";
-    static components = { FieldDetailPage, ModelButtons };
+    static components = { FieldDetailPage, ModelButtons, PageLayoutEditor };
 
     props = useProps({
         model: t.object(),
@@ -170,6 +171,20 @@ export class ModelDetail extends Component {
             ? await this.action.loadAction(model.actionId)
             : defaultActionForModel({ model: model.model, view_type: viewType });
         this.studio.setParams({ action, viewType, mode: this.studio.MODES.EDITOR, editorTab: "views" });
+    }
+
+    /** Opens the form layout in Studio's own view editor, for the advanced changes. */
+    openAdvancedEditor() {
+        return this.openLayout("form");
+    }
+
+    /** Opens the page layout editor of the form. */
+    editPageLayout() {
+        this.showSection("page_layout");
+    }
+
+    backToLayouts() {
+        this.showSection("layouts");
     }
 
     openNewField() {

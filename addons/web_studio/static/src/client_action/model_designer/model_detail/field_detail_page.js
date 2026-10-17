@@ -61,6 +61,8 @@ export class FieldDetailPage extends Component {
             required: false,
             options: [],
             removedOptionIds: [],
+            relation: "",
+            models: [],
         });
 
         this.isDirty = computed(() => this.hasChanges());
@@ -72,7 +74,15 @@ export class FieldDetailPage extends Component {
                 this.state.options.every((option) => option.name.trim() !== "")
         );
 
-        onWillStart(() => this.load());
+        onWillStart(async () => {
+            this.state.models = await this.orm.searchRead(
+                "ir.model",
+                [["transient", "=", false]],
+                ["name", "model"],
+                { order: "name ASC" }
+            );
+            await this.load();
+        });
         onWillUpdateProps((nextProps) => {
             if (nextProps.fieldId !== this.props.fieldId) {
                 this.state.loading = true;
@@ -106,6 +116,7 @@ export class FieldDetailPage extends Component {
         this.state.label = record.field_description;
         this.state.help = record.help || "";
         this.state.required = record.required;
+        this.state.relation = record.relation || "";
         this.state.options = sorted.map((option) => this.optionFromRecord(option));
         this.state.removedOptionIds = [];
         this.state.loading = false;
@@ -131,6 +142,15 @@ export class FieldDetailPage extends Component {
 
     get isCustom() {
         return this.state.field?.isCustom;
+    }
+
+    /** Only a lookup (many2one) can be pointed to another model without a new column. */
+    get canChangeRelation() {
+        return this.isCustom && this.state.field?.type === "many2one";
+    }
+
+    onRelationChange(ev) {
+        this.state.relation = ev.target.value;
     }
 
     /** Commands to update the picklist values, empty when nothing changed. */
@@ -164,6 +184,7 @@ export class FieldDetailPage extends Component {
             this.state.label !== field.label ||
             this.state.help !== field.help ||
             (field.isCustom && this.state.required !== field.required) ||
+            (this.canChangeRelation && this.state.relation !== field.relation) ||
             (this.isSelection && field.isCustom && this.optionCommands().length > 0)
         );
     }
@@ -180,6 +201,9 @@ export class FieldDetailPage extends Component {
         }
         if (field.isCustom && this.state.required !== field.required) {
             values.required = this.state.required;
+        }
+        if (this.canChangeRelation && this.state.relation !== field.relation) {
+            values.relation = this.state.relation;
         }
         if (this.isSelection && field.isCustom) {
             const commands = this.optionCommands();

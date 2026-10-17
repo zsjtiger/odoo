@@ -97,6 +97,10 @@
             <FieldDetailPage t-elif="this.section === 'field'" model="this.props.model" fieldId="this.selectedFieldId" onChanged.bind="this.onFieldsChanged"/>
             <ModelButtons t-elif="this.section === 'buttons'" model="this.props.model"/>
 
+            <PageLayoutEditor t-elif="this.section === 'page_layout'" model="this.props.model"
+                onAdvanced="() => this.openAdvancedEditor()"
+                onBack="() => this.backToLayouts()"/>
+
             <section t-elif="this.section === 'layouts'" class="o_web_studio_model_layouts flex-grow-1 p-4 overflow-auto">
                 <h3 class="mb-1">Page Layouts</h3>
                 <p class="text-muted mb-3">Choose the layout to edit. Fields, buttons and sections are placed in the view editor.</p>
@@ -109,7 +113,9 @@
                                     <p class="card-text text-muted small mb-3">
                                         The <t t-out="this.viewLabel(viewType).toLowerCase()"/> view of <t t-out="this.props.model.name"/>.
                                     </p>
-                                    <button type="button" class="btn btn-outline-primary mt-auto o_web_studio_edit_layout"
+                                    <button t-if="viewType === 'form'" type="button" class="btn btn-primary mt-auto o_web_studio_edit_page_layout"
+                                        t-on-click="() => this.editPageLayout()">Edit Page Layout</button>
+                                    <button t-else="" type="button" class="btn btn-outline-primary mt-auto o_web_studio_edit_layout"
                                         t-att-data-view-type="viewType"
                                         t-on-click="() => this.openLayout(viewType)">Edit layout</button>
                                 </div>

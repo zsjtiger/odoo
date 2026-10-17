@@ -869,6 +869,19 @@ Are you sure you want to get rid of them?""", len(records))
             studio_view = self._get_studio_view(view)
             return self._return_view(view, studio_view, context)
 
+    @http.route('/web_studio/edit_page_layout', type='jsonrpc', auth='user')
+    def edit_page_layout(self, view_id, arch, context=None):
+        """ Stores the arch of a page layout as the studio view of the form, verbatim.
+
+            The arch replaces the root of the form (it is not merged through the
+            operations of the view editor), so it is written as it is.
+        """
+        if context:
+            request.update_context(**clean_context(context))
+        view = request.env['ir.ui.view'].browse(view_id)._get_closest_primary_view()
+        studio_view = self._set_studio_view(view, arch)
+        return self._return_view(view, studio_view or request.env['ir.ui.view'], context)
+
     @http.route('/web_studio/create_default_view', type='jsonrpc', auth='user')
     def create_default_view(self, model, view_type, attrs):
         attrs['string'] = "Default %s view for %s" % (view_type, model)

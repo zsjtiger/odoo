@@ -51,6 +51,7 @@
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label" for="o_web_studio_field_page_type">Data Type</label>
                                     <input id="o_web_studio_field_page_type" class="form-control" readonly="1" t-att-value="this.state.field.typeLabel"/>
+                                    <div class="form-text">The data type can't be changed: delete the field and create it again.</div>
                                 </div>
                             </div>
                             <div class="mb-3">
@@ -74,7 +75,15 @@
                     <div t-if="this.isRelation" class="card mb-4 o_web_studio_field_relationship">
                         <div class="card-header fw-bold">Relationship</div>
                         <div class="card-body">
-                            <div class="mb-2">Related object: <code t-out="this.state.field.relation"/></div>
+                            <div t-if="this.canChangeRelation" class="mb-2">
+                                <label class="form-label" for="o_web_studio_field_page_relation">Related Model</label>
+                                <select id="o_web_studio_field_page_relation" class="form-select o_web_studio_field_relation" t-on-change="this.onRelationChange">
+                                    <t t-foreach="this.state.models" t-as="model" t-key="model.id">
+                                        <option t-att-value="model.model" t-att-selected="model.model === this.state.relation" t-out="model.name"/>
+                                    </t>
+                                </select>
+                            </div>
+                            <div t-else="" class="mb-2">Related object: <code t-out="this.state.field.relation"/></div>
                             <div t-if="this.state.field.relationTable">Junction table: <code t-out="this.state.field.relationTable"/></div>
                         </div>
                     </div>

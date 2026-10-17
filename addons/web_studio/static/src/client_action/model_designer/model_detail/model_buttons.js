@@ -3,6 +3,7 @@ import { Dialog } from "@web/core/dialogs/dialog/dialog";
 import { ConfirmationDialog } from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/data/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { STUDIO_MODULE } from "../page_layout/page_layout_model";
 
 /** Buttons every record has, as in Salesforce's standard buttons. */
 export const STANDARD_BUTTONS = [
@@ -71,13 +72,15 @@ export class ModelButtons extends Component {
             ["name", "state", "code", "binding_view_types"],
             { order: "name ASC" }
         );
-        // Actions defined by a module are standard, the ones created here have no xmlid
+        // Actions defined by a module are standard, the ones created in Studio are custom
+        // The xml ids created by Studio (to place a button on a layout) don't count
         const moduleRecords = actions.length
             ? await this.orm.searchRead(
                   "ir.model.data",
                   [
                       ["model", "=", "ir.actions.server"],
                       ["res_id", "in", actions.map((action) => action.id)],
+                      ["module", "!=", STUDIO_MODULE],
                   ],
                   ["res_id"]
               )

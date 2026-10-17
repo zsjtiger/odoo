@@ -49,6 +49,7 @@ const defaultFields = () => ({
     ],
     x_ticket: [
         { id: 20, name: "x_title", field_description: "Title", help: "", ttype: "char", required: false, relation: false, relation_table: false, state: "manual", selection_ids: [] },
+        { id: 21, name: "x_owner", field_description: "Owner", help: "", ttype: "many2one", required: false, relation: "partner", relation_table: false, state: "manual", selection_ids: [] },
     ],
 });
 
@@ -173,15 +174,15 @@ test("the type filter on fields separates standard and custom fields", async () 
     expect(queryAllTexts(".o_web_studio_field_row td:nth-child(1)")).toEqual(["Loyalty", "Stage"]);
 });
 
-test("editing a layout opens the matching view in the view editor", async () => {
+test("the form layout opens the page layout editor, other layouts the view editor", async () => {
     await openContact();
     await contains(".o_web_studio_model_section:contains(Page Layouts)").click();
     expect(queryAllTexts(".o_web_studio_layout_card .card-title")).toEqual(["Form", "List"]);
-    await contains(".o_web_studio_edit_layout[data-view-type=form]").click();
+    await contains(".o_web_studio_edit_layout[data-view-type=list]").click();
     await waitUntil(() => setParamsCalls.length === 1);
     const params = setParamsCalls.at(-1);
     expect(params.mode).toBe("editor");
-    expect(params.viewType).toBe("form");
+    expect(params.viewType).toBe("list");
     expect(params.action.id).toBe(501);
 });
 
@@ -250,6 +251,17 @@ test("picklist values can be renamed, added, reordered and removed", async () =>
         [1, 71, { name: "Brand new", sequence: 1 }],
         [0, 0, { value: "third", name: "Third", sequence: 2 }],
     ]);
+});
+
+test("the related model of a custom lookup can be changed", async () => {
+    await openTicket();
+    await openField("Owner");
+    expect(queryOne(".o_web_studio_field_relation").value).toBe("partner");
+    await contains(".o_web_studio_field_relation").select("x_ticket");
+    await contains(".o_web_studio_save_field").click();
+    await waitUntil(() => calls.write.length === 1);
+    expect(calls.write[0].ids).toEqual([21]);
+    expect(calls.write[0].values).toEqual({ relation: "x_ticket" });
 });
 
 test("creating a field from the detail", async () => {
