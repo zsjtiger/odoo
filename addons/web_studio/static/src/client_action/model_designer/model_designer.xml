@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+<t t-name="web_studio.ModelDesigner">
+    <div class="o_web_studio_model_designer d-flex flex-column h-100 w-100 overflow-auto">
+        <div class="o_web_studio_model_designer_header d-flex flex-wrap align-items-center gap-3 px-4 py-3">
+            <h2 class="o_web_studio_model_designer_title m-0 me-auto">Models</h2>
+            <input type="search"
+                class="form-control o_web_studio_model_search"
+                placeholder="Search models"
+                t-att-value="this.state.search"
+                t-on-input="this.onSearchInput"/>
+            <div class="btn-group" role="group" aria-label="Filter models by type">
+                <button type="button" class="btn btn-sm"
+                    t-att-class="this.state.filter === 'all' ? 'btn-primary' : 'btn-outline-primary'"
+                    t-on-click="() => this.setFilter('all')">All</button>
+                <button type="button" class="btn btn-sm"
+                    t-att-class="this.state.filter === 'custom' ? 'btn-primary' : 'btn-outline-primary'"
+                    t-on-click="() => this.setFilter('custom')">Custom</button>
+                <button type="button" class="btn btn-sm"
+                    t-att-class="this.state.filter === 'standard' ? 'btn-primary' : 'btn-outline-primary'"
+                    t-on-click="() => this.setFilter('standard')">Standard</button>
+            </div>
+        </div>
+
+        <div t-if="this.state.loading" class="o_web_studio_model_designer_loading text-center p-5">
+            <i class="fa fa-circle-o-notch fa-spin fa-2x"/>
+        </div>
+
+        <div t-else="" class="px-4 pb-4">
+            <table class="o_web_studio_model_table table table-hover bg-view align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th scope="col">Label</th>
+                        <th scope="col">API name</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Layouts</th>
+                        <th scope="col" class="text-end">Edit layout</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="this.filteredModels()" t-as="model" t-key="model.id">
+                        <tr class="o_web_studio_model_row">
+                            <td>
+                                <a href="#" class="o_web_studio_model_name fw-bold" t-on-click.prevent="() => this.openModel(model)">
+                                    <t t-esc="model.name"/>
+                                </a>
+                            </td>
+                            <td><code t-esc="model.model"/></td>
+                            <td>
+                                <span t-if="model.isCustom" class="badge text-bg-primary">Custom</span>
+                                <span t-else="" class="badge text-bg-secondary">Standard</span>
+                            </td>
+                            <td>
+                                <t t-if="model.viewTypes.length">
+                                    <t t-foreach="model.viewTypes" t-as="viewType" t-key="viewType">
+                                        <span class="badge bg-white text-dark border me-1" t-esc="this.viewLabel(viewType)"/>
+                                    </t>
+                                </t>
+                                <span t-else="" class="text-muted">No action yet</span>
+                            </td>
+                            <td class="text-end text-nowrap">
+                                <button type="button" class="btn btn-sm btn-outline-primary me-1 o_web_studio_open_form"
+                                    t-on-click="() => this.openLayout(model, 'form')">Form</button>
+                                <button type="button" class="btn btn-sm btn-outline-primary o_web_studio_open_list"
+                                    t-on-click="() => this.openLayout(model, 'list')">List</button>
+                            </td>
+                        </tr>
+                    </t>
+                    <tr t-if="!this.filteredModels().length" class="o_web_studio_model_empty">
+                        <td colspan="5" class="text-center text-muted p-4">No model matches your search.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</t>
+
+</templates>

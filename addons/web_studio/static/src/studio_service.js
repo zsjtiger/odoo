@@ -97,7 +97,7 @@ function isActionStateValid(actionState) {
     );
 }
 
-function defaultActionForModel({ model, resId, view_id, view_type }) {
+export function defaultActionForModel({ model, resId, view_id, view_type }) {
     const action = {
         res_model: model,
         type: "ir.actions.act_window",

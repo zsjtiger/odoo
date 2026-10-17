@@ -100,7 +100,7 @@ test("switch view and close Studio", async () => {
     await click(".o_web_studio_navbar_item");
     await waitFor(".o_web_studio_editor_manager");
 
-    await click(".o_web_studio_menu .o_menu_sections button");
+    await click(".o_web_studio_menu .o_menu_sections button:contains(Views)");
     await waitFor(".o_web_studio_action_editor");
 
     await click(".o_web_studio_views .o_web_studio_thumbnail_item.o_web_studio_thumbnail_list");
