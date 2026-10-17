@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- AI 页面: 安装本模块后, AI 出现在移动端各页面的标签栏中 -->
+    <!-- AI 页面: 安装本模块后, AI 出现在移动端各页面的标签栏中, 位于"我的"之前 -->
     <data noupdate="1">
         <record id="ai_page" model="mobile_web.mobile.page">
             <field name="name">AI</field>
@@ -40,42 +40,43 @@
             <field name="mobile_page" ref="mobile_ai.ai_page"/>
             <field name="ir_action" ref="mobile_web.user_my_page_action"/>
             <field name="svg_icon_href">#crossnow-icon-TabMy</field>
-            <field name="sequence">4</field>
+            <field name="sequence">5</field>
         </record>
         <record id="ai_page_ai_page_action_rel" model="mobile_web.mobile.page.actions">
             <field name="name">AI</field>
             <field name="mobile_page" ref="mobile_ai.ai_page"/>
             <field name="ir_action" ref="mobile_ai.ai_page_action"/>
             <field name="svg_icon_href">#crossnow-icon-TabAI</field>
-            <field name="sequence">5</field>
+            <field name="sequence">4</field>
         </record>
         <record id="home_page_ai_page_action_rel" model="mobile_web.mobile.page.actions">
             <field name="name">AI</field>
             <field name="mobile_page" ref="mobile_web.home_page"/>
             <field name="ir_action" ref="mobile_ai.ai_page_action"/>
             <field name="svg_icon_href">#crossnow-icon-TabAI</field>
-            <field name="sequence">5</field>
+            <field name="sequence">4</field>
         </record>
         <record id="todo_page_ai_page_action_rel" model="mobile_web.mobile.page.actions">
             <field name="name">AI</field>
             <field name="mobile_page" ref="mobile_web.todo_page"/>
             <field name="ir_action" ref="mobile_ai.ai_page_action"/>
             <field name="svg_icon_href">#crossnow-icon-TabAI</field>
-            <field name="sequence">5</field>
+            <field name="sequence">4</field>
         </record>
         <record id="schedule_page_ai_page_action_rel" model="mobile_web.mobile.page.actions">
             <field name="name">AI</field>
             <field name="mobile_page" ref="mobile_web.schedule_page"/>
             <field name="ir_action" ref="mobile_ai.ai_page_action"/>
             <field name="svg_icon_href">#crossnow-icon-TabAI</field>
-            <field name="sequence">5</field>
+            <field name="sequence">4</field>
         </record>
         <record id="user_my_page_ai_page_action_rel" model="mobile_web.mobile.page.actions">
             <field name="name">AI</field>
             <field name="mobile_page" ref="mobile_web.user_my_page"/>
             <field name="ir_action" ref="mobile_ai.ai_page_action"/>
             <field name="svg_icon_href">#crossnow-icon-TabAI</field>
-            <field name="sequence">5</field>
+            <field name="sequence">4</field>
         </record>
     </data>
+
 </odoo>

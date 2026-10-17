@@ -29,3 +29,14 @@ class TestMobileAI(TransactionCase):
         page = self.env.ref('mobile_ai.ai_page')
         tabs = self.env['mobile_web.mobile.page.actions'].search([('mobile_page', '=', page.id)])
         self.assertEqual(len(tabs), 5)
+
+    def test_ai_tab_is_before_me_on_every_page(self):
+        """ AI 的标签排在"我的"之前, "我的"始终是最后一个标签 """
+        tab_actions = self.env['mobile_web.mobile.page.actions']
+        for xmlid in ('home_page', 'todo_page', 'schedule_page', 'user_my_page', 'ai_page'):
+            with self.subTest(page=xmlid):
+                page = self.env.ref(f'mobile_web.{xmlid}') if xmlid != 'ai_page' else self.env.ref('mobile_ai.ai_page')
+                tabs = tab_actions.search([('mobile_page', '=', page.id)], order='sequence')
+                names = tabs.mapped('name')
+                self.assertEqual(names[-1], 'Me')
+                self.assertLess(names.index('AI'), names.index('Me'))

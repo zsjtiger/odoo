@@ -11,7 +11,7 @@ Adds the AI assistant to the mobile web client. The chat is the same discuss cha
 AI session as in the web client, so conversations and tools behave the same and are shared
 between both clients.
     """,
-    'version': '1.0',
+    'version': '1.1',
     'depends': ['mobile_web', 'ai'],
     'data': [
         'data/mobile_ai_pages.xml',
@@ -31,5 +31,6 @@ between both clients.
             'mobile_ai/static/tests/**/*.test.js',
         ],
     },
+    'post_init_hook': '_post_init_hook',
     'license': 'LGPL-3',
 }
