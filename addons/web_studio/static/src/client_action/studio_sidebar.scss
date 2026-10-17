@@ -55,10 +55,10 @@ $o-web-studio-sidebar-margin: $grid-gutter-width * 0.5;
 
 .o_web_studio_sidebar {
     --Notebook-header-zindex: 200;
-    --o-web-studio-bg-dark: #{$o-web-studio-bg-dark};
+    --o-web-studio-bg-dark: #{darken($o-web-studio-salesforce-navy, 12%)};
 
-    background-color: $o-web-studio-bg-medium;
-    border-right: 3px solid $o-web-studio-bg-dark;
+    background-color: $o-web-studio-salesforce-navy;
+    border-right: 3px solid darken($o-web-studio-salesforce-navy, 12%);
     color-scheme: dark;
 
     .form-select {
@@ -66,7 +66,7 @@ $o-web-studio-sidebar-margin: $grid-gutter-width * 0.5;
     }
 
     .o_notebook {
-        --Notebook__link-background-color: #{$o-web-studio-bg-dark};
+        --Notebook__link-background-color: #{darken($o-web-studio-salesforce-navy, 12%)};
     }
 
     .o_notebook_headers {
@@ -86,14 +86,14 @@ $o-web-studio-sidebar-margin: $grid-gutter-width * 0.5;
         .nav-item {
             flex: 1 0 auto;
             text-align: center;
-            background-color: $o-web-studio-bg-dark;
+            background-color: darken($o-web-studio-salesforce-navy, 12%);
             margin: 0;
 
             .active, &:first-child:last-child {
-                background-color: $o-web-studio-bg-medium;
+                background-color: $o-web-studio-salesforce-blue;
             }
             :not(.inactive):not(.active):hover {
-                background-color: rgba($o-web-studio-bg-medium, 0.5);
+                background-color: rgba($o-web-studio-salesforce-blue, 0.5);
             }
             .nav-link, .nav-link:active {
                 width: 100%;
