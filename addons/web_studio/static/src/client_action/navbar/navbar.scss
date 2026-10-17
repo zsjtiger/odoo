@@ -54,6 +54,15 @@
     .o_web_studio_leave > a {
       // Allows to keep the same alignment as the navbar entries
       line-height: calc(var(--o-navbar-height) - #{$o-navbar-padding-v * 2});
+      // Same colours as the other entries of the navbar, not the brand colour
+      background-color: $o-web-studio-bg-medium;
+      color: rgba($o-web-studio-text-light, .9);
+
+      &:hover,
+      &:focus {
+        background-color: $o-web-studio-bg-dark;
+        color: $o-web-studio-text-light;
+      }
     }
   }
 }
