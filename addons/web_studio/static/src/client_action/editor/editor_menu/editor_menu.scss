@@ -1,8 +1,8 @@
 .o_web_studio_menu {
-    background-color: $o-web-studio-bg-medium;
+    background-color: $o-web-studio-salesforce-navy;
     text-align: center;
     min-height: $o-web-studio-menu-height;
-    border-bottom: 3px solid $o-web-studio-bg-dark;
+    border-bottom: 3px solid $o-web-studio-salesforce-navy;
 
     .o_web_studio_breadcrumb {
         display: inline-flex;
@@ -68,7 +68,7 @@
             font-size: 0.9rem;
             color: $o-web-studio-text-inactive;
             &:hover {
-                background-color: darken($o-web-studio-bg-medium, 2%);
+                background-color: $o-web-studio-salesforce-blue;
                 box-shadow: 0px 3px lighten($o-brand-primary, 10%);
                 color: $o-web-studio-text-light;
             }

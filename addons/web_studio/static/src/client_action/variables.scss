@@ -13,6 +13,10 @@ $o-web-studio-bg-dark: #262c34 !default;
 $o-web-studio-bg-darker: darken($o-web-studio-bg-dark, 2%) !default;
 $o-web-studio-bg-action: #eaeaea !default;
 
+// Salesforce Lightning global header navy, and its action blue for hover and active states
+$o-web-studio-salesforce-navy: #16325c;
+$o-web-studio-salesforce-blue: #0176d3;
+
 $o-web-studio-text-light: #eaeaea;
 $o-web-studio-text-inactive: darken($o-web-studio-text-light, 20%);
 $o-web-studio-text-dark: #15161a;

@@ -1,21 +1,17 @@
-// Salesforce Lightning global header navy, and its action blue for hover and active states
-$o-web-studio-navbar-bg: #16325c;
-$o-web-studio-navbar-accent: #0176d3;
-
 .o_studio_navbar {
   --NavBar-brand-color: #{rgba($o-web-studio-text-light, .9)};
   --NavBar-entry-color: #{rgba($o-web-studio-text-light, .9)};
-  --NavBar-entry-backgroundColor: #{$o-web-studio-navbar-bg};
-  --NavBar-entry-backgroundColor--hover: #{$o-web-studio-navbar-accent};
-  --NavBar-entry-backgroundColor--focus: #{$o-web-studio-navbar-accent};
+  --NavBar-entry-backgroundColor: #{$o-web-studio-salesforce-navy};
+  --NavBar-entry-backgroundColor--hover: #{$o-web-studio-salesforce-blue};
+  --NavBar-entry-backgroundColor--focus: #{$o-web-studio-salesforce-blue};
   --NavBar-menuToggle-color: #{rgba($o-web-studio-text-light, .9)};
-  --NavBar-entry-borderColor-active: #{$o-web-studio-navbar-accent};
-  --NavBar-entry-backgroundColor--active: #{$o-web-studio-navbar-accent};
+  --NavBar-entry-borderColor-active: #{$o-web-studio-salesforce-blue};
+  --NavBar-entry-backgroundColor--active: #{$o-web-studio-salesforce-blue};
   --NavBar-entry-color--active: #{$o-web-studio-text-light};
   --NavBar-entry-color--hover: #{$o-web-studio-text-light};
 
-  background: $o-web-studio-navbar-bg;
-  border-color: $o-web-studio-navbar-bg;
+  background: $o-web-studio-salesforce-navy;
+  border-color: $o-web-studio-salesforce-navy;
 
   &.o_main_navbar {
     .o_menu_toggle {
@@ -59,12 +55,12 @@ $o-web-studio-navbar-accent: #0176d3;
       // Allows to keep the same alignment as the navbar entries
       line-height: calc(var(--o-navbar-height) - #{$o-navbar-padding-v * 2});
       // Same colours as the other entries of the navbar, not the brand colour
-      background-color: $o-web-studio-navbar-bg;
+      background-color: $o-web-studio-salesforce-navy;
       color: rgba($o-web-studio-text-light, .9);
 
       &:hover,
       &:focus {
-        background-color: $o-web-studio-navbar-accent;
+        background-color: $o-web-studio-salesforce-blue;
         color: $o-web-studio-text-light;
       }
     }
