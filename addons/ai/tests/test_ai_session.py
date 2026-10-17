@@ -200,7 +200,7 @@ class TestAISession(TestAICallbackCommon, BusCase):
             'call_id': 'call_1',
         }
 
-        with mute_logger('odoo.addons.ai.models.ai_session'):
+        with mute_logger('odoo.addons.ai.models.ai_session_tools'):
             items = list(session._handle_tool_calls(
                 [tool_call],
                 {self.tool_failing.ai_tool_name: self.tool_failing},

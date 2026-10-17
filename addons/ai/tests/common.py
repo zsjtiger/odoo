@@ -107,7 +107,7 @@ class TestAICommon(TransactionCase):
         })
 
     def mock_completion_request(self, responses):
-        return patch.object(AiSession, '_get_completions', side_effect=({
+        return patch.object(self.registry['ai.session'], '_get_completions', side_effect=({
             'result': {
                 'role': 'assistant',
                 'content': parts,

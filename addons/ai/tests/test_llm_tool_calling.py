@@ -3,7 +3,7 @@ import json
 from datetime import datetime
 from unittest.mock import patch
 
-from odoo.addons.ai.models.ai_session import _logger as ai_session_logger
+from odoo.addons.ai.models.ai_session_tools import _logger as ai_session_logger
 from odoo.addons.ai.models.ir_actions_server import IrActionsServer
 from odoo.addons.ai.utils.ai_citation import apply_web_citations
 from odoo.addons.ai.utils.ai_utils import get_text_from_parts

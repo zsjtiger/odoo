@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
-from odoo.addons.ai.models.ai_session import _logger as tool_logger
+from odoo.addons.ai.models.ai_session_tools import _logger as tool_logger
 from odoo.addons.ai.tests.common import TestAICallbackCommon
 from odoo.addons.ai.utils.previews import make_records_update_preview
 from odoo.tools.mail import html_to_inner_content

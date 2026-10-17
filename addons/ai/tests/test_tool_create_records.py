@@ -8,7 +8,7 @@ from odoo.tests import users
 from odoo.tools.mail import html_sanitize, html_to_inner_content
 from odoo.tools.misc import format_datetime
 
-from odoo.addons.ai.models.ai_session import _logger as tool_logger
+from odoo.addons.ai.models.ai_session_tools import _logger as tool_logger
 from odoo.addons.ai.tests.common import TestAICallbackCommon
 from odoo.addons.ai.utils.previews import make_create_preview, make_record_create_preview
 
