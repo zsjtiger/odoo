@@ -15,7 +15,6 @@ const TEXTS = {
     placeholder: _t("Message AI"),
     send: _t("Send"),
     newChat: _t("New chat"),
-    add: _t("Add"),
     voice: _t("Voice input"),
     thinking: _t("Thinking…"),
     sendFailed: _t("Failed to send, please try again"),
@@ -79,9 +78,6 @@ export class AIPage extends MobilePage {
                     <p t-if="this.state.error" class="m_error"><t t-esc="this.texts.sendFailed"/></p>
                     <form class="m_ai_composer" t-on-submit.prevent="this.send">
                         <div class="m_ai_composer_box">
-                            <button type="button" class="m_ai_composer_btn" t-att-title="this.texts.add" disabled="disabled">
-                                <svg viewBox="0 0 24 24" class="m_ai_icon"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                            </button>
                             <textarea class="m_ai_input" rows="1" t-att-placeholder="this.texts.placeholder"
                                       t-att-value="this.state.draft" t-on-input="this.onInput" t-on-keydown="this.onKeydown"/>
                             <button type="submit" class="m_ai_composer_btn m_ai_send" t-att-title="this.texts.send"
