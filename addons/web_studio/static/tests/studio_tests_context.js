@@ -241,7 +241,6 @@ export function defineStudioEnvironment() {
             views: [
                 [1, "kanban"],
                 [2, "list"],
-                [false, "grid"],
                 [false, "pivot"],
                 [false, "form"],
                 [false, "search"],
@@ -257,7 +256,6 @@ export function defineStudioEnvironment() {
             views: [
                 [2, "list"],
                 [1, "kanban"],
-                [false, "grid"],
                 [false, "search"],
                 [false, "form"],
             ],

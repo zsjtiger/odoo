@@ -1,8 +1,6 @@
 import { rpc } from "@web/core/services/network/rpc";
-import {
-    TranslationButton as _TranslationButton,
-    TranslateModel as _TranslateModel,
-} from "@web/views/fields/text/translation/translation";
+import { TranslationButton as _TranslationButton } from "@web/views/fields/text/translation/translation";
+import { TranslateModel as _TranslateModel } from "@web/views/fields/text/translation/translation_model";
 
 class TranslateModel extends _TranslateModel {
     setup() {

@@ -23,15 +23,6 @@ class TestViewNormalization(TransactionCase):
         request_reset = request_var.set(self)
         self.addCleanup(request_var.reset, request_reset)
         self.base_view = self.env.ref('base.view_partner_form')
-        self.gantt_view = self.env['ir.ui.view'].create({
-            'arch_base':
-            """
-            <gantt date_start="date" date_stop="" string="Test">
-            </gantt>
-            """,
-            'model': 'res.partner',
-            'type': 'gantt',
-        })
         self.view = self.base_view.create({
             'arch_base':
             """
@@ -104,21 +95,16 @@ class TestViewNormalization(TransactionCase):
             'model': 'res.partner'})
         self.studio_controller = WebStudioController()
 
-    def _test_view_normalization(self, original, expected, view='form'):
-        if view == 'gantt':
-            view = self.gantt_view
-        else:
-            view = self.view
-
+    def _test_view_normalization(self, original, expected):
         original = original and textwrap.dedent(original)
-        self.studio_controller._set_studio_view(view, original)
+        self.studio_controller._set_studio_view(self.view, original)
 
-        studio_view = self.studio_controller._get_studio_view(view)
+        studio_view = self.studio_controller._get_studio_view(self.view)
         studio_view = studio_view.with_context(load_all_views=True)
         normalized = studio_view.normalize()
 
-        self.studio_controller._set_studio_view(view, normalized)
-        self.env[self.view.model].with_context(studio=True, load_all_views=True).get_view(view.id, view.type)
+        self.studio_controller._set_studio_view(self.view, normalized)
+        self.env[self.view.model].with_context(studio=True, load_all_views=True).get_view(self.view.id, self.view.type)
 
         normalized = normalized and normalized.strip()
         expected = expected and textwrap.dedent(expected).strip()
@@ -745,22 +731,6 @@ class TestViewNormalization(TransactionCase):
               </xpath>
             </data>
         """)
-
-    # Correctly calculate the expr on flat views
-    def test_view_normalization_23(self):
-        self._test_view_normalization("""
-            <data>
-              <xpath expr="//gantt[1]" position="attributes">
-                <attribute name="date_stop">date</attribute>
-              </xpath>
-            </data>
-            """, """
-            <data>
-              <xpath expr="/gantt" position="attributes">
-                <attribute name="date_stop">date</attribute>
-              </xpath>
-            </data>
-            """, 'gantt')
 
     # test that unnamed groups/pages are given a pseudo-random name attribute
     def test_view_normalization_24(self):

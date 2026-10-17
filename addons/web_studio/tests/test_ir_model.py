@@ -598,7 +598,10 @@ class TestStudioIrModelHardcoded(TransactionCase):
             "worksheet",
         }
         modules = self.env["ir.module.module"].search([('name', 'in', list(needed_modules))])
-        self.assertEqual(len(needed_modules), len(modules), needed_modules.difference(modules.mapped('name')))
+        if missing := needed_modules.difference(modules.mapped('name')):
+            # The hardcoded lists describe the full Odoo set of modules, which this
+            # database does not have, so there is nothing to compare them with.
+            self.skipTest(f"Missing required modules {', '.join(sorted(missing))}")
 
         if ms := [m.name for m in modules if m.state != 'installed']:
             # At least one needed module is not installed, so we would not be able

@@ -3,7 +3,7 @@ import { registry } from "@web/core/framework/registry";
 import { user as originalUser } from "@web/core/services/user";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { standardActionServiceProps } from "@web/webclient/actions/action_plugin";
-import { computeAppsAndMenuItems, reorderApps } from "@web/webclient/menus/menu_helpers";
+import { computeAppsAndMenuItems } from "@web/webclient/menus/menu_helpers";
 
 import { AppCreator } from "./app_creator/app_creator";
 import { Editor } from "./editor/editor";
@@ -81,3 +81,26 @@ export class StudioClientAction extends Component {
 registry.category("lazy_components").add("StudioClientAction", StudioClientAction);
 // force: true to bypass the studio lazy loading action next time and just use this one directly
 registry.category("actions").add("studio", StudioClientAction, { force: true });
+
+/**
+ * Sorts the apps of the home menu according to the given order of xmlids.
+ * Apps missing from the order come first, in their original order.
+ * @param {Array} apps
+ * @param {string[]} order
+ */
+function reorderApps(apps, order) {
+    apps.sort((a, b) => {
+        const aIndex = order.indexOf(a.xmlid);
+        const bIndex = order.indexOf(b.xmlid);
+        if (aIndex === -1 && bIndex === -1) {
+            return apps.indexOf(a) - apps.indexOf(b);
+        }
+        if (aIndex === -1) {
+            return -1;
+        }
+        if (bIndex === -1) {
+            return 1;
+        }
+        return aIndex - bIndex;
+    });
+}

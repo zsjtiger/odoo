@@ -433,6 +433,16 @@ export class ViewCompiler {
 ViewCompiler.OWL_DIRECTIVE_WHITELIST = [];
 
 const templateCache = Object.create(null);
+
+/**
+ * Clears the cache of compiled templates, so that the next compilation uses the current arch.
+ * Used by Studio after a view was edited.
+ */
+export function resetViewCompilerCache() {
+    for (const key of Object.keys(templateCache)) {
+        delete templateCache[key];
+    }
+}
 /**
  * @param {typeof ViewCompiler} ViewCompiler
  * @param {string} key

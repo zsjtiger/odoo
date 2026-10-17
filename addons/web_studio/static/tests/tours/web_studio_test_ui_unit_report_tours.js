@@ -1,7 +1,7 @@
 import { registry } from "@web/core/framework/registry";
 import { download } from "@web/core/services/network/download";
 import { patch } from "@web/core/utils/patch";
-import { parseXML, serializeXML } from "@web/core/utils/xml";
+import { parseXML } from "@web/core/utils/xml";
 import { assertEqual, stepNotInStudio, nextTick } from "@web_studio/../tests/tours/tour_helpers";
 import { cookie } from "@web/core/services/browser/cookie";
 import { editorsWeakMap } from "@html_editor/../tests/tours/helpers/editor";
@@ -35,7 +35,7 @@ function normalizeXML(str) {
         }
     }
 
-    return serializeXML(doc);
+    return new XMLSerializer().serializeToString(doc);
 }
 
 function insertText(element, text, offsets = null) {
@@ -1209,7 +1209,7 @@ registry.category("web_tour.tours").add("web_studio.test_error_at_loading_debug"
         },
         {
             trigger:
-                ".o-web-studio-report-container strong:contains(odoo.addons.base.models.ir_qweb.QWebError)",
+                ".o-web-studio-report-container strong:contains(odoo.addons.base.models.ir_qweb.errors.QWebError)",
         },
     ],
 });

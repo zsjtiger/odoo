@@ -19,7 +19,7 @@ import {
     followRelation,
     getTreeEditorContent,
     SELECTORS,
-} from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
+} from "@web/../tests/core/editors/tree_editor/condition_tree_editor_test_helpers";
 import {
     contains,
     defineActions,
@@ -522,8 +522,6 @@ test("supports multiple occurences of field", async () => {
     await contains(
         ".o_web_studio_form_view_editor .o_inner_group .o-web-studio-editor--element-clickable:eq(0)"
     ).click();
-    // Would be true if not present in node's options
-    expect(".o_web_studio_sidebar input[name='enable_sms']").not.toBeChecked();
     await contains(
         ".o_web_studio_form_view_editor .o_inner_group .o-web-studio-editor--element-clickable:eq(1)"
     ).click();
@@ -2502,38 +2500,6 @@ test("sidebar for a related field", async () => {
     await contains(".o_field_widget[name='related']").click();
     expect(".o_web_studio_properties").toHaveClass("active");
     expect("input[name='string']").toHaveValue("myRelatedField");
-});
-
-test("Phone field in form with SMS", async () => {
-    expect.assertions(4);
-
-    await mountViewEditor({
-        type: "form",
-        resModel: "coucou",
-        arch: `
-            <form><sheet>
-                <group>
-                    <field name='display_name' widget='phone' />
-                </group>
-            </sheet></form>`,
-    });
-
-    onRpc("/web_studio/edit_view", async (request) => {
-        const { params } = await request.json();
-        expect.step("edit_view");
-        expect(params.operations[0].node.attrs).toEqual({
-            name: "display_name",
-            widget: "phone",
-        });
-        expect(params.operations[0].new_attrs).toEqual({
-            options: '{"enable_sms":false}',
-        });
-    });
-
-    await contains(".o_form_label:contains('Display name')").click();
-    expect(".o_web_studio_sidebar input[id='enable_sms']").toBeChecked();
-    await contains(".o_web_studio_sidebar input[id='enable_sms']").click();
-    expect.verifySteps(["edit_view"]);
 });
 
 test("modification of field appearing multiple times in view", async () => {

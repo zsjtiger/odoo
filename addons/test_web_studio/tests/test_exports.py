@@ -1,6 +1,5 @@
 from odoo import Command
 from odoo.tools import BinaryBytes
-from odoo.addons.sale.tests.common import SaleCommon
 
 from .common_exports import StudioExportCase, StudioExportSerializer
 
@@ -837,60 +836,4 @@ class TestStudioExports(StudioExportCase):
                 <field name="url"><![CDATA[http://odoo.com]]></field>
             </record>
             </odoo>""",
-        )
-
-
-class TestSpecificStudioExports_SaleOrder(
-    SaleCommon,
-    StudioExportCase
-):
-    _test_user_groups = None  # FIXME list needed groups
-
-    def test_export_demo_sale_orders(self):
-        # SPECIFIC: Confirm demo sale orders
-        self.sale_order.action_confirm()
-        self.create_export_model("sale.order", domain=[("id", "in", [self.sale_order.id])], is_demo_data=True)
-        self.create_export_model("sale.order.line", domain=[("order_id", "in", [self.sale_order.id])], is_demo_data=True)
-        self.studio_export()
-        self.assertFileList(
-            "demo/sale_order.xml",
-            "demo/sale_order_line.xml",
-            "demo/sale_order_confirm.xml",
-            "warnings.txt",  # because no products nor partners are exported here, but that's not the point of this test.
-        )
-        evl_attr_value = f"[[ref('{self.get_xmlid(self.sale_order)}')]]"
-        self.assertXML(
-            "demo/sale_order_confirm.xml",
-            f"""<odoo>
-                <!--Update sale order stages-->
-                <function model="sale.order" name="action_confirm" eval="{evl_attr_value}"/>
-            </odoo>""",
-        )
-
-
-class TestSpecificStudioExports_Website(StudioExportCase):
-    def test_unlink_default_main_menu(self):
-        # SPECIFIC: unlink the default main menu from the website if needed
-        website = self.env.ref('base.default_website')
-        menus = self.env['website.menu'].search([('website_id', '=', website.id)])
-        self.create_export_model("website.menu", domain=[("id", "in", [m.id for m in menus])])
-        self.studio_export()
-        if self.get_xmlid(website) != "base.default_website" or not any(r['url'] == '/default-main-menu' for r in menus):
-            # Only written for the default website and on a fresh install
-            self.skipTest("This test is only written for the default website and on a fresh install")
-
-        self.assertFileList(
-            "warnings.txt",  # because we do not export all the necessary data for website exports, but that's not the point of this test
-            "data/website_menu.xml",
-        )
-
-        # should have only function to unlink the default main menu
-        nodes = self.get_xml_nodes("data/website_menu.xml", "/odoo/*")
-        self.assertEqual(len(nodes), 1 + len(menus), "has a child for each menu + 1")
-        self.assertEqual([n.tag for n in nodes], ["function"] + ["record"] * len(menus))
-        self.assertXML(
-            nodes[0],
-            """<function model="website.menu" name="unlink">
-                <value model="website.menu" eval="obj().search([('website_id', '=', ref('base.default_website')), ('url', '=', '/default-main-menu')]).id"/>
-            </function>""",
         )

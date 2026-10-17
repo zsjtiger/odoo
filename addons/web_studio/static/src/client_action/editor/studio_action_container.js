@@ -1,5 +1,4 @@
 import { render } from "@web/core/owl/utils";
-import { actionContainerProps } from "@web/webclient/actions/action_container";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/framework/registry";
 import { rpc } from "@web/core/services/network/rpc";
@@ -21,7 +20,6 @@ const editorTabRegistry = registry.category("web_studio.editor_tabs");
 
 export class StudioActionContainer extends Component {
     props = useProps({
-        ...actionContainerProps,
         reloadId: t.number(),
     });
 

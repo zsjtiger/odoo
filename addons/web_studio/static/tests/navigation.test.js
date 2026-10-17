@@ -380,22 +380,6 @@ test("open same record when leaving form", async () => {
     expect(".o_form_view .o_field_widget[name=name] input").toHaveValue("Applejack");
 });
 
-test("open Studio with non editable view", async () => {
-    onRpc("grid_unavailability", () => ({}));
-
-    await mountWithCleanup(WebClientEnterprise);
-    await animationFrame();
-
-    await click(".o_app[data-menu-xmlid=app_1]");
-    await waitFor(".o_kanban_view");
-
-    await click(".o_switch_view.o_grid");
-    await waitFor(".o_grid_view");
-
-    await click(".o_web_studio_navbar_item");
-    await waitFor(".o_web_studio_action_editor");
-});
-
 test("open list view with sample data gives empty list view in studio", async () => {
     await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
@@ -820,7 +804,7 @@ test("can edit ir.actions.act_window without id", async () => {
     expect(
         ".o_web_studio_thumbnail_item:not(.disabled.pe-none):has(img[alt='View Form'])"
     ).toHaveCount(1);
-    expect(".o_web_studio_thumbnail_item.pe-none").toHaveCount(10);
+    expect(".o_web_studio_thumbnail_item.pe-none").toHaveCount(7);
 
     await click(".o_web_studio_leave");
     await waitFor(".o_action_manager:first:not(:has(.o_studio))");

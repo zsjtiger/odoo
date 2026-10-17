@@ -174,6 +174,20 @@ class TestStudioUIUnit(odoo.tests.HttpCase):
     def setUpClass(cls):
         super().setUpClass()
         setup_view_editor_data(cls)
+        cls.privacyLookupAction = cls.env["ir.actions.server"].create({
+            "name": "Privacy Lookup",
+            "model_id": cls.env.ref("base.model_res_partner").id,
+            "binding_model_id": cls.env.ref("base.model_res_partner").id,
+            "binding_view_types": "form,list,kanban",
+            "state": "code",
+            "code": "action = {}",
+        })
+        cls.env["ir.model.data"].create({
+            "name": "studio_privacy_lookup_action",
+            "model": "ir.actions.server",
+            "module": "web_studio",
+            "res_id": cls.privacyLookupAction.id,
+        })
 
     def setUp(self):
         super().setUp()
@@ -2317,29 +2331,6 @@ class TestStudioUIUnit(odoo.tests.HttpCase):
             <data>
                 <xpath expr="/form//field[@name='function']" position="attributes">
                     <attribute name="invisible">"Robert".lower() in (display_name or "").lower()</attribute>
-                </xpath>
-            </data>
-        """)
-
-    def test_cohort_measure_values(self):
-        testCohortView = self.env["ir.ui.view"].create({
-        "name": "simple partner",
-        "model": "res.partner",
-        "type": "cohort",
-        "arch": '''
-                <cohort string="foo" date_start="create_date" date_stop="create_date">
-                    <field name="name"/>
-                </cohort>
-        '''
-        })
-        self.start_tour("/web?debug=tests", "web_studio_test_cohort_measure_values", login="admin")
-
-        studio_view = _get_studio_view(testCohortView)
-
-        assertViewArchEqual(self, studio_view.arch, """
-             <data>
-                <xpath expr="/cohort" position="attributes">
-                    <attribute name="measure">color</attribute>
                 </xpath>
             </data>
         """)

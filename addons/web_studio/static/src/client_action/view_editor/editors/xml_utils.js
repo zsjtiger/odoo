@@ -1,5 +1,5 @@
 import { evaluateExpr } from "@web/core/data/py_js/py";
-import { isComponentNode, appendAttr } from "@web/views/view_compiler";
+import { isComponentNode } from "@web/views/view_compiler";
 
 const nodeWeak = new WeakMap();
 
@@ -101,4 +101,25 @@ export function applyInvisible(invisible, compiled, params) {
     }
     compiled.setAttribute("t-if", isVisileExpr);
     return compiled;
+}
+
+/**
+ * Appends a value to the t-att-<attr> object of an element.
+ * @param {Element} el
+ * @param {string} attr
+ * @param {string} string
+ */
+export function appendAttr(el, attr, string) {
+    const attrKey = `t-att-${attr}`;
+    const attrVal = el.getAttribute(attrKey);
+    el.setAttribute(attrKey, appendToStringifiedObject(attrVal, string));
+}
+
+function appendToStringifiedObject(originalTattr, string) {
+    const re = /{(.*)}/;
+    const oldString = re.exec(originalTattr);
+    if (oldString) {
+        string = `${oldString[1]},${string}`;
+    }
+    return `{${string}}`;
 }

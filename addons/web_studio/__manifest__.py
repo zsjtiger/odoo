@@ -21,6 +21,7 @@ Note: Only the admin user is allowed to make those customizations.
         'base_automation',
         'mail',
         'html_editor',
+        'web_enterprise',
     ],
     'data': [
         'views/assets.xml',
@@ -73,7 +74,7 @@ Note: Only the admin user is allowed to make those customizations.
 
             ('include', 'web._assets_helpers'),
             'web_studio/static/src/scss/bootstrap_overridden.scss',
-            'web/static/src/scss/pre_variables.scss',
+            'web/static/src/scss/variables/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
             'web/static/lib/bootstrap/scss/_variables-dark.scss',
             'web/static/lib/bootstrap/scss/_maps.scss',
@@ -92,7 +93,7 @@ Note: Only the admin user is allowed to make those customizations.
         ],
         'web_studio.report_assets': [
             ('include', 'web._assets_helpers'),
-            'web/static/src/scss/pre_variables.scss',
+            'web/static/src/scss/variables/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
             'web/static/lib/bootstrap/scss/_variables-dark.scss',
             'web/static/lib/bootstrap/scss/_maps.scss',

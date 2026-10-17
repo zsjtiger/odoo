@@ -4,7 +4,7 @@ from odoo.tests import tagged
 from odoo.tests.common import BaseCase, HttpCase
 from odoo.addons.web_studio.controllers.export import StudioExporter
 from odoo.addons.web_studio.wizard.studio_export_wizard import _find_circular_dependencies, FIELDS_TO_EXPORT
-from odoo.addons.http_routing.tests.common import MockRequest
+from odoo.addons.web.tests.common import MockRequest
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
