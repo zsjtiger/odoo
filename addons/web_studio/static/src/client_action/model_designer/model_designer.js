@@ -101,6 +101,7 @@ export class ModelDesigner extends Component {
 
     selectModel(model) {
         designerState.selectedModelId = model.id;
+        designerState.selectedModel = { id: model.id, name: model.name, model: model.model };
         designerState.section = "fields";
     }
 }

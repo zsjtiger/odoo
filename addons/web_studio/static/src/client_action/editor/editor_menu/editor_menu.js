@@ -4,6 +4,7 @@ import { registry } from "@web/core/framework/registry";
 
 import { Component, computed, onWillStart, onWillUpdateProps, proxy, t, useProps } from "@odoo/owl";
 import { useStudioServiceAsReactive } from "@web_studio/studio_service";
+import { designerState } from "@web_studio/client_action/model_designer/designer_state";
 import { useService } from "@web/core/utils/hooks";
 import { useEnv } from "@web/core/owl/utils";
 const editorTabRegistry = registry.category("web_studio.editor_tabs");
@@ -15,21 +16,49 @@ class Breadcrumbs extends Component {
         switchTab: t.function(),
     });
     editionFlow = useEnv().editionFlow;
+    studio = useStudioServiceAsReactive();
     nextCrumbId = 0;
 
-    baseCrumb = computed(() => {
+    /**
+     * The first crumbs: the tab, or the Models > model path when the
+     * edited layout belongs to the model selected in the Models tab.
+     */
+    baseCrumbs() {
         const currentTab = this.props.currentTab;
-        return {
-            id: `__base__${currentTab.id}`,
-            data: {
-                name: currentTab.name,
+        const model = designerState.selectedModel;
+        const isModelContext =
+            model &&
+            (currentTab.id === "models" ||
+                (currentTab.id === "views" && this.studio.editedAction?.res_model === model.model));
+        if (isModelContext) {
+            return [
+                {
+                    id: "__models__",
+                    data: { name: _t("Models") },
+                    handler: () => {
+                        designerState.selectedModelId = null;
+                        designerState.selectedModel = null;
+                        this.props.switchTab({ tab: "models" });
+                    },
+                },
+                {
+                    id: `__model__${model.id}`,
+                    data: { name: model.name },
+                    handler: () => this.props.switchTab({ tab: "models" }),
+                },
+            ];
+        }
+        return [
+            {
+                id: `__base__${currentTab.id}`,
+                data: { name: currentTab.name },
+                handler: () => this.props.switchTab({ tab: currentTab.id }),
             },
-            handler: () => this.props.switchTab({ tab: currentTab.id }),
-        };
-    });
+        ];
+    }
 
     crumbs = computed(() => {
-        const crumbs = [this.baseCrumb()];
+        const crumbs = this.baseCrumbs();
         for (const c of this.env.editionFlow.breadcrumbs) {
             c.id ??= this.nextCrumbId++;
             crumbs.push(c);

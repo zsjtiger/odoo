@@ -37,3 +37,10 @@
     }
   }
 }
+
+.o_web_studio_menu {
+    .o_menu_sections button,
+    .o_web_studio_view_tab {
+        white-space: nowrap;
+    }
+}

@@ -2,7 +2,7 @@
 <templates>
 
 <t t-name="web_studio.ModelDetail">
-    <div class="o_web_studio_model_detail d-flex flex-column h-100 w-100 overflow-auto">
+    <div class="o_web_studio_model_detail d-flex flex-column h-100 w-100 overflow-hidden">
         <div class="o_web_studio_model_detail_header px-4 pt-3 pb-2">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-1">
@@ -20,7 +20,7 @@
             </div>
         </div>
 
-        <div class="d-flex flex-grow-1 min-h-0">
+        <div class="o_web_studio_model_body d-flex flex-grow-1">
             <nav class="o_web_studio_model_detail_nav flex-shrink-0 p-3">
                 <button type="button" class="o_web_studio_model_section btn w-100 text-start mb-1"
                     t-att-class="this.isFieldsSection ? 'btn-primary' : 'btn-light'"
@@ -30,47 +30,71 @@
                     t-on-click="() => this.showSection('layouts')">Page Layouts</button>
             </nav>
 
-            <section t-if="this.isFieldsSection" class="o_web_studio_model_fields flex-grow-1 p-4">
-                <div class="d-flex flex-wrap align-items-center gap-3 mb-3">
-                    <h3 class="m-0 me-auto">Fields &amp; Relationships</h3>
-                    <input type="search" class="form-control o_web_studio_model_field_search"
-                        placeholder="Search fields"
-                        t-att-value="this.state.search"
-                        t-on-input="this.onSearchInput"/>
-                    <button type="button" class="btn btn-primary o_web_studio_new_field" t-on-click="this.openNewField">New Field</button>
-                </div>
+            <section t-if="this.isFieldsSection" class="o_web_studio_model_fields d-flex flex-grow-1 overflow-hidden">
+                <div class="o_web_studio_model_fields_list flex-grow-1 p-4 overflow-auto">
+                    <div class="d-flex flex-wrap align-items-center gap-3 mb-3">
+                        <h3 class="m-0 me-auto">Fields &amp; Relationships</h3>
+                        <input type="search" class="form-control o_web_studio_model_field_search"
+                            placeholder="Search fields"
+                            t-att-value="this.state.search"
+                            t-on-input="this.onSearchInput"/>
+                        <div class="btn-group" role="group" aria-label="Filter fields by type">
+                            <button type="button" class="btn btn-sm"
+                                t-att-class="this.state.typeFilter === 'all' ? 'btn-primary' : 'btn-outline-primary'"
+                                t-on-click="() => this.setTypeFilter('all')">All</button>
+                            <button type="button" class="btn btn-sm o_web_studio_filter_custom"
+                                t-att-class="this.state.typeFilter === 'custom' ? 'btn-primary' : 'btn-outline-primary'"
+                                t-on-click="() => this.setTypeFilter('custom')">Custom</button>
+                            <button type="button" class="btn btn-sm"
+                                t-att-class="this.state.typeFilter === 'standard' ? 'btn-primary' : 'btn-outline-primary'"
+                                t-on-click="() => this.setTypeFilter('standard')">Standard</button>
+                        </div>
+                        <button type="button" class="btn btn-primary o_web_studio_new_field" t-on-click="this.openNewField">New Field</button>
+                    </div>
 
-                <div t-if="this.state.loading" class="text-center p-5">
-                    <i class="fa fa-circle-o-notch fa-spin fa-2x"/>
+                    <div t-if="this.state.loading" class="text-center p-5">
+                        <i class="fa fa-circle-o-notch fa-spin fa-2x"/>
+                    </div>
+                    <div t-else="">
+                        <table class="o_web_studio_field_table table table-hover bg-view align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Field Label</th>
+                                    <th scope="col">API Name</th>
+                                    <th scope="col">Data Type</th>
+                                    <th scope="col">Required</th>
+                                    <th scope="col">Custom</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="this.visibleFields()" t-as="field" t-key="field.id">
+                                    <tr class="o_web_studio_field_row cursor-pointer"
+                                        t-att-class="this.state.selectedFieldId === field.id ? 'table-active' : ''"
+                                        t-on-click="() => this.selectField(field)">
+                                        <td class="fw-bold" t-out="field.label"/>
+                                        <td><code t-out="field.name"/></td>
+                                        <td t-out="field.typeLabel"/>
+                                        <td><i t-if="field.required" class="fa fa-check text-success"/></td>
+                                        <td><i t-if="field.isCustom" class="fa fa-check text-primary"/></td>
+                                    </tr>
+                                </t>
+                                <tr t-if="!this.filteredFields().length" class="o_web_studio_field_empty">
+                                    <td colspan="5" class="text-center text-muted p-4">No field matches your search.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div t-if="this.hasMoreFields" class="text-center mt-3">
+                            <button type="button" class="btn btn-link o_web_studio_show_more_fields" t-on-click="this.showMoreFields">Show more fields</button>
+                        </div>
+                    </div>
                 </div>
-                <table t-else="" class="o_web_studio_field_table table table-hover bg-view align-middle mb-0">
-                    <thead>
-                        <tr>
-                            <th scope="col">Field Label</th>
-                            <th scope="col">API Name</th>
-                            <th scope="col">Data Type</th>
-                            <th scope="col">Required</th>
-                            <th scope="col">Custom</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <t t-foreach="this.filteredFields()" t-as="field" t-key="field.id">
-                            <tr class="o_web_studio_field_row">
-                                <td class="fw-bold" t-out="field.label"/>
-                                <td><code t-out="field.name"/></td>
-                                <td t-out="field.typeLabel"/>
-                                <td><i t-if="field.required" class="fa fa-check text-success"/></td>
-                                <td><i t-if="field.isCustom" class="fa fa-check text-primary"/></td>
-                            </tr>
-                        </t>
-                        <tr t-if="!this.filteredFields().length" class="o_web_studio_field_empty">
-                            <td colspan="5" class="text-center text-muted p-4">No field matches your search.</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <FieldDetailPanel t-if="this.selectedField()"
+                    field="this.selectedField()"
+                    onChanged.bind="this.onFieldsChanged"
+                    onClose.bind="this.closeFieldPanel"/>
             </section>
 
-            <section t-else="" class="o_web_studio_model_layouts flex-grow-1 p-4">
+            <section t-else="" class="o_web_studio_model_layouts flex-grow-1 p-4 overflow-auto">
                 <h3 class="mb-1">Page Layouts</h3>
                 <p class="text-muted mb-3">Choose the layout to edit. Fields, buttons and sections are placed in the view editor.</p>
                 <div class="row g-3">
@@ -119,6 +143,20 @@
                         <option t-att-value="option.value" t-att-selected="option.value === this.state.type" t-out="option.label"/>
                     </t>
                 </select>
+            </div>
+            <div t-if="this.isLookup">
+                <label class="form-label" for="o_web_studio_new_field_relation">Related Model</label>
+                <select id="o_web_studio_new_field_relation" class="form-select o_web_studio_new_field_relation" t-on-change="this.onRelationChange">
+                    <option value="">Choose a model</option>
+                    <t t-foreach="this.state.models" t-as="model" t-key="model.id">
+                        <option t-att-value="model.model" t-att-selected="model.model === this.state.relation" t-out="model.name"/>
+                    </t>
+                </select>
+            </div>
+            <div t-if="this.isPicklist">
+                <label class="form-label" for="o_web_studio_new_field_picklist">Values</label>
+                <textarea id="o_web_studio_new_field_picklist" class="form-control o_web_studio_new_field_picklist" rows="4"
+                    placeholder="One value per line" t-on-input="this.onPicklistInput"><t t-esc="this.state.picklist"/></textarea>
             </div>
         </div>
         <t t-set-slot="footer">
