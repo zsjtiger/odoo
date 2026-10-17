@@ -1,0 +1,17 @@
+.o_web_studio_model_detail {
+    background-color: $o-web-studio-bg-action;
+
+    .o_web_studio_model_detail_nav {
+        width: 240px;
+        border-right: 1px solid $gray-300;
+        background-color: $white;
+    }
+
+    .o_web_studio_field_table code {
+        font-size: 0.85em;
+    }
+
+    .o_web_studio_layout_card {
+        border-radius: 8px;
+    }
+}

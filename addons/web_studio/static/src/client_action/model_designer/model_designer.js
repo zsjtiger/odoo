@@ -3,21 +3,22 @@ import { _t } from "@web/core/data/l10n/translation";
 import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
 import { standardActionServiceProps } from "@web/webclient/actions/action_plugin";
-import { defaultActionForModel, useStudioServiceAsReactive, viewTypeToString } from "@web_studio/studio_service";
+import { viewTypeToString } from "@web_studio/studio_service";
+import { designerState } from "./designer_state";
+import { ModelDetail } from "./model_detail/model_detail";
 
 /**
- * Model-centric entry point of Studio: lists the models and opens the layout
- * (form, list, ...) of the chosen model in the view editor.
+ * Object-manager style entry point of Studio: a list of the models, and for
+ * the selected one its fields and page layouts.
  */
 export class ModelDesigner extends Component {
     static template = "web_studio.ModelDesigner";
+    static components = { ModelDetail };
 
     props = useProps(standardActionServiceProps);
 
     setup() {
         this.orm = useService("orm");
-        this.action = useService("action");
-        this.studio = useStudioServiceAsReactive();
 
         this.state = proxy({
             loading: true,
@@ -44,6 +45,10 @@ export class ModelDesigner extends Component {
                 );
             });
         });
+
+        this.selectedModel = computed(() =>
+            this.state.models.find((model) => model.id === designerState.selectedModelId)
+        );
 
         onWillStart(() => this.loadModels());
     }
@@ -82,10 +87,6 @@ export class ModelDesigner extends Component {
         this.state.loading = false;
     }
 
-    viewLabel(viewType) {
-        return viewTypeToString(viewType);
-    }
-
     onSearchInput(ev) {
         this.state.search = ev.target.value;
     }
@@ -94,26 +95,13 @@ export class ModelDesigner extends Component {
         this.state.filter = filter;
     }
 
-    /**
-     * Opens the given layout of a model in the view editor.
-     * Models without any action get a default action, as the router does for models.
-     * @param {Object} model
-     * @param {string} viewType
-     */
-    async openLayout(model, viewType) {
-        const action = model.actionId
-            ? await this.action.loadAction(model.actionId)
-            : defaultActionForModel({ model: model.model, view_type: viewType });
-        this.studio.setParams({ action, viewType, editorTab: "views" });
+    viewLabel(viewType) {
+        return viewTypeToString(viewType);
     }
 
-    /**
-     * Opens the model with its first available layout (the default view of its action).
-     * @param {Object} model
-     */
-    openModel(model) {
-        const viewType = model.viewTypes[0] || "list";
-        return this.openLayout(model, viewType);
+    selectModel(model) {
+        designerState.selectedModelId = model.id;
+        designerState.section = "fields";
     }
 }
 

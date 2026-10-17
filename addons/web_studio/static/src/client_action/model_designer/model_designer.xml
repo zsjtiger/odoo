@@ -2,7 +2,9 @@
 <templates>
 
 <t t-name="web_studio.ModelDesigner">
-    <div class="o_web_studio_model_designer d-flex flex-column h-100 w-100 overflow-auto">
+    <ModelDetail t-if="this.selectedModel()" model="this.selectedModel()"/>
+
+    <div t-else="" class="o_web_studio_model_designer d-flex flex-column h-100 w-100 overflow-auto">
         <div class="o_web_studio_model_designer_header d-flex flex-wrap align-items-center gap-3 px-4 py-3">
             <h2 class="o_web_studio_model_designer_title m-0 me-auto">Models</h2>
             <input type="search"
@@ -32,17 +34,16 @@
                 <thead>
                     <tr>
                         <th scope="col">Label</th>
-                        <th scope="col">API name</th>
+                        <th scope="col">API Name</th>
                         <th scope="col">Type</th>
-                        <th scope="col">Layouts</th>
-                        <th scope="col" class="text-end">Edit layout</th>
+                        <th scope="col">Page Layouts</th>
                     </tr>
                 </thead>
                 <tbody>
                     <t t-foreach="this.filteredModels()" t-as="model" t-key="model.id">
                         <tr class="o_web_studio_model_row">
                             <td>
-                                <a href="#" class="o_web_studio_model_name fw-bold" t-on-click.prevent="() => this.openModel(model)">
+                                <a href="#" class="o_web_studio_model_name fw-bold" t-on-click.prevent="() => this.selectModel(model)">
                                     <t t-esc="model.name"/>
                                 </a>
                             </td>
@@ -59,16 +60,10 @@
                                 </t>
                                 <span t-else="" class="text-muted">No action yet</span>
                             </td>
-                            <td class="text-end text-nowrap">
-                                <button type="button" class="btn btn-sm btn-outline-primary me-1 o_web_studio_open_form"
-                                    t-on-click="() => this.openLayout(model, 'form')">Form</button>
-                                <button type="button" class="btn btn-sm btn-outline-primary o_web_studio_open_list"
-                                    t-on-click="() => this.openLayout(model, 'list')">List</button>
-                            </td>
                         </tr>
                     </t>
                     <tr t-if="!this.filteredModels().length" class="o_web_studio_model_empty">
-                        <td colspan="5" class="text-center text-muted p-4">No model matches your search.</td>
+                        <td colspan="4" class="text-center text-muted p-4">No model matches your search.</td>
                     </tr>
                 </tbody>
             </table>

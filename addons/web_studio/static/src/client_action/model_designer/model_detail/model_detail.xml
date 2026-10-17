@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+<t t-name="web_studio.ModelDetail">
+    <div class="o_web_studio_model_detail d-flex flex-column h-100 w-100 overflow-auto">
+        <div class="o_web_studio_model_detail_header px-4 pt-3 pb-2">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-1">
+                    <li class="breadcrumb-item">
+                        <a href="#" class="o_web_studio_model_back" t-on-click.prevent="this.back">Models</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page" t-out="this.props.model.name"/>
+                </ol>
+            </nav>
+            <div class="d-flex flex-wrap align-items-center gap-3">
+                <h2 class="o_web_studio_model_detail_title m-0" t-out="this.props.model.name"/>
+                <span t-if="this.props.model.isCustom" class="badge text-bg-primary">Custom</span>
+                <span t-else="" class="badge text-bg-secondary">Standard</span>
+                <code class="text-muted" t-out="this.props.model.model"/>
+            </div>
+        </div>
+
+        <div class="d-flex flex-grow-1 min-h-0">
+            <nav class="o_web_studio_model_detail_nav flex-shrink-0 p-3">
+                <button type="button" class="o_web_studio_model_section btn w-100 text-start mb-1"
+                    t-att-class="this.isFieldsSection ? 'btn-primary' : 'btn-light'"
+                    t-on-click="() => this.showSection('fields')">Fields &amp; Relationships</button>
+                <button type="button" class="o_web_studio_model_section btn w-100 text-start"
+                    t-att-class="this.isFieldsSection ? 'btn-light' : 'btn-primary'"
+                    t-on-click="() => this.showSection('layouts')">Page Layouts</button>
+            </nav>
+
+            <section t-if="this.isFieldsSection" class="o_web_studio_model_fields flex-grow-1 p-4">
+                <div class="d-flex flex-wrap align-items-center gap-3 mb-3">
+                    <h3 class="m-0 me-auto">Fields &amp; Relationships</h3>
+                    <input type="search" class="form-control o_web_studio_model_field_search"
+                        placeholder="Search fields"
+                        t-att-value="this.state.search"
+                        t-on-input="this.onSearchInput"/>
+                    <button type="button" class="btn btn-primary o_web_studio_new_field" t-on-click="this.openNewField">New Field</button>
+                </div>
+
+                <div t-if="this.state.loading" class="text-center p-5">
+                    <i class="fa fa-circle-o-notch fa-spin fa-2x"/>
+                </div>
+                <table t-else="" class="o_web_studio_field_table table table-hover bg-view align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th scope="col">Field Label</th>
+                            <th scope="col">API Name</th>
+                            <th scope="col">Data Type</th>
+                            <th scope="col">Required</th>
+                            <th scope="col">Custom</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="this.filteredFields()" t-as="field" t-key="field.id">
+                            <tr class="o_web_studio_field_row">
+                                <td class="fw-bold" t-out="field.label"/>
+                                <td><code t-out="field.name"/></td>
+                                <td t-out="field.typeLabel"/>
+                                <td><i t-if="field.required" class="fa fa-check text-success"/></td>
+                                <td><i t-if="field.isCustom" class="fa fa-check text-primary"/></td>
+                            </tr>
+                        </t>
+                        <tr t-if="!this.filteredFields().length" class="o_web_studio_field_empty">
+                            <td colspan="5" class="text-center text-muted p-4">No field matches your search.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section t-else="" class="o_web_studio_model_layouts flex-grow-1 p-4">
+                <h3 class="mb-1">Page Layouts</h3>
+                <p class="text-muted mb-3">Choose the layout to edit. Fields, buttons and sections are placed in the view editor.</p>
+                <div class="row g-3">
+                    <t t-foreach="this.layoutTypes" t-as="viewType" t-key="viewType">
+                        <div class="col-12 col-md-6 col-xl-4">
+                            <div class="o_web_studio_layout_card card h-100">
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="card-title" t-out="this.viewLabel(viewType)"/>
+                                    <p class="card-text text-muted small mb-3">
+                                        The <t t-esc="this.viewLabel(viewType).toLowerCase()"/> view of <t t-esc="this.props.model.name"/>.
+                                    </p>
+                                    <button type="button" class="btn btn-outline-primary mt-auto o_web_studio_edit_layout"
+                                        t-att-data-view-type="viewType"
+                                        t-on-click="() => this.openLayout(viewType)">Edit layout</button>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </section>
+        </div>
+    </div>
+</t>
+
+<t t-name="web_studio.ModelDetail.NewFieldDialog">
+    <Dialog title="'New Field'">
+        <div class="o_web_studio_new_field d-flex flex-column gap-3">
+            <div>
+                <label class="form-label" for="o_web_studio_new_field_label">Field Label</label>
+                <input id="o_web_studio_new_field_label" class="form-control"
+                    placeholder="e.g. Loyalty level"
+                    t-att-value="this.state.label"
+                    t-on-input="this.onLabelInput"/>
+            </div>
+            <div>
+                <label class="form-label" for="o_web_studio_new_field_name">API Name</label>
+                <input id="o_web_studio_new_field_name" class="form-control"
+                    t-att-value="this.state.name"
+                    t-on-input="this.onNameInput"/>
+                <div class="form-text">Used by the database and the code.</div>
+            </div>
+            <div>
+                <label class="form-label" for="o_web_studio_new_field_type">Data Type</label>
+                <select id="o_web_studio_new_field_type" class="form-select" t-on-change="this.onTypeChange">
+                    <t t-foreach="this.typeOptions" t-as="option" t-key="option.value">
+                        <option t-att-value="option.value" t-att-selected="option.value === this.state.type" t-out="option.label"/>
+                    </t>
+                </select>
+            </div>
+        </div>
+        <t t-set-slot="footer">
+            <button type="button" class="btn btn-primary o_web_studio_create_field"
+                t-att-disabled="!this.canCreate" t-on-click="this.onConfirm">Create</button>
+            <button type="button" class="btn btn-secondary" t-on-click="() => this.props.close()">Cancel</button>
+        </t>
+    </Dialog>
+</t>
+
+</templates>
