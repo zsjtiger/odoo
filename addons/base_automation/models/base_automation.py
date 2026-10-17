@@ -101,6 +101,7 @@ WRITE_TRIGGERS = [
     'on_user_set',
 ]
 
+MAIL_TRIGGERS = ("on_message_received", "on_message_sent")
 
 CREATE_WRITE_SET = set(CREATE_TRIGGERS + WRITE_TRIGGERS)
 
@@ -128,13 +129,15 @@ def get_webhook_request_payload():
 class BaseAutomation(models.Model):
     _name = 'base.automation'
     _description = 'Automation Rule'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
-    name = fields.Char(string="Automation Rule Name", required=True, translate=True)
+    name = fields.Char(string="Automation Rule Name", required=True, translate=True, tracking=True)
     description = fields.Html(string="Description")
     model_id = fields.Many2one(
-        "ir.model", string="Model", domain=[("abstract", "=", False)], required=True, ondelete="cascade"
+        "ir.model", string="Model", domain=[("abstract", "=", False)], required=True, ondelete="cascade", tracking=True
     )
     model_name = fields.Char(related="model_id.model", string="Model Name", readonly=True, inverse="_inverse_model_name")
+    model_is_mail_thread = fields.Boolean(related="model_id.is_mail_thread")
     action_server_ids = fields.One2many("ir.actions.server", "base_automation_id",
         context={'default_usage': 'base_automation'},
         string="Actions",
@@ -148,6 +151,12 @@ class BaseAutomation(models.Model):
                                 help="This code will be run to find on which record the automation rule should be run.")
     log_webhook_calls = fields.Boolean(string="Log Calls", default=False)
     active = fields.Boolean(default=True, help="When unchecked, the rule is hidden and will not be executed.")
+
+    @api.constrains("trigger", "model_id")
+    def _check_trigger(self):
+        for automation in self:
+            if automation.trigger in MAIL_TRIGGERS and not automation.model_id.is_mail_thread:
+                raise exceptions.ValidationError(_("Mail event can not be configured on model %s. Only models with discussion feature can be used.", automation.model_id.name))
 
     trigger = fields.Selection(
         [
@@ -169,9 +178,12 @@ class BaseAutomation(models.Model):
             ('on_time_created', "After creation"),
             ('on_time_updated', "After last update"),
 
+            ("on_message_received", "On incoming message"),
+            ("on_message_sent", "On outgoing message"),
+
             ('on_webhook', "On webhook"),
         ], string='Trigger',
-        compute='_compute_trigger', readonly=False, store=True, required=True)
+        compute='_compute_trigger', readonly=False, store=True, required=True, tracking=True)
     trg_selection_field_id = fields.Many2one(
         'ir.model.fields.selection',
         string='Trigger Field',
@@ -192,24 +204,24 @@ class BaseAutomation(models.Model):
     trg_date_id = fields.Many2one(
         'ir.model.fields', string='Trigger Date',
         compute='_compute_trg_date_id',
-        readonly=False, store=True,
+        readonly=False, store=True, tracking=True,
         domain="[('model_id', '=', model_id), ('ttype', 'in', ('date', 'datetime'))]",
         help="""When should the condition be triggered.
                 If present, will be checked by the scheduler. If empty, will be checked at creation and update.""")
     trg_date_range = fields.Integer(
         string='Delay',
         compute='_compute_trg_date_range_data',
-        readonly=False, store=True)
+        readonly=False, store=True, tracking=True)
     trg_date_range_mode = fields.Selection(
         [('after', 'After'), ('before', 'Before')],
         string='Delay mode',
         compute='_compute_trg_date_range_data',
-        readonly=False, store=True)
+        readonly=False, store=True, tracking=True)
     trg_date_range_type = fields.Selection(
         [('minutes', 'Minutes'), ('hour', 'Hours'), ('day', 'Days'), ('month', 'Months')],
         string='Delay unit',
         compute='_compute_trg_date_range_data',
-        readonly=False, store=True)
+        readonly=False, store=True, tracking=True)
     trg_date_calendar_id = fields.Many2one(
         "resource.calendar", string='Use Calendar',
         compute='_compute_trg_date_calendar_id',
@@ -287,6 +299,14 @@ class BaseAutomation(models.Model):
             if record.trigger == 'on_change' and no_code_actions:
                 raise exceptions.ValidationError(
                     _('"On live update" automation rules can only be used with "Execute Python Code" action type.')
+                )
+            mail_actions = record.action_server_ids.filtered(
+                lambda a: a.state in ['mail_post', 'followers', 'next_activity']
+            )
+            if record.trigger == 'on_unlink' and mail_actions:
+                raise exceptions.ValidationError(
+                    _('Email, follower or activity action types cannot be used when deleting records, '
+                      'as there are no more records to apply these changes to!')
                 )
 
     @api.depends('model_id')
@@ -439,6 +459,17 @@ class BaseAutomation(models.Model):
                     trigger_value=dict(trigger_field._description_selection(self.env))['on_change'],
                     trigger_label=trigger_field._description_string(self.env),
                     state_value=action_states['code'])
+            }}
+
+        MAIL_STATES = ('mail_post', 'followers', 'next_activity')
+        mail_actions = self.action_server_ids.filtered(lambda a: a.state in MAIL_STATES)
+        if self.trigger == 'on_unlink' and len(mail_actions) > 0:
+            return {'warning': {
+                'title': _("Warning"),
+                'message': _(
+                    "You cannot send an email, add followers or create an activity "
+                    "for a deleted record.  It simply does not work."
+                ),
             }}
 
     def _has_trigger_onchange(self):
@@ -956,6 +987,30 @@ class BaseAutomation(models.Model):
 
             return base_automation_onchange
 
+        def make_message_post():
+            def _message_post(self, *args, **kwargs):
+                message = _message_post.origin(self, *args, **kwargs)
+                # Don't execute automations for a message emitted during
+                # the run of automations for a real message
+                # Don't execute if we know already that a message is only internal
+                message_sudo = message.sudo().with_context(active_test=False)
+                if "__action_done"  in self.env.context or message_sudo.is_internal or message_sudo.subtype_id.internal:
+                    return message
+                if message_sudo.message_type in ('notification', 'auto_comment', 'user_notification'):
+                    return message
+
+                # always execute actions when the author is a customer
+                # if author is not set, it means the message is coming from outside
+                mail_trigger = "on_message_received" if not message_sudo.author_id or message_sudo.author_id.partner_share else "on_message_sent"
+                automations = self.env['base.automation']._get_actions(self, [mail_trigger])
+                for automation in automations.with_context(old_values=None):
+                    with _keep_to_compute(self.env, self.env._protected):
+                        records = automation._filter_pre(self, feedback=True)
+                        automation._process(records, trigger='_message_post')
+
+                return message
+            return _message_post
+
         patched_models = defaultdict(set)
 
         def patch(model, name, method):
@@ -996,10 +1051,12 @@ class BaseAutomation(models.Model):
                 for field in automation_rule.on_change_field_ids:
                     Model._onchange_methods[field.name].append(method)
 
+            if automation_rule.model_id.is_mail_thread and automation_rule.trigger in MAIL_TRIGGERS:
+                patch(Model, "message_post", make_message_post())
 
     def _unregister_hook(self):
         """ Remove the patches installed by _register_hook() """
-        NAMES = ['create', 'write', '_compute_field_value', 'unlink', '_onchange_methods']
+        NAMES = ['create', 'write', '_compute_field_value', 'unlink', '_onchange_methods', "message_post"]
         for Model in self.env.registry.values():
             for name in NAMES:
                 try:

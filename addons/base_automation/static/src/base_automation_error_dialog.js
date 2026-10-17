@@ -1,7 +1,7 @@
-import { RPCErrorDialog } from "@web/core/services/errors/error_dialogs";
-import { registry } from "@web/core/framework/registry";
+import { RPCErrorDialog } from "@web/core/errors/error_dialogs";
+import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { user } from "@web/core/services/user";
+import { user } from "@web/core/user";
 
 export class BaseAutomationErrorDialog extends RPCErrorDialog {
     static template = "base_automation.ErrorDialog";

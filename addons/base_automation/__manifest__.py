@@ -13,7 +13,7 @@ Use automation rules to automatically trigger actions for various screens.
 Sales Team, or an opportunity which still has status pending after 14 days might
 trigger an automatic reminder email.
     """,
-    'depends': ['base', 'resource'],
+    'depends': ['base', 'resource', 'mail'],
     'data': [
         'data/base_automation_data.xml',
         'views/base_automation_views.xml',

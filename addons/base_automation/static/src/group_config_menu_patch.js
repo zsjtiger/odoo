@@ -1,6 +1,6 @@
-import { _t } from "@web/core/data/l10n/translation";
-import { registry } from "@web/core/framework/registry";
-import { user } from "@web/core/services/user";
+import { _t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
+import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 import { GroupConfigMenu } from "@web/views/view_components/group_config_menu";

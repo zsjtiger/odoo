@@ -12,14 +12,19 @@
                         <i
                             data-name="server_action_icon"
                             class="oi"
-                            t-att-class="{'oi-filled': ['object_create', 'object_write', 'webhook'].includes(action.data.state)}"
+                            t-att-class="{'oi-filled': ['object_create', 'object_write', 'mail_post', 'followers', 'remove_followers', 'webhook'].includes(action.data.state)}"
                             t-att-data-icon="{
                                 'code': 'code',
                                 'object_create': 'add_box',
                                 'object_copy': 'content_copy',
                                 'object_write': 'edit',
                                 'multi': 'format_list_bulleted',
+                                'mail_post': 'mail',
+                                'followers': 'person',
+                                'remove_followers': 'person_remove',
+                                'next_activity': 'schedule',
                                 'webhook': 'send',
+                                'whatsapp': 'whatsapp',
                             }[action.data.state] || 'radio_button_unchecked'"
                         />
                         <div class="ps-2" t-out="action.data.name" />

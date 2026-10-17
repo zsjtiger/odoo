@@ -1,3 +1,4 @@
+import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { animationFrame, expect, test, waitFor } from "@odoo/hoot";
 import { Model } from "@web/../tests/_framework/mock_server/mock_model";
 import {
@@ -11,6 +12,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 test("trigger_selection race condition", async () => {
+    defineMailModels();
 
     webModels.IrModel._records = [
         {
@@ -39,6 +41,7 @@ test("trigger_selection race condition", async () => {
             ],
         });
         model_id = fields.Many2one({ relation: "ir.model", default: 45 });
+        model_is_mail_thread = fields.Boolean();
         int = fields.Integer({ default: defaultDummy });
 
         _name = "base_auto";

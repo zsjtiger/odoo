@@ -1,8 +1,8 @@
 import { proxy } from "@odoo/owl";
-import { _t } from "@web/core/data/l10n/translation";
-import { registry } from "@web/core/framework/registry";
+import { _t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
 import { useRecordObserver } from "@web/model/relational_model/utils";
-import { selectionField, SelectionField } from "@web/views/fields/selection/selection/selection_field";
+import { selectionField, SelectionField } from "@web/views/fields/selection/selection_field";
 import { TRIGGER_FILTERS } from "./utils";
 import { useService } from "@web/core/utils/hooks";
 
@@ -18,6 +18,10 @@ const OPT_GROUPS = [
             "on_archive",
             "on_unarchive",
         ],
+    },
+    {
+        group: { sequence: 20, key: "mail", label: _t("Email Events") },
+        triggers: ["on_message_sent", "on_message_received"],
     },
     {
         group: { sequence: 30, key: "timing", label: _t("Timing Conditions") },
@@ -37,12 +41,15 @@ const OPT_GROUPS = [
     },
 ];
 
-function computeDerivedOptions(options, fields, currentSelection) {
+function computeDerivedOptions(options, fields, currentSelection, { excludeGroups = [] } = {}) {
     // filter options to display, derived from the current value and the model fields
     const derivedOptions = [];
     for (const [value, label] of options) {
         const { group, triggers } = OPT_GROUPS.find((g) => g.triggers.includes(value));
-        if (group.key === "deprecated" && !triggers.includes(currentSelection)) {
+        if (
+            (group.key === "deprecated" && !triggers.includes(currentSelection)) ||
+            excludeGroups.includes(group.key)
+        ) {
             // skip deprecated triggers if the current value is not deprecated
             continue;
         }
@@ -91,7 +98,8 @@ export class TriggerSelectionField extends SelectionField {
             const derivedOptions = computeDerivedOptions(
                 fields[this.props.name].selection,
                 relatedModelFields,
-                data[this.props.name]
+                data[this.props.name],
+                { excludeGroups: data.model_is_mail_thread ? [] : ["mail"] }
             );
 
             // then group them
@@ -119,5 +127,6 @@ export class TriggerSelectionField extends SelectionField {
 export const triggerSelectionField = {
     ...selectionField,
     component: TriggerSelectionField,
+    fieldDependencies: [{ name: "model_is_mail_thread", type: "boolean" }],
 };
 registry.category("fields").add("base_automation_trigger_selection", triggerSelectionField);

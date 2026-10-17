@@ -1,3 +1,4 @@
+import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { expect, test } from "@odoo/hoot";
 import {
     contains,
@@ -37,6 +38,7 @@ class Partner extends models.Model {
     ];
 }
 
+defineMailModels();
 defineModels([Partner]);
 
 test.tags("desktop");

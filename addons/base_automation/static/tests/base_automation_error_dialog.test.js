@@ -1,4 +1,5 @@
 import { BaseAutomationErrorDialog } from "@base_automation/base_automation_error_dialog";
+import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { expect, test } from "@odoo/hoot";
 import { waitFor } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
@@ -7,8 +8,9 @@ import {
     mountWithCleanup,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-import { MainComponentsContainer } from "@web/core/framework/main_components_container";
+import { MainComponentsContainer } from "@web/core/main_components_container";
 
+defineMailModels();
 
 test("Error due to an automation rule", async () => {
     expect.errors(1);
