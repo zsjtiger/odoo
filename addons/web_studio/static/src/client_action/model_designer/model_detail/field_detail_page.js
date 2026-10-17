@@ -4,6 +4,7 @@ import { _t } from "@web/core/data/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { designerState } from "../designer_state";
 import { getFieldTypeLabels } from "./field_types";
+import { relationTableName } from "./new_field_dialog";
 
 const SELECTION_FIELDS = ["value", "name", "sequence"];
 
@@ -63,6 +64,7 @@ export class FieldDetailPage extends Component {
             removedOptionIds: [],
             relation: "",
             models: [],
+            takenTables: [],
         });
 
         this.isDirty = computed(() => this.hasChanges());
@@ -75,12 +77,14 @@ export class FieldDetailPage extends Component {
         );
 
         onWillStart(async () => {
-            this.state.models = await this.orm.searchRead(
-                "ir.model",
-                [["transient", "=", false]],
-                ["name", "model"],
-                { order: "name ASC" }
-            );
+            const [models, manyFields] = await Promise.all([
+                this.orm.searchRead("ir.model", [["transient", "=", false]], ["name", "model"], {
+                    order: "name ASC",
+                }),
+                this.orm.searchRead("ir.model.fields", [["ttype", "=", "many2many"]], ["relation_table"]),
+            ]);
+            this.state.models = models;
+            this.state.takenTables = manyFields.map((field) => field.relation_table);
             await this.load();
         });
         onWillUpdateProps((nextProps) => {
@@ -144,9 +148,14 @@ export class FieldDetailPage extends Component {
         return this.state.field?.isCustom;
     }
 
-    /** Only a lookup (many2one) can be pointed to another model without a new column. */
+    /** A custom lookup or multi-select lookup can point to another model. */
     get canChangeRelation() {
-        return this.isCustom && this.state.field?.type === "many2one";
+        return this.isCustom && ["many2one", "many2many"].includes(this.state.field?.type);
+    }
+
+    /** Changing the related model of a many2many moves its links to a new junction table. */
+    get relationChangeLosesLinks() {
+        return this.canChangeRelation && this.state.field.type === "many2many" && this.state.relation !== this.state.field.relation;
     }
 
     onRelationChange(ev) {
@@ -204,6 +213,13 @@ export class FieldDetailPage extends Component {
         }
         if (this.canChangeRelation && this.state.relation !== field.relation) {
             values.relation = this.state.relation;
+            if (field.type === "many2many") {
+                values.relation_table = relationTableName(
+                    this.props.model.model,
+                    this.state.relation,
+                    this.state.takenTables
+                );
+            }
         }
         if (this.isSelection && field.isCustom) {
             const commands = this.optionCommands();
@@ -270,6 +286,24 @@ export class FieldDetailPage extends Component {
         if (!this.canSave()) {
             return;
         }
+        if (this.relationChangeLosesLinks) {
+            this.dialog.add(ConfirmationDialog, {
+                title: _t("Change Related Model"),
+                body: _t(
+                    "The existing links of %s are not kept: the field will use a new junction table, empty. Continue?",
+                    this.state.field.label
+                ),
+                confirmLabel: _t("Change"),
+                confirmClass: "btn-danger",
+                confirm: () => this.doSave(),
+                cancel: () => {},
+            });
+            return;
+        }
+        await this.doSave();
+    }
+
+    async doSave() {
         const values = this.buildValues();
         if (!Object.keys(values).length) {
             return;

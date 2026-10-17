@@ -1,5 +1,6 @@
 import { Component, computed, onWillStart, onWillUpdateProps, proxy, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/data/l10n/translation";
+import { RawBlock } from "./page_layout_raw_block";
 import { rpc } from "@web/core/services/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 import {
@@ -12,12 +13,14 @@ import {
     headerButtonNames,
     moveField,
     parseFormArch,
+    rawXml,
     removeHeaderButton,
     removeItem,
     removeSection,
     replaceRootArch,
     serializeFormLayout,
     setColumnCount,
+    setRawXml,
 } from "./page_layout_model";
 
 /** Fields that are always there and never placed by hand. */
@@ -46,9 +49,11 @@ function readPayload(ev) {
  */
 export class PageLayoutEditor extends Component {
     static template = "web_studio.PageLayoutEditor";
+    static components = { RawBlock };
 
     props = useProps({
         model: t.object(),
+        viewType: t.string().optional("form"),
         onAdvanced: t.function(),
         onBack: t.function(),
     });
@@ -62,6 +67,8 @@ export class PageLayoutEditor extends Component {
             saving: false,
             search: "",
             activeSectionId: null,
+            editingRawId: null,
+            rawDraft: "",
             viewId: false,
             studioViewId: false,
             layout: null,
@@ -111,14 +118,15 @@ export class PageLayoutEditor extends Component {
 
     async load(model = this.props.model) {
         this.state.loading = true;
+        const viewType = this.props.viewType;
         const info = await rpc("/web_studio/get_studio_view_arch", {
             model: model.model,
-            view_type: "form",
+            view_type: viewType,
         });
-        const views = await this.orm.call(model.model, "get_views", [[[info.main_view_id, "form"]]], {
+        const views = await this.orm.call(model.model, "get_views", [[[info.main_view_id, viewType]]], {
             context: { studio: true },
         });
-        const arch = views.views.form.arch;
+        const arch = views.views[viewType].arch;
         const layout = parseFormArch(arch);
         this.state.viewId = info.main_view_id;
         this.state.studioViewId = info.studio_view_id || false;
@@ -279,6 +287,40 @@ export class PageLayoutEditor extends Component {
 
     onSectionFocus(section) {
         this.state.activeSectionId = section.id;
+    }
+
+    get viewTitle() {
+        const titles = { form: _t("Form Page Layout"), list: _t("List Page Layout"), kanban: _t("Kanban Page Layout") };
+        return titles[this.props.viewType] || titles.form;
+    }
+
+    /** The layout of a list or kanban view has a single flat section: no title, no columns. */
+    isFlat(section) {
+        return Boolean(section.flat);
+    }
+
+    // --- Advanced blocks ----------------------------------------------------
+
+    startRawEdit(block) {
+        this.state.editingRawId = block.id;
+        this.state.rawDraft = rawXml(block);
+    }
+
+    onRawDraftInput(ev) {
+        this.state.rawDraft = ev.target.value;
+    }
+
+    cancelRawEdit() {
+        this.state.editingRawId = null;
+    }
+
+    applyRawEdit() {
+        try {
+            setRawXml(this.state.layout, this.state.editingRawId, this.state.rawDraft);
+            this.state.editingRawId = null;
+        } catch (error) {
+            this.notification.add(error.message, { type: "danger" });
+        }
     }
 
     // --- Fields in the layout -----------------------------------------------

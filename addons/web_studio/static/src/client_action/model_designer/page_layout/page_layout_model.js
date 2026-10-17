@@ -15,8 +15,20 @@ function uid(prefix) {
     return `${prefix}_${nextId++}`;
 }
 
+/**
+ * Attributes that the compiled view gets from the server and that a stored arch
+ * can't keep: the validation of the arch rejects them.
+ */
+const INTERNAL_ATTRIBUTES = ["actual_invisible", "actual_readonly", "studio_groups", "data-used-by"];
+
 function parseXml(xml) {
-    return new DOMParser().parseFromString(xml, "text/xml").documentElement;
+    const root = new DOMParser().parseFromString(xml, "text/xml").documentElement;
+    for (const node of [root, ...root.querySelectorAll("*")]) {
+        for (const name of INTERNAL_ATTRIBUTES) {
+            node.removeAttribute(name);
+        }
+    }
+    return root;
 }
 
 function children(node) {
@@ -53,11 +65,16 @@ export function createActionButtonNode(xmlid, label) {
     return button;
 }
 
+/** A block the layout doesn't manage, kept as it is and editable as XML. */
+function rawItem(node) {
+    return { kind: "raw", id: uid("raw"), node };
+}
+
 function parseItem(node) {
     if (node.tagName === "field" && node.getAttribute("name")) {
         return { kind: "field", name: node.getAttribute("name"), node };
     }
-    return { kind: "raw", node };
+    return rawItem(node);
 }
 
 function parseSection(node) {
@@ -69,7 +86,7 @@ function parseSection(node) {
     }));
     const extra = children(node)
         .filter((child) => child.tagName !== "group")
-        .map((child) => ({ kind: "raw", node: child }));
+        .map(rawItem);
     if (!innerGroups.length) {
         // A group without inner groups is a single column
         columns.push({ id: uid("column"), attributes: {}, items: children(node).map(parseItem) });
@@ -85,14 +102,72 @@ function parseSection(node) {
     };
 }
 
+/** Templates of a kanban view that hold the card of a record. */
+const CARD_TEMPLATE_NAMES = ["card", "kanban-box"];
+
 /**
- * @param {string} arch arch of a form view
- * @returns {Object} the layout of the form
+ * The card of a kanban view is laid out as a flat section, like a list: its
+ * fields and blocks. The other nodes of the view are kept as they are.
+ * @returns {Object|null} the layout, null if the view has no card template
+ */
+function parseKanbanLayout(root) {
+    if (root.tagName !== "kanban") {
+        return null;
+    }
+    const templates = children(root).find((child) => child.tagName === "templates");
+    const card = templates
+        ? children(templates).find(
+              (child) => child.tagName === "t" && CARD_TEMPLATE_NAMES.includes(child.getAttribute("t-name"))
+          )
+        : null;
+    if (!card) {
+        return null;
+    }
+    return {
+        rootTag: root.tagName,
+        rootAttributes: attributesOf(root),
+        header: [],
+        hasSheet: false,
+        sheetAttributes: {},
+        body: [
+            {
+                kind: "section",
+                id: uid("section"),
+                title: "",
+                attributes: {},
+                columns: [{ id: uid("column"), attributes: {}, items: children(card).map(parseItem) }],
+                extra: [],
+                flat: true,
+            },
+        ],
+        footer: children(root)
+            .filter((child) => child !== templates)
+            .map(rawItem),
+        kanban: {
+            cardTag: card.tagName,
+            cardAttributes: attributesOf(card),
+            templatesAttributes: attributesOf(templates),
+            otherTemplates: children(templates)
+                .filter((child) => child !== card)
+                .map(rawItem),
+        },
+    };
+}
+
+/**
+ * @param {string} arch arch of a form or a list view
+ * @returns {Object} the layout of the view. A list view has a single flat
+ *   section: its fields, without title nor columns.
  */
 export function parseFormArch(arch) {
     const root = parseXml(arch);
+    const kanbanLayout = parseKanbanLayout(root);
+    if (kanbanLayout) {
+        return kanbanLayout;
+    }
     const headerNode = children(root).find((child) => child.tagName === "header");
     const sheetNode = children(root).find((child) => child.tagName === "sheet");
+    const flat = root.tagName === "list";
     const layout = {
         rootTag: root.tagName,
         rootAttributes: attributesOf(root),
@@ -100,7 +175,7 @@ export function parseFormArch(arch) {
             ? children(headerNode).map((node) =>
                   node.tagName === "button" && node.getAttribute("type") === "action"
                       ? { kind: "button", node }
-                      : { kind: "raw", node }
+                      : rawItem(node)
               )
             : [],
         hasSheet: Boolean(sheetNode),
@@ -109,13 +184,26 @@ export function parseFormArch(arch) {
         footer: [],
     };
     const bodyParent = sheetNode || root;
-    layout.body = children(bodyParent)
-        .filter((child) => child !== headerNode)
-        .map((node) => (node.tagName === "group" ? parseSection(node) : { kind: "raw", node }));
+    const bodyNodes = children(bodyParent).filter((child) => child !== headerNode);
+    if (flat) {
+        layout.body = [
+            {
+                kind: "section",
+                id: uid("section"),
+                title: "",
+                attributes: {},
+                columns: [{ id: uid("column"), attributes: {}, items: bodyNodes.map(parseItem) }],
+                extra: [],
+                flat: true,
+            },
+        ];
+    } else {
+        layout.body = bodyNodes.map((node) => (node.tagName === "group" ? parseSection(node) : rawItem(node)));
+    }
     if (sheetNode) {
         layout.footer = children(root)
             .filter((child) => child !== headerNode && child !== sheetNode)
-            .map((node) => ({ kind: "raw", node }));
+            .map(rawItem);
     }
     return layout;
 }
@@ -144,9 +232,30 @@ export function serializeFormLayout(layout) {
         root.appendChild(container);
     }
 
-    for (const entry of layout.body) {
+    if (layout.kanban) {
+        const templates = doc.createElement("templates");
+        setAttributes(templates, layout.kanban.templatesAttributes);
+        const card = doc.createElement(layout.kanban.cardTag);
+        setAttributes(card, layout.kanban.cardAttributes);
+        for (const item of layout.body[0].columns[0].items) {
+            card.appendChild(doc.importNode(item.node, true));
+        }
+        templates.appendChild(card);
+        for (const item of layout.kanban.otherTemplates) {
+            templates.appendChild(doc.importNode(item.node, true));
+        }
+        root.appendChild(templates);
+    }
+
+    for (const entry of layout.kanban ? [] : layout.body) {
         if (entry.kind !== "section") {
             container.appendChild(doc.importNode(entry.node, true));
+            continue;
+        }
+        if (entry.flat) {
+            for (const item of entry.columns[0].items) {
+                container.appendChild(doc.importNode(item.node, true));
+            }
             continue;
         }
         const group = doc.createElement("group");
@@ -331,6 +440,49 @@ export function headerButtonNames(layout) {
     return layout.header
         .filter((item) => item.kind === "button")
         .map((item) => item.node.getAttribute("name"));
+}
+
+/** @returns {Object[]} every block of the layout that is kept as XML. */
+export function rawItems(layout) {
+    const items = [...layout.header.filter((item) => item.kind === "raw"), ...layout.footer];
+    if (layout.kanban) {
+        items.push(...layout.kanban.otherTemplates);
+    }
+    for (const entry of layout.body) {
+        if (entry.kind !== "section") {
+            items.push(entry);
+            continue;
+        }
+        items.push(...entry.extra);
+        for (const column of entry.columns) {
+            items.push(...column.items.filter((item) => item.kind === "raw"));
+        }
+    }
+    return items;
+}
+
+/**
+ * Replaces the XML of a block the layout keeps as it is.
+ * @param {Object} layout
+ * @param {string} id id of the block
+ * @param {string} xml the new XML of the block, a single element
+ * @throws {Error} if the XML is not well formed
+ */
+export function setRawXml(layout, id, xml) {
+    const item = rawItems(layout).find((candidate) => candidate.id === id);
+    if (!item) {
+        return;
+    }
+    const doc = new DOMParser().parseFromString(xml, "text/xml");
+    if (doc.getElementsByTagName("parsererror").length) {
+        throw new Error("The XML is not well formed.");
+    }
+    item.node = doc.documentElement;
+}
+
+/** @returns {string} the XML of a block, as it is written in the arch */
+export function rawXml(item) {
+    return new XMLSerializer().serializeToString(item.node);
 }
 
 /**

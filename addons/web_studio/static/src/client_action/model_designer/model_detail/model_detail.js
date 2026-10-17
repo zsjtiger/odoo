@@ -178,8 +178,9 @@ export class ModelDetail extends Component {
         return this.openLayout("form");
     }
 
-    /** Opens the page layout editor of the form. */
-    editPageLayout() {
+    /** Opens the page layout editor of a form or a list. */
+    editPageLayout(viewType) {
+        this.designerState.layoutViewType = viewType;
         this.showSection("page_layout");
     }
 

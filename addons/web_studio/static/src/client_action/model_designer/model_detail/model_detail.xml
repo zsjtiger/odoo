@@ -97,7 +97,8 @@
             <FieldDetailPage t-elif="this.section === 'field'" model="this.props.model" fieldId="this.selectedFieldId" onChanged.bind="this.onFieldsChanged"/>
             <ModelButtons t-elif="this.section === 'buttons'" model="this.props.model"/>
 
-            <PageLayoutEditor t-elif="this.section === 'page_layout'" model="this.props.model"
+            <PageLayoutEditor t-elif="this.section === 'page_layout'" t-key="this.designerState.layoutViewType" model="this.props.model"
+                viewType="this.designerState.layoutViewType"
                 onAdvanced="() => this.openAdvancedEditor()"
                 onBack="() => this.backToLayouts()"/>
 
@@ -113,8 +114,9 @@
                                     <p class="card-text text-muted small mb-3">
                                         The <t t-out="this.viewLabel(viewType).toLowerCase()"/> view of <t t-out="this.props.model.name"/>.
                                     </p>
-                                    <button t-if="viewType === 'form'" type="button" class="btn btn-primary mt-auto o_web_studio_edit_page_layout"
-                                        t-on-click="() => this.editPageLayout()">Edit Page Layout</button>
+                                    <button t-if="viewType === 'form' or viewType === 'list' or viewType === 'kanban'" type="button" class="btn btn-primary mt-auto o_web_studio_edit_page_layout"
+                                        t-att-data-view-type="viewType"
+                                        t-on-click="() => this.editPageLayout(viewType)">Edit Page Layout</button>
                                     <button t-else="" type="button" class="btn btn-outline-primary mt-auto o_web_studio_edit_layout"
                                         t-att-data-view-type="viewType"
                                         t-on-click="() => this.openLayout(viewType)">Edit layout</button>

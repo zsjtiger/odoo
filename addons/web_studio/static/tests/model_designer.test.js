@@ -50,6 +50,7 @@ const defaultFields = () => ({
     x_ticket: [
         { id: 20, name: "x_title", field_description: "Title", help: "", ttype: "char", required: false, relation: false, relation_table: false, state: "manual", selection_ids: [] },
         { id: 21, name: "x_owner", field_description: "Owner", help: "", ttype: "many2one", required: false, relation: "partner", relation_table: false, state: "manual", selection_ids: [] },
+        { id: 22, name: "x_team", field_description: "Team", help: "", ttype: "many2many", required: false, relation: "partner", relation_table: "x_x_ticket_partner_rel", state: "manual", selection_ids: [] },
     ],
 });
 
@@ -68,6 +69,20 @@ let irServerActions;
 let calls;
 
 beforeEach(() => {
+    onRpc("/web_studio/get_studio_view_arch", () => ({
+        main_view_id: 1,
+        studio_view_id: false,
+        studio_view_arch: "<data/>",
+    }));
+    onRpc("partner", "get_views", () => ({
+        views: {
+            form: { arch: "<form><sheet><group><field name=\"name\"/></group></sheet></form>" },
+            list: { arch: "<list><field name=\"name\"/></list>" },
+        },
+    }));
+    onRpc("x_ticket", "get_views", () => ({
+        views: { form: { arch: "<form><sheet/></form>" }, list: { arch: "<list/>" } },
+    }));
     designerState.selectedModelId = null;
     designerState.selectedModel = null;
     designerState.section = "fields";
@@ -174,26 +189,15 @@ test("the type filter on fields separates standard and custom fields", async () 
     expect(queryAllTexts(".o_web_studio_field_row td:nth-child(1)")).toEqual(["Loyalty", "Stage"]);
 });
 
-test("the form layout opens the page layout editor, other layouts the view editor", async () => {
+test("the form and list layouts open the page layout editor", async () => {
     await openContact();
     await contains(".o_web_studio_model_section:contains(Page Layouts)").click();
-    expect(queryAllTexts(".o_web_studio_layout_card .card-title")).toEqual(["Form", "List"]);
-    await contains(".o_web_studio_edit_layout[data-view-type=list]").click();
-    await waitUntil(() => setParamsCalls.length === 1);
-    const params = setParamsCalls.at(-1);
-    expect(params.mode).toBe("editor");
-    expect(params.viewType).toBe("list");
-    expect(params.action.id).toBe(501);
-});
-
-test("a model without action gets a default action for its layout", async () => {
-    await openTicket();
-    await contains(".o_web_studio_model_section:contains(Page Layouts)").click();
-    await contains(".o_web_studio_edit_layout[data-view-type=list]").click();
-    await waitUntil(() => setParamsCalls.length === 1);
-    const params = setParamsCalls.at(-1);
-    expect(params.action.res_model).toBe("x_ticket");
-    expect(params.action.views).toEqual([[false, "list"]]);
+    await contains(".o_web_studio_edit_page_layout[data-view-type=form]").click();
+    await waitUntil(() => queryOne(".o_web_studio_page_layout_canvas"));
+    expect(queryOne(".o_web_studio_page_layout h4").innerText).toBe("Form Page Layout");
+    await contains(".o_web_studio_back_to_layouts").click();
+    await contains(".o_web_studio_edit_page_layout[data-view-type=list]").click();
+    await waitUntil(() => queryOne(".o_web_studio_page_layout h4")?.innerText === "List Page Layout");
 });
 
 test("clicking a field opens its own page with the field properties", async () => {
@@ -264,6 +268,21 @@ test("the related model of a custom lookup can be changed", async () => {
     expect(calls.write[0].values).toEqual({ relation: "x_ticket" });
 });
 
+test("changing the related model of a many2many asks for a confirmation", async () => {
+    await openTicket();
+    await openField("Team");
+    await contains(".o_web_studio_field_relation").select("x_ticket");
+    await contains(".o_web_studio_save_field").click();
+    expect(calls.write).toHaveLength(0);
+    await contains(".o_dialog .btn-danger").click();
+    await waitUntil(() => calls.write.length === 1);
+    expect(calls.write[0].ids).toEqual([22]);
+    expect(calls.write[0].values).toEqual({
+        relation: "x_ticket",
+        relation_table: "x_x_ticket_x_ticket_rel",
+    });
+});
+
 test("creating a field from the detail", async () => {
     await openTicket();
     await contains(".o_web_studio_new_field").click();
@@ -308,7 +327,8 @@ test("creating a many2many field creates its junction table", async () => {
         name: "x_watchers",
         ttype: "many2many",
         relation: "partner",
-        relation_table: "x_x_ticket_partner_rel",
+        // The junction table of x_team already uses the first name
+        relation_table: "x_x_ticket_partner_rel_2",
     });
 });
 

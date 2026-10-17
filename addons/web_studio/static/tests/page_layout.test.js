@@ -1,5 +1,5 @@
 import { describe, expect, test, beforeEach } from "@odoo/hoot";
-import { queryAllTexts, queryOne, waitUntil } from "@odoo/hoot-dom";
+import { click, queryAllTexts, queryOne, waitUntil } from "@odoo/hoot-dom";
 import { contains, defineModels, fields, models, mountWithCleanup, onRpc } from "@web/../tests/web_test_helpers";
 import {
     addField,
@@ -14,6 +14,12 @@ import {
     replaceRootArch,
     serializeFormLayout,
     setColumnCount,
+} from "@web_studio/client_action/model_designer/page_layout/page_layout_model";
+import {
+    parseFormArch as parseArch,
+    rawItems,
+    rawXml,
+    setRawXml,
 } from "@web_studio/client_action/model_designer/page_layout/page_layout_model";
 import { PageLayoutEditor } from "@web_studio/client_action/model_designer/page_layout/page_layout_editor";
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
@@ -129,6 +135,64 @@ test("the saved arch replaces the root of the form", () => {
     expect(studioArch.endsWith("</form></xpath></data>")).toBe(true);
 });
 
+test("a list view is a single flat section of fields", () => {
+    const layout = parseArch('<list><header><button type="action" name="a.b" string="Go"/></header><field name="name"/><field name="email"/></list>');
+    expect(layout.rootTag).toBe("list");
+    expect(layout.body).toHaveLength(1);
+    expect(layout.body[0].flat).toBe(true);
+    expect(layout.body[0].columns[0].items.map((item) => item.name)).toEqual(["name", "email"]);
+    const serialized = serializeFormLayout(layout);
+    expect(serialized.startsWith("<list>")).toBe(true);
+    expect(serialized.includes("<group")).toBe(false);
+    expect(serializeFormLayout(parseArch(serialized))).toBe(serialized);
+});
+
+test("attributes computed by the server are not kept in the arch", () => {
+    const layout = parseArch(
+        '<list><field name="company_id" column_invisible="True" actual_invisible="False" studio_groups="[]" data-used-by="x"/></list>'
+    );
+    const serialized = serializeFormLayout(layout);
+    expect(serialized.includes("actual_invisible")).toBe(false);
+    expect(serialized.includes("studio_groups")).toBe(false);
+    expect(serialized.includes("data-used-by")).toBe(false);
+    expect(serialized.includes('column_invisible="True"')).toBe(true);
+});
+
+test("the card of a kanban view is laid out as a flat section", () => {
+    const arch = `<kanban sample="1">
+        <field name="active"/>
+        <templates>
+            <t t-name="card" class="o_card">
+                <field name="name"/>
+                <div class="o_extra"><field name="email"/></div>
+            </t>
+        </templates>
+    </kanban>`;
+    const layout = parseArch(arch);
+    expect(layout.rootTag).toBe("kanban");
+    expect(layout.body[0].flat).toBe(true);
+    const fieldNames = layout.body[0].columns[0].items
+        .filter((item) => item.kind === "field")
+        .map((item) => item.name);
+    expect(fieldNames).toEqual(["name"]);
+    const serialized = serializeFormLayout(layout);
+    expect(serialized.includes('<t t-name="card" class="o_card">')).toBe(true);
+    expect(serialized.includes('name="active"')).toBe(true);
+    expect(serializeFormLayout(parseArch(serialized))).toBe(serialized);
+    // The fields of the card are the ones the editor manages
+    addField(layout, layout.body[0].id, layout.body[0].columns[0].id, "phone");
+    expect(serializeFormLayout(layout).includes('<field name="phone"/>')).toBe(true);
+});
+
+test("advanced blocks are kept and their XML can be replaced", () => {
+    const layout = parseFormArch(FORM_ARCH);
+    const chatter = rawItems(layout).find((item) => item.node.getAttribute("class") === "oe_chatter");
+    expect(rawXml(chatter)).toBe('<div class="oe_chatter"/>');
+    setRawXml(layout, chatter.id, '<div class="oe_chatter" data-x="1"/>');
+    expect(serializeFormLayout(layout).includes('data-x="1"')).toBe(true);
+    expect(() => setRawXml(layout, chatter.id, "<div")).toThrow();
+});
+
 describe("page layout editor", () => {
     let saved;
 
@@ -210,6 +274,36 @@ describe("page layout editor", () => {
         await waitUntil(() => saved);
         expect(saved.arch.includes('string="Contact details"')).toBe(true);
         expect(saved.arch.includes('name="email"')).toBe(false);
+    });
+
+    test("a list layout has no section controls and saves the list arch", async () => {
+        onRpc("partner", "get_views", () => ({ views: { list: { arch: '<list><field name="name"/></list>' } } }));
+        await mountWithCleanup(PageLayoutEditor, {
+            props: {
+                model: { id: 1, model: "partner", name: "Contact" },
+                viewType: "list",
+                onAdvanced() {},
+                onBack() {},
+            },
+        });
+        expect(".o_web_studio_section_title").toHaveCount(0);
+        expect(".o_web_studio_add_section").toHaveCount(0);
+        await contains(".o_web_studio_palette_field:contains(Email) .o_web_studio_palette_add_field").click();
+        await contains(".o_web_studio_save_layout").click();
+        await waitUntil(() => saved);
+        expect(saved.arch.startsWith('<data><xpath expr="/list" position="replace"><list>')).toBe(true);
+        expect(saved.arch.includes('name="email"')).toBe(true);
+    });
+
+    test("an advanced block can be edited as XML", async () => {
+        await mountEditor();
+        await click(queryOne(".o_web_studio_raw_edit"));
+        await contains(".o_web_studio_raw_draft").edit('<div class="oe_edited"/>');
+        await contains(".o_web_studio_raw_apply").click();
+        expect(queryOne(".o_web_studio_save_layout").disabled).toBe(false);
+        await contains(".o_web_studio_save_layout").click();
+        await waitUntil(() => saved);
+        expect(saved.arch.includes('class="oe_edited"')).toBe(true);
     });
 
     test("a header button is added by clicking the palette and saved", async () => {

@@ -9,4 +9,6 @@ export const designerState = proxy({
     // "fields" | "field" | "layouts" | "buttons"
     section: "fields",
     selectedFieldId: null,
+    // View type of the page layout being edited: "form" or "list"
+    layoutViewType: "form",
 });
