@@ -189,7 +189,6 @@ class AITool(models.AbstractModel):
             raise LookupError("Could not find the calling agent.")
         return agent
 
-    @api.ormcache('self.env.uid', 'self.env.company.id')
     def _ai_tool_get_models(self) -> dict:
         """Get all models accessible to the current user as CSV data, excluding transient and abstract models."""
         def is_model_allowed(model):
@@ -213,45 +212,8 @@ class AITool(models.AbstractModel):
             & Domain("abstract", "=", False)
         )
         model_records = self.env["ir.model"].sudo().search(search_domain, order="model")
-
-        # Get app ordering from web menus
-        all_menus = self.env["ir.ui.menu"].load_web_menus(False)
-        root_menu_ids = all_menus["root"]["children"]  # This is ordered by sequence
-
-        # Create app name to sequence mapping
-        app_sequence = {}
-        for idx, menu_id in enumerate(root_menu_ids):
-            if menu_id in all_menus:
-                app_menu = self.env["ir.ui.menu"].browse(all_menus[menu_id]["id"])
-                if app_menu.exists():
-                    # Get the technical name (usually matches module name)
-                    app_name = all_menus[menu_id].get("xmlid", "").split(".")[0]
-                    if app_name:
-                        app_sequence[app_name] = idx
-
-        # Group models by their main module/app
-        models_by_app = defaultdict(list)
-        for model_rec in model_records:
-            # Skip models without a proper registry entry
-            if model_rec.model not in self.env:
-                continue
-
-            model_obj = self.env[model_rec.model]
-            # Skip models that are actually abstract despite the flag
-            if model_obj._abstract or not model_obj._auto:
-                continue
-
-            # Determine the app/module (first module in the list)
-            modules = model_rec.modules.split(", ") if model_rec.modules else []
-            app = modules[0] if modules else "base"
-
-            models_by_app[app].append(
-                {
-                    "id": model_rec.id,
-                    "model": model_rec.model,
-                    "description": (model_obj._explanation or model_rec.name or model_obj._description or "").replace('|', ' ').replace('\n', ' '),
-                }
-            )
+        app_sequence = self._get_app_sequence()
+        models_by_app = self._group_models_by_app(model_records)
 
         # Build CSV result
         csv_result = "id|model|description\n"
@@ -274,9 +236,81 @@ class AITool(models.AbstractModel):
             'summary': {'icon': 'view_list', 'text': self.env._("Retrieved models")},
         }
 
-    @api.ormcache('self.env.uid', 'self.env.company.id')
+    def _get_app_sequence(self):
+        """Return the position of each app in the web menu, keyed by the app's technical name."""
+        all_menus = self.env["ir.ui.menu"].load_web_menus(False)
+        root_menu_ids = all_menus["root"]["children"]  # This is ordered by sequence
+
+        app_sequence = {}
+        for idx, menu_id in enumerate(root_menu_ids):
+            if menu_id in all_menus:
+                app_menu = self.env["ir.ui.menu"].browse(all_menus[menu_id]["id"])
+                if app_menu.exists():
+                    # Get the technical name (usually matches module name)
+                    app_name = all_menus[menu_id].get("xmlid", "").split(".")[0]
+                    if app_name:
+                        app_sequence[app_name] = idx
+        return app_sequence
+
+    def _group_models_by_app(self, model_records):
+        """Group the usable models by their main module (first module in the list)."""
+        models_by_app = defaultdict(list)
+        for model_rec in model_records:
+            # Skip models without a proper registry entry
+            if model_rec.model not in self.env:
+                continue
+
+            model_obj = self.env[model_rec.model]
+            # Skip models that are actually abstract despite the flag
+            if model_obj._abstract or not model_obj._auto:
+                continue
+
+            modules = model_rec.modules.split(", ") if model_rec.modules else []
+            app = modules[0] if modules else "base"
+
+            models_by_app[app].append(
+                {
+                    "id": model_rec.id,
+                    "model": model_rec.model,
+                    "description": (model_obj._explanation or model_rec.name or model_obj._description or "").replace('|', ' ').replace('\n', ' '),
+                }
+            )
+        return models_by_app
+
     def _ai_tool_get_menus(self):
         """Get all menus accessible to the current user as CSV data."""
+        action_menus = self._get_action_menus()
+        csv_result = "menu_id|action_id|action_type|complete_name|model|action_explanation|available_view_types|default_view_type\n"
+
+        for menu_data in action_menus:
+            menu = menu_data["menu"]
+            action = menu_data["action"]
+
+            model_name = (action.res_model if action.type != "ir.actions.report" else action.model)
+            action_explanation = action.explanation or ""
+
+            available_view_types = ([view[1] for view in action.views] if action.type == "ir.actions.act_window" and action.views else [])
+            default_view_type = (available_view_types[0] if available_view_types else "null")
+            if action.type == "ir.actions.act_window" and action.view_id:
+                default_view_type = action.view_id.type
+
+            csv_result += (
+                f"{menu.id}|"
+                f"{action.id}|"
+                f"{action.type}|"
+                f"{menu.complete_name}|"
+                f"{model_name or ''}|"
+                f"{action_explanation.replace('|', ' ').replace('\\n', ' ')}|"
+                f"{','.join(available_view_types)}|"
+                f"{default_view_type}\n"
+            )
+        return {
+            'response': f"# Available Menus\n{csv_result}",
+            'summary': {'icon': 'explore', 'text': self.env._("Retrieved menus")},
+        }
+
+    def _get_action_menus(self):
+        """Return the menus that open an action the user can access, sorted by app and menu path."""
         all_menus = self.env["ir.ui.menu"].load_web_menus(False)
         root_menu_ids = set(all_menus["root"]["children"])
 
@@ -316,35 +350,7 @@ class AITool(models.AbstractModel):
         # Menus are already ordered by sequence from load_web_menus(), but we still need to sort
         # by complete_name within each app to maintain proper hierarchy display
         action_menus.sort(key=lambda m: (m["app_menu"].sequence, m["menu"].complete_name))
-
-        csv_result = "menu_id|action_id|action_type|complete_name|model|action_explanation|available_view_types|default_view_type\n"
-
-        for menu_data in action_menus:
-            menu = menu_data["menu"]
-            action = menu_data["action"]
-
-            model_name = (action.res_model if action.type != "ir.actions.report" else action.model)
-            action_explanation = action.explanation or ""
-
-            available_view_types = ([view[1] for view in action.views] if action.type == "ir.actions.act_window" and action.views else [])
-            default_view_type = (available_view_types[0] if available_view_types else "null")
-            if action.type == "ir.actions.act_window" and action.view_id:
-                default_view_type = action.view_id.type
-
-            csv_result += (
-                f"{menu.id}|"
-                f"{action.id}|"
-                f"{action.type}|"
-                f"{menu.complete_name}|"
-                f"{model_name or ''}|"
-                f"{action_explanation.replace('|', ' ').replace('\\n', ' ')}|"
-                f"{','.join(available_view_types)}|"
-                f"{default_view_type}\n"
-            )
-        return {
-            'response': f"# Available Menus\n{csv_result}",
-            'summary': {'icon': 'explore', 'text': self.env._("Retrieved menus")},
-        }
+        return action_menus
 
     def _ai_tool_get_fields(self, model_name, include_description=True):
         model_fields = self._get_model_fields(model_name)
@@ -534,23 +540,7 @@ class AITool(models.AbstractModel):
         measures_to_apply = [measure["name"] for measure in measures]
         validate_measures(self.env[model_name], measures_to_apply)
 
-        menus = self.env["ir.ui.menu"].load_menus(debug=self.env.context.get('debug', False))
-        menu = menus.get(menu_id)
-        if not menu:
-            raise ValueError(f"Menu with ID {menu_id} not found.")
-        action = self.env["ir.actions.act_window"].browse(menu["action_id"])
-        if not action.exists():
-            raise ValueError(f"The action associated with menu ID {menu_id} does not exist.")
-
-        validate_date_filters(self.env[model_name], selected_filters, action)
-
-        menu_obj = self.env["ir.ui.menu"].browse(menu_id)
-        _logger.info("Opening pivot view for menu '%s' (ID: %s) with action '%s' (ID: %s)",
-                     menu_obj.name, menu_id, action.name, action.id)
-
-        action_dict = action._get_action_dict()
-        if action_dict.get("res_model") != model_name:
-            raise ValueError(f"The model '{model_name}' does not match the model of the action associated with menu ID {menu_id}.")
+        action_dict = self._get_menu_action_dict(menu_id, model_name, selected_filters, 'pivot')
 
         sorted_column = None
         # the first measure with ordering is the sorted_column
@@ -562,10 +552,7 @@ class AITool(models.AbstractModel):
             if measure != "__count" and measure not in self.env[model_name]._fields:
                 raise ValueError(f"Measure '{measure}' not found in model '{model_name}' for menu ID {menu_id}.")
 
-        # Check if pivot view is in available views
-        available_views = [view[1] for view in action_dict.get("views", [])]
-        if "pivot" not in available_views:
-            raise ValueError(f"Pivot view is not available for the action associated with menu ID {menu_id}.")
+        self._check_menu_view_available(action_dict, 'pivot', menu_id)
 
         ai_props = {
             "selectedFilters": selected_filters or [],
@@ -599,16 +586,11 @@ class AITool(models.AbstractModel):
             'summary': {'icon': 'open_in_browser', 'text': self.env._("Opened the pivot view for %s", self.env[model_name]._description)},
         }
 
-    def _ai_tool_open_menu_graph(
-        self, menu_id, model_name, selected_filters, selected_groupbys, measure, mode, order, search,
-        stacked=False, cumulated=False, custom_domain=None):
-        """
-        Opens a graph view for the specified menu ID with the given parameters.
-        """
-        validate_search_terms(search)
-        validate_groupbys(self.env[model_name], selected_groupbys)
-        validate_measures(self.env[model_name], [measure])
+    def _get_menu_action_dict(self, menu_id, model_name, selected_filters, view_type):
+        """Return the action dict of a menu, after checking that it is an action on ``model_name``.
 
+        The date filters are validated against the action.
+        """
         menus = self.env["ir.ui.menu"].load_menus(debug=self.env.context.get('debug', False))
         menu = menus.get(menu_id)
         if not menu:
@@ -620,12 +602,32 @@ class AITool(models.AbstractModel):
         validate_date_filters(self.env[model_name], selected_filters, action)
 
         menu_obj = self.env["ir.ui.menu"].browse(menu_id)
-        _logger.info("Opening graph view for menu '%s' (ID: %s) with action '%s' (ID: %s)",
-                     menu_obj.name, menu_id, action.name, action.id)
+        _logger.info("Opening %s view for menu '%s' (ID: %s) with action '%s' (ID: %s)",
+                     view_type, menu_obj.name, menu_id, action.name, action.id)
 
         action_dict = action._get_action_dict()
         if action_dict.get("res_model") != model_name:
             raise ValueError(f"The model '{model_name}' does not match the model of the action associated with menu ID {menu_id}.")
+        return action_dict
+
+    def _check_menu_view_available(self, action_dict, view_type, menu_id):
+        """Raise if the action of a menu does not offer the view ``view_type``."""
+        available_views = [view[1] for view in action_dict.get("views", [])]
+        if view_type not in available_views:
+            raise ValueError(f"{view_type.capitalize()} view is not available for the action associated with menu ID {menu_id}.")
+
+
+    def _ai_tool_open_menu_graph(
+        self, menu_id, model_name, selected_filters, selected_groupbys, measure, mode, order, search,
+        stacked=False, cumulated=False, custom_domain=None):
+        """
+        Opens a graph view for the specified menu ID with the given parameters.
+        """
+        validate_search_terms(search)
+        validate_groupbys(self.env[model_name], selected_groupbys)
+        validate_measures(self.env[model_name], [measure])
+
+        action_dict = self._get_menu_action_dict(menu_id, model_name, selected_filters, 'graph')
 
         # Validate measure
         if measure != "__count" and measure not in self.env[model_name]._fields:
@@ -639,10 +641,7 @@ class AITool(models.AbstractModel):
         if order not in ["ASC", "DESC"]:
             raise ValueError(f"Invalid order '{order}'. Must be 'ASC' or 'DESC'.")
 
-        # Check if graph view is in available views
-        available_views = [view[1] for view in action_dict.get("views", [])]
-        if "graph" not in available_views:
-            raise ValueError(f"Graph view is not available for the action associated with menu ID {menu_id}.")
+        self._check_menu_view_available(action_dict, 'graph', menu_id)
 
         ai_props = {
             "selectedFilters": selected_filters,
@@ -1004,60 +1003,9 @@ class AITool(models.AbstractModel):
         updated_records = {}
         for update in updates:
             model_name = update['model_name']
-            model_fields = self._get_model_fields(model_name)
-            domain = update['domain']
-            changes_data = update['changes']
-            changes = {}
-
-            for c in changes_data:
-                field_name = c['field']
-                if model_fields.get(field_name, {}).get('readonly', False):
-                    raise ValueError(f"The field '{field_name}' is readonly and shouldn't be updated directly. Update the field dependencies instead.")
-
-                if x2m_commands := c.get('x2m_commands'):
-                    try:
-                        value = ast.literal_eval(x2m_commands)
-                    except ValueError as e:
-                        raise ValueError(f"Malformed command '{x2m_commands}' for field '{c['field']}' of model '{model_name}'") from e
-                else:
-                    value = c.get('value')
-                changes[field_name] = value
-
-            # sudo(False) just in case this tool ever gets run in a sudo-ed env (shouldn't happen)
-            model = self.env[model_name].sudo(False)
-            parsed_domain = self._parse_domain(model_name, domain, operation='write')
-            if parsed_domain in (True, []):
-                raise ValueError("You cannot update using a dummy truthy domain (e.g. [], True). To update all records, pass a domain that matches all records instead.")
-            records = model.search(parsed_domain)
-
-            if records:
-                try:
-                    with self.env.cr.savepoint():
-                        # entering the savepoint flushed the cursor, which RUNS
-                        # the pending precommit hooks — tracking data staged
-                        # before this point would be consumed early (and the
-                        # write's own tracking would then log as the acting
-                        # user), so the author is stamped here, inside
-                        if tool_context.get('agent_id') and isinstance(records, self.pool['mail.thread']):
-                            author = self._get_calling_agent(tool_context).partner_id
-                            if tool_context.get('auto_confirm'):
-                                tracked_fnames = records._track_get_fields() & set(changes)
-                                records._track_add(
-                                    {record.id: {fname: record[fname] for fname in tracked_fnames}
-                                     for record in records},
-                                    author=author,
-                                )
-                            else:
-                                records._track_set_log_author(author)
-                        records.write(changes)
-                except psycopg2.errors.IntegrityError as e:
-                    raise ValueError(f"Update failed due to database constraints: {self._sql_error_to_message(e)}")
-                if model_name not in updated_records:
-                    updated_records[model_name] = records
-                else:
-                    updated_records[model_name] |= records
-            else:
-                raise ValueError(f"No records were found corresponding to the domain '{domain}'")
+            changes = self._parse_update_changes(model_name, update['changes'])
+            records = self._write_records_update(tool_context, model_name, update['domain'], changes)
+            updated_records[model_name] = updated_records[model_name] | records if model_name in updated_records else records
 
         tool_context["preview_links"] = self._get_preview_links("write", updated_records, menu_by_model)
         return {
@@ -1065,6 +1013,62 @@ class AITool(models.AbstractModel):
             "client_tool": {'name': 'reload', 'oneway': True},
             "summary": {'icon': 'edit', 'text': self.env._("Updated records")},
         }
+
+    def _parse_update_changes(self, model_name, changes_data):
+        """Return the ``{field: value}`` mapping of an update, rejecting readonly fields.
+
+        A field given as ``x2m_commands`` is parsed from its literal ORM command list.
+        """
+        model_fields = self._get_model_fields(model_name)
+        changes = {}
+        for c in changes_data:
+            field_name = c['field']
+            if model_fields.get(field_name, {}).get('readonly', False):
+                raise ValueError(f"The field '{field_name}' is readonly and shouldn't be updated directly. Update the field dependencies instead.")
+
+            if x2m_commands := c.get('x2m_commands'):
+                try:
+                    value = ast.literal_eval(x2m_commands)
+                except ValueError as e:
+                    raise ValueError(f"Malformed command '{x2m_commands}' for field '{c['field']}' of model '{model_name}'") from e
+            else:
+                value = c.get('value')
+            changes[field_name] = value
+        return changes
+
+    def _write_records_update(self, tool_context, model_name, domain, changes):
+        """Write ``changes`` on the records matching ``domain`` and return them."""
+        # sudo(False) just in case this tool ever gets run in a sudo-ed env (shouldn't happen)
+        model = self.env[model_name].sudo(False)
+        parsed_domain = self._parse_domain(model_name, domain, operation='write')
+        if parsed_domain in (True, []):
+            raise ValueError("You cannot update using a dummy truthy domain (e.g. [], True). To update all records, pass a domain that matches all records instead.")
+        records = model.search(parsed_domain)
+        if not records:
+            raise ValueError(f"No records were found corresponding to the domain '{domain}'")
+
+        try:
+            with self.env.cr.savepoint():
+                # entering the savepoint flushed the cursor, which RUNS
+                # the pending precommit hooks — tracking data staged
+                # before this point would be consumed early (and the
+                # write's own tracking would then log as the acting
+                # user), so the author is stamped here, inside
+                if tool_context.get('agent_id') and isinstance(records, self.pool['mail.thread']):
+                    author = self._get_calling_agent(tool_context).partner_id
+                    if tool_context.get('auto_confirm'):
+                        tracked_fnames = records._track_get_fields() & set(changes)
+                        records._track_add(
+                            {record.id: {fname: record[fname] for fname in tracked_fnames}
+                             for record in records},
+                            author=author,
+                        )
+                    else:
+                        records._track_set_log_author(author)
+                records.write(changes)
+        except psycopg2.errors.IntegrityError as e:
+            raise ValueError(f"Update failed due to database constraints: {self._sql_error_to_message(e)}")
+        return records
 
     def _ai_tool_create_records(self, tool_context, explanation, preview_menu_id, model_name, values):
         if model_name not in self.env:

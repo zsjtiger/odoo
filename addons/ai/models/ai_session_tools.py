@@ -56,6 +56,14 @@ def _reset_tool_context(tools_context):
     tools_context['result'] = None
 
 
+def _pending_tool_event(tool_call, pending_results, **event):
+    """Return an event that suspends the batch on ``tool_call``, keeping the results so far."""
+    return {**event, 'pending_tool_call': {
+        'call_id': tool_call['call_id'],
+        'pending_results': pending_results,
+    }}
+
+
 class AiSessionToolsMixin(models.AbstractModel):
     """Methods of AiSession that run and resume tool calls."""
     _name = 'ai.session.tools.mixin'
@@ -293,16 +301,7 @@ class AiSessionToolsMixin(models.AbstractModel):
 
         if self.loop_state == "waiting_confirmation":
             confirmation_value = response["value"]
-            selected_choice = next(
-                (
-                    choice
-                    for choice in user_input_request["choices"]
-                    if choice["value"] == confirmation_value
-                ),
-                None,
-            )
-            if not selected_choice:
-                raise UserError(self.env._("This AI confirmation choice is no longer available."))
+            selected_choice = self._select_confirmation_choice(user_input_request, confirmation_value)
             if automatic:
                 self.turn_notifications = (self.turn_notifications or []) + [{
                     'type': 'ai_note',
@@ -317,35 +316,7 @@ class AiSessionToolsMixin(models.AbstractModel):
             if confirmation_value == UserInputResponse.DECLINE:
                 return self._abort_pending_tools()
         elif self.loop_state == "waiting_answer":
-            values = response['value']
-            selected_values = set(values)
-            selected_choices = [
-                choice
-                for choice in user_input_request["choices"]
-                if choice["value"] in selected_values
-            ]
-            known_values = {choice["value"] for choice in selected_choices}
-            free_text_values = [
-                value.strip() for value in values if value not in known_values
-            ]
-            ordered_values = [
-                choice["value"] for choice in selected_choices
-            ] + free_text_values
-            ordered_labels = [
-                choice["label"] for choice in selected_choices
-            ] + free_text_values
-            if (
-                (not user_input_request["multi_select"] and len(values) != 1)
-                or (
-                    free_text_values
-                    and (
-                        not user_input_request["allow_free_text"]
-                        or len(free_text_values) != 1
-                    )
-                )
-                or len(ordered_values) != len(values)
-            ):
-                raise UserError(self.env._("This AI question response is not valid."))
+            ordered_values, ordered_labels = self._resolve_question_answer(user_input_request, response['value'])
             self.channel_id.sudo().message_post(
                 body=", ".join(ordered_labels),
                 message_type="comment",
@@ -357,6 +328,47 @@ class AiSessionToolsMixin(models.AbstractModel):
             get_ai_int_param(self.env, 'ai.max_successive_calls', 30) or 30
         )
         return self._advance_tool_batch(response)
+
+    def _select_confirmation_choice(self, user_input_request, value):
+        """Return the choice of a confirmation request whose value is ``value``."""
+        selected_choice = next(
+            (choice for choice in user_input_request["choices"] if choice["value"] == value),
+            None,
+        )
+        if not selected_choice:
+            raise UserError(self.env._("This AI confirmation choice is no longer available."))
+        return selected_choice
+
+    def _resolve_question_answer(self, user_input_request, values):
+        """Validate the answer to a question and return ``(ordered_values, ordered_labels)``.
+
+        Choices come first, in the order they were offered, followed by the single free text answer.
+        """
+        selected_values = set(values)
+        selected_choices = [
+            choice
+            for choice in user_input_request["choices"]
+            if choice["value"] in selected_values
+        ]
+        known_values = {choice["value"] for choice in selected_choices}
+        free_text_values = [
+            value.strip() for value in values if value not in known_values
+        ]
+        ordered_values = [choice["value"] for choice in selected_choices] + free_text_values
+        ordered_labels = [choice["label"] for choice in selected_choices] + free_text_values
+        if (
+            (not user_input_request["multi_select"] and len(values) != 1)
+            or (
+                free_text_values
+                and (
+                    not user_input_request["allow_free_text"]
+                    or len(free_text_values) != 1
+                )
+            )
+            or len(ordered_values) != len(values)
+        ):
+            raise UserError(self.env._("This AI question response is not valid."))
+        return ordered_values, ordered_labels
 
     def _deliver_subagent_result(self, content, *, status='completed'):
         """Pass this child's completed answer directly into its parent's pending batch."""
@@ -428,33 +440,21 @@ class AiSessionToolsMixin(models.AbstractModel):
                 continue
             _reset_tool_context(tools_context)
             tool = tools_by_name[tool_call['name']]
-            tools_context['tool_call_id'] = tool_call['call_id']
-            tool_args = dict(tool_call['args'])
-            tool_args.pop('tool_status', None)
-            tools_context_before_call = copy.deepcopy(tools_context)
-            try:
-                tool_result = tool.with_context(**(record_context | self._get_tool_execution_context()))._ai_tool_run(
-                    record, tool_args, tools_context,
-                )
-            except (*PG_CONCURRENCY_EXCEPTIONS_TO_RETRY, ConcurrencyError):
-                raise
-            except Exception as e:  # noqa: BLE001
-                tools_context.clear()
-                tools_context.update(tools_context_before_call)
-                tool_results.append(format_tool_result(tool_call, error=f"Tool call failed: {e}"))
-                exception_msg = f"{tool_call['name']}: failed with the following error: {e}"
-                _logger.warning(exception_msg, exc_info=_logger.isEnabledFor(logging.DEBUG))
+            tool_result, error = self._execute_tool_call(tool, tool_call, record, record_context, tools_context)
+            if error:
+                tool_results.append(format_tool_result(tool_call, error=f"Tool call failed: {error}"))
                 yield {
                     'intermediary_message': format_tool_summary({'icon': 'warning', 'text': tool.name}, tool_call),
                     'is_tool_summary': True,
                 }
                 failed_tool_call = True
                 continue
+            summary = tool_result.get("summary", {'text': tool.name}) if isinstance(tool_result, dict) else {'text': tool.name}
+            yield {
+                'intermediary_message': format_tool_summary(summary, tool_call),
+                'is_tool_summary': True,
+            }
             if isinstance(tool_result, dict):
-                yield {
-                    'intermediary_message': format_tool_summary(tool_result.get("summary", {'text': tool.name}), tool_call),
-                    'is_tool_summary': True,
-                }
                 if 'child_session_id' in tool_result:
                     tool_results.append({
                         'tool_name': tool_call['name'], 'tool_call_id': tool_call['call_id'],
@@ -467,47 +467,57 @@ class AiSessionToolsMixin(models.AbstractModel):
                     yield {'client_tool': {'name': 'do_action', 'params': {'action': action}, 'oneway': True}}
                 if client_tool := tool_result.pop('client_tool', None):
                     if not client_tool.get('oneway'):
-                        yield {
-                            'client_tool': client_tool,
-                            'pending_tool_call': {
-                                'call_id': tool_call['call_id'],
-                                'pending_results': tool_results,
-                            }
-                        }
+                        yield _pending_tool_event(tool_call, tool_results, client_tool=client_tool)
                         return
                     yield {'client_tool': client_tool}
                 if 'response' in tool_result:
                     tool_result = tool_result['response']
-            else:
-                yield {
-                    'intermediary_message': format_tool_summary({'text': tool.name}, tool_call),
-                    'is_tool_summary': True,
-                }
             if links := tools_context.pop("preview_links", None):
                 yield {'notifications': [{'type': 'ai_preview', 'body': link} for link in links]}
-            if user_input_request := tools_context['user_input_request']:
-                yield {
-                    'user_input_request': user_input_request,
-                    'pending_tool_call': {
-                        'call_id': tool_call['call_id'],
-                        'pending_results': tool_results,
-                    },
-                }
-                return
-            if tools_context['await_external_result']:
-                yield {
-                    'external_wait_message': tools_context['external_wait_message'] or self.env._("Waiting for an external result…"),
-                    'pending_tool_call': {
-                        'call_id': tool_call['call_id'],
-                        'pending_results': tool_results,
-                    },
-                }
+            if pending := self._pending_interaction_event(tools_context, tool_call, tool_results):
+                yield pending
                 return
             tool_results.append(format_tool_result(tool_call, result=tool_result))
         item = {'tool_results': tool_results}
         if not failed_tool_call and (final_message := tools_context['final_message']):
             item['final_message'] = final_message
         yield item
+
+    def _pending_interaction_event(self, tools_context, tool_call, pending_results):
+        """Return the event that suspends the batch for a user input or an external result, if any."""
+        if user_input_request := tools_context['user_input_request']:
+            return _pending_tool_event(tool_call, pending_results, user_input_request=user_input_request)
+        if tools_context['await_external_result']:
+            return _pending_tool_event(
+                tool_call, pending_results,
+                external_wait_message=tools_context['external_wait_message'] or self.env._("Waiting for an external result…"),
+            )
+        return None
+
+    def _execute_tool_call(self, tool, tool_call, record, record_context, tools_context):
+        """Run one tool call and return ``(tool_result, error)``.
+
+        ``error`` is the exception raised by the tool, if any; the tools context is then
+        restored to its state before the call.
+        """
+        tools_context['tool_call_id'] = tool_call['call_id']
+        tool_args = dict(tool_call['args'])
+        tool_args.pop('tool_status', None)
+        tools_context_before_call = copy.deepcopy(tools_context)
+        try:
+            tool_result = tool.with_context(**(record_context | self._get_tool_execution_context()))._ai_tool_run(
+                record, tool_args, tools_context,
+            )
+        except (*PG_CONCURRENCY_EXCEPTIONS_TO_RETRY, ConcurrencyError):
+            raise
+        except Exception as e:  # noqa: BLE001
+            tools_context.clear()
+            tools_context.update(tools_context_before_call)
+            exception_msg = f"{tool_call['name']}: failed with the following error: {e}"
+            _logger.warning(exception_msg, exc_info=_logger.isEnabledFor(logging.DEBUG))
+            return None, e
+        return tool_result, None
+
 
     def _abort_pending_tools(self):
         """Decline the remaining tools, wait for launched children, and post the interruption note."""

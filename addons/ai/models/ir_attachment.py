@@ -86,62 +86,9 @@ class IrAttachment(models.Model):
                 continue
             extension = attachment.mimetype.split('/')[-1]
             if extension == 'pdf' and not attachment.url:
-                # Extract the X first / last pages of the PDFs
-                reader = None
-                with contextlib.suppress(PdfReadError):
-                    reader = OdooPdfFileReader(to_pdf_stream(attachment), strict=False)
-                if not reader or not max_pdf_pages or len(reader.pages) <= max_pdf_pages:
-                    b64_datas = attachment.raw.to_base64()
-                else:
-                    writer = OdooPdfFileWriter()
-                    start_pages = max_pdf_pages // 2
-                    end_pages = max_pdf_pages - start_pages
-                    for p in (*range(start_pages), *range(len(reader.pages) - end_pages, len(reader.pages))):
-                        writer.add_page(reader.pages[p])
-                    out_buff = io.BytesIO()
-                    writer.write(out_buff)
-                    b64_datas = base64.b64encode(out_buff.getvalue()).decode()
-
-                files_checksums.add(attachment.checksum)
-                files_parts.append({
-                    'type': 'inline_data',
-                    'mimetype': 'application/pdf',
-                    'data': b64_datas,
-
-                })
+                part = attachment._ai_pdf_part(max_pdf_pages)
             elif extension in AI_SUPPORTED_IMG_TYPES:
-                raw_data = retrieve_image_data_from_record(attachment, 'raw')['content']
-                aspect_ratio = '1:1'
-                size = None
-                try:
-                    image_process = ImageProcess(raw_data)
-                    size = image_process.image.size
-                    if max(size) > 1024:
-                        raw_data = image_process \
-                            .crop_resize(min(size[0], 1024), min(size[1], 1024), 0, 0) \
-                            .image_quality(output_format='PNG')
-                except Exception as e:  # noqa: BLE001
-                    _logger.error("Image resize failed %s", e)
-                finally:
-                    if size:
-                        aspect_ratio = closest_aspect_ratio(width=size[0], height=size[1])
-                if (
-                    attachment.res_field and attachment.res_model in self.env and attachment.res_id
-                    and (image_record := self.env[attachment.res_model].browse(attachment.res_id).exists())
-                ):
-                    image_path = field_to_image_path(image_record, attachment.res_field)
-                else:
-                    image_path = field_to_image_path(attachment, 'raw')
-                files_checksums.add(attachment.checksum)
-                files_parts.append({
-                    'type': 'inline_data',
-                    'mimetype': attachment.mimetype,
-                    'data': base64.b64encode(raw_data).decode(),
-                    'metadata': {
-                        'image_path': image_path,
-                        'aspect_ratio': aspect_ratio
-                    }
-                })
+                part = attachment._ai_image_part()
             else:
                 if not attachment.index_content or attachment.index_content == "application":
                     files_checksums.add(attachment.checksum)
@@ -150,12 +97,72 @@ class IrAttachment(models.Model):
                         'text': f"File '{attachment.name}' ({attachment.mimetype}): Filetype not supported",
                     })
                     continue
-                files_parts.append({
+                part = {
                     'type': 'text',
                     'text': f"Content of file '{attachment.name}' ({attachment.mimetype}): {attachment.index_content}",
-                })
+                }
+            files_checksums.add(attachment.checksum)
+            files_parts.append(part)
             vals.append({'id': attachment.id, 'file': f"<file_{attachment.checksum}/>"})
         return vals, files_parts, files_checksums
+
+    def _ai_pdf_part(self, max_pdf_pages):
+        """Return the PDF part sent to the LLM, limited to the first and last ``max_pdf_pages`` pages."""
+        self.ensure_one()
+        reader = None
+        with contextlib.suppress(PdfReadError):
+            reader = OdooPdfFileReader(to_pdf_stream(self), strict=False)
+        if not reader or not max_pdf_pages or len(reader.pages) <= max_pdf_pages:
+            b64_datas = self.raw.to_base64()
+        else:
+            writer = OdooPdfFileWriter()
+            start_pages = max_pdf_pages // 2
+            end_pages = max_pdf_pages - start_pages
+            for p in (*range(start_pages), *range(len(reader.pages) - end_pages, len(reader.pages))):
+                writer.add_page(reader.pages[p])
+            out_buff = io.BytesIO()
+            writer.write(out_buff)
+            b64_datas = base64.b64encode(out_buff.getvalue()).decode()
+        return {
+            'type': 'inline_data',
+            'mimetype': 'application/pdf',
+            'data': b64_datas,
+        }
+
+    def _ai_image_part(self):
+        """Return the image part sent to the LLM, resized to at most 1024 pixels per side."""
+        self.ensure_one()
+        raw_data = retrieve_image_data_from_record(self, 'raw')['content']
+        aspect_ratio = '1:1'
+        size = None
+        try:
+            image_process = ImageProcess(raw_data)
+            size = image_process.image.size
+            if max(size) > 1024:
+                raw_data = image_process \
+                    .crop_resize(min(size[0], 1024), min(size[1], 1024), 0, 0) \
+                    .image_quality(output_format='PNG')
+        except Exception as e:  # noqa: BLE001
+            _logger.error("Image resize failed %s", e)
+        finally:
+            if size:
+                aspect_ratio = closest_aspect_ratio(width=size[0], height=size[1])
+        if (
+            self.res_field and self.res_model in self.env and self.res_id
+            and (image_record := self.env[self.res_model].browse(self.res_id).exists())
+        ):
+            image_path = field_to_image_path(image_record, self.res_field)
+        else:
+            image_path = field_to_image_path(self, 'raw')
+        return {
+            'type': 'inline_data',
+            'mimetype': self.mimetype,
+            'data': base64.b64encode(raw_data).decode(),
+            'metadata': {
+                'image_path': image_path,
+                'aspect_ratio': aspect_ratio
+            }
+        }
 
     def _retrieve_image_src_and_mimetype(self):
         self.ensure_one()

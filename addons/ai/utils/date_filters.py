@@ -136,56 +136,63 @@ def validate_date_filters(model, filters, action=None):
 
         # Check if field is available as a date filter in the search view
         if field_name not in date_filter_configs:
-            available_filters = list(date_filter_configs.keys()) if date_filter_configs else []
-            if available_filters:
-                invalid_date_filters.append(
-                    f"{field_name} is not available as a date filter in the search view. "
-                    f"Available date filters: {', '.join(available_filters)}. "
-                    f"For {field_name}, use custom_domain with the 'ai_tool_compute_date' tool to get date/time values."
-                )
-            else:
-                invalid_date_filters.append(
-                    f"{field_name} is not available as a date filter in the search view (no date filters available). "
-                    f"Use custom_domain with the 'ai_tool_compute_date' tool to get date/time values for {field_name}."
-                )
+            invalid_date_filters.append(_unavailable_date_filter_message(field_name, date_filter_configs))
             continue  # Skip to next date_filter
 
-        # Validate each period for this field
         config = date_filter_configs[field_name]
-        custom_options = config.get('custom_options', [])
-        invalid_periods = []
-
-        for period in selected_periods:
-            if period in custom_options:
-                continue
-
-            if period in VALID_QUARTERS:
-                continue
-
-            # check if a valid period with offset (month+-N, year+-N)
-            def check_valid_period(period_type):
-                match = re.match(rf'^{period_type}([+-]\d{{1,2}})?$', period)
-                if match:
-                    offset = int(match.group(1) or 0)
-                    start_period = config.get(f'start_{period_type}', -2)
-                    end_period = config.get(f'end_{period_type}', 0)
-                    if not start_period <= offset <= end_period:
-                        invalid_periods.append(f"'{period}' (offset {offset} outside range [{start_period}, {end_period}])")
-                    return True
-                return False
-
-            if not (check_valid_period('month') or check_valid_period('year')):
-                invalid_periods.append(
-                    f"'{period}' (not a valid pattern. "
-                    f"Valid: month, year (with offsets), quarters (first_quarter, second_quarter, third_quarter, fourth_quarter). "
-                    f"Custom options: {custom_options if custom_options else 'none'})",
-                )
-
+        invalid_periods = _invalid_periods(config, selected_periods)
         if invalid_periods:
             invalid_date_filters.append(f"Invalid period formats for field '{field_name}': {', '.join(invalid_periods)}")
 
     if invalid_date_filters:
         raise ValueError(f"Invalid date_filters: {'; '.join(invalid_date_filters)}")
+
+
+def _unavailable_date_filter_message(field_name, date_filter_configs):
+    """Return the error for a date filter on a field that the search view does not offer."""
+    if date_filter_configs:
+        return (
+            f"{field_name} is not available as a date filter in the search view. "
+            f"Available date filters: {', '.join(date_filter_configs.keys())}. "
+            f"For {field_name}, use custom_domain with the 'ai_tool_compute_date' tool to get date/time values."
+        )
+    return (
+        f"{field_name} is not available as a date filter in the search view (no date filters available). "
+        f"Use custom_domain with the 'ai_tool_compute_date' tool to get date/time values for {field_name}."
+    )
+
+
+def _invalid_periods(config, selected_periods):
+    """Return the descriptions of the selected periods that the date filter ``config`` does not accept."""
+    custom_options = config.get('custom_options', [])
+    invalid_periods = []
+
+    for period in selected_periods:
+        if period in custom_options:
+            continue
+
+        if period in VALID_QUARTERS:
+            continue
+
+        # check if a valid period with offset (month+-N, year+-N)
+        def check_valid_period(period_type):
+            match = re.match(rf'^{period_type}([+-]\d{{1,2}})?$', period)
+            if match:
+                offset = int(match.group(1) or 0)
+                start_period = config.get(f'start_{period_type}', -2)
+                end_period = config.get(f'end_{period_type}', 0)
+                if not start_period <= offset <= end_period:
+                    invalid_periods.append(f"'{period}' (offset {offset} outside range [{start_period}, {end_period}])")
+                return True
+            return False
+
+        if not (check_valid_period('month') or check_valid_period('year')):
+            invalid_periods.append(
+                f"'{period}' (not a valid pattern. "
+                f"Valid: month, year (with offsets), quarters (first_quarter, second_quarter, third_quarter, fourth_quarter). "
+                f"Custom options: {custom_options if custom_options else 'none'})",
+            )
+    return invalid_periods
 
 
 def compute_date(field_type, user_tz, today, operations=None, pin=None):

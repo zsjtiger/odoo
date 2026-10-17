@@ -212,14 +212,7 @@ class IrActionsServer(models.Model):
         self.sudo(record.env.su)._can_execute_action_on_records(record)
 
         action_prompt, context_fields = self._ai_prepare_prompt_values(record)
-        date = datetime.now(UTC).astimezone().replace(second=0, microsecond=0).isoformat()
-        record_context, files_parts = record._get_ai_context(context_fields)
-        context = f"# Context\n## Current date\n{date}"
-        context += f'\n## Current record\n{{"model": "{record._name}", "id": {record.id}}}'
-        if record_context != '{}':
-            context += f"\n## ORM Snapshot\n{record_context}"
-        msg_parts = [{'type': 'text', 'text': f"# Action request\n{action_prompt}\n{context}"}]
-        msg_parts.extend(files_parts)
+        msg_parts = self._ai_prompt_message_parts(record, action_prompt, context_fields)
 
         if isinstance(record, self.pool['mail.thread']):
             if author := self._ai_partner():
@@ -233,26 +226,10 @@ class IrActionsServer(models.Model):
         tool_calls_history = []
 
         def collect_tool_results_callback(item, tools_context):
-            # only collect the sources for the web search tool (to not overload chatter with
-            # useless info and to show source urls instead of "[WEB_SOURCE:uuid]")
-
             if 'tool_calls' in item:
                 all_tool_calls.extend(item['tool_calls'])
             if 'tool_results' in item:
-                if web_search_tool := self.env.ref('ai.ir_actions_server_ai_web_search', raise_if_not_found=False):
-                    for tool_result in item['tool_results']:
-                        if tool_result['tool_name'] == web_search_tool.sudo().ai_tool_name and tool_result['success']:
-                            source_links = Markup(", ").join(
-                                Markup('<a href="{}" target="_blank" rel="noreferrer noopener">{}</a>').format(
-                                    source["url"], source["source_name"]
-                                )
-                                for source in tools_context['state'].get('web_sources', {}).values()
-                            )
-                            if source_links:
-                                tool_result['result'] = [{
-                                    'type': 'text',
-                                    'text': Markup("Sources: {}").format(source_links),
-                                }]
+                self._ai_add_web_sources_to_results(item['tool_results'], tools_context)
                 for tool_result in item['tool_results']:
                     if tool_result['tool_name'] in tools_by_name:
                         related_tool_call = next(
@@ -275,18 +252,56 @@ class IrActionsServer(models.Model):
             usage='ai_action',
         )
         if isinstance(record, self.pool['mail.thread']):
-            # Log the tools the LLM used in the chatter of the record
-            body = self.env['ir.qweb']._render(
-                "ai.ai_log_action",
-                {
-                    "record": record,
-                    "tool_calls": tool_calls_history,
-                    "action": self,
-                },
-            )
-            record._message_log(body=body, author_id=self._ai_partner().id)
+            self._ai_log_tool_calls(record, tool_calls_history)
 
         return responses, tool_calls_history
+
+    def _ai_prompt_message_parts(self, record, action_prompt, context_fields):
+        """Return the message parts of the action request: the prompt, the context and the files."""
+        date = datetime.now(UTC).astimezone().replace(second=0, microsecond=0).isoformat()
+        record_context, files_parts = record._get_ai_context(context_fields)
+        context = f"# Context\n## Current date\n{date}"
+        context += f'\n## Current record\n{{"model": "{record._name}", "id": {record.id}}}'
+        if record_context != '{}':
+            context += f"\n## ORM Snapshot\n{record_context}"
+        msg_parts = [{'type': 'text', 'text': f"# Action request\n{action_prompt}\n{context}"}]
+        msg_parts.extend(files_parts)
+        return msg_parts
+
+    def _ai_add_web_sources_to_results(self, tool_results, tools_context):
+        """Replace the result of successful web searches by the links of their sources.
+
+        Only the web search tool is handled: it keeps the chatter free of useless info and shows
+        source urls instead of "[WEB_SOURCE:uuid]".
+        """
+        web_search_tool = self.env.ref('ai.ir_actions_server_ai_web_search', raise_if_not_found=False)
+        if not web_search_tool:
+            return
+        for tool_result in tool_results:
+            if tool_result['tool_name'] == web_search_tool.sudo().ai_tool_name and tool_result['success']:
+                source_links = Markup(", ").join(
+                    Markup('<a href="{}" target="_blank" rel="noreferrer noopener">{}</a>').format(
+                        source["url"], source["source_name"]
+                    )
+                    for source in tools_context['state'].get('web_sources', {}).values()
+                )
+                if source_links:
+                    tool_result['result'] = [{
+                        'type': 'text',
+                        'text': Markup("Sources: {}").format(source_links),
+                    }]
+
+    def _ai_log_tool_calls(self, record, tool_calls_history):
+        """Log in the chatter of ``record`` the tools the LLM used for the action."""
+        body = self.env['ir.qweb']._render(
+            "ai.ai_log_action",
+            {
+                "record": record,
+                "tool_calls": tool_calls_history,
+                "action": self,
+            },
+        )
+        record._message_log(body=body, author_id=self._ai_partner().id)
 
     def _ai_get_records(self, eval_context):
         """Return the record on which the AI action will be executed."""

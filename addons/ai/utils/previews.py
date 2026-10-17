@@ -41,39 +41,7 @@ def make_records_update_preview(records, changes):
         if field.type in ('binary', 'image', 'properties'):
             raise ValueError(f"Field of type {field.type} cannot be updated ({fname})")
         if field.type in ('many2many', 'one2many'):
-            if not isinstance(changes[fname], list) or not isinstance(changes[fname][0], tuple):
-                raise ValueError(f"{fname} is a x2many and expects a Command as value. Try again with a Command")
-            cmd_items = []
-            comodel = _get_comodel(env, field)
-            for cmd in changes[fname]:
-                if cmd[0] in (Command.CREATE, Command.UPDATE, Command.DELETE):
-                    raise ValueError(f"Command {cmd[0]} cannot be used during an update.")
-                if cmd[0] == Command.UNLINK:
-                    cmd_items.append(env._(
-                        'Remove "%(record_name)s"',
-                        record_name=Markup("<i>%s</i>") % comodel.browse(cmd[1]).display_name,
-                    ))
-                elif cmd[0] == Command.LINK:
-                    cmd_items.append(env._(
-                        'Add "%(record_name)s"',
-                        record_name=Markup("<i>%s</i>") % comodel.browse(cmd[1]).display_name,
-                    ))
-                elif cmd[0] == Command.CLEAR:
-                    cmd_items.append(env._("Remove all"))
-                elif cmd[0] == Command.SET:
-                    cmd_items.append(env._(
-                        "Replace all by %(new_relations)s",
-                        new_relations=Markup("<ul>%s</ul>") % Markup().join(
-                            Markup("<li>%s</li>") % rec.display_name
-                            for rec in comodel.browse(cmd[2])
-                        )
-                    ))
-            if len(cmd_items) > 1:
-                val = Markup("<ul>%s</ul>") % Markup().join(Markup("<li>%s</li>") % i for i in cmd_items)
-            elif cmd_items:
-                val = cmd_items[0]
-            else:
-                val = ""
+            val = _make_x2m_preview_value(env, field, changes[fname])
         elif field.type in ('html', 'text'):
             if field.type == "html":
                 old_vals[fname] = html_to_inner_content(old_vals[fname])
@@ -109,6 +77,42 @@ def make_records_update_preview(records, changes):
             item['old_val'] = old_vals[fname] if old_vals[fname] not in (False, None) else env._("None")
         items.append(item)
     return items
+
+
+def _make_x2m_preview_value(env, field, commands):
+    """Describe the ORM commands of a x2many update as the list of changes shown to the user."""
+    if not isinstance(commands, list) or not isinstance(commands[0], tuple):
+        raise ValueError(f"{field.name} is a x2many and expects a Command as value. Try again with a Command")
+    cmd_items = []
+    comodel = _get_comodel(env, field)
+    for cmd in commands:
+        if cmd[0] in (Command.CREATE, Command.UPDATE, Command.DELETE):
+            raise ValueError(f"Command {cmd[0]} cannot be used during an update.")
+        if cmd[0] == Command.UNLINK:
+            cmd_items.append(env._(
+                'Remove "%(record_name)s"',
+                record_name=Markup("<i>%s</i>") % comodel.browse(cmd[1]).display_name,
+            ))
+        elif cmd[0] == Command.LINK:
+            cmd_items.append(env._(
+                'Add "%(record_name)s"',
+                record_name=Markup("<i>%s</i>") % comodel.browse(cmd[1]).display_name,
+            ))
+        elif cmd[0] == Command.CLEAR:
+            cmd_items.append(env._("Remove all"))
+        elif cmd[0] == Command.SET:
+            cmd_items.append(env._(
+                "Replace all by %(new_relations)s",
+                new_relations=Markup("<ul>%s</ul>") % Markup().join(
+                    Markup("<li>%s</li>") % rec.display_name
+                    for rec in comodel.browse(cmd[2])
+                )
+            ))
+    if len(cmd_items) > 1:
+        return Markup("<ul>%s</ul>") % Markup().join(Markup("<li>%s</li>") % i for i in cmd_items)
+    if cmd_items:
+        return cmd_items[0]
+    return ""
 
 
 def make_batch_update_preview(env, explanation, updates):

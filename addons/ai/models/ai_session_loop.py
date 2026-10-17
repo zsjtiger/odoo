@@ -28,6 +28,23 @@ from .ai_session_tools import SUBAGENT_TOOL_XMLIDS
 _logger = logging.getLogger(__name__)
 
 
+TURN_LIMIT_WARNING = dedent("""
+    <turn_limit_warning>
+    You are about to exceed the turn limit.
+    Primary Directive: Your next and ONLY action is to call the `ai_tool_ask_user_question` tool.
+    Tool Arguments: You MUST provide the following arguments:
+        `choices`:
+             - Two choices meaning "continue" and "stop here", in the language used in this conversation.
+        `question`:
+            This must be a single string in the conversation's language, construct it by combining these parts:
+            1. A reason for pausing (e.g. "...is taking more steps than I can complete in one go, so I've paused here").
+            2. A summary of your progress so far (e.g. "I have found the partners in California...").
+            3. A description of the next step (e.g. "...and am about to check their open opportunities.").
+            4. A direct question asking to proceed (e.g. "Would you like me to continue?").
+    </turn_limit_warning>
+""").strip()
+
+
 class AiSessionLoopMixin(models.AbstractModel):
     """Methods of AiSession that submit completion requests and continue the agent loop."""
     _name = 'ai.session.loop.mixin'
@@ -297,21 +314,8 @@ class AiSessionLoopMixin(models.AbstractModel):
             self.event_ids = [Command.create({'metadata': user_event})]
             messages.append(user_event)
 
-        rag_context = None
         if messages:
-            last_user_message = self._get_last_user_message(messages)
-            if not is_first_round:
-                rag_context = state['rag_context']
-            else:
-                text = get_text_from_parts(last_user_message['content'])
-                if text and self.agent_id.sources_ids:
-                    rag_context = self.agent_id._build_rag_context(text)
-                state['rag_context'] = rag_context
-            last_user_message['content'].append({
-                'type': 'text',
-                'text': self._get_context_input(rag_context),
-            })
-
+            self._append_round_context(messages, state, is_first_round)
         updated_instructions = self._append_loaded_skills(
             self.agent_id._get_instructions(
                 self.ai_composer_id.default_prompt if not self.parent_session_id else None,
@@ -321,32 +325,12 @@ class AiSessionLoopMixin(models.AbstractModel):
         )
         if round_no >= round_limit:
             tools = self.env.ref("ai.ir_actions_server_ask_user_question").sudo()
-            warning_text = dedent("""
-                <turn_limit_warning>
-                You are about to exceed the turn limit.
-                Primary Directive: Your next and ONLY action is to call the `ai_tool_ask_user_question` tool.
-                Tool Arguments: You MUST provide the following arguments:
-                    `choices`:
-                         - Two choices meaning "continue" and "stop here", in the language used in this conversation.
-                    `question`:
-                        This must be a single string in the conversation's language, construct it by combining these parts:
-                        1. A reason for pausing (e.g. "...is taking more steps than I can complete in one go, so I've paused here").
-                        2. A summary of your progress so far (e.g. "I have found the partners in California...").
-                        3. A description of the next step (e.g. "...and am about to check their open opportunities.").
-                        4. A direct question asking to proceed (e.g. "Would you like me to continue?").
-                </turn_limit_warning>
-            """).strip()
-            last_user_message = self._get_last_user_message(messages)
-            last_user_message['content'].append({
+            self._get_last_user_message(messages)['content'].append({
                 'type': 'text',
-                'text': warning_text,
+                'text': TURN_LIMIT_WARNING,
             })
         else:
-            tools = self.env["ir.actions.server"].sudo().browse(state.get("available_tools")).exists()
-            if not self._can_start_subsession():
-                for xmlid in SUBAGENT_TOOL_XMLIDS:
-                    tools -= self.env.ref(xmlid)
-                state['available_tools'] = tools.ids
+            tools = self._get_round_tools(state)
         if tools and completion_options.get('web_grounding'):
             raise UserError(self.env._(
                 "The web grounding option is not supported with tools. Use the web search skill instead."
@@ -367,6 +351,35 @@ class AiSessionLoopMixin(models.AbstractModel):
             request_round_limit=round_limit,
             state=state,
         )
+
+    def _append_round_context(self, messages, state, is_first_round):
+        """Append the retrieved sources of the conversation to its last user message.
+
+        The sources are retrieved on the first round and reused by the following rounds.
+        """
+        if not is_first_round:
+            rag_context = state['rag_context']
+        else:
+            last_user_message = self._get_last_user_message(messages)
+            text = get_text_from_parts(last_user_message['content'])
+            rag_context = None
+            if text and self.agent_id.sources_ids:
+                rag_context = self.agent_id._build_rag_context(text)
+            state['rag_context'] = rag_context
+        last_user_message = self._get_last_user_message(messages)
+        last_user_message['content'].append({
+            'type': 'text',
+            'text': self._get_context_input(rag_context),
+        })
+
+    def _get_round_tools(self, state):
+        """Return the tools available for this round, without the subagent tools past the depth limit."""
+        tools = self.env["ir.actions.server"].sudo().browse(state.get("available_tools")).exists()
+        if not self._can_start_subsession():
+            for xmlid in SUBAGENT_TOOL_XMLIDS:
+                tools -= self.env.ref(xmlid)
+            state['available_tools'] = tools.ids
+        return tools
 
     def _root_session(self):
         session = self
