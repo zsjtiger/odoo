@@ -10,6 +10,7 @@ PAGE_COMPONENT_IDS = (
     'mobile_page.todo_page',
     'mobile_page.schedule_page',
     'mobile_page.user_my_page',
+    'mobile_page.ai_page',
 )
 
 

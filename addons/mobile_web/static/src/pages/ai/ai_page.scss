@@ -1,0 +1,69 @@
+// 页面高度 = 视口减去底部标签栏; 安全区域(刘海/底部横条)由输入区域的内边距留出
+.m_ai_page {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    .m_ai_body {
+        display: flex;
+        flex: 1 1 auto;
+        flex-direction: column;
+        min-height: 0;
+    }
+
+    .m_ai_messages {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: 8px 0;
+    }
+
+    .m_ai_message {
+        max-width: 85%;
+        margin: 6px 0;
+        padding: 8px 12px;
+        border-radius: 12px;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+    }
+
+    .m_ai_message_user {
+        margin-left: auto;
+        background-color: $theme-color;
+        color: $white-color;
+    }
+
+    .m_ai_message_assistant {
+        background-color: #f1f1f1;
+    }
+
+    .m_ai_pending {
+        opacity: 0.6;
+    }
+
+    .m_ai_composer {
+        display: flex;
+        align-items: flex-end;
+        gap: 8px;
+        padding: 8px 0 calc(8px + env(safe-area-inset-bottom));
+        border-top: 1px solid #e5e5e5;
+    }
+
+    // 16px 字号: iOS 聚焦时不会自动放大页面
+    .m_ai_input {
+        flex: 1 1 auto;
+        min-height: 44px;
+        max-height: 140px;
+        padding: 10px 12px;
+        font-size: 16px;
+        border: 1px solid #d0d0d0;
+        border-radius: 22px;
+        resize: none;
+    }
+
+    .m_ai_send {
+        min-height: 44px;
+        min-width: 64px;
+    }
+}

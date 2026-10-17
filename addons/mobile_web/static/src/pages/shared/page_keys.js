@@ -7,4 +7,5 @@ export const PAGE_KEYS = Object.freeze({
     TODO: "mobile_page.todo_page",
     SCHEDULE: "mobile_page.schedule_page",
     MY: "mobile_page.user_my_page",
+    AI: "mobile_page.ai_page",
 });

@@ -12,6 +12,7 @@ import { TodoPage } from "@mobile_web/pages/todo/todo_page";
 import { SchedulePage } from "@mobile_web/pages/schedule/schedule_page";
 import { UserMyPage } from "@mobile_web/pages/my/my_page";
 import { MobilePage } from "@mobile_web/pages/shared/components/mobile_page";
+import { AIPage } from "@mobile_web/pages/ai/ai_page";
 
 describe.current.tags("mobile");
 
@@ -20,6 +21,7 @@ test("every page key is registered, so the backend page data can be resolved", (
     expect(mobilePageRegistry.get(PAGE_KEYS.TODO)).toBe(TodoPage);
     expect(mobilePageRegistry.get(PAGE_KEYS.SCHEDULE)).toBe(SchedulePage);
     expect(mobilePageRegistry.get(PAGE_KEYS.MY)).toBe(UserMyPage);
+    expect(mobilePageRegistry.get(PAGE_KEYS.AI)).toBe(AIPage);
 });
 
 test("the page keys match the backend list", () => {
@@ -28,6 +30,7 @@ test("the page keys match the backend list", () => {
         "mobile_page.todo_page",
         "mobile_page.schedule_page",
         "mobile_page.user_my_page",
+        "mobile_page.ai_page",
     ]);
 });
 
