@@ -10,6 +10,7 @@ import {
     usePlugin,
     useScope,
 } from "@odoo/owl";
+import { AppLauncher } from "@web/webclient/navbar/app_launcher";
 import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
 import { Dropdown } from "@web/core/components/dropdown/dropdown";
 import { DropdownGroup } from "@web/core/components/dropdown/dropdown_group";
@@ -33,6 +34,7 @@ export class MenuDropdown extends Dropdown {}
 export class NavBar extends Component {
     static template = "web.NavBar";
     static components = {
+        AppLauncher,
         Dropdown,
         DropdownItem,
         DropdownGroup,

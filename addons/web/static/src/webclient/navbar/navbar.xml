@@ -72,24 +72,10 @@
       </a>
     </t>
     <t t-else="">
-      <div t-if="!this.isScopedApp" class="o_navbar_apps_menu">
-        <Dropdown>
-          <button data-hotkey="h" title="Home Menu" data-available-offline="">
-            <i class="oi" data-icon="apps"/>
-          </button>
-          <t t-set-slot="content">
-            <DropdownItem
-              t-foreach="apps"
-              t-as="app"
-              t-key="app.id"
-              class="{ 'o_app': true, focus: this.menuService.getCurrentApp() === app, 'o_disabled_offline': !this._isAvailable(app) }"
-              onSelected="() => this.onNavBarDropdownItemSelection(app)"
-              t-out="app.name"
-              attrs="{ href: this.getMenuItemHref(app), 'data-menu-xmlid': app.xmlid, 'data-section': app.id }"
-            />
-          </t>
-        </Dropdown>
-      </div>
+      <AppLauncher t-if="!this.isScopedApp" apps="apps"
+        onSelect="(menu) => this.onNavBarDropdownItemSelection(menu)"
+        getHref="(menu) => this.getMenuItemHref(menu)"
+        isAvailable="(menu) => this._isAvailable(menu)"/>
       <div t-else="" class="mx-2"/>
     </t>
   </t>
