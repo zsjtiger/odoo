@@ -221,6 +221,11 @@
         }
     }
 
+    // Leave room for the app icon, which is absolutely positioned before the name
+    .o_menu_brand_icon + .o_menu_brand {
+        margin-left: calc(var(--o-navbar-height) - #{$o-navbar-padding-v * 2} + #{map-get($spacers, 2)});
+    }
+
     .o_menu_brand, .o_navbar_breadcrumbs, .o_navbar_breadcrumbs .btn {
         color: var(--NavBar-brand-color, #{$o-navbar-brand-color});
     }

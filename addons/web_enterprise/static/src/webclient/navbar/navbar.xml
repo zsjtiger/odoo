@@ -29,7 +29,7 @@
                         class="oi o_menu_brand_icon position-absolute start-0 h-100 ms-2"
                         t-att-data-icon="this.currentApp.webIconClass"
                         t-att-style="'color:' + this.currentApp.webIconColor"/>
-                    <span t-out="this.currentApp.name" class="o_menu_brand d-flex ms-3 pe-0"/>
+                    <span t-out="this.currentApp.name" class="o_menu_brand d-flex pe-0"/>
                 </t>
             </t>
         </a>
