@@ -17,7 +17,6 @@ from odoo.tools.xml.template_inheritance import apply_inheritance_specs
 from odoo.addons.web_studio.controllers import main
 from odoo.addons.web_studio.controllers.keyed_xml_differ import (
     DIFF_ATTRIBUTE,
-    KeyedXmlDiffer,
 )
 
 # We are dealing with an HTML document that has QWeb syntax in it (<t />, t-att etc..)
