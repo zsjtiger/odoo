@@ -9,6 +9,8 @@
     padding-top: $o-navbar-padding-v;
     padding-bottom: $o-navbar-padding-v;
     background: $o-navbar-background;
+    // accent line under the navbar, drawn inside the box so the height does not change
+    box-shadow: inset 0 -2px 0 $primary;
     font-size: $o-navbar-font-size;
 
     @include media-breakpoint-up(md) {
