@@ -16,7 +16,10 @@
                         </button>
                     </div>
                     <div t-if="this.isOpen(item)" class="o_accordion_details">
-                        <t t-out="item.details"/>
+                        <div class="o_accordion_group o_group">
+                            <t t-if="item.details" t-out="item.details"/>
+                            <t t-slot="details" item="item"/>
+                        </div>
                     </div>
                 </div>
             </t>

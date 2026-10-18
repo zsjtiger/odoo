@@ -59,4 +59,16 @@
         padding: 0 1rem 0.75rem 2.25rem;
         font-size: $font-size-sm;
     }
+
+    // laid out like a form <group>: content flows in columns, list and One2many take a full row
+    .o_accordion_group {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+        gap: 0.75rem 1.5rem;
+        align-items: start;
+
+        > .o_accordion_wide {
+            grid-column: 1 / -1;
+        }
+    }
 }

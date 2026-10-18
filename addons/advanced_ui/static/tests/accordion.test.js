@@ -1,3 +1,4 @@
+import { Component, xml } from "@odoo/owl";
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, click, queryAll, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
@@ -47,4 +48,25 @@ test("accordion: open sections given at start", async () => {
     await mountWithCleanup(Accordion, { props: { items, openIds: ["b"] } });
     expect(queryOne(".o_accordion_details").textContent).toBe("Accordion details - B");
     expect(queryAll(".o_accordion_summary")[1]).toHaveAttribute("aria-expanded", "true");
+});
+
+test("accordion: slot content is rendered inside the open section", async () => {
+    class Wrapper extends Component {
+        static components = { Accordion };
+        static template = xml`
+            <Accordion items="this.sections" openIds="['a']">
+                <t t-set-slot="details" t-slot-scope="scope">
+                    <span class="o_custom_field" t-out="scope.item.id"/>
+                    <div class="o_accordion_wide o_custom_list" t-if="scope.item.id === 'a'">list</div>
+                </t>
+            </Accordion>`;
+        setup() {
+            this.sections = items;
+        }
+    }
+    await mountWithCleanup(Wrapper);
+    expect(".o_accordion_group").toHaveCount(1);
+    expect(".o_accordion_group .o_custom_field").toHaveText("a");
+    expect(".o_accordion_group .o_custom_list").toHaveCount(1);
+    expect(".o_accordion_wide").toHaveCount(1);
 });

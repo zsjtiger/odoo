@@ -5,7 +5,11 @@ import { Component, proxy, t, useProps } from "@odoo/owl";
  * and details (visible when the item is open).
  *
  * Props:
- * - items: [{ id, summary, details }], details can be a string or a template
+ * - items: [{ id, summary, details }], details is an optional string
+ *
+ * Open sections render the "details" slot with { item } as scope. Any content can be
+ * placed there (fields, lists, One2many), and it is laid out in columns like a form group.
+ * Wrap content that spans the whole row in an element with the "o_accordion_wide" class.
  * - multiple: whether several items can be open at the same time (default: one at a time)
  * - openIds: ids of the items open at the start
  */
@@ -15,6 +19,7 @@ export class Accordion extends Component {
         items: t.array(),
         multiple: t.boolean().optional(),
         openIds: t.array().optional(),
+        slots: t.object().optional(),
     });
 
     setup() {

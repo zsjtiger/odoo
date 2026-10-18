@@ -67,6 +67,32 @@ Each item:
 | `summary` | Text shown in the row header. Always visible.                                                |
 | `details` | Content shown when the row is open. Rendered as text; wrap HTML in `markup()` to render it. |
 
+### Putting fields, lists or One2many in a row
+
+Plain text in `details` is enough for simple cases. For anything richer, pass the
+content through the `details` slot. It is rendered only while the row is open, and
+it is laid out in columns like a form `<group>`:
+
+```xml
+<Accordion items="this.sections" openIds="['lines']">
+    <t t-set-slot="details" t-slot-scope="scope">
+        <!-- fields, rendered as form group columns -->
+        <div class="o_accordion_wide">
+            <!-- a list or One2many, spanning the full row -->
+        </div>
+    </t>
+</Accordion>
+```
+
+The slot receives the row as `scope.item`, so one slot can serve every row and
+branch on `scope.item.id`. Wrap content that should span the whole width in an
+element with the class `o_accordion_wide`.
+
+The slot needs an OWL template that renders the accordion, so it is set up in a
+component template. Passing records and field definitions to `<Field>` or a list
+renderer is up to the component that owns the data. A field widget that does this
+automatically from a form view is not provided yet.
+
 ### Behaviour
 
 - All rows are closed by default, unless their ids are listed in `openIds`.
