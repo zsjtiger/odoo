@@ -29,3 +29,40 @@
     font-weight: 600;
     font-size: $font-size-sm;
 }
+
+.o_lookup_autocomplete {
+    .o_lookup_scope_button {
+        min-width: 6rem;
+        justify-content: space-between;
+    }
+
+    .o_lookup_scope_menu {
+        list-style: none;
+        margin-left: 0;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        z-index: $zindex-dropdown;
+        min-width: 14rem;
+        margin-top: 0.25rem;
+        padding: 0.5rem 0;
+        background: $white;
+        li {
+            list-style: none;
+        }
+        border: 1px solid $border-color;
+        border-radius: $border-radius;
+        box-shadow: $box-shadow-sm;
+    }
+
+    .o_lookup_scope_menu .dropdown-item {
+        width: 100%;
+        padding: 0.25rem 0.75rem 0.25rem 1.5rem;
+        text-align: left;
+    }
+
+    .o_lookup_scope_title {
+        padding: 0.25rem 0.75rem 0.5rem;
+        font-weight: 600;
+    }
+}

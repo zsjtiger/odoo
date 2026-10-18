@@ -2,7 +2,19 @@
 <templates xml:space="preserve">
 
     <t t-name="advanced_ui.LookupAutocomplete">
-        <div class="o_input_dropdown o_lookup_autocomplete" t-ref="this.autocompleteContainerRef">
+        <div class="o_lookup_autocomplete d-flex align-items-start gap-2">
+            <div t-if="this.hasScope" class="o_lookup_scope position-relative flex-shrink-0">
+                <button type="button" class="o_lookup_scope_button btn btn-light d-flex align-items-center gap-2" t-on-click="this.toggleScope" t-out="this.scopeLabel"/>
+                <ul t-if="this.scope.open" class="o_lookup_scope_menu o-dropdown--menu show">
+                    <li class="o_lookup_scope_title" t-out="this.suggestionsTitle"/>
+                    <t t-foreach="this.scopeOptions" t-as="value" t-key="value or ''">
+                        <li>
+                            <button type="button" class="dropdown-item" t-att-class="{ 'active': value === this.scope.value }" t-on-click="() => this.selectScope(value)" t-out="value or this.allLabel"/>
+                        </li>
+                    </t>
+                </ul>
+            </div>
+            <div class="o_input_dropdown flex-grow-1" t-ref="this.autocompleteContainerRef">
             <input t-if="this.uiService.isSmall and this.props.dropdown"
                 type="text"
                 t-att-id="this.props.id"
@@ -38,6 +50,7 @@
                 </t>
             </AutoComplete>
             <span class="o_dropdown_button" />
+            </div>
         </div>
     </t>
 

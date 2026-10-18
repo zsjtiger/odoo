@@ -55,12 +55,18 @@ registry.category("fields").add("lookup", {
             type: "field",
             availableTypes: ["char"],
         },
+        {
+            label: _t("Scope selector"),
+            name: "scope",
+            type: "boolean",
+            help: _t("Adds a selector above the suggestions to show one group only."),
+        },
     ],
     extractProps(staticInfo, dynamicInfo) {
-        const { subtitle, group } = staticInfo.options;
+        const { subtitle, group, scope } = staticInfo.options;
         return {
             ...extractM2OFieldProps(staticInfo, dynamicInfo),
-            lookupFields: { subtitle, group },
+            lookupFields: { subtitle, group, scope },
         };
     },
 });

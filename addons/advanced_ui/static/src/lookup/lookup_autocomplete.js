@@ -1,4 +1,4 @@
-import { t, useProps } from "@odoo/owl";
+import { proxy, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/data/l10n/translation";
 import { AutoComplete } from "@web/core/components/autocomplete/autocomplete";
 import { Many2XAutocomplete, many2XAutocompleteProps } from "@web/views/fields/relational_utils";
@@ -18,6 +18,42 @@ export class LookupAutocomplete extends Many2XAutocomplete {
         ...many2XAutocompleteProps,
         lookupFields: t.object().optional(),
     });
+    scope = proxy({ value: null, open: false });
+    groupNames = new Set();
+
+    /** Whether the scope selector is shown: it filters the suggestions by group value. */
+    get hasScope() {
+        return !!(this.props.lookupFields?.scope && this.groupField);
+    }
+
+    get scopeLabel() {
+        return this.scope.value || _t("All");
+    }
+
+    get scopeOptions() {
+        return [null, ...[...this.groupNames].sort()];
+    }
+
+    get suggestionsTitle() {
+        return _t("Suggested for you");
+    }
+
+    get allLabel() {
+        return _t("All");
+    }
+
+    toggleScope() {
+        this.scope.open = !this.scope.open;
+    }
+
+    selectScope(value) {
+        this.scope.value = value;
+        this.scope.open = false;
+        // re-run the search with the text already typed, through the input's own input event
+        const input = this.autocompleteContainerRef()?.querySelector("input");
+        input?.dispatchEvent(new Event("input", { bubbles: true }));
+        input?.focus();
+    }
 
     get optionsSource() {
         return { ...super.optionsSource, optionSlot: "lookupOption" };
@@ -36,6 +72,11 @@ export class LookupAutocomplete extends Many2XAutocomplete {
         if (!this.groupField) {
             return suggestions;
         }
+        for (const suggestion of suggestions) {
+            if (suggestion.data?.record) {
+                this.groupNames.add(this.getGroupName(suggestion.data.record));
+            }
+        }
         const grouped = [];
         const seenGroups = new Set();
         for (const suggestion of suggestions) {
@@ -44,6 +85,9 @@ export class LookupAutocomplete extends Many2XAutocomplete {
                 continue;
             }
             const group = this.getGroupName(suggestion.data.record);
+            if (this.scope.value && group !== this.scope.value) {
+                continue;
+            }
             if (!seenGroups.has(group)) {
                 seenGroups.add(group);
                 grouped.push({

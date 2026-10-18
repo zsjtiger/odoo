@@ -35,6 +35,19 @@ class Order extends models.Model {
     };
 }
 
+class ScopedOrder extends models.Model {
+    _name = "scoped.order";
+    partner_id = fields.Many2one({ relation: "partner" });
+
+    _records = [{ id: 1, partner_id: false }];
+    _views = {
+        form: /* xml */ `
+            <form>
+                <field name="partner_id" widget="lookup" options="{'subtitle': 'city', 'group': 'type', 'scope': true}"/>
+            </form>`,
+    };
+}
+
 class PlainOrder extends models.Model {
     _name = "plain.order";
     partner_id = fields.Many2one({ relation: "partner" });
@@ -48,7 +61,7 @@ class PlainOrder extends models.Model {
     };
 }
 
-defineModels([Partner, Order, PlainOrder]);
+defineModels([Partner, Order, ScopedOrder, PlainOrder]);
 
 test("lookup widget: suggestions show a tile, the name and the subtitle field", async () => {
     await mountView({ type: "form", resModel: "order", resId: 1 });
@@ -68,6 +81,18 @@ test("lookup widget: suggestions are split under a header per group value", asyn
     expect(queryAllTexts(".o_lookup_group_title")).toEqual(["Account", "Opportunity"]);
     expect(queryAllTexts(".o_lookup_title")).toEqual(["Acme", "Acme Construction"]);
     expect(".o_lookup_option").toHaveCount(2);
+});
+
+test("lookup widget: the scope selector keeps only the chosen group", async () => {
+    await mountView({ type: "form", resModel: "scoped.order", resId: 1 });
+    await contains("[name='partner_id'] input").edit("Acme", { confirm: false });
+    await waitFor(".o_lookup_option");
+    expect(".o_lookup_scope_button").toHaveText("All");
+    await contains(".o_lookup_scope_button").click();
+    await contains(".o_lookup_scope_menu .dropdown-item:contains(Opportunity)").click();
+    await waitFor(".o_lookup_option");
+    expect(".o_lookup_scope_button").toHaveText("Opportunity");
+    expect(queryAllTexts(".o_lookup_title")).toEqual(["Acme Construction"]);
 });
 
 test("default many2one dropdown is unchanged", async () => {
