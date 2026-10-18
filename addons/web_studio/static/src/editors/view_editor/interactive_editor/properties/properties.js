@@ -1,5 +1,5 @@
 import { Component, xml, proxy, t, useProps } from "@odoo/owl";
-import { SidebarPropertiesToolbox } from "@web_studio/client_action/view_editor/interactive_editor/properties/sidebar_properties_toolbox/sidebar_properties_toolbox";
+import { SidebarPropertiesToolbox } from "@web_studio/editors/view_editor/interactive_editor/properties/sidebar_properties_toolbox/sidebar_properties_toolbox";
 
 class DefaultProperties extends Component {
     static template = xml`

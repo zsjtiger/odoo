@@ -9,7 +9,7 @@ import {
     onRpc,
     serverState,
 } from "@web/../tests/web_test_helpers";
-import { AppCreator } from "@web_studio/client_action/app_creator/app_creator";
+import { AppCreator } from "@web_studio/app_creation/app_creator/app_creator";
 
 const sampleIconUrl =
     "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z9DwHwAGBQKA3H7sNwAAAABJRU5ErkJggg==";

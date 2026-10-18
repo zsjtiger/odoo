@@ -123,7 +123,7 @@ function openEditorPowerBox(element, offsets = null) {
 function patchReportEditorModelForSilentSave() {
     const saveProms = [];
     const { ReportEditorModel } = odoo.loader.modules.get(
-        "@web_studio/client_action/report_editor/report_editor_model"
+        "@web_studio/editors/report_editor/report_editor_model"
     );
     const _unpatch = patch(ReportEditorModel.prototype, {
         saveReport() {

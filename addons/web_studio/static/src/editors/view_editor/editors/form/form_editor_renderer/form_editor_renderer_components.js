@@ -3,14 +3,14 @@ import { _t } from "@web/core/data/l10n/translation";
 import { uniqueId } from "@web/core/utils/functions";
 import { useOwnedDialogs } from "@web/core/utils/hooks";
 import { formView } from "@web/views/form/form_view";
-import { FieldSelectorDialog } from "@web_studio/client_action/view_editor/editors/components/field_selector_dialog";
-import { StudioHook } from "@web_studio/client_action/view_editor/editors/components/studio_hook_component";
+import { FieldSelectorDialog } from "@web_studio/editors/view_editor/editors/components/field_selector_dialog";
+import { StudioHook } from "@web_studio/editors/view_editor/editors/components/studio_hook_component";
 import {
     randomName,
     studioIsVisible,
     useStudioRef,
-} from "@web_studio/client_action/view_editor/editors/utils";
-import { NewButtonBoxDialog } from "@web_studio/client_action/view_editor/interactive_editor/properties/button_properties/new_button_box_dialog";
+} from "@web_studio/editors/view_editor/editors/utils";
+import { NewButtonBoxDialog } from "@web_studio/editors/view_editor/interactive_editor/properties/button_properties/new_button_box_dialog";
 import { AddButtonAction } from "../../../interactive_editor/action_button/action_button";
 
 /**

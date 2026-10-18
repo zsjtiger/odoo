@@ -1,10 +1,10 @@
 import { useEnv } from "@web/core/owl/utils";
 import { kanbanView } from "@web/views/kanban/kanban_view";
-import { FieldStudio } from "@web_studio/client_action/view_editor/editors/components/field_studio";
-import { WidgetStudio } from "@web_studio/client_action/view_editor/editors/components/widget_studio";
-import { computeXpath } from "@web_studio/client_action/view_editor/editors/xml_utils";
-import { ViewButtonStudio } from "@web_studio/client_action/view_editor/editors/components/view_button_studio";
-import { StudioHook } from "@web_studio/client_action/view_editor/editors/components/studio_hook_component";
+import { FieldStudio } from "@web_studio/editors/view_editor/editors/components/field_studio";
+import { WidgetStudio } from "@web_studio/editors/view_editor/editors/components/widget_studio";
+import { computeXpath } from "@web_studio/editors/view_editor/editors/xml_utils";
+import { ViewButtonStudio } from "@web_studio/editors/view_editor/editors/components/view_button_studio";
+import { StudioHook } from "@web_studio/editors/view_editor/editors/components/studio_hook_component";
 import { useService } from "@web/core/utils/hooks";
 
 import { Component, useProps, t, toRaw, xml, onError, proxy } from "@odoo/owl";

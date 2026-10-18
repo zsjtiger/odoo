@@ -1,5 +1,5 @@
 import { Widget } from "@web/views/widgets/widget";
-import { studioIsVisible, useStudioRef } from "@web_studio/client_action/view_editor/editors/utils";
+import { studioIsVisible, useStudioRef } from "@web_studio/editors/view_editor/editors/utils";
 
 export class WidgetStudio extends Widget {
     static template = "web_studio.Widget";

@@ -5,11 +5,11 @@ import { useBus, useService } from "@web/core/utils/hooks";
 import { standardActionServiceProps } from "@web/webclient/actions/action_plugin";
 import { computeAppsAndMenuItems } from "@web/webclient/menus/menu_helpers";
 
-import { AppCreator } from "./app_creator/app_creator";
+import { AppCreator } from "../app_creation/app_creator/app_creator";
 import { ModelDesigner } from "./model_designer/model_designer";
-import { Editor } from "./editor/editor";
+import { Editor } from "../editors/editor/editor";
 import { StudioNavbar } from "./navbar/navbar";
-import { StudioHomeMenu } from "./studio_home_menu/studio_home_menu";
+import { StudioHomeMenu } from "../home_menu/studio/studio_home_menu";
 
 import { Component, onWillStart, onMounted, onPatched, onWillUnmount, useProps } from "@odoo/owl";
 

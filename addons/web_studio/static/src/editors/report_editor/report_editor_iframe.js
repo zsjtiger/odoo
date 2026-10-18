@@ -1,7 +1,7 @@
 import { Component, proxy, signal, t, useEffect, useProps } from "@odoo/owl";
-import { getCssFromPaperFormat } from "@web_studio/client_action/report_editor/utils";
+import { getCssFromPaperFormat } from "@web_studio/editors/report_editor/utils";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
-import { ErrorDisplay } from "@web_studio/client_action/report_editor/error_display";
+import { ErrorDisplay } from "@web_studio/editors/report_editor/error_display";
 
 export class ReportEditorIframe extends Component {
     static components = { ErrorDisplay };

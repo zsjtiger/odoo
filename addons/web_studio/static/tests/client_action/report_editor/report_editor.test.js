@@ -16,7 +16,7 @@ import {
     serverState,
 } from "@web/../tests/web_test_helpers";
 import { WebClientEnterprise } from "@web_enterprise/webclient/webclient";
-import { ReportEditorModel } from "@web_studio/client_action/report_editor/report_editor_model";
+import { ReportEditorModel } from "@web_studio/editors/report_editor/report_editor_model";
 import { defineStudioEnvironment } from "../../studio_tests_context";
 import { IrModel } from "@web/../tests/_framework/mock_server/mock_models/ir_model";
 import { patch } from "@web/core/utils/patch";

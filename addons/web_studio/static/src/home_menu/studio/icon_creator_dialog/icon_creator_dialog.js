@@ -2,7 +2,7 @@ import { Dialog } from "@web/core/dialogs/dialog/dialog";
 import { rpc } from "@web/core/services/network/rpc";
 import { user } from "@web/core/services/user";
 import { useService } from "@web/core/utils/hooks";
-import { IconCreator } from "@web_studio/client_action/icon_creator/icon_creator";
+import { IconCreator } from "@web_studio/app_creation/icon_creator/icon_creator";
 
 import { Component, proxy, t, useProps } from "@odoo/owl";
 

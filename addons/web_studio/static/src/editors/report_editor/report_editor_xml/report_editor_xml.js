@@ -19,7 +19,7 @@ import { useCodeEditorState } from "@web/core/components/code_editor/code_editor
 import { IrUiViewCodeEditor } from "@web/core/editors/ir_ui_view_code_editor/code_editor";
 import { ResizablePanel } from "@web/core/components/resizable_panel/resizable_panel";
 
-import { loadResources } from "@web_studio/client_action/xml_resource_editor/xml_resource_editor";
+import { loadResources } from "@web_studio/editors/xml_resource_editor/xml_resource_editor";
 import { OptionsContainer, UndoRedo } from "../report_editor_components";
 import { ReportEditorIframe } from "../report_editor_iframe";
 import { ReportEditorSidebarPlugin } from "../report_editor_sidebar";

@@ -7,7 +7,7 @@ import { registry } from "@web/core/framework/registry";
 import { hover, queryAll, queryFirst, queryOne, waitFor } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 
-import { REPORT_EDITOR_PLUGINS } from "@web_studio/client_action/report_editor/report_editor_wysiwyg/editor_plugins/report_editor_plugin";
+import { REPORT_EDITOR_PLUGINS } from "@web_studio/editors/report_editor/report_editor_wysiwyg/editor_plugins/report_editor_plugin";
 
 describe.current.tags("desktop");
 

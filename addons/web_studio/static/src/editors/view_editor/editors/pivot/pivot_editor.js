@@ -3,15 +3,15 @@ import { registry } from "@web/core/framework/registry";
 import { pivotView } from "@web/views/pivot/pivot_view";
 import { _t } from "@web/core/data/l10n/translation";
 
-import { Property } from "@web_studio/client_action/view_editor/property/property";
-import { InteractiveEditorSidebar } from "@web_studio/client_action/view_editor/interactive_editor/interactive_editor_sidebar";
-import { SidebarViewToolbox } from "@web_studio/client_action/view_editor/interactive_editor/sidebar_view_toolbox/sidebar_view_toolbox";
-import * as operationUtils from "@web_studio/client_action/view_editor/operations_utils";
-import { fieldsToChoices } from "@web_studio/client_action/view_editor/editors/utils";
+import { Property } from "@web_studio/editors/view_editor/property/property";
+import { InteractiveEditorSidebar } from "@web_studio/editors/view_editor/interactive_editor/interactive_editor_sidebar";
+import { SidebarViewToolbox } from "@web_studio/editors/view_editor/interactive_editor/sidebar_view_toolbox/sidebar_view_toolbox";
+import * as operationUtils from "@web_studio/editors/view_editor/operations_utils";
+import { fieldsToChoices } from "@web_studio/editors/view_editor/editors/utils";
 
 import { Many2ManyTagsField } from "@web/views/fields/relational/many2many_tags/many2many_tags_field";
 
-import { useEditNodeAttributes } from "@web_studio/client_action/view_editor/view_editor_model";
+import { useEditNodeAttributes } from "@web_studio/editors/view_editor/view_editor_model";
 import { computeReportMeasures } from "@web/views/utils";
 import { MultiRecordSelector } from "@web/core/editors/record_selectors/multi_record_selector";
 

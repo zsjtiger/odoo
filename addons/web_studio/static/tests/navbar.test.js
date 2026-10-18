@@ -16,8 +16,8 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { registry } from "@web/core/framework/registry";
 import { WebClientEnterprise } from "@web_enterprise/webclient/webclient";
-import { AppMenuEditor } from "@web_studio/client_action/editor/app_menu_editor/app_menu_editor";
-import { NewModelItem } from "@web_studio/client_action/editor/new_model_item/new_model_item";
+import { AppMenuEditor } from "@web_studio/editors/editor/app_menu_editor/app_menu_editor";
+import { NewModelItem } from "@web_studio/editors/editor/new_model_item/new_model_item";
 import { StudioNavbar } from "@web_studio/client_action/navbar/navbar";
 import { defineStudioEnvironment } from "./studio_tests_context";
 

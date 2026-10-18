@@ -13,7 +13,7 @@ import { sortBy } from "@web/core/utils/arrays";
 import {
     SIDEBAR_SAFE_FIELDS,
     SIDEBAR_VIEW_DEPENDENT_BLACKLIST,
-} from "@web_studio/client_action/view_editor/editors/sidebar_safe_fields";
+} from "@web_studio/editors/view_editor/editors/sidebar_safe_fields";
 
 export const hookPositionTolerance = 50;
 

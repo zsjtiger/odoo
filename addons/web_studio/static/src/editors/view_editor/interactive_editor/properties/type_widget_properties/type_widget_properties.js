@@ -10,15 +10,15 @@ import {
 import { rpc } from "@web/core/services/network/rpc";
 import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
-import { Property } from "@web_studio/client_action/view_editor/property/property";
+import { Property } from "@web_studio/editors/view_editor/property/property";
 import {
     fieldsToChoices,
     getWowlFieldWidgets,
-} from "@web_studio/client_action/view_editor/editors/utils";
+} from "@web_studio/editors/view_editor/editors/utils";
 import {
     FIELD_TYPE_ATTRIBUTES,
     COMPUTED_DISPLAY_OPTIONS,
-} from "@web_studio/client_action/view_editor/interactive_editor/properties/type_widget_properties/type_specific_and_computed_properties";
+} from "@web_studio/editors/view_editor/interactive_editor/properties/type_widget_properties/type_specific_and_computed_properties";
 import { AlertDialog } from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/data/l10n/translation";
 import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";

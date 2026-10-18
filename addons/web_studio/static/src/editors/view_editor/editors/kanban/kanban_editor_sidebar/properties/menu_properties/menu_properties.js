@@ -1,6 +1,6 @@
 import { Component, t, useProps } from "@odoo/owl";
-import { Property } from "@web_studio/client_action/view_editor/property/property";
-import { SidebarPropertiesToolbox } from "@web_studio/client_action/view_editor/interactive_editor/properties/sidebar_properties_toolbox/sidebar_properties_toolbox";
+import { Property } from "@web_studio/editors/view_editor/property/property";
+import { SidebarPropertiesToolbox } from "@web_studio/editors/view_editor/interactive_editor/properties/sidebar_properties_toolbox/sidebar_properties_toolbox";
 
 export class MenuProperties extends Component {
     static template = "web_studio.ViewEditor.InteractiveEditorProperties.Menu";

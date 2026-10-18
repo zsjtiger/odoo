@@ -1,15 +1,15 @@
 import { onMounted, proxy, signal, t, useEffect, useProps } from "@odoo/owl";
 import { settingProps } from "@web/views/form/setting/setting";
 import { formView } from "@web/views/form/form_view";
-import * as formEditorRendererComponents from "@web_studio/client_action/view_editor/editors/form/form_editor_renderer/form_editor_renderer_components";
+import * as formEditorRendererComponents from "@web_studio/editors/view_editor/editors/form/form_editor_renderer/form_editor_renderer_components";
 
 import { ChatterContainer, ChatterContainerHook } from "../chatter_container";
-import { StudioHook } from "@web_studio/client_action/view_editor/editors/components/studio_hook_component";
-import { FieldStudio } from "@web_studio/client_action/view_editor/editors/components/field_studio";
-import { WidgetStudio } from "@web_studio/client_action/view_editor/editors/components/widget_studio";
-import { ViewButtonStudio } from "@web_studio/client_action/view_editor/editors/components/view_button_studio";
+import { StudioHook } from "@web_studio/editors/view_editor/editors/components/studio_hook_component";
+import { FieldStudio } from "@web_studio/editors/view_editor/editors/components/field_studio";
+import { WidgetStudio } from "@web_studio/editors/view_editor/editors/components/widget_studio";
+import { ViewButtonStudio } from "@web_studio/editors/view_editor/editors/components/view_button_studio";
 import { InnerGroup, OuterGroup } from "./form_editor_groups";
-import { AddButtonAction } from "@web_studio/client_action/view_editor/interactive_editor/action_button/action_button";
+import { AddButtonAction } from "@web_studio/editors/view_editor/interactive_editor/action_button/action_button";
 
 class Setting extends formView.Renderer.components.Setting {
     props = useProps({

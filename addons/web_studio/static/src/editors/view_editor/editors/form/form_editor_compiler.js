@@ -2,7 +2,7 @@ import { isComponentNode } from "@web/views/view_compiler";
 import {
     computeXpath,
     applyInvisible,
-} from "@web_studio/client_action/view_editor/editors/xml_utils";
+} from "@web_studio/editors/view_editor/editors/xml_utils";
 import { createElement } from "@web/core/utils/xml";
 import { formView } from "@web/views/form/form_view";
 import { objectToString } from "@web/views/form/form_compiler";

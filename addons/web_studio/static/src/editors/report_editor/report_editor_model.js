@@ -17,11 +17,11 @@ import { useService } from "@web/core/utils/hooks";
 import { omit, pick } from "@web/core/utils/objects";
 import { _t } from "@web/core/data/l10n/translation";
 import { user } from "@web/core/services/user";
-import { useEditorBreadcrumbs } from "@web_studio/client_action/editor/edition_flow";
+import { useEditorBreadcrumbs } from "@web_studio/editors/editor/edition_flow";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { renderToMarkup } from "@web/core/utils/render";
 import { makeActiveField } from "@web/model/relational_model/utils";
-import { humanReadableError } from "@web_studio/client_action/report_editor/utils";
+import { humanReadableError } from "@web_studio/editors/report_editor/utils";
 import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
 
 const notificationErrorTemplate = "web_studio.ReportEditor.NotificationError";

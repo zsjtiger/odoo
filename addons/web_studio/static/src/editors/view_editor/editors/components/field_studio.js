@@ -2,7 +2,7 @@ import { proxy } from "@odoo/owl";
 import { Field } from "@web/views/fields/field";
 import { FieldContentOverlay } from "./field_content_overlay";
 
-import { useStudioRef, studioIsVisible } from "@web_studio/client_action/view_editor/editors/utils";
+import { useStudioRef, studioIsVisible } from "@web_studio/editors/view_editor/editors/utils";
 
 import { registry } from "@web/core/framework/registry";
 

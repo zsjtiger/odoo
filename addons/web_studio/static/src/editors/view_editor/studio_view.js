@@ -13,7 +13,7 @@ import { _t } from "@web/core/data/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { useSubEnv } from "@web/core/owl/utils";
 import { WithSearch } from "@web/search/with_search/with_search";
-import { cleanClickedElements } from "@web_studio/client_action/view_editor/editors/utils";
+import { cleanClickedElements } from "@web_studio/editors/view_editor/editors/utils";
 
 export class StudioView extends Component {
     static components = { WithSearch };

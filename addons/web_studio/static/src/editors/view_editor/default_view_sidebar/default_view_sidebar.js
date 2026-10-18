@@ -1,6 +1,6 @@
 import { Component, proxy, t, useProps } from "@odoo/owl";
-import { InteractiveEditorSidebar } from "@web_studio/client_action/view_editor/interactive_editor/interactive_editor_sidebar";
-import { SidebarViewToolbox } from "@web_studio/client_action/view_editor/interactive_editor/sidebar_view_toolbox/sidebar_view_toolbox";
+import { InteractiveEditorSidebar } from "@web_studio/editors/view_editor/interactive_editor/interactive_editor_sidebar";
+import { SidebarViewToolbox } from "@web_studio/editors/view_editor/interactive_editor/sidebar_view_toolbox/sidebar_view_toolbox";
 
 export class DefaultViewSidebar extends Component {
     static template = "web_studio.ViewEditor.DefaultViewSidebar";

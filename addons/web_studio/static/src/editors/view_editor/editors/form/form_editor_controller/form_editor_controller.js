@@ -1,7 +1,7 @@
 import { onMounted, onPatched, useProps, proxy, t } from "@odoo/owl";
 import { formView } from "@web/views/form/form_view";
 import { formControllerProps } from "@web/views/form/form_controller";
-import { useModelConfigFetchInvisible } from "@web_studio/client_action/view_editor/editors/utils";
+import { useModelConfigFetchInvisible } from "@web_studio/editors/view_editor/editors/utils";
 
 /**
  * This hook ensures that a record datapoint has the "parent" key in its evalContext, allowing

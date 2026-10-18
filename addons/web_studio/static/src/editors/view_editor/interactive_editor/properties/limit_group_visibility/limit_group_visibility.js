@@ -1,6 +1,6 @@
 import { Component, computed, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/data/l10n/translation";
-import { useEditNodeAttributes } from "@web_studio/client_action/view_editor/view_editor_model";
+import { useEditNodeAttributes } from "@web_studio/editors/view_editor/view_editor_model";
 import { MultiRecordSelector } from "@web/core/editors/record_selectors/multi_record_selector";
 
 export class LimitGroupVisibility extends Component {

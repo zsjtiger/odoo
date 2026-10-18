@@ -11,19 +11,19 @@ import {
     getCurrencyField,
     getHooks,
     hookPositionTolerance,
-} from "@web_studio/client_action/view_editor/editors/utils";
+} from "@web_studio/editors/view_editor/editors/utils";
 import { ConfirmationDialog } from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
 import {
     FieldConfigurationDialog,
     SelectionValuesEditor,
     RelationalFieldConfigurator,
     RelatedChainBuilder,
-} from "@web_studio/client_action/view_editor/interactive_editor/field_configuration/field_configuration";
+} from "@web_studio/editors/view_editor/interactive_editor/field_configuration/field_configuration";
 import {
     getNodesFromXpath,
     countPreviousSiblings,
-} from "@web_studio/client_action/view_editor/editors/xml_utils";
-import { DefaultViewSidebar } from "@web_studio/client_action/view_editor/default_view_sidebar/default_view_sidebar";
+} from "@web_studio/editors/view_editor/editors/xml_utils";
+import { DefaultViewSidebar } from "@web_studio/editors/view_editor/default_view_sidebar/default_view_sidebar";
 import { waitUntil } from "@web/core/framework/macro";
 import { pick } from "@web/core/utils/objects";
 

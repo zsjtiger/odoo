@@ -5,8 +5,8 @@ import { rpc } from "@web/core/services/network/rpc";
 import { user } from "@web/core/services/user";
 import { useBus, useService, useOwnedDialogs } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialogs/dialog/dialog";
-import { ModelConfiguratorDialog } from "../../model_configurator/model_configurator";
-import { useDialogConfirmation } from "../../utils";
+import { ModelConfiguratorDialog } from "../../../app_creation/model_configurator/model_configurator";
+import { useDialogConfirmation } from "../../../client_action/utils";
 
 class SimpleNewModelDialog extends Component {
     static template = "web_studio.SimpleNewModelDialog";

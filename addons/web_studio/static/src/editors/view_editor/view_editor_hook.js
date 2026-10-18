@@ -4,7 +4,7 @@ import { useEnv, useSubEnv } from "@web/core/owl/utils";
 import {
     useEditorBreadcrumbs,
     useEditorMenuItem,
-} from "@web_studio/client_action/editor/edition_flow";
+} from "@web_studio/editors/editor/edition_flow";
 import { viewTypeToString } from "@web_studio/studio_service";
 import { ViewEditorModel } from "./view_editor_model";
 import { ViewEditorSnackbar } from "./view_editor_snackbar";

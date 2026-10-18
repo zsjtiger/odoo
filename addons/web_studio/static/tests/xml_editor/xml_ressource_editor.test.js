@@ -4,7 +4,7 @@ import { queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { Component, signal, xml } from "@odoo/owl";
 import { contains, mountWithCleanup, onRpc } from "@web/../tests/web_test_helpers";
-import { XmlResourceEditor } from "@web_studio/client_action/xml_resource_editor/xml_resource_editor";
+import { XmlResourceEditor } from "@web_studio/editors/xml_resource_editor/xml_resource_editor";
 
 describe.current.tags("desktop");
 

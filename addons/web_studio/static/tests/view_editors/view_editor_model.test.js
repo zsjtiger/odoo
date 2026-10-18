@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { ViewEditorModel } from "@web_studio/client_action/view_editor/view_editor_model";
+import { ViewEditorModel } from "@web_studio/editors/view_editor/view_editor_model";
 
 describe.current.tags("headless");
 

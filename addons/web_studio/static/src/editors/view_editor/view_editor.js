@@ -3,7 +3,7 @@ import { Component, onWillUpdateProps, markRaw, useProps, proxy, signal, t } fro
 
 import { useBus, useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/framework/registry";
-import { StudioView } from "@web_studio/client_action/view_editor/studio_view";
+import { StudioView } from "@web_studio/editors/view_editor/studio_view";
 
 import { InteractiveEditor } from "./interactive_editor/interactive_editor";
 import { useViewEditorModel } from "./view_editor_hook";
@@ -13,7 +13,7 @@ import { getDefaultConfig } from "@web/views/view";
 import {
     XmlResourceEditor,
     xmlResourceEditorProps,
-} from "@web_studio/client_action/xml_resource_editor/xml_resource_editor";
+} from "@web_studio/editors/xml_resource_editor/xml_resource_editor";
 import { useSetupAction } from "@web/search/action_hook";
 import { _t } from "@web/core/data/l10n/translation";
 

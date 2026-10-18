@@ -1,18 +1,18 @@
 import { Component, proxy, t, useProps } from "@odoo/owl";
-import { InteractiveEditorSidebar } from "@web_studio/client_action/view_editor/interactive_editor/interactive_editor_sidebar";
+import { InteractiveEditorSidebar } from "@web_studio/editors/view_editor/interactive_editor/interactive_editor_sidebar";
 import {
     ExistingFields,
     NewFields,
-} from "@web_studio/client_action/view_editor/editors/components/view_fields";
-import { Property } from "@web_studio/client_action/view_editor/property/property";
-import { SidebarViewToolbox } from "@web_studio/client_action/view_editor/interactive_editor/sidebar_view_toolbox/sidebar_view_toolbox";
-import { Properties } from "@web_studio/client_action/view_editor/interactive_editor/properties/properties";
-import { ButtonProperties } from "@web_studio/client_action/view_editor/interactive_editor/properties/button_properties/button_properties";
+} from "@web_studio/editors/view_editor/editors/components/view_fields";
+import { Property } from "@web_studio/editors/view_editor/property/property";
+import { SidebarViewToolbox } from "@web_studio/editors/view_editor/interactive_editor/sidebar_view_toolbox/sidebar_view_toolbox";
+import { Properties } from "@web_studio/editors/view_editor/interactive_editor/properties/properties";
+import { ButtonProperties } from "@web_studio/editors/view_editor/interactive_editor/properties/button_properties/button_properties";
 import { _t } from "@web/core/data/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
-import { FieldProperties } from "@web_studio/client_action/view_editor/interactive_editor/properties/field_properties/field_properties";
-import { useEditNodeAttributes } from "@web_studio/client_action/view_editor/view_editor_model";
-import { fieldsToChoices } from "@web_studio/client_action/view_editor/editors/utils";
+import { FieldProperties } from "@web_studio/editors/view_editor/interactive_editor/properties/field_properties/field_properties";
+import { useEditNodeAttributes } from "@web_studio/editors/view_editor/view_editor_model";
+import { fieldsToChoices } from "@web_studio/editors/view_editor/editors/utils";
 
 class ListFieldNodeProperties extends FieldProperties {
     onChangeAttribute(value, name) {

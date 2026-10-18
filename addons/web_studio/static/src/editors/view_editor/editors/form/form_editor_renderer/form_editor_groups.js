@@ -1,8 +1,8 @@
 import { Component, onMounted, onPatched, useProps, proxy, signal, t, xml } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { formView } from "@web/views/form/form_view";
-import { StudioHook } from "@web_studio/client_action/view_editor/editors/components/studio_hook_component";
-import { studioIsVisible } from "@web_studio/client_action/view_editor/editors/utils";
+import { StudioHook } from "@web_studio/editors/view_editor/editors/components/studio_hook_component";
+import { studioIsVisible } from "@web_studio/editors/view_editor/editors/utils";
 
 const components = formView.Renderer.components;
 

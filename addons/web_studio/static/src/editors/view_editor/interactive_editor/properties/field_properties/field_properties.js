@@ -10,14 +10,14 @@ import {
 import { _t } from "@web/core/data/l10n/translation";
 import { rpc } from "@web/core/services/network/rpc";
 import { user } from "@web/core/services/user";
-import { Property } from "@web_studio/client_action/view_editor/property/property";
+import { Property } from "@web_studio/editors/view_editor/property/property";
 import { CheckBox } from "@web/core/components/checkbox/checkbox";
-import { TypeWidgetProperties } from "@web_studio/client_action/view_editor/interactive_editor/properties/type_widget_properties/type_widget_properties";
-import { ViewStructureProperties } from "@web_studio/client_action/view_editor/interactive_editor/properties/view_structure_properties/view_structure_properties";
+import { TypeWidgetProperties } from "@web_studio/editors/view_editor/interactive_editor/properties/type_widget_properties/type_widget_properties";
+import { ViewStructureProperties } from "@web_studio/editors/view_editor/interactive_editor/properties/view_structure_properties/view_structure_properties";
 import { useService } from "@web/core/utils/hooks";
 import { ClassAttribute } from "../class_attribute/class_attribute";
 import { ModifiersProperties } from "../modifiers/modifiers_properties";
-import { useEditNodeAttributes } from "@web_studio/client_action/view_editor/view_editor_model";
+import { useEditNodeAttributes } from "@web_studio/editors/view_editor/view_editor_model";
 import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
 
 class TechnicalName extends Component {

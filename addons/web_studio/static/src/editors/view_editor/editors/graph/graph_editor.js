@@ -3,12 +3,12 @@ import { _t } from "@web/core/data/l10n/translation";
 import { registry } from "@web/core/framework/registry";
 import { graphView } from "@web/views/graph/graph_view";
 
-import { Property } from "@web_studio/client_action/view_editor/property/property";
-import { InteractiveEditorSidebar } from "@web_studio/client_action/view_editor/interactive_editor/interactive_editor_sidebar";
-import { SidebarViewToolbox } from "@web_studio/client_action/view_editor/interactive_editor/sidebar_view_toolbox/sidebar_view_toolbox";
-import * as operationUtils from "@web_studio/client_action/view_editor/operations_utils";
-import { fieldsToChoices } from "@web_studio/client_action/view_editor/editors/utils";
-import { useEditNodeAttributes } from "@web_studio/client_action/view_editor/view_editor_model";
+import { Property } from "@web_studio/editors/view_editor/property/property";
+import { InteractiveEditorSidebar } from "@web_studio/editors/view_editor/interactive_editor/interactive_editor_sidebar";
+import { SidebarViewToolbox } from "@web_studio/editors/view_editor/interactive_editor/sidebar_view_toolbox/sidebar_view_toolbox";
+import * as operationUtils from "@web_studio/editors/view_editor/operations_utils";
+import { fieldsToChoices } from "@web_studio/editors/view_editor/editors/utils";
+import { useEditNodeAttributes } from "@web_studio/editors/view_editor/view_editor_model";
 
 export class GraphEditorSidebar extends Component {
     static template = "web_studio.ViewEditor.GraphEditorSidebar";

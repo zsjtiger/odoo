@@ -1,7 +1,7 @@
 import { Component, computed, proxy, t, useProps } from "@odoo/owl";
 import { router } from "@web/core/services/browser/router";
 import { useService } from "@web/core/utils/hooks";
-import { humanReadableError } from "@web_studio/client_action/report_editor/utils";
+import { humanReadableError } from "@web_studio/editors/report_editor/utils";
 
 export class ErrorDisplay extends Component {
     static template = "web_studio.ErrorDisplay";

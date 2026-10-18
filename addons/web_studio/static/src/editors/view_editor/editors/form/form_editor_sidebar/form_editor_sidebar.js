@@ -1,22 +1,22 @@
 import { Component, proxy, t, useProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-import { InteractiveEditorSidebar } from "@web_studio/client_action/view_editor/interactive_editor/interactive_editor_sidebar";
+import { InteractiveEditorSidebar } from "@web_studio/editors/view_editor/interactive_editor/interactive_editor_sidebar";
 import {
     ExistingFields,
     NewFields,
-} from "@web_studio/client_action/view_editor/editors/components/view_fields";
-import { ViewStructures } from "@web_studio/client_action/view_editor/editors/components/view_structures";
-import { Property } from "@web_studio/client_action/view_editor/property/property";
-import { Properties } from "@web_studio/client_action/view_editor/interactive_editor/properties/properties";
-import { ButtonProperties } from "@web_studio/client_action/view_editor/interactive_editor/properties/button_properties/button_properties";
-import { FieldProperties } from "@web_studio/client_action/view_editor/interactive_editor/properties/field_properties/field_properties";
-import { GroupProperties } from "@web_studio/client_action/view_editor/editors/form/form_editor_sidebar/properties/group_properties/group_properties";
-import { LabelProperties } from "@web_studio/client_action/view_editor/editors/form/form_editor_sidebar/properties/label_properties/label_properties";
-import { PageProperties } from "@web_studio/client_action/view_editor/editors/form/form_editor_sidebar/properties/page_properties/page_properties";
+} from "@web_studio/editors/view_editor/editors/components/view_fields";
+import { ViewStructures } from "@web_studio/editors/view_editor/editors/components/view_structures";
+import { Property } from "@web_studio/editors/view_editor/property/property";
+import { Properties } from "@web_studio/editors/view_editor/interactive_editor/properties/properties";
+import { ButtonProperties } from "@web_studio/editors/view_editor/interactive_editor/properties/button_properties/button_properties";
+import { FieldProperties } from "@web_studio/editors/view_editor/interactive_editor/properties/field_properties/field_properties";
+import { GroupProperties } from "@web_studio/editors/view_editor/editors/form/form_editor_sidebar/properties/group_properties/group_properties";
+import { LabelProperties } from "@web_studio/editors/view_editor/editors/form/form_editor_sidebar/properties/label_properties/label_properties";
+import { PageProperties } from "@web_studio/editors/view_editor/editors/form/form_editor_sidebar/properties/page_properties/page_properties";
 import { _t } from "@web/core/data/l10n/translation";
-import { SidebarViewToolbox } from "@web_studio/client_action/view_editor/interactive_editor/sidebar_view_toolbox/sidebar_view_toolbox";
-import { useEditNodeAttributes } from "@web_studio/client_action/view_editor/view_editor_model";
-import { WidgetProperties } from "@web_studio/client_action/view_editor/interactive_editor/properties/widget_properties/widget_properties";
+import { SidebarViewToolbox } from "@web_studio/editors/view_editor/interactive_editor/sidebar_view_toolbox/sidebar_view_toolbox";
+import { useEditNodeAttributes } from "@web_studio/editors/view_editor/view_editor_model";
+import { WidgetProperties } from "@web_studio/editors/view_editor/interactive_editor/properties/widget_properties/widget_properties";
 import { OTdLabelProperties } from "./properties/o_td_label_properties/o_td_label_properties";
 
 export class FormEditorSidebar extends Component {

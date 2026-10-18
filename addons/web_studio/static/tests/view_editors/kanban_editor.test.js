@@ -21,7 +21,7 @@ import {
     editView,
     mountViewEditor,
 } from "@web_studio/../tests/view_editor_tests_utils";
-import { KanbanEditorSidebar } from "@web_studio/client_action/view_editor/editors/kanban/kanban_editor_sidebar/kanban_editor_sidebar";
+import { KanbanEditorSidebar } from "@web_studio/editors/view_editor/editors/kanban/kanban_editor_sidebar/kanban_editor_sidebar";
 
 class Coucou extends models.Model {
     display_name = fields.Char();

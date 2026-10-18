@@ -49,17 +49,17 @@ Note: Only the admin user is allowed to make those customizations.
             'web_studio/static/src/utils.js',
 
             'web_studio/static/src/client_action/studio_action_loader.js',
-            'web_studio/static/src/client_action/app_creator/app_creator_shortcut.js',
+            'web_studio/static/src/app_creation/app_creator/app_creator_shortcut.js',
             'web_studio/static/src/client_action/components/**/*.js',
             'web_studio/static/src/client_action/components/**/*.xml',
             'web_studio/static/src/export/**/*.js',
-            'web_studio/static/src/home_menu/**/*.js',
+            'web_studio/static/src/home_menu/background.js',
             'web_studio/static/src/views/**/*.js',
             'web_studio/static/src/js/**/*.js',
             ('remove', 'web_studio/static/src/views/kanban_report/**/*'),
             'web_studio/static/src/approval/**/*',
             'web_studio/static/src/**/*.xml',
-            'web_studio/static/src/client_action/report_editor/qweb_table_plugin.scss',
+            'web_studio/static/src/editors/report_editor/qweb_table_plugin.scss',
         ],
         # This bundle is lazy loaded: it is loaded when studio is opened for the first time
         'web_studio.studio_assets': [
@@ -69,9 +69,12 @@ Note: Only the admin user is allowed to make those customizations.
         'web_studio.studio_assets_minimal': [
             'html_editor/static/src/main/media/media_dialog/icon_selector.js',
             'web_studio/static/src/client_action/**/*.js',
+            'web_studio/static/src/editors/**/*.js',
+            'web_studio/static/src/app_creation/**/*.js',
+            'web_studio/static/src/home_menu/studio/**/*.js',
             'web_studio/static/src/views/kanban_report/**/*.js',
             ('remove', 'web_studio/static/src/client_action/studio_action_loader.js'),
-            ('remove', 'web_studio/static/src/client_action/app_creator/app_creator_shortcut.js'),
+            ('remove', 'web_studio/static/src/app_creation/app_creator/app_creator_shortcut.js'),
 
             ('include', 'web._assets_helpers'),
             'web_studio/static/src/scss/bootstrap_overridden.scss',
@@ -81,7 +84,10 @@ Note: Only the admin user is allowed to make those customizations.
             'web/static/lib/bootstrap/scss/_maps.scss',
             'web_studio/static/src/client_action/variables.scss',
             'web_studio/static/src/client_action/**/*.scss',
-            ("remove", "web_studio/static/src/client_action/report_editor/report_iframe.scss"),
+            'web_studio/static/src/editors/**/*.scss',
+            'web_studio/static/src/app_creation/**/*.scss',
+            'web_studio/static/src/home_menu/studio/**/*.scss',
+            ("remove", "web_studio/static/src/editors/report_editor/report_iframe.scss"),
             'web_studio/static/src/views/kanban_report/**/*.scss',
         ],
         "web_studio.studio_assets_dark": [
@@ -99,8 +105,8 @@ Note: Only the admin user is allowed to make those customizations.
             'web/static/lib/bootstrap/scss/_variables-dark.scss',
             'web/static/lib/bootstrap/scss/_maps.scss',
             "web/static/src/webclient/actions/reports/report.scss",
-            'web_studio/static/src/client_action/report_editor/report_iframe.scss',
-            'web_studio/static/src/client_action/report_editor/qweb_table_plugin.scss',
+            'web_studio/static/src/editors/report_editor/report_iframe.scss',
+            'web_studio/static/src/editors/report_editor/qweb_table_plugin.scss',
             'html_editor/static/src/main/selection_placeholder_plugin.scss',
         ],
         'web.assets_unit_tests': [

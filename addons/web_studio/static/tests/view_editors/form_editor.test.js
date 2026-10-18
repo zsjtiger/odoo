@@ -53,7 +53,7 @@ import {
     mountViewEditor,
     openStudio,
 } from "@web_studio/../tests/view_editor_tests_utils";
-import { COMPUTED_DISPLAY_OPTIONS } from "@web_studio/client_action/view_editor/interactive_editor/properties/type_widget_properties/type_specific_and_computed_properties";
+import { COMPUTED_DISPLAY_OPTIONS } from "@web_studio/editors/view_editor/interactive_editor/properties/type_widget_properties/type_specific_and_computed_properties";
 
 describe.current.tags("desktop");
 

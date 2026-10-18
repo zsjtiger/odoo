@@ -6,7 +6,7 @@ import { Dialog, dialogProps } from "@web/core/dialogs/dialog/dialog";
 import { user } from "@web/core/services/user";
 import { useNestedSortable } from "@web/core/utils/nested_sortable";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
-import { MenuCreatorDialog } from "@web_studio/client_action/menu_creator/menu_creator";
+import { MenuCreatorDialog } from "@web_studio/app_creation/menu_creator/menu_creator";
 import { useDialogConfirmation, useSubEnvAndServices } from "@web_studio/client_action/utils";
 
 const EditMenuDialogProps = { ...dialogProps };

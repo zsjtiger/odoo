@@ -1,7 +1,7 @@
 import { onMounted } from "@odoo/owl";
 import { kanbanView } from "@web/views/kanban/kanban_view";
 import { KanbanHeader } from "@web/views/kanban/kanban_header";
-import { KanbanEditorRecord } from "@web_studio/client_action/view_editor/editors/kanban/kanban_editor_record";
+import { KanbanEditorRecord } from "@web_studio/editors/view_editor/editors/kanban/kanban_editor_record";
 import { SelectionHeaderButtons } from "../../interactive_editor/action_button/action_button";
 
 class KanbanEditorHeader extends KanbanHeader {

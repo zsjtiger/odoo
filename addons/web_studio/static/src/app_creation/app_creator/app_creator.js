@@ -2,9 +2,9 @@ import { Component, proxy, signal, t, useListener, useProps } from "@odoo/owl";
 import { rpc } from "@web/core/services/network/rpc";
 import { user } from "@web/core/services/user";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
-import { ModelConfigurator } from "@web_studio/client_action/model_configurator/model_configurator";
+import { ModelConfigurator } from "@web_studio/app_creation/model_configurator/model_configurator";
 import { DEFAULT_ICON, IconCreator } from "../icon_creator/icon_creator";
-import { MenuCreator, MenuCreatorModel } from "@web_studio/client_action/menu_creator/menu_creator";
+import { MenuCreator, MenuCreatorModel } from "@web_studio/app_creation/menu_creator/menu_creator";
 
 class AppCreatorState {
     /**

@@ -9,7 +9,7 @@ import {
     getNodeAttributes,
     parseStringToXml,
     serializeXmlToString,
-} from "@web_studio/client_action/view_editor/editors/xml_utils";
+} from "@web_studio/editors/view_editor/editors/xml_utils";
 import { EventBus, markRaw, proxy, toRaw, computed, Resource, types as t } from "@odoo/owl";
 import { user } from "@web/core/services/user";
 import { parseXML } from "@web/core/utils/xml";
@@ -17,11 +17,11 @@ import { viewTypeToString } from "@web_studio/studio_service";
 import {
     xpathToLegacyXpathInfo,
     cleanClickedElements,
-} from "@web_studio/client_action/view_editor/editors/utils";
+} from "@web_studio/editors/view_editor/editors/utils";
 import { Reactive, getFieldsInArch, memoizeOnce } from "@web_studio/client_action/utils";
 import { getModifier, resetViewCompilerCache } from "@web/views/view_compiler";
 import { _t } from "@web/core/data/l10n/translation";
-import { EditorOperations, SnackbarIndicator } from "@web_studio/client_action/editor/edition_flow";
+import { EditorOperations, SnackbarIndicator } from "@web_studio/editors/editor/edition_flow";
 import { Race } from "@web/core/utils/concurrency";
 import { AlertDialog, ConfirmationDialog } from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
 import { SelectionContentDialog } from "./interactive_editor/field_configuration/selection_content_dialog";

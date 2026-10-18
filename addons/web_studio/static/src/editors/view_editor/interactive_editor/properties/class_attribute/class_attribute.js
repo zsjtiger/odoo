@@ -1,6 +1,6 @@
 import { Component, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/data/l10n/translation";
-import { Property } from "@web_studio/client_action/view_editor/property/property";
+import { Property } from "@web_studio/editors/view_editor/property/property";
 
 export class ClassAttribute extends Component {
     static template = "web_studio.ViewEditor.ClassAttribute";

@@ -21,8 +21,8 @@ import { registry } from "@web/core/framework/registry";
 import { onWillRender } from "@web/core/owl/utils";
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { WebClientEnterprise } from "@web_enterprise/webclient/webclient";
-import { ListEditorRenderer } from "@web_studio/client_action/view_editor/editors/list/list_editor_renderer";
-import { SIDEBAR_SAFE_FIELDS } from "@web_studio/client_action/view_editor/editors/sidebar_safe_fields";
+import { ListEditorRenderer } from "@web_studio/editors/view_editor/editors/list/list_editor_renderer";
+import { SIDEBAR_SAFE_FIELDS } from "@web_studio/editors/view_editor/editors/sidebar_safe_fields";
 import { editView, handleDefaultStudioRoutes, mountViewEditor } from "../view_editor_tests_utils";
 
 describe.current.tags("desktop");

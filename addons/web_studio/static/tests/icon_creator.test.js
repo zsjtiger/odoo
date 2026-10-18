@@ -3,7 +3,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import { setInputFiles } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { contains, mountWithCleanup, onRpc } from "@web/../tests/web_test_helpers";
-import { IconCreator } from "@web_studio/client_action/icon_creator/icon_creator";
+import { IconCreator } from "@web_studio/app_creation/icon_creator/icon_creator";
 
 describe.current.tags("desktop");
 

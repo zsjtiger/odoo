@@ -5,7 +5,7 @@ import { useDialogConfirmation } from "@web_studio/client_action/utils";
 import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/data/l10n/translation";
 import { DomainSelector } from "@web/core/editors/domain_selector/domain_selector";
-import { SelectionContentDialog } from "@web_studio/client_action/view_editor/interactive_editor/field_configuration/selection_content_dialog";
+import { SelectionContentDialog } from "@web_studio/editors/view_editor/interactive_editor/field_configuration/selection_content_dialog";
 import { RecordSelector } from "@web/core/editors/record_selectors/record_selector";
 import { ViewEditorModel } from "../../view_editor_model";
 import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";

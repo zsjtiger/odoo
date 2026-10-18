@@ -1,24 +1,24 @@
 import { Component, proxy, signal, t, usePlugin, useProps } from "@odoo/owl";
 import { registry } from "@web/core/framework/registry";
-import { computeXpath } from "@web_studio/client_action/view_editor/editors/xml_utils";
+import { computeXpath } from "@web_studio/editors/view_editor/editors/xml_utils";
 import { visitXML } from "@web/core/utils/xml";
 import { SidebarDraggableItem } from "@web_studio/client_action/components/sidebar_draggable_item/sidebar_draggable_item";
-import { StudioHook } from "@web_studio/client_action/view_editor/editors/components/studio_hook_component";
-import { InteractiveEditorSidebar } from "@web_studio/client_action/view_editor/interactive_editor/interactive_editor_sidebar";
-import { ExistingFields } from "@web_studio/client_action/view_editor/editors/components/view_fields";
-import { Property } from "@web_studio/client_action/view_editor/property/property";
-import { ModifiersProperties } from "@web_studio/client_action/view_editor/interactive_editor/properties/modifiers/modifiers_properties";
-import { SidebarViewToolbox } from "@web_studio/client_action/view_editor/interactive_editor/sidebar_view_toolbox/sidebar_view_toolbox";
+import { StudioHook } from "@web_studio/editors/view_editor/editors/components/studio_hook_component";
+import { InteractiveEditorSidebar } from "@web_studio/editors/view_editor/interactive_editor/interactive_editor_sidebar";
+import { ExistingFields } from "@web_studio/editors/view_editor/editors/components/view_fields";
+import { Property } from "@web_studio/editors/view_editor/property/property";
+import { ModifiersProperties } from "@web_studio/editors/view_editor/interactive_editor/properties/modifiers/modifiers_properties";
+import { SidebarViewToolbox } from "@web_studio/editors/view_editor/interactive_editor/sidebar_view_toolbox/sidebar_view_toolbox";
 import { _t } from "@web/core/data/l10n/translation";
 import { memoize } from "@web/core/utils/functions";
 import { useOwnedDialogs } from "@web/core/utils/hooks";
-import { SidebarPropertiesToolbox } from "@web_studio/client_action/view_editor/interactive_editor/properties/sidebar_properties_toolbox/sidebar_properties_toolbox";
+import { SidebarPropertiesToolbox } from "@web_studio/editors/view_editor/interactive_editor/properties/sidebar_properties_toolbox/sidebar_properties_toolbox";
 import { standardViewProps } from "@web/views/standard_view_props";
 import {
     FieldConfigurationDialog,
     FilterConfiguration,
-} from "@web_studio/client_action/view_editor/interactive_editor/field_configuration/field_configuration";
-import { fieldsToChoices, randomName } from "@web_studio/client_action/view_editor/editors/utils";
+} from "@web_studio/editors/view_editor/interactive_editor/field_configuration/field_configuration";
+import { fieldsToChoices, randomName } from "@web_studio/editors/view_editor/editors/utils";
 import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
 
 function getGroupByFieldNameFromString(str) {

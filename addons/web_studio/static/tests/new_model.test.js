@@ -9,7 +9,7 @@ import {
     mountWithCleanup,
     onRpc,
 } from "@web/../tests/web_test_helpers";
-import { NewModelItem } from "@web_studio/client_action/editor/new_model_item/new_model_item";
+import { NewModelItem } from "@web_studio/editors/editor/new_model_item/new_model_item";
 
 describe.current.tags("desktop");
 

@@ -20,10 +20,10 @@ import { location, browser } from "@web/core/services/browser/browser";
 import { user } from "@web/core/services/user";
 import { WebClientEnterprise } from "@web_enterprise/webclient/webclient";
 import { StudioClientAction } from "@web_studio/client_action/studio_client_action";
-import { FormEditorCompiler } from "@web_studio/client_action/view_editor/editors/form/form_editor_compiler";
-import { FormEditorRenderer } from "@web_studio/client_action/view_editor/editors/form/form_editor_renderer/form_editor_renderer";
-import { ListEditorRenderer } from "@web_studio/client_action/view_editor/editors/list/list_editor_renderer";
-import { ViewEditor } from "@web_studio/client_action/view_editor/view_editor";
+import { FormEditorCompiler } from "@web_studio/editors/view_editor/editors/form/form_editor_compiler";
+import { FormEditorRenderer } from "@web_studio/editors/view_editor/editors/form/form_editor_renderer/form_editor_renderer";
+import { ListEditorRenderer } from "@web_studio/editors/view_editor/editors/list/list_editor_renderer";
+import { ViewEditor } from "@web_studio/editors/view_editor/view_editor";
 import { defineStudioEnvironment } from "./studio_tests_context";
 import { redirect } from "@web/core/utils/urls";
 

@@ -1,17 +1,17 @@
 import { Component, providePlugins, usePlugin, useProps } from "@odoo/owl";
 import { registry } from "@web/core/framework/registry";
 
-import { BaseEditorTabComponent } from "@web_studio/client_action/editor/editor_menu/editor_menu";
-import { useReportEditorModel } from "@web_studio/client_action/report_editor/report_editor_model";
+import { BaseEditorTabComponent } from "@web_studio/editors/editor/editor_menu/editor_menu";
+import { useReportEditorModel } from "@web_studio/editors/report_editor/report_editor_model";
 import {
     ReportEditorWysiwyg,
     ReportEditorWysiwygSidebar,
-} from "@web_studio/client_action/report_editor/report_editor_wysiwyg/report_editor_wysiwyg";
+} from "@web_studio/editors/report_editor/report_editor_wysiwyg/report_editor_wysiwyg";
 import {
     ReportEditorResourcesPlugin,
     ReportEditorXml,
     ReportResourceSelector,
-} from "@web_studio/client_action/report_editor/report_editor_xml/report_editor_xml";
+} from "@web_studio/editors/report_editor/report_editor_xml/report_editor_xml";
 import { ReportEditorPreview } from "./report_editor_preview/report_editor_preview";
 
 import { getCssFromPaperFormat } from "./utils";

@@ -3,15 +3,15 @@ import { registry } from "@web/core/framework/registry";
 import { omit } from "@web/core/utils/objects";
 
 import { Component, proxy, t, usePlugin, useProps } from "@odoo/owl";
-import { InteractiveEditorSidebar } from "@web_studio/client_action/view_editor/interactive_editor/interactive_editor_sidebar";
-import { Property } from "@web_studio/client_action/view_editor/property/property";
-import { SidebarViewToolbox } from "@web_studio/client_action/view_editor/interactive_editor/sidebar_view_toolbox/sidebar_view_toolbox";
+import { InteractiveEditorSidebar } from "@web_studio/editors/view_editor/interactive_editor/interactive_editor_sidebar";
+import { Property } from "@web_studio/editors/view_editor/property/property";
+import { SidebarViewToolbox } from "@web_studio/editors/view_editor/interactive_editor/sidebar_view_toolbox/sidebar_view_toolbox";
 import {
     fieldsToChoices,
     getStudioNoFetchFields,
-} from "@web_studio/client_action/view_editor/editors/utils";
+} from "@web_studio/editors/view_editor/editors/utils";
 import { SCALE_LABELS } from "@web/views/calendar/calendar_controller";
-import { useEditNodeAttributes } from "@web_studio/client_action/view_editor/view_editor_model";
+import { useEditNodeAttributes } from "@web_studio/editors/view_editor/view_editor_model";
 import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
 
 export class CalendarEditorSidebar extends Component {

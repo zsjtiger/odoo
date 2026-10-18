@@ -21,8 +21,8 @@ import { MainComponentsContainer } from "@web/core/framework/main_components_con
 import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
 import { getDefaultConfig } from "@web/views/view";
-import { EditionFlow } from "@web_studio/client_action/editor/edition_flow";
-import { ViewEditor } from "@web_studio/client_action/view_editor/view_editor";
+import { EditionFlow } from "@web_studio/editors/editor/edition_flow";
+import { ViewEditor } from "@web_studio/editors/view_editor/view_editor";
 import { useStudioServiceAsReactive } from "@web_studio/studio_service";
 import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
 
