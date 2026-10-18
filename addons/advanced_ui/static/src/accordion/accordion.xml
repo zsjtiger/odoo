@@ -11,8 +11,9 @@
                         t-on-keydown="(ev) => this.onSummaryKeydown(ev, item)">
                         <span class="o_accordion_chevron" t-att-class="{ 'o_accordion_chevron_open': this.isOpen(item) }"/>
                         <span class="o_accordion_title flex-grow-1 text-truncate" t-out="item.summary"/>
-                        <button type="button" class="o_accordion_menu btn btn-sm btn-light o-dropdown-caret" tabindex="-1"
-                            aria-label="More"/>
+                        <button type="button" class="o_accordion_menu btn btn-sm" tabindex="-1" aria-label="More">
+                            <span class="o_accordion_caret"/>
+                        </button>
                     </div>
                     <div t-if="this.isOpen(item)" class="o_accordion_details">
                         <t t-out="item.details"/>
