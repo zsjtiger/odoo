@@ -1,0 +1,21 @@
+.o_lookup_autocomplete {
+    .o_lookup_option {
+        min-height: 2.5rem;
+        padding: 0.25rem 0;
+    }
+
+    .o_lookup_tile {
+        width: 2rem;
+        height: 2rem;
+        border-radius: 4px;
+        color: #fff;
+    }
+
+    .o_lookup_title {
+        line-height: 1.2;
+    }
+
+    .o_lookup_subtitle {
+        line-height: 1.2;
+    }
+}

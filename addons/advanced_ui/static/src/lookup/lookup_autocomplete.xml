@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="advanced_ui.LookupAutocomplete">
+        <div class="o_input_dropdown o_lookup_autocomplete" t-ref="this.autocompleteContainerRef">
+            <input t-if="this.uiService.isSmall and this.props.dropdown"
+                type="text"
+                t-att-id="this.props.id"
+                class="o_input"
+                readonly=""
+                autocomplete="off"
+                t-att-placeholder="this.props.placeholder"
+                t-att-value="this.props.value"
+                t-on-click="this.onSearchMore"
+                t-on-barcode-search="this.onBarcodeSearch"
+            />
+            <AutoComplete t-else="" t-props="this.autoCompleteProps">
+                <t t-set-slot="lookupOption" t-slot-scope="optionScope">
+                    <t t-if="optionScope.data.record">
+                        <div class="o_lookup_option d-flex align-items-center gap-2">
+                            <span class="o_lookup_tile d-flex align-items-center justify-content-center flex-shrink-0 fw-bold"
+                                t-attf-style="background-color: {{ this.getTileColor(optionScope.data.record) }};"
+                                t-out="this.getTileInitial(optionScope.data.record)"/>
+                            <div class="o_lookup_text min-w-0">
+                                <div class="o_lookup_title text-truncate" t-out="optionScope.label"/>
+                                <div class="o_lookup_subtitle small text-muted text-truncate" t-out="this.getSubtitle(optionScope.data.record)"/>
+                            </div>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <t t-call-slot="{{ optionScope.data.slotName }}" t-props="optionScope.data" label="optionScope.label">
+                            <t t-out="optionScope.label"/>
+                        </t>
+                    </t>
+                </t>
+            </AutoComplete>
+            <span class="o_dropdown_button" />
+        </div>
+    </t>
+
+</templates>

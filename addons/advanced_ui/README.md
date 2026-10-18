@@ -118,6 +118,22 @@ the inline list:
 The fields in a row are read-only in the current version. Nested One2many or list
 views inside a row are not supported yet.
 
+### Lookup dropdown for many2one
+
+The `lookup` widget is an opt-in dropdown for many2one fields. Its suggestions are
+drawn as rows: a coloured tile with the record's initial, the name, and a subtitle
+taken from a field of the related model. The default many2one dropdown is unchanged.
+
+```xml
+<field name="partner_id" widget="lookup" options="{'subtitle': 'city'}"/>
+```
+
+- `options="{'subtitle': 'city'}"` names a char field of the related model shown under
+  each name. Without it, the subtitle is empty.
+- The tile colour is chosen from the record id, so it does not follow the model.
+- Section headers (such as "Accounts" and "Opportunities", one per model) are not
+  supported yet: the lookup shows the results of the field's own model only.
+
 ### Behaviour
 
 - All rows are closed by default, unless their ids are listed in `openIds`.
