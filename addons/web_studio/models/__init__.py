@@ -18,7 +18,7 @@ from . import res_groups
 from . import res_company
 from . import ir_qweb
 from . import report_paperformat
-from . import studio_approval
+from . import approval
 from . import ir_default
 from . import studio_export_model
 from . import models
