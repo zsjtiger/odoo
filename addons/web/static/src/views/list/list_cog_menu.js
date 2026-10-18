@@ -5,7 +5,7 @@ export class ListCogMenu extends CogMenu {
     static template = "web.ListCogMenu";
     props = useProps({
         ...cogMenuProps,
-        hasSelectedRecords: t.number().optional(),
+        hasSelectedRecords: t.boolean().optional(),
     });
     _registryItems() {
         return this.props.hasSelectedRecords ? [] : super._registryItems();
