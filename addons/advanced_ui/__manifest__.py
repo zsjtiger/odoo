@@ -14,4 +14,12 @@ Advanced features of the user interface, built on top of the web client.
     'installable': True,
     'auto_install': False,
     'license': 'LGPL-3',
+    'assets': {
+        'web.assets_backend': [
+            'advanced_ui/static/src/**/*',
+        ],
+        'web.assets_unit_tests': [
+            'advanced_ui/static/tests/**/*',
+        ],
+    },
 }
