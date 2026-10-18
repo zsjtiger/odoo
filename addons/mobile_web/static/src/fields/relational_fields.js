@@ -3,7 +3,8 @@ import {
     onWillStart,
     onWillUpdateProps,
     proxy,
-    useOnChange,
+    untrack,
+    useEffect,
     useProps,
     xml,
 } from "@odoo/owl";
@@ -102,18 +103,19 @@ export class Many2oneField extends Component {
         const nameSearch = makeNameSearch(this.orm, this.props.field.relation, {});
         this.search = (text) => nameSearch(text, getM2ODomain(this.props.field, this.props.record));
         // the value depends on another field: it is cleared as soon as that field changes
-        useOnChange(
-            () => {
-                const value = this.dependsOn && toEvalValue(this.props.record.data[this.dependsOn]);
-                return [Array.isArray(value) ? value.join(",") : value];
-            },
-            () => {
-                if (this.current) {
-                    this.props.onChange(false);
-                }
-            },
-            { initialRun: false }
-        );
+        let lastDependencyKey;
+        useEffect(() => {
+            const value = this.dependsOn && toEvalValue(this.props.record.data[this.dependsOn]);
+            const dependencyKey = Array.isArray(value) ? value.join(",") : value;
+            if (lastDependencyKey !== undefined && dependencyKey !== lastDependencyKey) {
+                untrack(() => {
+                    if (this.current) {
+                        this.props.onChange(false);
+                    }
+                });
+            }
+            lastDependencyKey = dependencyKey;
+        });
     }
 
     get dependsOn() {

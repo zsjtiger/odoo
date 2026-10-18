@@ -1,4 +1,4 @@
-import { Component, t, useOnChange, useProps } from "@odoo/owl";
+import { Component, t, untrack, useEffect, useProps } from "@odoo/owl";
 import { _t } from "@web/core/data/l10n/translation";
 import { registry } from "@web/core/framework/registry";
 import { computeM2OProps, Many2One } from "./many2one";
@@ -134,15 +134,20 @@ export class Many2OneField extends Component {
     setup() {
         // the value depends on another field: it is cleared as soon as that field changes,
         // since the candidates are filtered by the new value
-        useOnChange(
-            () => [this.dependsOn && getValueKey(this.props.record.data[this.dependsOn])],
-            () => {
-                if (this.props.record.data[this.props.name]) {
-                    this.props.record.update({ [this.props.name]: false });
-                }
-            },
-            { initialRun: false }
-        );
+        let lastDependencyKey;
+        useEffect(() => {
+            const dependencyKey = this.dependsOn
+                ? getValueKey(this.props.record.data[this.dependsOn])
+                : undefined;
+            if (lastDependencyKey !== undefined && dependencyKey !== lastDependencyKey) {
+                untrack(() => {
+                    if (this.props.record.data[this.props.name]) {
+                        this.props.record.update({ [this.props.name]: false });
+                    }
+                });
+            }
+            lastDependencyKey = dependencyKey;
+        });
     }
 
     get dependsOn() {
