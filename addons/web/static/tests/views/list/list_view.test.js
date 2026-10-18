@@ -1489,29 +1489,28 @@ test(`list view: action button in controlPanel with display='always' on desktop`
             a: true,
         },
     });
+    // the header buttons are in the actions menu (cog dropdown), next to the New button
     expect(
         queryAllTexts(`div.o_control_panel_breadcrumbs button, div.o_control_panel_actions button`)
     ).toEqual([
         "New",
-        "display",
-        "", // magnifying glass btn
         "", // cog dropdown
+        "", // magnifying glass btn
         "", // search btn
     ]);
 
     await contains(`.o_data_row .o_list_record_selector input[type="checkbox"]`).click();
     expect(
         queryAllTexts(`div.o_control_panel_breadcrumbs button, div.o_control_panel_actions button`)
-    ).toEqual(["New", "display", "" /* unselect all btn */, "default-selection"]);
+    ).toEqual(["New", "" /* cog dropdown */, "display", "default-selection"]);
 
     await contains(`.o_data_row .o_list_record_selector input[type="checkbox"]`).click();
     expect(
         queryAllTexts(`div.o_control_panel_breadcrumbs button, div.o_control_panel_actions button`)
     ).toEqual([
         "New",
-        "display",
-        "", // magnifying glass btn
         "", // cog dropdown
+        "", // magnifying glass btn
         "", // search btn
     ]);
 });

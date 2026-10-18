@@ -10,6 +10,7 @@ const cogMenuRegistry = registry.category("cogMenu");
 export const cogMenuProps = {
     ...actionMenusProps,
     getActiveIds: t.function().optional(),
+    hasSlotItems: t.boolean().optional(),
     context: t.object().optional(),
     resModel: t.string().optional(),
     items: t
@@ -50,7 +51,7 @@ export class CogMenu extends ActionMenus {
     }
 
     get hasItems() {
-        return this.cogItems.length || this.props.items.print?.length;
+        return this.cogItems.length || this.props.items.print?.length || this.props.hasSlotItems;
     }
 
     async _registryItems() {
