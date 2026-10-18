@@ -93,6 +93,31 @@ component template. Passing records and field definitions to `<Field>` or a list
 renderer is up to the component that owns the data. A field widget that does this
 automatically from a form view is not provided yet.
 
+### In a form view: the `accordion` field widget
+
+A One2many field can be shown as an accordion directly from the form view, with no
+JavaScript. Each line of the relation is a row, and the open row shows the fields of
+the inline list:
+
+```xml
+<field name="line_ids" widget="accordion" options="{'summary': 'name'}">
+    <list>
+        <field name="name"/>
+        <field name="qty"/>
+    </list>
+</field>
+```
+
+- `widget="accordion"` is valid on `one2many` fields.
+- `options="{'summary': 'name'}"` sets the field shown in the row header. It must be a
+  char field. Without it, the row header reads `display_name`, which is only shown if
+  the inline list loads it.
+- The fields of the inline `<list>`, except the summary field, are shown in the
+  open row, as a form group. Only the fields listed there are loaded.
+
+The fields in a row are read-only in the current version. Nested One2many or list
+views inside a row are not supported yet.
+
 ### Behaviour
 
 - All rows are closed by default, unless their ids are listed in `openIds`.
