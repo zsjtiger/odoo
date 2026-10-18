@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import typing
+from operator import attrgetter
 from odoo.exceptions import AccessError, MissingError
 from odoo.tools import SQL, unique
 from odoo.tools.misc import SENTINEL, Sentinel
@@ -30,6 +31,11 @@ class Many2one(_Relational):
         client side (domain or a python expression that will be evaluated
         to provide domain)
 
+    :param str depends_on: optional name of a field of the same model whose
+        value filters the candidate values on the client side: the domain
+        is then a python expression that references that field, e.g.
+        ``[('country_id', '=', country_id)] if country_id else []``
+
     :param dict context: an optional context to use on the client side when
         handling that field
 
@@ -54,10 +60,13 @@ class Many2one(_Relational):
     _column_type = ('int4', 'int4')
 
     ondelete: OnDelete | None = None    # what to do when value is deleted
+    depends_on: str | None = None       # name of the field filtering the candidates (client side)
     delegate: bool = False              # whether self implements delegation
 
     def __init__(self, comodel_name: str | Sentinel = SENTINEL, string: str | Sentinel = SENTINEL, **kwargs):
         super().__init__(comodel_name=comodel_name, string=string, **kwargs)
+
+    _description_depends_on = property(attrgetter('depends_on'))
 
     def _setup_attrs__(self, model_class, name):
         super()._setup_attrs__(model_class, name)

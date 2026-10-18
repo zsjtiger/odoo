@@ -71,6 +71,12 @@ class IrModelFields(models.Model):
     domain = fields.Char(default="[]", help="The optional domain to restrict possible values for relationship fields, "
                                             "specified as a Python expression defining a list of triplets. "
                                             "For example: [('color','=','red')]")
+    depends_on = fields.Char(
+        string="Depends on",
+        help="Name of a field of the same model. The candidate values of this many2one field "
+             "are filtered by the value of that field, through the domain. "
+             "For example: [('country_id', '=', country_id)] if country_id else []",
+    )
     groups = fields.Many2many('res.groups', 'ir_model_fields_group_rel', 'field_id', 'group_id')
     group_expand = fields.Boolean(string="Expand Groups",
                                   help="If checked, all the records of the target model will be included\n"
@@ -132,6 +138,11 @@ class IrModelFields(models.Model):
     @api.constrains('domain')
     def _check_domain(self):
         return _checks._check_domain(self)
+
+    @api.constrains('depends_on', 'ttype', 'model')
+    def _check_depends_on(self):
+        return _checks._check_depends_on(self)
+
     @api.constrains('name')
     def _check_name(self):
         return _checks._check_name(self)

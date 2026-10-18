@@ -6,6 +6,23 @@ import { designerState } from "../designer_state";
 import { getFieldTypeLabels } from "./field_types";
 import { relationTableName } from "./new_field_dialog";
 
+/** Domain generated from a dependency: [(target, '=', dependency)] if dependency else [] */
+const DEPENDENCY_DOMAIN_REGEX = /^\[\('(\w+)', '(?:=|in)', (\w+)\)\] if \2 else \[\]$/;
+
+/**
+ * @param {string|false} domain
+ * @returns {{ targetField: string, dependsOn: string } | null} the parts of a generated domain
+ */
+function parseDependencyDomain(domain) {
+    const match = domain && domain.match(DEPENDENCY_DOMAIN_REGEX);
+    return match ? { targetField: match[1], dependsOn: match[2] } : null;
+}
+
+/** The field type of the candidates matching a dependency of the given type. */
+function targetTypeOf(dependsType) {
+    return ["many2many", "one2many"].includes(dependsType) ? "many2one" : dependsType;
+}
+
 const SELECTION_FIELDS = ["value", "name", "sequence"];
 
 /**
@@ -63,6 +80,10 @@ export class FieldDetailPage extends Component {
             options: [],
             removedOptionIds: [],
             relation: "",
+            dependsOn: "",
+            targetField: "",
+            dependsFields: [],
+            targetFields: [],
             models: [],
             takenTables: [],
         });
@@ -99,7 +120,7 @@ export class FieldDetailPage extends Component {
         const [record] = await this.orm.read(
             "ir.model.fields",
             [fieldId],
-            ["name", "field_description", "help", "ttype", "required", "relation", "relation_table", "state", "selection_ids"]
+            ["name", "field_description", "help", "ttype", "required", "relation", "relation_table", "state", "selection_ids", "depends_on", "domain"]
         );
         const options = record.selection_ids.length
             ? await this.orm.read("ir.model.fields.selection", record.selection_ids, SELECTION_FIELDS)
@@ -116,14 +137,87 @@ export class FieldDetailPage extends Component {
             relation: record.relation,
             relationTable: record.relation_table,
             isCustom: record.state === "manual",
+            dependsOn: record.depends_on || "",
+            targetField: parseDependencyDomain(record.domain)?.targetField || "",
+            isGeneratedDomain: Boolean(parseDependencyDomain(record.domain)),
         };
         this.state.label = record.field_description;
         this.state.help = record.help || "";
         this.state.required = record.required;
         this.state.relation = record.relation || "";
+        this.state.dependsOn = record.depends_on || "";
+        this.state.targetField = this.state.field.targetField;
         this.state.options = sorted.map((option) => this.optionFromRecord(option));
         this.state.removedOptionIds = [];
         this.state.loading = false;
+        await this.loadDependsOnOptions();
+        await this.loadTargetOptions();
+    }
+
+    /** Fields of the model that the field may depend on, any type but itself. */
+    async loadDependsOnOptions() {
+        this.state.dependsFields = await this.orm.searchRead(
+            "ir.model.fields",
+            [["model", "=", this.props.model.model], ["name", "!=", this.state.field.name]],
+            ["name", "field_description", "ttype"],
+            { order: "field_description ASC" }
+        );
+    }
+
+    /** Stored fields of the related model that the dependency value is compared with. */
+    async loadTargetOptions() {
+        this.state.targetFields = [];
+        const dependsField = this.state.dependsFields.find((field) => field.name === this.state.dependsOn);
+        if (!dependsField || !this.state.field.relation) {
+            return;
+        }
+        this.state.targetFields = await this.orm.searchRead(
+            "ir.model.fields",
+            [
+                ["model", "=", this.state.field.relation],
+                ["ttype", "=", targetTypeOf(dependsField.ttype)],
+                ["store", "=", true],
+            ],
+            ["name", "field_description"],
+            { order: "field_description ASC" }
+        );
+    }
+
+    async onDependsOnChange(ev) {
+        this.state.dependsOn = ev.target.value;
+        this.state.targetField = "";
+        await this.loadTargetOptions();
+    }
+
+    onTargetFieldChange(ev) {
+        this.state.targetField = ev.target.value;
+    }
+
+    /** Only a custom many2one can depend on another field: its candidates are filtered. */
+    get canDependOn() {
+        return this.isCustom && this.state.field?.type === "many2one";
+    }
+
+    /**
+     * Domain filtering the candidates by the value of the dependency, empty when the
+     * dependency is not fully configured.
+     * @returns {string|false}
+     */
+    dependencyDomain() {
+        const { dependsOn, targetField } = this.state;
+        const dependsField = this.state.dependsFields.find((field) => field.name === dependsOn);
+        if (!dependsField || !targetField) {
+            return false;
+        }
+        const operator = ["many2many", "one2many"].includes(dependsField.ttype) ? "in" : "=";
+        return `[('${targetField}', '${operator}', ${dependsOn})] if ${dependsOn} else []`;
+    }
+
+    hasDependencyChanges() {
+        const field = this.state.field;
+        return (
+            this.state.dependsOn !== field.dependsOn || this.state.targetField !== field.targetField
+        );
     }
 
     optionFromRecord(option) {
@@ -194,6 +288,7 @@ export class FieldDetailPage extends Component {
             this.state.help !== field.help ||
             (field.isCustom && this.state.required !== field.required) ||
             (this.canChangeRelation && this.state.relation !== field.relation) ||
+            (this.canDependOn && this.hasDependencyChanges()) ||
             (this.isSelection && field.isCustom && this.optionCommands().length > 0)
         );
     }
@@ -219,6 +314,16 @@ export class FieldDetailPage extends Component {
                     this.state.relation,
                     this.state.takenTables
                 );
+            }
+        }
+        if (this.canDependOn && this.hasDependencyChanges()) {
+            const domain = this.dependencyDomain();
+            values.depends_on = domain ? this.state.dependsOn : false;
+            // the generated domain replaces the previous one only if it was generated too
+            if (domain) {
+                values.domain = domain;
+            } else if (field.isGeneratedDomain) {
+                values.domain = "[]";
             }
         }
         if (this.isSelection && field.isCustom) {

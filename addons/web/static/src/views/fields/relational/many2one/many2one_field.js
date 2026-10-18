@@ -1,4 +1,4 @@
-import { Component, t, useProps } from "@odoo/owl";
+import { Component, t, useOnChange, useProps } from "@odoo/owl";
 import { _t } from "@web/core/data/l10n/translation";
 import { registry } from "@web/core/framework/registry";
 import { computeM2OProps, Many2One } from "./many2one";
@@ -111,10 +111,43 @@ export const many2OneFieldProps = {
     string: t.string().optional(),
 };
 
+/**
+ * Key of a field value, so that a reload of the same value is not seen as a change.
+ * @param {any} value
+ * @returns {any}
+ */
+function getValueKey(value) {
+    if (value?.records) {
+        return value.records.map((record) => record.resId).join(",");
+    }
+    if (value && typeof value === "object" && "id" in value) {
+        return value.id;
+    }
+    return value;
+}
+
 export class Many2OneField extends Component {
     static template = "web.Many2OneField";
     static components = { Many2One };
     props = useProps(many2OneFieldProps);
+
+    setup() {
+        // the value depends on another field: it is cleared as soon as that field changes,
+        // since the candidates are filtered by the new value
+        useOnChange(
+            () => [this.dependsOn && getValueKey(this.props.record.data[this.dependsOn])],
+            () => {
+                if (this.props.record.data[this.props.name]) {
+                    this.props.record.update({ [this.props.name]: false });
+                }
+            },
+            { initialRun: false }
+        );
+    }
+
+    get dependsOn() {
+        return this.props.record.fields[this.props.name].depends_on;
+    }
 
     get m2oProps() {
         return computeM2OProps(this.props);

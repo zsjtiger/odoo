@@ -192,6 +192,20 @@ def _get_manual_field_data(self, model_name):
     return self._all_manual_field_data().get(model_name, {})
 
 
+def _eval_manual_domain(domain):
+    """ Return the domain of a manual field.
+
+    A domain may reference the other fields of the record (``depends_on``), it
+    cannot be evaluated on the server: it is kept as a string, the client
+    evaluates it with the values of the record.
+    """
+    domain = domain or '[]'
+    try:
+        return expr_eval(domain)
+    except NameError:
+        return domain
+
+
 def _instanciate_attrs(self, field_data):
     """ Return the parameters for a field instance for ``field_data``. """
     attrs = {
@@ -234,7 +248,8 @@ def _instanciate_attrs(self, field_data):
             return
         attrs['comodel_name'] = field_data['relation']
         attrs['ondelete'] = field_data['on_delete']
-        attrs['domain'] = expr_eval(field_data['domain'] or '[]')
+        attrs['domain'] = _eval_manual_domain(field_data['domain'])
+        attrs['depends_on'] = field_data.get('depends_on') or None
         attrs['group_expand'] = '_read_group_expand_full' if field_data['group_expand'] else None
     elif field_data['ttype'] == 'one2many':
         if not self.pool.loaded and not (

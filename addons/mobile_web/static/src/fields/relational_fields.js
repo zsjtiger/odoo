@@ -1,5 +1,15 @@
-import { Component, onWillStart, onWillUpdateProps, proxy, useProps, xml } from "@odoo/owl";
+import {
+    Component,
+    onWillStart,
+    onWillUpdateProps,
+    proxy,
+    useOnChange,
+    useProps,
+    xml,
+} from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
+import { Domain } from "@web/core/data/domain";
+import { evaluateExpr } from "@web/core/data/py_js/py";
 import { mobileFieldRegistry } from "@mobile_web/views/registries";
 import { fieldProps, displayOrEmpty, hasDisplayValue } from "@mobile_web/fields/field_utils";
 import { getFieldWidget } from "@mobile_web/fields/field_widget";
@@ -26,15 +36,44 @@ function pairName(pair) {
  * 按关键字搜索关联模型, 使用服务端的 name_search
  */
 function makeNameSearch(orm, relation, context) {
-    return async (text) => {
+    return async (text, args = []) => {
         const results = await orm.call(relation, "name_search", [], {
             name: text,
+            args,
             operator: "ilike",
             limit: 30,
             context,
         });
         return results.map(([id, name]) => ({ id, name }));
     };
+}
+
+/**
+ * 移动端记录的值为 [id, name] / [[id, name], ...], 求值域时还原为 id
+ */
+function toEvalValue(value) {
+    if (Array.isArray(value)) {
+        return Array.isArray(value[0]) ? value.map((pair) => pair[0]) : value[0];
+    }
+    return value;
+}
+
+/**
+ * 多对一字段的域, 允许引用记录上的其他字段 (如 Studio 配置的依赖字段)
+ * 引用的字段未加载时无法求值, 此时不做过滤
+ */
+function getM2ODomain(field, record) {
+    if (typeof field.domain !== "string") {
+        return field.domain || [];
+    }
+    const evalContext = Object.fromEntries(
+        Object.entries(record.data).map(([name, value]) => [name, toEvalValue(value)])
+    );
+    try {
+        return new Domain(evaluateExpr(field.domain, evalContext)).toList();
+    } catch {
+        return [];
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -60,9 +99,26 @@ export class Many2oneField extends Component {
     state = proxy({ open: false });
 
     setup() {
-        this.search = makeNameSearch(this.orm, this.props.field.relation, {});
+        const nameSearch = makeNameSearch(this.orm, this.props.field.relation, {});
+        this.search = (text) => nameSearch(text, getM2ODomain(this.props.field, this.props.record));
+        // the value depends on another field: it is cleared as soon as that field changes
+        useOnChange(
+            () => {
+                const value = this.dependsOn && toEvalValue(this.props.record.data[this.dependsOn]);
+                return [Array.isArray(value) ? value.join(",") : value];
+            },
+            () => {
+                if (this.current) {
+                    this.props.onChange(false);
+                }
+            },
+            { initialRun: false }
+        );
     }
 
+    get dependsOn() {
+        return this.props.field.depends_on;
+    }
     get current() {
         return this.props.record.data[this.props.name] || false;
     }

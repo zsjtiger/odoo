@@ -85,6 +85,25 @@
                             </div>
                             <div t-else="" class="mb-2">Related object: <code t-out="this.state.field.relation"/></div>
                             <div t-if="this.state.field.relationTable">Junction table: <code t-out="this.state.field.relationTable"/></div>
+                            <div t-if="this.canDependOn" class="mt-3 o_web_studio_field_depends_on">
+                                <label class="form-label" for="o_web_studio_field_page_depends_on">Depends on</label>
+                                <select id="o_web_studio_field_page_depends_on" class="form-select o_web_studio_field_depends_on_select" t-on-change="this.onDependsOnChange">
+                                    <option value="" t-att-selected="!this.state.dependsOn">None</option>
+                                    <t t-foreach="this.state.dependsFields" t-as="dependsField" t-key="dependsField.name">
+                                        <option t-att-value="dependsField.name" t-att-selected="dependsField.name === this.state.dependsOn" t-out="dependsField.field_description"/>
+                                    </t>
+                                </select>
+                                <div t-if="this.state.dependsOn" class="mt-2">
+                                    <label class="form-label" for="o_web_studio_field_page_depends_on_target">Filter on</label>
+                                    <select id="o_web_studio_field_page_depends_on_target" class="form-select o_web_studio_field_depends_on_target" t-att-disabled="!this.state.targetFields.length" t-on-change="this.onTargetFieldChange">
+                                        <option value="" t-att-selected="!this.state.targetField">Choose a field</option>
+                                        <t t-foreach="this.state.targetFields" t-as="targetField" t-key="targetField.name">
+                                            <option t-att-value="targetField.name" t-att-selected="targetField.name === this.state.targetField" t-out="targetField.field_description"/>
+                                        </t>
+                                    </select>
+                                    <small class="form-text text-muted">Only the records whose field matches the value of the dependency are offered.</small>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -4224,3 +4224,49 @@ test("custom many2one field with write_date as related field", async () => {
     expect(".o_field_widget[name=trululu] input").toHaveValue("first record");
     expect(".o_field_widget[name=trululu] .date").toHaveText("13/02/2023");
 });
+
+test("many2one: value cleared when the field it depends on changes", async () => {
+    Partner._fields.trululu = fields.Many2one({
+        string: "Trululu",
+        relation: "partner",
+        depends_on: "foo",
+        domain: "[('foo', '=', foo)] if foo else []",
+    });
+    onRpc("web_name_search", ({ kwargs }) => {
+        expect.step(JSON.stringify(kwargs.domain));
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `<form><field name="foo"/><field name="trululu"/></form>`,
+    });
+    expect(".o_field_many2one input").toHaveValue("aaa");
+
+    await contains("[name=foo] input").edit("new foo");
+    expect(".o_field_many2one input").toHaveValue("");
+    await contains(".o_field_many2one input").click();
+    expect.verifySteps([JSON.stringify([["foo", "=", "new foo"]])]);
+});
+
+test("many2one: domain referencing a field not in the view is not applied", async () => {
+    Partner._fields.trululu = fields.Many2one({
+        string: "Trululu",
+        relation: "partner",
+        domain: "[('foo', '=', foo)] if foo else []",
+    });
+    onRpc("web_name_search", ({ kwargs }) => {
+        expect.step(JSON.stringify(kwargs.domain));
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `<form><field name="trululu"/></form>`,
+    });
+    await contains(".o_field_many2one input").click();
+    expect(".o_field_many2one .o-autocomplete--dropdown-item").not.toHaveCount(0);
+    expect.verifySteps([JSON.stringify([])]);
+});

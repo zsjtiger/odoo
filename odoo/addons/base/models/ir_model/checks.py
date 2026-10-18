@@ -27,11 +27,26 @@ def _check_index(self):
 def _check_domain(self):
     for field in self:
         try:
-            expr_eval(field.domain or '[]')
+            expr_eval(field.domain or '[]', {field.depends_on: False} if field.depends_on else None)
         except Exception as e:  # noqa: BLE001
             raise ValidationError(
                 _("An error occurred while evaluating the domain:\n%(error)s", error=e)
             ) from e
+
+
+def _check_depends_on(self):
+    for field in self:
+        if not field.depends_on:
+            continue
+        if field.ttype != 'many2one':
+            raise ValidationError(_("Only a many2one field can depend on another field."))
+        if field.depends_on == field.name:
+            raise ValidationError(_("A field cannot depend on itself."))
+        if not field.search_count([('model', '=', field.model), ('name', '=', field.depends_on)]):
+            raise ValidationError(_(
+                "The field %(name)s does not exist on the model %(model)s.",
+                name=field.depends_on, model=field.model,
+            ))
 
 
 def _check_name(self):

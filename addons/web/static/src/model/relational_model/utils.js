@@ -343,9 +343,16 @@ export function getFieldDomain(record, fieldName, domain) {
     }
     // Fallback to the domain defined in the field definition in python
     domain = record.fields[fieldName].domain;
-    return typeof domain === "string"
-        ? new Domain(evaluateExpr(domain, record.evalContext)).toList()
-        : domain || [];
+    if (typeof domain !== "string") {
+        return domain || [];
+    }
+    try {
+        return new Domain(evaluateExpr(domain, record.evalContext)).toList();
+    } catch {
+        // the domain references a field that is not loaded on the record (e.g. a dependency
+        // field which is not in the view): no filtering can be applied
+        return [];
+    }
 }
 
 export function getBasicEvalContext(config) {
