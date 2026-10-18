@@ -16,7 +16,10 @@
             />
             <AutoComplete t-else="" t-props="this.autoCompleteProps">
                 <t t-set-slot="lookupOption" t-slot-scope="optionScope">
-                    <t t-if="optionScope.data.record">
+                    <t t-if="optionScope.data.header">
+                        <div class="o_lookup_group_title" t-out="optionScope.label"/>
+                    </t>
+                    <t t-elif="optionScope.data.record">
                         <div class="o_lookup_option d-flex align-items-center gap-2">
                             <span class="o_lookup_tile d-flex align-items-center justify-content-center flex-shrink-0 fw-bold"
                                 t-attf-style="background-color: {{ this.getTileColor(optionScope.data.record) }};"

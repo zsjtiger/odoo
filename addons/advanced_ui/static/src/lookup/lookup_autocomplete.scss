@@ -19,3 +19,13 @@
         line-height: 1.2;
     }
 }
+
+.o_lookup_autocomplete .o_lookup_group_header {
+    cursor: default;
+}
+
+.o_lookup_group_title {
+    padding: 0.5rem 0.75rem 0.25rem;
+    font-weight: 600;
+    font-size: $font-size-sm;
+}

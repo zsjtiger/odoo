@@ -13,10 +13,12 @@ describe.current.tags("desktop");
 class Partner extends models.Model {
     name = fields.Char();
     city = fields.Char();
+    type = fields.Char();
 
     _records = [
-        { id: 1, name: "Acme", city: "San Francisco" },
-        { id: 2, name: "Paddy's Pub", city: "Boston, MA" },
+        { id: 1, name: "Acme", city: "San Francisco", type: "Account" },
+        { id: 2, name: "Paddy's Pub", city: "Boston, MA", type: "Account" },
+        { id: 3, name: "Acme Construction", city: "Grand Marais, MN", type: "Opportunity" },
     ];
 }
 
@@ -28,7 +30,7 @@ class Order extends models.Model {
     _views = {
         form: /* xml */ `
             <form>
-                <field name="partner_id" widget="lookup" options="{'subtitle': 'city'}"/>
+                <field name="partner_id" widget="lookup" options="{'subtitle': 'city', 'group': 'type'}"/>
             </form>`,
     };
 }
@@ -52,11 +54,20 @@ test("lookup widget: suggestions show a tile, the name and the subtitle field", 
     await mountView({ type: "form", resModel: "order", resId: 1 });
     await contains("[name='partner_id'] input").edit("Acme", { confirm: false });
     await waitFor(".o_lookup_option");
-    expect(".o_lookup_option").toHaveCount(1);
-    expect(queryAllTexts(".o_lookup_title")).toEqual(["Acme"]);
-    expect(queryAllTexts(".o_lookup_subtitle")).toEqual(["San Francisco"]);
-    expect(".o_lookup_tile").toHaveCount(1);
-    expect(".o_lookup_tile").toHaveText("A");
+    expect(".o_lookup_option").toHaveCount(2);
+    expect(queryAllTexts(".o_lookup_title")).toEqual(["Acme", "Acme Construction"]);
+    expect(queryAllTexts(".o_lookup_subtitle")).toEqual(["San Francisco", "Grand Marais, MN"]);
+    expect(".o_lookup_tile").toHaveCount(2);
+    expect(".o_lookup_tile:eq(0)").toHaveText("A");
+});
+
+test("lookup widget: suggestions are split under a header per group value", async () => {
+    await mountView({ type: "form", resModel: "order", resId: 1 });
+    await contains("[name='partner_id'] input").edit("Acme", { confirm: false });
+    await waitFor(".o_lookup_group_title");
+    expect(queryAllTexts(".o_lookup_group_title")).toEqual(["Account", "Opportunity"]);
+    expect(queryAllTexts(".o_lookup_title")).toEqual(["Acme", "Acme Construction"]);
+    expect(".o_lookup_option").toHaveCount(2);
 });
 
 test("default many2one dropdown is unchanged", async () => {

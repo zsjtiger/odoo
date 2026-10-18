@@ -125,14 +125,18 @@ drawn as rows: a coloured tile with the record's initial, the name, and a subtit
 taken from a field of the related model. The default many2one dropdown is unchanged.
 
 ```xml
-<field name="partner_id" widget="lookup" options="{'subtitle': 'city'}"/>
+<field name="partner_id" widget="lookup" options="{'subtitle': 'city', 'group': 'type'}"/>
 ```
 
-- `options="{'subtitle': 'city'}"` names a char field of the related model shown under
-  each name. Without it, the subtitle is empty.
+- `subtitle` names a char field of the related model shown under each name. Without
+  it, the subtitle is empty.
+- `group` names a char field of the related model. The suggestions are split under a
+  header for each value of that field, in the order they first appear. Records with an
+  empty value go under "Other". Without it, the suggestions are not grouped.
 - The tile colour is chosen from the record id, so it does not follow the model.
-- Section headers (such as "Accounts" and "Opportunities", one per model) are not
-  supported yet: the lookup shows the results of the field's own model only.
+
+Suggestions come from the field's own model only. A header per model, as in a search
+across several objects, needs one source per model and is not provided.
 
 ### Behaviour
 
