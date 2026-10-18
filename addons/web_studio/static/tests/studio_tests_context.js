@@ -232,6 +232,14 @@ export function defineStudioEnvironment() {
 
     defineActions([
         {
+            // The action of the Studio app, opening the Studio home (the app picker)
+            id: 9999,
+            name: "Studio",
+            type: "ir.actions.client",
+            tag: "studio",
+            xml_id: "web_studio.action_web_studio_home",
+        },
+        {
             id: 1,
             name: "partner Action",
             res_model: "partner",

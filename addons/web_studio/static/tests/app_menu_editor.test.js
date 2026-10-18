@@ -11,6 +11,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { WebClientEnterprise } from "@web_enterprise/webclient/webclient";
 import { defineStudioEnvironment } from "./studio_tests_context";
+import { openApp, openStudioHome } from "./studio_test_navigation";
 
 describe.current.tags("desktop");
 
@@ -20,8 +21,8 @@ test("edit menu behavior", async () => {
     await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
 
-    await contains(".o_web_studio_navbar_item").click();
-    await contains(".o_app[data-menu-xmlid=app_1]").click();
+    await openStudioHome();
+    await openApp("app_1");
     expect(".o-web-studio-appmenu-editor").toHaveCount(0);
     await contains(".o_web_edit_menu").click();
     expect(".o-web-studio-appmenu-editor").toHaveCount(1);
@@ -31,8 +32,8 @@ test("edit menu dialog rendering", async () => {
     await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
 
-    await contains(".o_web_studio_navbar_item").click();
-    await contains(".o_app[data-menu-xmlid=app_1]").click();
+    await openStudioHome();
+    await openApp("app_1");
     await contains(".o_web_edit_menu").click();
 
     expect("ul.oe_menu_editor > li").toHaveAttribute("data-item-id", "1");
@@ -62,8 +63,8 @@ test("edit menu dialog: create menu", async () => {
     await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
 
-    await contains(".o_web_studio_navbar_item").click();
-    await contains(".o_app[data-menu-xmlid=app_1]").click();
+    await openStudioHome();
+    await openApp("app_1");
     await contains(".o_web_edit_menu").click();
 
     stepAllNetworkCalls();
@@ -120,8 +121,8 @@ test("drag/drop to reorganize menus", async () => {
     await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
 
-    await contains(".o_web_studio_navbar_item").click();
-    await contains(".o_app[data-menu-xmlid=app_1]").click();
+    await openStudioHome();
+    await openApp("app_1");
     await contains(".o_web_edit_menu").click();
 
     stepAllNetworkCalls();
@@ -152,8 +153,8 @@ test("edit/delete menus", async () => {
     await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
 
-    await contains(".o_web_studio_navbar_item").click();
-    await contains(".o_app[data-menu-xmlid=app_1]").click();
+    await openStudioHome();
+    await openApp("app_1");
     await contains(".o_web_edit_menu").click();
     expect(".o-web-studio-interactive-list-item-label").toHaveCount(3);
 

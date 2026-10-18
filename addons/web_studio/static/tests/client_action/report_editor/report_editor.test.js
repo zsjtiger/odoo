@@ -18,6 +18,7 @@ import {
 import { WebClientEnterprise } from "@web_enterprise/webclient/webclient";
 import { ReportEditorModel } from "@web_studio/editors/report_editor/report_editor_model";
 import { defineStudioEnvironment } from "../../studio_tests_context";
+import { openApp } from "../../studio_test_navigation";
 import { IrModel } from "@web/../tests/_framework/mock_server/mock_models/ir_model";
 import { patch } from "@web/core/utils/patch";
 import { location } from "@web/core/services/browser/browser";
@@ -137,7 +138,7 @@ test("reports tab disabled when no record", async () => {
         model: args[0],
     }));
     await mountWithCleanup(WebClientEnterprise);
-    await contains("a.o_app[data-menu-xmlid=app_1]").click();
+    await openApp("app_1");
     await contains(".o_web_studio_navbar_item:not(.o_disabled)").click();
     expect(".o_web_studio_menu .o_menu_sections button:contains(Reports)").toHaveCount(1);
     expect(".o_web_studio_menu .o_menu_sections button:contains(Reports):disabled").toHaveCount(1);
@@ -171,7 +172,8 @@ test("open report form view from cog", async () => {
     });
 
     await mountWithCleanup(WebClientEnterprise);
-    await waitFor(".o_home_menu");
+    // The web client lands on the first app, there is no home menu anymore
+    await waitFor(".o_main_navbar");
     await getService("action").doAction({
         name: "Some Action",
         type: "ir.actions.act_window",

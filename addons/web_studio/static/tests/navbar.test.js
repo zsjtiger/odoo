@@ -20,6 +20,7 @@ import { AppMenuEditor } from "@web_studio/editors/editor/app_menu_editor/app_me
 import { NewModelItem } from "@web_studio/editors/editor/new_model_item/new_model_item";
 import { StudioNavbar } from "@web_studio/client_action/navbar/navbar";
 import { defineStudioEnvironment } from "./studio_tests_context";
+import { openApp } from "./studio_test_navigation";
 
 describe.current.tags("desktop");
 
@@ -177,7 +178,7 @@ test("adapt navbar when leaving studio", async () => {
     await resize({ width: 1120 });
     await animationFrame();
 
-    await contains(".o_app[data-menu-xmlid=app_1]").click();
+    await openApp("app_1");
     await animationFrame();
 
     expect(".o_menu_sections .o_menu_sections_more").toHaveCount(0);
@@ -215,7 +216,7 @@ test("concurrency: open studio while loading the views", async () => {
     await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
 
-    await contains(".o_app[data-menu-xmlid=app_1]").click();
+    await openApp("app_1");
     expect(".o_web_studio_navbar_item.o_disabled").toHaveCount(1);
 
     await contains(".o_web_studio_navbar_item").click();

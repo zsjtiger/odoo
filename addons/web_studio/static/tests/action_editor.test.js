@@ -13,6 +13,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { WebClientEnterprise } from "@web_enterprise/webclient/webclient";
 import { defineStudioEnvironment } from "./studio_tests_context";
+import { openApp, openStudioHome } from "./studio_test_navigation";
 
 describe.current.tags("desktop");
 
@@ -23,8 +24,8 @@ test("create unavailable view", async () => {
     await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
 
-    await contains(".o_web_studio_navbar_item").click();
-    await contains(".o_app[data-menu-xmlid=app_1]").click();
+    await openStudioHome();
+    await openApp("app_1");
     await contains(".o_menu_sections button:contains(Views)").click();
     await contains(".o_web_studio_thumbnail_item.o_web_studio_thumbnail_activity").click();
 
@@ -61,8 +62,8 @@ test("disable the view from studio", async () => {
     await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
 
-    await contains(".o_web_studio_navbar_item").click();
-    await contains(".o_app[data-menu-xmlid=app_1]").click();
+    await openStudioHome();
+    await openApp("app_1");
     await contains(".o_menu_sections button:contains(Views)").click();
     await contains(".o_web_studio_thumbnail_list .o_web_studio_more").click();
     await contains(".o-dropdown-item:contains('Disable View')").click();
@@ -86,8 +87,8 @@ test("add groups on action", async () => {
     await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
 
-    await contains(".o_web_studio_navbar_item").click();
-    await contains(".o_app[data-menu-xmlid=app_1]").click();
+    await openStudioHome();
+    await openApp("app_1");
     await contains(".o_menu_sections button:contains(Views)").click();
 
     await contains("input#group_ids").click();
@@ -104,7 +105,12 @@ test("concurrency: keep user's input when editing action", async () => {
         actionName = params.args.name;
         await def.promise;
     });
-    onRpc("/web/action/load", async () => {
+    onRpc("/web/action/load", async (request) => {
+        const { params } = await request.json();
+        if (params.action_id !== 1) {
+            // Other actions (e.g. the Studio home) are handled by the default mock server
+            return;
+        }
         expect.step("load_action");
         return {
             id: 1,
@@ -126,8 +132,8 @@ test("concurrency: keep user's input when editing action", async () => {
     await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
 
-    await contains(".o_web_studio_navbar_item").click();
-    await contains(".o_app[data-menu-xmlid=app_1]").click();
+    await openStudioHome();
+    await openApp("app_1");
     await contains(".o_menu_sections button:contains(Views)").click();
     expect.verifySteps(["load_action"]);
 
@@ -158,7 +164,7 @@ test("active_id and active_ids present in context at reload", async () => {
     await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
 
-    await contains(".o_app[data-menu-xmlid=app_1]").click();
+    await openApp("app_1");
     await animationFrame();
     expect.verifySteps([
         `load_action: {"action_id":1,"context":{"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1]}}`,

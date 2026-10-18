@@ -3,6 +3,7 @@ import { animationFrame } from "@odoo/hoot-mock";
 import { contains, mountWithCleanup, onRpc } from "@web/../tests/web_test_helpers";
 import { WebClientEnterprise } from "@web_enterprise/webclient/webclient";
 import { defineStudioEnvironment } from "./studio_tests_context";
+import { openApp } from "./studio_test_navigation";
 
 describe.current.tags("desktop");
 
@@ -12,7 +13,7 @@ test("add custom field button with other optional columns", async () => {
     await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
 
-    await contains(".o_app[data-menu-xmlid=app_3]").click();
+    await openApp("app_3");
     await animationFrame();
 
     expect(".o_list_view").toHaveCount(1);
@@ -34,7 +35,7 @@ test("add custom field button without other optional columns", async () => {
     await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
 
-    await contains(".o_app[data-menu-xmlid=app_2]").click();
+    await openApp("app_2");
     await animationFrame();
 
     expect(".o_list_view").toHaveCount(1);
@@ -67,7 +68,7 @@ test("should render the no content helper of studio actions", async () => {
     await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
 
-    await contains(".o_app[data-menu-xmlid=app_2]").click();
+    await openApp("app_2");
     await animationFrame();
     await contains(".o_web_studio_navbar_item").click();
     await contains(".o_menu_sections button:contains(Automations)").click();

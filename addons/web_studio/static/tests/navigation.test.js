@@ -25,6 +25,7 @@ import { FormEditorRenderer } from "@web_studio/editors/view_editor/editors/form
 import { ListEditorRenderer } from "@web_studio/editors/view_editor/editors/list/list_editor_renderer";
 import { ViewEditor } from "@web_studio/editors/view_editor/view_editor";
 import { defineStudioEnvironment } from "./studio_tests_context";
+import { openApp, openStudioHome } from "./studio_test_navigation";
 import { redirect } from "@web/core/utils/urls";
 
 describe.current.tags("desktop");
@@ -46,13 +47,14 @@ test("Studio icon matches the clickbot selector", async () => {
     // might not be tested anymore by the click_everywhere test.
     await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
+    await waitFor(".o_web_studio_navbar_item:not(.o_disabled) i");
     expect(".o_web_studio_navbar_item:not(.o_disabled) i").toHaveCount(1);
 });
 
 test("open Studio with act_window and viewType", async () => {
     await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
-    await click(".o_app[data-menu-xmlid=app_1]");
+    await openApp("app_1");
     await contains(".o_menu_sections .o_nav_entry:nth-child(2)").click();
     await animationFrame();
 
@@ -72,7 +74,7 @@ test("reload the studio view", async () => {
     await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
 
-    await click(".o_app[data-menu-xmlid=app_1]");
+    await openApp("app_1");
     await waitFor(".o_kanban_view");
     expect(".o_kanban_record:contains(Yop)").toHaveCount(1);
 
@@ -94,7 +96,7 @@ test("switch view and close Studio", async () => {
     await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
 
-    await click(".o_app[data-menu-xmlid=app_1]");
+    await openApp("app_1");
     await waitFor(".o_kanban_record:contains(Yop)");
 
     await click(".o_web_studio_navbar_item");
@@ -119,16 +121,17 @@ test("navigation in Studio with act_window", async () => {
     await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
 
-    expect(".o_home_menu").toHaveCount(1);
+    // The web client lands on the first app, there is no home menu anymore
+    expect(".o_home_menu").toHaveCount(0);
 
-    await click(".o_app[data-menu-xmlid=app_1]");
+    await openApp("app_1");
     await waitFor(".o_kanban_view");
 
     expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
-        "/mail/store",
         "/web/action/load",
+        "/mail/store",
         "get_views",
         "web_search_read",
         "has_group",
@@ -148,7 +151,7 @@ test("navigation in Studio with act_window", async () => {
 
     await click(".o_studio_navbar .o_menu_toggle");
     await waitFor(".o_studio_home_menu");
-    await click(".o_app[data-menu-xmlid=app_2]");
+    await openApp("app_2");
     await waitFor(".o_list_view");
 
     expect.verifySteps([
@@ -182,7 +185,7 @@ test("keep action context when leaving Studio", async () => {
     await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
 
-    await click(".o_app[data-menu-xmlid=app_1]");
+    await openApp("app_1");
     await waitFor(".o_kanban_view");
 
     await click(".o_nav_entry[data-menu-xmlid=menu_12]");
@@ -217,7 +220,7 @@ test("user context is unpolluted when entering studio in error", async () => {
     await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
 
-    await click(".o_app[data-menu-xmlid=app_1]");
+    await openApp("app_1");
     await waitFor(".o_kanban_view");
     expect.verifySteps([`get_views, context studio: "undefined", option studio: "undefined"`]);
 
@@ -257,7 +260,7 @@ test("user context is not polluted when getting views", async () => {
     await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
 
-    await click(".o_app[data-menu-xmlid=app_1]");
+    await openApp("app_1");
     await waitFor(".o_kanban_view");
     expect.verifySteps([
         `get_views, context studio: "undefined", option studio: "undefined"`,
@@ -298,7 +301,7 @@ test("error bubbles up if first rendering", async () => {
     await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
 
-    await click(".o_app[data-menu-xmlid=app_1]");
+    await openApp("app_1");
     await waitFor(".o_kanban_view");
     await contains(".o_menu_sections a[data-menu-xmlid=menu_12]").click();
     await waitFor(".o_list_view");
@@ -342,7 +345,7 @@ test("error when new app's view is invalid", async () => {
     await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
 
-    await click(".o_web_studio_navbar_item");
+    await openStudioHome();
     await contains(".o_web_studio_new_app").click();
     await contains(".o_web_studio_app_creator_next").click();
     await contains(".o_web_studio_app_creator_name input").edit("testApp");
@@ -358,7 +361,7 @@ test("open same record when leaving form", async () => {
     await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
 
-    await click(".o_app[data-menu-xmlid=app_2]");
+    await openApp("app_2");
     await waitFor(".o_list_view");
 
     await click(".o_data_row .o_data_cell:eq(1)");
@@ -384,7 +387,7 @@ test("open list view with sample data gives empty list view in studio", async ()
     await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
 
-    await click(".o_app[data-menu-xmlid=app_3]");
+    await openApp("app_3");
     await waitFor(".o_list_view");
 
     await contains(".o_web_studio_navbar_item").click();
@@ -397,7 +400,7 @@ test("kanban in studio should always ignore sample data", async () => {
     await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
 
-    await click(".o_app[data-menu-xmlid=app_3]");
+    await openApp("app_3");
     await waitFor(".o_list_view");
 
     await click(".o_switch_view.o_kanban");
@@ -420,9 +423,10 @@ test("entering a kanban keeps the user's domain", async () => {
     await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
 
-    expect.verifySteps([]);
+    // The first app is opened at start
+    expect.verifySteps([`web_search_read: []`]);
 
-    await click(".o_app[data-menu-xmlid=app_2]");
+    await openApp("app_2");
     await waitFor(".o_list_view");
 
     await click(".o_searchview_dropdown_toggler");
@@ -454,7 +458,7 @@ test("open Studio with editable form view and check context propagation", async 
     await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
 
-    await click(".o_app[data-menu-xmlid=app_2]");
+    await openApp("app_2");
     await contains(".o_list_button_add").click();
     await waitFor(".o_form_view");
 
@@ -473,21 +477,16 @@ test("open Studio with editable form view and check context propagation", async 
 });
 
 test("concurrency: execute a non editable action and try to enter studio", async () => {
-    const def = Promise.withResolvers();
-
-    const webClient = await mountWithCleanup(WebClientEnterprise);
+    await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
 
-    expect(".o_home_menu").toHaveCount(1);
+    // The web client lands on the first app, there is no home menu anymore
+    expect(".o_home_menu").toHaveCount(0);
 
-    webClient.env.bus.addEventListener("ACTION_MANAGER:UI-UPDATED", () => {
-        expect(".o_list_view").toHaveCount(1);
-        expect(".o_web_studio_navbar_item.o_disabled").toHaveCount(1);
-        def.resolve();
-    });
-
-    await click(".o_app[data-menu-xmlid=app_4]");
-    await def.promise;
+    await openApp("app_4");
+    // The settings action is not editable by Studio: its icon is disabled once loaded
+    await waitFor(".o_list_view");
+    await waitFor(".o_web_studio_navbar_item.o_disabled");
     expect(".o_list_view").toHaveCount(1);
     expect(".o_web_studio_navbar_item.o_disabled").toHaveCount(1);
 });
@@ -496,7 +495,7 @@ test("command palette inside studio", async () => {
     await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
 
-    await click(".o_web_studio_navbar_item");
+    await openStudioHome();
     await waitFor(".o_studio_home_menu");
 
     await press("Space");
@@ -514,7 +513,7 @@ test("command palette inside studio with error", async () => {
     await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
 
-    await click(".o_web_studio_navbar_item");
+    await openStudioHome();
     await waitFor(".o_studio_home_menu");
 
     await press(["S", "e", "t", "t"]);
@@ -571,13 +570,13 @@ test("leaving studio with a pending rendering in Studio", async () => {
     await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
 
-    await click(".o_app[data-menu-xmlid=app_2]");
+    await openApp("app_2");
     await waitFor(".o_list_view");
 
     await click(".o_data_cell");
     await animationFrame();
 
-    await click(".o_web_studio_navbar_item");
+    await contains(".o_web_studio_navbar_item").click();
     await waitFor(".o_web_studio_editor_manager");
 
     expect(".dummy.first-pass").toHaveCount(1);
@@ -617,7 +616,7 @@ test("auto-save feature works in studio (not editing a view)", async () => {
     await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
 
-    await click(".o_app[data-menu-xmlid=app_1]");
+    await openApp("app_1");
     await waitFor(".o_kanban_view");
 
     await click(".o_web_studio_navbar_item");
@@ -727,9 +726,10 @@ test("entering studio with active_id", async () => {
         },
     ]);
     await mountWithCleanup(WebClientEnterprise);
-    await waitFor(".o_home_menu");
+    // The web client lands on the first app, there is no home menu anymore
+    await waitFor(".o_main_navbar");
     await animationFrame(); // wait for url to be pushed
-    expect(location.href).toBe("https://www.hoot.test/odoo");
+    expect(".o_home_menu").toHaveCount(0);
 
     await getService("action").doAction("action_active_id_project");
     await waitFor(".o_list_view .o_last_breadcrumb_item:contains(Projects)");
@@ -785,7 +785,7 @@ test("can edit ir.actions.act_window without id", async () => {
     await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
 
-    await click(".o_app[data-menu-xmlid=app_1]");
+    await openApp("app_1");
     await contains(".o_kanban_view .o_kanban_record:not(.o_kanban_ghost)").click();
     await animationFrame();
     await click(".o_form_view .o_field_many2one_selection input");
@@ -831,9 +831,8 @@ test("enter and leave with multirecord view (invalid to load)", async () => {
     expect(".o_web_studio_view_renderer .o_pivot_view").toHaveCount(1);
 
     await contains(".o_web_studio_leave").click();
+    // Leaving Studio goes back to the web client, outside of Studio
     await waitFor(".o_action_manager:first:not(:has(.o_studio))");
-    await waitFor(".o_home_menu");
-    expect(".o_main_navbar .o_menu_toggle").toHaveCount(0);
     expect(".o_studio").toHaveCount(0);
     expect(".o_menu_toggle_back").toHaveCount(0);
 });
@@ -856,9 +855,8 @@ test("enter and leave on home menu with multirecord view (invalid to load)", asy
     expect(".o_studio .o_home_menu").toHaveCount(1);
 
     await contains(".o_web_studio_leave").click();
+    // Leaving Studio goes back to the web client, outside of Studio
     await waitFor(".o_action_manager:first:not(:has(.o_studio))");
-    await waitFor(".o_home_menu");
-    expect(".o_main_navbar .o_menu_toggle").toHaveCount(0);
     expect(".o_studio").toHaveCount(0);
     expect(".o_menu_toggle_back").toHaveCount(0);
 });
@@ -890,8 +888,5 @@ test("enter and leave on home menu with multirecord view (invalid to load) and a
 
     await contains(".o_web_studio_leave").click();
     await waitFor(".o_action_manager:first:not(:has(.o_studio))");
-    await waitFor(".o_home_menu");
     expect(".o_studio").toHaveCount(0);
-    await contains(".o_menu_toggle_back").click();
-    expect(".o_form_view").toHaveCount(1);
 });

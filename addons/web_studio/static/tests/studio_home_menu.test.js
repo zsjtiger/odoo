@@ -10,6 +10,7 @@ import {
 import { WebClientEnterprise } from "@web_enterprise/webclient/webclient";
 import { MODES } from "@web_studio/studio_service";
 import { defineStudioEnvironment } from "./studio_tests_context";
+import { openStudioHome } from "./studio_test_navigation";
 
 describe.current.tags("desktop");
 
@@ -19,8 +20,7 @@ test("simple rendering", async () => {
     await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
 
-    expect(".o_app").toHaveCount(4);
-    await contains(".o_web_studio_navbar_item").click();
+    await openStudioHome();
     // The Models tile is added to the apps of the Studio home menu
     expect(".o_app").toHaveCount(6);
 
@@ -63,11 +63,10 @@ test("Click on a normal App", async () => {
 
     await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
-    await contains(".o_web_studio_navbar_item").click();
+    await openStudioHome();
     await contains(".o_app[data-menu-xmlid=app_1]").click();
 
     expect.verifySteps([
-        "studio:open: ",
         `studio:open: ${MODES.EDITOR},1`,
         "menu:setCurrentMenu: 1",
     ]);
@@ -90,10 +89,16 @@ test("Click on new App", async () => {
 
     await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
-    await contains(".o_web_studio_navbar_item").click();
+    await openStudioHome();
     await contains(".o_web_studio_new_app").click();
 
     expect.verifySteps([
+        // Studio starts on its home (app picker) when opened without a mode
+        [
+            {
+                mode: MODES.HOME_MENU,
+            },
+        ],
         [
             {
                 mode: MODES.APP_CREATOR,
@@ -105,7 +110,7 @@ test("Click on new App", async () => {
 test("Click on edit icon button", async () => {
     await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
-    await contains(".o_web_studio_navbar_item").click();
+    await openStudioHome();
 
     // TODO: Check why hover doesn't work
     // expect(".o_app[data-menu-xmlid=app_1] .o_web_studio_edit_icon:visible").toHaveCount(0);
@@ -155,7 +160,7 @@ test("edit an icon", async () => {
     await mountWithCleanup(WebClientEnterprise);
     await animationFrame();
 
-    await contains(".o_web_studio_navbar_item").click();
+    await openStudioHome();
     await contains(".o_app[data-menu-xmlid=app_1] .o_web_studio_edit_icon", {
         visible: false,
     }).click();
