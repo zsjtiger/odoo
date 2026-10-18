@@ -700,7 +700,7 @@ class IrModuleModule(models.Model):
                 extract_method = 'odoo.tools.babel:extract_javascript'
                 extract_keywords = {'_t': None}
             else:
-                extract_method = 'odoo.tools.translate:babel_extract_qweb'
+                extract_method = 'odoo.tools.text.translate:babel_extract_qweb'
                 extract_keywords = {}
             try:
                 with attachment.raw.open() as fileobj:
