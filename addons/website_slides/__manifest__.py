@@ -123,7 +123,7 @@ Featuring
             'web/static/src/core/utils/transitions.scss',  # included early because used by other files
             'web/static/src/core/**/*',
             'web/static/src/env.js',
-            ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'),
+            ('remove', 'web/static/src/core/components/emoji_picker/emoji_data.js'),
 
             'website_slides/static/src/scss/website_slides.scss',
             'website_slides/static/src/js/slides_embed.js',

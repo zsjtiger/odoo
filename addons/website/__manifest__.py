@@ -442,7 +442,7 @@
             ('prepend', 'website/static/src/scss/bootstrap_overridden.scss'),
         ],
         'web._assets_bootstrap_frontend': [
-            ('after', 'web/static/src/scss/utilities_custom.scss', 'html_builder/static/src/scss/utilities_custom.scss'),
+            ('after', 'web/static/src/scss/bootstrap/utilities_custom.scss', 'html_builder/static/src/scss/utilities_custom.scss'),
         ],
         'website.font_urls_export': [
             # A minimal bundle that includes all the variable/function files
