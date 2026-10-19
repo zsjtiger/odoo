@@ -1,8 +1,8 @@
 import { loadCssFromBundle } from "@mail/utils/common/misc";
 import { onWillDestroy, useApp } from "@odoo/owl";
 import { PortalChatter } from "@portal/chatter/portal/portal_chatter";
-import { registry } from "@web/core/registry";
-import { session } from "@web/session";
+import { registry } from "@web/core/framework/registry";
+import { session } from "@web/boot/session";
 
 export class PortalChatterService {
     constructor(env, services) {
@@ -40,7 +40,7 @@ export class PortalChatterService {
         };
     }
 
-    /** @param {import("@web/env").OdooEnv} env */
+    /** @param {import("@web/boot/env").OdooEnv} env */
     async initialize(env) {
         const chatterEl = document.querySelector(".o_portal_chatter");
         const props = this.getProps(chatterEl);

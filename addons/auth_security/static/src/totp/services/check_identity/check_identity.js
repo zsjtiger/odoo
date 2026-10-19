@@ -1,5 +1,5 @@
 import { patch } from "@web/core/utils/patch";
-import { CheckIdentityForm } from "@web/core/session/check_identity";
+import { CheckIdentityForm } from "@web/core/services/session/check_identity";
 
 patch(CheckIdentityForm.prototype, {
     async setup() {

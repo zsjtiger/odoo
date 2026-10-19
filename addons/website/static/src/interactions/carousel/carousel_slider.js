@@ -1,9 +1,9 @@
 import { usePlugin } from "@odoo/owl";
 import { Interaction } from "@web/public/interaction";
-import { browser } from "@web/core/browser/browser";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { browser } from "@web/core/services/browser/browser";
+import { getActiveHotkey } from "@web/core/services/hotkeys/hotkey_utils";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { onceAllImagesLoaded } from "@website/utils/images";
 import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 

@@ -1,6 +1,6 @@
-import { isMacOS } from "@web/core/browser/feature_detection";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { isMacOS } from "@web/core/services/browser/feature_detection";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { Interaction } from "@web/public/interaction";
 
 export class SurveyEnterTooltip extends Interaction {

@@ -5,8 +5,8 @@ import {
     goBackToBlocks,
     clickToolbarButton,
 } from "@website/js/tours/tour_utils";
-import { browser } from "@web/core/browser/browser";
-import { registry } from "@web/core/registry";
+import { browser } from "@web/core/services/browser/browser";
+import { registry } from "@web/core/framework/registry";
 
 registerWebsitePreviewTour(
     "anchor_behaviour_on_accordion_same_tab",

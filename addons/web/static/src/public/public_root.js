@@ -1,7 +1,7 @@
 import { whenReady } from "@odoo/owl";
 import { browser } from "@web/core/services/browser/browser";
 import { cookie } from "@web/core/services/browser/cookie";
-import { jsToPyLocale, pyToJsLocale } from "@web/core/data/l10n/utils";
+import { jsToPyLocale, pyToJsLocale } from "@web/core/data/l10n/utils/locales";
 import { MainComponentsContainer } from "@web/core/framework/main_components_container";
 import { mountComponent } from "@web/boot/env";
 import lazyloader from "@web/public/lazyloader";

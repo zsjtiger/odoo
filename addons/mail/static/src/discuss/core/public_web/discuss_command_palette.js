@@ -3,7 +3,7 @@ import { Component, proxy, t, useProps } from "@odoo/owl";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { Dialog } from "@web/core/dialogs/dialog/dialog";
 import { _t } from "@web/core/data/l10n/translation";
-import { normalize } from "@web/core/data/l10n/utils";
+import { normalize } from "@web/core/data/l10n/utils/normalize";
 import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
 import { highlightText } from "@web/core/utils/html";

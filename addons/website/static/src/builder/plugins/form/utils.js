@@ -1,5 +1,5 @@
-import { _t } from "@web/core/l10n/translation";
-import { localeCompare } from "@web/core/l10n/utils";
+import { _t } from "@web/core/data/l10n/translation";
+import { localeCompare } from "@web/core/data/l10n/utils/collation";
 import { generateHTMLId } from "@web/core/utils/strings";
 import { isSmallInteger } from "@html_builder/utils/utils";
 

@@ -1,5 +1,5 @@
-import { registry } from "@web/core/registry";
-import { session } from "@web/session";
+import { registry } from "@web/core/framework/registry";
+import { session } from "@web/boot/session";
 
 export class CheckIdentityTimeout {
 

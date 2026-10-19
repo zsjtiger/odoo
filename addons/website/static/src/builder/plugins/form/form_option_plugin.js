@@ -1,8 +1,8 @@
 import { proxy } from "@odoo/owl";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { Cache } from "@web/core/utils/cache";
 import { Plugin } from "@html_editor/plugin";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { ConfirmationDialog } from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
 import { redirect } from "@web/core/utils/urls";
 import { FormOptionAddFieldButton } from "./form_option_add_field_button";
 import {
@@ -36,7 +36,7 @@ import {
     getDescriptionPosition,
 } from "./utils";
 import { SyncCache } from "@html_builder/utils/sync_cache";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { omit } from "@web/core/utils/objects";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { BuilderAction } from "@html_builder/core/builder_action";

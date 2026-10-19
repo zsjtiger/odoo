@@ -1,5 +1,5 @@
 import { Component, computed, t, useProps } from "@odoo/owl";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { GridCell } from "../grid_cell";
 import { GridRow } from "../grid_row/grid_row";
 

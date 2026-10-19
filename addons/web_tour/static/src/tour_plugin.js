@@ -39,6 +39,7 @@ const stepSchemaAuto = {
 const stepSchemaOnboarding = {
     ...stepSchema,
     content: t.or([t.string(), t.object()]).optional(), //allow object(_t && markup)
+    timeout: t.customValidator(t.number(), (value) => value >= 0 && value <= 60000).optional(),
     tooltipPosition: t
         .customValidator(t.string(), (value) => ["top", "bottom", "left", "right"].includes(value))
         .optional(),

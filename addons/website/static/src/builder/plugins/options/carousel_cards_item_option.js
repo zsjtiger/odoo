@@ -1,5 +1,5 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { CardImagePositionOption } from "./card_image_position_option";
 
 export class CarouselCardsItemOption extends BaseOptionComponent {

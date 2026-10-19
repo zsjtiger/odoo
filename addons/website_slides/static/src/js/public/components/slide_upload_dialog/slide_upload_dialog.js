@@ -1,14 +1,14 @@
 import { Component, onMounted, proxy, t, useProps } from "@odoo/owl";
-import { Dialog } from "@web/core/dialog/dialog";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
 import { redirect } from "@web/core/utils/urls";
-import { SelectMenu } from "@web/core/select_menu/select_menu";
+import { SelectMenu } from "@web/core/components/select_menu/select_menu";
 import { ModuleToInstallIcon, SlideCategoryIcon } from "./slide_upload_dialog_select";
 import { SlideInstallModule } from "./slide_install_module";
 import { SlideUploadCategory } from "./slide_upload_category";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { rpc } from "@web/core/network/rpc";
+import { rpc } from "@web/core/services/network/rpc";
 
 export class SlideUploadDialog extends Component {
     static baseSettings = {

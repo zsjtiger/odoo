@@ -1,5 +1,5 @@
 import { Component, computed, signal, t, useEffect, useProps } from "@odoo/owl";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { formatFloatFactor } from "@web/views/fields/formatters";
 import { standardGridCellProps, useGridCell } from "@web_grid/hooks/grid_cell_hook";
 import { GridCell } from "../views/grid_model";

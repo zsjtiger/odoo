@@ -2,7 +2,7 @@ import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { useDomState } from "@html_builder/core/utils";
 import { Plugin } from "@html_editor/plugin";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { ShowOnOption } from "../floating_snippets_plugin";
 
 export class WhatsappOption extends BaseOptionComponent {

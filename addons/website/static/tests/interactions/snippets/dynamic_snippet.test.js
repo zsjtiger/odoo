@@ -5,7 +5,7 @@ import { queryAll } from "@odoo/hoot-dom";
 
 import { onRpc } from "@web/../tests/web_test_helpers";
 
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { Interaction } from "@web/public/interaction";
 
 class TestDynamicItem extends Interaction {

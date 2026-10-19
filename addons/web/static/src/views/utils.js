@@ -1,5 +1,5 @@
 import { _t } from "@web/core/data/l10n/translation";
-import { localeCompare } from "@web/core/data/l10n/utils";
+import { localeCompare } from "@web/core/data/l10n/utils/collation";
 import { registry } from "@web/core/framework/registry";
 import { unique } from "@web/core/utils/arrays";
 import { exprToBoolean } from "@web/core/utils/strings";

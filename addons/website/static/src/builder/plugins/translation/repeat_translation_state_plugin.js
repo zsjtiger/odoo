@@ -2,7 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { withSequence } from "@html_editor/utils/resource";
 import { unwrapContents } from "@html_editor/utils/dom";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 /**
  * @typedef {import("plugins").CSSSelector[]} force_background_translation_state_selectors

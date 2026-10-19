@@ -5,7 +5,7 @@ import {
     clickOnSnippet,
     changeOptionInPopover,
 } from "@website/js/tours/tour_utils";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 export const SUB_SNIPPET_TEMPLATES = {
     s_masonry_block_default_template: "s_masonry_block",

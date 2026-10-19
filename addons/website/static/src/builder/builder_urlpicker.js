@@ -2,7 +2,7 @@ import { BuilderUrlPicker } from "@html_builder/core/building_blocks/builder_url
 import { useActionInfo } from "@html_builder/core/utils";
 import { useProps, signal, t } from "@odoo/owl";
 import { AutoComplete } from "@web/core/components/autocomplete/autocomplete";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 import wUtils from "@website/js/utils";
 

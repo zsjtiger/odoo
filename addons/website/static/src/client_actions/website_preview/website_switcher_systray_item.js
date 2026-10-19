@@ -1,9 +1,9 @@
-import { _t } from "@web/core/l10n/translation";
-import { browser } from "@web/core/browser/browser";
+import { _t } from "@web/core/data/l10n/translation";
+import { browser } from "@web/core/services/browser/browser";
 import { useService } from "@web/core/utils/hooks";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { session } from "@web/session";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
+import { session } from "@web/boot/session";
 import { Component, useProps } from "@odoo/owl";
 import { isHTTPSorNakedDomainRedirection } from "./utils";
 

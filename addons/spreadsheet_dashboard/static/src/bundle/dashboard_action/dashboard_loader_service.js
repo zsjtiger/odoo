@@ -42,9 +42,9 @@ export const Status = {
  * @property {string} name
  * @property {Array<Dashboard>} dashboards
  *
- * @typedef {import("@web/env").OdooEnv} OdooEnv
+ * @typedef {import("@web/boot/env").OdooEnv} OdooEnv
  *
- * @typedef {import("@web/core/orm_plugin").ORM} ORM
+ * @typedef {import("@web/core/services/orm_plugin").ORM} ORM
  */
 
 export class DashboardLoader {

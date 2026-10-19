@@ -7,7 +7,7 @@ import {
 import { ColorSelector } from "@html_editor/main/font/color_selector";
 import { Component, signal, t, useProps } from "@odoo/owl";
 import { isCSSColor, isColorGradient } from "@web/core/utils/colors";
-import { useEnv } from "@web/owl2/utils";
+import { useEnv } from "@web/core/owl/utils";
 import {
     basicContainerBuilderComponentProps,
     getAllActionsAndOperations,

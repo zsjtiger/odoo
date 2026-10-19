@@ -1,8 +1,8 @@
-import { _t } from "@web/core/l10n/translation";
-import { deserializeDateTime, formatDateTime } from "@web/core/l10n/dates";
-import { rpc } from "@web/core/network/rpc";
-import { registry } from "@web/core/registry";
-import { CheckBox } from "@web/core/checkbox/checkbox";
+import { _t } from "@web/core/data/l10n/translation";
+import { deserializeDateTime, formatDateTime } from "@web/core/data/l10n/dates";
+import { rpc } from "@web/core/services/network/rpc";
+import { registry } from "@web/core/framework/registry";
+import { CheckBox } from "@web/core/components/checkbox/checkbox";
 import { useService, useBus } from "@web/core/utils/hooks";
 import { Component, proxy, useProps } from "@odoo/owl";
 import { OptimizeSEODialog } from "@website/components/dialog/seo";

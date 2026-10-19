@@ -2,7 +2,7 @@ import { Component, onWillStart, usePlugin, t, useProps } from "@odoo/owl";
 import { browser } from "@web/core/services/browser/browser";
 import { Dialog } from "@web/core/dialogs/dialog/dialog";
 import { _t } from "@web/core/data/l10n/translation";
-import { localeCompare } from "@web/core/data/l10n/utils";
+import { localeCompare } from "@web/core/data/l10n/utils/collation";
 import { rpc } from "@web/core/services/network/rpc";
 import { ORM } from "@web/core/services/orm_plugin";
 import { registry } from "@web/core/framework/registry";

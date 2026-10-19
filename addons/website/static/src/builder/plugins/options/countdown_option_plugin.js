@@ -5,7 +5,7 @@ import { getElementsWithOption } from "@html_builder/utils/utils";
 import { Plugin } from "@html_editor/plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { withSequence } from "@html_editor/utils/resource";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { SelectTemplateAction } from "../customize_website_plugin";
 
 export class CountdownOption extends BaseOptionComponent {

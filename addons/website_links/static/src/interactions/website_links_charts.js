@@ -1,8 +1,8 @@
 import { Interaction } from "@web/public/interaction";
-import { _t } from "@web/core/l10n/translation";
-import { deserializeDate } from "@web/core/l10n/dates";
-import { registry } from "@web/core/registry";
-import { loadBundle } from "@web/core/assets";
+import { _t } from "@web/core/data/l10n/translation";
+import { deserializeDate } from "@web/core/data/l10n/dates";
+import { registry } from "@web/core/framework/registry";
+import { loadBundle } from "@web/core/framework/assets";
 const { DateTime } = luxon;
 
 class WebsiteLinksCharts extends Interaction {

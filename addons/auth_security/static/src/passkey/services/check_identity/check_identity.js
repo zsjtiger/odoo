@@ -1,6 +1,6 @@
 import { patch } from "@web/core/utils/patch";
-import { rpc } from "@web/core/network/rpc";
-import { CheckIdentityForm } from "@web/core/session/check_identity";
+import { rpc } from "@web/core/services/network/rpc";
+import { CheckIdentityForm } from "@web/core/services/session/check_identity";
 
 import * as passkeyLib from "@auth_security/../lib/passkey/simplewebauthn";
 

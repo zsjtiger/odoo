@@ -1,7 +1,7 @@
 import { getValueFromVar } from "@html_builder/utils/utils";
 import { normalizeColor } from "@html_builder/utils/utils_css";
 import { Plugin } from "@html_editor/plugin";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { deepCopy, deepMerge, pick } from "@web/core/utils/objects";
 import { backgroundShapesDefinition } from "./background_shapes_definition";
 import { getDefaultColors } from "./background_shape_option";

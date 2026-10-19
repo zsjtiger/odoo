@@ -1,6 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { allowsParagraphRelatedElements } from "@html_editor/utils/dom_info";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 export class IconSnippetOptionPlugin extends Plugin {
     static id = "iconSnippetOption";

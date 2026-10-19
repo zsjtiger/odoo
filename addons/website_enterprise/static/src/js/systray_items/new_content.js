@@ -2,7 +2,7 @@ import {
     NewContentSystrayItem,
     MODULE_STATUS,
 } from "@website/client_actions/website_preview/new_content_systray_item";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 
 patch(NewContentSystrayItem.prototype, {

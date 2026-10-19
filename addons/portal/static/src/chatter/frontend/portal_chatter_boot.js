@@ -1,6 +1,6 @@
 import { Interaction } from "@web/public/interaction";
-import { registry } from "@web/core/registry";
-import { loadBundle } from "@web/core/assets";
+import { registry } from "@web/core/framework/registry";
+import { loadBundle } from "@web/core/framework/assets";
 import { memoize } from "@web/core/utils/functions";
 
 odoo.portalChatterReady = Promise.withResolvers();

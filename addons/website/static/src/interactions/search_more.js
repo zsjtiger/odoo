@@ -1,7 +1,7 @@
 import { Interaction } from "@web/public/interaction";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { KeepLast } from "@web/core/utils/concurrency";
-import { rpc } from "@web/core/network/rpc";
+import { rpc } from "@web/core/services/network/rpc";
 import { parseHTML } from "@html_editor/utils/html";
 
 export class SearchMore extends Interaction {

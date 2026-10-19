@@ -2,9 +2,9 @@ import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
 import { getModelName } from "./utils";
 import { FormActionFieldsOption } from "./form_action_fields_option";
-import { session } from "@web/session";
+import { session } from "@web/boot/session";
 import { selectElements } from "@html_editor/utils/dom_traversal";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 export class FormOption extends BaseOptionComponent {
     static id = "form_option";

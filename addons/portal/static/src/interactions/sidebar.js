@@ -1,7 +1,7 @@
 import { Interaction } from "@web/public/interaction";
 
-import { deserializeDate } from "@web/core/l10n/dates";
-import { _t } from "@web/core/l10n/translation";
+import { deserializeDate } from "@web/core/data/l10n/dates";
+import { _t } from "@web/core/data/l10n/translation";
 import { uniqueId } from "@web/core/utils/functions";
 
 const { DateTime } = luxon;

@@ -1,5 +1,5 @@
 import { CarouselSlider } from "@website/interactions/carousel/carousel_slider";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { patchDynamicContentEntry } from "@web/public/utils";
 
 const CarouselSliderEdit = (I) =>

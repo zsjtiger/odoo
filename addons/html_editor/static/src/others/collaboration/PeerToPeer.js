@@ -1,4 +1,4 @@
-import { localeCompare } from "@web/core/data/l10n/utils";
+import { localeCompare } from "@web/core/data/l10n/utils/collation";
 
 const urlParams = new URLSearchParams(window.location.search);
 const collaborationDebug = urlParams.get("collaborationDebug");

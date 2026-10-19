@@ -1,5 +1,5 @@
-import { registry } from "@web/core/registry";
-import { cookie } from "@web/core/browser/cookie";
+import { registry } from "@web/core/framework/registry";
+import { cookie } from "@web/core/services/browser/cookie";
 
 import { omit } from "@web/core/utils/objects";
 

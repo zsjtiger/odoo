@@ -1,5 +1,5 @@
-import { registry } from "@web/core/registry";
-import { rpc } from '@web/core/network/rpc';
+import { registry } from "@web/core/framework/registry";
+import { rpc } from '@web/core/services/network/rpc';
 import { Interaction } from "@web/public/interaction";
 
 export const recordRE = /^([^(]+)\((\d+)/;

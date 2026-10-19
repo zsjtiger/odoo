@@ -1,8 +1,8 @@
 import { Interaction } from "@web/public/interaction";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
-import { rpc } from "@web/core/network/rpc";
-import * as passkeyLib from "../../lib/simplewebauthn.js";
+import { rpc } from "@web/core/services/network/rpc";
+import * as passkeyLib from "@auth_security/../lib/passkey/simplewebauthn";
 
 export class PasskeyLogin extends Interaction {
     static selector = ".passkey_login_link";

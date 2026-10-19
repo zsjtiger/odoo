@@ -1,7 +1,7 @@
 import { Component, computed, proxy, useProps, t } from "@odoo/owl";
-import { Dialog } from "@web/core/dialog/dialog";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
 import { fuzzyLookup } from "@web/core/utils/search";
-import { localeCompare } from "@web/core/l10n/utils";
+import { localeCompare } from "@web/core/data/l10n/utils/collation";
 
 export class BuilderListDialog extends Component {
     static template = "html_builder.BuilderListDialog";

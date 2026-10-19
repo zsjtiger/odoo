@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { GridArchParser } from "@web_grid/views/grid_arch_parser";
 import { GridController } from "@web_grid/views/grid_controller";
 import { GridModel } from "@web_grid/views/grid_model";

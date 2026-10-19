@@ -1,6 +1,6 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/core/owl/utils";
 import { xml, Component, proxy, useProps, t } from "@odoo/owl";
-import { POSITION_BUS } from "@web/core/position/position_hook";
+import { POSITION_BUS } from "@web/core/components/position/position_hook";
 
 export function useStackingComponentState() {
     const stack = proxy([]);

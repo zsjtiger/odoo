@@ -1,10 +1,10 @@
 import { usePlugin } from "@odoo/owl";
 import { Interaction } from "@web/public/interaction";
-import { registry } from "@web/core/registry";
-import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
+import { registry } from "@web/core/framework/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { rpc } from "@web/core/services/network/rpc";
 import { addLoadingEffect } from "@web/core/utils/ui";
-import { browser } from "@web/core/browser/browser";
+import { browser } from "@web/core/services/browser/browser";
 import { WebsiteLinksTagsWrapper } from "@website_links/components/website_links_tags_wrapper";
 import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 

@@ -1,6 +1,6 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 export class FloatingBlocksBlockMobileOption extends BaseOptionComponent {
     static id = "floating_blocks_block_mobile_option";

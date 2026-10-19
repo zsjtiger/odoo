@@ -1,9 +1,9 @@
 import { Component, onWillUnmount, proxy, signal, t, useProps } from "@odoo/owl";
-import { browser } from "@web/core/browser/browser";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { deserializeDate, serializeDate } from "@web/core/l10n/dates";
-import { _t } from "@web/core/l10n/translation";
+import { browser } from "@web/core/services/browser/browser";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
+import { deserializeDate, serializeDate } from "@web/core/data/l10n/dates";
+import { _t } from "@web/core/data/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { useModelWithSampleData } from "@web/model/model";
 import { useSetupAction } from "@web/search/action_hook";

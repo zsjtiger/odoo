@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { changeOptionInPopover, unfoldOptionsGroup } from "@website/js/tours/tour_utils";
 
 registry.category("web_tour.tours").add("website_studio_listing_and_page", {

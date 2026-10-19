@@ -343,7 +343,7 @@ export class DashboardSearchBar extends Component {
     }
 
     /**
-     * @returns {import("@web/core/navigation/navigation").NavigationOptions}
+     * @returns {import("@web/core/components/navigation/navigation").NavigationOptions}
      */
     getDropdownNavigation() {
         const isExpansible = (index) => {

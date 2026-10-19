@@ -1,5 +1,5 @@
 import { patch } from "@web/core/utils/patch";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { RatingPopupComposer } from "@portal_rating/interactions/portal_rating_composer";
 
 patch(RatingPopupComposer.prototype, {

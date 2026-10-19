@@ -1,7 +1,7 @@
 import { SyncCache } from "@html_builder/utils/sync_cache";
 import { Plugin } from "@html_editor/plugin";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { patch } from "@web/core/utils/patch";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 import { FormOptionPlugin } from "@website/builder/plugins/form/form_option_plugin";

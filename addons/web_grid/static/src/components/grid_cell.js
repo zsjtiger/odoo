@@ -1,5 +1,5 @@
 import { Component, computed, signal, t, useEffect, useProps } from "@odoo/owl";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { formatFloat } from "@web/core/utils/numbers";
 import { formatInteger } from "@web/views/fields/formatters";
 import { useNumpadDecimal } from "@web/views/fields/numpad_decimal_hook";

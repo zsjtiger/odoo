@@ -1,9 +1,9 @@
 import { handleCheckIdentity } from "@portal/interactions/portal_security";
 import { Interaction } from "@web/public/interaction";
 import { InputConfirmationDialog } from "@portal/js/components/input_confirmation_dialog/input_confirmation_dialog";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { renderToMarkup } from "@web/core/utils/render";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 
 export class PortalPasskey extends Interaction {
     static selector = ".o_passkey_portal_entry";

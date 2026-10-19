@@ -1,6 +1,6 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { patch } from "@web/core/utils/patch";
-import * as passkeyLib from "../lib/simplewebauthn";
+import * as passkeyLib from "@auth_security/../lib/passkey/simplewebauthn";
 
 let unpatchPasskeyRegistration;
 

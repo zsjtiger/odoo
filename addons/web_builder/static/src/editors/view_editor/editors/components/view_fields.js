@@ -1,7 +1,7 @@
 import { Component, proxy, t, usePlugin, useProps } from "@odoo/owl";
 import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
 import { _t } from "@web/core/data/l10n/translation";
-import { localeCompare } from "@web/core/data/l10n/utils";
+import { localeCompare } from "@web/core/data/l10n/utils/collation";
 import { SidebarDraggableItem } from "@web_builder/client_action/components/sidebar_draggable_item/sidebar_draggable_item";
 
 export class ExistingFields extends Component {

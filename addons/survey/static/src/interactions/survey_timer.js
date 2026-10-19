@@ -1,6 +1,6 @@
 import { Interaction } from "@web/public/interaction";
-import { deserializeDateTime } from "@web/core/l10n/dates";
-import { registry } from "@web/core/registry";
+import { deserializeDateTime } from "@web/core/data/l10n/dates";
+import { registry } from "@web/core/framework/registry";
 const { DateTime } = luxon;
 
 export class SurveyTimer extends Interaction {

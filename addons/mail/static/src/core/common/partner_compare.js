@@ -1,4 +1,5 @@
-import { localeCompare, normalize } from "@web/core/data/l10n/utils";
+import { localeCompare } from "@web/core/data/l10n/utils/collation";
+import { normalize } from "@web/core/data/l10n/utils/normalize";
 import { registry } from "@web/core/framework/registry";
 
 /**

@@ -1,16 +1,16 @@
 import { usePlugin } from "@odoo/owl";
 import { scrollTo } from "@html_builder/utils/scrolling";
 import { Interaction } from "@web/public/interaction";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 
-import { localization } from "@web/core/l10n/localization";
-import { _t } from "@web/core/l10n/translation";
-import { formatList } from "@web/core/l10n/utils";
-import { post } from "@web/core/network/http_service";
-import { user } from "@web/core/user";
+import { localization } from "@web/core/data/l10n/localization";
+import { _t } from "@web/core/data/l10n/translation";
+import { formatList } from "@web/core/data/l10n/utils/format_list";
+import { post } from "@web/core/services/network/http_service";
+import { user } from "@web/core/services/user";
 import { delay } from "@web/core/utils/concurrency";
-import { session } from "@web/session";
+import { session } from "@web/boot/session";
 import {
     clampDate,
     formatDate,
@@ -19,7 +19,7 @@ import {
     parseDateTime,
     serializeDate,
     serializeDateTime,
-} from "@web/core/l10n/dates";
+} from "@web/core/data/l10n/dates";
 import { getParsedDataFor } from "@website/js/utils";
 import { generateHTMLId } from "@web/core/utils/strings";
 

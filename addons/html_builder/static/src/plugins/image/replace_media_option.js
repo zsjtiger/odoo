@@ -1,8 +1,8 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
 import { allowedToCreateLink } from "@html_editor/main/link/link_plugin";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 
 export class ReplaceMediaOption extends BaseOptionComponent {
     static id = "replace_media_option";

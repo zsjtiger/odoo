@@ -1,5 +1,5 @@
-import { rpc } from "@web/core/network/rpc";
-import { registry } from "@web/core/registry";
+import { rpc } from "@web/core/services/network/rpc";
+import { registry } from "@web/core/framework/registry";
 import { range } from "@web/core/utils/numbers";
 import { Interaction } from "@web/public/interaction";
 import { pick } from "@web/core/utils/objects";

@@ -12,7 +12,7 @@ import { htmlEscape, markup } from "@odoo/owl";
 
 import { router } from "@web/core/services/browser/router";
 import { emojiLoader } from "@web/core/components/emoji_picker/emoji_loader";
-import { formatList } from "@web/core/data/l10n/utils";
+import { formatList } from "@web/core/data/l10n/utils/format_list";
 import {
     createElementWithContent,
     htmlJoin,

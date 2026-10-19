@@ -3,7 +3,7 @@ import { fields, Record } from "@mail/model/export";
 import { compareDatetime, nearestGreaterThanOrEqual } from "@mail/utils/common/misc";
 
 import { _t } from "@web/core/data/l10n/translation";
-import { formatList } from "@web/core/data/l10n/utils";
+import { formatList } from "@web/core/data/l10n/utils/format_list";
 import { rpc } from "@web/core/services/network/rpc";
 import { user } from "@web/core/services/user";
 import { imageUrl } from "@web/core/utils/urls";

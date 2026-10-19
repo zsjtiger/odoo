@@ -1,5 +1,5 @@
-import { _t } from "@web/core/l10n/translation";
-import { Dialog } from "@web/core/dialog/dialog";
+import { _t } from "@web/core/data/l10n/translation";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
 import { Component, proxy, signal, useProps, t } from "@odoo/owl";
 

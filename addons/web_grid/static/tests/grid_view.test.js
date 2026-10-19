@@ -25,8 +25,8 @@ import {
     toggleMenuItem,
     toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
-import { browser } from "@web/core/browser/browser";
-import { Domain } from "@web/core/domain";
+import { browser } from "@web/core/services/browser/browser";
+import { Domain } from "@web/core/data/domain";
 import { WebClient } from "@web/webclient/webclient";
 import { parseFloatTime } from "@web/views/fields/parsers";
 import { formatFloatTime } from "@web/views/fields/formatters";

@@ -1,6 +1,6 @@
 import { Interaction } from "@web/public/interaction";
-import { registry } from "@web/core/registry";
-import { _t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/framework/registry";
+import { _t } from "@web/core/data/l10n/translation";
 
 export class A11yNewTabLink extends Interaction {
     static selector = "a[target='_blank']";

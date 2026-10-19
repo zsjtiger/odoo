@@ -3,7 +3,7 @@ import { normalizeColor } from "@html_builder/utils/utils_css";
 import { defaultImageFilterOptions } from "@html_editor/main/media/image_post_process_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { getHtmlStyle } from "@html_editor/utils/formatting";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 export class ImageFilterOptionPlugin extends Plugin {
     static id = "ImageFilterOption";

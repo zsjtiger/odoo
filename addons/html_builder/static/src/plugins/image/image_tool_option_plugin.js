@@ -3,7 +3,7 @@ import {
     loadImage,
     loadImageInfo,
 } from "@html_editor/utils/image_processing";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { Plugin } from "@html_editor/plugin";
 import { searchSupportedParentLinkEl } from "./replace_media_option";
 import { getMimetype } from "@html_editor/utils/image";

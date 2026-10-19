@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { insertSnippet, openLinkPopup, waitForEditMode } from "@website/js/tours/tour_utils";
 import { patch } from "@web/core/utils/patch";
 

@@ -1,8 +1,8 @@
-import { rpc } from "@web/core/network/rpc";
-import { registry } from "@web/core/registry";
+import { rpc } from "@web/core/services/network/rpc";
+import { registry } from "@web/core/framework/registry";
 import { FormController } from "@web/views/form/form_controller";
 import { formView } from "@web/views/form/form_view";
-import * as passkeyLib from "../../lib/simplewebauthn.js";
+import * as passkeyLib from "@auth_security/../lib/passkey/simplewebauthn";
 
 export class PassKeyIdentityCheckFormController extends FormController {
     /**

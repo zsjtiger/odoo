@@ -1,5 +1,5 @@
-import { useSubEnv } from "@web/owl2/utils";
-import { registry } from "@web/core/registry";
+import { useSubEnv } from "@web/core/owl/utils";
+import { registry } from "@web/core/framework/registry";
 import { formView } from "@web/views/form/form_view";
 import { formControllerProps } from "@web/views/form/form_controller";
 import { EventBus, useProps, t } from "@odoo/owl";

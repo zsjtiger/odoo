@@ -22,7 +22,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { ModelFieldSelector } from "@web/core/editors/model_field_selector/model_field_selector";
-import { localeCompare } from "@web/core/data/l10n/utils";
+import { localeCompare } from "@web/core/data/l10n/utils/collation";
 
 class Partner extends models.Model {
     foo = fields.Char();

@@ -1,11 +1,11 @@
 import { Interaction } from "@web/public/interaction";
 import { InputConfirmationDialog } from "@portal/js/components/input_confirmation_dialog/input_confirmation_dialog";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { renderToMarkup } from "@web/core/utils/render";
 import { handleCheckIdentity } from "@portal/interactions/portal_security";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import * as passkeyLib from "@auth_security/../lib/passkey/simplewebauthn";
-import { user } from "@web/core/user";
+import { user } from "@web/core/services/user";
 
 export class PortalPasskeyCreate extends Interaction {
     static selector = "#portal_passkey_add";

@@ -1,4 +1,4 @@
-import { useEnv } from "@web/owl2/utils";
+import { useEnv } from "@web/core/owl/utils";
 import { useDomState } from "@html_builder/core/utils";
 import { onWillStart } from "@odoo/owl";
 

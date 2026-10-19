@@ -1,8 +1,8 @@
 import { markup } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 
-import { BaseEditorTabComponent } from "@web_builder/client_action/editor/editor_menu/editor_menu";
+import { BaseEditorTabComponent } from "@web_builder/editors/editor/editor_menu/editor_menu";
 
 const MODEL_PAGE_HELP = _t(
     markup(`

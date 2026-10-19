@@ -1,5 +1,5 @@
 import { Interaction } from "@web/public/interaction";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 import { patch } from "@web/core/utils/patch";
 import { closestScrollableY, isScrollableY } from "@web/core/utils/scrolling";

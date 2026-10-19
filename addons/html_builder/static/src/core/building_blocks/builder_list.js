@@ -3,12 +3,12 @@ import { BuilderListDialog } from "@html_builder/core/building_blocks/builder_li
 import { useBuilderComponent, useInputBuilderComponent } from "@html_builder/core/utils";
 import { isSmallInteger } from "@html_builder/utils/utils";
 import { Component, computed, onPatched, useProps, proxy, signal, t, xml } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
-import { SelectMenu } from "@web/core/select_menu/select_menu";
+import { _t } from "@web/core/data/l10n/translation";
+import { SelectMenu } from "@web/core/components/select_menu/select_menu";
 import { useSortable } from "@web/core/utils/sortable_owl";
 import { useService } from "@web/core/utils/hooks";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
-import { localeCompare } from "@web/core/l10n/utils";
+import { localeCompare } from "@web/core/data/l10n/utils/collation";
 
 /**
  * Focus the last added input item to a list container.

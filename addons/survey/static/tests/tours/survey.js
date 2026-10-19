@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 const survey_steps = (checkPageTranslation) => [
     // Page-1

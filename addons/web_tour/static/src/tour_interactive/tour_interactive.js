@@ -25,7 +25,7 @@ export class TourInteractive {
     /**
      * @param {Tour} data
      * @param {Object} deps
-     * @param {import("@web/core/services/network/orm_service").ORM} deps.orm
+     * @param {import("@web/core/services/orm_plugin").ORM} deps.orm
      * @param {import("@web/core/services/effects/effect_plugin").EffectPlugin} deps.effect
      * @param {import("@web/core/components/overlay/overlay_plugin").OverlayPlugin} deps.overlay
      * @param {(nextTour: Object) => void} deps.onChainNextTour

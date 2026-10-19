@@ -136,7 +136,7 @@ export const NO_RECORD_AT_THIS_POSITION = "__NO_RECORD_AT_THIS_POSITION__";
  */
 export class OdooPivotModel extends PivotModel {
     /**
-     * @param {import("@web/env").OdooEnv} env
+     * @param {import("@web/boot/env").OdooEnv} env
      * @param {import("@spreadsheet").OdooPivotModelParams} params
      * @param {import("@spreadsheet").PivotModelServices} services
      */

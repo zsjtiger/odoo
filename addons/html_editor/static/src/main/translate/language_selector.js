@@ -3,7 +3,7 @@ import { useService } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/components/dropdown/dropdown";
 import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
 import { loadLanguages } from "@web/core/data/l10n/translation";
-import { jsToPyLocale } from "@web/core/data/l10n/utils";
+import { jsToPyLocale } from "@web/core/data/l10n/utils/locales";
 import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 import { user } from "@web/core/services/user";
 import { useDropdownAutoVisibility } from "@html_editor/toolbar_dropdown_hook";

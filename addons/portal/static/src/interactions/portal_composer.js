@@ -1,8 +1,8 @@
 import { markup } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
-import { post } from "@web/core/network/http_service";
-import { rpc, RPCError } from "@web/core/network/rpc";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { post } from "@web/core/services/network/http_service";
+import { rpc, RPCError } from "@web/core/services/network/rpc";
+import { registry } from "@web/core/framework/registry";
 import { Interaction } from "@web/public/interaction";
 
 /**

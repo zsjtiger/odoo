@@ -1,10 +1,10 @@
-import { useEnv } from "@web/owl2/utils";
-import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
+import { useEnv } from "@web/core/owl/utils";
+import { _t } from "@web/core/data/l10n/translation";
+import { rpc } from "@web/core/services/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 import { AddPageDialog } from "@website/components/dialog/add_page_dialog";
 import { onWillStart, proxy, usePlugin } from "@odoo/owl";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
 
 /**
  * Used to share code and keep the same behaviour on different types of 'website

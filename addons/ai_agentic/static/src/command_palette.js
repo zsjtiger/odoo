@@ -1,6 +1,6 @@
 import { Component, t, usePlugin, useProps, useScope } from "@odoo/owl";
 import { _t } from "@web/core/data/l10n/translation";
-import { normalize } from "@web/core/data/l10n/utils";
+import { normalize } from "@web/core/data/l10n/utils/normalize";
 import { ORM } from "@web/core/services/orm_plugin";
 import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";

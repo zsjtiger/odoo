@@ -1,13 +1,13 @@
 import { signal } from "@odoo/owl";
 import { KeepLast, Mutex } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
-import { Domain } from "@web/core/domain";
-import { serializeDate } from "@web/core/l10n/dates";
-import { localization } from "@web/core/l10n/localization";
-import { _t } from "@web/core/l10n/translation";
-import { pyToJsLocale } from "@web/core/l10n/utils";
+import { Domain } from "@web/core/data/domain";
+import { serializeDate } from "@web/core/data/l10n/dates";
+import { localization } from "@web/core/data/l10n/localization";
+import { _t } from "@web/core/data/l10n/translation";
+import { pyToJsLocale } from "@web/core/data/l10n/utils/locales";
 import { Model } from "@web/model/model";
-import { browser } from "@web/core/browser/browser";
+import { browser } from "@web/core/services/browser/browser";
 
 const { DateTime, Interval } = luxon;
 

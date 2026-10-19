@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { EventBus } from "@website/utils/misc";
 
 export const websiteCookiesService = {

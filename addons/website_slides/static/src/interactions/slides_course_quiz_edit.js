@@ -1,9 +1,9 @@
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { ConfirmationDialog } from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
 import { Interaction } from "@web/public/interaction";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { insertHtmlContent } from "@website_slides/js/utils";
 import { WebsiteSlidesCourseQuizQuestionForm } from "@website_slides/js/public/components/slides_course_quiz_question_form/slides_course_quiz_question_form";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { markup } from "@odoo/owl";
 
 export class WebsiteSlidesQuizEdit extends Interaction {

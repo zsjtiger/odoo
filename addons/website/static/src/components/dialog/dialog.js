@@ -1,5 +1,5 @@
-import { Dialog, dialogProps } from "@web/core/dialog/dialog";
-import { _t } from "@web/core/l10n/translation";
+import { Dialog, dialogProps } from "@web/core/dialogs/dialog/dialog";
+import { _t } from "@web/core/data/l10n/translation";
 import { Component, useProps, proxy, signal, t } from "@odoo/owl";
 
 const NO_OP = () => {};

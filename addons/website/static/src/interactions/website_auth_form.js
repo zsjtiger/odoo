@@ -1,7 +1,7 @@
-import { registry } from "@web/core/registry";
-import { _t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/framework/registry";
+import { _t } from "@web/core/data/l10n/translation";
 import { Interaction } from "@web/public/interaction";
-import { session } from "@web/session";
+import { session } from "@web/boot/session";
 
 export class WebsiteAuthFormWarning extends Interaction {
     static selector = "form:is(.oe_signup_form, .oe_login_form)";

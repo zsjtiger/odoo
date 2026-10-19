@@ -1,4 +1,4 @@
-import { rpc } from "@web/core/network/rpc";
+import { rpc } from "@web/core/services/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 import { SearchModel } from "@web/search/search_model";
 

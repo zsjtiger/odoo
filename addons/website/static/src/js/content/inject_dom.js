@@ -1,4 +1,4 @@
-import { session } from "@web/session";
+import { session } from "@web/boot/session";
 import {
     setUtmsHtmlDataset,
     getClosestLiEls,

@@ -10,13 +10,13 @@ import {
     useListener,
     useProps,
 } from "@odoo/owl";
-import { Domain } from "@web/core/domain";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { Domain } from "@web/core/data/domain";
+import { getActiveHotkey } from "@web/core/services/hotkeys/hotkey_utils";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
-import { useVirtualGrid } from "@web/core/virtual_grid_hook";
+import { useVirtualGrid } from "@web/core/utils/virtual_grid_hook";
 import { Field } from "@web/views/fields/field";
 import { GridComponent } from "@web_grid/components/grid_component/grid_component";
 import { GridScaleSelector } from "./grid_scale_selector";

@@ -1,21 +1,21 @@
-import { useEnv, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
-import { location, browser } from "@web/core/browser/browser";
+import { useEnv, useLayoutEffect, useSubEnv } from "@web/core/owl/utils";
+import { location, browser } from "@web/core/services/browser/browser";
 const sessionStorage = browser.sessionStorage;
 import { AutoComplete } from "@web/core/components/autocomplete/autocomplete";
 import { delay } from "@web/core/utils/concurrency";
 import { getDataURLFromFile, redirect } from "@web/core/utils/urls";
 import { getCSSVariableValue } from "@html_editor/utils/formatting";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { isImageFile, svgToPNG, webpToPNG } from "@website/js/utils";
 import { escapeRegExp } from "@web/core/utils/strings";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 import { clamp } from "@web/core/utils/numbers";
-import { registry } from "@web/core/registry";
-import { rpc } from "@web/core/network/rpc";
-import { user } from "@web/core/user";
+import { registry } from "@web/core/framework/registry";
+import { rpc } from "@web/core/services/network/rpc";
+import { user } from "@web/core/services/user";
 import { mixCssColors } from "@web/core/utils/colors";
-import { router } from "@web/core/browser/router";
+import { router } from "@web/core/services/browser/router";
 import {
     Component,
     computed,
@@ -32,7 +32,7 @@ import {
 } from "@odoo/owl";
 import { standardActionServiceProps } from "@web/webclient/actions/action_plugin";
 import { fuzzyLevenshteinLookup } from "@web/core/utils/search";
-import { isBrowserSafari } from "@web/core/browser/feature_detection";
+import { isBrowserSafari } from "@web/core/services/browser/feature_detection";
 
 export const ROUTES = {
     descriptionScreen: 1,

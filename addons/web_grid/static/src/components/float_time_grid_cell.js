@@ -1,5 +1,5 @@
 import { computed } from "@odoo/owl";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { formatFloatTime } from "@web/views/fields/formatters";
 import { parseFloatTime } from "@web/views/fields/parsers";
 import { GridCell } from "./grid_cell";

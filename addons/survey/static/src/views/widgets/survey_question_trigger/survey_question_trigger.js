@@ -1,5 +1,5 @@
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { Component, useEffect, signal, proxy, useProps } from "@odoo/owl";
 

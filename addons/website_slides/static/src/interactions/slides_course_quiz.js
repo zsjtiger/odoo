@@ -1,11 +1,11 @@
-import { rpc } from "@web/core/network/rpc";
+import { rpc } from "@web/core/services/network/rpc";
 import { SlideQuizFinishDialog } from "@website_slides/js/public/components/slide_quiz_finish_dialog/slide_quiz_finish_dialog";
 import { Interaction } from "@web/public/interaction";
-import { registry } from "@web/core/registry";
-import { _t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/framework/registry";
+import { _t } from "@web/core/data/l10n/translation";
 import { markup } from "@odoo/owl";
-import { session } from "@web/session";
-import { user } from "@web/core/user";
+import { session } from "@web/boot/session";
+import { user } from "@web/core/services/user";
 
 export class WebsiteSlidesQuiz extends Interaction {
     static selector = ".o_wslides_js_quiz_container";

@@ -1,5 +1,5 @@
 import { AnchorSlide } from "@website/interactions/anchor_slide";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 import { isVisible } from "@web/core/utils/ui";
 

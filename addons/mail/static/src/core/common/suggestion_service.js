@@ -4,7 +4,8 @@ import { SUGGESTION_DELIMITERS } from "@mail/core/common/suggestion_hook";
 
 import { compareDatetime } from "@mail/utils/common/misc";
 import { emojiLoader } from "@web/core/components/emoji_picker/emoji_loader";
-import { localeCompare, normalize } from "@web/core/data/l10n/utils";
+import { localeCompare } from "@web/core/data/l10n/utils/collation";
+import { normalize } from "@web/core/data/l10n/utils/normalize";
 import { registry } from "@web/core/framework/registry";
 import { fuzzyLookup } from "@web/core/utils/search";
 

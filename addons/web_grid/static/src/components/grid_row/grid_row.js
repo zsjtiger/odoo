@@ -1,5 +1,5 @@
 import { Component, t, useProps } from "@odoo/owl";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 export const gridRowProps = {
     name: t.string(),

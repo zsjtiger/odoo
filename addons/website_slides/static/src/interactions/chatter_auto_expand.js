@@ -1,7 +1,7 @@
 import { usePlugin } from "@odoo/owl";
 import { Interaction } from "@web/public/interaction";
-import { registry } from "@web/core/registry";
-import { router } from "@web/core/browser/router";
+import { registry } from "@web/core/framework/registry";
+import { router } from "@web/core/services/browser/router";
 import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 
 export class ChatterAutoExpand extends Interaction {

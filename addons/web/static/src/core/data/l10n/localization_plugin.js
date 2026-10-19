@@ -1,6 +1,6 @@
 import { onWillDestroy, onWillStart, usePlugin, Plugin, useListener } from "@odoo/owl";
 import { session } from "@web/boot/session";
-import { jsToPyLocale } from "@web/core/data/l10n/utils";
+import { jsToPyLocale } from "@web/core/data/l10n/utils/locales";
 import { user } from "@web/core/services/user";
 import { browser } from "@web/core/services/browser/browser";
 import { services } from "@web/core/framework/services";

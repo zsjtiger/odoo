@@ -12,7 +12,7 @@ import { Crypto, CRYPTO_ALGO } from "@web/core/utils/crypto";
 import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
 import { NonSecureContextError } from "@web/core/services/errors/non_secure_context_error";
 import { _t } from "@web/core/data/l10n/translation";
-import { normalize } from "@web/core/data/l10n/utils";
+import { normalize } from "@web/core/data/l10n/utils/normalize";
 import { ConnectionLostError, rpc, rpcBus } from "@web/core/services/network/rpc";
 import { ORM } from "@web/core/services/orm_plugin";
 import { registry } from "@web/core/framework/registry";

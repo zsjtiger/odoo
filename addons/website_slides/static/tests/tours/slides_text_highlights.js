@@ -31,7 +31,7 @@ const checkChatterNotBooted = (content, trigger) => ({
         await new Promise((resolve) =>
             iframeWindow.requestAnimationFrame(() => iframeWindow.setTimeout(resolve))
         );
-        const { assets } = iframeWindow.odoo.loader.modules.get("@web/core/assets");
+        const { assets } = iframeWindow.odoo.loader.modules.get("@web/core/framework/assets");
         if (assets.globalCache.has("portal.assets_chatter")) {
             throw new Error("portal.assets_chatter should not have been loaded");
         }

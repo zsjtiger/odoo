@@ -1,5 +1,5 @@
 import { Interaction } from "@web/public/interaction";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { renderToMarkup } from "@web/core/utils/render";
 
 export class SurveyResultPagination extends Interaction {

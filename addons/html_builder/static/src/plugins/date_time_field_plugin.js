@@ -2,8 +2,8 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
 import { Plugin } from "@html_editor/plugin";
-import { formatDate, formatDateTime, parseDateTime } from "@web/core/l10n/dates";
-import { registry } from "@web/core/registry";
+import { formatDate, formatDateTime, parseDateTime } from "@web/core/data/l10n/dates";
+import { registry } from "@web/core/framework/registry";
 
 const { DateTime } = luxon;
 

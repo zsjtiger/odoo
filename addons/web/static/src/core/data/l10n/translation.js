@@ -1,4 +1,4 @@
-import { formatList } from "@web/core/data/l10n/utils";
+import { formatList } from "@web/core/data/l10n/utils/format_list";
 import { isIterable } from "@web/core/utils/arrays";
 import { htmlSprintf, isMarkup } from "@web/core/utils/html";
 import { mapSubstitutions, sprintf } from "@web/core/utils/strings";
