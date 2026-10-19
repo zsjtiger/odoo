@@ -94,7 +94,7 @@ class TestClocFields(TransactionCase):
         })
 
     def create_field(self, name):
-        field = self.env['ir.model.fields'].with_context(studio=True).create({
+        field = self.env['ir.model.fields'].create({
             'name': name,
             'field_description': name,
             'model': 'res.partner',
