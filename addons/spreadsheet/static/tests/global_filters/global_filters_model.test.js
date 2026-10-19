@@ -3,7 +3,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, mockDate, mockTimeZone } from "@odoo/hoot-mock";
 
 import { DispatchResult, Model, helpers, constants, CompiledFormula } from "@odoo/o-spreadsheet";
-import { Domain } from "@web/core/domain";
+import { Domain } from "@web/core/data/domain";
 import {
     defineSpreadsheetModels,
     getBasicPivotArch,

@@ -2,8 +2,8 @@
 
 import { Component, signal, t, untrack, useProps } from "@odoo/owl";
 import { AutoComplete } from "@web/core/components/autocomplete/autocomplete";
-import { BadgeTag } from "@web/core/tags_list/badge_tag";
-import { useLayoutEffect } from "@web/owl2/utils";
+import { BadgeTag } from "@web/core/components/tags_list/badge_tag";
+import { useLayoutEffect } from "@web/core/owl/utils";
 
 export class TextFilterValue extends Component {
     static template = "spreadsheet.TextFilterValue";

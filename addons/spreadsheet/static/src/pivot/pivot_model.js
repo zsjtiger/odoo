@@ -1,12 +1,12 @@
 //@ts-check
 
-import { _t } from "@web/core/l10n/translation";
-import { Domain } from "@web/core/domain";
+import { _t } from "@web/core/data/l10n/translation";
+import { Domain } from "@web/core/data/domain";
 import { PivotModel } from "@web/views/pivot/pivot_model";
 
 import { helpers, constants, EvaluationError, SpreadsheetPivotTable } from "@odoo/o-spreadsheet";
 import { parseGroupField } from "./pivot_helpers";
-import { localeCompare } from "@web/core/l10n/utils";
+import { localeCompare } from "@web/core/data/l10n/utils/collation";
 
 const { toNormalizedPivotValue, toNumber, isDateOrDatetimeField, pivotTimeAdapter, deepEquals } =
     helpers;

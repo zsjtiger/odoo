@@ -1,5 +1,5 @@
 const { DateTime } = luxon;
-import { Domain } from "@web/core/domain";
+import { Domain } from "@web/core/data/domain";
 import { expect } from "@odoo/hoot";
 
 function getDateDomainBounds(domain) {
@@ -29,7 +29,7 @@ function getDateDomainBounds(domain) {
  * @param {string} field
  * @param {string} start
  * @param {string} end
- * @param {import("@web/core/domain").DomainRepr} domain
+ * @param {import("@web/core/data/domain").DomainRepr} domain
  */
 export function assertDateDomainEqual(field, start, end, domain) {
     domain = new Domain(domain).toList();
@@ -39,7 +39,7 @@ export function assertDateDomainEqual(field, start, end, domain) {
 }
 
 /**
- * @param {import("@web/core/domain").DomainRepr} domain
+ * @param {import("@web/core/data/domain").DomainRepr} domain
  * @returns {number}
  */
 export function getDateDomainDurationInDays(domain) {

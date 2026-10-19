@@ -1,8 +1,8 @@
 //@ts-check
 
-import { Domain } from "@web/core/domain";
-import { _t } from "@web/core/l10n/translation";
-import { user } from "@web/core/user";
+import { Domain } from "@web/core/data/domain";
+import { _t } from "@web/core/data/l10n/translation";
+import { user } from "@web/core/services/user";
 import { NO_RECORD_AT_THIS_POSITION, OdooPivotModel } from "./pivot_model";
 import { EvaluationError, PivotRuntimeDefinition, registries, helpers } from "@odoo/o-spreadsheet";
 import { LOADING_ERROR } from "@spreadsheet/data_sources/data_source";

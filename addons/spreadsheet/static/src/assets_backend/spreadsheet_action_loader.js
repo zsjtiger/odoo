@@ -1,6 +1,6 @@
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
-import { loadBundle } from "@web/core/assets";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
+import { loadBundle } from "@web/core/framework/assets";
 import { useService } from "@web/core/utils/hooks";
 
 const actionRegistry = registry.category("actions");

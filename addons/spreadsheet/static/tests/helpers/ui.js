@@ -1,13 +1,13 @@
 import { Model, Spreadsheet, stores } from "@odoo/o-spreadsheet";
-import { loadBundle } from "@web/core/assets";
+import { loadBundle } from "@web/core/framework/assets";
 
 import { getFixture } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 import { Component, onMounted, onWillUnmount, t, useProps, xml } from "@odoo/owl";
 import { useSpreadsheetNotificationStore } from "@spreadsheet/hooks";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
-import { MainComponentsContainer } from "@web/core/main_components_container";
-import { render } from "@web/owl2/utils";
+import { MainComponentsContainer } from "@web/core/framework/main_components_container";
+import { render } from "@web/core/owl/utils";
 
 const { useStoreProvider, ModelStore } = stores;
 

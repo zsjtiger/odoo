@@ -1,14 +1,14 @@
 /** @ts-check */
 
-import { MultiRecordSelector } from "@web/core/record_selectors/multi_record_selector";
+import { MultiRecordSelector } from "@web/core/editors/record_selectors/multi_record_selector";
 import { DateFilterValue } from "../date_filter_value/date_filter_value";
 
 import { Component, onWillStart, t, useProps } from "@odoo/owl";
 import { components } from "@odoo/o-spreadsheet";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { Domain } from "@web/core/domain";
-import { user } from "@web/core/user";
+import { Domain } from "@web/core/data/domain";
+import { user } from "@web/core/services/user";
 import { TextFilterValue } from "../filter_text_value/filter_text_value";
 import { getFields, ModelNotFoundError } from "@spreadsheet/data_sources/data_source";
 import { SelectionFilterValue } from "../selection_filter_value/selection_filter_value";

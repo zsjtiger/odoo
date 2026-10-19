@@ -34,8 +34,8 @@ import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/helpers/pivot";
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 
-import { localization } from "@web/core/l10n/localization";
-import { user } from "@web/core/user";
+import { localization } from "@web/core/data/l10n/localization";
+import { user } from "@web/core/services/user";
 
 import { Model } from "@odoo/o-spreadsheet";
 

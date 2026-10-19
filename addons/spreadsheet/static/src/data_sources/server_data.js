@@ -1,6 +1,6 @@
 // @ts-check
 
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { EvaluationError } from "@odoo/o-spreadsheet";
 import { LoadingDataError, isLoadingError } from "../o_spreadsheet/errors";
 
