@@ -134,7 +134,7 @@ class ResUsers(models.Model):
           - mfa: whether mfa should be skipped or not, possible values:
 
             - enforce: enforce mfa no matter what (not yet implemented)
-            - default: delegate to auth_totp
+            - default: delegate to auth_security
             - skip: skip mfa no matter what
 
           Examples:

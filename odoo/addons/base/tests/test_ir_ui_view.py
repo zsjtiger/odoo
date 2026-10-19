@@ -4957,7 +4957,7 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'appointment',
             'approvals',
             'approvals_purchase_stock',
-            'auth_totp',
+            'auth_security',
             'barcodes_gs1_nomenclature',
             'base_address_extended',
             'base_automation',

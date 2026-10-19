@@ -22,7 +22,7 @@ from odoo.tools.profiling import profiler
 _logger = logging.getLogger('odoo.tests.test_module_operations')
 
 BLACKLIST = {
-    'auth_ldap',
+    'auth_external',
 }
 IGNORE = ('hw_', 'theme_', 'l10n_', 'test_')
 

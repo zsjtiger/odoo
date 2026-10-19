@@ -324,6 +324,6 @@ registry
     .add("odoo.exceptions.ValidationError", WarningDialog)
     .add("odoo.exceptions.RedirectWarning", RedirectWarningDialog)
     .add("odoo.addons.web.models.models.UnlinkBlockedError", UnlinkBlockedErrorDialog)
-    .add("odoo.http.session.SessionExpiredException", SessionExpiredDialog)
+    .add("odoo.http.session.session.SessionExpiredException", SessionExpiredDialog)
     .add("werkzeug.exceptions.Forbidden", SessionExpiredDialog)
     .add("504", Error504Dialog);

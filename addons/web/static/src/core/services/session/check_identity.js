@@ -310,7 +310,7 @@ export class CheckIdentity {
 
     verifyUserErrorHandler(env, error, originalError) {
         if (originalError instanceof RPCError) {
-            if (originalError.data.name === "odoo.http.session.CheckIdentityException") {
+            if (originalError.data.name === "odoo.http.session.session.CheckIdentityException") {
                 this.run();
                 return true;
             }
@@ -354,7 +354,7 @@ rpc._originalRpc = originalRpc;
 rpc._rpc = function (...args) {
     const originalPromise = originalRpc(...args);
     const promise = originalPromise.catch((error) => {
-        if (error.data?.name === "odoo.http.session.CheckIdentityException") {
+        if (error.data?.name === "odoo.http.session.session.CheckIdentityException") {
             return odoo.__WOWL_DEBUG__.root.env.services["check_identity"]
                 .checkIdentity()
                 .then(() => originalRpc(...args));
