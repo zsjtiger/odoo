@@ -1,5 +1,4 @@
 from odoo import models
-from odoo.http import request
 
 
 class Http(models.AbstractModel):
@@ -12,11 +11,11 @@ class Http(models.AbstractModel):
         :return: session信息
         """
         res = super().session_info()
-        user = request.env.user
+        user = self.env.user
         approval_models = user.fetch_approval_models()
         res.update({"approval_models": approval_models})
         enable_common_workflow = False
-        if request.env['ir.config_parameter'].sudo().get_str('enable_common_workflow') != 'disable':
+        if self.env['ir.config_parameter'].sudo().get_str('enable_common_workflow') != 'disable':
             enable_common_workflow = True
         res.update({"enable_common_workflow": enable_common_workflow})
         return res
