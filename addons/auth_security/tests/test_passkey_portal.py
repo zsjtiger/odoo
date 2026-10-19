@@ -2,7 +2,7 @@ from odoo import Command
 from odoo.exceptions import AccessError
 from odoo.tests import tagged
 from odoo.tools import SQL
-from odoo.addons.auth_security.tests.passkey.test_passkey_demo import PasskeyTest
+from odoo.addons.auth_security.tests.test_passkey_demo import PasskeyTest
 
 
 @tagged('post_install', '-at_install')

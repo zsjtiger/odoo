@@ -22,14 +22,14 @@
         'passkey/security/ir.access.csv',
         # passkey_portal
         'passkey_portal/views/templates.xml',
-        # password_policy
-        'password_policy/data/defaults.xml',
-        'password_policy/views/res_users.xml',
-        'password_policy/views/res_config_settings_views.xml',
-        # password_policy_portal
-        'password_policy_portal/views/templates.xml',
-        # password_policy_signup
-        'password_policy_signup/views/signup_templates.xml',
+        # password
+        'password/data/defaults.xml',
+        'password/views/res_users.xml',
+        'password/views/res_config_settings_views.xml',
+        # password_portal
+        'password_portal/views/templates.xml',
+        # password_signup
+        'password_signup/views/signup_templates.xml',
         # timeout
         'timeout/views/res_groups_views.xml',
         # totp
@@ -52,8 +52,8 @@
             'auth_security/static/src/passkey/services/check_identity/*',
             'auth_security/static/src/passkey/views/*',
             'auth_security/static/src/passkey/scss/res_users.scss',
-            'auth_security/static/src/password_policy/**/*',
-            ('remove', 'auth_security/static/src/password_policy/css/password_field.css'),
+            'auth_security/static/src/password/**/*',
+            ('remove', 'auth_security/static/src/password/css/password_field.css'),
             'auth_security/static/src/timeout/services/check_identity/*',
             'auth_security/static/src/totp/scss/**/*',
             'auth_security/static/src/totp/services/check_identity/*',
@@ -64,11 +64,10 @@
             'auth_security/static/src/passkey/interactions/*',
             'auth_security/static/src/passkey/services/check_identity/*',
             'auth_security/static/src/passkey_portal/**',
-            'auth_security/static/src/password_policy/css/password_field.css',
-            'auth_security/static/src/password_policy/password_policy.js',
-            'auth_security/static/src/password_policy_signup/public/**/*',
-            'auth_security/static/src/password_policy/password_meter.js',
-            'auth_security/static/src/password_policy/password_policy.js',
+            'auth_security/static/src/password/css/password_field.css',
+            'auth_security/static/src/password/password_policy.js',
+            'auth_security/static/src/password_signup/public/**/*',
+            'auth_security/static/src/password/password_meter.js',
             'auth_security/static/src/timeout/services/check_identity/*',
             'auth_security/static/src/totp/services/check_identity/*',
             'auth_security/static/src/totp_mail/services/check_identity/*',

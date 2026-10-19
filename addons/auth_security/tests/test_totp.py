@@ -11,7 +11,7 @@ from odoo.tools import mute_logger
 
 from odoo.addons.auth_security.totp.models.totp import TOTP as auth_TOTP
 
-from ...totp.controllers.home import Home
+from ..totp.controllers.home import Home
 
 _logger = logging.getLogger(__name__)
 

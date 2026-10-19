@@ -9,7 +9,7 @@ from odoo.tests import tagged
 from odoo.tools import SQL, mute_logger
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
-from ...passkey.mobile_utils import _get_app_sha256_cert_fingerprints
+from ..passkey.mobile_utils import _get_app_sha256_cert_fingerprints
 
 
 @tagged('post_install', '-at_install')

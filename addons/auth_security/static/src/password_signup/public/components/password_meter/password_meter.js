@@ -1,5 +1,5 @@
-import { Meter } from "@auth_security/password_policy/password_meter";
-import { ConcretePolicy, recommendations } from "@auth_security/password_policy/password_policy";
+import { Meter } from "@auth_security/password/password_meter";
+import { ConcretePolicy, recommendations } from "@auth_security/password/password_policy";
 import { Component, proxy, t, useListener, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 

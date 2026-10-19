@@ -19,6 +19,7 @@ class ResUsers(models.Model):
         super(ResUsers, self)._set_password()
 
     def _check_password_policy(self, passwords):
+        # The minimum length is read from the 'auth_password_policy.minlength' key, which core code also sets.
         failures = []
         params = self.env['ir.config_parameter'].sudo()
 

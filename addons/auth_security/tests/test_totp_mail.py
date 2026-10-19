@@ -8,7 +8,7 @@ from xmlrpc.client import Fault
 from odoo.tests import get_db_name, tagged, HttpCase
 from odoo.tools import mute_logger
 
-from odoo.addons.auth_security.tests.totp.test_totp import TestTOTPMixin
+from odoo.addons.auth_security.tests.test_totp import TestTOTPMixin
 
 _logger = logging.getLogger(__name__)
 

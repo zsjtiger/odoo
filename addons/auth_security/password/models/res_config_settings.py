@@ -5,6 +5,7 @@ class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     minlength = fields.Integer(
+        # The key keeps its original name: core code (base tests, odoo/modules/loading/data.py) sets it.
         "Minimum Password Length", config_parameter="auth_password_policy.minlength",
         help="Minimum number of characters passwords must contain, set to 0 to disable.")
 
