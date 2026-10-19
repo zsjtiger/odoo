@@ -8,7 +8,6 @@ from unittest.mock import patch
 from odoo import tests
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal
 from odoo.addons.base.tests.files import JPG_RAW, PDF_RAW
-from odoo.addons.gamification.tests.common import HttpCaseGamification
 from odoo.addons.mail.models.mail_message import MailMessage
 from odoo.fields import Command, Datetime
 from odoo.tools import BinaryBytes, mute_logger
@@ -16,7 +15,7 @@ from odoo.tools import BinaryBytes, mute_logger
 _logger = logging.getLogger(__name__)
 
 
-class TestUICommon(HttpCaseGamification, HttpCaseWithUserPortal):
+class TestUICommon(HttpCaseWithUserPortal):
 
     @classmethod
     def setUpClass(cls):
@@ -26,11 +25,6 @@ class TestUICommon(HttpCaseGamification, HttpCaseWithUserPortal):
 
     def setUp(self):
         super().setUp()
-        self.env.ref('gamification.rank_student').description_motivational = """
-            <div class="d-flex align-items-center">
-                <div class="flex-grow-1">Reach the next rank and gain a very nice mug!</div>
-                <img class="ms-3 img img-fluid" style="max-height: 72px;" src="/gamification/static/img/rank_misc_mug.png"/>
-            </div>"""
 
         self.channel = self.env['slide.channel'].create({
             'name': 'Basics of Gardening - Test',
@@ -324,7 +318,7 @@ class TestUi(TestUICommon):
 
 
 @tests.common.tagged('post_install', '-at_install')
-class TestUiPublisher(HttpCaseGamification):
+class TestUiPublisher(tests.HttpCase):
 
     def fetch_proxy(self, url):
         if url.endswith('ThreeTimeAKCGoldWinnerPembrookeWelshCorgi.jpg'):
@@ -389,7 +383,7 @@ class TestUiMemberInvited(TestUICommon):
 
 
 @tests.common.tagged('external', 'post_install', '-standard', '-at_install')
-class TestUiPublisherYoutube(HttpCaseGamification):
+class TestUiPublisherYoutube(tests.HttpCase):
 
     def test_course_member_yt_employee(self):
         # remove membership because we need to be able to join the course during the tour

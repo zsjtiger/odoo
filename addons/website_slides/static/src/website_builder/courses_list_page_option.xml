@@ -8,9 +8,6 @@
 </t>
 
 <t t-name="website_slides.CoursesListAsidePageOption">
-    <BuilderRow label.translate="Achievements">
-        <BuilderCheckbox action="'websiteConfig'" actionParam="{views: ['website_slides.toggle_latest_achievements']}"/>
-    </BuilderRow>
     <BuilderRow label.translate="Leaderboard">
         <BuilderCheckbox action="'websiteConfig'" actionParam="{views: ['website_slides.toggle_leaderboard']}"/>
     </BuilderRow>

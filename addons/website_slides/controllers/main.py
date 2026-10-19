@@ -355,31 +355,13 @@ class WebsiteSlides(WebsiteProfile):
                 channels_my = request.env['slide.channel']
             render_values['channels_my'] = channels_my
 
-        achievements = tools.lazy(lambda: request.env['gamification.badge.user'].sudo().search([('badge_id.is_published', '=', True)], limit=5))
-        if request.env.user._is_public():
-            challenges = None
-            challenges_done = None
-        else:
-            challenges = tools.lazy(lambda: request.env['gamification.challenge'].sudo().search([
-                ('challenge_category', '=', 'slides'),
-                ('reward_id.is_published', '=', True)
-            ], order='id asc', limit=5))
-            challenges_done = tools.lazy(lambda: request.env['gamification.badge.user'].sudo().search([
-                ('challenge_id', 'in', challenges.ids),
-                ('user_id', '=', request.env.user.id),
-                ('badge_id.is_published', '=', True)
-            ]).mapped('challenge_id'))
-
         users = tools.lazy(lambda: request.env['res.users'].sudo().search([
             ('karma', '>', 0),
             ('website_published', '=', True)], limit=5, order='karma desc'))
 
         render_values.update({
-            'achievements': achievements,
             'users': users,
             'top3_users': tools.lazy(self._get_top3_users),
-            'challenges': challenges,
-            'challenges_done': challenges_done,
             'search_tags': request.env['slide.channel.tag'],
             'slide_query_url': QueryURL('/slides', ['tag']),
             'slugify_tags': self._slugify_tags,

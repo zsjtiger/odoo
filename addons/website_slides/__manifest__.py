@@ -21,14 +21,10 @@ Featuring
     'depends': [
         'portal_rating',
         'website',
-        'website_mail',
         'website_profile',
-        'digest'
     ],
     'data': [
         'security/website_slides_security.xml',
-        'views/digest_views.xml',
-        'views/gamification_karma_tracking_views.xml',
         'views/mail_activity_views.xml',
         'views/res_config_settings_views.xml',
         'views/res_partner_views.xml',
@@ -53,8 +49,6 @@ Featuring
         'views/slide_channel_add.xml',
         'views/website_slides_snippet_templates.xml',
         'wizard/slide_channel_invite_views.xml',
-        'data/digest_data.xml',
-        'data/gamification_data.xml',
         'data/mail_message_subtype_data.xml',
         'data/mail_template_data.xml',
         'data/portal_entry_data.xml',
@@ -70,7 +64,6 @@ Featuring
         'data/slide_channel_demo.xml',
         'data/slide_slide_demo.xml',
         'data/slide_user_demo.xml',
-        'data/slide_user_gamification_demo.xml',
     ],
     'application': True,
     'assets': {

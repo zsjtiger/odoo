@@ -8,16 +8,12 @@
     'summary': 'Enterprise website builder',
     'website': 'https://www.odoo.com/app/website',
     'depends': [
-        'digest',
         'web',
         'html_editor',
         'http_routing',
         'portal',
-        'social_media',
         'auth_signup',
         'mail',
-        'google_recaptcha',
-        'utm',
         'html_builder',
     ],
     'external_dependencies': {
@@ -35,7 +31,6 @@
         'data/mail_mail_data.xml',
         'data/website_data.xml',
         'data/website_visitor_cron.xml',
-        'data/digest_data.xml',
         'views/website_technical_views.xml',
         'views/website_templates.xml',
         'views/theme_colors_preview.xml',
@@ -256,7 +251,6 @@
         'views/ir_model_views.xml',
         'views/res_partner_views.xml',
         'views/neutralize_views.xml',
-        'views/digest_digest_views.xml',
         'wizard/base_language_install_views.xml',
         'wizard/blocked_third_party_domains.xml',
         'wizard/website_robots.xml',
@@ -337,7 +331,6 @@
         'website.assets_inside_builder_iframe': [
             ('include', 'html_builder.assets_inside_builder_iframe'),
             'portal/static/src/scss/portal.edit.*',
-            'google_recaptcha/static/src/xml/recaptcha.xml',
             'website/static/src/**/*.edit.*',
             'website/static/src/core/website_edit_service.js',
         ],
@@ -443,7 +436,6 @@
             'website/static/src/snippets/**/*.js',
             'website/static/src/snippets/**/*.xml',
             'website/static/src/snippets/s_table_of_content/000.scss',
-            'google_recaptcha/static/src/js/recaptcha.js',
             'website/static/src/js/content/generate_video_iframe.js',
         ],
         'web._assets_frontend_helpers': [

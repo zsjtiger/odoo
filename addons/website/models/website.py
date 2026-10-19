@@ -2089,7 +2089,7 @@ class Website(models.CachedModel):
 
     def _get_html_fields_blacklist(self):
         return (
-            'mail.message', 'mail.activity', 'digest.tip',
+            'mail.message', 'mail.activity',
         )
 
     def _get_html_fields(self):
