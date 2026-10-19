@@ -93,8 +93,6 @@ export class SlideLike extends Interaction {
                 this.showAlert(_t("You must be member of this course to vote"));
             } else if (data.error === "channel_comment_disabled") {
                 this.showAlert(_t("Votes and comments are disabled for this course"));
-            } else if (data.error === "channel_karma_required") {
-                this.showAlert(_t("You don't have enough karma to vote"));
             } else {
                 this.showAlert(_t("Unknown error"));
             }

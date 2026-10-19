@@ -162,11 +162,6 @@
                             t-attf-class="d-flex text-decoration-none mw-100 overflow-hidden #{'text-muted' if not can_access else ''}">
                             <div class="o_wslides_lesson_link_name text-truncate" t-att-title="aside_slide.name">
                                 <span t-out="aside_slide.name"/>
-                                <span class="align-items-end" t-if="aside_slide.question_ids">
-                                    <span t-att-class="'badge rounded-pill %s' % ('text-bg-success' if channel_progress[aside_slide.id].get('completed') else 'text-bg-info')">
-                                        <t t-out="channel_progress[aside_slide.id].get('quiz_karma_won') if channel_progress[aside_slide.id].get('completed') else channel_progress[aside_slide.id].get('quiz_karma_gain')"/> xp
-                                    </span>
-                                </span>
                             </div>
                         </a>
                     </div>
@@ -217,22 +212,6 @@
             </div>
         </div>
         <div class="col-12 col-md order-1 order-md-2 text-nowrap flex-grow-0 d-flex flex-wrap flex-md-nowrap justify-content-center justify-content-md-end align-items-center mb-3 mb-md-0">
-            <t t-set="quiz_karma_won" t-value="channel_progress[slide.id].get('quiz_karma_won', 0)"/>
-            <t t-set="quiz_karma_gain" t-value="channel_progress[slide.id].get('quiz_karma_gain', 0)"/>
-            <span t-if="slide.question_ids and (slide_completed or quiz_karma_gain)" style="flex-basis: 100%"
-                t-attf-class="mx-2 my-1 badge #{'text-bg-success' if slide_completed else 'text-bg-info'}">
-                <span t-if="slide_completed">
-                    <i class="oi oi-filled" data-icon="check_circle"/>
-                    <t t-if="quiz_karma_won">
-                        <t t-out="quiz_karma_won" />
-                        <span>XP</span>
-                    </t>
-                </span>
-                <t t-else="">
-                    <span t-out="quiz_karma_gain"/>
-                    <span>XP</span>
-                </t>
-            </span>
             <div class="btn-group flex-grow-1 flex-sm-0 my-1" role="group" aria-label="Lesson Nav">
                 <a t-attf-class="o_wslides_nav_button btn btn-light border my-auto #{'disabled' if not previous_slide else ''} me-2"
                     role="button" t-att-aria-disabled="'true' if not previous_slide else None" aria-label="Previous"
@@ -357,13 +336,13 @@
                         </t>
                     </p>
                     <p t-elif="not slide.channel_id.can_comment">
-                        There are no comments for now. Earn more Karma to be the first to leave a comment.
+                        There are no comments for now. Be the first to leave a comment.
                     </p>
                     <t t-else="" t-set="enable_slide_comments" t-value="1"/>
                 </t>
                 <t t-else="">
                     <t t-set="enable_slide_comments" t-value="1"/>
-                    <t t-if="not slide.channel_id.can_comment and can_access_channel"><p>Earn more Karma to leave a comment.</p></t>
+                    <t t-if="not slide.channel_id.can_comment and can_access_channel"><p>Join the course to leave a comment.</p></t>
                 </t>
                 <t t-if="enable_slide_comments" t-call="portal.message_thread"
                     object="slide"
@@ -463,9 +442,6 @@
         t-att-data-can-self-mark-uncompleted="slide.can_self_mark_uncompleted"
         t-att-data-completed="slide_completed"
         t-att-data-quiz-attempts-count="quiz_attempts_count"
-        t-att-data-quiz-karma-max="quiz_karma_max"
-        t-att-data-quiz-karma-gain="quiz_karma_gain"
-        t-att-data-quiz-karma-won="quiz_karma_won"
         t-att-data-has-next="1 if next_slide else 0"
         t-att-data-next-slide-url="'/slides/slide/%s' % (slug(next_slide)) if next_slide else None"
         t-att-data-channel-id="slide.channel_id.id"

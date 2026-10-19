@@ -59,7 +59,7 @@ export class WebsiteSlidesQuiz extends Interaction {
     }
 
     /**
-     * Update validation box (karma, buttons)
+     * Update validation box (buttons)
      */
     async renderValidationInfo() {
         const validationEl = this.el.querySelector(".o_wslides_js_lesson_quiz_validation");
@@ -213,22 +213,9 @@ export class WebsiteSlidesQuiz extends Interaction {
         this.slide.completed = data.completed;
         this.channel.completion = data.channel_completion;
 
-        // three of the rankProgress properties are HTML messages, mark if set
-        const rankProgress = data.rankProgress;
-        if ("description" in rankProgress) {
-            rankProgress.description = markup(rankProgress.description || "");
-            rankProgress.previous_rank.motivational = markup(
-                rankProgress.previous_rank.motivational || ""
-            );
-            rankProgress.new_rank.motivational = markup(rankProgress.new_rank.motivational || "");
-        }
-
         this.slidesService.setQuiz({
             answers: data.answers,
-            karmaWon: data.quizKarmaWon,
-            karmaGain: data.quizKarmaGain,
             attemptsCount: data.quizAttemptsCount,
-            rankProgress: rankProgress,
         });
 
         if (this.slide.completed) {

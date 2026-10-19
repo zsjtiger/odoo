@@ -46,13 +46,9 @@ const websiteSlidesService = {
                 questions: [],
                 questionCount: undefined,
                 attemptsCount: undefined,
-                karmaGain: undefined,
-                karmaWon: undefined,
-                karmaMax: undefined,
                 desciption: undefined,
                 descriptionSafe: undefined,
                 slideResources: [],
-                rankProgress: undefined,
             },
             channel: {
                 id: undefined,
@@ -142,9 +138,6 @@ const websiteSlidesService = {
                         questions: quizData.slide_questions || [],
                         questionCount: quizData.slide_questions.length,
                         attemptsCount: quizData.quiz_attempts_count || 0,
-                        karmaGain: quizData.quiz_karma_gain || 0,
-                        karmaWon: quizData.quiz_karma_won || 0,
-                        karmaMax: quizData.quiz_karma_max || 0,
                         slideResources: quizData.slide_resource_ids || [],
                     });
                 }

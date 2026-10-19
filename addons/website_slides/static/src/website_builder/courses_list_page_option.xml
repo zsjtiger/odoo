@@ -8,9 +8,6 @@
 </t>
 
 <t t-name="website_slides.CoursesListAsidePageOption">
-    <BuilderRow label.translate="Leaderboard">
-        <BuilderCheckbox action="'websiteConfig'" actionParam="{views: ['website_slides.toggle_leaderboard']}"/>
-    </BuilderRow>
 </t>
 
 <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">

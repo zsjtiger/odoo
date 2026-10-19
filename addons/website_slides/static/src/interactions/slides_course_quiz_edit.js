@@ -179,9 +179,6 @@ export class WebsiteSlidesQuizEdit extends Interaction {
         });
         this.slidesService.setQuiz({
             attemptsCount: Number(data.quizAttemptsCount),
-            karmaMax: Number(data.quizKarmaMax),
-            karmaGain: Number(data.quizKarmaGain),
-            karmaWon: Number(data.quizKarmaWon || 0),
             answers: [],
             sessionAnswers: data.sessionAnswers || [],
             questions,

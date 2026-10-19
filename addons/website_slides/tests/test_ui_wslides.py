@@ -158,7 +158,6 @@ class TestUi(TestUICommon):
     def test_course_member_employee(self):
         user_demo = self.user_demo
         user_demo.write({
-            'karma': 1,
             'group_ids': [(6, 0, self.env.ref('base.group_user').ids)]
         })
 
@@ -167,7 +166,6 @@ class TestUi(TestUICommon):
     def test_course_member_elearning_officer(self):
         user_demo = self.user_demo
         user_demo.write({
-            'karma': 1,
             'group_ids': [(6, 0, (self.env.ref('base.group_user') | self.env.ref('website_slides.group_website_slides_officer')).ids)]
         })
 
@@ -175,8 +173,6 @@ class TestUi(TestUICommon):
 
     def test_course_member_portal(self):
         user_portal = self.user_portal
-        user_portal.karma = 1
-
         self.start_tour('/slides', 'course_member', login=user_portal.login)
 
     def test_full_screen_edition_website_restricted_editor(self):
@@ -262,7 +258,6 @@ class TestUi(TestUICommon):
         self.start_tour(f"/mail/message/{message.id}", "slides_review_highlight_tour", login="portal")
 
     def test_course_review_modification(self):
-        self.user_portal.karma = 20
         self.start_tour("/slides", "course_review_modification", login=self.user_portal.login)
 
     def test_course_review_modification_by_admin(self):

@@ -149,8 +149,8 @@ class WebsiteSlides(WebsiteProfile):
 
         return render_values
 
-    def _get_slide_quiz_partner_info(self, slide, quiz_done=False):
-        return slide._compute_quiz_info(request.env.user.partner_id, quiz_done=quiz_done)[slide.id]
+    def _get_slide_quiz_partner_info(self, slide):
+        return slide._compute_quiz_info(request.env.user.partner_id)[slide.id]
 
     def _get_slide_quiz_data(self, slide):
         is_designer = request.env.user.has_group('website.group_website_designer')
@@ -224,15 +224,9 @@ class WebsiteSlides(WebsiteProfile):
             ])
             for slide_partner in slide_partners:
                 channel_progress[slide_partner.slide_id.id].update(slide_partner.read()[0])
-                if slide_partner.slide_id.question_ids:
-                    gains = [slide_partner.slide_id.quiz_first_attempt_reward,
-                             slide_partner.slide_id.quiz_second_attempt_reward,
-                             slide_partner.slide_id.quiz_third_attempt_reward,
-                             slide_partner.slide_id.quiz_fourth_attempt_reward]
-                    channel_progress[slide_partner.slide_id.id]['quiz_gain'] = gains[slide_partner.quiz_attempts_count] if slide_partner.quiz_attempts_count < len(gains) else gains[-1]
 
         if include_quiz:
-            quiz_info = slides._compute_quiz_info(request.env.user.partner_id, quiz_done=False)
+            quiz_info = slides._compute_quiz_info(request.env.user.partner_id)
             for slide_id, slide_info in quiz_info.items():
                 channel_progress[slide_id].update(slide_info)
 
@@ -355,13 +349,7 @@ class WebsiteSlides(WebsiteProfile):
                 channels_my = request.env['slide.channel']
             render_values['channels_my'] = channels_my
 
-        users = tools.lazy(lambda: request.env['res.users'].sudo().search([
-            ('karma', '>', 0),
-            ('website_published', '=', True)], limit=5, order='karma desc'))
-
         render_values.update({
-            'users': users,
-            'top3_users': tools.lazy(self._get_top3_users),
             'search_tags': request.env['slide.channel.tag'],
             'slide_query_url': QueryURL('/slides', ['tag']),
             'slugify_tags': self._slugify_tags,
@@ -459,7 +447,6 @@ class WebsiteSlides(WebsiteProfile):
             'search_my': my,
             'search_tags': search_tags,
             'search_count': search_count,
-            'top3_users': self._get_top3_users(),
             'slugify_tags': self._slugify_tags,
             'slide_query_url': QueryURL('/slides', ['tag']),
             'pager': self.env.website.pager(
@@ -476,11 +463,6 @@ class WebsiteSlides(WebsiteProfile):
 
     def _prepare_additional_channel_values(self, values, **kwargs):
         return values
-
-    def _get_top3_users(self):
-        return request.env['res.users'].sudo().search_read([
-            ('karma', '>', 0),
-            ('website_published', '=', True)], ['id'], limit=3, order='karma desc')
 
     def _get_user_slide_authorization(self, slide_id):
         """ Get authorization status for the current user to access the given slide along with some data.
@@ -989,7 +971,7 @@ class WebsiteSlides(WebsiteProfile):
             next_category_to_open = False
 
         values = self._get_slide_detail(slide)
-        # quiz-specific: update with karma and quiz information
+        # quiz-specific: update with quiz information
         if slide.question_ids:
             values.update(self._get_slide_quiz_data(slide))
         # sidebar: update with user channel progress
@@ -1134,8 +1116,6 @@ class WebsiteSlides(WebsiteProfile):
             return {'error': 'channel_membership_required'}
         if not slide.channel_id.allow_comment:
             return {'error': 'channel_comment_disabled'}
-        if not slide.channel_id.can_vote:
-            return {'error': 'channel_karma_required'}
         if upvote:
             slide.action_like()
         else:
@@ -1294,18 +1274,10 @@ class WebsiteSlides(WebsiteProfile):
         user_bad_answers = user_answers.filtered(lambda answer: not answer.is_correct)
 
         self._set_viewed_slide(slide, quiz_attempts_inc=True)
-        quiz_info = self._get_slide_quiz_partner_info(slide, quiz_done=True)
+        quiz_info = self._get_slide_quiz_partner_info(slide)
 
-        rank_progress = {}
         if not user_bad_answers:
-            rank_progress['previous_rank'] = self._get_rank_values(request.env.user)
             slide._action_mark_completed()
-            rank_progress['new_rank'] = self._get_rank_values(request.env.user)
-            rank_progress.update({
-                'description': request.env.user.rank_id.description,
-                'last_rank': not request.env.user._get_next_rank(),
-                'level_up': rank_progress['previous_rank']['lower_bound'] != rank_progress['new_rank']['lower_bound']
-            })
         self._channel_remove_session_answers(slide.channel_id, slide)
         return {
             'answers': {
@@ -1316,10 +1288,7 @@ class WebsiteSlides(WebsiteProfile):
             },
             'completed': slide.user_has_completed,
             'channel_completion': slide.channel_id.completion,
-            'quizKarmaWon': quiz_info['quiz_karma_won'],
-            'quizKarmaGain': quiz_info['quiz_karma_gain'],
             'quizAttemptsCount': quiz_info['quiz_attempts_count'],
-            'rankProgress': rank_progress,
         }
 
     @http.route(['/slides/slide/quiz/save_to_session'], type='jsonrpc', auth='public', website=True)
@@ -1329,20 +1298,6 @@ class WebsiteSlides(WebsiteProfile):
         session_slide_answer_quiz[str(slide_id)] = quiz_answers['slide_answers']
         request.session['slide_answer_quiz'] = json.dumps(session_slide_answer_quiz)
 
-    def _get_rank_values(self, user):
-        lower_bound = user.rank_id.karma_min or 0
-        next_rank = user._get_next_rank()
-        upper_bound = next_rank.karma_min
-        progress = 100
-        if next_rank and (upper_bound - lower_bound) != 0:
-            progress = 100 * ((user.karma - lower_bound) / (upper_bound - lower_bound))
-        return {
-            'lower_bound': lower_bound,
-            'upper_bound': upper_bound,
-            'karma': user.karma,
-            'motivational': next_rank.description_motivational,
-            'progress': progress
-        }
     # --------------------------------------------------
     # CATEGORY MANAGEMENT
     # --------------------------------------------------
@@ -1613,7 +1568,6 @@ class WebsiteSlides(WebsiteProfile):
             'courses_completed': courses_completed,
             'courses_ongoing': courses_ongoing,
             'is_profile_page': True,
-            'badge_category': 'slides',
             'my_profile': request.env.user.id == user.id,
         }
         return values

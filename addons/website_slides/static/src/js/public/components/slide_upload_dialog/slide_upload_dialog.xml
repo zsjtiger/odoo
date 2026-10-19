@@ -99,7 +99,7 @@
 
     <t t-name="website_slides.SlideCategoryTutorial.Quiz">
         <div class="h5">Test your students with small Quizzes</div>
-        <div>With Quizzes you can keep your students focused and motivated by answering some questions and gaining some karma points</div>
+        <div>With Quizzes you can keep your students focused and motivated by answering some questions.</div>
         <img src="/website_slides/static/src/img/onboarding-quiz.png" title="Quiz Demo Data" class="img-fluid"/>
     </t>
 
