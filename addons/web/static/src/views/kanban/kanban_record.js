@@ -8,14 +8,13 @@ import { _t } from "@web/core/data/l10n/translation";
 import {
     CardRenderer,
     getFormattedRecord,
-    getImageSrcFromRecordInfo,
     getRawValue,
 } from "@web/views/card/card_renderer";
 import { TOUCH_SELECTION_THRESHOLD } from "@web/views/utils";
 import { KanbanCoverImageDialog } from "./kanban_cover_image_dialog";
 import { KanbanDropdownMenuWrapper } from "./kanban_dropdown_menu_wrapper";
 
-export { getFormattedRecord, getImageSrcFromRecordInfo, getRawValue };
+export { getFormattedRecord, getRawValue };
 
 // These classes determine whether a click on a record should open it.
 export const CANCEL_GLOBAL_CLICK = ["a", ".dropdown", ".oe_kanban_action", "[data-bs-toggle]"].join(
