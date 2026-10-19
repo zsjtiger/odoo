@@ -140,15 +140,6 @@ class SurveySurvey(models.Model):
         ('classic-2_company', 'Classic #2'),
         ('classic-2_black', 'Classic #2 Black')],
         string='Certification template', default='modern_company')
-    # Certification badge
-    #   certification_badge_id_dummy is used to have two different behaviours in the form view :
-    #   - If the certification badge is not set, show certification_badge_id and only display create option in the m2o
-    #   - If the certification badge is set, show certification_badge_id_dummy in 'no create' mode.
-    #       So it can be edited but not removed or replaced.
-    certification_give_badge = fields.Boolean('Give Badge', compute='_compute_certification_give_badge',
-                                              readonly=False, store=True, copy=False)
-    certification_badge_id = fields.Many2one('gamification.badge', 'Certification Badge', copy=False, index='btree_not_null')
-    certification_badge_id_dummy = fields.Many2one(related='certification_badge_id', string='Certification Badge ')
     # live sessions
     session_available = fields.Boolean('Live session available', compute='_compute_session_available')
     session_state = fields.Selection([
@@ -200,10 +191,6 @@ class SurveySurvey(models.Model):
     _attempts_limit_check = models.Constraint(
         'CHECK( (is_attempts_limited=False) OR (attempts_limit is not null AND attempts_limit > 0) )',
         'The attempts limit needs to be a positive number if the survey has a limited number of attempts.',
-    )
-    _badge_uniq = models.Constraint(
-        'unique (certification_badge_id)',
-        'The badge for each survey should be unique!',
     )
     _session_speed_rating_has_time_limit = models.Constraint(
         'CHECK (session_speed_rating != TRUE OR session_speed_rating_time_limit IS NOT NULL AND session_speed_rating_time_limit > 0)',
@@ -366,14 +353,6 @@ class SurveySurvey(models.Model):
             if not survey.certification or survey.scoring_type == 'no_scoring':
                 survey.certification = False
 
-    @api.depends('users_login_required', 'certification')
-    def _compute_certification_give_badge(self):
-        for survey in self:
-            if not survey.certification_give_badge or \
-               not survey.users_login_required or \
-               not survey.certification:
-                survey.certification_give_badge = False
-
     @api.depends('certification')
     def _compute_scoring_type(self):
         for survey in self:
@@ -475,10 +454,7 @@ class SurveySurvey(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        surveys = super().create(vals_list)
-        for survey_sudo in surveys.filtered(lambda survey: survey.certification_give_badge).sudo():
-            survey_sudo._create_certification_badge_trigger()
-        return surveys
+        return super().create(vals_list)
 
     def write(self, vals):
         speed_rating, speed_limit = vals.get('session_speed_rating'), vals.get('session_speed_rating_time_limit')
@@ -489,9 +465,6 @@ class SurveySurvey(models.Model):
         ))
 
         result = super().write(vals)
-        if 'certification_give_badge' in vals:
-            return self.sudo()._handle_certification_badges(vals)
-
         if questions_to_update := surveys_to_update.question_ids:
             questions_to_update._update_time_limit_from_survey(is_time_limited=speed_rating, time_limit=speed_limit)
 
@@ -526,14 +499,6 @@ class SurveySurvey(models.Model):
                 if src.triggering_answer_ids:
                     dst.triggering_answer_ids = [answers_map[src_answer_id.id] for src_answer_id in src.triggering_answer_ids]
         return new_surveys
-
-    def action_archive(self):
-        super().action_archive()
-        self.certification_badge_id.action_archive()
-
-    def action_unarchive(self):
-        super().action_unarchive()
-        self.certification_badge_id.action_unarchive()
 
     # ------------------------------------------------------------
     # ANSWER MANAGEMENT
@@ -1233,63 +1198,6 @@ class SurveySurvey(models.Model):
             'count_failed': scoring_failed_count,
             'count_passed': total - scoring_failed_count
         }
-
-    # ------------------------------------------------------------
-    # GAMIFICATION / BADGES
-    # ------------------------------------------------------------
-
-    def _prepare_challenge_category(self):
-        return 'certification'
-
-    def _create_certification_badge_trigger(self):
-        self.ensure_one()
-        if not self.certification_badge_id:
-            raise ValueError(_('Certification Badge is not configured for the survey %(survey_name)s', survey_name=self.title))
-
-        goal = self.env['gamification.goal.definition'].create({
-            'name': self.title,
-            'description': _("%s certification passed", self.title),
-            'domain': "['&', ('survey_id', '=', %s), ('scoring_success', '=', True)]" % self.id,
-            'computation_mode': 'count',
-            'display_mode': 'boolean',
-            'model_id': self.env.ref('survey.model_survey_user_input').id,
-            'condition': 'higher',
-            'batch_mode': True,
-            'batch_distinctive_field': self.env.ref('survey.field_survey_user_input__partner_id').id,
-            'batch_user_expression': 'user.partner_id.id'
-        })
-        challenge = self.env['gamification.challenge'].create({
-            'name': _('%s challenge certification', self.title),
-            'reward_id': self.certification_badge_id.id,
-            'state': 'inprogress',
-            'period': 'once',
-            'challenge_category': self._prepare_challenge_category(),
-            'reward_realtime': True,
-            'report_message_frequency': 'never',
-            'user_domain': [('karma', '>', 0)],
-            'visibility_mode': 'personal'
-        })
-        self.env['gamification.challenge.line'].create({
-            'definition_id': goal.id,
-            'challenge_id': challenge.id,
-            'target_goal': 1
-        })
-
-    def _handle_certification_badges(self, vals):
-        if vals.get('certification_give_badge'):
-            self.certification_badge_id.action_unarchive()
-            # (re-)create challenge and goal
-            for survey in self:
-                survey._create_certification_badge_trigger()
-        else:
-            # if badge with owner : archive them, else delete everything (badge, challenge, goal)
-            badges = self.mapped('certification_badge_id')
-            challenges_to_delete = self.env['gamification.challenge'].search([('reward_id', 'in', badges.ids)])
-            goals_to_delete = challenges_to_delete.mapped('line_ids').mapped('definition_id')
-            badges.action_archive()
-            # delete all challenges and goals because not needed anymore (challenge lines are deleted in cascade)
-            challenges_to_delete.unlink()
-            goals_to_delete.unlink()
 
     # ------------------------------------------------------------
     # TOOLING / MISC

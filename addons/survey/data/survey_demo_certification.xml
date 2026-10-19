@@ -18,8 +18,6 @@
             <field name="is_attempts_limited" eval="True" />
             <field name="attempts_limit">2</field>
             <field name="description" type="html"><p>Test your vendor skills!</p></field>
-            <field name="certification_give_badge">True</field>
-            <field name="certification_badge_id" ref="vendor_certification_badge"/>
             <field name="background_image" type="bytes" file="survey/static/src/img/survey_background_2.webp"/>
             <field name="lang_ids" eval="False"/>
         </record>
