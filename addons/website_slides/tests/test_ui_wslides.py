@@ -6,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 from unittest.mock import patch
 
 from odoo import tests
-from odoo.addons.base.tests.common import HttpCaseWithUserPortal
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
 from odoo.addons.base.tests.files import JPG_RAW, PDF_RAW
 from odoo.addons.mail.models.mail_message import MailMessage
 from odoo.fields import Command, Datetime
@@ -15,7 +15,7 @@ from odoo.tools import BinaryBytes, mute_logger
 _logger = logging.getLogger(__name__)
 
 
-class TestUICommon(HttpCaseWithUserPortal):
+class TestUICommon(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
 
     @classmethod
     def setUpClass(cls):
@@ -313,7 +313,7 @@ class TestUi(TestUICommon):
 
 
 @tests.common.tagged('post_install', '-at_install')
-class TestUiPublisher(tests.HttpCase):
+class TestUiPublisher(HttpCaseWithUserDemo):
 
     def fetch_proxy(self, url):
         if url.endswith('ThreeTimeAKCGoldWinnerPembrookeWelshCorgi.jpg'):
