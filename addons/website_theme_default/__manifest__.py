@@ -11,7 +11,7 @@
     ],
     'images': [
         'static/description/cover.png',
-        'static/description/theme_default_screenshot.jpg',
+        'static/description/website_theme_default_screenshot.jpg',
     ],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

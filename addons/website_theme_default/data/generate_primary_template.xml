@@ -3,7 +3,7 @@
 
 <!-- Generate primary snippet templates that are not predefined -->
 <function model="ir.module.module" name="_generate_primary_snippet_templates">
-    <value eval="[ref('base.module_theme_default')]"/>
+    <value eval="[ref('base.module_website_theme_default')]"/>
 </function>
 
 </odoo>

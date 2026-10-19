@@ -1111,7 +1111,7 @@ export class ThemeSelectionScreen extends ApplyConfiguratorScreen {
                 try {
                     const themes = await getRecommendedThemes(this.orm, this.state);
                     if (!themes.length) {
-                        themeName = "theme_default";
+                        themeName = "website_theme_default";
                     } else {
                         updateRecommendedThemes(this.state, themes);
                     }

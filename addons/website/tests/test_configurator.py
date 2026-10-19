@@ -127,15 +127,15 @@ class TestConfiguratorPreview(odoo.tests.HttpCase):
 
         def preview_url_mocked(website, theme_name):
             # No module in the test addons path ships a preview file.
-            if theme_name == 'theme_default':
-                return '/theme_default/static/description/preview.html'
+            if theme_name == 'website_theme_default':
+                return '/website_theme_default/static/description/preview.html'
             return None
 
         self.patch(WebsiteModel, '_get_configurator_theme_preview_url', preview_url_mocked)
         self.patch(WebsiteController, '_load_configurator_preview_html', lambda controller, url: self.PREVIEW_HTML)
 
     def _preview(self, **params):
-        params.setdefault('theme_name', 'theme_default')
+        params.setdefault('theme_name', 'website_theme_default')
         query = '&'.join(f'{key}={value}' for key, value in params.items() if value is not None)
         return self.url_open(f'/website/configurator/preview?{query}')
 
@@ -152,7 +152,7 @@ class TestConfiguratorPreview(odoo.tests.HttpCase):
     def test_preview_rejects_an_invalid_theme_name(self):
         self.authenticate('admin', 'admin')
         for theme_name in (
-            'theme_default/../website',     # traversal on a valid theme
+            'website_theme_default/../website',     # traversal on a valid theme
             'theme_unknown',                # no such module
             'website',                      # a module, but not a theme
         ):

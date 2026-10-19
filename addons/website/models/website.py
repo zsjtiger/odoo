@@ -838,7 +838,7 @@ class Website(models.CachedModel):
         self._check_configurator_access()
         Module = self.env['ir.module.module']
         domain = Module.get_themes_domain()
-        domain = Domain.AND([[('name', '!=', 'theme_default')], domain])
+        domain = Domain.AND([[('name', '!=', 'website_theme_default')], domain])
         client_themes = Module.search(domain).mapped('name')
         manifests = {
             theme_name: manifest
@@ -886,7 +886,7 @@ class Website(models.CachedModel):
         self._check_configurator_access()
         website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
         website.ensure_one()
-        theme = self.env["ir.module.module"].search([("name", "=", "theme_default")])
+        theme = self.env["ir.module.module"].search([("name", "=", "website_theme_default")])
         website.configurator_done = True
         return theme.with_context(website_id=website.id).button_choose_theme()
 
