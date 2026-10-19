@@ -30,7 +30,7 @@ class IrModuleCase(TransactionCase):
         )
         report = self.env['ir.actions.report'].create({
             'name': 'good_data_report',
-            'report_name': 'web_studio.test_duplicate_foo',
+            'report_name': 'web_builder.test_duplicate_foo',
             'model': 'res.users',
         })
         self.env["ir.model.data"].create({

@@ -219,7 +219,7 @@ class IrModelData(models.Model):
         if any(row[2] == 'res.groups' for row in rows):
             self.env.transaction.invalidate_ormcache('groups')
 
-    # NOTE: this method is overriden in web_studio; if you need to make another
+    # NOTE: this method is overriden in web_builder; if you need to make another
     #  override, make sure it is compatible with the one that is there.
     def _build_insert_xmlids_values(self):
         return {

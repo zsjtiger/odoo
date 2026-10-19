@@ -5238,7 +5238,7 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'utm',
             'voip',
             'web',
-            'web_studio',
+            'web_builder',
         )
 
         modules_without_error = set(self.env['ir.module.module'].search([('state', '=', 'installed'), ('name', 'in', only_log_modules)]).mapped('name'))

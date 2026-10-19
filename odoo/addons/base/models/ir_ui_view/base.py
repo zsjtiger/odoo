@@ -405,9 +405,9 @@ class Base(models.AbstractModel):
         models = self._get_view_fields(view_type or view.type, models)
         result = {
             'arch': arch,
-            # TODO: only `web_studio` seems to require this. I guess this is acceptable to keep it.
+            # TODO: only `web_builder` seems to require this. I guess this is acceptable to keep it.
             'id': view.id,
-            # TODO: only `web_studio` seems to require this. But this one on the other hand should be eliminated:
+            # TODO: only `web_builder` seems to require this. But this one on the other hand should be eliminated:
             # you just called `get_views` for that model, so obviously the web client already knows the model.
             'model': self._name,
             # Set a frozendict and tuple for the field list to make sure the value in cache cannot be updated.
