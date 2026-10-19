@@ -16,6 +16,7 @@ from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor
 from lxml import etree, html
 from markupsafe import Markup
+from requests import RequestException
 from urllib.parse import urlparse, urlsplit
 from werkzeug import urls
 
@@ -28,6 +29,8 @@ from odoo.addons.website.tools import (
     text_from_html,
 )
 from odoo.addons.portal.controllers.portal import pager
+from odoo.addons.ai.llm import LLMError
+from odoo.addons.ai.utils.ai_utils import get_llm_client, get_text_from_parts
 from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.http import request
@@ -767,6 +770,68 @@ class Website(models.CachedModel):
         except FileNotFoundError:
             return None
 
+    def _ai_text(self, prompt):
+        """Return the text answer of the OpenAI model configured for this database, or '' when AI is unavailable."""
+        try:
+            client = get_llm_client(self.env)
+            response = client.chat_completion([{'role': 'user', 'content': [{'type': 'text', 'text': prompt}]}])
+        except (LLMError, RequestException) as e:
+            logger.info("AI generation unavailable for the configurator: %s", e)
+            return ''
+        return get_text_from_parts(response['content']) or ''
+
+    def _ai_recommend_themes(self, theme_catalog, industry_name, website_type, positioning, count):
+        """Use the configured OpenAI model to pick the best themes for a given business context."""
+        if not industry_name:
+            return []
+        catalog_desc = "\n".join(
+            f"- {name}: {description}" for name, description in theme_catalog.items() if description
+        )
+        prompt = (
+            f"I'm building {website_type or 'a'} website for a {industry_name} business "
+            f"with a {positioning or 'general'} positioning.\n"
+            f"Available themes:\n{catalog_desc}\n\n"
+            f"Pick the {count} best-fitting themes. Return ONLY a JSON array of theme names, "
+            f"e.g. [\"theme_clean\", \"theme_cobalt\"]. No explanation."
+        )
+        content = self._ai_text(prompt)
+        if match := re.search(r'\[[\s\S]*?\]', content):
+            try:
+                suggestions = json.loads(match.group())
+            except json.JSONDecodeError:
+                return []
+            if isinstance(suggestions, list):
+                return [
+                    theme for theme in suggestions
+                    if isinstance(theme, str) and theme in theme_catalog
+                ][:count]
+        return []
+
+    def _ai_generate_placeholders(self, website, placeholders, industry):
+        """Return the texts the OpenAI model writes for ``placeholders``, keyed by placeholder."""
+        prompt = (
+            f"Write website texts for a {industry or 'general'} business. "
+            f"Answer in {website.default_lang_id.name}. "
+            "Return ONLY a JSON object mapping each of these keys to its text, "
+            "using XXXX wherever the company name goes: "
+            f"{json.dumps(list(placeholders))}"
+        )
+        match = re.search(r'\{[\s\S]*\}', self._ai_text(prompt))
+        if not match:
+            return {}
+        try:
+            response = json.loads(match.group())
+        except json.JSONDecodeError:
+            return {}
+        if not isinstance(response, dict):
+            return {}
+        name_replace_parser = re.compile(r"XXXX", re.MULTILINE)
+        return {
+            key: name_replace_parser.sub(lambda _match: website.name, response[key], 0)
+            for key in placeholders
+            if isinstance(response.get(key), str) and response[key]
+        }
+
     @api.model
     def configurator_recommended_themes(self, industry_id, result_nbr_max=6,
                                         industry_name='', website_type='', positioning='', skip_ai=False):
@@ -781,12 +846,32 @@ class Website(models.CachedModel):
             if (manifest := get_manifest(theme_name))
         }
 
+        theme_catalog = {
+            theme_name: manifest.get('description', '')
+            for theme_name, manifest in manifests.items()
+        }
+
+        # Use AI to pick the best themes for this business
+        ai_theme_names = []
+        if not skip_ai:
+            ai_theme_names = self._ai_recommend_themes(
+                theme_catalog, industry_name, website_type, positioning, result_nbr_max
+            )
+
+        # Build the theme list: AI-recommended first, then fill with local themes.
         themes_suggested = []
+        selected_theme_names = set()
+        for name in ai_theme_names:
+            if name in manifests and name not in selected_theme_names:
+                themes_suggested.append(name)
+                selected_theme_names.add(name)
         for theme_name in client_themes:
             if len(themes_suggested) >= result_nbr_max:
                 break
-            if theme_name in manifests:
+            if theme_name in manifests and theme_name not in selected_theme_names:
                 themes_suggested.append(theme_name)
+                selected_theme_names.add(theme_name)
+
 
         themes_with_previews = []
         for theme_name in themes_suggested:
@@ -936,6 +1021,7 @@ class Website(models.CachedModel):
 
         # Remote industry images are not available, so the theme keeps its own visuals.
         images = {}
+        skip_ai = kwargs.get('skip_ai')  # Used by design-themes tooling
 
         # Generate text for the homepage.
         configurator_snippets = website.get_theme_configurator_snippets(theme_name)
@@ -954,11 +1040,14 @@ class Website(models.CachedModel):
             text_generation_target_lang=text_generation_target_lang,
             text_must_be_translated_for_openai=text_must_be_translated_for_openai,
         )
+        industry = kwargs['industry_name']
         generated_content = {}
+        translated_content = {}
         for snippet in snippet_list:
             snippet_key = website._get_snippet_view_key(snippet, 'homepage')
-            html_text_processor, snippet_generated_content, _translated = html_text_processor._get_snippet_content(snippet_key)
+            html_text_processor, snippet_generated_content, snippet_translated_content = html_text_processor._get_snippet_content(snippet_key)
             generated_content.update(snippet_generated_content)
+            translated_content.update(snippet_translated_content)
 
         # Extract placeholders from footers
         for footer_id in footer_ids:
@@ -967,6 +1056,13 @@ class Website(models.CachedModel):
                 html_text_processor, placeholders = html_text_processor._process_snippet(view_id.arch_db, view_id.arch_db)
                 for placeholder in placeholders:
                     generated_content[placeholder] = ''
+
+        if not skip_ai:
+            translated_ratio = html_text_processor._calculate_translation_ratio(generated_content, translated_content)
+            if translated_ratio > 0.7:
+                generated_content.update(self._ai_generate_placeholders(website, generated_content, industry))
+            else:
+                logger.info("Skip AI text generation because translation coverage is too low (%s%%)", translated_ratio * 100)
 
         # Configure the homepage.
         page_view_id = self.with_context(website_id=website.id).viewref('website.homepage')

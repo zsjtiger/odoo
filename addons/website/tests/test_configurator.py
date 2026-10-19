@@ -26,6 +26,58 @@ class TestConfiguratorCommon(odoo.tests.HttpCase):
 @odoo.tests.common.tagged('post_install', '-at_install')
 class TestConfigurator(TestConfiguratorCommon):
 
+    def _mock_openai_answer(self, text):
+        """Make the configured OpenAI model answer ``text`` to every chat request."""
+        self.env['ir.config_parameter'].sudo().set_str('openai.api_key', 'test-key')
+        self.env['ir.config_parameter'].sudo().set_str('openai.model', 'test-model')
+        return patch(
+            'odoo.addons.ai.llm.client.OpenAICompatibleClient.chat_completion',
+            return_value={'role': 'assistant', 'content': [{'type': 'text', 'text': text}]},
+        )
+
+    def test_ai_recommend_themes(self):
+        with self._mock_openai_answer('["theme_clean", "theme_cobalt", "theme_unknown"]'):
+            themes = self.env['website']._ai_recommend_themes(
+                {
+                    'theme_clean': 'Clean theme',
+                    'theme_cobalt': 'Cobalt theme',
+                },
+                'restaurant',
+                'business',
+                'premium',
+                6,
+            )
+
+        self.assertEqual(themes, ['theme_clean', 'theme_cobalt'])
+
+    def test_ai_recommend_themes_wrong_answer(self):
+        with self._mock_openai_answer('[{"name": "New Arrivals", "description": "Fresh styles"}]'):
+            themes = self.env['website']._ai_recommend_themes(
+                {
+                    'theme_clean': 'Clean theme',
+                    'theme_cobalt': 'Cobalt theme',
+                },
+                'restaurant',
+                'business',
+                'premium',
+                6,
+            )
+
+        self.assertEqual(themes, [])
+
+    def test_ai_unavailable_without_configuration(self):
+        themes = self.env['website']._ai_recommend_themes(
+            {'theme_clean': 'Clean theme'}, 'restaurant', 'business', 'premium', 6,
+        )
+        self.assertEqual(themes, [])
+
+    def test_ai_generate_placeholders(self):
+        website = self.env.ref('base.default_website')
+        with self._mock_openai_answer('{"Catchy Headline": "Welcome to XXXX", "Other": ""}'):
+            texts = self.env['website']._ai_generate_placeholders(website, ['Catchy Headline', 'Other'], 'bakery')
+
+        self.assertEqual(texts, {'Catchy Headline': f'Welcome to {website.name}'})
+
     def test_configurator_params_step(self):
         self.start_tour('/website/configurator/2', 'configurator_params_step', login='admin')
 

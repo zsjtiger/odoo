@@ -15,6 +15,7 @@
         'auth_signup',
         'mail',
         'html_builder',
+        'ai',
     ],
     'external_dependencies': {
         'python': ['geoip2'],
