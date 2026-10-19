@@ -14,7 +14,7 @@ from odoo.tools.sql import SQL, escape_like_value
 
 from odoo.addons.base.models.ir_http import EXTENSION_TO_WEB_MIMETYPES
 from odoo.addons.website.tools import text_from_html
-from odoo.tools.translate import adapt_translated_field_value
+from odoo.tools.text.translate import adapt_translated_field_value
 
 
 logger = logging.getLogger(__name__)

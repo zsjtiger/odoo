@@ -10,7 +10,7 @@ from odoo import api, exceptions, fields, models, _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import is_html_empty
-from odoo.tools.translate import mark_as_copy
+from odoo.tools.text.translate import mark_as_copy
 from odoo.tools.urls import urljoin as url_join
 
 SURVEY_LEADERBOARD_MAX_PARTICIPANTS = 250

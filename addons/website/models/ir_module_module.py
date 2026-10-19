@@ -10,7 +10,7 @@ from odoo.exceptions import MissingError
 from odoo.modules import Manifest
 from odoo.tools import SQL, split_every
 from odoo.tools.constants import IN_MAX
-from odoo.tools.translate import StoredTranslations
+from odoo.tools.text.translate import StoredTranslations
 
 _logger = logging.getLogger(__name__)
 
@@ -472,7 +472,6 @@ class IrModuleModule(models.Model):
             ('state', '!=', 'uninstallable'),
             ('category_id', 'not in', [
                 get_id('base.module_category_hidden'),
-                get_id('base.module_category_theme_hidden'),
             ]),
             '|',
             ('category_id', '=', get_id('base.module_category_theme')),

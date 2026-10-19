@@ -20,7 +20,7 @@ from odoo import release
 from odoo.http import Controller, Response, request, route
 from odoo.http.router import db_list
 from odoo.http.session import authenticate, logout, save_session
-from odoo.sql_db import db_connect
+from odoo.orm.database.sql_db import db_connect
 from odoo.tools.misc import file_open, str2bool
 from odoo.tools.text.translate import _
 

@@ -36,9 +36,9 @@ from odoo.http import request
 from odoo.models import Query
 from odoo.modules.module import get_manifest
 from odoo.tools import BinaryBytes, BinaryValue, file_open, lazy
-from odoo.tools.image import image_process
+from odoo.tools.files.image import image_process
 from odoo.tools.sql import SQL, escape_like_value
-from odoo.tools.translate import _
+from odoo.tools import _
 
 logger = logging.getLogger(__name__)
 

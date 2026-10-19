@@ -6,7 +6,7 @@ import werkzeug.exceptions
 from odoo import _, http, tools
 from odoo.exceptions import UserError
 from odoo.http import request
-from odoo.tools.translate import LazyTranslate
+from odoo.tools import LazyTranslate
 
 _lt = LazyTranslate(__name__)
 

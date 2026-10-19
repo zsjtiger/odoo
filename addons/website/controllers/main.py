@@ -30,12 +30,13 @@ from odoo.http.session import SessionExpiredException
 from odoo.http.stream import STATIC_CACHE_LONG
 from odoo.tools import OrderedSet, py_to_js_locale
 from odoo.tools import html_escape as escape
-from odoo.tools.image import hex_to_rgb
+from odoo.tools.files.image import hex_to_rgb
 from odoo.tools.json import scriptsafe as json
-from odoo.tools.mimetypes import guess_mimetype
+from odoo.tools.files.mimetypes import guess_mimetype
 from odoo.tools.misc import file_open
 from odoo.tools.sql import escape_like_value
-from odoo.tools.translate import LazyTranslate, TRANSLATED_ELEMENTS
+from odoo.tools import LazyTranslate
+from odoo.tools.text.translate import TRANSLATED_ELEMENTS
 
 from odoo.addons.base.models.ir_http import EXTENSION_TO_WEB_MIMETYPES
 from odoo.addons.portal.controllers.portal import pager as portal_pager

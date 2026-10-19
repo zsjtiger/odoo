@@ -19,7 +19,7 @@ from odoo.fields import Domain
 from odoo.http import request, Response
 from odoo.http.session import touch
 from odoo.tools import consteq, email_normalize_all
-from odoo.tools.translate import LazyTranslate
+from odoo.tools import LazyTranslate
 
 _lt = LazyTranslate(__name__)
 _logger = logging.getLogger(__name__)

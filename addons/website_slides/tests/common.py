@@ -104,7 +104,6 @@ class SlidesCase(MailCase):
             'is_published': True,
             'completion_time': 1.5,
             'sequence': 4,
-            'quiz_first_attempt_reward': 42,
         })
         cls.question_1 = cls.env['slide.question'].with_user(cls.user_officer).create({
             'question': 'How long should be cooked a human?',

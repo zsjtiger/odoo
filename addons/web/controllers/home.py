@@ -12,7 +12,7 @@ from odoo.http import Controller, request, route
 from odoo.http.router import db_list
 from odoo.http.session import authenticate, check, touch, update_session_token
 from odoo.tools import LazyTranslate, _, config, hmac
-from odoo.tools.cloc import Cloc
+from odoo.modules.cloc import Cloc
 from odoo.tools.urls import urljoin
 
 from .utils import (

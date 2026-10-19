@@ -7,7 +7,7 @@ from markupsafe import escape
 
 from odoo import api, models
 from odoo.tools import xml_translate
-from odoo.tools.translate import StoredTranslations
+from odoo.tools.text.translate import StoredTranslations
 
 _logger = logging.getLogger(__name__)
 
