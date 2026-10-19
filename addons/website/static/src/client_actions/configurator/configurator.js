@@ -1,7 +1,7 @@
 import { useEnv, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
 import { location, browser } from "@web/core/browser/browser";
 const sessionStorage = browser.sessionStorage;
-import { AutoComplete } from "@web/core/autocomplete/autocomplete";
+import { AutoComplete } from "@web/core/components/autocomplete/autocomplete";
 import { delay } from "@web/core/utils/concurrency";
 import { getDataURLFromFile, redirect } from "@web/core/utils/urls";
 import { getCSSVariableValue } from "@html_editor/utils/formatting";

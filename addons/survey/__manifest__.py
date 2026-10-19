@@ -62,7 +62,7 @@ sent mails with personal token for the invitation of the survey.
             'survey/static/src/js/survey_preload_image_mixin.js',
             ('include', 'web._assets_helpers'),
             ('include', 'web._assets_frontend_helpers'),
-            'web/static/src/scss/pre_variables.scss',
+            'web/static/src/scss/variables/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
             'web/static/lib/bootstrap/scss/_variables-dark.scss',
             'web/static/lib/bootstrap/scss/_maps.scss',

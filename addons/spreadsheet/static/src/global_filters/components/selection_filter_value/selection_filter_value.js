@@ -9,7 +9,7 @@ import {
     onMounted,
     useProps,
 } from "@odoo/owl";
-import { AutoComplete } from "@web/core/autocomplete/autocomplete";
+import { AutoComplete } from "@web/core/components/autocomplete/autocomplete";
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
 import { useService } from "@web/core/utils/hooks";
 

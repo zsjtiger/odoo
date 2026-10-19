@@ -1,6 +1,6 @@
 import { LinkPopover } from "@html_editor/main/link/link_popover";
 import { _t } from "@web/core/l10n/translation";
-import { AutoComplete, autoCompleteProps } from "@web/core/autocomplete/autocomplete";
+import { AutoComplete, autoCompleteProps } from "@web/core/components/autocomplete/autocomplete";
 import { useProps, signal, t, onMounted } from "@odoo/owl";
 import { patch } from "@web/core/utils/patch";
 import wUtils from "@website/js/utils";
