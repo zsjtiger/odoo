@@ -82,7 +82,7 @@ msgstr ""
 "            "
 
 #. module: web_builder
-#: model:ir.module.module,description:base.module_web_studio
+#: model:ir.module.module,description:base.module_web_builder
 msgid ""
 "\n"
 "Studio - Customize Odoo\n"
@@ -1178,7 +1178,7 @@ msgid "Create a new Model"
 msgstr "Yeni bir Model oluştur"
 
 #. module: web_builder
-#: model:ir.module.module,summary:base.module_web_studio
+#: model:ir.module.module,summary:base.module_web_builder
 msgid "Create and customize your Odoo apps"
 msgstr ""
 
@@ -4012,7 +4012,7 @@ msgstr ""
 #. module: web_builder
 #: model:ir.model.fields,field_description:web_builder.field_ir_model_data__studio
 #: model:ir.model.fields,field_description:web_builder.field_studio_export_wizard_data__studio
-#: model:ir.module.module,shortdesc:base.module_web_studio
+#: model:ir.module.module,shortdesc:base.module_web_builder
 msgid "Studio"
 msgstr "Studio"
 

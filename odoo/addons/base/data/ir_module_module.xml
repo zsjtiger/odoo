@@ -2,7 +2,7 @@
 <odoo>
     <data>
 
-        <record model="ir.module.module" id="base.module_web_studio">
+        <record model="ir.module.module" id="base.module_web_builder">
             <field name="name">web_builder</field>
             <field name="shortdesc">Studio</field>
             <field name="sequence">75</field>

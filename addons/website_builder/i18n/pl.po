@@ -28,7 +28,7 @@ msgstr ""
 "X-Generator: Weblate 2026.8.1\n"
 
 #. module: website_builder
-#: model:ir.module.module,description:base.module_website_studio
+#: model:ir.module.module,description:base.module_website_builder
 msgid ""
 "\n"
 "Studio - Customize Odoo\n"
@@ -94,7 +94,7 @@ msgid "Display Name"
 msgstr "Nazwa wyświetlana"
 
 #. module: website_builder
-#: model:ir.module.module,summary:base.module_website_studio
+#: model:ir.module.module,summary:base.module_website_builder
 msgid "Display Website Elements in Studio"
 msgstr ""
 
@@ -200,7 +200,7 @@ msgid "Website Description"
 msgstr "Opis strony"
 
 #. module: website_builder
-#: model:ir.module.module,shortdesc:base.module_website_studio
+#: model:ir.module.module,shortdesc:base.module_website_builder
 msgid "Website Studio"
 msgstr ""
 
