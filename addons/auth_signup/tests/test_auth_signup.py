@@ -12,16 +12,12 @@ from odoo.tests import tagged
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('post_install', '-at_install')
 class TestAuthSignupFlow(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
 
-    def setUp(self):
-        super(TestAuthSignupFlow, self).setUp()
-        res_config = self.env['res.config.settings']
-        self.default_values = res_config.default_get(list(res_config.fields_get()))
-
     def _activate_free_signup(self):
-        self.default_values.update({'auth_signup_uninvited': 'b2c'})
+        # The website module decides the invitation scope of the current website
+        self.env.ref('base.default_website').auth_signup_uninvited = 'b2c'
 
     def _get_free_signup_url(self):
         return '/web/signup'
@@ -61,7 +57,8 @@ class TestAuthSignupFlow(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
             # Call the controller
             url_free_signup = self._get_free_signup_url()
             response = self.url_open(url_free_signup, data=payload)
-            self.assertIn('/web/login_successful?account_created=True', response.url)
+            # Portal users (installed with website) are redirected to their account page instead
+            self.assertRegex(response.url, r'/(web/login_successful\?account_created=True|my)$')
             # Check if an email is sent to the new userw
             new_user = self.env['res.users'].search([('name', '=', name)])
             self.assertTrue(new_user)
