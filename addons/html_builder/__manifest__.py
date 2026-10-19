@@ -40,7 +40,7 @@
         'html_builder.assets_inside_builder_iframe': [
             ('include', 'web._assets_helpers'),
 
-            'web/static/src/scss/bootstrap_overridden.scss',
+            'web/static/src/scss/bootstrap/bootstrap_overridden.scss',
             'html_builder/static/src/**/*.edit.*',
             'html_editor/static/src/main/translate/translate_plugin.scss',
             'html_editor/static/src/main/link/link.scss',

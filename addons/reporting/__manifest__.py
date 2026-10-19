@@ -24,7 +24,6 @@
             'reporting/static/lib/echarts.min.js',
             'reporting/static/src/**/*.scss',
             'reporting/static/src/**/*.js',
-            'reporting/static/src/**/*.xml',
         ],
         'web.assets_unit_tests': [
             'reporting/static/lib/echarts.min.js',

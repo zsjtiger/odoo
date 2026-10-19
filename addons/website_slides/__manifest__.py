@@ -110,19 +110,19 @@ Featuring
             ('include', 'web._assets_bootstrap_frontend'),
 
             ('include', 'web.icons_fonts'),
-            'web/static/src/module_loader.js',
-            'web/static/src/session.js',
+            'web/static/src/boot/module_loader.js',
+            'web/static/src/boot/session.js',
 
             'web/static/lib/luxon/luxon.js',
             'web/static/src/libs/luxon.js',
             'web/static/lib/owl/owl.js',
-            'web/static/src/owl2/owl3_compatibility_layer.js',
-            'web/static/src/owl2/utils.js',
+            'web/static/src/core/owl/owl3_compatibility_layer.js',
+            'web/static/src/core/owl/utils.js',
             'web/static/lib/owl/odoo_module.js',
 
             'web/static/src/core/utils/transitions.scss',  # included early because used by other files
             'web/static/src/core/**/*',
-            'web/static/src/env.js',
+            'web/static/src/boot/env.js',
             ('remove', 'web/static/src/core/components/emoji_picker/emoji_data.js'),
 
             'website_slides/static/src/scss/website_slides.scss',
