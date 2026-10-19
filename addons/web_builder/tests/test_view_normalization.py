@@ -9,7 +9,7 @@ from odoo.addons.web_builder.controllers.main import WebStudioController
 
 
 @tagged('web_studio_normalization')
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('post_install', '-at_install')
 class TestViewNormalization(TransactionCase):
 
     maxDiff = None

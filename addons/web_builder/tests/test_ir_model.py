@@ -16,7 +16,7 @@ from odoo.exceptions import ValidationError
 from odoo import Command
 
 
-@tagged('at_install', '-post_install')
+@tagged('post_install', '-at_install')
 class TestStudioIrModel(TransactionCase):
 
     @classmethod

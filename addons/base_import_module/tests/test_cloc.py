@@ -83,7 +83,7 @@ SCSS_TEST = '''
 '''
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('post_install', '-at_install')
 class TestClocFields(TransactionCase):
     def create_xml_id(self, module, name, rec):
         self.env['ir.model.data'].create({

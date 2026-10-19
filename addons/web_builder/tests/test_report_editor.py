@@ -39,7 +39,7 @@ def get_combined_and_studio_arch(view):
     return view.get_combined_arch(), studio_view.arch
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('post_install', '-at_install')
 class TestReportEditor(TransactionCase):
 
     def setUp(self):

@@ -39,7 +39,7 @@ class TestStudioController(TransactionCase):
         self.env = self.env(context=dict(self.env.context, **overrides))
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('post_install', '-at_install')
 class TestEditView(TestStudioController):
 
     def edit_view(self, base_view, studio_arch="", operations=None, model=None, context=None):
