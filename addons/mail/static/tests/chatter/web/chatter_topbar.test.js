@@ -11,7 +11,7 @@ import {
 import { describe, expect, test } from "@odoo/hoot";
 import { advanceTime } from "@odoo/hoot-mock";
 
-import { DELAY_FOR_SPINNER } from "@mail/chatter/web_portal_project/chatter";
+import { DELAY_FOR_SPINNER } from "@mail/chatter/web/chatter_patch";
 
 describe.current.tags("desktop");
 defineMailModels();
