@@ -2,7 +2,7 @@ import { AiPrompt, AiPromptDialog } from "@ai/ai_prompt/ai_prompt";
 import { computed, signal } from "@odoo/owl";
 import { rpc } from "@web/core/services/network/rpc";
 import { patch } from "@web/core/utils/patch";
-import { FieldProperties } from "@web_studio/editors/view_editor/interactive_editor/properties/field_properties/field_properties";
+import { FieldProperties } from "@web_builder/editors/view_editor/interactive_editor/properties/field_properties/field_properties";
 import { _t } from "@web/core/data/l10n/translation";
 import { KeepLast, Mutex } from "@web/core/utils/concurrency";
 
@@ -60,7 +60,7 @@ patch(FieldProperties.prototype, {
             Object.assign(this.tempAiValues(), values);
             const aiValues = this.aiValues();
             try {
-                await rpc("/web_studio/edit_field", {
+                await rpc("/web_builder/edit_field", {
                     model_name: this.env.viewEditorModel.resModel,
                     field_name: field.name,
                     values: values,

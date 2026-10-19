@@ -143,7 +143,7 @@ class IrModuleModule(models.Model):
             to_install.button_immediate_install()
             # Rebrowse to use the new registry
             return self.env[self._name].browse(self._ids)._import_module(module, path, force=force, with_demo=with_demo)
-        elif 'web_studio' not in installed_mods and _is_studio_custom(path):
+        elif 'web_builder' not in installed_mods and _is_studio_custom(path):
             raise UserError(_("Studio customizations require the Odoo Studio app."))
 
         mod = known_mods_names.get(module)

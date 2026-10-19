@@ -55,7 +55,7 @@ export class HomeMenu extends Component {
                 xmlid: t.string(),
             })
         ),
-        // Optional: web_studio's StudioHomeMenu subclass disables app
+        // Optional: web_builder's StudioHomeMenu subclass disables app
         // sorting (see _enableAppsSorting) and never passes this prop.
         reorderApps: t.function().optional(),
     });

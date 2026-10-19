@@ -27,7 +27,7 @@ export class PromoteStudioDialog extends Component {
         this.uiService.block();
         const modules = await this.ormService.searchRead(
             "ir.module.module",
-            [["name", "=", "web_studio"]],
+            [["name", "=", "web_builder"]],
             ["id"]
         );
         await this.ormService.call("ir.module.module", "button_immediate_install", [

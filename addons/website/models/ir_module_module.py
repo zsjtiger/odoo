@@ -248,7 +248,7 @@ class IrModuleModule(models.Model):
 
             if self.env.context.get('apply_new_theme'):
                 # TODO Kept for backward compatibility with design-themes tests
-                # and web_studio. This could become a parameter in master.
+                # and web_builder. This could become a parameter in master.
                 self.env['theme.utils'].with_context(website_id=website.id)._post_copy(module)
 
     def _theme_unload(self, website):

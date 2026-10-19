@@ -9,7 +9,7 @@ import {
     onRpc,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-import { editView, mountViewEditor } from "@web_studio/../tests/view_editor_tests_utils";
+import { editView, mountViewEditor } from "@web_builder/../tests/view_editor_tests_utils";
 
 import { before, describe, expect, test } from "@odoo/hoot";
 import { queryOne, waitFor } from "@odoo/hoot-dom";
@@ -61,10 +61,10 @@ test("ai and system prompt are available for base fields", async () => {
             },
         });
     });
-    onRpc("/web_studio/edit_field", () => {
+    onRpc("/web_builder/edit_field", () => {
         expect.step("edit_field");
     });
-    onRpc("/web_studio/get_studio_view_arch", () => ({ studio_view_arch: "" }));
+    onRpc("/web_builder/get_studio_view_arch", () => ({ studio_view_arch: "" }));
     await mountViewEditor({
         type: "form",
         resModel: "dummy",
@@ -100,11 +100,11 @@ test("ai can be changed on base fields", async () => {
             },
         });
     });
-    onRpc("/web_studio/edit_field", () => {
+    onRpc("/web_builder/edit_field", () => {
         expect.step("edit_field");
     });
 
-    onRpc("/web_studio/edit_view", async (request) => {
+    onRpc("/web_builder/edit_view", async (request) => {
         expect.step("edit_view");
         const params = (await request.json()).params;
         expect(params.operations).toEqual([
@@ -145,7 +145,7 @@ test("ai can be changed on base fields", async () => {
         ]);
     });
 
-    onRpc("/web_studio/get_studio_view_arch", () => ({ studio_view_arch: "" }));
+    onRpc("/web_builder/get_studio_view_arch", () => ({ studio_view_arch: "" }));
     await mountViewEditor({
         type: "form",
         resModel: "dummy",
@@ -183,7 +183,7 @@ test("make custom field use ai", async () => {
             },
         });
     });
-    onRpc("/web_studio/edit_field", async (request) => {
+    onRpc("/web_builder/edit_field", async (request) => {
         const { params } = await request.json();
         expect.step("edit_field");
         editCount++;
@@ -207,7 +207,7 @@ test("make custom field use ai", async () => {
             expect(params.values.ai).toBe(false);
         }
     });
-    onRpc("/web_studio/edit_view", async (request) => {
+    onRpc("/web_builder/edit_view", async (request) => {
         const { params } = await request.json();
         expect.step("edit_view");
         if (editCount === 1) {

@@ -7,13 +7,13 @@
     'version': '0.1',
     'author': 'Odoo S.A.',
     'license': 'OEEL-1',
-    'depends': ['ai_fields', 'web_studio'],
+    'depends': ['ai_fields', 'web_builder'],
     'auto_install': True,
     'assets': {
         'web.assets_backend': [
             'web_studio_ai_fields/static/src/**/*.xml',
         ],
-        'web_studio.studio_assets_minimal': [
+        'web_builder.studio_assets_minimal': [
             'web_studio_ai_fields/static/src/**/*.js',
         ],
         'web.assets_unit_tests': [

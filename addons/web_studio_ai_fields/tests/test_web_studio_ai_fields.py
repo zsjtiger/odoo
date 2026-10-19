@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.tests import tagged
 
-from odoo.addons.web_studio.tests.test_view_editor import TestStudioController
+from odoo.addons.web_builder.tests.test_view_editor import TestStudioController
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install

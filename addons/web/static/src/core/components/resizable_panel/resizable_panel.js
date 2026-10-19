@@ -124,7 +124,7 @@ export const resizablePanelProps = {
 };
 
 export class ResizablePanel extends Component {
-    static template = "web_studio.ResizablePanel";
+    static template = "web_builder.ResizablePanel";
 
     static components = {};
     props = useProps(resizablePanelProps);
