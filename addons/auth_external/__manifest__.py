@@ -5,11 +5,29 @@
     'category': 'Hidden/Tools',
     'license': 'LGPL-3',
     'author': 'Odoo S.A.',
-    'depends': ['base', 'web', 'base_setup', 'auth_signup'],
+    'depends': [
+        'base',
+        'web',
+        'base_setup',
+        'auth_signup',
+    ],
     'external_dependencies': {'python': ['python-ldap']},
-    'data': ['oauth/data/auth_oauth_data.xml', 'oauth/views/auth_oauth_views.xml', 'oauth/views/res_config_settings_views.xml', 'oauth/views/auth_oauth_templates.xml', 'oauth/security/ir.access.csv', 'ldap/views/ldap_installer_views.xml', 'ldap/views/res_config_settings_views.xml', 'ldap/security/ir.access.csv'],
+    'data': [
+        # oauth
+        'oauth/data/auth_oauth_data.xml',
+        'oauth/views/auth_oauth_views.xml',
+        'oauth/views/res_config_settings_views.xml',
+        'oauth/views/auth_oauth_templates.xml',
+        'oauth/security/ir.access.csv',
+        # ldap
+        'ldap/views/ldap_installer_views.xml',
+        'ldap/views/res_config_settings_views.xml',
+        'ldap/security/ir.access.csv',
+    ],
     'assets': {
-        'web.assets_frontend': ['auth_external/static/src/oauth/**/*'],
+        'web.assets_frontend': [
+            'auth_external/static/src/oauth/**/*',
+        ],
     },
     'installable': True,
     'application': False,
