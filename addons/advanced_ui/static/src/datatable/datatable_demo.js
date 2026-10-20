@@ -113,11 +113,15 @@ const PARTNER_NAMES = [
     "Sam",
     "Tina",
 ];
-const PARTNERS = PARTNER_NAMES.map((name, index) => ({ id: index + 1, name }));
+const PARTNERS = Array.from({ length: 60 }, (_, index) => ({
+    id: index + 1,
+    name: index < PARTNER_NAMES.length ? PARTNER_NAMES[index] : `Partner ${index + 1}`,
+}));
 
 /** Demo search for the relation filter: a real app would call the server here. */
-async function searchPartners(term) {
-    return PARTNERS.filter((partner) => partner.name.toLowerCase().includes(term.toLowerCase()));
+async function searchPartners(term, { offset, limit }) {
+    const found = PARTNERS.filter((partner) => partner.name.toLowerCase().includes(term.toLowerCase()));
+    return { records: found.slice(offset, offset + limit), count: found.length };
 }
 
 const FILTER_COLUMNS = [

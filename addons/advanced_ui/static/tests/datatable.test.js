@@ -447,8 +447,12 @@ test("datatable: relation filter searches and checks records in the popover", as
             key: "partnerId",
             label: "Partner",
             filter: "relation",
-            searchRecords: async (term) =>
-                partners.filter((partner) => partner.name.toLowerCase().includes(term.toLowerCase())),
+            searchRecords: async (term, { offset, limit }) => {
+                const found = partners.filter((partner) =>
+                    partner.name.toLowerCase().includes(term.toLowerCase())
+                );
+                return { records: found.slice(offset, offset + limit), count: found.length };
+            },
         },
     ];
     class RelationFiltered extends Component {
@@ -485,4 +489,44 @@ test("datatable: relation filter searches and checks records in the popover", as
     await animationFrame();
     await applyFilter();
     expect(queryAllTexts("tbody tr td:first-child")).toEqual(["A", "D"]);
+});
+
+test("datatable: relation filter pages the options 20 at a time", async () => {
+    const manyPartners = Array.from({ length: 25 }, (_, i) => ({ id: i + 1, name: `Partner ${i + 1}` }));
+    const manyColumns = [
+        { key: "name", label: "Name" },
+        {
+            key: "partnerId",
+            label: "Partner",
+            filter: "relation",
+            searchRecords: async (term, { offset, limit }) => {
+                const found = manyPartners.filter((partner) =>
+                    partner.name.toLowerCase().includes(term.toLowerCase())
+                );
+                return { records: found.slice(offset, offset + limit), count: found.length };
+            },
+        },
+    ];
+    class ManyOptions extends Component {
+        static template = xml`<DataTable columns="this.columns" rows="this.rows"/>`;
+        static components = { DataTable };
+
+        setup() {
+            this.columns = manyColumns;
+            this.rows = [];
+        }
+    }
+    await mountWithCleanup(ManyOptions);
+    await openFilter(1);
+    await animationFrame();
+    expect(queryAllTexts(".o_datatable_filter_popover .o_datatable_relation_list label")).toHaveLength(20);
+    await click(".o_datatable_filter_popover .o_pager_next");
+    await animationFrame();
+    expect(queryAllTexts(".o_datatable_filter_popover .o_datatable_relation_list label")).toEqual([
+        "Partner 21",
+        "Partner 22",
+        "Partner 23",
+        "Partner 24",
+        "Partner 25",
+    ]);
 });

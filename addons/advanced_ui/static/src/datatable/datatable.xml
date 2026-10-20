@@ -39,6 +39,7 @@
                                     t-att-class="{ 'o_datatable_filter_active': this.isFilterActive(column) }"
                                     t-on-click.stop="() => this.toggleFilter(column)">▼</button>
                                 <div t-if="this.isFilterOpen(column)" class="o_datatable_filter_popover"
+                                    t-att-class="{ 'o_datatable_relation_popover': column.filter === 'relation' }"
                                     t-on-click.stop="() => {}">
                                     <t t-if="column.filter === 'text'">
                                         <select class="form-select form-select-sm mb-2" aria-label="Operator"
@@ -80,13 +81,18 @@
                                         <div class="small text-muted mb-1">
                                             <span t-out="this.state.draft.length"/> selected
                                         </div>
-                                        <div t-foreach="this.state.relationOptions" t-as="record" t-key="record.id"
-                                            class="form-check">
-                                            <input type="checkbox" class="form-check-input"
-                                                t-att-checked="this.isRelationSelected(record)"
-                                                t-on-change="() => this.toggleRelation(record)"/>
-                                            <label class="form-check-label" t-out="record.name"/>
+                                        <div class="o_datatable_relation_list">
+                                            <div t-foreach="this.state.relationOptions" t-as="record" t-key="record.id"
+                                                class="form-check">
+                                                <input type="checkbox" class="form-check-input"
+                                                    t-att-checked="this.isRelationSelected(record)"
+                                                    t-on-change="() => this.toggleRelation(record)"/>
+                                                <label class="form-check-label" t-out="record.name"/>
+                                            </div>
                                         </div>
+                                        <Pager offset="this.state.relationOffset" limit="this.relationPageSize"
+                                            total="this.state.relationCount" isEditable="false"
+                                            onUpdate="(params) => this.loadRelationOptions(column, this.state.optionSearch, params.offset)"/>
                                     </t>
                                     <t t-elif="column.filter === 'date' or column.filter === 'datetime'">
                                         <select class="form-select form-select-sm mb-2" aria-label="Operator"
@@ -112,7 +118,7 @@
                                             t-att-value="this.state.draft.max"
                                             t-on-input="(ev) => this.setDraft('max', ev.target.value)"/>
                                     </t>
-                                    <div class="d-flex gap-2 mt-2">
+                                    <div class="d-flex justify-content-end gap-2 mt-2">
                                         <button type="button" class="btn btn-primary btn-sm o_datatable_filter_apply"
                                             t-on-click="() => this.applyFilter(column)">Apply</button>
                                         <button type="button" class="btn btn-secondary btn-sm o_datatable_filter_clear"

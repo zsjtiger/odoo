@@ -1,4 +1,5 @@
 import { Component, onWillUnmount, proxy, signal, t, useEffect, useProps } from "@odoo/owl";
+import { Pager } from "@web/core/components/pager/pager";
 import { _t } from "@web/core/data/l10n/translation";
 import { uniqueId } from "@web/core/utils/functions";
 import { Field } from "@web/views/fields/field";
@@ -32,9 +33,12 @@ import { emptyFilterValue, isFilterActive } from "./filter_domain";
  *   where text is the formatted value. Use it to render field components or badges.
  * - onSelectionChange(selectedIds)
  */
+/** Number of options shown per page in a relational filter. */
+const RELATION_PAGE_SIZE = 20;
+
 export class DataTable extends Component {
     static template = "advanced_ui.DataTable";
-    static components = { Field };
+    static components = { Field, Pager };
     props = useProps({
         columns: t.array(),
         rows: t.array(),
@@ -70,6 +74,7 @@ export class DataTable extends Component {
             ["<", _t("Before")],
             [">", _t("After")],
         ];
+        this.relationPageSize = RELATION_PAGE_SIZE;
         this.boolOptions = [
             [true, _t("Yes")],
             [false, _t("No")],
@@ -85,6 +90,8 @@ export class DataTable extends Component {
             draft: null,
             optionSearch: "",
             relationOptions: [],
+            relationOffset: 0,
+            relationCount: 0,
             loading: false,
         });
         this.radioName = uniqueId("o_datatable_radio_");
@@ -187,14 +194,21 @@ export class DataTable extends Component {
     }
 
     /**
-     * Searches the records of a relational filter with the column's `searchRecords(term)`,
-     * which resolves to [{ id, name }].
+     * Searches the records of a relational filter one page at a time. The column's
+     * `searchRecords(term, { offset, limit })` resolves to { records: [{ id, name }], count }.
      * @param {Object} column
      * @param {string} term
+     * @param {number} [offset]
      */
-    async loadRelationOptions(column, term) {
+    async loadRelationOptions(column, term, offset = 0) {
         this.state.optionSearch = term;
-        this.state.relationOptions = await column.searchRecords(term);
+        const { records, count } = await column.searchRecords(term, {
+            offset,
+            limit: RELATION_PAGE_SIZE,
+        });
+        this.state.relationOptions = records;
+        this.state.relationCount = count;
+        this.state.relationOffset = offset;
     }
 
     isRelationSelected(record) {

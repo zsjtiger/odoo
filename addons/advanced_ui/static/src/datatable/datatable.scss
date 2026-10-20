@@ -191,3 +191,13 @@
         text-align: left;
     }
 }
+
+// Relational filter: fixed width, a fixed-height list, and the pager below it.
+.o_datatable .o_datatable_relation_popover {
+    width: 20rem;
+}
+
+.o_datatable .o_datatable_relation_list {
+    height: 240px;
+    overflow-y: auto;
+}
