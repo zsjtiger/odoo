@@ -136,6 +136,7 @@ export const listRendererProps = {
     archInfo: t.any(),
     openRecord: t.any(),
     onAdd: t.any().optional(),
+    onRecordDelete: t.any().optional(),
     cycleOnTab: t.any().optional(true),
     allowSelectors: t.any().optional(false),
     editable: t.any().optional(),
@@ -570,6 +571,11 @@ export class ListRenderer extends Component {
     get singleSelectionName() {
         this.singleSelectionGroup ??= uniqueId("o_list_single_selection_");
         return this.singleSelectionGroup;
+    }
+
+    /** Whether the row menu can delete a record of a top-level list. */
+    get canDeleteRecord() {
+        return !!(this.activeActions.onDelete || (this.props.onRecordDelete && this.activeActions.delete));
     }
 
     get hasRowMenu() {
@@ -1665,6 +1671,9 @@ export class ListRenderer extends Component {
         }
         if (this.activeActions.onDelete) {
             return this.activeActions.onDelete(record);
+        }
+        if (this.props.onRecordDelete && this.activeActions.delete) {
+            return this.props.onRecordDelete(record);
         }
     }
 

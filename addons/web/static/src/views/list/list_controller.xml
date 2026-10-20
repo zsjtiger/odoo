@@ -73,6 +73,7 @@
                     openRecord.bind="this.openRecord"
                     noContentHelp="this.props.info.noContentHelp"
                     onAdd.bind="this.createRecord"
+                    onRecordDelete.bind="this.onRecordDelete"
                     optionalActiveFields="this.optionalActiveFields"
                     readonly="this.props.readonly"
                 />

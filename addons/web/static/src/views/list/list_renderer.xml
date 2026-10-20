@@ -419,7 +419,7 @@
                     <button class="btn btn-link o_list_row_menu_toggle p-0" aria-label="Row actions">▾</button>
                     <t t-set-slot="content">
                         <DropdownItem t-if="this.props.openRecord" onSelected="() => this.props.openRecord(record)">Open</DropdownItem>
-                        <DropdownItem t-if="this.activeActions.onDelete" onSelected="() => this.onDeleteRecord(record)">Delete</DropdownItem>
+                        <DropdownItem t-if="this.canDeleteRecord" onSelected="() => this.onDeleteRecord(record)">Delete</DropdownItem>
                     </t>
                 </Dropdown>
             </td>

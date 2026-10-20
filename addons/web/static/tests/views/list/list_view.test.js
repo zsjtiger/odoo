@@ -22536,6 +22536,23 @@ test("list: row_menu opens a menu on each row", async () => {
 
     await click(queryAll(".o_list_row_menu_toggle")[0]);
     await animationFrame();
-    // Delete is only offered when the list has an onDelete action (one2many fields).
-    expect(queryAllTexts(".dropdown-item")).toEqual(["Open"]);
+    expect(queryAllTexts(".dropdown-item")).toEqual(["Open", "Delete"]);
+});
+
+test("list: row menu Delete asks for confirmation and removes the record", async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list row_menu="1"><field name="foo"/></list>`,
+    });
+
+    await click(queryAll(".o_list_row_menu_toggle")[0]);
+    await animationFrame();
+    await click(queryAll(".dropdown-item")[1]);
+    await animationFrame();
+    expect(".modal .btn-danger").toHaveCount(1);
+
+    await click(".modal .btn-danger");
+    await animationFrame();
+    expect(".o_data_row").toHaveCount(3);
 });
