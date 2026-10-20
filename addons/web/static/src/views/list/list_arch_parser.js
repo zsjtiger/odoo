@@ -263,9 +263,11 @@ export class ListArchParser {
 
                 treeAttr.noOpen = exprToBoolean(node.getAttribute("no_open") || "");
                 // layout options, applied as classes by the renderer
-                for (const attr of ["striped", "bordered", "no_row_hover", "headless", "fixed_layout"]) {
-                    treeAttr[attr] = exprToBoolean(xmlDoc.getAttribute(attr) || "");
-                }
+                treeAttr.striped = exprToBoolean(xmlDoc.getAttribute("striped") || "");
+                treeAttr.bordered = exprToBoolean(xmlDoc.getAttribute("bordered") || "");
+                treeAttr.noRowHover = exprToBoolean(xmlDoc.getAttribute("no_row_hover") || "");
+                treeAttr.headless = exprToBoolean(xmlDoc.getAttribute("headless") || "");
+                treeAttr.fixedLayout = exprToBoolean(xmlDoc.getAttribute("fixed_layout") || "");
                 treeAttr.rawExpand = xmlDoc.getAttribute("expand");
                 treeAttr.decorations = getDecoration(xmlDoc);
 
