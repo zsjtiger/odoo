@@ -160,3 +160,34 @@
         min-width: 0;
     }
 }
+
+// Header filter popover: floats over the rows, so it never changes the column widths.
+.o_datatable {
+    .o_datatable_filter_toggle {
+        padding: 0 0.25rem;
+        margin-left: 0.25rem;
+        line-height: 1.2;
+        font-size: 0.7rem;
+        color: $gray-600;
+    }
+
+    .o_datatable_filter_active {
+        color: $primary;
+    }
+
+    .o_datatable_filter_popover {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        z-index: 20;
+        min-width: 14rem;
+        padding: 0.75rem;
+        background-color: $white;
+        border: 1px solid $border-color;
+        border-radius: $border-radius;
+        box-shadow: $box-shadow;
+        font-weight: normal;
+        white-space: normal;
+        text-align: left;
+    }
+}
