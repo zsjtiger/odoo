@@ -214,6 +214,16 @@ export class MyList extends Component {
 Props that are expressions in the template need quotes for strings: `sortKey="'name'"`.
 Booleans are written as `true`.
 
+### Usage
+
+A tree (list) view gets these options as attributes of `<list>`, written in the XML view:
+
+```xml
+<list striped="1" bordered="1" no_row_hover="1" fixed_layout="1" single_selection="1" row_menu="1" infinite_scroll="1">
+```
+
+Each attribute is optional. The table below explains what each one does.
+
 ### Configuration
 
 To use the DataTable in your own module, depend on `advanced_ui` in the manifest:
@@ -226,15 +236,8 @@ Then import the component and declare it in a component, as shown above. Each pa
 table is set by its prop or column option, listed below. Nothing needs to be changed in the
 core files.
 
-For a tree (list) view, the layout options are attributes of `<list>`, written in the XML
-view. No JavaScript is needed:
-
-```xml
-<list striped="1" bordered="1" no_row_hover="1" headless="1" fixed_layout="1"
-    single_selection="1" row_menu="1" infinite_scroll="1">
-    <field name="name"/>
-</list>
-```
+For a tree (list) view, the layout options are attributes of `<list>`, see the Usage section.
+No JavaScript is needed.
 
 | Attribute | Effect |
 |---|---|
