@@ -56,13 +56,15 @@
                             t-att-data-cell="row_index + '-' + column_index"
                             t-att-tabindex="this.isFocused(row_index, column_index) ? 0 : -1"
                             t-on-focus="() => this.setFocus(row_index, column_index)">
-                            <t t-slot="cell" row="row" column="column" value="row[column.key]" text="this.cellText(column, row)">
-                                <Field t-if="column.type === 'field'" name="column.key" record="row" readonly="true"/>
-                                <a t-elif="column.type === 'link'" href="#" class="o_datatable_link text-truncate d-block"
-                                    t-on-click="(ev) => ev.preventDefault()" t-out="this.cellText(column, row)"/>
-                                <a t-elif="column.type === 'email'" class="o_datatable_link text-truncate d-block"
-                                    t-attf-href="mailto:{{ row[column.key] }}" t-out="this.cellText(column, row)"/>
-                                <span t-else="" class="text-truncate d-block" t-out="this.cellText(column, row)"/>
+                            <Field t-if="column.type === 'field'" name="column.key" record="row" readonly="true"/>
+                            <t t-else="">
+                                <t t-slot="cell" row="row" column="column" value="row[column.key]" text="this.cellText(column, row)">
+                                    <a t-if="column.type === 'link'" href="#" class="o_datatable_link text-truncate d-block"
+                                        t-on-click="(ev) => ev.preventDefault()" t-out="this.cellText(column, row)"/>
+                                    <a t-elif="column.type === 'email'" class="o_datatable_link text-truncate d-block"
+                                        t-attf-href="mailto:{{ row[column.key] }}" t-out="this.cellText(column, row)"/>
+                                    <span t-else="" class="text-truncate d-block" t-out="this.cellText(column, row)"/>
+                                </t>
                             </t>
                         </td>
                         <td t-if="this.props.rowActions" class="o_datatable_actions">
