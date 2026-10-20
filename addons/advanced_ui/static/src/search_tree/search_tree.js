@@ -1,4 +1,5 @@
 import { patch } from "@web/core/utils/patch";
+import { SearchPanel } from "@web/search/search_panel/search_panel";
 import { SearchArchParser } from "@web/search/search_arch_parser";
 import { SearchModel } from "@web/search/search_model";
 
@@ -7,12 +8,30 @@ import { SearchModel } from "@web/search/search_model";
  * can name the parent field and the label field of that model:
  *
  * <searchpanel>
- *     <field name="categ_id" tree_parent="parent_id" tree_label="name"/>
+ *     <field name="categ_id" tree_parent="parent_id" tree_label="name" limit="200"/>
  * </searchpanel>
  *
  * The values of the field are shown as a tree on the left. Selecting a node
  * filters the records on that node and on all its descendants.
+ *
+ * The `limit` attribute is the number of nodes loaded at once. When there are
+ * more nodes, a "Load more" button loads the next page of `limit` nodes.
  */
+
+const DEFAULT_PARENT = "parent_id";
+const DEFAULT_LIMIT = 200;
+
+// Descendants of a node change rarely: they are kept for a while, so that
+// selecting the same node again does not ask the server again.
+const DESCENDANTS_CACHE_DURATION = 5 * 60 * 1000;
+
+/**
+ * @param {number | [number, string] | false} value a many2one value
+ * @returns {number | false}
+ */
+function toId(value) {
+    return (Array.isArray(value) ? value[0] : value) || false;
+}
 
 patch(SearchArchParser.prototype, {
     visitSearchPanel(searchPanelNode) {
@@ -27,7 +46,7 @@ patch(SearchArchParser.prototype, {
             const section = this.sections.find(([, s]) => s.fieldName === node.getAttribute("name"))?.[1];
             if (section?.type === "category") {
                 section.tree = {
-                    parent: node.getAttribute("tree_parent") || null,
+                    parent: node.getAttribute("tree_parent") || DEFAULT_PARENT,
                     label: node.getAttribute("tree_label") || "display_name",
                 };
             }
@@ -36,149 +55,111 @@ patch(SearchArchParser.prototype, {
     },
 });
 
-// Labels and parents of the tree nodes change rarely: they are kept for a while
-// so that a reload of the search panel does not read them again.
-const TREE_CACHE_DURATION = 5 * 60 * 1000;
-
 patch(SearchModel.prototype, {
-    _createCategoryTree(sectionId, result) {
-        super._createCategoryTree(sectionId, result);
-        const category = this.sections.get(sectionId);
-        if (!category.tree) {
-            return;
-        }
-        // The parent field of the comodel, as the server knows it
-        category.comodelParent = result.parent_field || false;
-        if (category.tree.parent) {
-            category.parentField = category.tree.parent;
-        }
-        this._loadTreeNodes(category);
-    },
-
     /**
-     * Returns the cache of the tree nodes of a comodel for the given label and parent.
+     * Tree categories are loaded here, one page at a time, instead of with
+     * search_panel_select_range: that method returns no value at all when the
+     * result reaches the limit, which is not what a paged tree needs.
      *
-     * @param {string} key
-     * @returns {Map<number, Object>}
+     * @param {Object[]} categories
      */
-    _getTreeNodeCache(key) {
-        this.treeNodeCaches ??= new Map();
-        if (!this.treeNodeCaches.has(key)) {
-            this.treeNodeCaches.set(key, new Map());
-        }
-        return this.treeNodeCaches.get(key);
+    async _fetchCategories(categories) {
+        const treeCategories = categories.filter((category) => category.tree);
+        await super._fetchCategories(categories.filter((category) => !category.tree));
+        await Promise.all(treeCategories.map((category) => this._fetchTreeNodes(category)));
     },
 
     /**
-     * Reads the label and the parent of the nodes that are not cached yet, so that
-     * the tree shows the configured label and follows the configured parent field.
+     * Reads one page of nodes: `limit + 1` records are read, the extra one tells
+     * whether there is a next page.
      *
      * @param {Object} category
      */
-    async _loadTreeNodes(category) {
+    async _fetchTreeNodes(category) {
         const { label, parent } = category.tree;
-        const parentName = parent || category.comodelParent;
-        const ids = [...category.values.keys()].filter(Boolean);
-        if (!ids.length) {
-            return;
-        }
-        const loadId = (category.treeLoadId = (category.treeLoadId || 0) + 1);
+        category.pageSize ??= category.limit || DEFAULT_LIMIT;
+        category.limit ||= DEFAULT_LIMIT;
         const comodel = this.searchViewFields[category.fieldName].relation;
-        const cache = this._getTreeNodeCache(`${comodel}|${label}|${parentName}`);
-        const now = Date.now();
-        const isFresh = (id) => cache.has(id) && now - cache.get(id).time < TREE_CACHE_DURATION;
-        const missingIds = ids.filter((id) => !isFresh(id));
-        if (missingIds.length) {
-            const fields = [...new Set([label, parentName].filter(Boolean))];
-            const records = await this.orm.read(comodel, missingIds, fields, {
-                context: this.globalContext,
-            });
-            for (const record of records) {
-                const parentValue = parentName ? record[parentName] : false;
-                cache.set(record.id, {
-                    label: record[label],
-                    parentId: (Array.isArray(parentValue) ? parentValue[0] : parentValue) || false,
-                    time: now,
-                });
-            }
-        }
-        if (loadId !== category.treeLoadId) {
+        const records = await this.orm.searchRead(comodel, [], [...new Set(["id", label, parent])], {
+            context: this.globalContext,
+            limit: category.limit + 1,
+        });
+        category.hasMore = records.length > category.limit;
+        const values = records.slice(0, category.limit).map((record) => ({
+            id: record.id,
+            display_name: String(record[label] || record.display_name || record.id),
+            [parent]: toId(record[parent]),
+        }));
+        this._createCategoryTree(category.id, { parent_field: parent, values });
+    },
+
+    /**
+     * Loads the next page of nodes of a tree.
+     *
+     * @param {number} sectionId
+     */
+    async loadMoreTreeValues(sectionId) {
+        const category = this.sections.get(sectionId);
+        if (!category?.tree) {
             return;
         }
-        for (const id of ids) {
-            const value = category.values.get(id);
-            const node = cache.get(id);
-            if (!value || !node) {
-                continue;
-            }
-            value.display_name = node.label || value.display_name;
-            if (parentName) {
-                value.parentId = node.parentId;
-            }
-        }
-        this._linkTreeNodes(category);
+        category.limit += category.pageSize;
+        await this._fetchSections([category], []);
         this.trigger("update");
     },
 
     /**
-     * Rebuilds the children and the roots of the tree from the parent of each node.
-     * A node whose parent is not loaded is a root.
+     * Selects a node of a tree. Its descendants are read from the server before
+     * the search runs, so that they are found even if they are not on a loaded page.
      *
-     * @param {Object} category
+     * @param {number} sectionId
+     * @param {number} valueId
      */
-    _linkTreeNodes(category) {
-        const nodes = [...category.values.values()].filter((value) => value.id);
-        for (const node of nodes) {
-            node.childrenIds = [];
+    async toggleCategoryValue(sectionId, valueId) {
+        const category = this.sections.get(sectionId);
+        if (!category?.tree) {
+            return super.toggleCategoryValue(sectionId, valueId);
         }
-        for (const node of nodes) {
-            if (node.parentId && category.values.has(node.parentId)) {
-                category.values.get(node.parentId).childrenIds.push(node.id);
-            }
+        category.activeValueId = valueId;
+        const ids = await this._getTreeDescendantIds(category, valueId);
+        if (category.activeValueId !== valueId) {
+            return;
         }
-        category.rootIds = [
-            false,
-            ...nodes
-                .filter((node) => !node.parentId || !category.values.has(node.parentId))
-                .map((node) => node.id),
-        ];
+        category.selection = { valueId, ids };
+        this._notify();
     },
 
     /**
-     * The ids of a node and of all its loaded descendants.
+     * The ids of a node and of all its descendants, read level by level.
      *
      * @param {Object} category
      * @param {number} nodeId
-     * @returns {number[]}
+     * @returns {Promise<number[]>}
      */
-    _getTreeNodeIds(category, nodeId) {
+    async _getTreeDescendantIds(category, nodeId) {
+        const { parent } = category.tree;
+        const comodel = this.searchViewFields[category.fieldName].relation;
+        this.treeDescendantsCache ??= new Map();
+        const key = `${comodel}|${parent}|${nodeId}`;
+        const cached = this.treeDescendantsCache.get(key);
+        if (cached && Date.now() - cached.time < DESCENDANTS_CACHE_DURATION) {
+            return cached.ids;
+        }
         const ids = [nodeId];
-        const queue = [nodeId];
-        while (queue.length) {
-            const current = queue.shift();
-            for (const childId of category.values.get(current)?.childrenIds ?? []) {
-                ids.push(childId);
-                queue.push(childId);
+        const seen = new Set(ids);
+        let frontier = [nodeId];
+        while (frontier.length) {
+            const records = await this.orm.searchRead(comodel, [[parent, "in", frontier]], ["id"], {
+                context: this.globalContext,
+            });
+            frontier = records.map((record) => record.id).filter((id) => !seen.has(id));
+            for (const id of frontier) {
+                seen.add(id);
+                ids.push(id);
             }
         }
+        this.treeDescendantsCache.set(key, { ids, time: Date.now() });
         return ids;
-    },
-
-    /**
-     * The condition of a selected node. When the tree follows the parent field of the
-     * comodel, the server expands the node into its descendants with child_of, which
-     * does not send the ids of the tree. Otherwise, the loaded descendants are sent.
-     *
-     * @param {Object} category
-     * @returns {Array}
-     */
-    _getTreeCategoryCondition(category) {
-        const { activeValueId, fieldName, tree } = category;
-        const followsComodelParent = (tree.parent || false) === (category.comodelParent || false);
-        if (followsComodelParent && category.comodelParent) {
-            return [fieldName, "child_of", activeValueId];
-        }
-        return [fieldName, "in", this._getTreeNodeIds(category, activeValueId)];
     },
 
     _getCategoryDomain(excludedCategoryId) {
@@ -188,7 +169,11 @@ patch(SearchModel.prototype, {
                 continue;
             }
             if (category.tree) {
-                domain.push(this._getTreeCategoryCondition(category));
+                const ids =
+                    category.selection?.valueId === category.activeValueId
+                        ? category.selection.ids
+                        : [category.activeValueId];
+                domain.push([category.fieldName, "in", ids]);
                 continue;
             }
             const field = this.searchViewFields[category.fieldName];
@@ -196,5 +181,11 @@ patch(SearchModel.prototype, {
             domain.push([category.fieldName, operator, category.activeValueId]);
         }
         return domain;
+    },
+});
+
+patch(SearchPanel.prototype, {
+    loadMoreTreeValues(sectionId) {
+        return this.env.searchModel.loadMoreTreeValues(sectionId);
     },
 });

@@ -333,48 +333,47 @@ that node and on all of its descendants.
 ### Usage
 
 Add a `<searchpanel>` with the field that points to the hierarchical model, and set the
-two tree options on that field:
+tree options on that field:
 
 ```xml
 <search string="Contacts">
     <searchpanel class="o_search_tree">
-        <field name="category_id" expand="1" tree_parent="parent_id" tree_label="name"/>
+        <field name="category_id" expand="1" limit="200" tree_parent="parent_id" tree_label="name"/>
     </searchpanel>
 </search>
 ```
 
 ### Configuration
 
-- `tree_parent`: the parent field of the related model (the model of the field). Default:
-  the `_parent_name` of the model, as Odoo does.
+- `tree_parent`: the parent field of the related model. Default: `parent_id`.
 - `tree_label`: the field whose value is the label of each node. Default: `display_name`.
-- `expand="1"`: the full range of nodes is loaded, including the nodes that have no
-  record of their own. Set it so that every node of the tree is shown.
+- `limit`: the number of nodes loaded at once. Default: 200. When the tree has more nodes,
+  a "Load more" button under the tree loads the next `limit` nodes. Set it to the size of
+  the pages you want to see.
+- `expand="1"`: the nodes that have no record of their own are part of the tree too.
+  Set it so that every node of the tree is shown.
+- `class="o_search_tree"` on the `<searchpanel>`: the tree layout (toggles in a column,
+  guide lines per level, highlighted selection). The styles are in
+  `static/src/search_tree/search_tree.scss`.
 
-The field must be a many2one or a many2many to a hierarchical model. Records of the field
-are the ones filtered when a node is selected.
-
-### Styling
-
-Add the class `o_search_tree` to the `<searchpanel>` to get the tree layout: the toggles
-sit in a column of their own, each level is indented on a guide line, and the selected
-node is highlighted. The styles are in `static/src/search_tree/search_tree.scss`.
+The field must be a many2one or a many2many to a hierarchical model. The records of the
+field are the ones filtered when a node is selected.
 
 ### Behaviour
 
-- The labels come from `tree_label`. They are read when the tree is loaded, and kept for
-  5 minutes, so a reload of the panel (for example on each search) does not read them again.
-- When `tree_parent` is the parent field of the comodel, selecting a node filters with
-  `child_of` on the field: the server expands the node into all its descendants, and the
-  ids of the tree are not sent.
-- Otherwise, the node and the descendants loaded in the panel are sent as the list of ids.
-  With the `limit` of the panel, a very large tree can be cut in that case.
+- The nodes are read with one page at a time: `limit + 1` records are read, and the extra
+  one tells whether a "Load more" is needed. The tree is not read through the server limit
+  of the standard search panel, which returns nothing when the result reaches the limit.
+- Selecting a node reads its descendants from the server, level by level, and filters on
+  the node and all of them. Descendants on pages that are not loaded are included.
+- Descendant lists are kept for 5 minutes, so selecting the same node again does not read
+  them again.
 
 ### Demo
 
-The menu **Search Panel Tree** under Custom opens the contacts with a tag tree. The demo
-data are in `data/search_tree_demo.xml`: regions, countries and VIP tags, with a few
-partners.
+The menu **Search Panel Tree** under Custom opens the contacts with a tag tree
+(`limit="4"`, to show the "Load more" button). The demo data are in
+`data/search_tree_demo.xml`: regions, countries and VIP tags, with a few partners.
 
 ### Tests
 
