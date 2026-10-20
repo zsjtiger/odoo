@@ -1,8 +1,10 @@
 import { Component, onWillUnmount, proxy, signal, t, useEffect, useProps } from "@odoo/owl";
 import { _t } from "@web/core/data/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
 import { uniqueId } from "@web/core/utils/functions";
 import { Field } from "@web/views/fields/field";
 import { emptyFilterValue, isFilterActive } from "./filter_domain";
+import { RelationFilterDialog } from "./relation_filter_dialog";
 
 /**
  * DataTable: a table with the layouts and behaviours of the list demo.
@@ -74,6 +76,7 @@ export class DataTable extends Component {
             [true, _t("Yes")],
             [false, _t("No")],
         ];
+        this.dialog = useService("dialog");
         this.state = proxy({
             sortKey: this.props.sortKey || null,
             sortDirection: this.props.sortDirection || "asc",
@@ -180,6 +183,22 @@ export class DataTable extends Component {
         this.state.draft = this.allOptionsSelected(column)
             ? []
             : this.optionsOf(column).map((option) => option[0]);
+    }
+
+    /**
+     * Opens the dialog that searches and checks the records of a relational filter.
+     * The column gives `searchRecords(term)`, which resolves to [{ id, name }].
+     * @param {Object} column
+     */
+    openRelationDialog(column) {
+        this.dialog.add(RelationFilterDialog, {
+            title: column.label,
+            searchRecords: column.searchRecords,
+            selected: [...this.state.draft],
+            onConfirm: (records) => {
+                this.state.draft = records;
+            },
+        });
     }
 
     applyFilter(column) {

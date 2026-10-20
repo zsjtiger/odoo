@@ -83,6 +83,7 @@ function generateRows(start, count) {
             amount: 1000 + ((i * 7919) % 500000),
             contact: "bob@acme.com",
             won: i % 3 === 0,
+            partnerId: PARTNERS[i % PARTNERS.length].id,
         });
     }
     return rows;
@@ -90,11 +91,29 @@ function generateRows(start, count) {
 
 const MAX_INFINITE_ROWS = 200;
 
+const PARTNERS = [
+    { id: 1, name: "Alice" },
+    { id: 2, name: "Bob" },
+    { id: 3, name: "Carol" },
+];
+
+/** Demo search for the relation filter: a real app would call the server here. */
+async function searchPartners(term) {
+    return PARTNERS.filter((partner) => partner.name.toLowerCase().includes(term.toLowerCase()));
+}
+
 const FILTER_COLUMNS = [
     { key: "name", label: "Name", filter: "text" },
     { key: "stage", label: "Stage", filter: "selection", selection: STAGES.map((stage) => [stage, stage]) },
     { key: "won", label: "Won", filter: "bool", format: (value) => (value ? "Yes" : "No") },
     { key: "closeDate", label: "Close Date", type: "date", filter: "date", format: formatDate },
+    {
+        key: "partnerId",
+        label: "Partner",
+        filter: "relation",
+        searchRecords: searchPartners,
+        format: (id) => PARTNERS.find((partner) => partner.id === id)?.name ?? "",
+    },
     { key: "amount", label: "Amount", type: "number", filter: "number", format: formatAmount },
 ];
 

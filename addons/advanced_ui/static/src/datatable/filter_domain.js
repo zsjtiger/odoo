@@ -4,6 +4,8 @@
  * Each column opts in with `filter`. Its value depends on the type:
  * - "text": { operator, value }. Operators: "ilike", "=", "not ilike"
  * - "selection": array of the selected values, matched with "in"
+ * - "relation": array of the selected records { id, name }, matched with "in" on their ids.
+ *   Used for many2one, many2many and one2many columns.
  * - "bool": array of the selected booleans, matched with "in"
  * - "date" / "datetime": { operator, from, to } with "YYYY-MM-DD" dates. Operators:
  *   "between" (uses from and to), "=", "<" and ">" (use from). For "datetime" the
@@ -48,6 +50,7 @@ export function emptyFilterValue(column) {
             return { operator: "ilike", value: "" };
         case "selection":
         case "bool":
+        case "relation":
             return [];
         case "date":
         case "datetime":
@@ -70,6 +73,7 @@ export function isFilterActive(column, value) {
             return !isEmpty(value?.value);
         case "selection":
         case "bool":
+        case "relation":
             return Boolean(value?.length);
         case "date":
         case "datetime":
@@ -100,6 +104,9 @@ export function buildFilterDomain(columns, filters) {
             case "selection":
             case "bool":
                 domain.push([key, "in", [...value]]);
+                break;
+            case "relation":
+                domain.push([key, "in", value.map((record) => record.id)]);
                 break;
             case "date":
             case "datetime": {

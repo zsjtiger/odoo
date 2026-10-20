@@ -72,6 +72,17 @@
                                             <label class="form-check-label" t-out="option[1]"/>
                                         </div>
                                     </t>
+                                    <t t-elif="column.filter === 'relation'">
+                                        <div class="mb-2">
+                                            <span t-foreach="this.state.draft" t-as="record" t-key="record_index"
+                                                class="badge text-bg-light me-1 mb-1" t-out="record.name"/>
+                                        </div>
+                                        <div class="small text-muted mb-2">
+                                            <span t-out="this.state.draft.length"/> selected
+                                        </div>
+                                        <button type="button" class="btn btn-secondary btn-sm o_datatable_relation_select"
+                                            t-on-click="() => this.openRelationDialog(column)">Select…</button>
+                                    </t>
                                     <t t-elif="column.filter === 'date' or column.filter === 'datetime'">
                                         <select class="form-select form-select-sm mb-2" aria-label="Operator"
                                             t-on-change="(ev) => this.setDraft('operator', ev.target.value)">

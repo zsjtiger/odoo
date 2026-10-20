@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="advanced_ui.RelationFilterDialog">
+        <Dialog title="this.props.title || ''" size="'md'">
+            <input type="text" class="form-control mb-2 o_relation_filter_search" placeholder="Search"
+                aria-label="Search" t-att-value="this.state.search"
+                t-on-input="(ev) => this.search(ev.target.value)"/>
+            <div class="small text-muted mb-1">
+                <span t-out="this.state.selected.length"/> selected
+            </div>
+            <div t-foreach="this.state.results" t-as="record" t-key="record.id" class="form-check">
+                <input type="checkbox" class="form-check-input"
+                    t-att-checked="this.isSelected(record)"
+                    t-on-change="() => this.toggle(record)"/>
+                <label class="form-check-label" t-out="record.name"/>
+            </div>
+            <t t-set-slot="footer">
+                <button type="button" class="btn btn-primary o_relation_filter_confirm"
+                    t-on-click="() => this.confirm()">Confirm</button>
+                <button type="button" class="btn btn-secondary" t-on-click="() => this.props.close()">Cancel</button>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>

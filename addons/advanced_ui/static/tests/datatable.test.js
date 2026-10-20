@@ -428,3 +428,63 @@ test("datatable: selection filter applies the checked options and Clear removes 
     await animationFrame();
     expect(queryAllTexts("tbody tr td:first-child")).toEqual(["A", "B", "C", "D"]);
 });
+
+test("datatable: relation filter picks records in a dialog and filters the rows", async () => {
+    const partners = [
+        { id: 1, name: "Alice" },
+        { id: 2, name: "Bob" },
+        { id: 3, name: "Carol" },
+    ];
+    const relationRows = [
+        { id: 1, name: "A", partnerId: 1 },
+        { id: 2, name: "B", partnerId: 2 },
+        { id: 3, name: "C", partnerId: 3 },
+        { id: 4, name: "D", partnerId: 1 },
+    ];
+    const relationColumns = [
+        { key: "name", label: "Name" },
+        {
+            key: "partnerId",
+            label: "Partner",
+            filter: "relation",
+            searchRecords: async (term) =>
+                partners.filter((partner) => partner.name.toLowerCase().includes(term.toLowerCase())),
+        },
+    ];
+    class RelationFiltered extends Component {
+        static template = xml`
+            <DataTable columns="this.columns" rows="this.pageRows" filters="this.state.filters"
+                onFilterChange="(key, value) => this.onFilterChange(key, value)"/>`;
+        static components = { DataTable };
+
+        setup() {
+            this.columns = relationColumns;
+            this.state = proxy({ filters: {} });
+        }
+
+        get pageRows() {
+            const domain = buildFilterDomain(relationColumns, this.state.filters);
+            return relationRows.filter((row) => matchesDomain(row, domain));
+        }
+
+        onFilterChange(key, value) {
+            this.state.filters[key] = value;
+        }
+    }
+    await mountWithCleanup(RelationFiltered);
+    expect(queryAllTexts("tbody tr td:first-child")).toEqual(["A", "B", "C", "D"]);
+
+    await openFilter(0);
+    await click(".o_datatable_relation_select");
+    await animationFrame();
+    setFilterValue(".o_relation_filter_search", "ali");
+    await animationFrame();
+    await animationFrame();
+    expect(queryAllTexts(".modal label")).toEqual(["Alice"]);
+    await click(".modal input[type=checkbox]");
+    await animationFrame();
+    await click(".o_relation_filter_confirm");
+    await animationFrame();
+    await applyFilter();
+    expect(queryAllTexts("tbody tr td:first-child")).toEqual(["A", "D"]);
+});
