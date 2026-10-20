@@ -91,11 +91,29 @@ function generateRows(start, count) {
 
 const MAX_INFINITE_ROWS = 200;
 
-const PARTNERS = [
-    { id: 1, name: "Alice" },
-    { id: 2, name: "Bob" },
-    { id: 3, name: "Carol" },
+const PARTNER_NAMES = [
+    "Alice",
+    "Bob",
+    "Carol",
+    "David",
+    "Emma",
+    "Frank",
+    "Grace",
+    "Henry",
+    "Isabel",
+    "Jack",
+    "Karen",
+    "Liam",
+    "Maria",
+    "Noah",
+    "Olivia",
+    "Peter",
+    "Quinn",
+    "Rosa",
+    "Sam",
+    "Tina",
 ];
+const PARTNERS = PARTNER_NAMES.map((name, index) => ({ id: index + 1, name }));
 
 /** Demo search for the relation filter: a real app would call the server here. */
 async function searchPartners(term) {
@@ -134,7 +152,7 @@ export class DataTableDemo extends Component {
         this.infiniteRows = proxy(generateRows(0, 20));
         this.pagedRows = generateRows(0, 10);
         this.filterColumns = FILTER_COLUMNS;
-        this.filterRows = generateRows(0, 30);
+        this.filterRows = generateRows(0, 100);
         this.filterState = proxy({ offset: 0, limit: 3, filters: {} });
         this.page = proxy({ offset: 0, limit: 3 });
         this.rowActions = [
