@@ -77,6 +77,16 @@
             </section>
 
             <section class="mb-5">
+                <h2 class="h4 mb-3">Header filters with pagination</h2>
+                <div class="d-flex justify-content-end mb-2">
+                    <Pager offset="this.filterState.offset" limit="this.filterState.limit" total="this.filteredRows.length"
+                        onUpdate="(params) => this.onFilterPageUpdate(params)"/>
+                </div>
+                <DataTable columns="this.filterColumns" rows="this.filterPage" filters="this.filterState.filters"
+                    onFilterChange="(key, value) => this.onFilterChange(key, value)"/>
+            </section>
+
+            <section class="mb-5">
                 <h2 class="h4 mb-3">Custom cells (slot)</h2>
                 <DataTable columns="this.advancedColumns" rows="this.accounts">
                     <t t-set-slot="cell" t-slot-scope="scope">

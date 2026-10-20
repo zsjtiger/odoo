@@ -1,9 +1,10 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { Component, proxy, t, useProps, xml } from "@odoo/owl";
-import { animationFrame, click, keyDown, queryAll, queryAllTexts, queryOne } from "@odoo/hoot-dom";
+import { animationFrame, click, edit, keyDown, queryAll, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { DataTable } from "@advanced_ui/datatable/datatable";
 import { Pager } from "@web/core/components/pager/pager";
+import { buildFilterDomain, matchesDomain } from "@advanced_ui/datatable/filter_domain";
 import { registry } from "@web/core/framework/registry";
 import { listView } from "@web/views/list/list_view";
 import { defineModels, fields, models, mountView, webModels } from "@web/../tests/web_test_helpers";
@@ -223,4 +224,60 @@ test("datatable: field columns render the Odoo field widget of each record", asy
 
     expect(".o_datatable .o_field_char").toHaveCount(4);
     expect(queryAllTexts(".o_datatable .o_field_char")).toEqual(["yop", "blip", "gnap", "abc"]);
+});
+
+test("datatable: header filters narrow the rows and paging follows them", async () => {
+    const allRows = Array.from({ length: 10 }, (_, i) => ({ id: i, name: `Row ${i}`, amount: i }));
+    const filterColumns = [
+        { key: "name", label: "Name", filter: "text" },
+        { key: "amount", label: "Amount", type: "number", filter: "number" },
+    ];
+    class Filtered extends Component {
+        static template = xml`
+            <DataTable columns="this.columns" rows="this.pageRows" filters="this.state.filters"
+                onFilterChange="(key, value) => this.onFilterChange(key, value)"/>
+            <Pager offset="this.state.offset" limit="this.state.limit" total="this.filteredRows.length"
+                onUpdate="(params) => this.onUpdate(params)"/>`;
+        static components = { DataTable, Pager };
+
+        setup() {
+            this.columns = filterColumns;
+            this.state = proxy({ offset: 0, limit: 3, filters: {} });
+        }
+
+        get filteredRows() {
+            const domain = buildFilterDomain(filterColumns, this.state.filters);
+            return allRows.filter((row) => matchesDomain(row, domain));
+        }
+
+        get pageRows() {
+            return this.filteredRows.slice(this.state.offset, this.state.offset + this.state.limit);
+        }
+
+        onFilterChange(key, value) {
+            this.state.filters[key] = value;
+            this.state.offset = 0;
+        }
+
+        onUpdate({ offset, limit }) {
+            this.state.offset = offset;
+            this.state.limit = limit;
+        }
+    }
+    await mountWithCleanup(Filtered);
+    expect(queryAllTexts("tbody tr td:first-child")).toEqual(["Row 0", "Row 1", "Row 2"]);
+
+    await edit(queryOne(".o_datatable_filters input[type=text]"), "Row 1");
+    await animationFrame();
+    expect(queryAllTexts("tbody tr td:first-child")).toEqual(["Row 1"]);
+
+    await edit(queryOne(".o_datatable_filters input[type=text]"), "");
+    await animationFrame();
+    await edit(queryAll(".o_datatable_filters input[type=number]")[0], "3");
+    await animationFrame();
+    // Amounts 3 to 9 match: the first page shows three of them.
+    expect(queryAllTexts("tbody tr td:first-child")).toEqual(["Row 3", "Row 4", "Row 5"]);
+    await click(".o_pager_next");
+    await animationFrame();
+    expect(queryAllTexts("tbody tr td:first-child")).toEqual(["Row 6", "Row 7", "Row 8"]);
 });

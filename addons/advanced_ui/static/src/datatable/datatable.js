@@ -14,6 +14,10 @@ import { Field } from "@web/views/fields/field";
  *   - fixed: the column cannot be resized (default false)
  *   - format(value, row): the text shown in the cell (default: the value)
  * - rows: [{ id, ...values }], each row needs a unique id
+ * - filters: values of the header filters, keyed by column key (see filter_domain.js)
+ * - onFilterChange(key, value): called when a header filter changes. The parent decides
+ *   what the filter means (usually a domain), DataTable only shows the controls.
+ *   A column opts in with `filter: "text" | "selection" | "bool" | "number"`.
  * - sortKey, sortDirection ("asc" | "desc"): the initial sort
  * - striped, bordered, headless, fixedLayout, noRowHover: layout booleans
  * - selection: "none" (default), "multi" (checkboxes) or "single" (radio buttons)
@@ -48,6 +52,8 @@ export class DataTable extends Component {
         onLoadMore: t.function().optional(),
         onSelectionChange: t.function().optional(),
         slots: t.object().optional(),
+        filters: t.object().optional(),
+        onFilterChange: t.function().optional(),
     });
 
     setup() {
@@ -89,6 +95,23 @@ export class DataTable extends Component {
             }
             return valueA > valueB ? direction : 0;
         });
+    }
+
+    get hasFilters() {
+        return this.props.columns.some((column) => column.filter);
+    }
+
+    filterValue(column) {
+        return this.props.filters?.[column.key] ?? "";
+    }
+
+    changeFilter(column, value) {
+        this.props.onFilterChange?.(column.key, value);
+    }
+
+    changeNumberFilter(column, bound, value) {
+        const current = this.props.filters?.[column.key] || {};
+        this.props.onFilterChange?.(column.key, { ...current, [bound]: value });
     }
 
     get allSelected() {

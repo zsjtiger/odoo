@@ -37,6 +37,35 @@
                         </th>
                         <th t-if="this.props.rowActions" class="o_datatable_actions" style="width: 2.5rem;"/>
                     </tr>
+                    <tr t-if="this.hasFilters" class="o_datatable_filters">
+                        <th t-if="this.props.selection !== 'none'" class="o_datatable_select"/>
+                        <th t-foreach="this.props.columns" t-as="column" t-key="column.key">
+                            <input t-if="column.filter === 'text'" type="text" class="form-control form-control-sm"
+                                t-att-value="this.filterValue(column)" aria-label="Filter"
+                                t-on-change="(ev) => this.changeFilter(column, ev.target.value)"/>
+                            <select t-elif="column.filter === 'selection'" class="form-select form-select-sm" aria-label="Filter"
+                                t-on-change="(ev) => this.changeFilter(column, ev.target.value)">
+                                <option value="" t-att-selected="!this.filterValue(column)">All</option>
+                                <option t-foreach="column.selection" t-as="option" t-key="option_index"
+                                    t-att-value="option[0]" t-att-selected="this.filterValue(column) === option[0]" t-out="option[1]"/>
+                            </select>
+                            <select t-elif="column.filter === 'bool'" class="form-select form-select-sm" aria-label="Filter"
+                                t-on-change="(ev) => this.changeFilter(column, ev.target.value)">
+                                <option value="" t-att-selected="!this.filterValue(column)">All</option>
+                                <option value="true" t-att-selected="this.filterValue(column) === 'true'">Yes</option>
+                                <option value="false" t-att-selected="this.filterValue(column) === 'false'">No</option>
+                            </select>
+                            <div t-elif="column.filter === 'number'" class="d-flex gap-1">
+                                <input type="number" class="form-control form-control-sm" placeholder="Min" aria-label="Minimum"
+                                    t-att-value="this.filterValue(column).min ?? ''"
+                                    t-on-change="(ev) => this.changeNumberFilter(column, 'min', ev.target.value)"/>
+                                <input type="number" class="form-control form-control-sm" placeholder="Max" aria-label="Maximum"
+                                    t-att-value="this.filterValue(column).max ?? ''"
+                                    t-on-change="(ev) => this.changeNumberFilter(column, 'max', ev.target.value)"/>
+                            </div>
+                        </th>
+                        <th t-if="this.props.rowActions"/>
+                    </tr>
                 </thead>
                 <tbody>
                     <tr t-foreach="this.sortedRows" t-as="row" t-key="row.id"

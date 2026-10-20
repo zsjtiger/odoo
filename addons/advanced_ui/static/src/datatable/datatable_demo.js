@@ -2,6 +2,7 @@ import { Component, proxy } from "@odoo/owl";
 import { registry } from "@web/core/framework/registry";
 import { DataTable } from "@advanced_ui/datatable/datatable";
 import { Pager } from "@web/core/components/pager/pager";
+import { buildFilterDomain, matchesDomain } from "@advanced_ui/datatable/filter_domain";
 
 const STAGES = ["Prospecting", "Value Proposition", "Id. Decision Makers", "Negotiation"];
 
@@ -81,12 +82,20 @@ function generateRows(start, count) {
             confidence: (i * 7) % 100,
             amount: 1000 + ((i * 7919) % 500000),
             contact: "bob@acme.com",
+            won: i % 3 === 0,
         });
     }
     return rows;
 }
 
 const MAX_INFINITE_ROWS = 200;
+
+const FILTER_COLUMNS = [
+    { key: "name", label: "Name", filter: "text" },
+    { key: "stage", label: "Stage", filter: "selection", selection: STAGES.map((stage) => [stage, stage]) },
+    { key: "won", label: "Won", filter: "bool", format: (value) => (value ? "Yes" : "No") },
+    { key: "amount", label: "Amount", type: "number", filter: "number", format: formatAmount },
+];
 
 export class DataTableDemo extends Component {
     static template = "advanced_ui.DataTableDemo";
@@ -104,6 +113,9 @@ export class DataTableDemo extends Component {
         this.largeRows = proxy([...this.accounts, ...generateRows(0, 30)]);
         this.infiniteRows = proxy(generateRows(0, 20));
         this.pagedRows = generateRows(0, 10);
+        this.filterColumns = FILTER_COLUMNS;
+        this.filterRows = generateRows(0, 30);
+        this.filterState = proxy({ offset: 0, limit: 3, filters: {} });
         this.page = proxy({ offset: 0, limit: 3 });
         this.rowActions = [
             { label: "Edit", onSelect: (row) => console.info("Edit", row.name) },
@@ -119,6 +131,27 @@ export class DataTableDemo extends Component {
     onPageUpdate({ offset, limit }) {
         this.page.offset = offset;
         this.page.limit = limit;
+    }
+
+    /** Rows matching the header filters. The total of the pager is the length of this list. */
+    get filteredRows() {
+        const domain = buildFilterDomain(FILTER_COLUMNS, this.filterState.filters);
+        return this.filterRows.filter((row) => matchesDomain(row, domain));
+    }
+
+    get filterPage() {
+        const { offset, limit } = this.filterState;
+        return this.filteredRows.slice(offset, offset + limit);
+    }
+
+    onFilterChange(key, value) {
+        this.filterState.filters[key] = value;
+        this.filterState.offset = 0;
+    }
+
+    onFilterPageUpdate({ offset, limit }) {
+        this.filterState.offset = offset;
+        this.filterState.limit = limit;
     }
 
     async loadMore() {

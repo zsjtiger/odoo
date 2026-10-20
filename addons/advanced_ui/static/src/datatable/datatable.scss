@@ -147,3 +147,16 @@
         }
     }
 }
+
+// Header filters: one row of controls under the column headers.
+.o_datatable .o_datatable_filters th {
+    background-color: $white;
+    font-weight: normal;
+    padding: 0.25rem 0.5rem;
+    border-top: none;
+
+    input,
+    select {
+        min-width: 0;
+    }
+}
