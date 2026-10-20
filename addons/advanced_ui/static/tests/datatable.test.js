@@ -6,7 +6,7 @@ import { DataTable } from "@advanced_ui/datatable/datatable";
 import { Pager } from "@web/core/components/pager/pager";
 import { registry } from "@web/core/framework/registry";
 import { listView } from "@web/views/list/list_view";
-import { defineModels, fields, models, mountView } from "@web/../tests/web_test_helpers";
+import { defineModels, fields, models, mountView, webModels } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 
@@ -19,7 +19,8 @@ class Foo extends models.Model {
         { id: 4, foo: "abc" },
     ];
 }
-defineModels([Foo]);
+const { ResCompany, ResPartner, ResUsers } = webModels;
+defineModels([Foo, ResCompany, ResPartner, ResUsers]);
 
 /** Renders the records of a list with DataTable, using a field column. */
 class DataTableListRenderer extends Component {
