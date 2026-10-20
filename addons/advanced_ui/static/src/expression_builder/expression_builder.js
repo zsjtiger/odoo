@@ -141,7 +141,6 @@ export class ExpressionBuilder extends Component {
     setup() {
         this.state = proxy({
             tree: this.props.value ? cloneTree(this.props.value) : defaultTree(),
-            showCode: false,
         });
         this.notify = this.notify.bind(this);
         // Takes over a value changed from outside, unless it is what the builder shows
@@ -155,23 +154,8 @@ export class ExpressionBuilder extends Component {
         );
     }
 
-    get codeText() {
-        try {
-            const domain = toDomain(this.state.tree);
-            return domain === null
-                ? _t("A formula has no domain: it is evaluated by the formula only.")
-                : JSON.stringify(domain, null, 2);
-        } catch (error) {
-            return error.message;
-        }
-    }
-
     notify() {
         this.props.onChange?.(cloneTree(this.state.tree));
-    }
-
-    onToggleCode() {
-        this.state.showCode = !this.state.showCode;
     }
 }
 

@@ -9,8 +9,7 @@ Advanced controls for the Odoo web client. The addon provides:
 - **Date picker**: a date field widget with a calendar icon and a configurable
   display format, usable in form and list views.
 - **Expression builder**: a builder for logical conditions over the fields of a model
-  (all, any, custom logic, always, or a formula), with nested groups and a code view
-  of the Odoo domain it produces.
+  (all, any, custom logic, always, or a formula), with nested groups.
 
 ## Accordion
 
@@ -258,7 +257,6 @@ when the expression is true, with conditions on fields and groups of conditions:
 - **Conditions**: a resource (a field), an operator and a value. The operators and the
   value input depend on the field type.
 - **Groups**: a group has its own mode and can be nested in another group.
-- **Code Editor**: shows the Odoo domain built from the expression.
 
 ### Usage
 

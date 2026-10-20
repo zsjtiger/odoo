@@ -113,14 +113,17 @@ export function conditionDomain(condition) {
     if (!condition.resource || !condition.operator) {
         return [];
     }
-    const { resource, operator, type } = condition;
+    const { resource, operator, type, value } = condition;
     if (operator === "set") {
         return [[resource, "!=", false]];
     }
     if (operator === "not set") {
         return [[resource, "=", false]];
     }
-    return [[resource, operator, castValue(condition.value, type)]];
+    if (value === "") {
+        return [];
+    }
+    return [[resource, operator, castValue(value, type)]];
 }
 
 const TRUE_TOKENS = () => [[1, "=", 1]];

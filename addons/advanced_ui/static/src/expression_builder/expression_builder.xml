@@ -10,13 +10,6 @@
                 depth="0"
                 onChange="this.notify"
             />
-            <div class="o_expression_footer d-flex justify-content-end mt-3">
-                <button type="button" class="btn btn-link o_expression_code_toggle" t-on-click="this.onToggleCode">
-                    <t t-if="this.state.showCode">Close Code Editor</t>
-                    <t t-else="">Open Code Editor</t>
-                </button>
-            </div>
-            <pre t-if="this.state.showCode" class="o_expression_code mt-2 mb-0" t-out="this.codeText"/>
         </div>
     </t>
 
@@ -42,7 +35,7 @@
                     aria-label="Remove group"
                     t-on-click="() => this.props.onRemove()"
                 >
-                    <i class="oi" data-icon="trash"/>
+                    <i class="oi" data-icon="delete"/>
                 </button>
             </div>
 
@@ -132,7 +125,7 @@
                                     aria-label="Remove condition"
                                     t-on-click="() => this.onRemoveChild(child_index)"
                                 >
-                                    <i class="oi" data-icon="trash"/>
+                                    <i class="oi" data-icon="delete"/>
                                 </button>
                             </t>
                         </div>
@@ -140,10 +133,10 @@
                 </div>
                 <div t-if="!this.props.readonly" class="o_expression_add d-flex gap-2 mt-2">
                     <button type="button" class="o_expression_add_condition btn btn-outline-primary" t-on-click="this.onAddCondition">
-                        <i class="oi me-1" data-icon="plus"/>Add Condition
+                        <i class="oi me-1" data-icon="add"/>Add Condition
                     </button>
                     <button type="button" class="o_expression_add_group btn btn-outline-primary" t-on-click="this.onAddGroup">
-                        <i class="oi me-1" data-icon="plus"/>Add Group
+                        <i class="oi me-1" data-icon="add"/>Add Group
                     </button>
                 </div>
             </t>
@@ -186,10 +179,10 @@
                 </div>
                 <div t-if="!this.props.readonly" class="o_expression_add d-flex gap-2 mt-2">
                     <button type="button" class="o_expression_add_condition btn btn-outline-primary" t-on-click="this.onAddCondition">
-                        <i class="oi me-1" data-icon="plus"/>Add Condition
+                        <i class="oi me-1" data-icon="add"/>Add Condition
                     </button>
                     <button type="button" class="o_expression_add_group btn btn-outline-primary" t-on-click="this.onAddGroup">
-                        <i class="oi me-1" data-icon="plus"/>Add Group
+                        <i class="oi me-1" data-icon="add"/>Add Group
                     </button>
                 </div>
             </t>

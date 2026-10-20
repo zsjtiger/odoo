@@ -128,7 +128,11 @@ test("numbers and booleans are cast to their type", () => {
 });
 
 test("incomplete conditions are skipped, and always has no criteria", () => {
-    const tree = group("all", [condition("", "", ""), condition("name", "=", "a")]);
+    const tree = group("all", [
+        condition("", "", ""),
+        condition("amount", ">", "", "number"),
+        condition("name", "=", "a"),
+    ]);
     expect(toDomain(tree)).toEqual([["name", "=", "a"]]);
     expect(toDomain(group("always", []))).toEqual([]);
     expect(toDomain(newGroup("all"))).toEqual([]);
@@ -219,11 +223,4 @@ test("form: custom logic reports a reference to a missing condition", async () =
     await fieldInput("expr").edit("1 AND 4");
     await animationFrame();
     expect(".o_expression_error").toHaveText("Custom logic refers to condition 4, which does not exist.");
-});
-
-test("form: the code editor shows the domain", async () => {
-    await mountView({ type: "form", resModel: "event", resId: 1 });
-    await click(".o_expression_code_toggle");
-    await animationFrame();
-    expect(".o_expression_code").toHaveText('"name"');
 });

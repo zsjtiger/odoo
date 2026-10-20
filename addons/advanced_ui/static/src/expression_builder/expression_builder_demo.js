@@ -1,7 +1,7 @@
 import { Component, proxy } from "@odoo/owl";
 import { registry } from "@web/core/framework/registry";
 import { ExpressionBuilder } from "./expression_builder";
-import { defaultTree, toDomain } from "./expression_logic";
+import { defaultTree } from "./expression_logic";
 
 const FIELDS = [
     { name: "name", label: "Name", kind: "char" },
@@ -28,15 +28,6 @@ export class ExpressionBuilderDemo extends Component {
 
     setup() {
         this.state = proxy({ tree: defaultTree() });
-    }
-
-    get domainText() {
-        try {
-            const domain = toDomain(this.state.tree);
-            return domain === null ? "No domain (formula mode)" : JSON.stringify(domain, null, 2);
-        } catch (error) {
-            return error.message;
-        }
     }
 
     onTreeChange(tree) {
