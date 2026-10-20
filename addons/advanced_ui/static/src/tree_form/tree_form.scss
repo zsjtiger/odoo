@@ -2,6 +2,15 @@
 .o_tree_form {
     min-height: 0;
 
+    .o_tree_form_toolbar {
+        background-color: var(--bs-body-bg, #fff);
+        min-height: 3rem;
+    }
+
+    .o_tree_form_content {
+        min-height: 0;
+    }
+
     .o_tree_form_nav {
         width: 18rem;
         flex-shrink: 0;

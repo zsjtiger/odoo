@@ -28,6 +28,7 @@ export class TreeNav extends Component {
         limit: t.number().optional(),
         context: t.object().optional(),
         selectedId: t.or([t.number(), t.literal(false)]).optional(),
+        reloadKey: t.number().optional(),
         onSelect: t.function(),
     });
 
@@ -36,7 +37,7 @@ export class TreeNav extends Component {
         this.state = proxy({ nodes: new Map(), roots: [], expanded: new Set(), limit: 0, hasMore: false, loading: true });
         onWillStart(() => this.load(true));
         onWillUpdateProps((nextProps) => {
-            if (nextProps.resModel !== this.props.resModel) {
+            if (nextProps.resModel !== this.props.resModel || nextProps.reloadKey !== this.props.reloadKey) {
                 return this.load(true);
             }
         });
@@ -139,7 +140,30 @@ export class TreeFormAction extends Component {
     props = useProps({ ...standardActionServiceProps });
 
     setup() {
-        this.state = proxy({ selectedId: false });
+        this.state = proxy({ selectedId: false, creating: false, sidebarOpen: true, reloadKey: 0 });
+    }
+
+    get title() {
+        return this.props.action.name || "";
+    }
+
+    toggleSidebar() {
+        this.state.sidebarOpen = !this.state.sidebarOpen;
+    }
+
+    /** Opens an empty form on the right, to create a record. */
+    onNew() {
+        this.state.creating = true;
+        this.state.selectedId = false;
+    }
+
+    /** Reads the tree again. */
+    onRefresh() {
+        this.state.reloadKey++;
+    }
+
+    get showForm() {
+        return this.state.creating || Boolean(this.state.selectedId);
     }
 
     get params() {
@@ -155,7 +179,9 @@ export class TreeFormAction extends Component {
             limit: limit || DEFAULT_LIMIT,
             context: this.props.action.context || {},
             selectedId: this.state.selectedId,
+            reloadKey: this.state.reloadKey,
             onSelect: (id) => {
+                this.state.creating = false;
                 this.state.selectedId = id;
             },
         };
@@ -165,7 +191,7 @@ export class TreeFormAction extends Component {
         return {
             type: "form",
             resModel: this.params.res_model,
-            resId: this.state.selectedId,
+            resId: this.state.creating ? false : this.state.selectedId,
             viewId: this.params.form_view_id || false,
             context: this.props.action.context || {},
             display: { controlPanel: false },
