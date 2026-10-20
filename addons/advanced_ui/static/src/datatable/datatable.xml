@@ -52,10 +52,16 @@
                                             t-on-input="(ev) => this.setDraft('value', ev.target.value)"/>
                                     </t>
                                     <t t-elif="column.filter === 'selection' or column.filter === 'bool'">
-                                        <input type="text" class="form-control form-control-sm mb-2" placeholder="Search"
+                                        <div class="o_datatable_search mb-2">
+                                            <svg class="o_datatable_search_icon" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
+                                                            <circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.6"/>
+                                                            <line x1="10.8" y1="10.8" x2="14.5" y2="14.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                                                        </svg>
+                                            <input type="text" class="form-control form-control-sm" placeholder="Search"
                                             aria-label="Search options"
-                                            t-att-value="this.state.optionSearch"
-                                            t-on-input="(ev) => this.setOptionSearch(ev.target.value)"/>
+                                                t-att-value="this.state.optionSearch"
+                                                t-on-input="(ev) => this.setOptionSearch(ev.target.value)"/>
+                                        </div>
                                         <div class="small text-muted mb-1">
                                             <span t-out="this.state.draft.length"/> selected
                                         </div>
@@ -74,10 +80,16 @@
                                         </div>
                                     </t>
                                     <t t-elif="column.filter === 'relation'">
-                                        <input type="text" class="form-control form-control-sm mb-2" placeholder="Search"
+                                        <div class="o_datatable_search mb-2">
+                                            <svg class="o_datatable_search_icon" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
+                                                            <circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.6"/>
+                                                            <line x1="10.8" y1="10.8" x2="14.5" y2="14.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                                                        </svg>
+                                            <input type="text" class="form-control form-control-sm" placeholder="Search"
                                             aria-label="Search options"
-                                            t-att-value="this.state.optionSearch"
-                                            t-on-input="(ev) => this.loadRelationOptions(column, ev.target.value)"/>
+                                                t-att-value="this.state.optionSearch"
+                                                t-on-input="(ev) => this.loadRelationOptions(column, ev.target.value)"/>
+                                        </div>
                                         <div class="small text-muted mb-1">
                                             <span t-out="this.state.draft.length"/> selected
                                         </div>

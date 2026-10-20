@@ -209,3 +209,22 @@
     font-size: 0.8rem;
     white-space: nowrap;
 }
+
+// Search boxes of the filter popover: rounded, with a magnifier inside.
+.o_datatable .o_datatable_search {
+    position: relative;
+
+    .o_datatable_search_icon {
+        position: absolute;
+        left: 0.6rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: $gray-500;
+        pointer-events: none;
+    }
+
+    input {
+        padding-left: 2rem;
+        border-radius: 999px;
+    }
+}
