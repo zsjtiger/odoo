@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { Component, proxy, xml } from "@odoo/owl";
+import { Component, proxy, t, useProps, xml } from "@odoo/owl";
 import { animationFrame, click, keyDown, queryAll, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { DataTable } from "@advanced_ui/datatable/datatable";
@@ -26,6 +26,7 @@ defineModels([Foo, ResCompany, ResPartner, ResUsers]);
 class DataTableListRenderer extends Component {
     static template = xml`<DataTable columns="this.columns" rows="this.props.list.records"/>`;
     static components = { DataTable };
+    props = useProps({ list: t.any(), archInfo: t.any().optional() });
 
     setup() {
         this.columns = [{ key: "foo", label: "Foo", type: "field" }];
