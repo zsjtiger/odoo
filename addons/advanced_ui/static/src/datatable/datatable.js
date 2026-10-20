@@ -1,12 +1,15 @@
 import { Component, onWillUnmount, proxy, signal, t, useEffect, useProps } from "@odoo/owl";
 import { uniqueId } from "@web/core/utils/functions";
+import { Field } from "@web/views/fields/field";
 
 /**
  * DataTable: a table with the layouts and behaviours of the list demo.
  *
  * Props:
  * - columns: [{ key, label, type, sortable, fixed, format }]
- *   - type: "text" (default), "number", "date" (ISO string), "link" or "email"
+ *   - type: "text" (default), "number", "date" (ISO string), "link", "email" or "field"
+ *     "field" renders the Odoo field widget of the record: rows must then be records
+ *     of a model, and the column key is the field name. Such columns are not sortable.
  *   - sortable: a click on the header sorts the rows (default false)
  *   - fixed: the column cannot be resized (default false)
  *   - format(value, row): the text shown in the cell (default: the value)
@@ -25,6 +28,7 @@ import { uniqueId } from "@web/core/utils/functions";
  */
 export class DataTable extends Component {
     static template = "advanced_ui.DataTable";
+    static components = { Field };
     props = useProps({
         columns: t.array(),
         rows: t.array(),

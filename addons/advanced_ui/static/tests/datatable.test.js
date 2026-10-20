@@ -4,8 +4,33 @@ import { animationFrame, click, keyDown, queryAll, queryAllTexts, queryOne } fro
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { DataTable } from "@advanced_ui/datatable/datatable";
 import { Pager } from "@web/core/components/pager/pager";
+import { registry } from "@web/core/framework/registry";
+import { listView } from "@web/views/list/list_view";
+import { defineModels, fields, models, mountView } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
+
+class Foo extends models.Model {
+    foo = fields.Char();
+    _records = [
+        { id: 1, foo: "yop" },
+        { id: 2, foo: "blip" },
+        { id: 3, foo: "gnap" },
+        { id: 4, foo: "abc" },
+    ];
+}
+defineModels([Foo]);
+
+/** Renders the records of a list with DataTable, using a field column. */
+class DataTableListRenderer extends Component {
+    static template = xml`<DataTable columns="this.columns" rows="this.props.list.records"/>`;
+    static components = { DataTable };
+
+    setup() {
+        this.columns = [{ key: "foo", label: "Foo", type: "field" }];
+    }
+}
+registry.category("views").add("datatable_list_test", { ...listView, Renderer: DataTableListRenderer });
 
 const columns = [
     { key: "name", label: "Name", sortable: true },
@@ -185,4 +210,15 @@ test("datatable: the parent pages the rows with a Pager", async () => {
     await click(".o_pager_next");
     await animationFrame();
     expect(queryAllTexts("tbody tr td:first-child")).toEqual(["Row 3", "Row 4", "Row 5"]);
+});
+
+test("datatable: field columns render the Odoo field widget of each record", async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list js_class="datatable_list_test"><field name="foo"/></list>`,
+    });
+
+    expect(".o_datatable .o_field_char").toHaveCount(4);
+    expect(queryAllTexts(".o_datatable .o_field_char")).toEqual(["yop", "blip", "gnap", "abc"]);
 });
