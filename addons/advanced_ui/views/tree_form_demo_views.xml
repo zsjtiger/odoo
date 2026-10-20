@@ -28,6 +28,7 @@
             'label_field': 'name',
             'limit': 200,
             'form_view_id': ref('advanced_ui.tree_form_demo_form'),
+            'toolbar_buttons': [{'label': 'Duplicate', 'method': 'copy'}],
         }"/>
     </record>
 

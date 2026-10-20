@@ -140,7 +140,29 @@ export class TreeFormAction extends Component {
     props = useProps({ ...standardActionServiceProps });
 
     setup() {
+        this.orm = useService("orm");
         this.state = proxy({ selectedId: false, creating: false, sidebarOpen: true, reloadKey: 0 });
+    }
+
+    /** The buttons of the toolbar: each calls a method on the selected record. */
+    get toolbarButtons() {
+        return this.params.toolbar_buttons || [];
+    }
+
+    /**
+     * Calls the method of a toolbar button on the selected record, then reads the
+     * tree again, since the method may have changed it.
+     *
+     * @param {{ label: string, method: string }} button
+     */
+    async onToolbarButton(button) {
+        if (!this.state.selectedId) {
+            return;
+        }
+        await this.orm.call(this.params.res_model, button.method, [[this.state.selectedId]], {
+            context: this.props.action.context || {},
+        });
+        this.onRefresh();
     }
 
     get title() {
