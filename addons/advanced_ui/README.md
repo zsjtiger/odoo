@@ -384,15 +384,16 @@ The panel is not covered by the unit tests yet.
 ## Tree form
 
 A client action with a hierarchical model on the left, and on the right the form of the
-selected record. The form is a regular Odoo form view: its fields, groups and sheet are
-configured in the form arch.
+selected record. The form is a regular Odoo form view: its fields and groups are
+configured in its arch. The toolbar on top can hold buttons and comboboxes, configured in
+the action params.
 
 ### Usage
 
-Define a form view for the model, and an action with the tag `advanced_ui.tree_form`:
+1. Define the form view of the model:
 
 ```xml
-<record id="my_form" model="ir.ui.view">
+<record id="my_tree_form_view" model="ir.ui.view">
     <field name="name">my.model.tree.form</field>
     <field name="model">my.model</field>
     <field name="arch" type="xml">
@@ -409,7 +410,11 @@ Define a form view for the model, and an action with the tag `advanced_ui.tree_f
         </form>
     </field>
 </record>
+```
 
+2. Define the action, with the tag `advanced_ui.tree_form` and its params:
+
+```xml
 <record id="action_my_tree_form" model="ir.actions.client">
     <field name="name">My Tree Form</field>
     <field name="tag">advanced_ui.tree_form</field>
@@ -418,51 +423,93 @@ Define a form view for the model, and an action with the tag `advanced_ui.tree_f
         'parent_field': 'parent_id',
         'label_field': 'name',
         'limit': 200,
-        'form_view_id': ref('my_module.my_form'),
+        'form_view_id': ref('my_module.my_tree_form_view'),
+        'toolbar_buttons': [
+            {'label': 'Duplicate', 'method': 'copy'},
+        ],
+        'toolbar_comboboxes': [
+            {
+                'label': 'Status',
+                'field': 'active',
+                'options': [['', 'All'], ['true', 'Active'], ['false', 'Archived']],
+            },
+            {
+                'label': 'Under',
+                'field': 'parent_id',
+                'all_label': 'Any',
+                'options_model': {
+                    'model': 'my.model',
+                    'label_field': 'name',
+                    'domain': [('parent_id', '=', False)],
+                },
+            },
+        ],
     }"/>
 </record>
+
+<menuitem id="menu_my_tree_form" name="My Tree Form"
+    parent="base.menu_custom" action="action_my_tree_form"/>
 ```
 
 ### Configuration
 
-The params of the action:
+Params of the action:
 
-- `res_model`: the hierarchical model (required). Its records are the nodes of the tree.
-- `parent_field`: the parent field of the model. Default: `parent_id`.
-- `label_field`: the field shown as the label of each node. Default: `display_name`.
-- `limit`: the number of nodes loaded at once. Default: 200. A "Load more" button under
-  the tree loads the next page.
-- `form_view_id`: the form view on the right. Default: the default form of the model.
-- `toolbar_buttons`: buttons of the toolbar, each `{'label': ..., 'method': ...}`. The
-  method is called on the selected node, then the tree is read again. The buttons are
-  disabled until a node is selected.
-- `toolbar_comboboxes`: comboboxes of the toolbar, each one filters the tree on `field`:
-  - `label`: the text before the combobox.
-  - `field`: the field of the model that the value is compared with (`=`).
-  - `options`: static options, as `[value, label]` pairs. `"true"` and `"false"` are booleans.
-  - `options_model`: the options are read from a model instead, with `model`,
-    `label_field` (default `display_name`), `value_field` (default `id`) and `domain`.
-    They are read when the form opens, and again on Refresh.
-  - `all_label`: the label of the first option, which shows every node (default "All").
+| Param | Meaning | Default |
+|---|---|---|
+| `res_model` | The hierarchical model (required). Its records are the nodes of the tree. | — |
+| `parent_field` | The parent field of the model. | `parent_id` |
+| `label_field` | The field shown as the label of each node. | `display_name` |
+| `limit` | The number of nodes loaded at once. "Load more" loads the next page. | 200 |
+| `form_view_id` | The form view on the right. | the default form |
+| `toolbar_buttons` | Buttons of the toolbar: `{'label', 'method'}`. | none |
+| `toolbar_comboboxes` | Comboboxes of the toolbar, each one filters the tree. | none |
 
-The fields and groups shown in the form are configured in that form view.
+`toolbar_buttons` entries:
+
+- `label`: the text of the button.
+- `method`: a method of the model, called on the selected node with `[[id]]`. The tree is
+  read again after the call. The button is disabled until a node is selected.
+
+`toolbar_comboboxes` entries:
+
+- `label`: the text before the combobox.
+- `field`: the field compared with the value, with `=`.
+- `options`: static options, as `[value, label]` pairs. `"true"` and `"false"` become booleans.
+- `options_model`: the options come from a model instead: `model`, `label_field`
+  (default `display_name`), `value_field` (default `id`) and `domain`. They are read when
+  the form opens, and again on Refresh.
+- `all_label`: the label of the first option, which shows every node. Default "All".
+
+The toolbar always has **New** (an empty form on the right, to create a record) and
+**Refresh** (reads the options and the tree again). The button at the top of the left
+panel hides the tree; when it is hidden, a button at the left of the toolbar shows it again.
+
+The fields and groups shown in the form are configured in the form view.
 
 ### Behaviour
 
 - The first level of the tree is open. Clicking a node shows its form on the right.
-- Each page of nodes is read with `limit + 1` records, the extra one tells whether there
-  is a next page.
-- The label of a node is the value of `label_field` when the tree is loaded. After a
-  change of the name in the form, the tree shows the new label when it is loaded again.
+- Each page of nodes is read with `limit + 1` records; the extra one tells whether a
+  "Load more" button is needed.
+- The tree includes archived records, so a combobox on `active` can filter them.
+- Choosing a combobox option reloads the tree with `[field, "=", value]`. The form on the
+  right is not changed; if the selected node is filtered out, its form stays open.
+- A child whose parent is filtered out is shown as a root.
+- The label of a node is read when the tree loads. After a name change in the form, the
+  label changes when the tree is read again (Refresh).
 
 ### Demo
 
-The menu **Tree Form** under Custom opens the partner tags (`res.partner.category`) with
-the form defined in `views/tree_form_demo_views.xml`.
+The menu **Tree Form** under Custom opens the partner tags (`res.partner.category`), with
+the form, the Duplicate button and the Status and Under comboboxes of
+`views/tree_form_demo_views.xml`.
 
 ### Tests
 
-The tree form is not covered by the unit tests yet.
+The tree nav (the left panel) is covered by `static/tests/tree_form.test.js`. The toolbar,
+the comboboxes and the form on the right are checked in the browser only, not by the
+unit tests yet.
 
 ## DataTable
 
