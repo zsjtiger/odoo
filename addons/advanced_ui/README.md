@@ -214,6 +214,37 @@ export class MyList extends Component {
 Props that are expressions in the template need quotes for strings: `sortKey="'name'"`.
 Booleans are written as `true`.
 
+### Configuration
+
+To use the DataTable in your own module, depend on `advanced_ui` in the manifest:
+
+```python
+'depends': ['web', 'advanced_ui'],
+```
+
+Then import the component and declare it in a component, as shown above. Each part of the
+table is set by its prop or column option, listed below. Nothing needs to be changed in the
+core files.
+
+For a tree (list) view, the layout options are attributes of `<list>`, written in the XML
+view. No JavaScript is needed:
+
+```xml
+<list striped="1" bordered="1" no_row_hover="1" headless="1" fixed_layout="1"
+    single_selection="1" row_menu="1" infinite_scroll="1">
+    <field name="name"/>
+</list>
+```
+
+| Attribute | Effect |
+|---|---|
+| `striped`, `bordered`, `no_row_hover`, `headless`, `fixed_layout` | Layout of the table |
+| `single_selection` | One row selected at a time, with radio buttons |
+| `row_menu` | A menu on each row with Open, and Delete when the list allows deleting |
+| `infinite_scroll` | Loads the next records when the bottom of the list is reached |
+
+The demo is in the Technical menu, so developer mode must be on to see it.
+
 ### Props
 
 | Prop | Description |
@@ -291,12 +322,32 @@ const domain = buildFilterDomain(this.columns, this.state.filters);
 
 Conditions are combined with AND. Empty values add no condition.
 
-The search function of a `relation` column returns one page and the total number of matches:
+The search function of a `relation` column returns one page and the total number of matches.
+For a model, it can use the ORM service:
 
 ```js
-async searchRecords(term, { offset, limit }) {
-    const records = await orm.call("res.partner", "name_search", [], {...});
-    return { records: [{ id, name }, ...], count: total };
+setup() {
+    this.orm = useService("orm");
+    this.columns = [
+        {
+            key: "partnerId",
+            label: "Partner",
+            filter: "relation",
+            searchRecords: (term, { offset, limit }) => this.searchPartners(term, { offset, limit }),
+        },
+    ];
+}
+
+async searchPartners(term, { offset, limit }) {
+    const domain = term ? [["name", "ilike", term]] : [];
+    const [records, count] = await Promise.all([
+        this.orm.searchRead("res.partner", domain, ["display_name"], { offset, limit }),
+        this.orm.searchCount("res.partner", domain),
+    ]);
+    return {
+        records: records.map((record) => ({ id: record.id, name: record.display_name })),
+        count,
+    };
 }
 ```
 
