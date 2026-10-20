@@ -10,6 +10,7 @@
                 class="o_input o_datepicker_input pe-5"
                 autocomplete="off"
                 t-att-id="this.props.id"
+                t-att-value="this.formattedValue"
                 t-att-placeholder="this.placeholder"
                 t-att-name="this.props.name"
                 t-on-change="this.onChange"

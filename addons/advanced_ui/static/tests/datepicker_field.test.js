@@ -52,7 +52,7 @@ test("form: the date is shown in the configured format", async () => {
 });
 
 test("form: without format option, the language date format is used", async () => {
-    await mountView({ type: "form", resModel: "default_format", resId: 1 });
+    await mountView({ type: "form", resModel: "default.format", resId: 1 });
     expect(".o_datepicker_input").toHaveValue("01/31/2024");
 });
 

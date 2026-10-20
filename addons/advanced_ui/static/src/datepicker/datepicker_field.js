@@ -1,4 +1,4 @@
-import { Component, t, useEffect, useProps, signal } from "@odoo/owl";
+import { Component, t, useProps, signal } from "@odoo/owl";
 import { useDateTimePicker } from "@web/core/components/datetime/datetime_picker_hook";
 import { areDatesEqual, deserializeDate, formatDate, parseDate, today } from "@web/core/data/l10n/dates";
 import { _t } from "@web/core/data/l10n/translation";
@@ -44,17 +44,6 @@ export class DatePickerField extends Component {
             onApply: (value) => this.onApply(value),
         });
         this.openPicker = picker.open;
-
-        // Keeps the text of the input in sync with the value of the record, unless
-        // the user is typing (the text is then only written back on change).
-        useEffect(
-            (el, text) => {
-                if (el && el.value !== text) {
-                    el.value = text;
-                }
-            },
-            () => [this.inputRef(), this.formattedValue]
-        );
     }
 
     //-------------------------------------------------------------------------
@@ -132,7 +121,12 @@ export class DatePickerField extends Component {
             await this.props.record.update({ [this.props.name]: false });
             return;
         }
-        const parsed = parseDate(text, { format: this.props.format });
+        let parsed = false;
+        try {
+            parsed = parseDate(text, { format: this.props.format });
+        } catch {
+            // The text is not a date in this format: it is reverted below
+        }
         if (parsed?.isValid && this.isWithinLimits(parsed)) {
             await this.props.record.update({ [this.props.name]: parsed });
         }
