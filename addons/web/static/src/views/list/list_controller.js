@@ -514,7 +514,7 @@ export class ListController extends Component {
     }
 
     get hasSelectedRecords() {
-        return this.model.root.selection.length || this.isDomainSelected;
+        return this.model.root.selection.length > 0 || this.isDomainSelected;
     }
 
     get isDomainSelected() {
