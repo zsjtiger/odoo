@@ -1,0 +1,40 @@
+// Tree search panel, on a search panel with the class "o_search_tree".
+// Each level is indented on a guide line. The toggle has a column of its own,
+// so the labels of a level line up, and the selected node is highlighted.
+.o_search_panel.o_search_tree {
+    --SearchPanelHeader-toggle-fold-width: 1.25rem;
+    --SearchPanelHeader-margin-y: 0.125rem;
+
+    max-height: 70vh;
+
+    // The connectors of the core tree are replaced by the guide lines below
+    .o_treeEntry::before,
+    .o_treeEntry::after {
+        display: none;
+    }
+
+    .list-group.d-block {
+        margin-left: 0.5rem;
+        padding-left: 0.5rem;
+        border-left: 1px solid var(--bs-border-color, #dee2e6);
+    }
+
+    .o_search_panel_category_value_header {
+        border-radius: 0.375rem;
+        padding: 0.25rem 0.5rem 0.25rem 0;
+        transition: background-color 0.1s;
+
+        &:hover {
+            background-color: var(--bs-tertiary-bg, #f8f9fa);
+        }
+
+        &.active {
+            background-color: rgba($primary, 0.12);
+            color: $primary;
+        }
+    }
+
+    .o_toggle_fold {
+        color: var(--bs-secondary-color, #6c757d);
+    }
+}

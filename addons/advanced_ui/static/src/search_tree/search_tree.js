@@ -36,6 +36,10 @@ patch(SearchArchParser.prototype, {
     },
 });
 
+// Labels and parents of the tree nodes change rarely: they are kept for a while
+// so that a reload of the search panel does not read them again.
+const TREE_CACHE_DURATION = 5 * 60 * 1000;
+
 patch(SearchModel.prototype, {
     _createCategoryTree(sectionId, result) {
         super._createCategoryTree(sectionId, result);
@@ -43,6 +47,8 @@ patch(SearchModel.prototype, {
         if (!category.tree) {
             return;
         }
+        // The parent field of the comodel, as the server knows it
+        category.comodelParent = result.parent_field || false;
         if (category.tree.parent) {
             category.parentField = category.tree.parent;
         }
@@ -50,36 +56,64 @@ patch(SearchModel.prototype, {
     },
 
     /**
-     * Reads the label and the parent of each node, so that the tree shows the
-     * configured label and follows the configured parent field.
+     * Returns the cache of the tree nodes of a comodel for the given label and parent.
+     *
+     * @param {string} key
+     * @returns {Map<number, Object>}
+     */
+    _getTreeNodeCache(key) {
+        this.treeNodeCaches ??= new Map();
+        if (!this.treeNodeCaches.has(key)) {
+            this.treeNodeCaches.set(key, new Map());
+        }
+        return this.treeNodeCaches.get(key);
+    },
+
+    /**
+     * Reads the label and the parent of the nodes that are not cached yet, so that
+     * the tree shows the configured label and follows the configured parent field.
      *
      * @param {Object} category
      */
     async _loadTreeNodes(category) {
         const { label, parent } = category.tree;
-        const parentName = parent || category.parentField;
+        const parentName = parent || category.comodelParent;
         const ids = [...category.values.keys()].filter(Boolean);
         if (!ids.length) {
             return;
         }
         const loadId = (category.treeLoadId = (category.treeLoadId || 0) + 1);
         const comodel = this.searchViewFields[category.fieldName].relation;
-        const fields = [...new Set([label, parentName].filter(Boolean))];
-        const records = await this.orm.read(comodel, ids, fields, {
-            context: this.globalContext,
-        });
+        const cache = this._getTreeNodeCache(`${comodel}|${label}|${parentName}`);
+        const now = Date.now();
+        const isFresh = (id) => cache.has(id) && now - cache.get(id).time < TREE_CACHE_DURATION;
+        const missingIds = ids.filter((id) => !isFresh(id));
+        if (missingIds.length) {
+            const fields = [...new Set([label, parentName].filter(Boolean))];
+            const records = await this.orm.read(comodel, missingIds, fields, {
+                context: this.globalContext,
+            });
+            for (const record of records) {
+                const parentValue = parentName ? record[parentName] : false;
+                cache.set(record.id, {
+                    label: record[label],
+                    parentId: (Array.isArray(parentValue) ? parentValue[0] : parentValue) || false,
+                    time: now,
+                });
+            }
+        }
         if (loadId !== category.treeLoadId) {
             return;
         }
-        for (const record of records) {
-            const value = category.values.get(record.id);
-            if (!value) {
+        for (const id of ids) {
+            const value = category.values.get(id);
+            const node = cache.get(id);
+            if (!value || !node) {
                 continue;
             }
-            value.display_name = record[label] || value.display_name;
+            value.display_name = node.label || value.display_name;
             if (parentName) {
-                const parentValue = record[parentName];
-                value.parentId = (Array.isArray(parentValue) ? parentValue[0] : parentValue) || false;
+                value.parentId = node.parentId;
             }
         }
         this._linkTreeNodes(category);
@@ -130,6 +164,23 @@ patch(SearchModel.prototype, {
         return ids;
     },
 
+    /**
+     * The condition of a selected node. When the tree follows the parent field of the
+     * comodel, the server expands the node into its descendants with child_of, which
+     * does not send the ids of the tree. Otherwise, the loaded descendants are sent.
+     *
+     * @param {Object} category
+     * @returns {Array}
+     */
+    _getTreeCategoryCondition(category) {
+        const { activeValueId, fieldName, tree } = category;
+        const followsComodelParent = (tree.parent || false) === (category.comodelParent || false);
+        if (followsComodelParent && category.comodelParent) {
+            return [fieldName, "child_of", activeValueId];
+        }
+        return [fieldName, "in", this._getTreeNodeIds(category, activeValueId)];
+    },
+
     _getCategoryDomain(excludedCategoryId) {
         const domain = [];
         for (const category of this.categories) {
@@ -137,8 +188,7 @@ patch(SearchModel.prototype, {
                 continue;
             }
             if (category.tree) {
-                const ids = this._getTreeNodeIds(category, category.activeValueId);
-                domain.push([category.fieldName, "in", ids]);
+                domain.push(this._getTreeCategoryCondition(category));
                 continue;
             }
             const field = this.searchViewFields[category.fieldName];

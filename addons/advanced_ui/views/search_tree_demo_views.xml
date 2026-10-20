@@ -5,7 +5,7 @@
         <field name="model">res.partner</field>
         <field name="arch" type="xml">
             <search string="Contacts">
-                <searchpanel>
+                <searchpanel class="o_search_tree">
                     <field name="category_id" expand="1" tree_parent="parent_id" tree_label="name"/>
                 </searchpanel>
             </search>

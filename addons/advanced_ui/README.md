@@ -337,7 +337,7 @@ two tree options on that field:
 
 ```xml
 <search string="Contacts">
-    <searchpanel>
+    <searchpanel class="o_search_tree">
         <field name="category_id" expand="1" tree_parent="parent_id" tree_label="name"/>
     </searchpanel>
 </search>
@@ -354,12 +354,21 @@ two tree options on that field:
 The field must be a many2one or a many2many to a hierarchical model. Records of the field
 are the ones filtered when a node is selected.
 
+### Styling
+
+Add the class `o_search_tree` to the `<searchpanel>` to get the tree layout: the toggles
+sit in a column of their own, each level is indented on a guide line, and the selected
+node is highlighted. The styles are in `static/src/search_tree/search_tree.scss`.
+
 ### Behaviour
 
-- The labels come from `tree_label`, read when the tree is loaded.
-- Selecting a node filters with the node and its descendants, `in` the list of their ids.
-- The descendants are the nodes loaded in the panel. With the `limit` of the panel, a
-  very large tree can be cut; the nodes beyond the limit are not selected with their parent.
+- The labels come from `tree_label`. They are read when the tree is loaded, and kept for
+  5 minutes, so a reload of the panel (for example on each search) does not read them again.
+- When `tree_parent` is the parent field of the comodel, selecting a node filters with
+  `child_of` on the field: the server expands the node into all its descendants, and the
+  ids of the tree are not sent.
+- Otherwise, the node and the descendants loaded in the panel are sent as the list of ids.
+  With the `limit` of the panel, a very large tree can be cut in that case.
 
 ### Demo
 
