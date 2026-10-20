@@ -90,9 +90,6 @@
                                                 <label class="form-check-label" t-out="record.name"/>
                                             </div>
                                         </div>
-                                        <Pager offset="this.state.relationOffset" limit="this.relationPageSize"
-                                            total="this.state.relationCount" isEditable="false"
-                                            onUpdate="(params) => this.loadRelationOptions(column, this.state.optionSearch, params.offset)"/>
                                     </t>
                                     <t t-elif="column.filter === 'date' or column.filter === 'datetime'">
                                         <select class="form-select form-select-sm mb-2" aria-label="Operator"
@@ -118,11 +115,17 @@
                                             t-att-value="this.state.draft.max"
                                             t-on-input="(ev) => this.setDraft('max', ev.target.value)"/>
                                     </t>
-                                    <div class="d-flex justify-content-end gap-2 mt-2">
-                                        <button type="button" class="btn btn-primary btn-sm o_datatable_filter_apply"
-                                            t-on-click="() => this.applyFilter(column)">Apply</button>
-                                        <button type="button" class="btn btn-secondary btn-sm o_datatable_filter_clear"
-                                            t-on-click="() => this.clearFilter(column)">Clear</button>
+                                    <div class="o_datatable_filter_footer d-flex align-items-center mt-2">
+                                        <Pager t-if="column.filter === 'relation'" class="o_datatable_relation_pager"
+                                            offset="this.state.relationOffset" limit="this.relationPageSize"
+                                            total="this.state.relationCount" isEditable="false"
+                                            onUpdate="(params) => this.loadRelationOptions(column, this.state.optionSearch, params.offset)"/>
+                                        <div class="d-flex gap-2 ms-auto">
+                                            <button type="button" class="btn btn-primary btn-sm o_datatable_filter_apply"
+                                                t-on-click="() => this.applyFilter(column)">Apply</button>
+                                            <button type="button" class="btn btn-secondary btn-sm o_datatable_filter_clear"
+                                                t-on-click="() => this.clearFilter(column)">Clear</button>
+                                        </div>
                                     </div>
                                 </div>
                             </t>
