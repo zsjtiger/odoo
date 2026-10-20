@@ -16,6 +16,7 @@ Advanced features of the user interface, built on top of the web client.
         'views/datatable_demo_views.xml',
         'views/search_tree_demo_views.xml',
         'views/tree_form_demo_views.xml',
+        'views/timepicker_demo_views.xml',
     ],
     'installable': True,
     'auto_install': False,

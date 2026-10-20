@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="advanced_ui.TimePickerDemo">
+        <div class="o_timepicker_demo container-fluid p-4" style="max-width: 36rem">
+            <h2 class="mb-4">Time Picker</h2>
+
+            <div class="mb-4">
+                <label class="form-label mb-1">Time (step 30 minutes)</label>
+                <TimePicker value="this.state.start" step="30" onChange="(time) => this.setValue('start', time)"/>
+                <div class="small text-muted mt-1">Value: <span t-out="this.state.start || 'empty'"/></div>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label mb-1">Quarter hours (step 15 minutes)</label>
+                <TimePicker value="this.state.quarter" step="15" onChange="(time) => this.setValue('quarter', time)"/>
+                <div class="small text-muted mt-1">Value: <span t-out="this.state.quarter || 'empty'"/></div>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label mb-1">Empty</label>
+                <TimePicker value="this.state.end" placeholder="'HH:MM'" onChange="(time) => this.setValue('end', time)"/>
+                <div class="small text-muted mt-1">Value: <span t-out="this.state.end || 'empty'"/></div>
+            </div>
+        </div>
+    </t>
+
+</templates>
