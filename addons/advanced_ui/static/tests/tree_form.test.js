@@ -66,10 +66,17 @@ test("clicking a node selects it", async () => {
     expect.verifySteps([3]);
 });
 
-test("Load more reads the next page of nodes", async () => {
+test("Load more reads the next page of nodes, until there are none", async () => {
     await mountTree({ limit: 2 });
+    expect(queryAllTexts(".o_tree_nav_label")).not.toInclude("Europe");
+    // Each page adds `limit` nodes: the second page holds Europe and Japan
+    await click(".o_tree_nav_more_button");
+    await animationFrame();
+    expect(queryAllTexts(".o_tree_nav_label")).toInclude("Europe");
     expect(queryAllTexts(".o_tree_nav_label")).not.toInclude("VIP");
+    // The third page holds VIP, and there is no page after it
     await click(".o_tree_nav_more_button");
     await animationFrame();
     expect(queryAllTexts(".o_tree_nav_label")).toInclude("VIP");
+    expect(".o_tree_nav_more_button").toHaveCount(0);
 });
