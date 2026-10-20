@@ -22536,5 +22536,6 @@ test("list: row_menu opens a menu on each row", async () => {
 
     await click(queryAll(".o_list_row_menu_toggle")[0]);
     await animationFrame();
-    expect(queryAllTexts(".dropdown-item")).toEqual(["Open", "Delete"]);
+    // Delete is only offered when the list has an onDelete action (one2many fields).
+    expect(queryAllTexts(".dropdown-item")).toEqual(["Open"]);
 });
