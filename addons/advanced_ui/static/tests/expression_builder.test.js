@@ -174,7 +174,7 @@ class Event extends models.Model {
     };
 }
 
-defineModels([...webModels, Event]);
+defineModels({ ...webModels, Event });
 
 test("form: the stored conditions are shown", async () => {
     await mountView({ type: "form", resModel: "event", resId: 1 });

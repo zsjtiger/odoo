@@ -44,7 +44,7 @@ class DefaultFormat extends models.Model {
     };
 }
 
-defineModels([...webModels, Event, DefaultFormat]);
+defineModels({ ...webModels, Event, DefaultFormat });
 
 test("form: the date is shown in the configured format", async () => {
     await mountView({ type: "form", resModel: "event", resId: 1 });
