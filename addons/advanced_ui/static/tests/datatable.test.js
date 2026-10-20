@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { Component, proxy, t, useProps, xml } from "@odoo/owl";
-import { animationFrame, click, edit, keyDown, queryAll, queryAllTexts, queryOne } from "@odoo/hoot-dom";
+import { animationFrame, click, keyDown, queryAll, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { DataTable } from "@advanced_ui/datatable/datatable";
 import { Pager } from "@web/core/components/pager/pager";
@@ -226,6 +226,17 @@ test("datatable: field columns render the Odoo field widget of each record", asy
     expect(queryAllTexts(".o_datatable .o_field_char")).toEqual(["yop", "blip", "gnap", "abc"]);
 });
 
+/**
+ * Sets the value of a filter control and fires the change event the control listens to.
+ * @param {string|HTMLElement} target
+ * @param {string} value
+ */
+function setFilterValue(target, value) {
+    const input = typeof target === "string" ? queryOne(target) : target;
+    input.value = value;
+    input.dispatchEvent(new Event("change", { bubbles: true }));
+}
+
 test("datatable: header filters narrow the rows and paging follows them", async () => {
     const allRows = Array.from({ length: 10 }, (_, i) => ({ id: i, name: `Row ${i}`, amount: i }));
     const filterColumns = [
@@ -267,13 +278,13 @@ test("datatable: header filters narrow the rows and paging follows them", async 
     await mountWithCleanup(Filtered);
     expect(queryAllTexts("tbody tr td:first-child")).toEqual(["Row 0", "Row 1", "Row 2"]);
 
-    await edit(queryOne(".o_datatable_filters input[type=text]"), "Row 1");
+    setFilterValue(".o_datatable_filters input[type=text]", "Row 1");
     await animationFrame();
     expect(queryAllTexts("tbody tr td:first-child")).toEqual(["Row 1"]);
 
-    await edit(queryOne(".o_datatable_filters input[type=text]"), "");
+    setFilterValue(".o_datatable_filters input[type=text]", "");
     await animationFrame();
-    await edit(queryAll(".o_datatable_filters input[type=number]")[0], "3");
+    setFilterValue(queryAll(".o_datatable_filters input[type=number]")[0], "3");
     await animationFrame();
     // Amounts 3 to 9 match: the first page shows three of them.
     expect(queryAllTexts("tbody tr td:first-child")).toEqual(["Row 3", "Row 4", "Row 5"]);
