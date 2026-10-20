@@ -541,6 +541,31 @@ export class ListRenderer extends Component {
         };
     }
 
+    /**
+     * Classes for the table, from the layout attributes of the <list> arch
+     * (striped, bordered, no_row_hover, headless, fixed_layout).
+     */
+    get tableLayoutClasses() {
+        const { archInfo } = this.props;
+        const classes = [];
+        if (archInfo.striped) {
+            classes.push("o_list_striped");
+        }
+        if (archInfo.bordered) {
+            classes.push("o_list_bordered");
+        }
+        if (!archInfo.noRowHover) {
+            classes.push("table-hover");
+        }
+        if (archInfo.headless) {
+            classes.push("o_list_headless");
+        }
+        if (archInfo.fixedLayout) {
+            classes.push("o_list_fixed_layout");
+        }
+        return classes.join(" ");
+    }
+
     get activeActions() {
         return this.props.activeActions || {};
     }

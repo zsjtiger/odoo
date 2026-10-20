@@ -262,6 +262,10 @@ export class ListArchParser {
                 treeAttr.groupsLimit = groupsLimitAttr && parseInt(groupsLimitAttr, 10);
 
                 treeAttr.noOpen = exprToBoolean(node.getAttribute("no_open") || "");
+                // layout options, applied as classes by the renderer
+                for (const attr of ["striped", "bordered", "no_row_hover", "headless", "fixed_layout"]) {
+                    treeAttr[attr] = exprToBoolean(xmlDoc.getAttribute(attr) || "");
+                }
                 treeAttr.rawExpand = xmlDoc.getAttribute("expand");
                 treeAttr.decorations = getDecoration(xmlDoc);
 

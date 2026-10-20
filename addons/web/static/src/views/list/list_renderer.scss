@@ -633,3 +633,35 @@
         margin: auto 0;
     }
 }
+
+// Layout options set on the <list> arch: striped, bordered, headless, fixed_layout.
+.o_list_table {
+    &.o_list_striped > tbody > tr:nth-child(even):not(.table-info) > td {
+        background-color: $gray-200;
+    }
+
+    &.o_list_bordered {
+        th,
+        td {
+            border-right: 1px solid $border-color;
+
+            &:last-child {
+                border-right: none;
+            }
+        }
+    }
+
+    &.o_list_headless > thead {
+        display: none;
+    }
+
+    &.o_list_fixed_layout {
+        table-layout: fixed;
+
+        th,
+        td {
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+}

@@ -22470,3 +22470,34 @@ test("Empty Groups: filter out empty groups", async () => {
 
     expect(".o_group_header").toHaveCount(1);
 });
+
+test("list: layout attributes are applied as table classes", async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list striped="1" bordered="1" no_row_hover="1" headless="1" fixed_layout="1">
+                <field name="foo"/>
+            </list>
+        `,
+    });
+
+    expect(".o_list_table").toHaveClass("o_list_striped");
+    expect(".o_list_table").toHaveClass("o_list_bordered");
+    expect(".o_list_table").toHaveClass("o_list_headless");
+    expect(".o_list_table").toHaveClass("o_list_fixed_layout");
+    expect(".o_list_table").not.toHaveClass("table-hover");
+    expect(".o_data_row").toHaveCount(4);
+});
+
+test("list: rows are hoverable and not striped by default", async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list><field name="foo"/></list>`,
+    });
+
+    expect(".o_list_table").toHaveClass("table-hover");
+    expect(".o_list_table").not.toHaveClass("o_list_striped");
+    expect(".o_list_table thead").toHaveCount(1);
+});
