@@ -12,6 +12,8 @@ Advanced controls for the Odoo web client. The addon provides:
   (all, any, custom logic, always, or a formula), with nested groups.
 - **Search panel tree**: the search panel of a list or kanban view shows a hierarchical
   model as a tree; selecting a node filters the records of that node and its descendants.
+- **Tree form**: a hierarchical model on the left, and the form of the selected record on
+  the right, configured in its form view.
 
 ## Accordion
 
@@ -378,6 +380,78 @@ The menu **Search Panel Tree** under Custom opens the contacts with a tag tree
 ### Tests
 
 The panel is not covered by the unit tests yet.
+
+## Tree form
+
+A client action with a hierarchical model on the left, and on the right the form of the
+selected record. The form is a regular Odoo form view: its fields, groups and sheet are
+configured in the form arch.
+
+### Usage
+
+Define a form view for the model, and an action with the tag `advanced_ui.tree_form`:
+
+```xml
+<record id="my_form" model="ir.ui.view">
+    <field name="name">my.model.tree.form</field>
+    <field name="model">my.model</field>
+    <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <group string="Identity">
+                    <field name="name"/>
+                    <field name="parent_id"/>
+                </group>
+                <group string="Details">
+                    <field name="color"/>
+                </group>
+            </sheet>
+        </form>
+    </field>
+</record>
+
+<record id="action_my_tree_form" model="ir.actions.client">
+    <field name="name">My Tree Form</field>
+    <field name="tag">advanced_ui.tree_form</field>
+    <field name="params" eval="{
+        'res_model': 'my.model',
+        'parent_field': 'parent_id',
+        'label_field': 'name',
+        'limit': 200,
+        'form_view_id': ref('my_module.my_form'),
+    }"/>
+</record>
+```
+
+### Configuration
+
+The params of the action:
+
+- `res_model`: the hierarchical model (required). Its records are the nodes of the tree.
+- `parent_field`: the parent field of the model. Default: `parent_id`.
+- `label_field`: the field shown as the label of each node. Default: `display_name`.
+- `limit`: the number of nodes loaded at once. Default: 200. A "Load more" button under
+  the tree loads the next page.
+- `form_view_id`: the form view on the right. Default: the default form of the model.
+
+The fields and groups shown in the form are configured in that form view.
+
+### Behaviour
+
+- The first level of the tree is open. Clicking a node shows its form on the right.
+- Each page of nodes is read with `limit + 1` records, the extra one tells whether there
+  is a next page.
+- The label of a node is the value of `label_field` when the tree is loaded. After a
+  change of the name in the form, the tree shows the new label when it is loaded again.
+
+### Demo
+
+The menu **Tree Form** under Custom opens the partner tags (`res.partner.category`) with
+the form defined in `views/tree_form_demo_views.xml`.
+
+### Tests
+
+The tree form is not covered by the unit tests yet.
 
 ## DataTable
 

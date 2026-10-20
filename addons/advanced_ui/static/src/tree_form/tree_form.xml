@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="advanced_ui.TreeNav">
+        <div class="o_tree_nav">
+            <div t-if="this.state.loading" class="o_tree_nav_loading text-muted small p-2">Loading...</div>
+            <ul t-else="" class="o_tree_nav_list list-unstyled mb-0">
+                <t t-foreach="this.rows" t-as="row" t-key="row.node.id">
+                    <li
+                        class="o_tree_nav_node d-flex align-items-center"
+                        t-att-class="{ 'o_tree_nav_node_selected': this.props.selectedId === row.node.id }"
+                        t-att-style="'padding-left: ' + (row.depth * 1.25 + 0.5) + 'rem'"
+                        t-on-click="() => this.onSelect(row.node.id)"
+                    >
+                        <button
+                            type="button"
+                            class="o_tree_nav_toggle btn btn-link p-0 me-1"
+                            t-att-class="{ 'invisible': !row.node.childIds.length }"
+                            t-on-click="(ev) => this.onToggle(ev, row.node.id)"
+                            aria-label="Expand or collapse"
+                        >
+                            <i class="oi" t-att-data-icon="this.state.expanded.has(row.node.id) ? 'arrow_drop_down' : 'arrow_right'"/>
+                        </button>
+                        <span class="o_tree_nav_label text-truncate" t-out="row.node.label"/>
+                    </li>
+                </t>
+            </ul>
+            <div t-if="this.state.hasMore" class="o_tree_nav_more p-2">
+                <button type="button" class="btn btn-link btn-sm p-0 o_tree_nav_more_button" t-on-click="this.onLoadMore">Load more</button>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="advanced_ui.TreeFormAction">
+        <div class="o_tree_form d-flex h-100">
+            <aside class="o_tree_form_nav border-end overflow-auto">
+                <TreeNav
+                    resModel="this.treeProps.resModel"
+                    parentField="this.treeProps.parentField"
+                    labelField="this.treeProps.labelField"
+                    limit="this.treeProps.limit"
+                    context="this.treeProps.context"
+                    selectedId="this.treeProps.selectedId"
+                    onSelect="this.treeProps.onSelect"
+                />
+            </aside>
+            <main class="o_tree_form_content flex-grow-1 overflow-auto">
+                <div t-if="!this.state.selectedId" class="o_tree_form_empty text-muted p-4">
+                    Select a node on the left to see its form.
+                </div>
+                <View t-else="" t-key="this.state.selectedId" t-props="this.viewProps"/>
+            </main>
+        </div>
+    </t>
+
+</templates>

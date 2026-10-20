@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="tree_form_demo_form" model="ir.ui.view">
+        <field name="name">advanced_ui.tree_form_demo.form</field>
+        <field name="model">res.partner.category</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group string="Identity">
+                        <field name="name"/>
+                        <field name="parent_id"/>
+                    </group>
+                    <group string="Display">
+                        <field name="color"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_tree_form_demo" model="ir.actions.client">
+        <field name="name">Tree Form</field>
+        <field name="tag">advanced_ui.tree_form</field>
+        <field name="params" eval="{
+            'res_model': 'res.partner.category',
+            'parent_field': 'parent_id',
+            'label_field': 'name',
+            'limit': 200,
+            'form_view_id': ref('advanced_ui.tree_form_demo_form'),
+        }"/>
+    </record>
+
+    <menuitem id="menu_tree_form_demo"
+        name="Tree Form"
+        parent="base.menu_custom"
+        action="action_tree_form_demo"
+        sequence="50"/>
+</odoo>
