@@ -68,6 +68,15 @@
             </section>
 
             <section class="mb-5">
+                <h2 class="h4 mb-3">Pagination (the parent controls the page)</h2>
+                <div class="d-flex justify-content-end mb-2">
+                    <Pager offset="this.page.offset" limit="this.page.limit" total="this.pagedRows.length"
+                        onUpdate="(params) => this.onPageUpdate(params)"/>
+                </div>
+                <DataTable columns="this.advancedColumns" rows="this.currentPage"/>
+            </section>
+
+            <section class="mb-5">
                 <h2 class="h4 mb-3">Custom cells (slot)</h2>
                 <DataTable columns="this.advancedColumns" rows="this.accounts">
                     <t t-set-slot="cell" t-slot-scope="scope">

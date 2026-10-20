@@ -1,6 +1,7 @@
 import { Component, proxy } from "@odoo/owl";
 import { registry } from "@web/core/framework/registry";
 import { DataTable } from "@advanced_ui/datatable/datatable";
+import { Pager } from "@web/core/components/pager/pager";
 
 const STAGES = ["Prospecting", "Value Proposition", "Id. Decision Makers", "Negotiation"];
 
@@ -89,7 +90,7 @@ const MAX_INFINITE_ROWS = 200;
 
 export class DataTableDemo extends Component {
     static template = "advanced_ui.DataTableDemo";
-    static components = { DataTable };
+    static components = { DataTable, Pager };
 
     setup() {
         this.basicColumns = BASIC_COLUMNS;
@@ -102,10 +103,22 @@ export class DataTableDemo extends Component {
         this.accounts = toRows(ACCOUNTS, "account");
         this.largeRows = proxy([...this.accounts, ...generateRows(0, 30)]);
         this.infiniteRows = proxy(generateRows(0, 20));
+        this.pagedRows = generateRows(0, 10);
+        this.page = proxy({ offset: 0, limit: 3 });
         this.rowActions = [
             { label: "Edit", onSelect: (row) => console.info("Edit", row.name) },
             { label: "Delete", onSelect: (row) => console.info("Delete", row.name) },
         ];
+    }
+
+    get currentPage() {
+        return this.pagedRows.slice(this.page.offset, this.page.offset + this.page.limit);
+    }
+
+    /** Pages are handled by the parent: DataTable only renders the rows it is given. */
+    onPageUpdate({ offset, limit }) {
+        this.page.offset = offset;
+        this.page.limit = limit;
     }
 
     async loadMore() {

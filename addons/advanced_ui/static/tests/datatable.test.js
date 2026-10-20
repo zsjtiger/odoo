@@ -1,8 +1,9 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { Component, xml } from "@odoo/owl";
+import { Component, proxy, xml } from "@odoo/owl";
 import { animationFrame, click, keyDown, queryAll, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { DataTable } from "@advanced_ui/datatable/datatable";
+import { Pager } from "@web/core/components/pager/pager";
 
 describe.current.tags("desktop");
 
@@ -153,4 +154,35 @@ test("datatable: the cell slot renders custom content in every cell", async () =
     await mountWithCleanup(Wrapper);
     expect(".custom-cell").toHaveCount(6);
     expect(queryAllTexts(".custom-cell")).toEqual(["Acme", "300", "Globex", "100", "Initech", "200"]);
+});
+
+test("datatable: the parent pages the rows with a Pager", async () => {
+    const allRows = Array.from({ length: 10 }, (_, i) => ({ id: i, name: `Row ${i}`, amount: i }));
+    class Paged extends Component {
+        static template = xml`
+            <Pager offset="this.state.offset" limit="this.state.limit" total="this.allRows.length"
+                onUpdate="(params) => this.onUpdate(params)"/>
+            <DataTable columns="this.columns" rows="this.currentPage"/>`;
+        static components = { DataTable, Pager };
+
+        setup() {
+            this.columns = columns;
+            this.allRows = allRows;
+            this.state = proxy({ offset: 0, limit: 3 });
+        }
+
+        get currentPage() {
+            return this.allRows.slice(this.state.offset, this.state.offset + this.state.limit);
+        }
+
+        onUpdate({ offset, limit }) {
+            this.state.offset = offset;
+            this.state.limit = limit;
+        }
+    }
+    await mountWithCleanup(Paged);
+    expect(queryAllTexts("tbody tr td:first-child")).toEqual(["Row 0", "Row 1", "Row 2"]);
+    await click(".o_pager_next");
+    await animationFrame();
+    expect(queryAllTexts("tbody tr td:first-child")).toEqual(["Row 3", "Row 4", "Row 5"]);
 });
