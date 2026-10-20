@@ -130,6 +130,8 @@ function hasOnlyReadonlyFields(cell) {
     return fields.length > 0 && fields.every((el) => el.classList.contains("o_readonly_modifier"));
 }
 
+const INFINITE_SCROLL_PAGE_SIZE = 80;
+
 export const listRendererProps = {
     activeActions: t.any().optional(),
     list: t.any(),
@@ -576,6 +578,30 @@ export class ListRenderer extends Component {
     /** Whether the row menu can delete a record of a top-level list. */
     get canDeleteRecord() {
         return !!(this.activeActions.onDelete || (this.props.onRecordDelete && this.activeActions.delete));
+    }
+
+    /**
+     * Infinite scroll: when the bottom of the list is reached, load the next page
+     * by raising the limit, so the records already shown are kept.
+     */
+    async onScroll(ev) {
+        if (!this.props.archInfo.infiniteScroll || this.loadingMore) {
+            return;
+        }
+        const el = ev.currentTarget;
+        if (el.scrollTop + el.clientHeight < el.scrollHeight - 40) {
+            return;
+        }
+        const list = this.props.list;
+        if (list.isGrouped || list.records.length >= list.count) {
+            return;
+        }
+        this.loadingMore = true;
+        try {
+            await list.load({ offset: 0, limit: list.limit + INFINITE_SCROLL_PAGE_SIZE });
+        } finally {
+            this.loadingMore = false;
+        }
     }
 
     get hasRowMenu() {

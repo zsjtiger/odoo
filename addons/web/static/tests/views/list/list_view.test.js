@@ -22556,3 +22556,17 @@ test("list: row menu Delete asks for confirmation and removes the record", async
     await animationFrame();
     expect(".o_data_row").toHaveCount(3);
 });
+
+test("list: infinite_scroll loads the next page when the bottom is reached", async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list infinite_scroll="1" limit="2"><field name="foo"/></list>`,
+    });
+
+    expect(".o_data_row").toHaveCount(2);
+    queryOne(".o_list_renderer").dispatchEvent(new Event("scroll"));
+    await animationFrame();
+    await animationFrame();
+    expect(".o_data_row").toHaveCount(4);
+});

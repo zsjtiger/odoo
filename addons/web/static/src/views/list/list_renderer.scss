@@ -671,3 +671,9 @@
 .o_list_row_menu_header {
     width: 2rem;
 }
+
+// Infinite scroll: the list scrolls inside its own area, so the scroll event can load more.
+.o_list_renderer.o_list_infinite {
+    max-height: 70vh;
+    overflow-y: auto;
+}

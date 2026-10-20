@@ -5,8 +5,10 @@
         <t t-set="_canSelectRecord" t-value="this.canSelectRecord"/>
         <div
             class="o_list_renderer o_renderer table-responsive"
+            t-att-class="{ 'o_list_infinite': this.props.archInfo.infiniteScroll }"
             tabindex="-1"
             t-ref="this.rootRef"
+            t-on-scroll="(ev) => this.onScroll(ev)"
         >
             <t t-if="this.showNoContentHelper">
                 <ActionHelper noContentHelp="this.props.noContentHelp"/>

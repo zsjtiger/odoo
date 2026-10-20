@@ -270,6 +270,7 @@ export class ListArchParser {
                 treeAttr.fixedLayout = exprToBoolean(xmlDoc.getAttribute("fixed_layout") || "");
                 treeAttr.singleSelection = exprToBoolean(xmlDoc.getAttribute("single_selection") || "");
                 treeAttr.rowMenu = exprToBoolean(xmlDoc.getAttribute("row_menu") || "");
+                treeAttr.infiniteScroll = exprToBoolean(xmlDoc.getAttribute("infinite_scroll") || "");
                 treeAttr.rawExpand = xmlDoc.getAttribute("expand");
                 treeAttr.decorations = getDecoration(xmlDoc);
 

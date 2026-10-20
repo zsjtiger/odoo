@@ -60,6 +60,7 @@
             <rng:optional><rng:attribute name="fixed_layout"/></rng:optional>
             <rng:optional><rng:attribute name="single_selection"/></rng:optional>
             <rng:optional><rng:attribute name="row_menu"/></rng:optional>
+            <rng:optional><rng:attribute name="infinite_scroll"/></rng:optional>
             <rng:optional>
                 <rng:attribute name="limit">
                     <rng:data type="int"/>
