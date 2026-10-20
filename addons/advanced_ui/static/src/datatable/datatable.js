@@ -19,6 +19,8 @@ import { uniqueId } from "@web/core/utils/functions";
  * - scrollable, maxHeight: the rows scroll in an area with a sticky header
  * - rowActions: [{ label, onSelect(row) }], shows a menu on each row
  * - onLoadMore(): called when the bottom of a scrollable table is reached
+ * - slot "cell": replaces the content of each cell. It receives { row, column, value, text },
+ *   where text is the formatted value. Use it to render field components or badges.
  * - onSelectionChange(selectedIds)
  */
 export class DataTable extends Component {
@@ -41,6 +43,7 @@ export class DataTable extends Component {
         rowActions: t.array().optional(),
         onLoadMore: t.function().optional(),
         onSelectionChange: t.function().optional(),
+        slots: t.object().optional(),
     });
 
     setup() {

@@ -68,6 +68,16 @@
             </section>
 
             <section class="mb-5">
+                <h2 class="h4 mb-3">Custom cells (slot)</h2>
+                <DataTable columns="this.advancedColumns" rows="this.accounts">
+                    <t t-set-slot="cell" t-slot-scope="scope">
+                        <span t-if="scope.column.key === 'stage'" class="badge text-bg-info" t-out="scope.value"/>
+                        <span t-else="" class="text-truncate d-block" t-out="scope.text"/>
+                    </t>
+                </DataTable>
+            </section>
+
+            <section class="mb-5">
                 <h2 class="h6 mb-2">Resizeable: Columns 0 and 3 fixed</h2>
                 <DataTable columns="this.fixedColumns" rows="this.accounts" resizable="true"
                     scrollable="true" maxHeight="'220px'"/>

@@ -1,4 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
+import { Component, xml } from "@odoo/owl";
 import { animationFrame, click, keyDown, queryAll, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { DataTable } from "@advanced_ui/datatable/datatable";
@@ -132,4 +133,24 @@ test("datatable: dragging a header edge resizes its column", async () => {
     window.dispatchEvent(new PointerEvent("pointerup", { clientX: 180 }));
     await animationFrame();
     expect(queryAll("thead th")[0].offsetWidth).toBeGreaterThan(width);
+});
+
+test("datatable: the cell slot renders custom content in every cell", async () => {
+    class Wrapper extends Component {
+        static template = xml`
+            <DataTable columns="this.columns" rows="this.rows">
+                <t t-set-slot="cell" t-slot-scope="scope">
+                    <b class="custom-cell" t-out="scope.text"/>
+                </t>
+            </DataTable>`;
+        static components = { DataTable };
+
+        setup() {
+            this.columns = columns;
+            this.rows = rows;
+        }
+    }
+    await mountWithCleanup(Wrapper);
+    expect(".custom-cell").toHaveCount(6);
+    expect(queryAllTexts(".custom-cell")).toEqual(["Acme", "300", "Globex", "100", "Initech", "200"]);
 });
