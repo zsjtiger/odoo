@@ -12,7 +12,9 @@ Advanced features of the user interface, built on top of the web client.
     'version': '1.0',
     'depends': ['web'],
     'data': [
+        'data/search_tree_demo.xml',
         'views/datatable_demo_views.xml',
+        'views/search_tree_demo_views.xml',
     ],
     'installable': True,
     'auto_install': False,

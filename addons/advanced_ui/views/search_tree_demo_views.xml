@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="search_tree_demo_search" model="ir.ui.view">
+        <field name="name">advanced_ui.search_tree_demo.search</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <search string="Contacts">
+                <searchpanel>
+                    <field name="category_id" expand="1" tree_parent="parent_id" tree_label="name"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_search_tree_demo" model="ir.actions.act_window">
+        <field name="name">Search Panel Tree</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">list,kanban</field>
+        <field name="search_view_id" ref="search_tree_demo_search"/>
+    </record>
+
+    <menuitem id="menu_search_tree_demo"
+        name="Search Panel Tree"
+        parent="base.menu_custom"
+        action="action_search_tree_demo"
+        sequence="40"/>
+</odoo>

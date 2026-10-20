@@ -10,6 +10,8 @@ Advanced controls for the Odoo web client. The addon provides:
   display format, usable in form and list views.
 - **Expression builder**: a builder for logical conditions over the fields of a model
   (all, any, custom logic, always, or a formula), with nested groups.
+- **Search panel tree**: the search panel of a list or kanban view shows a hierarchical
+  model as a tree; selecting a node filters the records of that node and its descendants.
 
 ## Accordion
 
@@ -321,6 +323,53 @@ use the `o_expression_nested` class.
 
 The tests are in `static/tests/expression_builder.test.js`: the domain conversion, the
 custom logic parser, and the form widget.
+
+## Search panel tree
+
+The search panel on the left of a list or kanban view can show a hierarchical model as a
+tree. Each node has an expand/collapse toggle. Selecting a node filters the records on
+that node and on all of its descendants.
+
+### Usage
+
+Add a `<searchpanel>` with the field that points to the hierarchical model, and set the
+two tree options on that field:
+
+```xml
+<search string="Contacts">
+    <searchpanel>
+        <field name="category_id" expand="1" tree_parent="parent_id" tree_label="name"/>
+    </searchpanel>
+</search>
+```
+
+### Configuration
+
+- `tree_parent`: the parent field of the related model (the model of the field). Default:
+  the `_parent_name` of the model, as Odoo does.
+- `tree_label`: the field whose value is the label of each node. Default: `display_name`.
+- `expand="1"`: the full range of nodes is loaded, including the nodes that have no
+  record of their own. Set it so that every node of the tree is shown.
+
+The field must be a many2one or a many2many to a hierarchical model. Records of the field
+are the ones filtered when a node is selected.
+
+### Behaviour
+
+- The labels come from `tree_label`, read when the tree is loaded.
+- Selecting a node filters with the node and its descendants, `in` the list of their ids.
+- The descendants are the nodes loaded in the panel. With the `limit` of the panel, a
+  very large tree can be cut; the nodes beyond the limit are not selected with their parent.
+
+### Demo
+
+The menu **Search Panel Tree** under Custom opens the contacts with a tag tree. The demo
+data are in `data/search_tree_demo.xml`: regions, countries and VIP tags, with a few
+partners.
+
+### Tests
+
+The panel is not covered by the unit tests yet.
 
 ## DataTable
 
