@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame, click, dispatch, keyDown, queryAll, queryAllTexts, queryOne } from "@odoo/hoot-dom";
+import { animationFrame, click, keyDown, queryAll, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { DataTable } from "@advanced_ui/datatable/datatable";
 
@@ -117,16 +117,16 @@ test("datatable: scrolling to the bottom calls onLoadMore", async () => {
     });
     const scrollArea = queryOne(".o_datatable");
     scrollArea.scrollTop = scrollArea.scrollHeight;
-    dispatch(scrollArea, "scroll");
+    scrollArea.dispatchEvent(new Event("scroll"));
     await animationFrame();
     expect(calls).toBe(1);
 });
 
 test("datatable: dragging a header edge resizes its column", async () => {
     await mountTable({ resizable: true });
-    const resizer = queryOne(".o_datatable_resizer");
+    const resizer = queryAll(".o_datatable_resizer")[0];
     const width = queryAll("thead th")[0].offsetWidth;
-    dispatch(resizer, "pointerdown", { clientX: 100 });
+    resizer.dispatchEvent(new PointerEvent("pointerdown", { clientX: 100, bubbles: true }));
     window.dispatchEvent(new PointerEvent("pointermove", { clientX: 100 + 80 }));
     window.dispatchEvent(new PointerEvent("pointerup", { clientX: 180 }));
     await animationFrame();
