@@ -14,8 +14,9 @@
  * which is the implicit operator of an Odoo domain.
  */
 
-import { DateTime } from "luxon";
 import { serializeDateTime } from "@web/core/data/l10n/dates";
+
+const { DateTime } = luxon;
 
 function isEmpty(value) {
     return value === undefined || value === null || value === "";
