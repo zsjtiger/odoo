@@ -177,3 +177,150 @@ The unit tests live in `static/tests/` (`accordion.test.js`, `accordion_field.te
 and `lookup_field.test.js`). They are JavaScript (Hoot) tests, run in the browser:
 install or update the addon on a database, then open `/web/tests?filter=advanced_ui`
 while logged in as an administrator.
+
+## DataTable
+
+A table with the layouts and behaviours of the list demo: striped, bordered, headless,
+fixed layout, row selection, sorting, a row menu, a scrollable area with a sticky
+header, infinite loading, resizable columns, keyboard navigation between cells, and
+header filters.
+
+### Enabling it
+
+```js
+import { DataTable } from "@advanced_ui/datatable/datatable";
+```
+
+Declare it in a component and render it in its template:
+
+```js
+export class MyList extends Component {
+    static template = "my_module.MyList";
+    static components = { DataTable };
+    setup() {
+        this.columns = [
+            { key: "name", label: "Name", type: "link", sortable: true },
+            { key: "amount", label: "Amount", type: "number", sortable: true },
+        ];
+        this.rows = [{ id: 1, name: "Acme", amount: 25000 }];
+    }
+}
+```
+
+```xml
+<DataTable columns="this.columns" rows="this.rows" selection="'multi'"/>
+```
+
+Props that are expressions in the template need quotes for strings: `sortKey="'name'"`.
+Booleans are written as `true`.
+
+### Props
+
+| Prop | Description |
+|---|---|
+| `columns` | Column definitions, see below |
+| `rows` | `[{ id, ...values }]`. Each row needs a unique `id` |
+| `sortKey`, `sortDirection` | Initial sort (`"asc"` or `"desc"`) |
+| `striped`, `bordered`, `headless`, `fixedLayout`, `noRowHover` | Layout switches |
+| `selection` | `"none"` (default), `"multi"` (checkboxes) or `"single"` (radio buttons) |
+| `onSelectionChange(ids)` | Called when the selection changes |
+| `resizable` | Columns can be resized by dragging their header edge |
+| `keyboard` | Arrow keys move between cells (default `true`) |
+| `scrollable`, `maxHeight` | Rows scroll in an area of this height, with a sticky header |
+| `rowActions` | `[{ label, onSelect(row) }]`, shown in a menu on each row |
+| `onLoadMore()` | Called when a scrollable table reaches its bottom. Returns a promise |
+| `filters`, `onFilterChange(key, value)` | Header filter values, and the callback when they change |
+
+### Columns
+
+| Key | Description |
+|---|---|
+| `key` | Field name in the row. Required |
+| `label` | Header text |
+| `type` | `"text"` (default), `"number"`, `"date"` (ISO string), `"link"`, `"email"`, or `"field"` |
+| `sortable` | Clicking the header sorts the rows |
+| `fixed` | The column cannot be resized |
+| `format(value, row)` | Text shown in the cell |
+| `filter` | Filter type, see below |
+| `selection` | `[[value, label]]`, options of a `selection` filter |
+| `searchRecords(term, { offset, limit })` | Search of a `relation` filter, see below |
+
+`type: "field"` renders the Odoo field widget of each record, so the rows must be
+records of a model. Such columns are not sortable.
+
+### Custom cells
+
+A `cell` slot replaces the content of each cell, for everything except `type: "field"`:
+
+```xml
+<DataTable columns="this.columns" rows="this.rows">
+    <t t-set-slot="cell" t-slot-scope="scope">
+        <span t-if="scope.column.key === 'stage'" class="badge text-bg-info" t-out="scope.value"/>
+        <span t-else="" t-out="scope.text"/>
+    </t>
+</DataTable>
+```
+
+The slot receives `row`, `column`, `value` (the raw value) and `text` (the formatted value).
+
+### Header filters
+
+A column with `filter` shows a ▼ button in its header. It opens a popover with the
+controls of that type. The popover has Apply and Clear buttons. Apply sends the value to
+`onFilterChange(key, value)`, and Clear sends the empty value. DataTable does not filter
+the rows itself: the parent turns the filter values into a domain, so the filter also
+works when the rows come from the server.
+
+| `filter` | Popover | Value | Domain |
+|---|---|---|---|
+| `"text"` | Operator (Contains, Equals, Does not contain) and a text input | `{ operator, value }` | `[key, operator, value]` |
+| `"selection"` | Search, select all, and a checkbox per option | array of values | `[key, "in", values]` |
+| `"bool"` | Same as selection, with Yes and No | array of booleans | `[key, "in", values]` |
+| `"date"`, `"datetime"` | Operator (Between, Equals, Before, After) and one or two dates | `{ operator, from, to }` | `>=`, `<=` on the bounds, or `=`, `<`, `>` |
+| `"number"` | Min and max inputs | `{ min, max }` | `>=`, `<=` |
+| `"relation"` | Search, and a checkbox per record, 20 per page with a pager | array of `{ id, name }` | `[key, "in", ids]` |
+
+For `"datetime"` the bounds are the start and the end of the days in the user's timezone,
+converted to UTC. The domain helpers are in `static/src/datatable/filter_domain.js`:
+
+```js
+import { buildFilterDomain } from "@advanced_ui/datatable/filter_domain";
+
+const domain = buildFilterDomain(this.columns, this.state.filters);
+```
+
+Conditions are combined with AND. Empty values add no condition.
+
+The search function of a `relation` column returns one page and the total number of matches:
+
+```js
+async searchRecords(term, { offset, limit }) {
+    const records = await orm.call("res.partner", "name_search", [], {...});
+    return { records: [{ id, name }, ...], count: total };
+}
+```
+
+The popover shows 20 options per page. Choosing or searching does not reset the checked
+records, so they stay selected while the user pages or searches.
+
+### Paging with a filter
+
+The parent keeps the page (`offset`, `limit`) and the filters. When the filters change, it
+resets `offset` to 0. The total of the `Pager` is the number of rows that match the
+filters, so paging and filtering work together:
+
+```xml
+<Pager offset="this.state.offset" limit="this.state.limit" total="this.filteredRows.length"
+    onUpdate="(params) => this.onUpdate(params)"/>
+<DataTable columns="this.columns" rows="this.pageRows" filters="this.state.filters"
+    onFilterChange="(key, value) => this.onFilterChange(key, value)"/>
+```
+
+### Demo and tests
+
+The demo is in the Technical menu, under Data Table (`advanced_ui.datatable_demo`). It
+shows every layout, the paging, the custom cells, the header filters, and the relation
+filter. The demo filters the rows in JavaScript with `matchesDomain` from `filter_domain.js`.
+
+The tests are in `static/tests/datatable.test.js`. Run them in the browser as described in
+the Tests section above, with the filter `datatable:`.
