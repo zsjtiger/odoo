@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { click, queryAllTexts, queryOne } from "@odoo/hoot-dom";
-import { defineModels, fields, models, mountView } from "@web/../tests/web_test_helpers";
+import { animationFrame, click, queryAllTexts } from "@odoo/hoot-dom";
+import { defineModels, fields, models, mountView, webModels } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 
@@ -37,7 +37,7 @@ class Item extends models.Model {
     };
 }
 
-defineModels([Category, Item]);
+defineModels({ ...webModels, Category, Item });
 
 /** The header of the tree node with the given label. */
 function nodeHeader(label) {
@@ -57,6 +57,7 @@ test("the tree shows the first page of nodes, and a Load more button", async () 
 test("Load more shows the next page of nodes", async () => {
     await mountView({ type: "list", resModel: "item" });
     await click(".o_search_tree_more_button");
+    await animationFrame();
     expect(queryAllTexts(".o_search_panel_label_title")).toInclude("VIP");
     expect(".o_search_tree_more_button").toHaveCount(0);
 });
@@ -64,7 +65,9 @@ test("Load more shows the next page of nodes", async () => {
 test("selecting a node filters on the node and its descendants", async () => {
     await mountView({ type: "list", resModel: "item" });
     await click(".o_search_tree_more_button");
+    await animationFrame();
     await click(nodeHeader("Regions"));
+    await animationFrame();
     // Tokyo is under Japan, under Asia; Paris is under Europe; HQ is under VIP only
     expect(queryAllTexts(".o_data_row .o_data_cell")).toEqual(["Tokyo", "Paris"]);
 });
@@ -72,7 +75,10 @@ test("selecting a node filters on the node and its descendants", async () => {
 test("selecting the All node shows every record", async () => {
     await mountView({ type: "list", resModel: "item" });
     await click(".o_search_tree_more_button");
+    await animationFrame();
     await click(nodeHeader("Regions"));
+    await animationFrame();
     await click(nodeHeader("All"));
+    await animationFrame();
     expect(queryAllTexts(".o_data_row .o_data_cell")).toEqual(["Tokyo", "Paris", "HQ"]);
 });

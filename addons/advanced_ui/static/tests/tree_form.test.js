@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { click, queryAllTexts } from "@odoo/hoot-dom";
+import { animationFrame, click, queryAllTexts } from "@odoo/hoot-dom";
 import { defineModels, fields, models, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { TreeNav } from "@advanced_ui/tree_form/tree_form";
 
@@ -52,8 +52,10 @@ test("a node opens and closes its children", async () => {
     await mountTree();
     expect(queryAllTexts(".o_tree_nav_label")).not.toInclude("Japan");
     await click(nodeOf("Asia").querySelector(".o_tree_nav_toggle"));
+    await animationFrame();
     expect(queryAllTexts(".o_tree_nav_label")).toInclude("Japan");
     await click(nodeOf("Asia").querySelector(".o_tree_nav_toggle"));
+    await animationFrame();
     expect(queryAllTexts(".o_tree_nav_label")).not.toInclude("Japan");
 });
 
@@ -68,5 +70,6 @@ test("Load more reads the next page of nodes", async () => {
     await mountTree({ limit: 2 });
     expect(queryAllTexts(".o_tree_nav_label")).not.toInclude("VIP");
     await click(".o_tree_nav_more_button");
+    await animationFrame();
     expect(queryAllTexts(".o_tree_nav_label")).toInclude("VIP");
 });
