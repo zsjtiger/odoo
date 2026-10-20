@@ -43,6 +43,16 @@
                 <div class="ms-auto d-flex gap-2">
                     <button type="button" class="o_tree_form_refresh btn btn-light btn-sm" t-on-click="this.onRefresh">Refresh</button>
                     <button type="button" class="o_tree_form_new btn btn-primary btn-sm" t-on-click="this.onNew">New</button>
+                    <t t-foreach="this.toolbarComboboxes" t-as="combo" t-key="combo_index">
+                        <label class="o_tree_form_combobox_label small text-muted mb-0" t-out="combo.label"/>
+                        <select class="o_tree_form_combobox form-select form-select-sm w-auto"
+                            t-att-aria-label="combo.label"
+                            t-on-change="(ev) => this.onComboboxChange(combo, ev)">
+                            <t t-foreach="combo.options" t-as="option" t-key="option_index">
+                                <option t-att-value="option[0]" t-att-selected="this.filterValue(combo) === option[0]" t-out="option[1]"/>
+                            </t>
+                        </select>
+                    </t>
                     <t t-foreach="this.toolbarButtons" t-as="button" t-key="button_index">
                         <button type="button" class="o_tree_form_button btn btn-light btn-sm"
                             t-att-disabled="!this.state.selectedId"
@@ -61,6 +71,7 @@
                         context="this.treeProps.context"
                         selectedId="this.treeProps.selectedId"
                         reloadKey="this.treeProps.reloadKey"
+                        domain="this.treeProps.domain"
                         onSelect="this.treeProps.onSelect"
                     />
                 </aside>

@@ -19,6 +19,21 @@ import { View } from "@web/views/view";
 
 const DEFAULT_LIMIT = 200;
 
+/**
+ * A value of a combobox, as the domain needs it: "true" and "false" are booleans.
+ *
+ * @param {string} value
+ */
+function castFilterValue(value) {
+    if (value === "true") {
+        return true;
+    }
+    if (value === "false") {
+        return false;
+    }
+    return value;
+}
+
 export class TreeNav extends Component {
     static template = "advanced_ui.TreeNav";
     props = useProps({
@@ -29,16 +44,19 @@ export class TreeNav extends Component {
         context: t.object().optional(),
         selectedId: t.or([t.number(), t.literal(false)]).optional(),
         reloadKey: t.number().optional(),
+        domain: t.array().optional(),
         onSelect: t.function(),
     });
 
     setup() {
         this.orm = useService("orm");
         this.state = proxy({ nodes: new Map(), roots: [], expanded: new Set(), limit: 0, hasMore: false, loading: true });
-        onWillStart(() => this.load(true));
+        onWillStart(() => this.load(true, this.props));
         onWillUpdateProps((nextProps) => {
-            if (nextProps.resModel !== this.props.resModel || nextProps.reloadKey !== this.props.reloadKey) {
-                return this.load(true);
+            const domainChanged = JSON.stringify(nextProps.domain) !== JSON.stringify(this.props.domain);
+            if (nextProps.resModel !== this.props.resModel || nextProps.reloadKey !== this.props.reloadKey || domainChanged) {
+                // The new props are not set yet: the load reads them from nextProps
+                return this.load(true, nextProps);
             }
         });
     }
@@ -70,14 +88,15 @@ export class TreeNav extends Component {
      * whether there is a next page.
      *
      * @param {boolean} reset whether the tree starts again from the first page
+     * @param {Object} props the props to read the tree with
      */
-    async load(reset = false) {
+    async load(reset = false, props = this.props) {
         if (reset) {
             this.state.limit = this.pageSize;
         }
-        const { resModel, parentField, labelField, context } = this.props;
+        const { resModel, parentField, labelField, context } = props;
         const fields = [...new Set(["id", labelField, parentField])];
-        const records = await this.orm.searchRead(resModel, [], fields, {
+        const records = await this.orm.searchRead(resModel, props.domain || [], fields, {
             context,
             limit: this.state.limit + 1,
         });
@@ -141,7 +160,27 @@ export class TreeFormAction extends Component {
 
     setup() {
         this.orm = useService("orm");
-        this.state = proxy({ selectedId: false, creating: false, sidebarOpen: true, reloadKey: 0 });
+        this.state = proxy({ selectedId: false, creating: false, sidebarOpen: true, reloadKey: 0, filters: {} });
+    }
+
+    /** The comboboxes of the toolbar: each one filters the nodes of the tree. */
+    get toolbarComboboxes() {
+        return this.params.toolbar_comboboxes || [];
+    }
+
+    /** The domain of the tree, from the values chosen in the comboboxes. */
+    get treeDomain() {
+        return this.toolbarComboboxes
+            .filter((combo) => this.state.filters[combo.field])
+            .map((combo) => [combo.field, "=", castFilterValue(this.state.filters[combo.field])]);
+    }
+
+    filterValue(combo) {
+        return this.state.filters[combo.field] || "";
+    }
+
+    onComboboxChange(combo, ev) {
+        this.state.filters[combo.field] = ev.target.value;
     }
 
     /** The buttons of the toolbar: each calls a method on the selected record. */
@@ -199,7 +238,9 @@ export class TreeFormAction extends Component {
             parentField: parent_field || "parent_id",
             labelField: label_field || "display_name",
             limit: limit || DEFAULT_LIMIT,
-            context: this.props.action.context || {},
+            // Archived records are part of the tree, so that a combobox can filter them
+            context: { ...(this.props.action.context || {}), active_test: false },
+            domain: this.treeDomain,
             selectedId: this.state.selectedId,
             reloadKey: this.state.reloadKey,
             onSelect: (id) => {

@@ -27,6 +27,12 @@
         <field name="name">VIP</field>
     </record>
 
+    <record id="partner_category_demo_archived" model="res.partner.category">
+        <field name="name">Old Regions</field>
+        <field name="parent_id" ref="partner_category_demo_regions"/>
+        <field name="active" eval="False"/>
+    </record>
+
     <record id="partner_demo_paris" model="res.partner">
         <field name="name">Paris Office</field>
         <field name="category_id" eval="[(6, 0, [ref('partner_category_demo_france')])]"/>

@@ -29,6 +29,11 @@
             'limit': 200,
             'form_view_id': ref('advanced_ui.tree_form_demo_form'),
             'toolbar_buttons': [{'label': 'Duplicate', 'method': 'copy'}],
+            'toolbar_comboboxes': [{
+                'label': 'Status',
+                'field': 'active',
+                'options': [['', 'All'], ['true', 'Active'], ['false', 'Archived']],
+            }],
         }"/>
     </record>
 
