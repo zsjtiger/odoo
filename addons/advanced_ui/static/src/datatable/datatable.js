@@ -1,6 +1,8 @@
 import { Component, onWillUnmount, proxy, signal, t, useEffect, useProps } from "@odoo/owl";
+import { _t } from "@web/core/data/l10n/translation";
 import { uniqueId } from "@web/core/utils/functions";
 import { Field } from "@web/views/fields/field";
+import { emptyFilterValue, isFilterActive } from "./filter_domain";
 
 /**
  * DataTable: a table with the layouts and behaviours of the list demo.
@@ -57,6 +59,21 @@ export class DataTable extends Component {
     });
 
     setup() {
+        this.textOperators = [
+            ["ilike", _t("Contains")],
+            ["=", _t("Equals")],
+            ["not ilike", _t("Does not contain")],
+        ];
+        this.dateOperators = [
+            ["between", _t("Between")],
+            ["=", _t("Equals")],
+            ["<", _t("Before")],
+            [">", _t("After")],
+        ];
+        this.boolOptions = [
+            [true, _t("Yes")],
+            [false, _t("No")],
+        ];
         this.state = proxy({
             sortKey: this.props.sortKey || null,
             sortDirection: this.props.sortDirection || "asc",
@@ -64,6 +81,9 @@ export class DataTable extends Component {
             widths: {},
             focus: { row: 0, col: 0 },
             menuRowId: null,
+            openFilter: null,
+            draft: null,
+            optionSearch: "",
             loading: false,
         });
         this.radioName = uniqueId("o_datatable_radio_");
@@ -101,17 +121,75 @@ export class DataTable extends Component {
         return this.props.columns.some((column) => column.filter);
     }
 
-    filterValue(column) {
-        return this.props.filters?.[column.key] ?? "";
+    isFilterActive(column) {
+        return isFilterActive(column, this.props.filters?.[column.key]);
     }
 
-    changeFilter(column, value) {
-        this.props.onFilterChange?.(column.key, value);
+    isFilterOpen(column) {
+        return this.state.openFilter === column.key;
     }
 
-    changeRangeFilter(column, bound, value) {
-        const current = this.props.filters?.[column.key] || {};
-        this.props.onFilterChange?.(column.key, { ...current, [bound]: value });
+    /**
+     * Opens the filter popover of a column, with a copy of its current value as draft.
+     * The draft is only sent to the parent when the user applies it.
+     * @param {Object} column
+     */
+    toggleFilter(column) {
+        if (this.isFilterOpen(column)) {
+            this.state.openFilter = null;
+            return;
+        }
+        const current = this.props.filters?.[column.key] ?? emptyFilterValue(column);
+        this.state.draft = JSON.parse(JSON.stringify(current));
+        this.state.optionSearch = "";
+        this.state.openFilter = column.key;
+    }
+
+    setDraft(key, value) {
+        this.state.draft[key] = value;
+    }
+
+    setOptionSearch(value) {
+        this.state.optionSearch = value;
+    }
+
+    optionsOf(column) {
+        return column.filter === "bool" ? this.boolOptions : column.selection || [];
+    }
+
+    visibleOptions(column) {
+        const search = this.state.optionSearch.toLowerCase();
+        return this.optionsOf(column).filter((option) => option[1].toLowerCase().includes(search));
+    }
+
+    allOptionsSelected(column) {
+        const values = this.optionsOf(column).map((option) => option[0]);
+        return values.length > 0 && values.every((value) => this.state.draft.includes(value));
+    }
+
+    toggleOption(value) {
+        const index = this.state.draft.indexOf(value);
+        if (index >= 0) {
+            this.state.draft.splice(index, 1);
+        } else {
+            this.state.draft.push(value);
+        }
+    }
+
+    toggleAllOptions(column) {
+        this.state.draft = this.allOptionsSelected(column)
+            ? []
+            : this.optionsOf(column).map((option) => option[0]);
+    }
+
+    applyFilter(column) {
+        this.props.onFilterChange?.(column.key, this.state.draft);
+        this.state.openFilter = null;
+    }
+
+    clearFilter(column) {
+        this.props.onFilterChange?.(column.key, emptyFilterValue(column));
+        this.state.openFilter = null;
     }
 
     get allSelected() {

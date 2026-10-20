@@ -34,45 +34,78 @@
                             <span t-if="this.props.resizable and !column.fixed" class="o_datatable_resizer"
                                 t-on-pointerdown="(ev) => this.startResize(ev, column)"
                                 t-on-click="(ev) => ev.stopPropagation()"/>
+                            <t t-if="column.filter">
+                                <button type="button" class="btn btn-sm o_datatable_filter_toggle" aria-label="Filter"
+                                    t-att-class="{ 'o_datatable_filter_active': this.isFilterActive(column) }"
+                                    t-on-click.stop="() => this.toggleFilter(column)">▼</button>
+                                <div t-if="this.isFilterOpen(column)" class="o_datatable_filter_popover"
+                                    t-on-click.stop="() => {}">
+                                    <t t-if="column.filter === 'text'">
+                                        <select class="form-select form-select-sm mb-2" aria-label="Operator"
+                                            t-on-change="(ev) => this.setDraft('operator', ev.target.value)">
+                                            <option t-foreach="this.textOperators" t-as="op" t-key="op_index"
+                                                t-att-value="op[0]" t-att-selected="this.state.draft.operator === op[0]" t-out="op[1]"/>
+                                        </select>
+                                        <input type="text" class="form-control form-control-sm" aria-label="Value"
+                                            t-att-value="this.state.draft.value"
+                                            t-on-input="(ev) => this.setDraft('value', ev.target.value)"/>
+                                    </t>
+                                    <t t-elif="column.filter === 'selection' or column.filter === 'bool'">
+                                        <input type="text" class="form-control form-control-sm mb-2" placeholder="Search"
+                                            aria-label="Search options"
+                                            t-att-value="this.state.optionSearch"
+                                            t-on-input="(ev) => this.setOptionSearch(ev.target.value)"/>
+                                        <div class="small text-muted mb-1">
+                                            <span t-out="this.state.draft.length"/> selected
+                                        </div>
+                                        <div class="form-check">
+                                            <input type="checkbox" class="form-check-input" id="o_datatable_all_options"
+                                                t-att-checked="this.allOptionsSelected(column)"
+                                                t-on-change="() => this.toggleAllOptions(column)"/>
+                                            <label class="form-check-label" for="o_datatable_all_options">All</label>
+                                        </div>
+                                        <div t-foreach="this.visibleOptions(column)" t-as="option" t-key="option_index"
+                                            class="form-check">
+                                            <input type="checkbox" class="form-check-input"
+                                                t-att-checked="this.state.draft.includes(option[0])"
+                                                t-on-change="() => this.toggleOption(option[0])"/>
+                                            <label class="form-check-label" t-out="option[1]"/>
+                                        </div>
+                                    </t>
+                                    <t t-elif="column.filter === 'date' or column.filter === 'datetime'">
+                                        <select class="form-select form-select-sm mb-2" aria-label="Operator"
+                                            t-on-change="(ev) => this.setDraft('operator', ev.target.value)">
+                                            <option t-foreach="this.dateOperators" t-as="op" t-key="op_index"
+                                                t-att-value="op[0]" t-att-selected="this.state.draft.operator === op[0]" t-out="op[1]"/>
+                                        </select>
+                                        <input type="date" class="form-control form-control-sm mb-2" aria-label="From"
+                                            t-att-value="this.state.draft.from"
+                                            t-on-input="(ev) => this.setDraft('from', ev.target.value)"/>
+                                        <input t-if="this.state.draft.operator === 'between'" type="date"
+                                            class="form-control form-control-sm" aria-label="To"
+                                            t-att-value="this.state.draft.to"
+                                            t-on-input="(ev) => this.setDraft('to', ev.target.value)"/>
+                                    </t>
+                                    <t t-elif="column.filter === 'number'">
+                                        <input type="number" class="form-control form-control-sm mb-2" placeholder="Min"
+                                            aria-label="Minimum"
+                                            t-att-value="this.state.draft.min"
+                                            t-on-input="(ev) => this.setDraft('min', ev.target.value)"/>
+                                        <input type="number" class="form-control form-control-sm" placeholder="Max"
+                                            aria-label="Maximum"
+                                            t-att-value="this.state.draft.max"
+                                            t-on-input="(ev) => this.setDraft('max', ev.target.value)"/>
+                                    </t>
+                                    <div class="d-flex gap-2 mt-2">
+                                        <button type="button" class="btn btn-primary btn-sm o_datatable_filter_apply"
+                                            t-on-click="() => this.applyFilter(column)">Apply</button>
+                                        <button type="button" class="btn btn-secondary btn-sm o_datatable_filter_clear"
+                                            t-on-click="() => this.clearFilter(column)">Clear</button>
+                                    </div>
+                                </div>
+                            </t>
                         </th>
                         <th t-if="this.props.rowActions" class="o_datatable_actions" style="width: 2.5rem;"/>
-                    </tr>
-                    <tr t-if="this.hasFilters" class="o_datatable_filters">
-                        <th t-if="this.props.selection !== 'none'" class="o_datatable_select"/>
-                        <th t-foreach="this.props.columns" t-as="column" t-key="column.key">
-                            <input t-if="column.filter === 'text'" type="text" class="form-control form-control-sm"
-                                t-att-value="this.filterValue(column)" aria-label="Filter"
-                                t-on-change="(ev) => this.changeFilter(column, ev.target.value)"/>
-                            <select t-elif="column.filter === 'selection'" class="form-select form-select-sm" aria-label="Filter"
-                                t-on-change="(ev) => this.changeFilter(column, ev.target.value)">
-                                <option value="" t-att-selected="!this.filterValue(column)">All</option>
-                                <option t-foreach="column.selection" t-as="option" t-key="option_index"
-                                    t-att-value="option[0]" t-att-selected="this.filterValue(column) === option[0]" t-out="option[1]"/>
-                            </select>
-                            <select t-elif="column.filter === 'bool'" class="form-select form-select-sm" aria-label="Filter"
-                                t-on-change="(ev) => this.changeFilter(column, ev.target.value)">
-                                <option value="" t-att-selected="!this.filterValue(column)">All</option>
-                                <option value="true" t-att-selected="this.filterValue(column) === 'true'">Yes</option>
-                                <option value="false" t-att-selected="this.filterValue(column) === 'false'">No</option>
-                            </select>
-                            <div t-elif="column.filter === 'date' or column.filter === 'datetime'" class="d-flex gap-1">
-                                <input type="date" class="form-control form-control-sm" aria-label="From"
-                                    t-att-value="this.filterValue(column).from ?? ''"
-                                    t-on-change="(ev) => this.changeRangeFilter(column, 'from', ev.target.value)"/>
-                                <input type="date" class="form-control form-control-sm" aria-label="To"
-                                    t-att-value="this.filterValue(column).to ?? ''"
-                                    t-on-change="(ev) => this.changeRangeFilter(column, 'to', ev.target.value)"/>
-                            </div>
-                            <div t-elif="column.filter === 'number'" class="d-flex gap-1">
-                                <input type="number" class="form-control form-control-sm" placeholder="Min" aria-label="Minimum"
-                                    t-att-value="this.filterValue(column).min ?? ''"
-                                    t-on-change="(ev) => this.changeRangeFilter(column, 'min', ev.target.value)"/>
-                                <input type="number" class="form-control form-control-sm" placeholder="Max" aria-label="Maximum"
-                                    t-att-value="this.filterValue(column).max ?? ''"
-                                    t-on-change="(ev) => this.changeRangeFilter(column, 'max', ev.target.value)"/>
-                            </div>
-                        </th>
-                        <th t-if="this.props.rowActions"/>
                     </tr>
                 </thead>
                 <tbody>

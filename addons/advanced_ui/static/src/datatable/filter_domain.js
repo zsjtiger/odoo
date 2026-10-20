@@ -1,17 +1,17 @@
 /**
  * Helpers to turn the header filters of a DataTable into an Odoo domain.
  *
- * A column opts in with `filter`:
- * - "text": substring match (ilike) on the value
- * - "selection": exact match, the column gives its options as `selection: [[value, label]]`
- * - "bool": exact match on true/false, the filter value is "true" or "false"
- * - "number": range, the filter value is { min, max } and each bound is optional
- * - "date" / "datetime": range, the filter value is { from, to } with "YYYY-MM-DD" dates.
- *   For "datetime" the bounds are the start and the end of those days in the user's
- *   timezone, converted to UTC for the server.
+ * Each column opts in with `filter`. Its value depends on the type:
+ * - "text": { operator, value }. Operators: "ilike", "=", "not ilike"
+ * - "selection": array of the selected values, matched with "in"
+ * - "bool": array of the selected booleans, matched with "in"
+ * - "date" / "datetime": { operator, from, to } with "YYYY-MM-DD" dates. Operators:
+ *   "between" (uses from and to), "=", "<" and ">" (use from). For "datetime" the
+ *   bounds are the start and the end of the days in the user's timezone, in UTC.
+ * - "number": { min, max }, each bound optional
  *
- * Empty filter values add no condition. Domain conditions are combined with AND,
- * which is the implicit operator of an Odoo domain.
+ * Empty values add no condition. Conditions are combined with AND, the implicit
+ * operator of an Odoo domain.
  */
 
 import { serializeDateTime } from "@web/core/data/l10n/dates";
@@ -36,6 +36,50 @@ function toServerValue(filterType, day, edge) {
     return serializeDateTime(edge === "start" ? datetime.startOf("day") : datetime.endOf("day"));
 }
 
+
+/**
+ * The value of a column filter when nothing is set.
+ * @param {Object} column
+ * @returns {Object|Array|null}
+ */
+export function emptyFilterValue(column) {
+    switch (column.filter) {
+        case "text":
+            return { operator: "ilike", value: "" };
+        case "selection":
+        case "bool":
+            return [];
+        case "date":
+        case "datetime":
+            return { operator: "between", from: "", to: "" };
+        case "number":
+            return { min: "", max: "" };
+    }
+    return null;
+}
+
+/**
+ * Whether the value of a column filter restricts the rows.
+ * @param {Object} column
+ * @param {Object|Array|undefined} value
+ * @returns {boolean}
+ */
+export function isFilterActive(column, value) {
+    switch (column.filter) {
+        case "text":
+            return !isEmpty(value?.value);
+        case "selection":
+        case "bool":
+            return Boolean(value?.length);
+        case "date":
+        case "datetime":
+            return !isEmpty(value?.from) || !isEmpty(value?.to);
+        case "number":
+            return !isEmpty(value?.min) || !isEmpty(value?.max);
+    }
+    return false;
+}
+
 /**
  * @param {Object[]} columns
  * @param {Object} filters values keyed by column key
@@ -45,37 +89,49 @@ export function buildFilterDomain(columns, filters) {
     const domain = [];
     for (const column of columns) {
         const value = filters[column.key];
+        if (!isFilterActive(column, value)) {
+            continue;
+        }
+        const key = column.key;
         switch (column.filter) {
             case "text":
-                if (!isEmpty(value)) {
-                    domain.push([column.key, "ilike", value]);
-                }
+                domain.push([key, value.operator || "ilike", value.value]);
                 break;
             case "selection":
-                if (!isEmpty(value)) {
-                    domain.push([column.key, "=", value]);
-                }
-                break;
             case "bool":
-                if (!isEmpty(value)) {
-                    domain.push([column.key, "=", value === "true"]);
-                }
+                domain.push([key, "in", [...value]]);
                 break;
             case "date":
-            case "datetime":
-                if (!isEmpty(value?.from)) {
-                    domain.push([column.key, ">=", toServerValue(column.filter, value.from, "start")]);
-                }
-                if (!isEmpty(value?.to)) {
-                    domain.push([column.key, "<=", toServerValue(column.filter, value.to, "end")]);
+            case "datetime": {
+                const type = column.filter;
+                const operator = value.operator || "between";
+                if (operator === "between") {
+                    if (!isEmpty(value.from)) {
+                        domain.push([key, ">=", toServerValue(type, value.from, "start")]);
+                    }
+                    if (!isEmpty(value.to)) {
+                        domain.push([key, "<=", toServerValue(type, value.to, "end")]);
+                    }
+                } else if (!isEmpty(value.from)) {
+                    if (operator === "=" && type === "date") {
+                        domain.push([key, "=", value.from]);
+                    } else if (operator === "=") {
+                        domain.push([key, ">=", toServerValue(type, value.from, "start")]);
+                        domain.push([key, "<=", toServerValue(type, value.from, "end")]);
+                    } else if (operator === "<") {
+                        domain.push([key, "<", toServerValue(type, value.from, "start")]);
+                    } else if (operator === ">") {
+                        domain.push([key, ">", toServerValue(type, value.from, "end")]);
+                    }
                 }
                 break;
+            }
             case "number":
-                if (!isEmpty(value?.min)) {
-                    domain.push([column.key, ">=", Number(value.min)]);
+                if (!isEmpty(value.min)) {
+                    domain.push([key, ">=", Number(value.min)]);
                 }
-                if (!isEmpty(value?.max)) {
-                    domain.push([column.key, "<=", Number(value.max)]);
+                if (!isEmpty(value.max)) {
+                    domain.push([key, "<=", Number(value.max)]);
                 }
                 break;
         }
@@ -85,7 +141,7 @@ export function buildFilterDomain(columns, filters) {
 
 /**
  * Evaluates a domain built by buildFilterDomain on plain objects. Used when the
- * rows are not loaded from a model, such as in the demo.
+ * rows are not loaded from a model, such as in the demo and in the tests.
  * @param {Object} row
  * @param {Array} domain
  * @returns {boolean}
@@ -95,11 +151,19 @@ export function matchesDomain(row, domain) {
         const rowValue = row[key];
         switch (operator) {
             case "ilike":
-                return String(rowValue).toLowerCase().includes(String(value).toLowerCase());
+                return String(rowValue ?? "").toLowerCase().includes(String(value).toLowerCase());
+            case "not ilike":
+                return !String(rowValue ?? "").toLowerCase().includes(String(value).toLowerCase());
             case "=":
                 return rowValue === value;
+            case "in":
+                return value.includes(rowValue);
+            case ">":
+                return rowValue > value;
             case ">=":
                 return rowValue >= value;
+            case "<":
+                return rowValue < value;
             case "<=":
                 return rowValue <= value;
         }

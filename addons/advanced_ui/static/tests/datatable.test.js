@@ -234,7 +234,23 @@ test("datatable: field columns render the Odoo field widget of each record", asy
 function setFilterValue(target, value) {
     const input = typeof target === "string" ? queryOne(target) : target;
     input.value = value;
+    input.dispatchEvent(new Event("input", { bubbles: true }));
     input.dispatchEvent(new Event("change", { bubbles: true }));
+}
+
+/**
+ * Opens the filter popover of the column at the given index.
+ * @param {number} index
+ */
+async function openFilter(index) {
+    await click(queryAll(".o_datatable_filter_toggle")[index]);
+    await animationFrame();
+}
+
+/** Applies the filter popover that is open. */
+async function applyFilter() {
+    await click(".o_datatable_filter_apply");
+    await animationFrame();
 }
 
 test("datatable: header filters narrow the rows and paging follows them", async () => {
@@ -278,14 +294,17 @@ test("datatable: header filters narrow the rows and paging follows them", async 
     await mountWithCleanup(Filtered);
     expect(queryAllTexts("tbody tr td:first-child")).toEqual(["Row 0", "Row 1", "Row 2"]);
 
-    setFilterValue(".o_datatable_filters input[type=text]", "Row 1");
-    await animationFrame();
+    await openFilter(0);
+    setFilterValue(".o_datatable_filter_popover input[aria-label=Value]", "Row 1");
+    await applyFilter();
     expect(queryAllTexts("tbody tr td:first-child")).toEqual(["Row 1"]);
 
-    setFilterValue(".o_datatable_filters input[type=text]", "");
-    await animationFrame();
-    setFilterValue(queryAll(".o_datatable_filters input[type=number]")[0], "3");
-    await animationFrame();
+    await openFilter(0);
+    setFilterValue(".o_datatable_filter_popover input[aria-label=Value]", "");
+    await applyFilter();
+    await openFilter(1);
+    setFilterValue(".o_datatable_filter_popover input[aria-label=Minimum]", "3");
+    await applyFilter();
     // Amounts 3 to 9 match: the first page shows three of them.
     expect(queryAllTexts("tbody tr td:first-child")).toEqual(["Row 3", "Row 4", "Row 5"]);
     await click(".o_pager_next");
@@ -348,8 +367,64 @@ test("datatable: date range filters narrow the rows", async () => {
     await mountWithCleanup(DateFiltered);
     expect(queryAllTexts("tbody tr td:first-child")).toEqual(["A", "B", "C", "D"]);
 
-    setFilterValue(queryAll(".o_datatable_filters input[type=date]")[0], "2015-04-01");
-    setFilterValue(queryAll(".o_datatable_filters input[type=date]")[1], "2015-04-30");
-    await animationFrame();
+    await openFilter(0);
+    setFilterValue(".o_datatable_filter_popover input[aria-label=From]", "2015-04-01");
+    setFilterValue(".o_datatable_filter_popover input[aria-label=To]", "2015-04-30");
+    await applyFilter();
     expect(queryAllTexts("tbody tr td:first-child")).toEqual(["B", "C"]);
+});
+
+test("datatable: selection filter applies the checked options and Clear removes it", async () => {
+    const stageRows = [
+        { id: 1, name: "A", stage: "open" },
+        { id: 2, name: "B", stage: "won" },
+        { id: 3, name: "C", stage: "lost" },
+        { id: 4, name: "D", stage: "won" },
+    ];
+    const stageColumns = [
+        { key: "name", label: "Name" },
+        {
+            key: "stage",
+            label: "Stage",
+            filter: "selection",
+            selection: [
+                ["open", "Open"],
+                ["won", "Won"],
+                ["lost", "Lost"],
+            ],
+        },
+    ];
+    class StageFiltered extends Component {
+        static template = xml`
+            <DataTable columns="this.columns" rows="this.pageRows" filters="this.state.filters"
+                onFilterChange="(key, value) => this.onFilterChange(key, value)"/>`;
+        static components = { DataTable };
+
+        setup() {
+            this.columns = stageColumns;
+            this.state = proxy({ filters: {} });
+        }
+
+        get pageRows() {
+            const domain = buildFilterDomain(stageColumns, this.state.filters);
+            return stageRows.filter((row) => matchesDomain(row, domain));
+        }
+
+        onFilterChange(key, value) {
+            this.state.filters[key] = value;
+        }
+    }
+    await mountWithCleanup(StageFiltered);
+    expect(queryAllTexts("tbody tr td:first-child")).toEqual(["A", "B", "C", "D"]);
+
+    await openFilter(0);
+    // Checkboxes: all, open, won, lost. Check "Won".
+    await click(queryAll(".o_datatable_filter_popover input[type=checkbox]")[2]);
+    await applyFilter();
+    expect(queryAllTexts("tbody tr td:first-child")).toEqual(["B", "D"]);
+
+    await openFilter(0);
+    await click(".o_datatable_filter_clear");
+    await animationFrame();
+    expect(queryAllTexts("tbody tr td:first-child")).toEqual(["A", "B", "C", "D"]);
 });
