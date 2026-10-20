@@ -1,4 +1,5 @@
 import { Component, onWillStart, onWillUpdateProps, proxy, t, useProps } from "@odoo/owl";
+import { _t } from "@web/core/data/l10n/translation";
 import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
 import { standardActionServiceProps } from "@web/webclient/actions/action_plugin";
@@ -160,7 +161,58 @@ export class TreeFormAction extends Component {
 
     setup() {
         this.orm = useService("orm");
-        this.state = proxy({ selectedId: false, creating: false, sidebarOpen: true, reloadKey: 0, filters: {} });
+        this.state = proxy({
+            selectedId: false,
+            creating: false,
+            sidebarOpen: true,
+            reloadKey: 0,
+            filters: {},
+            comboOptions: {},
+        });
+        onWillStart(() => this.loadComboOptions());
+    }
+
+    /**
+     * Reads the options of the comboboxes that take them from a model. The first
+     * option is the one that shows every node.
+     */
+    async loadComboOptions() {
+        const comboOptions = {};
+        await Promise.all(
+            this.toolbarComboboxes.map(async (combo, index) => {
+                if (!combo.options_model) {
+                    return;
+                }
+                const {
+                    model,
+                    label_field: labelField = "display_name",
+                    value_field: valueField = "id",
+                    domain = [],
+                } = combo.options_model;
+                const records = await this.orm.searchRead(model, domain, [...new Set([valueField, labelField])], {
+                    context: this.props.action.context || {},
+                });
+                comboOptions[index] = records.map((record) => [
+                    String(record[valueField]),
+                    String(record[labelField] || record[valueField]),
+                    record[valueField],
+                ]);
+            })
+        );
+        this.state.comboOptions = comboOptions;
+    }
+
+    /**
+     * The options of a combobox: [value, label, raw value]. The static options of
+     * the params are used when the combobox has no model.
+     *
+     * @param {Object} combo
+     * @param {number} index
+     */
+    comboOptions(combo, index) {
+        const options = this.state.comboOptions[index] || (combo.options || []).map(([value, label]) => [value, label, value]);
+        const allLabel = combo.all_label || _t("All");
+        return [["", allLabel, ""], ...options];
     }
 
     /** The comboboxes of the toolbar: each one filters the nodes of the tree. */
@@ -171,16 +223,26 @@ export class TreeFormAction extends Component {
     /** The domain of the tree, from the values chosen in the comboboxes. */
     get treeDomain() {
         return this.toolbarComboboxes
-            .filter((combo) => this.state.filters[combo.field])
-            .map((combo) => [combo.field, "=", castFilterValue(this.state.filters[combo.field])]);
+            .filter((combo) => this.state.filters[combo.field] !== undefined && this.state.filters[combo.field] !== "")
+            .map((combo) => {
+                const value = this.state.filters[combo.field];
+                return [combo.field, "=", typeof value === "string" ? castFilterValue(value) : value];
+            });
     }
 
     filterValue(combo) {
-        return this.state.filters[combo.field] || "";
+        const value = this.state.filters[combo.field];
+        return value === undefined ? "" : String(value);
     }
 
-    onComboboxChange(combo, ev) {
-        this.state.filters[combo.field] = ev.target.value;
+    /**
+     * @param {Object} combo
+     * @param {number} index
+     * @param {Event} ev
+     */
+    onComboboxChange(combo, index, ev) {
+        const option = this.comboOptions(combo, index).find((opt) => opt[0] === ev.target.value);
+        this.state.filters[combo.field] = option ? option[2] : "";
     }
 
     /** The buttons of the toolbar: each calls a method on the selected record. */
@@ -218,8 +280,9 @@ export class TreeFormAction extends Component {
         this.state.selectedId = false;
     }
 
-    /** Reads the tree again. */
-    onRefresh() {
+    /** Reads the options of the comboboxes and the tree again. */
+    async onRefresh() {
+        await this.loadComboOptions();
         this.state.reloadKey++;
     }
 

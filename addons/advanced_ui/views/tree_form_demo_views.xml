@@ -33,6 +33,15 @@
                 'label': 'Status',
                 'field': 'active',
                 'options': [['', 'All'], ['true', 'Active'], ['false', 'Archived']],
+            }, {
+                'label': 'Under',
+                'field': 'parent_id',
+                'all_label': 'Any',
+                'options_model': {
+                    'model': 'res.partner.category',
+                    'label_field': 'name',
+                    'domain': [('parent_id', '=', False)],
+                },
             }],
         }"/>
     </record>

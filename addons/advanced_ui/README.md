@@ -433,6 +433,17 @@ The params of the action:
 - `limit`: the number of nodes loaded at once. Default: 200. A "Load more" button under
   the tree loads the next page.
 - `form_view_id`: the form view on the right. Default: the default form of the model.
+- `toolbar_buttons`: buttons of the toolbar, each `{'label': ..., 'method': ...}`. The
+  method is called on the selected node, then the tree is read again. The buttons are
+  disabled until a node is selected.
+- `toolbar_comboboxes`: comboboxes of the toolbar, each one filters the tree on `field`:
+  - `label`: the text before the combobox.
+  - `field`: the field of the model that the value is compared with (`=`).
+  - `options`: static options, as `[value, label]` pairs. `"true"` and `"false"` are booleans.
+  - `options_model`: the options are read from a model instead, with `model`,
+    `label_field` (default `display_name`), `value_field` (default `id`) and `domain`.
+    They are read when the form opens, and again on Refresh.
+  - `all_label`: the label of the first option, which shows every node (default "All").
 
 The fields and groups shown in the form are configured in that form view.
 
