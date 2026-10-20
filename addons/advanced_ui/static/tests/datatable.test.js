@@ -517,7 +517,7 @@ test("datatable: relation filter pages the options 20 at a time", async () => {
         }
     }
     await mountWithCleanup(ManyOptions);
-    await openFilter(1);
+    await openFilter(0);
     await animationFrame();
     expect(queryAllTexts(".o_datatable_filter_popover .o_datatable_relation_list label")).toHaveLength(20);
     await click(".o_datatable_filter_popover .o_pager_next");
