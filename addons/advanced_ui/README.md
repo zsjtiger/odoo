@@ -8,6 +8,9 @@ Advanced controls for the Odoo web client. The addon provides:
   an optional scope selector.
 - **Date picker**: a date field widget with a calendar icon and a configurable
   display format, usable in form and list views.
+- **Expression builder**: a builder for logical conditions over the fields of a model
+  (all, any, custom logic, always, or a formula), with nested groups and a code view
+  of the Odoo domain it produces.
 
 ## Accordion
 
@@ -242,6 +245,84 @@ Styles are in `static/src/datepicker/datepicker.scss`. The calendar button uses 
 
 The tests are in `static/tests/datepicker_field.test.js`: display with a format, the
 language format by default, typing and saving, invalid text, the calendar, and the list.
+
+## Expression builder
+
+A control to build a logical expression over the fields of a model. The user picks
+when the expression is true, with conditions on fields and groups of conditions:
+
+- **Take Action When**: how the conditions of a group combine. *All Conditions Are Met*
+  joins them with AND, *Any Condition Is Met* with OR, *Custom Logic Is Met* uses a text
+  such as `1 AND (2 OR 3)`, *Always (No Criteria)* has no condition, and *Formula
+  Evaluates To True* keeps a free text.
+- **Conditions**: a resource (a field), an operator and a value. The operators and the
+  value input depend on the field type.
+- **Groups**: a group has its own mode and can be nested in another group.
+- **Code Editor**: shows the Odoo domain built from the expression.
+
+### Usage
+
+As a field widget, on a `char` or `text` field. The expression is stored as JSON:
+
+```xml
+<field name="rule" widget="expression_builder"/>
+```
+
+As a component, from your JavaScript:
+
+```js
+import { ExpressionBuilder } from "@advanced_ui/expression_builder/expression_builder";
+import { toDomain } from "@advanced_ui/expression_builder/expression_logic";
+
+// in your component
+static components = { ExpressionBuilder };
+// <ExpressionBuilder fields="fields" value="tree" onChange="onTreeChange"/>
+// where fields = [{ name: "name", label: "Name", kind: "char" }, ...]
+// and the kinds are char, number, date, boolean or selection (with choices: [[value, label], ...])
+```
+
+Turn a tree into a domain with `toDomain(tree)`. It returns `[]` when there is no
+criteria, and `null` in formula mode, which has no domain.
+
+### Configuration
+
+- The resources of the widget are the fields of the model, except the types the builder
+  cannot compare. The list is sorted by label. Supported types: `char`, `text`, `integer`,
+  `float`, `monetary`, `date`, `boolean` and `selection`. Other types are left out, and
+  `datetime` is left out too.
+- The operators for each kind are in `OPERATORS` in `static/src/expression_builder/expression_logic.js`.
+
+### Custom logic
+
+In custom mode, each condition is numbered from 1 in the order it is listed in the group.
+The text combines the numbers with `AND`, `OR`, `NOT` and parentheses. `AND` binds tighter
+than `OR`. A number that names no condition, or a text that does not parse, is reported
+under the text, and the domain is not built.
+
+### Behaviour
+
+- Incomplete conditions (no resource or no operator) are skipped in AND and OR groups.
+  In custom logic they count as true.
+- *set* and *not set* compare the field with `false`.
+- Numbers and booleans are converted to their type in the domain. Dates are compared as
+  `YYYY-MM-DD` strings.
+- In the widget, a value change is saved when the record is saved.
+
+### Limitations
+
+- A formula has no domain: it is kept as text and not evaluated by the builder.
+- Only the fields of the model are offered; related paths (such as `partner_id.name`)
+  are not.
+
+### Styling
+
+Styles are in `static/src/expression_builder/expression_builder.scss`. The nested groups
+use the `o_expression_nested` class.
+
+### Tests
+
+The tests are in `static/tests/expression_builder.test.js`: the domain conversion, the
+custom logic parser, and the form widget.
 
 ## DataTable
 
