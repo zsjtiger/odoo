@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="advanced_ui.DatePickerField">
+        <span t-if="this.props.readonly" class="text-truncate" t-out="this.formattedValue"/>
+        <div t-else="" t-ref="this.rootRef" class="o_datepicker position-relative">
+            <input
+                t-ref="this.inputRef"
+                type="text"
+                class="o_input o_datepicker_input pe-5"
+                autocomplete="off"
+                t-att-id="this.props.id"
+                t-att-placeholder="this.placeholder"
+                t-att-name="this.props.name"
+                t-on-change="this.onChange"
+                t-on-click="this.onCalendarClick"
+            />
+            <button
+                type="button"
+                class="o_datepicker_toggle btn position-absolute top-0 bottom-0 end-0 px-2"
+                aria-label="Open calendar"
+                t-on-click="this.onCalendarClick"
+            >
+                <i class="oi" data-icon="calendar_today"/>
+            </button>
+        </div>
+    </t>
+
+</templates>

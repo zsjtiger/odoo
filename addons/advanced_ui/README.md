@@ -6,6 +6,8 @@ Advanced controls for the Odoo web client. The addon provides:
   widget on One2many fields.
 - **Lookup**: a many2one dropdown with coloured rows, subtitles, group headers and
   an optional scope selector.
+- **Date picker**: a date field widget with a calendar icon and a configurable
+  display format, usable in form and list views.
 
 ## Accordion
 
@@ -177,6 +179,69 @@ The unit tests live in `static/tests/` (`accordion.test.js`, `accordion_field.te
 and `lookup_field.test.js`). They are JavaScript (Hoot) tests, run in the browser:
 install or update the addon on a database, then open `/web/tests?filter=advanced_ui`
 while logged in as an administrator.
+
+## Date picker
+
+A date field widget: a text input showing the date, with a calendar icon at its right
+end that opens the date picker. The date is displayed in the format you configure, and
+the text typed in the input is read with the same format.
+
+### Usage
+
+Use the `datepicker` widget on a `date` field, in a form or in a list:
+
+```xml
+<field name="date" widget="datepicker" options="{'format': 'dd/MM/yyyy'}"/>
+```
+
+In a list, the widget shows the formatted date as text when the row is not being
+edited, and the input with the calendar icon when the list is editable.
+
+### Configuration
+
+Options, set in the `options` attribute of the `<field>`:
+
+- `format`: the display format, written with Luxon tokens (the same tokens as
+  `DateTime.toFormat`). Examples: `dd/MM/yyyy` (31/01/2024), `dd.MM.yy`
+  (31.01.24), `MMM d, yyyy` (Jan 31, 2024), `EEEE d MMMM yyyy` (Wednesday 31 January 2024).
+  Without it, the date uses the language date format of the user.
+- `min_date`: the earliest accepted date, as an ISO date (e.g. `2024-01-01`) or
+  `today`. Earlier dates are disabled in the picker.
+- `max_date`: the latest accepted date, as an ISO date or `today`.
+- `placeholder` (attribute, not an option): the text shown in an empty input.
+  Default: "Pick a date".
+
+```xml
+<field name="date" widget="datepicker"
+       placeholder="Choose a day"
+       options="{'format': 'MMM d, yyyy', 'min_date': 'today'}"/>
+```
+
+### Behaviour
+
+- Choosing a day in the picker sets the value when the picker is applied.
+- Typing a date in the format of the field and pressing Enter (or leaving the input)
+  sets the value. A text that does not match the format is reverted to the current
+  value.
+- A typed date outside `min_date` / `max_date` is reverted, like an invalid text.
+- Clearing the input empties the field.
+- The format only changes the display. The stored value is still a date.
+
+### Limitations
+
+- Only `date` fields are supported. For `datetime`, use the standard Odoo widget.
+- Dates are typed with the format of the field: a text written in another format is
+  reverted, even if Odoo could read it.
+
+### Styling
+
+Styles are in `static/src/datepicker/datepicker.scss`. The calendar button uses the
+`o_datepicker_toggle` class; override it in your own stylesheet to change its look.
+
+### Tests
+
+The tests are in `static/tests/datepicker_field.test.js`: display with a format, the
+language format by default, typing and saving, invalid text, the calendar, and the list.
 
 ## DataTable
 
