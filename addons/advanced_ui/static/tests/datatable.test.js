@@ -429,7 +429,7 @@ test("datatable: selection filter applies the checked options and Clear removes 
     expect(queryAllTexts("tbody tr td:first-child")).toEqual(["A", "B", "C", "D"]);
 });
 
-test("datatable: relation filter picks records in a dialog and filters the rows", async () => {
+test("datatable: relation filter searches and checks records in the popover", async () => {
     const partners = [
         { id: 1, name: "Alice" },
         { id: 2, name: "Bob" },
@@ -475,15 +475,13 @@ test("datatable: relation filter picks records in a dialog and filters the rows"
     expect(queryAllTexts("tbody tr td:first-child")).toEqual(["A", "B", "C", "D"]);
 
     await openFilter(0);
-    await click(".o_datatable_relation_select");
     await animationFrame();
-    setFilterValue(".o_relation_filter_search", "ali");
+    expect(queryAllTexts(".o_datatable_filter_popover label")).toEqual(["Alice", "Bob", "Carol"]);
+    setFilterValue(".o_datatable_filter_popover input[aria-label='Search options']", "ali");
     await animationFrame();
     await animationFrame();
-    expect(queryAllTexts(".modal label")).toEqual(["Alice"]);
-    await click(".modal input[type=checkbox]");
-    await animationFrame();
-    await click(".o_relation_filter_confirm");
+    expect(queryAllTexts(".o_datatable_filter_popover label")).toEqual(["Alice"]);
+    await click(".o_datatable_filter_popover input[type=checkbox]");
     await animationFrame();
     await applyFilter();
     expect(queryAllTexts("tbody tr td:first-child")).toEqual(["A", "D"]);

@@ -73,15 +73,20 @@
                                         </div>
                                     </t>
                                     <t t-elif="column.filter === 'relation'">
-                                        <div class="mb-2">
-                                            <span t-foreach="this.state.draft" t-as="record" t-key="record_index"
-                                                class="badge text-bg-light me-1 mb-1" t-out="record.name"/>
-                                        </div>
-                                        <div class="small text-muted mb-2">
+                                        <input type="text" class="form-control form-control-sm mb-2" placeholder="Search"
+                                            aria-label="Search options"
+                                            t-att-value="this.state.optionSearch"
+                                            t-on-input="(ev) => this.loadRelationOptions(column, ev.target.value)"/>
+                                        <div class="small text-muted mb-1">
                                             <span t-out="this.state.draft.length"/> selected
                                         </div>
-                                        <button type="button" class="btn btn-secondary btn-sm o_datatable_relation_select"
-                                            t-on-click="() => this.openRelationDialog(column)">Select…</button>
+                                        <div t-foreach="this.state.relationOptions" t-as="record" t-key="record.id"
+                                            class="form-check">
+                                            <input type="checkbox" class="form-check-input"
+                                                t-att-checked="this.isRelationSelected(record)"
+                                                t-on-change="() => this.toggleRelation(record)"/>
+                                            <label class="form-check-label" t-out="record.name"/>
+                                        </div>
                                     </t>
                                     <t t-elif="column.filter === 'date' or column.filter === 'datetime'">
                                         <select class="form-select form-select-sm mb-2" aria-label="Operator"
