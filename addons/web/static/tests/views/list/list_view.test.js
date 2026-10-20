@@ -22501,3 +22501,40 @@ test("list: rows are hoverable and not striped by default", async () => {
     expect(".o_list_table").not.toHaveClass("o_list_striped");
     expect(".o_list_table thead").toHaveCount(1);
 });
+
+test("list: single_selection selects one row at a time", async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list single_selection="1"><field name="foo"/></list>`,
+    });
+
+    expect(".o_list_record_selector input[type=radio]").toHaveCount(4);
+    expect(".o_list_record_selector input[type=checkbox]").toHaveCount(0);
+
+    await click(queryAll(".o_list_record_selector input[type=radio]")[0]);
+    await animationFrame();
+    expect(".o_data_row.table-info").toHaveCount(1);
+    expect(queryAll(".o_data_row")[0]).toHaveClass("table-info");
+
+    await click(queryAll(".o_list_record_selector input[type=radio]")[2]);
+    await animationFrame();
+    expect(".o_data_row.table-info").toHaveCount(1);
+    expect(queryAll(".o_data_row")[2]).toHaveClass("table-info");
+    expect(queryAll(".o_data_row")[0]).not.toHaveClass("table-info");
+});
+
+test("list: row_menu opens a menu on each row", async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list row_menu="1"><field name="foo"/></list>`,
+    });
+
+    expect(".o_list_row_menu_toggle").toHaveCount(4);
+    expect(".o_list_row_menu .dropdown-item").toHaveCount(0);
+
+    await click(queryAll(".o_list_row_menu_toggle")[0]);
+    await animationFrame();
+    expect(queryAllTexts(".dropdown-item")).toEqual(["Open", "Delete"]);
+});

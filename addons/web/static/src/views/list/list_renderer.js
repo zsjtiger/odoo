@@ -26,6 +26,7 @@ import { ViewButton } from "@web/views/view_button/view_button";
 import { useBounceButton } from "@web/views/view_hook";
 import { Widget } from "@web/views/widgets/widget";
 import { useMagicColumnWidths } from "./column_width_hook";
+import { uniqueId } from "@web/core/utils/functions";
 
 import {
     Component,
@@ -564,6 +565,35 @@ export class ListRenderer extends Component {
             classes.push("o_list_fixed_layout");
         }
         return classes.join(" ");
+    }
+
+    get singleSelectionName() {
+        this.singleSelectionGroup ??= uniqueId("o_list_single_selection_");
+        return this.singleSelectionGroup;
+    }
+
+    get hasRowMenu() {
+        return !!this.props.archInfo.rowMenu;
+    }
+
+    get isSingleSelection() {
+        return !!this.props.archInfo.singleSelection;
+    }
+
+    /**
+     * Selects the given record and deselects the others (single selection mode).
+     * @param {RelationalRecord} record
+     */
+    selectSingleRecord(record) {
+        if (record.selected) {
+            return;
+        }
+        for (const other of this.props.list.records) {
+            if (other !== record && other.selected) {
+                other.toggleSelection(false);
+            }
+        }
+        record.toggleSelection(true);
     }
 
     get activeActions() {
@@ -2378,6 +2408,11 @@ export class ListRenderer extends Component {
      */
     toggleRecordSelection(record, _ev) {
         if (!this.canSelectRecord) {
+            return;
+        }
+        if (this.isSingleSelection) {
+            this.selectSingleRecord(record);
+            this.lastCheckedRecord = record;
             return;
         }
         const isRecordPresent = this.props.list.records.includes(this.lastCheckedRecord);

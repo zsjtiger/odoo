@@ -665,3 +665,9 @@
         }
     }
 }
+
+// Row action menu column: keep it narrow.
+.o_list_row_menu,
+.o_list_row_menu_header {
+    width: 2rem;
+}

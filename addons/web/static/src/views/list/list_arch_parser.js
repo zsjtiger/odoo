@@ -268,6 +268,8 @@ export class ListArchParser {
                 treeAttr.noRowHover = exprToBoolean(xmlDoc.getAttribute("no_row_hover") || "");
                 treeAttr.headless = exprToBoolean(xmlDoc.getAttribute("headless") || "");
                 treeAttr.fixedLayout = exprToBoolean(xmlDoc.getAttribute("fixed_layout") || "");
+                treeAttr.singleSelection = exprToBoolean(xmlDoc.getAttribute("single_selection") || "");
+                treeAttr.rowMenu = exprToBoolean(xmlDoc.getAttribute("row_menu") || "");
                 treeAttr.rawExpand = xmlDoc.getAttribute("expand");
                 treeAttr.decorations = getDecoration(xmlDoc);
 

@@ -58,6 +58,8 @@
             <rng:optional><rng:attribute name="no_row_hover"/></rng:optional>
             <rng:optional><rng:attribute name="headless"/></rng:optional>
             <rng:optional><rng:attribute name="fixed_layout"/></rng:optional>
+            <rng:optional><rng:attribute name="single_selection"/></rng:optional>
+            <rng:optional><rng:attribute name="row_menu"/></rng:optional>
             <rng:optional>
                 <rng:attribute name="limit">
                     <rng:data type="int"/>
