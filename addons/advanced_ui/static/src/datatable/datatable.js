@@ -17,7 +17,7 @@ import { Field } from "@web/views/fields/field";
  * - filters: values of the header filters, keyed by column key (see filter_domain.js)
  * - onFilterChange(key, value): called when a header filter changes. The parent decides
  *   what the filter means (usually a domain), DataTable only shows the controls.
- *   A column opts in with `filter: "text" | "selection" | "bool" | "number"`.
+ *   A column opts in with `filter: "text" | "selection" | "bool" | "number" | "date" | "datetime"`.
  * - sortKey, sortDirection ("asc" | "desc"): the initial sort
  * - striped, bordered, headless, fixedLayout, noRowHover: layout booleans
  * - selection: "none" (default), "multi" (checkboxes) or "single" (radio buttons)
@@ -109,7 +109,7 @@ export class DataTable extends Component {
         this.props.onFilterChange?.(column.key, value);
     }
 
-    changeNumberFilter(column, bound, value) {
+    changeRangeFilter(column, bound, value) {
         const current = this.props.filters?.[column.key] || {};
         this.props.onFilterChange?.(column.key, { ...current, [bound]: value });
     }

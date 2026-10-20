@@ -292,3 +292,64 @@ test("datatable: header filters narrow the rows and paging follows them", async 
     await animationFrame();
     expect(queryAllTexts("tbody tr td:first-child")).toEqual(["Row 6", "Row 7", "Row 8"]);
 });
+
+test("datatable: date filters produce a domain on the date strings", async () => {
+    const columns = [{ key: "closeDate", label: "Close", type: "date", filter: "date" }];
+    expect(buildFilterDomain(columns, { closeDate: { from: "2015-04-01", to: "2015-04-30" } })).toEqual([
+        ["closeDate", ">=", "2015-04-01"],
+        ["closeDate", "<=", "2015-04-30"],
+    ]);
+    expect(buildFilterDomain(columns, { closeDate: { from: "2015-04-01", to: "" } })).toEqual([
+        ["closeDate", ">=", "2015-04-01"],
+    ]);
+});
+
+test("datatable: datetime filters use the start and end of the days, in UTC", async () => {
+    const columns = [{ key: "createdAt", label: "Created", type: "date", filter: "datetime" }];
+    const [lower, upper] = buildFilterDomain(columns, {
+        createdAt: { from: "2015-04-01", to: "2015-04-30" },
+    }).map(([, , value]) => value);
+    expect(lower).toMatch(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/);
+    expect(upper).toMatch(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/);
+    expect(lower < upper).toBe(true);
+});
+
+test("datatable: date range filters narrow the rows", async () => {
+    const dateRows = [
+        { id: 1, name: "A", closeDate: "2015-03-31" },
+        { id: 2, name: "B", closeDate: "2015-04-10" },
+        { id: 3, name: "C", closeDate: "2015-04-20" },
+        { id: 4, name: "D", closeDate: "2015-05-02" },
+    ];
+    const dateColumns = [
+        { key: "name", label: "Name" },
+        { key: "closeDate", label: "Close", type: "date", filter: "date" },
+    ];
+    class DateFiltered extends Component {
+        static template = xml`
+            <DataTable columns="this.columns" rows="this.pageRows" filters="this.state.filters"
+                onFilterChange="(key, value) => this.onFilterChange(key, value)"/>`;
+        static components = { DataTable };
+
+        setup() {
+            this.columns = dateColumns;
+            this.state = proxy({ filters: {} });
+        }
+
+        get pageRows() {
+            const domain = buildFilterDomain(dateColumns, this.state.filters);
+            return dateRows.filter((row) => matchesDomain(row, domain));
+        }
+
+        onFilterChange(key, value) {
+            this.state.filters[key] = value;
+        }
+    }
+    await mountWithCleanup(DateFiltered);
+    expect(queryAllTexts("tbody tr td:first-child")).toEqual(["A", "B", "C", "D"]);
+
+    setFilterValue(queryAll(".o_datatable_filters input[type=date]")[0], "2015-04-01");
+    setFilterValue(queryAll(".o_datatable_filters input[type=date]")[1], "2015-04-30");
+    await animationFrame();
+    expect(queryAllTexts("tbody tr td:first-child")).toEqual(["B", "C"]);
+});

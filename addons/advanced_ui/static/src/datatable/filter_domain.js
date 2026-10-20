@@ -6,13 +6,33 @@
  * - "selection": exact match, the column gives its options as `selection: [[value, label]]`
  * - "bool": exact match on true/false, the filter value is "true" or "false"
  * - "number": range, the filter value is { min, max } and each bound is optional
+ * - "date" / "datetime": range, the filter value is { from, to } with "YYYY-MM-DD" dates.
+ *   For "datetime" the bounds are the start and the end of those days in the user's
+ *   timezone, converted to UTC for the server.
  *
  * Empty filter values add no condition. Domain conditions are combined with AND,
  * which is the implicit operator of an Odoo domain.
  */
 
+import { DateTime } from "luxon";
+import { serializeDateTime } from "@web/core/data/l10n/dates";
+
 function isEmpty(value) {
     return value === undefined || value === null || value === "";
+}
+
+/**
+ * Converts a "YYYY-MM-DD" filter bound to the value the server expects.
+ * @param {"date" | "datetime"} filterType
+ * @param {string} day
+ * @param {"start" | "end"} edge
+ */
+function toServerValue(filterType, day, edge) {
+    if (filterType === "date") {
+        return day;
+    }
+    const datetime = DateTime.fromISO(day);
+    return serializeDateTime(edge === "start" ? datetime.startOf("day") : datetime.endOf("day"));
 }
 
 /**
@@ -38,6 +58,15 @@ export function buildFilterDomain(columns, filters) {
             case "bool":
                 if (!isEmpty(value)) {
                     domain.push([column.key, "=", value === "true"]);
+                }
+                break;
+            case "date":
+            case "datetime":
+                if (!isEmpty(value?.from)) {
+                    domain.push([column.key, ">=", toServerValue(column.filter, value.from, "start")]);
+                }
+                if (!isEmpty(value?.to)) {
+                    domain.push([column.key, "<=", toServerValue(column.filter, value.to, "end")]);
                 }
                 break;
             case "number":

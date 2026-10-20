@@ -94,6 +94,7 @@ const FILTER_COLUMNS = [
     { key: "name", label: "Name", filter: "text" },
     { key: "stage", label: "Stage", filter: "selection", selection: STAGES.map((stage) => [stage, stage]) },
     { key: "won", label: "Won", filter: "bool", format: (value) => (value ? "Yes" : "No") },
+    { key: "closeDate", label: "Close Date", type: "date", filter: "date", format: formatDate },
     { key: "amount", label: "Amount", type: "number", filter: "number", format: formatAmount },
 ];
 
