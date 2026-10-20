@@ -11,6 +11,9 @@ Advanced features of the user interface, built on top of the web client.
     'category': 'Hidden',
     'version': '1.0',
     'depends': ['web'],
+    'data': [
+        'views/datatable_demo_views.xml',
+    ],
     'installable': True,
     'auto_install': False,
     'license': 'LGPL-3',

@@ -1,0 +1,149 @@
+.o_datatable {
+    position: relative;
+    font-size: 0.875rem;
+
+    table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    tbody td {
+        background-color: $white;
+    }
+
+    th,
+    td {
+        padding: 0.5rem 0.75rem;
+        vertical-align: middle;
+        text-align: left;
+        border-bottom: 1px solid $border-color;
+        white-space: nowrap;
+    }
+
+    th {
+        font-weight: 600;
+        color: $body-color;
+        background-color: $gray-100;
+        border-top: 1px solid $border-color;
+        border-bottom: 1px solid $border-color;
+        position: relative;
+        user-select: none;
+    }
+
+    .o_datatable_select {
+        width: 2.5rem;
+        text-align: center;
+    }
+
+    .o_datatable_sortable {
+        cursor: pointer;
+
+        &:hover {
+            color: $primary;
+        }
+    }
+
+    .o_datatable_sort_indicator {
+        margin-left: 0.25rem;
+        color: $primary;
+    }
+
+    .o_datatable_link {
+        color: $primary;
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    td:focus-visible {
+        outline: 2px solid $primary;
+        outline-offset: -2px;
+    }
+
+    .o_datatable_selected > td {
+        background-color: $gray-200;
+    }
+
+    .o_datatable_actions {
+        position: relative;
+        width: 2.5rem;
+        text-align: center;
+    }
+
+    .o_datatable_menu {
+        position: absolute;
+        right: 0.5rem;
+        top: 100%;
+        z-index: 10;
+        display: block;
+        min-width: 8rem;
+    }
+
+    .o_datatable_loading td {
+        white-space: normal;
+    }
+
+    // Layouts
+
+    &:not(.o_datatable_no_hover) tbody tr:hover > td {
+        background-color: $gray-100;
+    }
+
+    &.o_datatable_striped tbody tr:nth-child(even) > td {
+        background-color: $gray-200;
+    }
+
+    &.o_datatable_bordered {
+        th,
+        td {
+            border-right: 1px solid $border-color;
+
+            &:last-child {
+                border-right: none;
+            }
+        }
+    }
+
+    &.o_datatable_headless {
+        th,
+        thead {
+            display: none;
+        }
+    }
+
+    &.o_datatable_scrollable {
+        overflow: auto;
+
+        thead th {
+            position: sticky;
+            top: 0;
+            z-index: 2;
+        }
+    }
+
+    .o_datatable_fixed {
+        table-layout: fixed;
+
+        td,
+        th {
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+
+    .o_datatable_resizer {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 6px;
+        cursor: col-resize;
+
+        &:hover {
+            background-color: $primary;
+        }
+    }
+}

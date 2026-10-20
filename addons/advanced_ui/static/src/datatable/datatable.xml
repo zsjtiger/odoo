@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="advanced_ui.DataTable">
+        <div class="o_datatable" t-ref="this.rootRef"
+            t-att-class="{
+                'o_datatable_striped': this.props.striped,
+                'o_datatable_bordered': this.props.bordered,
+                'o_datatable_no_hover': this.props.noRowHover,
+                'o_datatable_headless': this.props.headless,
+                'o_datatable_scrollable': this.props.scrollable,
+            }"
+            t-att-style="this.props.scrollable ? 'max-height: ' + (this.props.maxHeight || '400px') : ''"
+            t-on-keydown="(ev) => this.onKeydown(ev)"
+            t-on-scroll="(ev) => this.onScroll(ev)">
+            <table class="table table-sm mb-0"
+                t-att-class="{ 'o_datatable_fixed': this.props.fixedLayout or this.props.resizable }">
+                <thead t-if="!this.props.headless" class="o_datatable_head">
+                    <tr>
+                        <th t-if="this.props.selection === 'multi'" class="o_datatable_select" style="width: 2.5rem;">
+                            <input type="checkbox" class="form-check-input" aria-label="Select all"
+                                t-ref="this.selectAllRef"
+                                t-att-checked="this.allSelected"
+                                t-on-change="() => this.toggleAll()"/>
+                        </th>
+                        <th t-if="this.props.selection === 'single'" class="o_datatable_select" style="width: 2.5rem;"/>
+                        <th t-foreach="this.props.columns" t-as="column" t-key="column.key"
+                            t-att-class="{ 'o_datatable_sortable': column.sortable }"
+                            t-att-style="this.widthStyle(column)"
+                            t-att-aria-sort="column.sortable ? this.ariaSort(column) : null"
+                            t-on-click="() => this.sortBy(column)">
+                            <span class="o_datatable_header_label" t-out="column.label"/>
+                            <span t-if="column.sortable" class="o_datatable_sort_indicator" t-out="this.sortIndicator(column)"/>
+                            <span t-if="this.props.resizable and !column.fixed" class="o_datatable_resizer"
+                                t-on-pointerdown="(ev) => this.startResize(ev, column)"
+                                t-on-click="(ev) => ev.stopPropagation()"/>
+                        </th>
+                        <th t-if="this.props.rowActions" class="o_datatable_actions" style="width: 2.5rem;"/>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr t-foreach="this.sortedRows" t-as="row" t-key="row.id"
+                        t-att-class="{ 'o_datatable_selected': this.isSelected(row) }">
+                        <td t-if="this.props.selection === 'multi'" class="o_datatable_select">
+                            <input type="checkbox" class="form-check-input" aria-label="Select row"
+                                t-att-checked="this.isSelected(row)"
+                                t-on-change="() => this.selectRow(row)"/>
+                        </td>
+                        <td t-if="this.props.selection === 'single'" class="o_datatable_select">
+                            <input type="radio" class="form-check-input" aria-label="Select row"
+                                t-att-name="this.radioName"
+                                t-att-checked="this.isSelected(row)"
+                                t-on-change="() => this.selectRow(row)"/>
+                        </td>
+                        <td t-foreach="this.props.columns" t-as="column" t-key="column.key"
+                            t-att-data-cell="row_index + '-' + column_index"
+                            t-att-tabindex="this.isFocused(row_index, column_index) ? 0 : -1"
+                            t-on-focus="() => this.setFocus(row_index, column_index)">
+                            <a t-if="column.type === 'link'" href="#" class="o_datatable_link text-truncate d-block"
+                                t-on-click="(ev) => ev.preventDefault()" t-out="this.cellText(column, row)"/>
+                            <a t-elif="column.type === 'email'" class="o_datatable_link text-truncate d-block"
+                                t-attf-href="mailto:{{ row[column.key] }}" t-out="this.cellText(column, row)"/>
+                            <span t-else="" class="text-truncate d-block" t-out="this.cellText(column, row)"/>
+                        </td>
+                        <td t-if="this.props.rowActions" class="o_datatable_actions">
+                            <button type="button" class="btn btn-sm o_datatable_action_toggle" aria-label="Row actions"
+                                t-on-click="() => this.toggleMenu(row)">▾</button>
+                            <div t-if="this.state.menuRowId === row.id" class="o_datatable_menu dropdown-menu show">
+                                <button t-foreach="this.props.rowActions" t-as="action" t-key="action_index"
+                                    type="button" class="dropdown-item" t-out="action.label"
+                                    t-on-click="() => this.runAction(action, row)"/>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr t-if="this.state.loading" class="o_datatable_loading">
+                        <td t-att-colspan="this.colspan" class="text-center text-muted">Loading…</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </t>
+
+</templates>

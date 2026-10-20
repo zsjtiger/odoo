@@ -1,0 +1,120 @@
+import { Component, proxy } from "@odoo/owl";
+import { registry } from "@web/core/framework/registry";
+import { DataTable } from "@advanced_ui/datatable/datatable";
+
+const STAGES = ["Prospecting", "Value Proposition", "Id. Decision Makers", "Negotiation"];
+
+function formatDate(iso) {
+    const [year, month, day] = iso.split("-");
+    return `${Number(month)}/${Number(day)}/${year.slice(2)}`;
+}
+
+function formatAmount(value) {
+    return `$${value.toLocaleString("en-US")}`;
+}
+
+function formatShortAmount(value) {
+    return `$${Math.round(value / 1000)}k`;
+}
+
+const BASIC_COLUMNS = [
+    { key: "name", label: "Opportunity Name", type: "link", sortable: true },
+    { key: "account", label: "Account Name", sortable: true },
+    { key: "closeDate", label: "Close Date", type: "date", sortable: true, format: formatDate },
+    { key: "stage", label: "Stage", sortable: true },
+    { key: "confidence", label: "Confidence", type: "number", sortable: true, format: (v) => `${v}%` },
+    { key: "amount", label: "Amount", type: "number", sortable: true, format: formatShortAmount },
+    { key: "contact", label: "Contact", type: "email", sortable: true },
+];
+
+const ADVANCED_COLUMNS = [
+    { key: "name", label: "Name", type: "link", sortable: true },
+    { key: "account", label: "Account Name", sortable: true },
+    { key: "closeDate", label: "Close Date", type: "date", sortable: true, format: formatDate },
+    { key: "stage", label: "Stage", sortable: true },
+    { key: "confidence", label: "Confidence", type: "number", sortable: true, format: (v) => `${v}%` },
+    { key: "amount", label: "Amount", type: "number", sortable: true, format: formatAmount },
+    { key: "contact", label: "Contact", type: "email", sortable: true },
+];
+
+const ACCOUNTS = [
+    ["Acme - 1,200 Widgets", "Acme", "2015-04-10", "Value Proposition", 70, 25000000, "jrogers@acme.com"],
+    ["Acme - 200 Widgets", "Acme", "2015-01-31", "Prospecting", 30, 5000000, "bob@acme.com"],
+    ["salesforce.com - 1,000 Licenses", "salesforce.com", "2015-01-31", "Id. Decision Makers", 60, 25000, "nathan@salesforce.com"],
+    ["Acme - 800 Widgets", "Acme", "2018-06-11", "Value Proposition", 85, 970000, "jrogers@acme.com"],
+    ["Acme - 744 Widgets", "Acme", "2017-04-15", "Prospecting", 56, 3110000, "bob@acme.com"],
+];
+
+const BASIC_ROWS = [
+    ["Cloudhub", "Cloudhub", "2015-04-14", "Prospecting", 20, 25000, "jrogers@cloudhub.com"],
+    ["Cloudhub + Anypoint Connectors", "Cloudhub", "2015-04-14", "Prospecting", 20, 25000, "jrogers@cloudhub.com"],
+    ["Cloudhub", "Cloudhub", "2015-04-14", "Prospecting", 20, 25000, "jrogers@cloudhub.com"],
+];
+
+const FIELDS = ["name", "account", "closeDate", "stage", "confidence", "amount", "contact"];
+
+function toRows(data, prefix) {
+    return data.map((values, index) => {
+        const row = { id: `${prefix}${index}` };
+        values.forEach((value, i) => (row[FIELDS[i]] = value));
+        return row;
+    });
+}
+
+/**
+ * Generates a deterministic batch of accounts, so the infinite list can load more.
+ * @param {number} start index of the first generated row
+ * @param {number} count number of rows to generate
+ */
+function generateRows(start, count) {
+    const rows = [];
+    for (let i = start; i < start + count; i++) {
+        const day = (i % 27) + 1;
+        const month = (i % 12) + 1;
+        rows.push({
+            id: `gen${i}`,
+            name: `Acme - ${100 + i} Widgets`,
+            account: "Acme",
+            closeDate: `2018-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`,
+            stage: STAGES[i % STAGES.length],
+            confidence: (i * 7) % 100,
+            amount: 1000 + ((i * 7919) % 500000),
+            contact: "bob@acme.com",
+        });
+    }
+    return rows;
+}
+
+const MAX_INFINITE_ROWS = 200;
+
+export class DataTableDemo extends Component {
+    static template = "advanced_ui.DataTableDemo";
+    static components = { DataTable };
+
+    setup() {
+        this.basicColumns = BASIC_COLUMNS;
+        this.advancedColumns = ADVANCED_COLUMNS;
+        this.fixedColumns = ADVANCED_COLUMNS.map((column, index) => ({
+            ...column,
+            fixed: index === 0 || index === 3,
+        }));
+        this.opportunities = toRows(BASIC_ROWS, "basic");
+        this.accounts = toRows(ACCOUNTS, "account");
+        this.largeRows = proxy([...this.accounts, ...generateRows(0, 30)]);
+        this.infiniteRows = proxy(generateRows(0, 20));
+        this.rowActions = [
+            { label: "Edit", onSelect: (row) => console.info("Edit", row.name) },
+            { label: "Delete", onSelect: (row) => console.info("Delete", row.name) },
+        ];
+    }
+
+    async loadMore() {
+        if (this.infiniteRows.length >= MAX_INFINITE_ROWS) {
+            return;
+        }
+        await new Promise((resolve) => setTimeout(resolve, 300));
+        this.infiniteRows.push(...generateRows(this.infiniteRows.length, 20));
+    }
+}
+
+registry.category("actions").add("advanced_ui.datatable_demo", DataTableDemo);
