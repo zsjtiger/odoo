@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="advanced_ui.ExpressionBuilderDemo">
+        <div class="o_expression_builder_demo container-fluid p-4" style="max-width: 56rem">
+            <h2 class="mb-3">Expression Builder</h2>
+            <ExpressionBuilder fields="this.fields" value="this.state.tree" onChange="(tree) => this.onTreeChange(tree)"/>
+            <div class="mt-4">
+                <div class="small text-muted mb-1">Domain</div>
+                <pre class="o_expression_code mb-0" t-out="this.domainText"/>
+            </div>
+        </div>
+    </t>
+
+</templates>
