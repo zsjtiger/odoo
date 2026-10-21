@@ -8,6 +8,8 @@ Advanced controls for the Odoo web client. The addon provides:
   an optional scope selector.
 - **Date picker**: a date field widget with a calendar icon and a configurable
   display format, usable in form and list views.
+- **Time picker**: a time input with a clock icon and a list of the times of the day,
+  filtered by the text typed; a field widget for char and float fields.
 - **Expression builder**: a builder for logical conditions over the fields of a model
   (all, any, custom logic, always, or a formula), with nested groups.
 - **Search panel tree**: the search panel of a list or kanban view shows a hierarchical
@@ -248,6 +250,69 @@ Styles are in `static/src/datepicker/datepicker.scss`. The calendar button uses 
 
 The tests are in `static/tests/datepicker_field.test.js`: display with a format, the
 language format by default, typing and saving, invalid text, the calendar, and the list.
+
+## Time picker
+
+A text input with a clock icon. Under it, a list of the times of the day, at a set step,
+which is filtered by the text typed. The value is a text `HH:MM`. It works as a standalone
+component, or as a field widget on a `char` or a `float` field.
+
+### Usage
+
+As a field widget, on a `char` field (the text `HH:MM`) or a `float` field (the hours,
+like `9.5` for 09:30):
+
+```xml
+<field name="start" widget="timepicker"/>
+<field name="duration" widget="timepicker" options="{'step': 15}"/>
+```
+
+As a component, from your JavaScript. The parent keeps the value, so it updates the
+value when `onChange` is called:
+
+```js
+import { TimePicker } from "@advanced_ui/timepicker/timepicker";
+
+static components = { TimePicker };
+// <TimePicker value="this.state.start" step="30" onChange="(time) => this.setStart(time)"/>
+```
+
+### Configuration
+
+- `step` (field option, default 30): the distance between two times of the list, in
+  minutes. `15` gives quarter hours, and `60` gives full hours.
+- `placeholder` (field attribute, or prop of the component): the text of an empty input.
+  Default: `00:00`.
+- `readonly`: the value is shown as text, without the input.
+
+### Behaviour
+
+- Focusing the input shows the list of all the times. Typing filters the list: `14` shows
+  `14:00` and `14:30`, and `9` shows the times of 09:xx.
+- The text typed is parsed when the input loses focus, or when Enter is pressed. These
+  forms are accepted: `9:30`, `09:30`, `0930`, `9` (9:00) and `9.5` (9.5 hours, 09:30).
+  Three digits, like `930`, are not read as a time.
+- A text that is not a valid time, such as `25:99`, is reverted to the value.
+- Keys: the arrow keys move through the list, Enter sets the highlighted time (or the text
+  typed), and Escape closes the list and reverts the text.
+- Clicking a time of the list sets it.
+- The value of a float field is rounded to hundredths of an hour.
+
+### Limitations
+
+- 24-hour times only, without seconds.
+- No minimum or maximum time.
+- The list is the same for every value of the day: there is no time zone handling.
+
+### Demo
+
+The menu **Time Picker** under Custom shows the control on its own, with a 30-minute list,
+a 15-minute list and an empty one.
+
+### Tests
+
+The tests are in `static/tests/timepicker.test.js`: the times of the day, the parsing, the
+filter of the list, the pick, Enter, and the char and float fields in a form.
 
 ## Expression builder
 
