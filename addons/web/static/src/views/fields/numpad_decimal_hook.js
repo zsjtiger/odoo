@@ -1,6 +1,6 @@
 import { onMounted, onPatched, onWillUnmount } from "@odoo/owl";
-import { localization } from "@web/core/l10n/localization";
-import { isIOS } from "@web/core/browser/feature_detection";
+import { localization } from "@web/core/data/l10n/localization";
+import { isIOS } from "@web/core/services/browser/feature_detection";
 
 function onKeydown(ev) {
     const decimalPoint = localization.decimalPoint;

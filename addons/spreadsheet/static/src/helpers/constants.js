@@ -1,6 +1,6 @@
 // @ts-check
 
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 
 export const DEFAULT_LINES_NUMBER = 20;
 

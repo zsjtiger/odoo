@@ -184,13 +184,6 @@ class SlideChannel(models.Model):
         string='Is Visible On Website', compute='_compute_is_visible',
         search='_search_is_visible')
     partner_has_new_content = fields.Boolean(compute='_compute_partner_has_new_content', compute_sudo=False)
-    # karma generation
-    karma_gen_channel_rank = fields.Integer(string='Course ranked', default=5)
-    karma_gen_channel_finish = fields.Integer(string='Course finished', default=10)
-    # Karma based actions
-    karma_review = fields.Integer('Add Review', default=10, help="Karma needed to add a review on the course")
-    karma_slide_comment = fields.Integer('Add Comment', default=3, help="Karma needed to add a comment on a slide of this course")
-    karma_slide_vote = fields.Integer('Vote', default=3, help="Karma needed to like/dislike a slide of this course.")
     can_review = fields.Boolean('Can Review', compute='_compute_action_rights', compute_sudo=False)
     can_comment = fields.Boolean('Can Comment', compute='_compute_action_rights', compute_sudo=False)
     can_vote = fields.Boolean('Can Vote', compute='_compute_action_rights', compute_sudo=False)
@@ -441,19 +434,10 @@ class SlideChannel(models.Model):
     def _compute_website_absolute_url(self):
         super()._compute_website_absolute_url()
 
-    @api.depends('can_publish', 'is_member', 'karma_review', 'karma_slide_comment', 'karma_slide_vote')
-    @api.depends_context('uid')
+    @api.depends('can_publish', 'is_member')
     def _compute_action_rights(self):
-        user_karma = self.env.user.karma
         for channel in self:
-            if channel.can_publish:
-                channel.can_vote = channel.can_comment = channel.can_review = True
-            elif not channel.is_member:
-                channel.can_vote = channel.can_comment = channel.can_review = False
-            else:
-                channel.can_review = user_karma >= channel.karma_review
-                channel.can_comment = user_karma >= channel.karma_slide_comment
-                channel.can_vote = user_karma >= channel.karma_slide_vote
+            channel.can_vote = channel.can_comment = channel.can_review = channel.can_publish or channel.is_member
 
     ######################
     # Prerequisite Compute
@@ -601,7 +585,7 @@ class SlideChannel(models.Model):
         Also make sure that only one review can be posted per course."""
         self.ensure_one()
         if kwargs.get('message_type') == 'comment' and not self.can_review:
-            raise AccessError(_('Not enough karma to review'))
+            raise AccessError(_('You must be a member of the course to review it'))
         if parent_id:
             parent_message = self.env['mail.message'].sudo().browse(parent_id)
             if parent_message.subtype_id and parent_message.subtype_id == self.env.ref('website_slides.mt_channel_slide_published'):
@@ -619,8 +603,6 @@ class SlideChannel(models.Model):
             ]
             if self.env["mail.message"].search_count(domain, limit=2) > 1:
                 raise ValidationError(_("Only a single review can be posted per course."))
-        if message.rating_value and message.is_current_user_or_guest_author:
-            self.env.user._add_karma(self.karma_gen_channel_rank, self, _("Course Ranked"))
         return message
 
     def _get_customer_portal_message_types(self):
@@ -797,53 +779,8 @@ class SlideChannel(models.Model):
         for channel in self:
             channel._action_add_members(channel.mapped('enroll_group_ids.all_user_ids.partner_id'))
 
-    def _get_earned_karma(self, partner_ids):
-        """ Compute the number of karma earned by partners on a channel
-        Warning: this count will not be accurate if the configuration has been
-        modified after the completion of a course!
-        """
-        total_karma = defaultdict(list)
-
-        slide_completed = self.env['slide.slide.partner'].sudo().search([
-            ('partner_id', 'in', partner_ids),
-            ('channel_id', 'in', self.ids),
-            ('completed', '=', True),
-            ('quiz_attempts_count', '>', 0)
-        ])
-        for partner_slide in slide_completed:
-            slide = partner_slide.slide_id
-            if not slide.question_ids:
-                continue
-            gains = [
-                slide.quiz_first_attempt_reward,
-                slide.quiz_second_attempt_reward,
-                slide.quiz_third_attempt_reward,
-                slide.quiz_fourth_attempt_reward,
-            ]
-            attempts = min(partner_slide.quiz_attempts_count, len(gains))
-            total_karma[partner_slide.partner_id.id].append({
-                'karma': gains[attempts - 1],
-                'channel_id': slide.channel_id,
-            })
-
-        channel_completed = self.env['slide.channel.partner'].sudo().search([
-            ('partner_id', 'in', partner_ids),
-            ('channel_id', 'in', self.ids),
-            ('member_status', '=', 'completed')
-        ])
-        for partner_channel in channel_completed:
-            channel = partner_channel.channel_id
-            total_karma[partner_channel.partner_id.id].append({
-                'karma': channel.karma_gen_channel_finish,
-                'channel_id': channel,
-            })
-
-        return total_karma
-
     def _remove_membership(self, partner_ids):
-        """ Karma earned during course progress is kept upon membership removal.
-        This is done because re-joining the course will not allow you to gain the karma again,
-        as we keep your progress """
+        """ Membership removal keeps the progress of the attendee. """
         if not partner_ids:
             raise ValueError("Do not use this method with an empty partner_id recordset")
 

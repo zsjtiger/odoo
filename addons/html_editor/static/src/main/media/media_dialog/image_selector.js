@@ -1,12 +1,12 @@
 import { proxy, signal, t, usePlugin, useProps } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
+import { _t } from "@web/core/data/l10n/translation";
+import { rpc } from "@web/core/services/network/rpc";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { DEFAULT_PALETTE } from "@html_editor/utils/color";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { Attachment, FileSelector, IMAGE_EXTENSIONS, IMAGE_MIMETYPES } from "./file_selector";
 import { isSrcCorsProtected } from "@html_editor/utils/image";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
 
 export class AutoResizeImage extends Attachment {
     static template = "html_editor.AutoResizeImage";

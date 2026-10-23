@@ -10,7 +10,7 @@ import {
     onRpc,
     webModels,
 } from "@web/../tests/web_test_helpers";
-import { browser } from "@web/core/browser/browser";
+import { browser } from "@web/core/services/browser/browser";
 import { animationFrame } from "@odoo/hoot-dom";
 import { IndexedDB } from "@web/core/utils/indexed_db";
 

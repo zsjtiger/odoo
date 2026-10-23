@@ -2,7 +2,7 @@ import { CallInvitation } from "@mail/discuss/call/common/call_invitation";
 
 import { Component } from "@odoo/owl";
 
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
 
 export class CallInvitations extends Component {

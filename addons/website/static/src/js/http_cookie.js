@@ -1,4 +1,4 @@
-import { cookie } from "@web/core/browser/cookie";
+import { cookie } from "@web/core/services/browser/cookie";
 import { patch } from "@web/core/utils/patch";
 
 patch(cookie, {

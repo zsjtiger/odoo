@@ -1,5 +1,5 @@
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { GraphArchParser } from "./graph_arch_parser";
 import { GraphModel } from "./graph_model";
 import { GraphController } from "./graph_controller";

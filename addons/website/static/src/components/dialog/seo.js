@@ -1,13 +1,13 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { _t } from "@web/core/l10n/translation";
+import { useLayoutEffect } from "@web/core/owl/utils";
+import { _t } from "@web/core/data/l10n/translation";
 import { deduceURLfromText } from "@html_editor/main/link/utils";
-import { pyToJsLocale, jsToPyLocale } from "@web/core/l10n/utils";
+import { pyToJsLocale, jsToPyLocale } from "@web/core/data/l10n/utils/locales";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
-import { rpc } from "@web/core/network/rpc";
+import { rpc } from "@web/core/services/network/rpc";
 import { escapeRegExp } from "@web/core/utils/strings";
 import { useService, useAutofocus } from "@web/core/utils/hooks";
 import { isVisible } from "@web/core/utils/ui";
-import { CheckBox } from "@web/core/checkbox/checkbox";
+import { CheckBox } from "@web/core/components/checkbox/checkbox";
 import { MediaDialog } from "@html_editor/main/media/media_dialog/media_dialog";
 import { getMimetype } from "@html_editor/utils/image";
 import { WebsiteDialog } from "./dialog";

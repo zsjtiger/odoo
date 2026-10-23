@@ -23,7 +23,7 @@ import {
 } from "../mail_test_helpers";
 import { BOUNCE_DURATION } from "@mail/core/common/chat_bubble";
 
-import { rpc } from "@web/core/network/rpc";
+import { rpc } from "@web/core/services/network/rpc";
 import { range } from "@web/core/utils/numbers";
 
 describe.current.tags("desktop");

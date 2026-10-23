@@ -1,7 +1,7 @@
 import { Component, t, useProps } from "@odoo/owl";
 import { MessageCardList } from "./message_card_list";
 import { MessageSearchState } from "@mail/core/common/message_search_hook";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
 export class SearchMessageResult extends Component {

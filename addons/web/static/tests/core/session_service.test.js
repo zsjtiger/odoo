@@ -8,7 +8,7 @@ import {
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { WebClient } from "@web/webclient/webclient";
 import { useService } from "@web/core/utils/hooks";
 

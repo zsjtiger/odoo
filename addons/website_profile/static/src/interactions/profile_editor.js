@@ -1,5 +1,5 @@
-import { location } from "@web/core/browser/browser";
-import { registry } from "@web/core/registry";
+import { location } from "@web/core/services/browser/browser";
+import { registry } from "@web/core/framework/registry";
 import { Interaction } from "@web/public/interaction";
 import { ProfileDialog } from "../components/profile_dialog/profile_dialog";
 

@@ -1,11 +1,11 @@
-import { useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/core/owl/utils";
 import { formView } from "@web/views/form/form_view";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { EventBus, t, useOnChange, useProps } from "@odoo/owl";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { ConfirmationDialog } from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
 import { formControllerProps } from "@web/views/form/form_controller";
-import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
-import { _t } from "@web/core/l10n/translation";
+import { useCustomDropzone } from "@web/core/components/dropzone/dropzone_hook";
+import { _t } from "@web/core/data/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { useX2ManyCrud } from "@web/views/fields/relational_utils";
 import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzone";

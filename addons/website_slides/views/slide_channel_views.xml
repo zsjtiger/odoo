@@ -130,19 +130,6 @@
                                     </group>
                                 </group>
                             </page>
-                            <page string="Karma" name="karma_rules">
-                                <group>
-                                    <group string="Rewards">
-                                        <field name="karma_gen_channel_rank" string="Review Course"/>
-                                        <field name="karma_gen_channel_finish" string="Finish Course"/>
-                                    </group>
-                                    <group string="Access Rights" invisible="not allow_comment">
-                                        <field name="karma_review" invisible="not allow_comment"/>
-                                        <field name="karma_slide_comment" invisible="not allow_comment"/>
-                                        <field name="karma_slide_vote" invisible="not allow_comment"/>
-                                    </group>
-                                </group>
-                            </page>
                         </notebook>
                     </sheet>
                     <chatter/>
@@ -208,11 +195,7 @@
                 <graph string="Courses" sample="1">
                     <field name="name"/>
                     <field name="total_views" type="measure"/>
-                    <field name="karma_slide_comment"/>
-                    <field name="karma_review"/>
                     <field name="color"/>
-                    <field name="karma_gen_channel_finish"/>
-                    <field name="karma_gen_channel_rank"/>
                     <field name="sequence"/>
                 </graph>
             </field>
@@ -225,11 +208,7 @@
                 <pivot string="Pivot" default_order="create_date desc" sample="1">
                     <field type="row" name="name" />
                     <field type="measure" name="total_views"/>
-                    <field name="karma_slide_comment"/>
-                    <field name="karma_review"/>
                     <field name="color"/>
-                    <field name="karma_gen_channel_finish"/>
-                    <field name="karma_gen_channel_rank"/>
                     <field name="sequence"/>
                 </pivot>
             </field>

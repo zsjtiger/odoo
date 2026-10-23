@@ -1,13 +1,13 @@
 import { Component, proxy, signal, t, useEnv, useLayoutEffect, useProps } from "@odoo/owl";
-import { CheckBox } from "@web/core/checkbox/checkbox";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { makeContext } from "@web/core/context";
-import { AccordionItem } from "@web/core/dropdown/accordion_item";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { _t } from "@web/core/l10n/translation";
-import { Transition } from "@web/core/transition";
-import { user } from "@web/core/user";
+import { CheckBox } from "@web/core/components/checkbox/checkbox";
+import { ConfirmationDialog } from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
+import { makeContext } from "@web/core/data/context";
+import { AccordionItem } from "@web/core/components/dropdown/accordion_item";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
+import { _t } from "@web/core/data/l10n/translation";
+import { Transition } from "@web/core/framework/transition";
+import { user } from "@web/core/services/user";
 import { useService } from "@web/core/utils/hooks";
 import { useSortable } from "@web/core/utils/sortable_owl";
 

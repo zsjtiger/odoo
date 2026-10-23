@@ -1,5 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { closestElement, descendants } from "@html_editor/utils/dom_traversal";
 
 const ANIMATED_NUMBER_SELECTOR = ".s_animated_number";

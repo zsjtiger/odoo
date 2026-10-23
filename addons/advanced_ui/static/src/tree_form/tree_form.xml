@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="advanced_ui.TreeNav">
+        <div class="o_tree_nav">
+            <div t-if="this.state.loading" class="o_tree_nav_loading text-muted small p-2">Loading...</div>
+            <ul t-else="" class="o_tree_nav_list list-unstyled mb-0">
+                <t t-foreach="this.rows" t-as="row" t-key="row.node.id">
+                    <li
+                        class="o_tree_nav_node d-flex align-items-center"
+                        t-att-class="{ 'o_tree_nav_node_selected': this.props.selectedId === row.node.id }"
+                        t-att-style="'padding-left: ' + (row.depth * 1.25 + 0.5) + 'rem'"
+                        t-on-click="() => this.onSelect(row.node.id)"
+                    >
+                        <button
+                            type="button"
+                            class="o_tree_nav_toggle btn btn-link p-0 me-1"
+                            t-att-class="{ 'invisible': !row.node.childIds.length }"
+                            t-on-click="(ev) => this.onToggle(ev, row.node.id)"
+                            aria-label="Expand or collapse"
+                        >
+                            <i class="oi" t-att-data-icon="this.state.expanded.has(row.node.id) ? 'arrow_drop_down' : 'arrow_right'"/>
+                        </button>
+                        <span class="o_tree_nav_label text-truncate" t-out="row.node.label"/>
+                    </li>
+                </t>
+            </ul>
+            <div t-if="this.state.hasMore" class="o_tree_nav_more p-2">
+                <button type="button" class="btn btn-link btn-sm p-0 o_tree_nav_more_button" t-on-click="this.onLoadMore">Load more</button>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="advanced_ui.TreeFormAction">
+        <div class="o_tree_form d-flex flex-column h-100">
+            <div class="o_tree_form_toolbar d-flex align-items-center gap-3 px-3 py-2 border-bottom">
+                <button t-if="!this.state.sidebarOpen" type="button" class="o_tree_form_sidebar_reopen btn btn-light btn-sm"
+                    title="Show the tree"
+                    t-on-click="this.toggleSidebar">
+                    <i class="oi" data-icon="left_panel_open"/>
+                </button>
+                <span class="o_tree_form_title fw-bold text-truncate" t-out="this.title"/>
+                <div class="d-flex align-items-center gap-3">
+                    <button type="button" class="o_tree_form_refresh btn btn-light btn-sm" t-on-click="this.onRefresh">Refresh</button>
+                    <button type="button" class="o_tree_form_new btn btn-primary btn-sm" t-on-click="this.onNew">New</button>
+                    <t t-foreach="this.toolbarComboboxes" t-as="combo" t-key="combo_index">
+                        <label class="o_tree_form_combobox_label small text-muted mb-0" t-out="combo.label"/>
+                        <select class="o_tree_form_combobox form-select form-select-sm w-auto"
+                            t-att-aria-label="combo.label"
+                            t-on-change="(ev) => this.onComboboxChange(combo, combo_index, ev)">
+                            <t t-foreach="this.comboOptions(combo, combo_index)" t-as="option" t-key="option_index">
+                                <option t-att-value="option[0]" t-att-selected="this.filterValue(combo) === option[0]" t-out="option[1]"/>
+                            </t>
+                        </select>
+                    </t>
+                    <t t-foreach="this.toolbarButtons" t-as="button" t-key="button_index">
+                        <button type="button" class="o_tree_form_button btn btn-light btn-sm"
+                            t-att-disabled="!this.state.selectedId"
+                            t-on-click="() => this.onToolbarButton(button)"
+                            t-out="button.label"/>
+                    </t>
+                </div>
+            </div>
+            <div class="d-flex flex-grow-1 min-h-0">
+                <aside t-att-class="'o_tree_form_nav border-end overflow-auto' + (this.state.sidebarOpen ? '' : ' d-none')">
+                    <div class="o_tree_form_nav_header d-flex justify-content-end p-1">
+                        <button type="button" class="o_tree_form_sidebar_toggle btn btn-light btn-sm"
+                            title="Hide the tree"
+                            t-on-click="this.toggleSidebar">
+                            <i class="oi" data-icon="left_panel_close"/>
+                        </button>
+                    </div>
+                    <TreeNav
+                        resModel="this.treeProps.resModel"
+                        parentField="this.treeProps.parentField"
+                        labelField="this.treeProps.labelField"
+                        limit="this.treeProps.limit"
+                        context="this.treeProps.context"
+                        selectedId="this.treeProps.selectedId"
+                        reloadKey="this.treeProps.reloadKey"
+                        domain="this.treeProps.domain"
+                        onSelect="this.treeProps.onSelect"
+                    />
+                </aside>
+                <main class="o_tree_form_content flex-grow-1 overflow-auto">
+                    <div t-if="!this.showForm" class="o_tree_form_empty text-muted p-4">
+                        Select a node on the left to see its form, or create a new record.
+                    </div>
+                    <View t-else="" t-key="this.state.creating ? 'new' : this.state.selectedId" t-props="this.viewProps"/>
+                </main>
+            </div>
+        </div>
+    </t>
+
+</templates>

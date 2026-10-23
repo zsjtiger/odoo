@@ -1,4 +1,4 @@
-import { useLayoutEffect, useSubEnv } from "@web/owl2/utils";
+import { useLayoutEffect, useSubEnv } from "@web/core/owl/utils";
 import { DateSection } from "@mail/core/common/date_section";
 import { Message } from "@mail/core/common/message";
 import { NotificationMessage } from "./notification_message";
@@ -18,12 +18,11 @@ import {
     useOnChange,
     useProps,
 } from "@odoo/owl";
-import { browser } from "@web/core/browser/browser";
+import { browser } from "@web/core/services/browser/browser";
 
-import { _t } from "@web/core/l10n/translation";
-import { Transition } from "@web/core/transition";
+import { _t } from "@web/core/data/l10n/translation";
+import { Transition } from "@web/core/framework/transition";
 import { useBus, useService } from "@web/core/utils/hooks";
-import { escape } from "@web/core/utils/strings";
 
 export const PRESENT_VIEWPORT_THRESHOLD = 1;
 /**
@@ -49,7 +48,6 @@ export class Thread extends Component {
 
     setup() {
         super.setup();
-        this.escape = escape;
         this.applyScroll = this.applyScroll.bind(this);
         this.saveScroll = this.saveScroll.bind(this);
         this.onScroll = this.onScroll.bind(this);

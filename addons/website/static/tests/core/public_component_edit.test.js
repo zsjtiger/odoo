@@ -1,7 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { startInteractions } from "@web/../tests/public/helpers";
 import { switchToEditMode } from "../helpers";
 

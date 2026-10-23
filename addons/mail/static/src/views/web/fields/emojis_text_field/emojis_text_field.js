@@ -1,7 +1,7 @@
 import { EmojisFieldCommon } from "@mail/views/web/fields/emojis_field_common/emojis_field_common";
 
-import { registry } from "@web/core/registry";
-import { TextField, textField } from "@web/views/fields/text/text_field";
+import { registry } from "@web/core/framework/registry";
+import { TextField, textField } from "@web/views/fields/text/text/text_field";
 
 /**
  * Extension of the FieldText that will add emojis support

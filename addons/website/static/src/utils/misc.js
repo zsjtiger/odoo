@@ -1,4 +1,4 @@
-import { cookie as cookieManager } from "@web/core/browser/cookie";
+import { cookie as cookieManager } from "@web/core/services/browser/cookie";
 
 export class EventBus extends EventTarget {
     trigger(name, payload) {

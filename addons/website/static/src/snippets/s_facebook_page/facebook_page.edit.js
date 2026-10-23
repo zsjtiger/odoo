@@ -1,5 +1,5 @@
 import { FacebookPage } from "./facebook_page";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 const FacebookPageEdit = (I) =>
     class extends I {

@@ -3,12 +3,12 @@ import { DashboardFacet } from "../dashboard_facet/dashboard_facet";
 import { DashboardDateFilter } from "../dashboard_date_filter/dashboard_date_filter";
 import { DashboardSearchBarMenu } from "../dashboard_search_bar_menu/dashboard_search_bar_menu";
 import { useService, useAutofocus } from "@web/core/utils/hooks";
-import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
-import { _t } from "@web/core/l10n/translation";
+import { useDropdownState } from "@web/core/components/dropdown/dropdown_hooks";
+import { _t } from "@web/core/data/l10n/translation";
 import { fuzzyTest, fuzzyLookup } from "@web/core/utils/search";
 import { SearchBarDropdown } from "@web/search/search_bar_dropdown";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
 import { KeepLast } from "@web/core/utils/concurrency";
 
 let nextItemId = 1;
@@ -343,7 +343,7 @@ export class DashboardSearchBar extends Component {
     }
 
     /**
-     * @returns {import("@web/core/navigation/navigation").NavigationOptions}
+     * @returns {import("@web/core/components/navigation/navigation").NavigationOptions}
      */
     getDropdownNavigation() {
         const isExpansible = (index) => {

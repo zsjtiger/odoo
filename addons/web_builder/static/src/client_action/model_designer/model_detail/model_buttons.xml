@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+<t t-name="web_builder.ModelButtons">
+    <section class="o_web_studio_model_buttons flex-grow-1 p-4 overflow-auto">
+        <div class="d-flex flex-wrap align-items-center gap-3 mb-1">
+            <h3 class="m-0 me-auto">Buttons, Links, and Actions</h3>
+            <button type="button" class="btn btn-primary o_web_studio_new_button" t-on-click="this.openNewButton">New Button</button>
+        </div>
+        <p class="text-muted mb-4">
+            Buttons appear in the Actions menu of the records of this model. Standard buttons are available on every record.
+        </p>
+
+        <h5 class="mb-2">Standard Buttons</h5>
+        <table class="o_web_studio_standard_buttons table bg-view align-middle mb-4">
+            <thead>
+                <tr>
+                    <th scope="col">Label</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Source</th>
+                </tr>
+            </thead>
+            <tbody>
+                <t t-foreach="this.standardButtons" t-as="button" t-key="button.name">
+                    <tr class="o_web_studio_standard_button_row">
+                        <td class="fw-bold" t-out="button.name"/>
+                        <td class="text-muted" t-out="button.help"/>
+                        <td><span class="badge text-bg-secondary">Standard</span></td>
+                    </tr>
+                </t>
+                <t t-foreach="this.moduleButtons()" t-as="button" t-key="button.id">
+                    <tr class="o_web_studio_module_button_row">
+                        <td class="fw-bold" t-out="button.name"/>
+                        <td class="text-muted">Defined by a module</td>
+                        <td><span class="badge text-bg-secondary">Module</span></td>
+                    </tr>
+                </t>
+            </tbody>
+        </table>
+
+        <h5 class="mb-2">Custom Buttons</h5>
+        <div t-if="this.state.loading" class="text-center p-4">
+            <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>
+        </div>
+        <table t-else="" class="o_web_studio_custom_buttons table bg-view align-middle mb-0">
+            <thead>
+                <tr>
+                    <th scope="col">Label</th>
+                    <th scope="col">Behavior</th>
+                    <th scope="col">Shown on</th>
+                    <th scope="col">Source</th>
+                    <th scope="col" class="text-end"/>
+                </tr>
+            </thead>
+            <tbody>
+                <t t-foreach="this.customButtons()" t-as="button" t-key="button.id">
+                    <tr class="o_web_studio_button_row">
+                        <td class="fw-bold" t-out="button.name"/>
+                        <td>
+                            <span t-if="button.isUrl" class="badge bg-white text-dark border">Open URL</span>
+                            <span t-else="" class="badge bg-white text-dark border">Run code</span>
+                        </td>
+                        <td t-out="this.placeLabel(button.places)"/>
+                        <td><span class="badge text-bg-primary">Custom</span></td>
+                        <td class="text-end">
+                            <button t-if="button.isCustom" type="button" class="btn btn-sm btn-outline-danger o_web_studio_delete_button"
+                                t-on-click="() => this.remove(button)">Delete</button>
+                        </td>
+                    </tr>
+                </t>
+                <tr t-if="!this.customButtons().length" class="o_web_studio_button_empty">
+                    <td colspan="5" class="text-center text-muted p-4">No custom button yet.</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+</t>
+
+<t t-name="web_builder.ModelButtons.NewButtonDialog">
+    <Dialog title="'New Button'">
+        <div class="o_web_studio_new_button_form d-flex flex-column gap-3">
+            <div>
+                <label class="form-label" for="o_web_studio_button_label">Button Label</label>
+                <input id="o_web_studio_button_label" class="form-control" placeholder="e.g. Send a welcome email"
+                    t-att-value="this.state.label" t-on-input="this.onLabelInput"/>
+            </div>
+            <div>
+                <label class="form-label" for="o_web_studio_button_behavior">Behavior</label>
+                <select id="o_web_studio_button_behavior" class="form-select" t-on-change="this.onBehaviorChange">
+                    <option value="url" t-att-selected="this.state.behavior === 'url'">Open a URL</option>
+                    <option value="code" t-att-selected="this.state.behavior === 'code'">Run server code</option>
+                </select>
+            </div>
+            <div t-if="this.state.behavior === 'url'">
+                <label class="form-label" for="o_web_studio_button_url">URL</label>
+                <input id="o_web_studio_button_url" class="form-control o_web_studio_button_url"
+                    placeholder="https://example.com/record/{id}"
+                    t-att-value="this.state.url" t-on-input="this.onUrlInput"/>
+                <div class="form-text">{id} is replaced by the id of the record.</div>
+            </div>
+            <div t-else="">
+                <label class="form-label" for="o_web_studio_button_code">Python Code</label>
+                <textarea id="o_web_studio_button_code" class="form-control o_web_studio_button_code font-monospace" rows="5"
+                    placeholder="# records is the current selection" t-on-input="this.onCodeInput"><t t-out="this.state.code"/></textarea>
+            </div>
+            <div>
+                <span class="form-label d-block">Shown on</span>
+                <div class="form-check">
+                    <input id="o_web_studio_button_detail" type="checkbox" class="form-check-input" t-att-checked="this.state.detail" t-on-change="this.onDetailChange"/>
+                    <label class="form-check-label" for="o_web_studio_button_detail">Detail page</label>
+                </div>
+                <div class="form-check">
+                    <input id="o_web_studio_button_list" type="checkbox" class="form-check-input" t-att-checked="this.state.list" t-on-change="this.onListChange"/>
+                    <label class="form-check-label" for="o_web_studio_button_list">List view</label>
+                </div>
+            </div>
+        </div>
+        <t t-set-slot="footer">
+            <button type="button" class="btn btn-primary o_web_studio_create_button"
+                t-att-disabled="!this.canCreate()" t-on-click="this.onConfirm">Create</button>
+            <button type="button" class="btn btn-secondary" t-on-click="() => this.props.close()">Cancel</button>
+        </t>
+    </Dialog>
+</t>
+
+</templates>

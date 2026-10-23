@@ -3,7 +3,7 @@
 from urllib.parse import quote
 
 from odoo import api, models, fields
-from odoo.tools.image import binary_to_image
+from odoo.tools.files.image import binary_to_image
 from odoo.exceptions import UserError
 
 SUPPORTED_IMAGE_MIMETYPES = {

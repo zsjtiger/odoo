@@ -1,5 +1,5 @@
 import { testSwitchWebsite, registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 // TODO: This part should be moved in a QUnit test
 const checkKanbanGroupBy = [

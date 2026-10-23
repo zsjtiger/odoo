@@ -1,5 +1,5 @@
 from odoo import fields, models
-from odoo.tools.translate import _, xml_translate, LazyTranslate
+from odoo.tools.text.translate import _, xml_translate, LazyTranslate
 
 _lt = LazyTranslate(__name__)
 

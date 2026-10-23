@@ -15,14 +15,14 @@ import {
 } from "@odoo/owl";
 
 import { Reactive } from "@web/core/utils/reactive";
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/core/owl/utils";
 
 import { CallPermissionDeniedDialog } from "@mail/discuss/call/common/call_permission_denied_dialog";
 import { monitorAudio } from "@mail/utils/common/media_monitoring";
-import { browser } from "@web/core/browser/browser";
+import { browser } from "@web/core/services/browser/browser";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { useService } from "@web/core/utils/hooks";
-import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
+import { useDropdownState } from "@web/core/components/dropdown/dropdown_hooks";
 
 /**
  * Version of usePlugin() where the plugin is allowed to not be provided by any parented component.
@@ -768,7 +768,7 @@ export function useSequential() {
     };
 }
 
-/** @param {import("@web/core/dropdown/dropdown_hooks").DropdownState} [dropdownState] */
+/** @param {import("@web/core/components/dropdown/dropdown_hooks").DropdownState} [dropdownState] */
 export function useDiscussSystray(dropdownState) {
     const ui = useService("ui");
     if (dropdownState) {

@@ -1,7 +1,7 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
 import { useProps } from "@odoo/owl";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { FormFieldOption, formFieldOptionProps } from "./form_field_option";
 
 export class FormFieldOptionRedraw extends BaseOptionComponent {

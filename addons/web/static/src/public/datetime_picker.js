@@ -3,8 +3,8 @@ import {
     deserializeDateTime,
     parseDate,
     parseDateTime,
-} from "@web/core/l10n/dates";
-import { registry } from "@web/core/registry";
+} from "@web/core/data/l10n/dates";
+import { registry } from "@web/core/framework/registry";
 import { Interaction } from "@web/public/interaction";
 
 export class DatetimePicker extends Interaction {

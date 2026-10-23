@@ -1,10 +1,10 @@
 import { Component, onMounted, proxy, signal, t, useProps } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { addLoadingEffect } from "@web/core/utils/ui";
-import { rpc } from "@web/core/network/rpc";
-import { registry } from "@web/core/registry";
+import { rpc } from "@web/core/services/network/rpc";
+import { registry } from "@web/core/framework/registry";
 import { redirect } from "@web/core/utils/urls";
-import { NameAndSignature } from "@web/core/signature/name_and_signature";
+import { NameAndSignature } from "@web/core/components/signature/name_and_signature";
 
 /**
  * This Component is a signature request form. It uses

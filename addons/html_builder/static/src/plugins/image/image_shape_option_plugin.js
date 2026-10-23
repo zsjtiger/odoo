@@ -15,7 +15,7 @@ import {
     getImageTransformationData,
     shouldPreventGifTransformation,
 } from "@html_editor/main/media/image_post_process_plugin";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { getMimetype } from "@html_editor/utils/image";
 import { withSequence } from "@html_editor/utils/resource";

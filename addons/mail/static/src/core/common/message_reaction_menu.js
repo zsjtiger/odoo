@@ -11,8 +11,8 @@ import {
     useProps,
 } from "@odoo/owl";
 
-import { Dialog } from "@web/core/dialog/dialog";
-import { emojiLoader, useLoadEmoji } from "@web/core/emoji_picker/emoji_loader";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
+import { emojiLoader, useLoadEmoji } from "@web/core/components/emoji_picker/emoji_loader";
 import { useService } from "@web/core/utils/hooks";
 import { Tab, Tabs } from "./tabs";
 

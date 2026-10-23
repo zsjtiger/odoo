@@ -1,12 +1,12 @@
 //@ts-check
 
-import { _t } from "@web/core/l10n/translation";
-import { Domain } from "@web/core/domain";
+import { _t } from "@web/core/data/l10n/translation";
+import { Domain } from "@web/core/data/domain";
 import { PivotModel } from "@web/views/pivot/pivot_model";
 
 import { helpers, constants, EvaluationError, SpreadsheetPivotTable } from "@odoo/o-spreadsheet";
 import { parseGroupField } from "./pivot_helpers";
-import { localeCompare } from "@web/core/l10n/utils";
+import { localeCompare } from "@web/core/data/l10n/utils/collation";
 
 const { toNormalizedPivotValue, toNumber, isDateOrDatetimeField, pivotTimeAdapter, deepEquals } =
     helpers;
@@ -136,7 +136,7 @@ export const NO_RECORD_AT_THIS_POSITION = "__NO_RECORD_AT_THIS_POSITION__";
  */
 export class OdooPivotModel extends PivotModel {
     /**
-     * @param {import("@web/env").OdooEnv} env
+     * @param {import("@web/boot/env").OdooEnv} env
      * @param {import("@spreadsheet").OdooPivotModelParams} params
      * @param {import("@spreadsheet").PivotModelServices} services
      */
@@ -754,7 +754,10 @@ export class OdooPivotModel extends PivotModel {
         const allGroupBys = params.groupingSets.flat();
         const order = columns
             .concat(rows)
-            .filter((dimension) => allGroupBys.includes(dimension.nameWithGranularity) && !dimension.isCustomField) // the order should not contain the custom groups
+            .filter(
+                (dimension) =>
+                    allGroupBys.includes(dimension.nameWithGranularity) && !dimension.isCustomField
+            ) // the order should not contain the custom groups
             .map((dimension) =>
                 dimension.order
                     ? `${dimension.nameWithGranularity} ${dimension.order}`
@@ -779,9 +782,13 @@ export class OdooPivotModel extends PivotModel {
         }
         const subGroup = { ...subGroups[0] };
         for (const measure of measures) {
+            if (measure === "__count") {
+                continue;
+            }
             const aggregator = measure.split(":")[1];
             switch (aggregator) {
                 case "sum":
+                case "sum_currency":
                 case "count":
                     subGroup[measure] = subGroups.reduce((sum, sg) => sum + sg[measure], 0);
                     break;
@@ -802,6 +809,8 @@ export class OdooPivotModel extends PivotModel {
                     }
                     break;
                 }
+                default:
+                    throw new Error(`Unsupported aggregator: ${aggregator}`);
             }
         }
         subGroup.__count = subGroups.reduce((sum, sg) => sum + (sg.__count || 0), 0);

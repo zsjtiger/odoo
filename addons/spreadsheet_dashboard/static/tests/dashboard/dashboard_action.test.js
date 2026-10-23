@@ -18,9 +18,9 @@ import {
     toggleSaveFavorite,
     toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
-import { location, browser } from "@web/core/browser/browser";
-import { routerBus, startRouter } from "@web/core/browser/router";
-import { RPCError } from "@web/core/network/rpc";
+import { location, browser } from "@web/core/services/browser/browser";
+import { routerBus, startRouter } from "@web/core/services/browser/router";
+import { RPCError } from "@web/core/services/network/rpc";
 import { range } from "@web/core/utils/numbers";
 import { THIS_YEAR_GLOBAL_FILTER } from "@spreadsheet/../tests/helpers/global_filter";
 

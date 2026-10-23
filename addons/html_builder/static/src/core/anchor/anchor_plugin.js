@@ -1,7 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
-import { browser } from "@web/core/browser/browser";
-import { _t } from "@web/core/l10n/translation";
+import { browser } from "@web/core/services/browser/browser";
+import { _t } from "@web/core/data/l10n/translation";
 import { markup } from "@odoo/owl";
 import { AnchorDialog } from "./anchor_dialog";
 import { getElementsWithOption, getSnippetName } from "@html_builder/utils/utils";

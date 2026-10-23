@@ -1,13 +1,13 @@
 import { Component, onMounted, onPatched, onWillUnmount, useProps, t } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
 import { debounce } from "@web/core/utils/timing";
-import { charField, CharField } from "@web/views/fields/char/char_field";
+import { charField, CharField } from "@web/views/fields/text/char/char_field";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
-import { UrlField, urlField } from "@web/views/fields/url/url_field";
+import { UrlField, urlField } from "@web/views/fields/text/url/url_field";
 import { PageDependencies } from "@website/components/dialog/page_properties";
-import { TranslationButton } from "@web/views/fields/translation/translation_button";
+import { TranslationButton } from "@web/views/fields/text/translation/translation_button";
 
 /**
  * Displays website page dependencies and URL redirect options when the page URL

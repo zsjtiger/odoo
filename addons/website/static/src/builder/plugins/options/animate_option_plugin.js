@@ -1,8 +1,8 @@
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { getScrollingElement } from "@web/core/utils/scrolling";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { AnimateText } from "./animate_text";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { unwrapContents } from "@html_editor/utils/dom";

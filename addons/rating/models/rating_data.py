@@ -4,7 +4,7 @@
 import operator
 
 from odoo.tools import SQL
-from odoo.tools.float_utils import float_compare
+from odoo.tools import float_compare
 
 RATING_AVG_TOP = 3.66
 RATING_AVG_OK = 2.33

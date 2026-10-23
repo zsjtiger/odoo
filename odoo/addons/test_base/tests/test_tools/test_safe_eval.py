@@ -237,7 +237,7 @@ class TestSafeEvalRuntime(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.startClassPatcher(patch(
-            'odoo.tools.safe_eval.runtime.unsafe_policy',
+            'odoo.tools.safe_eval.runtime.errors.unsafe_policy',
             lambda: UnsafePolicy.RAISE,
         ))
 
@@ -322,7 +322,7 @@ class TestSafeEvalRuntime(TransactionCase):
             res = list(func_gen())
         """
         with patch(
-            'odoo.tools.safe_eval.runtime.safe_call',
+            'odoo.tools.safe_eval.runtime.whitelist.safe_call',
             wraps=safe_call,
         ) as mock_safe_call:
             safe_eval(dedent(expr), {}, mode='exec')

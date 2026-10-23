@@ -2,9 +2,9 @@ import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
 import { getModelName } from "./utils";
 import { FormActionFieldsOption } from "./form_action_fields_option";
-import { session } from "@web/session";
+import { session } from "@web/boot/session";
 import { selectElements } from "@html_editor/utils/dom_traversal";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 export class FormOption extends BaseOptionComponent {
     static id = "form_option";
@@ -12,6 +12,12 @@ export class FormOption extends BaseOptionComponent {
     static dependencies = ["websiteFormOption"];
     static components = { FormActionFieldsOption };
     static async cleanForSave(el, { dependencies, services }) {
+        for (const hiddenDescEl of el.querySelectorAll(
+            ".s_website_form_field_description.d-none"
+        )) {
+            hiddenDescEl.remove();
+        }
+
         for (const sigEl of el.querySelectorAll("input[name=website_form_signature]")) {
             sigEl.remove();
         }

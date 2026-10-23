@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { MegaMenuDropdown } from "./mega_menu_dropdown";
 
 const MegaMenuDropdownEdit = (I) =>

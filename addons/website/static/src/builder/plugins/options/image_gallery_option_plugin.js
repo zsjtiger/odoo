@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { Plugin } from "@html_editor/plugin";
 import { loadImageInfo } from "@html_editor/utils/image_processing";
 import { updateCarouselIndicators } from "../carousel_option_plugin";

@@ -1,10 +1,10 @@
 import { proxy } from "@odoo/owl";
 
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 export class DiscussCoreCommon {
     /**
-     * @param {import("@web/env").OdooEnv} env
+     * @param {import("@web/boot/env").OdooEnv} env
      * @param {import("services").ServiceFactories} services
      */
     constructor(env, services) {
@@ -125,7 +125,7 @@ export const discussCoreCommon = {
         "presence",
     ],
     /**
-     * @param {import("@web/env").OdooEnv} env
+     * @param {import("@web/boot/env").OdooEnv} env
      * @param {import("services").ServiceFactories} services
      */
     start(env, services) {

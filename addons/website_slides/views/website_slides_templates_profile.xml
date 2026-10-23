@@ -10,7 +10,7 @@
     </template>
 
     <template id="user_profile_content" inherit_id="website_profile.user_profile_content">
-        <xpath expr="//div[@id='profile_about_badge']" position="before">
+        <xpath expr="//div[@id='profile_about_start']" position="before">
             <t t-if="channel">
                 <div class="mb32">
                     <h5 class="border-bottom pb-1">Completed Courses</h5>

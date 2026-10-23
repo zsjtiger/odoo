@@ -1,4 +1,4 @@
-import { useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/core/owl/utils";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { optionType } from "@mail/core/common/suggestion_hook";
 import { onExternalClick } from "@mail/utils/common/hooks";
@@ -6,8 +6,8 @@ import { markEventHandled, isEventHandled } from "@web/core/utils/misc";
 
 import { Component, proxy, signal, t, useListener, useOnChange, useProps } from "@odoo/owl";
 
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
-import { usePosition } from "@web/core/position/position_hook";
+import { getActiveHotkey } from "@web/core/services/hotkeys/hotkey_utils";
+import { usePosition } from "@web/core/components/position/position_hook";
 import { useService } from "@web/core/utils/hooks";
 
 /**

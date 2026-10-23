@@ -1,0 +1,39 @@
+// Time picker: a text input with a clock icon, and a list of the times under it.
+.o_timepicker {
+    .o_timepicker_input {
+        cursor: text;
+    }
+
+    .o_timepicker_icon {
+        top: 50%;
+        right: 0.75rem;
+        transform: translateY(-50%);
+        color: var(--text-muted, #6c757d);
+        pointer-events: none;
+    }
+
+    .o_timepicker_list {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        z-index: 20;
+        max-height: 14rem;
+        overflow-y: auto;
+        margin-top: 0.25rem;
+        background-color: var(--bs-body-bg, #fff);
+        border: 1px solid var(--border-color, #dee2e6);
+        border-radius: 0.375rem;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.12);
+    }
+
+    .o_timepicker_option {
+        cursor: pointer;
+
+        &:hover,
+        &.active {
+            background-color: rgba($primary, 0.12);
+            color: $primary;
+        }
+    }
+}

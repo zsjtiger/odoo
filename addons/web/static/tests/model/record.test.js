@@ -18,10 +18,10 @@ import { useService } from "@web/core/utils/hooks";
 import { Record } from "@web/model/record";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
 import { useRecordObserver } from "@web/model/relational_model/utils";
-import { CharField } from "@web/views/fields/char/char_field";
+import { CharField } from "@web/views/fields/text/char/char_field";
 import { Field } from "@web/views/fields/field";
-import { Many2ManyTagsField } from "@web/views/fields/many2many_tags/many2many_tags_field";
-import { Many2OneField } from "@web/views/fields/many2one/many2one_field";
+import { Many2ManyTagsField } from "@web/views/fields/relational/many2many_tags/many2many_tags_field";
+import { Many2OneField } from "@web/views/fields/relational/many2one/many2one_field";
 
 class Foo extends models.Model {
     foo = fields.Char();

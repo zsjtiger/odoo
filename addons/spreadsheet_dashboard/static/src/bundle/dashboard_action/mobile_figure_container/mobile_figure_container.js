@@ -1,6 +1,6 @@
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { Component, onMounted, onWillUnmount, signal, t, useProps } from "@odoo/owl";
-import { render, useSubEnv } from "@web/owl2/utils";
+import { render, useSubEnv } from "@web/core/owl/utils";
 
 const { registries, stores, constants, helpers } = spreadsheet;
 const { figureRegistry } = registries;

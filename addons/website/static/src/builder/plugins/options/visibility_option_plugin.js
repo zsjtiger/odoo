@@ -1,7 +1,7 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { Plugin } from "@html_editor/plugin";
 import { selectElements } from "@html_editor/utils/dom_traversal";
-import { pyToJsLocale } from "@web/core/l10n/utils";
+import { pyToJsLocale } from "@web/core/data/l10n/utils/locales";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
 /**

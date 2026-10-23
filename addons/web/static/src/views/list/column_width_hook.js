@@ -1,12 +1,12 @@
-import { browser } from "@web/core/browser/browser";
+import { browser } from "@web/core/services/browser/browser";
 import {
     formatDate,
     formatDateTime,
     toLocaleDateString,
     toLocaleDateTimeString,
-} from "@web/core/l10n/dates";
-import { localization } from "@web/core/l10n/localization";
-import { utils } from "@web/core/ui/ui_utils";
+} from "@web/core/data/l10n/dates";
+import { localization } from "@web/core/data/l10n/localization";
+import { utils } from "@web/core/services/ui/ui_utils";
 import { renderToElement } from "@web/core/utils/render";
 import { useDebounced } from "@web/core/utils/timing";
 

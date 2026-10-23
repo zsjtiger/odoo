@@ -1,6 +1,6 @@
 import { usePlugin } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { TourRecorderPlugin } from "./tour_recorder_plugin";
 
 registry.category("command_provider").add("tour_recorder", {

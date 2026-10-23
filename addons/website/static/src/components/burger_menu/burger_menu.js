@@ -1,6 +1,6 @@
 import { BurgerMenu } from "@web/webclient/burger_menu/burger_menu";
 import { useService } from "@web/core/utils/hooks";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { patch } from "@web/core/utils/patch";
 
 const websiteSystrayRegistry = registry.category("website_systray");

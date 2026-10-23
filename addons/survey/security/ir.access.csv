@@ -25,7 +25,6 @@ survey_user_input_line_rule_survey_user_1,Survey user input line: officer: unres
                 '&', ('survey_id.survey_type', 'in', ('assessment', 'custom', 'live_session', 'survey')),
                 '|', ('survey_id.restrict_user_ids', 'in', user.id),
                      ('survey_id.restrict_user_ids', '=', False)]"
-access_gamification_badge_survey_user,gamification.badge.survey.user,gamification.badge,survey.group_survey_user,crud,
 survey_invite_survey_user,Survey invite: officer: unrestricted or in restricted users,survey.invite,survey.group_survey_user,cru,"['|',  ('survey_id.restrict_user_ids', 'in', user.id),
                 ('survey_id.restrict_user_ids', '=', False)]"
 survey_invite_survey_manager,Survey invite: manager: all,survey.invite,survey.group_survey_manager,cru,

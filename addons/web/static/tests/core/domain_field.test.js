@@ -1,8 +1,8 @@
 import { expect, getFixture, test } from "@odoo/hoot";
 import { queryAllTexts, scroll } from "@odoo/hoot-dom";
 import { animationFrame, mockDate } from "@odoo/hoot-mock";
-import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
-import { SELECTORS } from "@web/../tests/core/domain_selector/domain_selector_helpers";
+import { getPickerCell } from "@web/../tests/core/components/datetime/datetime_test_helpers";
+import { SELECTORS } from "@web/../tests/core/editors/domain_selector/domain_selector_helpers";
 import {
     Country,
     Partner,
@@ -18,7 +18,7 @@ import {
     getCurrentPath,
     getCurrentValue,
     label,
-} from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
+} from "@web/../tests/core/editors/tree_editor/condition_tree_editor_test_helpers";
 import {
     contains,
     defineModels,
@@ -31,7 +31,7 @@ import {
     serverState,
 } from "@web/../tests/web_test_helpers";
 
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { WebClient } from "@web/webclient/webclient";
 
 class PartnerType extends models.Model {

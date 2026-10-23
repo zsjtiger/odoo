@@ -2,10 +2,10 @@
 
 import { WebsiteSlidesCommon } from "@website_slides/interactions/slides_course_common";
 import "@website_slides/interactions/slides_course_join";
-import { SIZES, utils as uiUtils } from "@web/core/ui/ui_utils";
-import { rpc } from "@web/core/network/rpc";
-import { registry } from "@web/core/registry";
-import { session } from "@web/session";
+import { SIZES, utils as uiUtils } from "@web/core/services/ui/ui_utils";
+import { rpc } from "@web/core/services/network/rpc";
+import { registry } from "@web/core/framework/registry";
+import { session } from "@web/boot/session";
 import { Interaction } from "@web/public/interaction";
 import { findSlide, insertHtmlContent } from "@website_slides/js/utils";
 import { markup } from "@odoo/owl";

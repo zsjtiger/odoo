@@ -1,8 +1,8 @@
 import { Component, proxy, signal, t, useEffect, useProps } from "@odoo/owl";
-import { useDateTimePicker } from "@web/core/datetime/datetime_picker_hook";
-import { ConversionError, formatDate, formatDateTime, parseDateTime } from "@web/core/l10n/dates";
-import { localization } from "@web/core/l10n/localization";
-import { _t } from "@web/core/l10n/translation";
+import { useDateTimePicker } from "@web/core/components/datetime/datetime_picker_hook";
+import { ConversionError, formatDate, formatDateTime, parseDateTime } from "@web/core/data/l10n/dates";
+import { localization } from "@web/core/data/l10n/localization";
+import { _t } from "@web/core/data/l10n/translation";
 import {
     basicContainerBuilderComponentProps,
     useBuilderComponent,

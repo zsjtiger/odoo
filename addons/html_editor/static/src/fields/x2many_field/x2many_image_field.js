@@ -1,6 +1,6 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
-import { ImageField, imageField, imageFieldProps } from "@web/views/fields/image/image_field";
+import { ImageField, imageField, imageFieldProps } from "@web/views/fields/media/image/image_field";
 import { t, useProps } from "@odoo/owl";
 import { CustomMediaDialog } from "./custom_media_dialog";
 import { getDataURLFromFile } from "@web/core/utils/urls";

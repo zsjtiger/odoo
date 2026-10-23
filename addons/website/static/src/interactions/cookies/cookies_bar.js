@@ -1,8 +1,8 @@
 import { Popup } from "@website/interactions/popup/popup";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
-import { cookie } from "@web/core/browser/cookie";
-import { _t } from "@web/core/l10n/translation";
+import { cookie } from "@web/core/services/browser/cookie";
+import { _t } from "@web/core/data/l10n/translation";
 import { isVisible } from "@web/core/utils/ui";
 import { setUtmsHtmlDataset } from "@website/utils/misc";
 

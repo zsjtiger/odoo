@@ -1,6 +1,6 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { generateHTMLId } from "@web/core/utils/strings";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { Interaction } from "@web/public/interaction";
 
 export class AddOtherOption extends Interaction {

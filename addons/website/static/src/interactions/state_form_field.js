@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { renderToMarkup } from "@web/core/utils/render";
 import { Interaction } from "@web/public/interaction";
 

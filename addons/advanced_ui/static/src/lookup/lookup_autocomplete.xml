@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="advanced_ui.LookupAutocomplete">
+        <div class="o_lookup_autocomplete d-flex align-items-start gap-2">
+            <div t-if="this.hasScope" class="o_lookup_scope position-relative flex-shrink-0">
+                <button type="button" class="o_lookup_scope_button btn btn-light d-flex align-items-center gap-2" t-on-click="this.toggleScope" t-out="this.scopeLabel"/>
+                <ul t-if="this.scope.open" class="o_lookup_scope_menu o-dropdown--menu show">
+                    <li class="o_lookup_scope_title" t-out="this.suggestionsTitle"/>
+                    <t t-foreach="this.scopeOptions" t-as="value" t-key="value or ''">
+                        <li>
+                            <button type="button" class="dropdown-item" t-att-class="{ 'active': value === this.scope.value }" t-on-click="() => this.selectScope(value)" t-out="value or this.allLabel"/>
+                        </li>
+                    </t>
+                </ul>
+            </div>
+            <div class="o_input_dropdown flex-grow-1" t-ref="this.autocompleteContainerRef">
+            <input t-if="this.uiService.isSmall and this.props.dropdown"
+                type="text"
+                t-att-id="this.props.id"
+                class="o_input"
+                readonly=""
+                autocomplete="off"
+                t-att-placeholder="this.props.placeholder"
+                t-att-value="this.props.value"
+                t-on-click="this.onSearchMore"
+                t-on-barcode-search="this.onBarcodeSearch"
+            />
+            <AutoComplete t-else="" t-props="this.autoCompleteProps">
+                <t t-set-slot="lookupOption" t-slot-scope="optionScope">
+                    <t t-if="optionScope.data.header">
+                        <div class="o_lookup_group_title" t-out="optionScope.label"/>
+                    </t>
+                    <t t-elif="optionScope.data.record">
+                        <div class="o_lookup_option d-flex align-items-center gap-2">
+                            <span class="o_lookup_tile d-flex align-items-center justify-content-center flex-shrink-0 fw-bold"
+                                t-attf-style="background-color: {{ this.getTileColor(optionScope.data.record) }};"
+                                t-out="this.getTileInitial(optionScope.data.record)"/>
+                            <div class="o_lookup_text min-w-0">
+                                <div class="o_lookup_title text-truncate" t-out="optionScope.label"/>
+                                <div class="o_lookup_subtitle small text-muted text-truncate" t-out="this.getSubtitle(optionScope.data.record)"/>
+                            </div>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <t t-call-slot="{{ optionScope.data.slotName }}" t-props="optionScope.data" label="optionScope.label">
+                            <t t-out="optionScope.label"/>
+                        </t>
+                    </t>
+                </t>
+            </AutoComplete>
+            <span class="o_dropdown_button" />
+            </div>
+        </div>
+    </t>
+
+</templates>

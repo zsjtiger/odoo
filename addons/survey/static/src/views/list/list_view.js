@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { listView } from "@web/views/list/list_view";
 import { SurveyListRenderer } from "@survey/views/list/list_renderer";
 

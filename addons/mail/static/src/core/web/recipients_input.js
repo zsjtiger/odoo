@@ -1,14 +1,14 @@
 import { parseEmail } from "@mail/utils/common/format";
-import { AutoComplete } from "@web/core/autocomplete/autocomplete";
-import { _t } from "@web/core/l10n/translation";
+import { AutoComplete } from "@web/core/components/autocomplete/autocomplete";
+import { _t } from "@web/core/data/l10n/translation";
 import { isEmail } from "@web/core/utils/strings";
 import { highlightText, odoomark } from "@web/core/utils/html";
 import { useService } from "@web/core/utils/hooks";
 import { useSelectCreate } from "@web/views/fields/relational_utils";
-import { BadgeTag } from "@web/core/tags_list/badge_tag";
+import { BadgeTag } from "@web/core/components/tags_list/badge_tag";
 
-import { rpc } from "@web/core/network/rpc";
-import { useTagNavigation } from "@web/core/record_selectors/tag_navigation_hook";
+import { rpc } from "@web/core/services/network/rpc";
+import { useTagNavigation } from "@web/core/editors/record_selectors/tag_navigation_hook";
 import { uniqueId } from "@web/core/utils/functions";
 import { RecipientTag, useRecipientChecker } from "./recipient_tag";
 

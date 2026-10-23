@@ -1,5 +1,5 @@
-import { localization } from "@web/core/l10n/localization";
-import { translatedTermsGlobal } from "@web/core/l10n/translation";
+import { localization } from "@web/core/data/l10n/localization";
+import { translatedTermsGlobal } from "@web/core/data/l10n/translation";
 import {
     clickOnEditAndWaitEditMode,
     clickOnEditAndWaitEditModeInTranslatedPage,
@@ -11,7 +11,7 @@ import {
     testSwitchWebsite,
 } from "@website/js/tours/tour_utils";
 import { stepUtils } from "@web_tour/tour_utils";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 registerWebsitePreviewTour("snippet_translation", {}, () => [
     stepUtils.goToUrl(getClientActionUrl()),

@@ -13,13 +13,9 @@ addons/*
 !web_enterprise
 !web_enterprise/**/*
 
-# Whitelist web_mobile
-!web_mobile
-!web_mobile/**/*
-
-# Whitelist web_studio
-!web_studio
-!web_studio/**/*
+# Whitelist web_builder
+!web_builder
+!web_builder/**/*
 
 # BlackList libs
 addons/web/static/lib/**/*
@@ -38,15 +34,15 @@ web_enterprise/static/src/legacy/**/*
 !web_enterprise/static/src/legacy
 !web_enterprise/static/src/legacy/*.js
 
-# Ignore everything in web_studio legacy but the top level (adapters)
-web_studio/static/src/legacy/**/*
-!web_studio/static/src/legacy
-!web_studio/static/src/legacy/*.js
+# Ignore everything in web_builder legacy but the top level (adapters)
+web_builder/static/src/legacy/**/*
+!web_builder/static/src/legacy
+!web_builder/static/src/legacy/*.js
 
 # Ignore all legacy related tests
 addons/web/static/tests/**/legacy/*
 web_enterprise/static/tests/**/legacy/*
-web_studio/static/tests/**/legacy/*
+web_builder/static/tests/**/legacy/*
 
 # base_import
 # whitelist new code
@@ -120,9 +116,9 @@ addons/html_editor/static/lib/diff2html/*.js
 !website_enterprise
 !website_enterprise/**/*
 
-# Whitelist website_studio
-!website_studio
-!website_studio/**/*
+# Whitelist website_builder
+!website_builder
+!website_builder/**/*
 
 # Whitelist website_generator
 !website_generator

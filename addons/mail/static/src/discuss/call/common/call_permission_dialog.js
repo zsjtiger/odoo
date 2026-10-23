@@ -1,6 +1,6 @@
 import { Component, signal, t, useProps } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
-import { PermissionPromptDialog } from "@web/core/permission_prompt_dialog/permission_prompt_dialog";
+import { _t } from "@web/core/data/l10n/translation";
+import { PermissionPromptDialog } from "@web/core/dialogs/permission_prompt_dialog/permission_prompt_dialog";
 import { useService } from "@web/core/utils/hooks";
 
 export class CallPermissionDialog extends Component {

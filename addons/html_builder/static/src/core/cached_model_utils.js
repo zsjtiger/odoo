@@ -1,4 +1,4 @@
-import { useEnv } from "@web/owl2/utils";
+import { useEnv } from "@web/core/owl/utils";
 
 export function useCachedModel() {
     return useEnv().editor.shared.cachedModel;

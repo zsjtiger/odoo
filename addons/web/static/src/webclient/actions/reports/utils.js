@@ -1,5 +1,5 @@
-import { _t } from "@web/core/l10n/translation";
-import { download } from "@web/core/network/download";
+import { _t } from "@web/core/data/l10n/translation";
+import { download } from "@web/core/services/network/download";
 
 /**
  * Generates the report url given a report action.

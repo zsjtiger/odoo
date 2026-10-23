@@ -1,5 +1,5 @@
 import { useEffect } from "@odoo/owl";
-import { makeContext } from "@web/core/context";
+import { makeContext } from "@web/core/data/context";
 import { ListRenderer } from "@web/views/list/list_renderer";
 
 export class QuestionPageListRenderer extends ListRenderer {

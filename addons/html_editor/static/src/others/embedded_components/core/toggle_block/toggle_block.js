@@ -4,7 +4,7 @@ import {
     useEditableDescendants,
 } from "@html_editor/others/embedded_component_utils";
 import { Component, onMounted, onPatched, proxy, t, useListener, useProps } from "@odoo/owl";
-import { browser } from "@web/core/browser/browser";
+import { browser } from "@web/core/services/browser/browser";
 
 const sessionStorage = browser.sessionStorage;
 export class EmbeddedToggleBlockComponent extends Component {

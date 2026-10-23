@@ -1,7 +1,7 @@
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { kanbanView } from "@web/views/kanban/kanban_view";
 import { KanbanController } from "@web/views/kanban/kanban_controller";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
 import { useLoaderOnClick } from "./theme_preview_form";
 import { KanbanRecord } from "@web/views/kanban/kanban_record";

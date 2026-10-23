@@ -3,8 +3,8 @@ import { Component } from "@odoo/owl";
 import { CallSettingsDialog } from "@mail/discuss/call/common/call_settings";
 import { DeviceSelect } from "@mail/discuss/call/common/device_select";
 
-import { isMobileOS } from "@web/core/browser/feature_detection";
-import { _t } from "@web/core/l10n/translation";
+import { isMobileOS } from "@web/core/services/browser/feature_detection";
+import { _t } from "@web/core/data/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
 export class QuickVoiceSettings extends Component {

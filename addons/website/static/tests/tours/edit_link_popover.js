@@ -1,11 +1,11 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import {
     insertSnippet,
     openLinkPopup,
     clickToolbarButton,
     waitForEditMode,
 } from "@website/js/tours/tour_utils";
-import { browser } from "@web/core/browser/browser";
+import { browser } from "@web/core/services/browser/browser";
 import { patch } from "@web/core/utils/patch";
 
 const FIRST_PARAGRAPH =

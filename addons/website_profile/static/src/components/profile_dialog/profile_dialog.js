@@ -11,17 +11,17 @@ import {
     useEffect,
     usePlugin,
 } from "@odoo/owl";
-import { Dialog } from "@web/core/dialog/dialog";
-import { localization } from "@web/core/l10n/localization";
-import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
-import { user } from "@web/core/user";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
+import { localization } from "@web/core/data/l10n/localization";
+import { _t } from "@web/core/data/l10n/translation";
+import { rpc } from "@web/core/services/network/rpc";
+import { user } from "@web/core/services/user";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { isHtmlEmpty } from "@web/core/utils/html";
 import { isEmail } from "@web/core/utils/strings";
 import { FileUploader } from "@web/views/fields/file_handler";
 import { endPos } from "@html_editor/utils/position";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
 
 export class ProfileDialog extends Component {
     static template = "website_profile.ProfileDialog";

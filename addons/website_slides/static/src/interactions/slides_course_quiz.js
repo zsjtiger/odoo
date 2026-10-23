@@ -1,11 +1,11 @@
-import { rpc } from "@web/core/network/rpc";
+import { rpc } from "@web/core/services/network/rpc";
 import { SlideQuizFinishDialog } from "@website_slides/js/public/components/slide_quiz_finish_dialog/slide_quiz_finish_dialog";
 import { Interaction } from "@web/public/interaction";
-import { registry } from "@web/core/registry";
-import { _t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/framework/registry";
+import { _t } from "@web/core/data/l10n/translation";
 import { markup } from "@odoo/owl";
-import { session } from "@web/session";
-import { user } from "@web/core/user";
+import { session } from "@web/boot/session";
+import { user } from "@web/core/services/user";
 
 export class WebsiteSlidesQuiz extends Interaction {
     static selector = ".o_wslides_js_quiz_container";
@@ -59,7 +59,7 @@ export class WebsiteSlidesQuiz extends Interaction {
     }
 
     /**
-     * Update validation box (karma, buttons)
+     * Update validation box (buttons)
      */
     async renderValidationInfo() {
         const validationEl = this.el.querySelector(".o_wslides_js_lesson_quiz_validation");
@@ -213,22 +213,9 @@ export class WebsiteSlidesQuiz extends Interaction {
         this.slide.completed = data.completed;
         this.channel.completion = data.channel_completion;
 
-        // three of the rankProgress properties are HTML messages, mark if set
-        const rankProgress = data.rankProgress;
-        if ("description" in rankProgress) {
-            rankProgress.description = markup(rankProgress.description || "");
-            rankProgress.previous_rank.motivational = markup(
-                rankProgress.previous_rank.motivational || ""
-            );
-            rankProgress.new_rank.motivational = markup(rankProgress.new_rank.motivational || "");
-        }
-
         this.slidesService.setQuiz({
             answers: data.answers,
-            karmaWon: data.quizKarmaWon,
-            karmaGain: data.quizKarmaGain,
             attemptsCount: data.quizAttemptsCount,
-            rankProgress: rankProgress,
         });
 
         if (this.slide.completed) {

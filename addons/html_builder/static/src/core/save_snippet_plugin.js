@@ -2,7 +2,7 @@ import { escapeTextNodes } from "@html_builder/utils/escaping";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { markup } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { BLOCKQUOTE_PARENT_HANDLERS } from "@html_builder/core/utils";
 
 /**

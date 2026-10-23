@@ -1,9 +1,9 @@
 import { SuggestionList } from "@html_editor/components/suggestion/suggestion_list";
 import { Plugin } from "@html_editor/plugin";
 import { isContentEditable, isTextNode } from "@html_editor/utils/dom_info";
-import { emojiLoader } from "@web/core/emoji_picker/emoji_loader";
-import { EmojiPicker } from "@web/core/emoji_picker/emoji_picker";
-import { _t } from "@web/core/l10n/translation";
+import { emojiLoader } from "@web/core/components/emoji_picker/emoji_loader";
+import { EmojiPicker } from "@web/core/components/emoji_picker/emoji_picker";
+import { _t } from "@web/core/data/l10n/translation";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { debounce } from "@web/core/utils/timing";
 import { proxy } from "@odoo/owl";

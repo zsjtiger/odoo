@@ -1,25 +1,26 @@
-import { useEnv, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
-import { location, browser } from "@web/core/browser/browser";
+import { useEnv, useLayoutEffect, useSubEnv } from "@web/core/owl/utils";
+import { location, browser } from "@web/core/services/browser/browser";
 const sessionStorage = browser.sessionStorage;
-import { AutoComplete } from "@web/core/autocomplete/autocomplete";
+import { AutoComplete } from "@web/core/components/autocomplete/autocomplete";
 import { delay } from "@web/core/utils/concurrency";
 import { getDataURLFromFile, redirect } from "@web/core/utils/urls";
 import { getCSSVariableValue } from "@html_editor/utils/formatting";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { isImageFile, svgToPNG, webpToPNG } from "@website/js/utils";
 import { escapeRegExp } from "@web/core/utils/strings";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 import { clamp } from "@web/core/utils/numbers";
-import { registry } from "@web/core/registry";
-import { rpc } from "@web/core/network/rpc";
-import { user } from "@web/core/user";
+import { registry } from "@web/core/framework/registry";
+import { rpc } from "@web/core/services/network/rpc";
+import { user } from "@web/core/services/user";
 import { mixCssColors } from "@web/core/utils/colors";
-import { router } from "@web/core/browser/router";
+import { router } from "@web/core/services/browser/router";
 import {
     Component,
     computed,
     onMounted,
+    onWillDestroy,
     onWillStart,
     proxy,
     signal,
@@ -31,7 +32,7 @@ import {
 } from "@odoo/owl";
 import { standardActionServiceProps } from "@web/webclient/actions/action_plugin";
 import { fuzzyLevenshteinLookup } from "@web/core/utils/search";
-import { isBrowserSafari } from "@web/core/browser/feature_detection";
+import { isBrowserSafari } from "@web/core/services/browser/feature_detection";
 
 export const ROUTES = {
     descriptionScreen: 1,
@@ -385,6 +386,7 @@ Return ONLY a JSON object with:
         ];
         this.state.positionings = [];
         this.state.selectedPositioning = undefined;
+        this.state.formerSelectedPositioning = undefined;
         this.state.positioningsLoading = true;
         try {
             const prompt = `${_t(
@@ -670,6 +672,17 @@ export class PaletteSelectionScreen extends Component {
         this.state = useStore();
         this.notification = useService("notification");
         this.orm = useService("orm");
+        this.recommendationCancelled = false;
+        this.typingTimeouts = [];
+        this.fullRecommendation = undefined;
+        onWillDestroy(() => {
+            // Stop pending characters from updating the shared state.
+            this.recommendationCancelled = true;
+            this.typingTimeouts.forEach(clearTimeout);
+            if (this.fullRecommendation) {
+                this.state.styleRecommendation = this.fullRecommendation;
+            }
+        });
 
         if (this.state.logo) {
             this.updatePalettes();
@@ -728,7 +741,6 @@ Return ONLY a JSON object with:
 - "reason": a short, user-friendly sentence in ${userLanguage} mentioning the business context without technical color terms or color codes, like: "For a family restaurant with a cozy positioning, I'd recommend the \\"Coral\\" palette for its warm and welcoming feel."`;
         this.state.styleRecommendation = undefined;
         let palette;
-        let reason = " ";
         try {
             const response = await rpc("/html_editor/generate_text", {
                 prompt,
@@ -738,12 +750,16 @@ Return ONLY a JSON object with:
             const parsed = match && JSON.parse(match[0]);
             palette = parsed && palettes[parsed.id];
             if (palette) {
-                reason = parsed.reason || " ";
+                this.fullRecommendation = parsed.reason || " ";
             }
         } catch {
             // Silently fail — the user can still pick manually
         }
-        this.typingAnimation(reason);
+        // The RPC may finish after the screen has been destroyed.
+        if (this.recommendationCancelled) {
+            return;
+        }
+        this.typingAnimation();
         if (palette) {
             this.state.aiRecommendedPalette = palette.name;
             if (!this.state.selectedPalette) {
@@ -752,20 +768,22 @@ Return ONLY a JSON object with:
         }
     }
 
-    typingAnimation(text) {
+    typingAnimation() {
         // Mimic ChatGPT-style typing with random delays for a less linear, more
         // natural-looking response.
         const typingSpeed = 0.5;
         this.state.styleRecommendation = "";
         let delay = 0;
-        for (const type of Array.from(text)) {
+        for (const type of Array.from(this.fullRecommendation || " ")) {
             delay += (10 + Math.random() * 70) * typingSpeed;
             if (".,;:!?".includes(type)) {
                 delay += (100 + Math.random() * 180) * typingSpeed;
             }
-            setTimeout(() => {
-                this.state.styleRecommendation += type;
-            }, delay);
+            this.typingTimeouts.push(
+                setTimeout(() => {
+                    this.state.styleRecommendation += type;
+                }, delay)
+            );
         }
     }
 
@@ -1093,7 +1111,7 @@ export class ThemeSelectionScreen extends ApplyConfiguratorScreen {
                 try {
                     const themes = await getRecommendedThemes(this.orm, this.state);
                     if (!themes.length) {
-                        themeName = "theme_default";
+                        themeName = "website_theme_default";
                     } else {
                         updateRecommendedThemes(this.state, themes);
                     }
@@ -1482,7 +1500,6 @@ export class Configurator extends Component {
 
     setup() {
         this.orm = useService("orm");
-        this.action = useService("action");
         this.website = useService("website");
 
         // Using the back button must update the router state.
@@ -1689,14 +1706,21 @@ export class Configurator extends Component {
             title: _t("Building your website."),
             bottomMessageTemplate: "website.website_loader.tour_tip",
         });
-        const redirectUrl = await this.orm.call("website", "configurator_skip");
+        await this.orm.call("website", "configurator_skip");
         this.clearStorage();
-        redirectUrl.params.path = "/website/lang/default?r=/";
-        redirectUrl.params.enable_editor = true;
         // Here the website service goToWebsite method is not used because
         // the web client needs to be reloaded after the configurator has
         // updated the website.
-        await this.action.doAction(redirectUrl);
+        const defaultLanguagePath = encodeURIComponent("/website/lang/default?r=/");
+        this.website.redirectOutFromLoader({
+            redirectAction: () => {
+                redirect(
+                    `/odoo/action-website.website_preview?website_id=${encodeURIComponent(
+                        this.websiteId
+                    )}&path=${defaultLanguagePath}&enable_editor=1`
+                );
+            },
+        });
     }
 }
 

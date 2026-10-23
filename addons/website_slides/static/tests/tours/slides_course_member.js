@@ -1,5 +1,5 @@
 import { delay } from "@web/core/utils/concurrency";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 function checkSidebarListItemIsCompleted(contains) {
     return {

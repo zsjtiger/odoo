@@ -1,6 +1,6 @@
 import { Image } from "@html_builder/core/img";
 import { Component, proxy, signal, useProps, t } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { useAutofocus } from "@web/core/utils/hooks";
 
 export class CustomInnerSnippet extends Component {

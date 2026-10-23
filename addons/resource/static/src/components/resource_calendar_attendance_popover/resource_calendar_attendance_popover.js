@@ -2,12 +2,12 @@ import { Record } from "@web/model/record";
 import { FormRenderer } from "@web/views/form/form_renderer";
 import { Component, useProps, types as t, signal } from "@odoo/owl";
 import { executeButtonCallback, useViewButtons } from "@web/views/view_button/view_button_hook";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
 import { ViewButton } from "@web/views/view_button/view_button";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { serializeDate } from "@web/core/l10n/dates";
+import { serializeDate } from "@web/core/data/l10n/dates";
 import { ResourceCalendarPlugin } from "@resource/plugins/resource_calendar_plugin";
 
 export class ResourceCalendarAttendancePopover extends Component {

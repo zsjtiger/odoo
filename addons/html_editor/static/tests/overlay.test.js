@@ -1,4 +1,4 @@
-import { OverlayPlugin } from "@web/core/overlay/overlay_plugin";
+import { OverlayPlugin } from "@web/core/components/overlay/overlay_plugin";
 import { beforeEach, expect, test, describe, getFixture } from "@odoo/hoot";
 import { setSelection } from "./_helpers/selection";
 import { click, hover, queryOne, waitFor, waitForNone } from "@odoo/hoot-dom";

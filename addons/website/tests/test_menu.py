@@ -72,7 +72,8 @@ class TestMenu(common.TransactionCase):
         # Ensure new website got a top menu
         total_menus = Menu.search_count([])
         Website.create({'name': 'new website'})
-        self.assertEqual(total_menus + 3, Menu.search_count([]), "New website's bootstraping should have duplicate default menu tree (Top/Home/Sub Default Menu)")
+        # Top menu plus a copy of each default child (Home, Sub Default Menu, and any menu installed modules add)
+        self.assertEqual(total_menus + 1 + len(default_menu.child_id), Menu.search_count([]), "New website's bootstraping should have duplicate default menu tree (Top + every default child menu)")
 
     def test_04_specific_menu_translation(self):
         IrModuleModule = self.env['ir.module.module']

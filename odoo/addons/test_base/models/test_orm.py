@@ -6,8 +6,8 @@ from odoo import api, fields, models
 from odoo.exceptions import AccessError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.tools import SQL
-from odoo.tools.float_utils import float_round
-from odoo.tools.translate import mark_as_copy
+from odoo.tools.numeric.float_utils import float_round
+from odoo.tools.text.translate import mark_as_copy
 
 from odoo.addons.base.models.res_company import company_default_for
 

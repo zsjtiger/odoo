@@ -19,7 +19,7 @@ import {
 } from "@html_editor/others/embedded_components/core/toggle_block/toggle_block";
 import { onMounted } from "@odoo/owl";
 import { animationFrame, press, queryOne, tick, waitFor } from "@odoo/hoot-dom";
-import { browser } from "@web/core/browser/browser";
+import { browser } from "@web/core/services/browser/browser";
 import { EmbeddedComponentPlugin } from "@html_editor/others/embedded_component_plugin";
 import { ToggleBlockPlugin } from "@html_editor/others/embedded_components/plugins/toggle_block_plugin/toggle_block_plugin";
 import { parseHTML } from "@html_editor/utils/html";

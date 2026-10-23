@@ -1,4 +1,4 @@
-import { render } from "@web/owl2/utils";
+import { render } from "@web/core/owl/utils";
 import { expect, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
 import { animationFrame, mockFetch, runAllTimers } from "@odoo/hoot-mock";
@@ -17,9 +17,9 @@ import {
     webModels,
 } from "@web/../tests/web_test_helpers";
 
-import { Dialog } from "@web/core/dialog/dialog";
-import { registry } from "@web/core/registry";
-import { BooleanField } from "@web/views/fields/boolean/boolean_field";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
+import { registry } from "@web/core/framework/registry";
+import { BooleanField } from "@web/views/fields/boolean/boolean/boolean_field";
 import { FormController } from "@web/views/form/form_controller";
 import { WebClient } from "@web/webclient/webclient";
 

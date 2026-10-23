@@ -768,6 +768,34 @@ class TestCustomFields(TestCommonCustomFields):
         with self.assertRaises(ValidationError):
             field.relation = 'foo'
 
+    def test_depends_on(self):
+        """ a custom many2one can depend on another field of the model """
+        self.create_field('x_country', field_type='many2one', relation='res.country')
+        city = self.create_field(
+            'x_city', field_type='many2one', relation='res.country.state',
+            depends_on='x_country',
+            domain="[('country_id', '=', x_country)] if x_country else []",
+        )
+        self.assertEqual(city.depends_on, 'x_country')
+        # the domain references a field of the record: it is only applied client-side
+        description = self.env[self.MODEL].fields_get(['x_city'], attributes=['depends_on', 'domain'])
+        self.assertEqual(description['x_city']['depends_on'], 'x_country')
+        self.assertIsInstance(description['x_city']['domain'], str)
+
+        # the dependency must be a field of the model, and it cannot be the field itself
+        with self.assertRaises(ValidationError):
+            city.depends_on = 'x_missing'
+        with self.assertRaises(ValidationError):
+            city.depends_on = 'x_city'
+
+        # only a many2one can depend on another field
+        with self.assertRaises(ValidationError):
+            self.create_field('x_name', depends_on='x_country')
+
+        city.depends_on = False
+        description = self.env[self.MODEL].fields_get(['x_city'], attributes=['depends_on'])
+        self.assertFalse(description['x_city'].get('depends_on'))
+
     def test_selection(self):
         """ custom selection field """
         Model = self.env[self.MODEL]

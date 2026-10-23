@@ -383,7 +383,7 @@ export class DomObserverPlugin extends Plugin {
     stagePendingMutations(mutations = this.observer.takeRecords()) {
         const serializedMutations = this.flush(mutations);
         if (serializedMutations.length) {
-            // TODO modify `handleMutations` of web_studio to handle `undoOperation`.
+            // TODO modify `handleMutations` of web_builder to handle `undoOperation`.
             this.trigger("on_pending_mutations_staged_handlers", serializedMutations);
             // Process potential new mutations caused by the handlers.
             this.flush();

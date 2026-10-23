@@ -1,0 +1,501 @@
+// 流程设计器: 左侧节点面板, 中间画布 (节点与连线), 右侧属性面板
+// 颜色按节点类别区分: 审批(青)、网关(琥珀)、自动任务(紫/蓝)、事件(绿/红)、子流程(蓝灰)
+
+$wf-ink: #2d3a47;
+$wf-muted: #6b7885;
+$wf-line: #e4e8ec;
+$wf-surface: #ffffff;
+$wf-canvas: #f6f7f9;
+$wf-accent: #714b67;
+$wf-approval: #0f9a96;
+$wf-gateway: #d28a12;
+$wf-auto: #5b5fd6;
+$wf-start: #2e9d5b;
+$wf-end: #c4483b;
+$wf-subprocess: #3d6b8e;
+$wf-shadow: 0 1px 2px rgba(20, 30, 40, 0.08), 0 2px 6px rgba(20, 30, 40, 0.06);
+
+.o_wf_designer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: $wf-canvas;
+    color: $wf-ink;
+}
+
+.o_wf_designer_toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: $wf-surface;
+    border-bottom: 1px solid $wf-line;
+    box-shadow: 0 1px 3px rgba(20, 30, 40, 0.05);
+
+    .o_wf_designer_title {
+        flex: 1;
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: 0.1px;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+        &::before {
+            content: "";
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            margin-right: 8px;
+            border-radius: 50%;
+            background: $wf-approval;
+            vertical-align: middle;
+        }
+    }
+
+    .btn {
+        border-radius: 6px;
+        padding: 4px 12px;
+        font-size: 13px;
+    }
+}
+
+.o_wf_designer_body {
+    display: flex;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.o_wf_palette {
+    flex: 0 0 176px;
+    padding: 14px 12px;
+    overflow-y: auto;
+    background: $wf-surface;
+    border-right: 1px solid $wf-line;
+}
+
+.o_wf_palette_title,
+.o_wf_properties_title {
+    margin-bottom: 10px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: $wf-muted;
+}
+
+.o_wf_palette_item {
+    position: relative;
+    margin-bottom: 8px;
+    padding: 8px 10px 8px 14px;
+    border: 1px solid $wf-line;
+    border-radius: 8px;
+    background: $wf-surface;
+    box-shadow: $wf-shadow;
+    font-size: 13px;
+    cursor: grab;
+    user-select: none;
+    transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+
+    // 左侧色条表示类别
+    &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 6px;
+        bottom: 6px;
+        width: 3px;
+        border-radius: 0 3px 3px 0;
+        background: $wf-muted;
+    }
+
+    &:hover {
+        transform: translateY(-1px);
+        border-color: #c9d1d9;
+        box-shadow: 0 4px 10px rgba(20, 30, 40, 0.12);
+    }
+
+    &:active {
+        cursor: grabbing;
+    }
+
+    &.o_wf_node_approve_execution,
+    &.o_wf_node_group_approve_execution_or,
+    &.o_wf_node_group_approve_execution_and {
+        &::before { background: $wf-approval; }
+    }
+
+    &.o_wf_node_parallel,
+    &.o_wf_node_exclusive,
+    &.o_wf_node_inclusive,
+    &.o_wf_node_event_based {
+        &::before { background: $wf-gateway; }
+    }
+
+    &.o_wf_node_service,
+    &.o_wf_node_script,
+    &.o_wf_node_business_rule,
+    &.o_wf_node_send_message,
+    &.o_wf_node_receive_message,
+    &.o_wf_node_call_activity {
+        &::before { background: $wf-auto; }
+    }
+
+    &.o_wf_node_start,
+    &.o_wf_node_timer,
+    &.o_wf_node_boundary_timer,
+    &.o_wf_node_throw_event {
+        &::before { background: $wf-start; }
+    }
+
+    &.o_wf_node_end {
+        &::before { background: $wf-end; }
+    }
+
+    &.o_wf_node_subprocess {
+        &::before { background: $wf-subprocess; }
+    }
+}
+
+.o_wf_palette_hint,
+.o_wf_properties_hint {
+    margin-top: 14px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: $wf-muted;
+}
+
+.o_wf_canvas {
+    position: relative;
+    flex: 1 1 auto;
+    overflow: auto;
+    background-color: #fff;
+    background-image: radial-gradient(#d9dee4 1px, transparent 1px);
+    background-size: 22px 22px;
+}
+
+.o_wf_edges {
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: visible;
+    pointer-events: none;
+
+    .o_wf_flow {
+        fill: none;
+        stroke: #8794a1;
+        stroke-width: 1.8;
+        stroke-linejoin: round;
+        pointer-events: none;
+
+        &.is_selected {
+            stroke: $wf-accent;
+            stroke-width: 2.6;
+        }
+    }
+
+    .o_wf_flow_temp {
+        stroke: $wf-approval;
+        stroke-dasharray: 6 4;
+    }
+
+    .o_wf_flow_hit {
+        fill: none;
+        stroke: transparent;
+        stroke-width: 14;
+        pointer-events: stroke;
+        cursor: pointer;
+    }
+}
+
+.o_wf_node {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: 6px 10px;
+    border: 1.5px solid #8794a1;
+    border-radius: 10px;
+    background: $wf-surface;
+    box-shadow: $wf-shadow;
+    font-size: 13px;
+    font-weight: 500;
+    text-align: center;
+    color: $wf-ink;
+    cursor: move;
+    user-select: none;
+    transition: box-shadow 0.15s ease, border-color 0.15s ease;
+
+    &:hover {
+        box-shadow: 0 4px 12px rgba(20, 30, 40, 0.14);
+    }
+
+    &.is_selected {
+        border-color: $wf-accent;
+        box-shadow: 0 0 0 3px rgba(113, 75, 103, 0.22), 0 4px 12px rgba(20, 30, 40, 0.12);
+    }
+
+    // 审批与任务: 白底、类别色边框
+    &.o_wf_node_approve_execution,
+    &.o_wf_node_group_approve_execution_or,
+    &.o_wf_node_group_approve_execution_and {
+        border-color: $wf-approval;
+        border-top-width: 4px;
+        background: #f3fbfa;
+    }
+
+    &.o_wf_node_service,
+    &.o_wf_node_script,
+    &.o_wf_node_business_rule,
+    &.o_wf_node_send_message,
+    &.o_wf_node_receive_message,
+    &.o_wf_node_call_activity {
+        border-color: $wf-auto;
+        background: #f6f5ff;
+    }
+
+    &.o_wf_node_subprocess {
+        background: #f7f9fb;
+        border-style: dashed;
+        border-color: $wf-subprocess;
+        font-weight: 600;
+    }
+
+    // 开始、结束、事件: 圆形
+    &.o_wf_node_start,
+    &.o_wf_node_end,
+    &.o_wf_node_timer,
+    &.o_wf_node_boundary_timer,
+    &.o_wf_node_throw_event {
+        border-radius: 50%;
+        padding: 0;
+        font-size: 11px;
+    }
+
+    &.o_wf_node_start {
+        border-color: $wf-start;
+        border-width: 3px;
+        background: #f1faf5;
+    }
+
+    &.o_wf_node_end {
+        border-color: $wf-end;
+        border-width: 4px;
+        background: #fdf3f2;
+    }
+
+    &.o_wf_node_throw_event {
+        border-color: $wf-start;
+        border-width: 3px;
+    }
+
+    // 定时器与开始、结束是小圆: 名称放在圆的下方, 不撑开圆
+    &.o_wf_node_timer .o_wf_node_label,
+    &.o_wf_node_boundary_timer .o_wf_node_label,
+    &.o_wf_node_start .o_wf_node_label,
+    &.o_wf_node_end .o_wf_node_label {
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        margin-top: 4px;
+        padding: 1px 6px;
+        border-radius: 4px;
+        background: rgba(255, 255, 255, 0.9);
+        font-size: 12px;
+        color: $wf-muted;
+        white-space: nowrap;
+        overflow: visible;
+    }
+
+    &.o_wf_node_timer,
+    &.o_wf_node_boundary_timer {
+        border-color: $wf-start;
+        background: #f1faf5;
+    }
+
+    // 网关: 菱形
+    &.o_wf_node_parallel,
+    &.o_wf_node_exclusive,
+    &.o_wf_node_inclusive,
+    &.o_wf_node_event_based {
+        border-radius: 5px;
+        transform: rotate(45deg);
+        font-size: 0;
+        background: #fff9ec;
+        border-color: $wf-gateway;
+        border-width: 2px;
+
+        .o_wf_node_label {
+            transform: rotate(-45deg);
+        }
+    }
+
+    .o_wf_node_label {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+        line-height: 1.25;
+    }
+
+    .o_wf_port {
+        position: absolute;
+        top: 50%;
+        right: -8px;
+        width: 14px;
+        height: 14px;
+        margin-top: -7px;
+        border: 2px solid $wf-muted;
+        border-radius: 50%;
+        background: $wf-surface;
+        cursor: crosshair;
+        transition: transform 0.12s ease, border-color 0.12s ease, background 0.12s ease;
+
+        &:hover {
+            transform: scale(1.25);
+            border-color: $wf-approval;
+            background: #e6f6f5;
+        }
+    }
+}
+
+.o_wf_properties {
+    flex: 0 0 280px;
+    padding: 16px 14px;
+    overflow-y: auto;
+    background: $wf-surface;
+    border-left: 1px solid $wf-line;
+
+    .o_wf_properties_title {
+        padding-bottom: 10px;
+        margin-bottom: 14px;
+        border-bottom: 1px solid $wf-line;
+        font-size: 14px;
+        letter-spacing: 0;
+        text-transform: none;
+        color: $wf-ink;
+    }
+
+    .o_wf_field {
+        display: block;
+        margin-bottom: 12px;
+
+        span {
+            display: block;
+            margin-bottom: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            color: $wf-muted;
+        }
+
+        .form-control,
+        .form-select {
+            border-radius: 6px;
+            font-size: 13px;
+            border-color: #d3d9df;
+
+            &:focus {
+                border-color: $wf-approval;
+                box-shadow: 0 0 0 3px rgba(15, 154, 150, 0.15);
+            }
+        }
+    }
+
+    .o_wf_users {
+        max-height: 240px;
+        overflow-y: auto;
+        margin-bottom: 12px;
+        border: 1px solid $wf-line;
+        border-radius: 6px;
+        padding: 6px;
+        background: #fbfcfd;
+    }
+
+    .o_wf_user {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 3px 4px;
+        border-radius: 4px;
+        font-size: 13px;
+
+        &:hover {
+            background: #eef2f5;
+        }
+    }
+}
+
+.o_wf_breadcrumb {
+    color: $wf-muted;
+    font-size: 13px;
+}
+
+.o_wf_flow.is_default {
+    stroke-dasharray: 2 4;
+}
+
+.o_wf_flow_label {
+    position: absolute;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: $wf-surface;
+    border: 1px solid #d3d9df;
+    box-shadow: $wf-shadow;
+    font-size: 12px;
+    color: $wf-ink;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+.o_wf_params {
+    margin-bottom: 12px;
+    padding: 8px;
+    border-radius: 6px;
+    background: #fbfcfd;
+    border: 1px solid $wf-line;
+
+    .o_wf_param {
+        display: grid;
+        grid-template-columns: 1fr 2fr auto;
+        gap: 4px;
+        margin-bottom: 6px;
+    }
+}
+
+.o_wf_check {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 12px;
+    font-size: 13px;
+}
+
+// 画布右键菜单: 整理布局, 验证
+.o_wf_context_menu {
+    position: absolute;
+    z-index: 20;
+    min-width: 180px;
+    padding: 4px;
+    border: 1px solid $wf-line;
+    border-radius: 8px;
+    background: $wf-surface;
+    box-shadow: 0 8px 24px rgba(20, 30, 40, 0.16);
+}
+
+.o_wf_context_item {
+    display: block;
+    width: 100%;
+    padding: 6px 10px;
+    border: 0;
+    border-radius: 6px;
+    background: none;
+    font-size: 13px;
+    text-align: left;
+    color: $wf-ink;
+
+    &:hover {
+        background: #eef2f5;
+    }
+}

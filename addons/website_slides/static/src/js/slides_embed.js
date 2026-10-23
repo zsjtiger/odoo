@@ -1,5 +1,5 @@
 import { Interaction } from "@web/public/interaction";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { SlideShareDialog } from "../js/public/components/slide_share_dialog/slide_share_dialog";
 import { Mutex } from "@web/core/utils/concurrency";
 

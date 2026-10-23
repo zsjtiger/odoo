@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- 自定义相关字段: 明细(O)可以编辑, 通过多对一读取的字段(M)只读 -->
+    <record id="mobile_demo_line_custom_item_name" model="mobile.custom.field">
+        <field name="name">Item name</field>
+        <field name="model_id" ref="model_mobile_demo_line"/>
+        <field name="path">item_id.name</field>
+        <field name="list_view" eval="True"/>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="mobile_demo_partner_a" model="res.partner">
+        <field name="name">Demo Partner Alpha</field>
+    </record>
+    <record id="mobile_demo_partner_b" model="res.partner">
+        <field name="name">Demo Partner Beta</field>
+    </record>
+    <record id="mobile_demo_partner_c" model="res.partner">
+        <field name="name">Demo Partner Delta</field>
+    </record>
+
+    <record id="mobile_demo_tag_vip" model="mobile.demo.tag">
+        <field name="name">VIP</field>
+        <field name="color">1</field>
+    </record>
+    <record id="mobile_demo_tag_followup" model="mobile.demo.tag">
+        <field name="name">Follow-up</field>
+        <field name="color">4</field>
+    </record>
+    <record id="mobile_demo_tag_internal" model="mobile.demo.tag">
+        <field name="name">Internal</field>
+        <field name="color">7</field>
+    </record>
+
+    <!-- 层级数据: 省 > 市 > 区 -->
+    <record id="mobile_demo_region_bj" model="mobile.demo.region">
+        <field name="name">北京市</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="mobile_demo_region_bj_city" model="mobile.demo.region">
+        <field name="name">北京市</field>
+        <field name="sequence">10</field>
+        <field name="parent_id" ref="mobile_demo_region_bj"/>
+    </record>
+
+    <record id="mobile_demo_region_bj_dc" model="mobile.demo.region">
+        <field name="name">东城区</field>
+        <field name="sequence">10</field>
+        <field name="parent_id" ref="mobile_demo_region_bj_city"/>
+    </record>
+
+    <record id="mobile_demo_region_bj_xc" model="mobile.demo.region">
+        <field name="name">西城区</field>
+        <field name="sequence">20</field>
+        <field name="parent_id" ref="mobile_demo_region_bj_city"/>
+    </record>
+
+    <record id="mobile_demo_region_gd" model="mobile.demo.region">
+        <field name="name">广东省</field>
+        <field name="sequence">20</field>
+    </record>
+
+    <record id="mobile_demo_region_gz" model="mobile.demo.region">
+        <field name="name">广州市</field>
+        <field name="sequence">10</field>
+        <field name="parent_id" ref="mobile_demo_region_gd"/>
+    </record>
+
+    <record id="mobile_demo_region_gz_th" model="mobile.demo.region">
+        <field name="name">天河区</field>
+        <field name="sequence">10</field>
+        <field name="parent_id" ref="mobile_demo_region_gz"/>
+    </record>
+
+    <record id="mobile_demo_region_gz_yx" model="mobile.demo.region">
+        <field name="name">越秀区</field>
+        <field name="sequence">20</field>
+        <field name="parent_id" ref="mobile_demo_region_gz"/>
+    </record>
+
+    <record id="mobile_demo_region_zj" model="mobile.demo.region">
+        <field name="name">浙江省</field>
+        <field name="sequence">30</field>
+    </record>
+
+    <record id="mobile_demo_region_hz" model="mobile.demo.region">
+        <field name="name">杭州市</field>
+        <field name="sequence">10</field>
+        <field name="parent_id" ref="mobile_demo_region_zj"/>
+    </record>
+
+    <record id="mobile_demo_region_hz_xh" model="mobile.demo.region">
+        <field name="name">西湖区</field>
+        <field name="sequence">10</field>
+        <field name="parent_id" ref="mobile_demo_region_hz"/>
+    </record>
+
+    <record id="mobile_demo_region_hz_sc" model="mobile.demo.region">
+        <field name="name">上城区</field>
+        <field name="sequence">20</field>
+        <field name="parent_id" ref="mobile_demo_region_hz"/>
+    </record>
+
+    <record id="mobile_demo_item_1" model="mobile.demo.item">
+        <field name="name">Alpha visit</field>
+        <field name="sequence">10</field>
+        <field name="state">done</field>
+        <field name="priority">2</field>
+        <field name="visit_type">urgent</field>
+        <field name="is_urgent">True</field>
+        <field name="urgent_reason">Patient reported chest pain</field>
+        <field name="note_required">Checked with the on-call doctor</field>
+        <field name="progress">100</field>
+        <field name="percentage">0.9</field>
+        <field name="qty">3</field>
+        <field name="duration">1.5</field>
+        <field name="price">1200</field>
+        <field name="date">2024-11-28</field>
+        <field name="visit_datetime">2024-11-28 02:30:00</field>
+        <field name="email">alpha@example.com</field>
+        <field name="phone">+86 10 1234 5678</field>
+        <field name="website">https://www.odoo.com</field>
+        <field name="secret">hidden-alpha</field>
+        <field name="image">iVBORw0KGgoAAAANSUhEUgAAAUAAAACgCAIAAADywSLLAAADZUlEQVR4nO3dy04bQRBA0Tz8nyzyW0EK/8kiCyREJBYInOm63efsTaolX9Vgh5nvP//8/gY0/Vg9APB5AoYwAUOYgCFMwBAmYAgTMIQJGMIEDGEChjABQ5iAIUzAECZgCBMwhAkYwgQMYQKGMAFD2O0rL35++HWvOeBkt6fHz73QBoYwAUOYgCFMwBAmYAj70qfQ7/y4z36YBue449c3NjCECRjCBAxhAoYwAUOYgCFMwBAmYAgTMIQJGMIEDGEChjABQ5iAIUzAECZgCBMwhAkYwu58Sx3W+uC9Wtz5aBsCzvvEDZbevkTMaQKuuteN0V5/jpKLBBzz/55HpeQiAWdc9ii5l39IxgkCDljyFEgZJ/gaabq1z3D1BNnhbOC5hsRjFU9mAw81pN5X0+bhhYAnmlnLzKkO5xJ6luGRuJyexgYeZHi9rypznkDAU7SqaE27MQGPUOyhOPN+BAxhAl6vu8q6k29DwIvVG6jPXyfglfZ49+9xiigBQ5iAl9lpce10lhYBr7HfO36/EyUIGMIEvMCuy2rXc00mYAgT8NX2XlN7n24gAUOYgCFMwJc64QrzhDPOIWAIEzCECfg651xbnnPS5QQMYQKGMAFDmIAvctqvhaeddxUBQ5iAIUzAECZgCBMwhAkYwgQMYQKGMAFDmIAhTMAQJmAIE/BFbk+Pq0e41GnnXUXAECZgCBMwhAn4Ouf8WnjOSZcTMIQJGMIEfKkTri1POOMcAoYwAUOYgK+29xXm3qcbSMAQJuAFdl1Tu55rMgFDmIDX2G9Z7XeiBAEvs9M7fqeztAgYwgS80h6La49TRAl4sfq7vz5/nYDX6zbQnXwbAoYwAY9QXGXFmfcj4ClaPbSm3ZiAB6lUUZnzBLfVA/CPlzaeH36tHuR90p3GBp5oZiczpzqcgIeaVsu0eXjhEnquIZfT0p3MBp5ubT/qHc4GDliyiqWbIOCMyzKWboiAY17runvJui0ScNW9StZtmoDz3hb4wZhFuw0Bb0WZp/E1EoQJGMIEDGEChjABQ5iAIUzAECZgCLvzf+RY/sercBQbGMIEDGEChjABQ5iAIexLn0L74zVYywaGMAFDmIAhTMAQJmAIEzCECRjCBAxhAoYwAUOYgCFMwBAmYAgTMIQJGMIEDGEChjABQ9hfpwWu6UMtLc0AAAAASUVORK5CYII=</field>
+        <field name="description">First demo record, marked done and urgent.</field>
+        <field name="notes">&lt;p&gt;Rich text with &lt;b&gt;bold&lt;/b&gt; and a &lt;a href="https://www.odoo.com"&gt;link&lt;/a&gt;.&lt;/p&gt;</field>
+        <field name="payload" eval="{'source': 'demo', 'rank': 1, 'tags': ['a', 'b']}"/>
+        <field name="partner_id" ref="mobile_demo_partner_a"/>
+        <field name="region_id" ref="mobile_demo_region_bj_dc"/>
+        <field name="keyinfo_ids" eval="[(0, 0, {'product': '测试', 'key_info': 'efficacy', 'feedback': 'positive'}), (0, 0, {'product': '鼓翘颗粒', 'key_info': 'safety', 'feedback': 'neutral'})]"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="tag_ids" eval="[(6, 0, [ref('mobile_demo_tag_vip'), ref('mobile_demo_tag_followup')])]"/>
+        <field name="line_ids" eval="[(0, 0, {'name': 'Consultation', 'quantity': 1, 'unit_price': 300}), (0, 0, {'name': 'Medicine', 'quantity': 2, 'unit_price': 450})]"/>
+    </record>
+
+    <record id="mobile_demo_item_2" model="mobile.demo.item">
+        <field name="name">Beta follow-up</field>
+        <field name="sequence">20</field>
+        <field name="state">confirmed</field>
+        <field name="priority">1</field>
+        <field name="progress">40</field>
+        <field name="percentage">0.4</field>
+        <field name="qty">1</field>
+        <field name="duration">0.5</field>
+        <field name="price">250</field>
+        <field name="date">2024-11-29</field>
+        <field name="email">beta@example.com</field>
+        <field name="phone">+86 21 5550 1000</field>
+        <field name="color">#e5484d</field>
+        <field name="partner_id" ref="mobile_demo_partner_b"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="tag_ids" eval="[(6, 0, [ref('mobile_demo_tag_followup')])]"/>
+        <field name="line_ids" eval="[(0, 0, {'name': 'Follow-up call', 'quantity': 1, 'unit_price': 250})]"/>
+    </record>
+
+    <record id="mobile_demo_item_3" model="mobile.demo.item">
+        <field name="name">Gamma internal review</field>
+        <field name="sequence">30</field>
+        <field name="state">draft</field>
+        <field name="priority">0</field>
+        <field name="progress">0</field>
+        <field name="percentage">0</field>
+        <field name="qty">5</field>
+        <field name="duration">2</field>
+        <field name="price">80</field>
+        <field name="date">2024-12-01</field>
+        <field name="tag_ids" eval="[(6, 0, [ref('mobile_demo_tag_internal')])]"/>
+    </record>
+
+    <record id="mobile_demo_item_4" model="mobile.demo.item">
+        <field name="name">Delta cancelled</field>
+        <field name="sequence">40</field>
+        <field name="state">cancel</field>
+        <field name="active">True</field>
+        <field name="progress">15</field>
+        <field name="percentage">0.15</field>
+        <field name="date">2024-12-03</field>
+        <field name="partner_id" ref="mobile_demo_partner_c"/>
+    </record>
+</odoo>

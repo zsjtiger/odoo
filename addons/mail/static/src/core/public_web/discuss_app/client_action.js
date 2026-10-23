@@ -3,9 +3,9 @@ import { propComputed } from "@mail/utils/common/hooks";
 
 import { Component, onMounted, onWillUnmount, t, useOnChange } from "@odoo/owl";
 
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
-import { router } from "@web/core/browser/router";
+import { router } from "@web/core/services/browser/router";
 
 export class DiscussClientAction extends Component {
     static components = { Discuss };

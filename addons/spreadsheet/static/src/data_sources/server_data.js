@@ -1,6 +1,6 @@
 // @ts-check
 
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { EvaluationError } from "@odoo/o-spreadsheet";
 import { LoadingDataError, isLoadingError } from "../o_spreadsheet/errors";
 
@@ -94,12 +94,12 @@ class ListRequestBatch {
 
 export class ServerData {
     /**
-     * @param {import("@web/core/orm_plugin").ORM} orm
+     * @param {import("@web/core/services/orm_plugin").ORM} orm
      * @param {object} params
      * @param {(promise: Promise<any>) => void} [params.whenDataStartLoading]
      */
     constructor(orm, { whenDataStartLoading }) {
-        /** @type {import("@web/core/orm_plugin").ORM} */
+        /** @type {import("@web/core/services/orm_plugin").ORM} */
         this.orm = orm;
         /** @type {(promise: Promise<any>) => void} */
         this.startLoadingCallback = whenDataStartLoading ?? (() => {});

@@ -1,5 +1,5 @@
-import { Dialog } from "@web/core/dialog/dialog";
-import { Notebook } from "@web/core/notebook/notebook";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
+import { Notebook } from "@web/core/components/notebook/notebook";
 
 import { Component, signal, t, useProps } from "@odoo/owl";
 

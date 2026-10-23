@@ -18,12 +18,12 @@ import {
     removeHtmlComments,
 } from "@mail/utils/common/html";
 
-import { browser } from "@web/core/browser/browser";
-import { router } from "@web/core/browser/router";
-import { deserializeDateTime } from "@web/core/l10n/dates";
-import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
-import { user } from "@web/core/user";
+import { browser } from "@web/core/services/browser/browser";
+import { router } from "@web/core/services/browser/router";
+import { deserializeDateTime } from "@web/core/data/l10n/dates";
+import { _t } from "@web/core/data/l10n/translation";
+import { rpc } from "@web/core/services/network/rpc";
+import { user } from "@web/core/services/user";
 import {
     createDocumentFragmentFromContent,
     createElementWithContent,
@@ -33,7 +33,7 @@ import { renderToElement } from "@web/core/utils/render";
 import { url } from "@web/core/utils/urls";
 
 import { markup } from "@odoo/owl";
-import { emojiLoader } from "@web/core/emoji_picker/emoji_loader";
+import { emojiLoader } from "@web/core/components/emoji_picker/emoji_loader";
 import { discussComponentRegistry } from "./discuss_component_registry";
 
 const { DateTime } = luxon;
@@ -756,7 +756,7 @@ export class Message extends Record {
 
     /**
      * @param {Object} owner
-     * @param {import("@web/env").OdooEnv} owner.env
+     * @param {import("@web/boot/env").OdooEnv} owner.env
      */
     onShowDeleteConfirm(owner) {
         this.remove({ removeFromThread: this.shouldHideFromMessageListOnDelete(owner.env) });
@@ -878,7 +878,7 @@ export class Message extends Record {
         await this.store.fetchStoreData("add_bookmark", { message_id: this.id });
     }
 
-    /** @param {import("@web/env").OdooEnv} env */
+    /** @param {import("@web/boot/env").OdooEnv} env */
     async removeBookmark(env) {
         await this.store.fetchStoreData("remove_bookmark", { message_id: this.id });
         if (!env.inMessagingMenu) {

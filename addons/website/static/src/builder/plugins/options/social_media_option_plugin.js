@@ -1,7 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { ICON_SELECTOR } from "@html_editor/utils/dom_info";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
@@ -219,15 +219,6 @@ export class SocialMediaOptionPlugin extends Plugin {
     }
 
     normalize(root) {
-        // Add https:// if needed, to the links from dom
-        for (const element of selectElements(root, ".s_social_media > a[href]")) {
-            const value = element.attributes.href.value;
-            const newHref = this.addHttpsIfNeeded(value);
-            if (value !== newHref && value !== "#") {
-                element.href = newHref;
-            }
-        }
-
         // ensure one '\n' between each element + before and after
         for (const element of selectElements(root, ".s_social_media > *, .s_share > *")) {
             if (element.nextSibling?.nodeType === Node.TEXT_NODE) {

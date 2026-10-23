@@ -1,6 +1,6 @@
 import { clickOnExtraMenuItem, clickOnSave } from "@website/js/tours/tour_utils";
-import { translationIsReady } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { translationIsReady } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 
 registry.category("web_tour.tours").add("translate_menu_name", {
     steps: () => [

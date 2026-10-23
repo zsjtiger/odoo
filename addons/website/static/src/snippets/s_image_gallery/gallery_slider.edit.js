@@ -1,5 +1,5 @@
 import { GallerySlider } from "./gallery_slider";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 /**
  * This interaction is kept for compatibility with snippets dropped before 18.0.

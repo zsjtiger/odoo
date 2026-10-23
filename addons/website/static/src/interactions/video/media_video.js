@@ -1,7 +1,7 @@
 import { Interaction } from "@web/public/interaction";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { setupAutoplay, triggerAutoplay } from "@website/utils/videos";
 import { generateVideoPlayer } from "@website/js/content/generate_video_iframe";
 

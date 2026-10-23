@@ -1,7 +1,7 @@
 import { WebsiteSlidesCommon } from "@website_slides/interactions/slides_course_common";
 import { redirect } from "@web/core/utils/urls";
-import { registry } from "@web/core/registry";
-import { _t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/framework/registry";
+import { _t } from "@web/core/data/l10n/translation";
 
 export class WebsiteSlidesNonFullscreen extends WebsiteSlidesCommon {
     static selector = ".o_wslides_lesson_main";

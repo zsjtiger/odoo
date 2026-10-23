@@ -1,0 +1,47 @@
+// 开关: 原生复选框隐藏, 由轨道与滑块展示状态
+// 开关
+.m_switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    input {
+        position: absolute;
+        opacity: 0;
+        width: 1px;
+        height: 1px;
+    }
+    .m_switch_track {
+        position: relative;
+        width: 51px;
+        height: 31px;
+        border-radius: 16px;
+        background: #e0e0e0;
+        transition: background 0.2s;
+        &::after {
+            content: "";
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 27px;
+            height: 27px;
+            border-radius: 50%;
+            background: #fff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+            transition: transform 0.2s;
+        }
+    }
+    input:checked + .m_switch_track {
+        background: $theme-btn;
+        &::after {
+            transform: translateX(20px);
+        }
+    }
+    input:focus-visible + .m_switch_track {
+        outline: 2px solid $theme-btn;
+        outline-offset: 2px;
+    }
+    .m_switch_label {
+        font-size: 16px;
+    }
+}

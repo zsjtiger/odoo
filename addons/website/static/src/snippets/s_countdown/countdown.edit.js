@@ -1,6 +1,6 @@
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
-import { registry } from "@web/core/registry";
+import { getActiveHotkey } from "@web/core/services/hotkeys/hotkey_utils";
+import { registry } from "@web/core/framework/registry";
 import { Countdown } from "./countdown";
 
 const DELETION_HOTKEYS = new Set([

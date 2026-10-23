@@ -1,13 +1,13 @@
-import { FrequentEmojiPlugin } from "@web/core/emoji_picker/frequent_emoji_plugin";
+import { FrequentEmojiPlugin } from "@web/core/components/emoji_picker/frequent_emoji_plugin";
 import { Action } from "@mail/core/common/action";
 import { Component, signal, t, useListener, usePlugin, useProps } from "@odoo/owl";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
-import { emojiLoader, useLoadEmoji } from "@web/core/emoji_picker/emoji_loader";
-import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { useDropdownState } from "@web/core/components/dropdown/dropdown_hooks";
+import { emojiLoader, useLoadEmoji } from "@web/core/components/emoji_picker/emoji_loader";
+import { useEmojiPicker } from "@web/core/components/emoji_picker/emoji_picker";
 import { useService } from "@web/core/utils/hooks";
 
-/** @typedef {import("@web/core/emoji_picker/emoji_picker").EmojiPicker} EmojiPicker */
+/** @typedef {import("@web/core/components/emoji_picker/emoji_picker").EmojiPicker} EmojiPicker */
 
 export class QuickReactionMenu extends Component {
     static template = "mail.QuickReactionMenu";

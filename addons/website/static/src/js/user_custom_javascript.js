@@ -7,9 +7,9 @@
 // world !' message in a popup:
 //
 /*
-import { ConfirmationDialog } from '@web/core/confirmation_dialog/confirmation_dialog';
+import { ConfirmationDialog } from '@web/core/dialogs/confirmation_dialog/confirmation_dialog';
 import { Interaction } from "@web/public/interaction";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 class HelloWorldPopup extends Interaction {
     static selector = "#wrapwrap";

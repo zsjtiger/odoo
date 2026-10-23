@@ -1,6 +1,6 @@
-import { Domain } from "@web/core/domain";
-import { _t } from "@web/core/l10n/translation";
-import { user } from "@web/core/user";
+import { Domain } from "@web/core/data/domain";
+import { _t } from "@web/core/data/l10n/translation";
+import { user } from "@web/core/services/user";
 import { sortBy } from "@web/core/utils/arrays";
 import { KeepLast, Race } from "@web/core/utils/concurrency";
 import { addPropertyFieldDefs, Model } from "@web/model/model";

@@ -1,7 +1,7 @@
 import { asyncComputed, onWillStart, t, useScope } from "@odoo/owl";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
 import { ActionMenus, actionMenusProps } from "@web/search/action_menus/action_menus";
 
@@ -10,6 +10,7 @@ const cogMenuRegistry = registry.category("cogMenu");
 export const cogMenuProps = {
     ...actionMenusProps,
     getActiveIds: t.function().optional(),
+    hasSlotItems: t.boolean().optional(),
     context: t.object().optional(),
     resModel: t.string().optional(),
     items: t
@@ -50,7 +51,7 @@ export class CogMenu extends ActionMenus {
     }
 
     get hasItems() {
-        return this.cogItems.length || this.props.items.print?.length;
+        return this.cogItems.length || this.props.items.print?.length || this.props.hasSlotItems;
     }
 
     async _registryItems() {

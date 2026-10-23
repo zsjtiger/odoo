@@ -14,9 +14,9 @@ import {
     ThemeFontWeightOption,
 } from "./theme_font_weight_option";
 import { setBuilderCSSVariables } from "@html_builder/utils/utils_css";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { ConfirmationDialog } from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { Cache } from "@web/core/utils/cache";
 import {
     convertCSSColorToRgba,

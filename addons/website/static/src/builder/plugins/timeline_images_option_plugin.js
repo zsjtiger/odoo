@@ -1,7 +1,7 @@
 import { isElement } from "@html_editor/utils/dom_info";
 import { Plugin } from "@html_editor/plugin";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 
 export class TimelineImagesOptionPlugin extends Plugin {
     static id = "timelineImagesOption";

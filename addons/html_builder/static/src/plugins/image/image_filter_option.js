@@ -4,7 +4,7 @@ import { getMimetypeBeforeShape } from "@html_builder/utils/image";
 import { isImageSupportedForProcessing } from "@html_editor/main/media/image_post_process_plugin";
 import { isWebGLEnabled } from "@html_editor/utils/image_processing";
 import { useProps, t } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 
 export class ImageFilterOption extends BaseOptionComponent {
     static template = "html_builder.ImageFilterOption";

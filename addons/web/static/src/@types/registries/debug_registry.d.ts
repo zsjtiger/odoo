@@ -1,6 +1,6 @@
 declare module "registries" {
     import { Component } from "@odoo/owl";
-    import { OdooEnv } from "@web/env";
+    import { OdooEnv } from "@web/boot/env";
 
     interface AccessRights {
         canEditView: boolean;

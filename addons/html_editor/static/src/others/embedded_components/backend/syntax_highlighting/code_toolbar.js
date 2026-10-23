@@ -1,7 +1,7 @@
 import { Component, t, useProps } from "@odoo/owl";
-import { CopyButton } from "@web/core/copy_button/copy_button";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { CopyButton } from "@web/core/components/copy_button/copy_button";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
 
 export const LANGUAGES = {
     plaintext: "Plain Text",

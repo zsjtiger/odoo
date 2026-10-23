@@ -3,7 +3,7 @@ import { defineMailModels, start } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { markup } from "@odoo/owl";
 
-import { deserializeDateTime, serializeDateTime } from "@web/core/l10n/dates";
+import { deserializeDateTime, serializeDateTime } from "@web/core/data/l10n/dates";
 import { getService, serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");

@@ -2,10 +2,10 @@ import { toggleFn } from "@mail/utils/common/signal";
 
 import { Component, signal, t, useListener, useProps } from "@odoo/owl";
 
-import { useLayoutEffect } from "@web/owl2/utils";
-import { useNavigation } from "@web/core/navigation/navigation";
-import { usePosition } from "@web/core/position/position_hook";
-import { getFirstElementOfNode } from "@web/core/dropdown/dropdown";
+import { useLayoutEffect } from "@web/core/owl/utils";
+import { useNavigation } from "@web/core/components/navigation/navigation";
+import { usePosition } from "@web/core/components/position/position_hook";
+import { getFirstElementOfNode } from "@web/core/components/dropdown/dropdown";
 
 /**
  * CallDropdown is an alternative to the web popover for calls to make them available

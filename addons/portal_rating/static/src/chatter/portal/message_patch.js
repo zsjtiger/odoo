@@ -4,8 +4,8 @@ import { convertBrToLineBreak } from "@mail/utils/common/format";
 import { useMaybePlugin } from "@mail/utils/common/hooks";
 
 import { signal, useOnChange } from "@odoo/owl";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { rpc } from "@web/core/network/rpc";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
+import { rpc } from "@web/core/services/network/rpc";
 import { patch } from "@web/core/utils/patch";
 
 Message.components = { ...Message.components, DropdownItem };

@@ -6,7 +6,7 @@ import werkzeug
 
 from odoo import http
 from odoo.http import request
-from odoo.tools.translate import _
+from odoo.tools import _
 from odoo.tools.misc import get_lang
 from odoo.addons.rating.models.rating_data import (
     RATING_HAPPY_VALUE,

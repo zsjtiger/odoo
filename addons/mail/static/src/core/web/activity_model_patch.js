@@ -1,6 +1,6 @@
 import { Activity } from "@mail/core/common/activity_model";
-import { formatDate, formatDateTime } from "@web/core/l10n/dates";
-import { _t } from "@web/core/l10n/translation";
+import { formatDate, formatDateTime } from "@web/core/data/l10n/dates";
+import { _t } from "@web/core/data/l10n/translation";
 
 import { isEmptyBlock } from "@html_editor/utils/dom_info";
 

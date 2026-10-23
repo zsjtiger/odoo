@@ -1,7 +1,7 @@
 import { Component, types, useProps } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
-import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/many2one/many2one_field";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
+import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/relational/many2one/many2one_field";
 import { Record } from "@web/model/relational_model/record";
 
 export function getRottingDaysTitle(modelName, rotDays) {

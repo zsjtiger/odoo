@@ -1,7 +1,7 @@
 import { fadeIn, fadeOut } from "@survey/utils";
 import { Interaction } from "@web/public/interaction";
-import { registry } from "@web/core/registry";
-import { rpc } from "@web/core/network/rpc";
+import { registry } from "@web/core/framework/registry";
+import { rpc } from "@web/core/services/network/rpc";
 import { getStringColor } from "@survey/interactions/utils";
 
 export class SurveySessionLeaderboard extends Interaction {

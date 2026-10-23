@@ -1,5 +1,5 @@
 import { useService } from "@web/core/utils/hooks";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { QuickVoiceSettings } from "@mail/discuss/call/common/quick_voice_settings";
 import { patch } from "@web/core/utils/patch";
 

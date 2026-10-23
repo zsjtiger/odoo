@@ -12,7 +12,7 @@ import { MenuDataPlugin } from "@website/builder/plugins/menu_data_plugin";
 import { MenuDialog } from "@website/components/dialog/edit_menu";
 import { SavePlugin } from "@html_builder/core/save_plugin";
 import { insertText } from "@html_editor/../tests/_helpers/user_actions";
-import { browser } from "@web/core/browser/browser";
+import { browser } from "@web/core/services/browser/browser";
 
 defineWebsiteModels();
 

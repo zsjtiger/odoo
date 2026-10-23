@@ -4,8 +4,8 @@ import { Composer } from "@mail/core/common/composer";
 import { useMaybePlugin } from "@mail/utils/common/hooks";
 
 import { patch } from "@web/core/utils/patch";
-import { rpc } from "@web/core/network/rpc";
-import { isMobileOS } from "@web/core/browser/feature_detection";
+import { rpc } from "@web/core/services/network/rpc";
+import { isMobileOS } from "@web/core/services/browser/feature_detection";
 
 const MAX_STAR_RATING = 5;
 const DEFAULT_STAR_RATING = 4;

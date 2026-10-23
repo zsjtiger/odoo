@@ -1,5 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { NavbarLinkPopover } from "./navbar_link_popover/navbar_link_popover";
 import { MenuDialog, EditMenuDialog } from "@website/components/dialog/edit_menu";
 import { withSequence } from "@html_editor/utils/resource";

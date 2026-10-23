@@ -1,5 +1,5 @@
-import { registry } from "@web/core/registry";
-import { browser } from "@web/core/browser/browser";
+import { registry } from "@web/core/framework/registry";
+import { browser } from "@web/core/services/browser/browser";
 import { Interaction } from "@web/public/interaction";
 
 export class Whatsapp extends Interaction {

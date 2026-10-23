@@ -1,4 +1,4 @@
-import { useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/core/owl/utils";
 import { Composer } from "@mail/core/common/composer";
 import { Thread } from "@mail/core/common/thread";
 import { Call } from "@mail/discuss/call/common/call";
@@ -7,10 +7,10 @@ import { useMessageScrolling } from "@mail/utils/common/hooks";
 
 import { Component, onMounted, onWillUnmount, types, useProps } from "@odoo/owl";
 
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { user } from "@web/core/user";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { user } from "@web/core/services/user";
 import { useService } from "@web/core/utils/hooks";
-import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+import { useHotkey } from "@web/core/services/hotkeys/hotkey_hook";
 import { MeetingReadyBanner } from "./meeting_ready_banner";
 import { meetingMoreActionGroups, MeetingSideActions } from "./meeting_side_actions";
 import { useThreadActions } from "@mail/core/common/thread_actions";

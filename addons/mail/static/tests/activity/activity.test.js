@@ -15,8 +15,8 @@ import {
 import { hover } from "@odoo/hoot-dom";
 import { advanceTime, mockDate } from "@odoo/hoot-mock";
 import { mockService, onRpc, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
-import { browser } from "@web/core/browser/browser";
-import { deserializeDateTime, serializeDate, today } from "@web/core/l10n/dates";
+import { browser } from "@web/core/services/browser/browser";
+import { deserializeDateTime, serializeDate, today } from "@web/core/data/l10n/dates";
 import { getOrigin } from "@web/core/utils/urls";
 
 describe.current.tags("desktop");

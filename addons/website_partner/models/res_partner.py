@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, models
-from odoo.tools.translate import html_translate
+from odoo.tools import html_translate
 
 
 class ResPartner(models.Model):

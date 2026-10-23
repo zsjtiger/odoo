@@ -1,8 +1,8 @@
 import {
     deleteConfirmationMessage,
     ConfirmationDialog,
-} from "@web/core/confirmation_dialog/confirmation_dialog";
-import { _t } from "@web/core/l10n/translation";
+} from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
+import { _t } from "@web/core/data/l10n/translation";
 import { useBus, useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { Layout } from "@web/search/layout";
 import { useModelWithSampleData } from "@web/model/model";
@@ -15,13 +15,13 @@ import { SearchBar } from "@web/search/search_bar/search_bar";
 import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
 import { ViewScaleSelector } from "@web/views/view_components/view_scale_selector";
 import { CogMenu } from "@web/search/cog_menu/cog_menu";
-import { browser } from "@web/core/browser/browser";
+import { browser } from "@web/core/services/browser/browser";
 import { standardViewProps } from "@web/views/standard_view_props";
 import { MultiSelectionButtons } from "@web/views/view_components/multi_selection_buttons";
-import { getLocalYearAndWeek } from "@web/core/l10n/dates";
+import { getLocalYearAndWeek } from "@web/core/data/l10n/dates";
 
 import { Component, proxy, t, useProps } from "@odoo/owl";
-import { hasTouch, isMobileOS } from "@web/core/browser/feature_detection";
+import { hasTouch, isMobileOS } from "@web/core/services/browser/feature_detection";
 
 const { DateTime } = luxon;
 

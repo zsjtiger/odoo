@@ -31,20 +31,6 @@
             } if obj(ref('base.main_partner')).name == 'My Company' else {}" model="res.partner"/>
         </function>
 
-        <record id="user_demo" model="res.users">
-            <field name="partner_id" ref="base.partner_demo"/>
-            <field name="login">demo</field>
-            <field name="password">demo</field>
-            <field name="signature" type="html"><div>Mr Demo</div></field>
-            <field name="company_id" ref="main_company"/>
-            <field name="group_ids" eval="[Command.set([ref('base.group_user'), ref('base.group_partner_manager'), ref('base.group_allow_export')])]"/>
-            <field name="image_1920" type="bytes" file="base/static/img/user_demo-image.webp"/>
-        </record>
-
-        <record id="partner_demo" model="res.partner">
-            <field name="user_id" ref="base.user_demo"/>
-        </record>
-
         <!-- Demo User (Light) -->
         <record id="partner_light" model="res.partner">
             <field name="name">Monica Light</field>
@@ -56,20 +42,6 @@
             <field name="tz">Europe/Brussels</field>
             <field name="email">light@example.com</field>
             <field name="phone">+32-489-189-562</field>
-        </record>
-
-        <record id="user_light" model="res.users">
-            <field name="partner_id" ref="base.partner_light"/>
-            <field name="login">light</field>
-            <field name="password">light</field>
-            <field name="signature" type="html"><div>Mrs Light</div></field>
-            <field name="company_id" ref="main_company"/>
-            <field name="group_ids" eval="[Command.set([ref('base.group_user')])]"/>
-            <field name="image_1920" type="bytes" file="base/static/img/user_light-image.webp"/>
-        </record>
-
-        <record id="partner_light" model="res.partner">
-            <field name="user_id" ref="base.user_light"/>
         </record>
 
         <record model="res.partner" id="base.partner_root">
@@ -106,16 +78,6 @@
             <field name="image_1920" type="bytes" file="base/static/img/partner_demo_portal.webp"/>
             <field name="phone">(683)-556-5104</field>
         </record>
-        <record id="demo_user0" model="res.users" context="{'no_reset_password': True}">
-            <field name="partner_id" ref="partner_demo_portal"/>
-            <field name="login">portal</field>
-            <field name="password">portal</field>
-            <field name="signature" type="html"><div>Mr Demo Portal</div></field>
-            <field name="group_ids" eval="[Command.clear()]"/><!-- Avoid auto-including this user in any default group -->
-        </record>
 
-        <record id="base.group_portal" model="res.groups"><!-- Add the demo user to the portal (and therefore to the portal member group) -->
-            <field name="user_ids" eval="[Command.link(ref('demo_user0'))]"/>
-        </record>
     </data>
 </odoo>

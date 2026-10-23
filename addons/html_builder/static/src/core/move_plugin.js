@@ -1,6 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import {
     addMobileOrders,
     fillRemovedItemGap,
@@ -8,7 +8,7 @@ import {
 } from "@html_builder/utils/column_layout_utils";
 import { isElementInViewport } from "@html_builder/utils/utils";
 import { scrollTo } from "@html_builder/utils/scrolling";
-import { localization } from "@web/core/l10n/localization";
+import { localization } from "@web/core/data/l10n/localization";
 
 /**
  * @typedef {import("plugins").CSSSelector} CSSSelector

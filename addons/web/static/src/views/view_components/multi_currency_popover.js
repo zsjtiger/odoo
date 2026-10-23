@@ -1,7 +1,7 @@
 import { Component, onWillStart, proxy, t, useListener, useProps } from "@odoo/owl";
-import { getCurrency, getCurrencyRates } from "@web/core/currency";
-import { toLocaleDateString } from "@web/core/l10n/dates";
-import { user } from "@web/core/user";
+import { getCurrency, getCurrencyRates } from "@web/core/data/currency";
+import { toLocaleDateString } from "@web/core/data/l10n/dates";
+import { user } from "@web/core/services/user";
 import { useService } from "@web/core/utils/hooks";
 import { formatMonetary } from "../fields/formatters";
 

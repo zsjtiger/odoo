@@ -1,7 +1,7 @@
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { Dialog } from "@web/core/dialog/dialog";
-import { Notebook } from "@web/core/notebook/notebook";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
+import { Notebook } from "@web/core/components/notebook/notebook";
 
 import { Component, useProps, proxy, signal, t } from "@odoo/owl";
 import { TABS, renderMedia } from "./media_dialog_utils";

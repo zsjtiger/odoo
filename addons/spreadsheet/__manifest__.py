@@ -18,7 +18,7 @@
         'spreadsheet.o_spreadsheet_core': [
             'web/static/src/views/graph/graph_model.js',
             'web/static/src/views/pivot/pivot_model.js',
-            'web/static/src/polyfills/clipboard.js',
+            'web/static/src/boot/polyfills/clipboard.js',
             ('include', 'web.chartjs_lib'),
             'spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js',
             'spreadsheet/static/src/**/*.js',
@@ -37,7 +37,7 @@
             'web/static/src/model/**/*.js',
             'web/static/src/views/**/*.js',
             'web/static/src/search/**/*.js',
-            'web/static/src/core/commands/command_hook.js',
+            'web/static/src/core/services/commands/command_hook.js',
             'web/static/src/webclient/menus/menu_helpers.js',
             ('remove', 'spreadsheet/static/src/ir_ui_menu/spreadsheet_link_service.js'),
             ('remove', 'spreadsheet/static/src/chart/odoo_link/components/*'),

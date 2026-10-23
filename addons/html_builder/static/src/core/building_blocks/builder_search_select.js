@@ -8,9 +8,9 @@ import {
     useSelectableContext,
 } from "../utils";
 import { BuilderComponent } from "./builder_component";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { useBus } from "@web/core/utils/hooks";
-import { SelectMenu } from "@web/core/select_menu/select_menu";
+import { SelectMenu } from "@web/core/components/select_menu/select_menu";
 import { useSelectMenuHandler } from "./select_many2x";
 
 const CHOICES_SCHEMA = t

@@ -1,5 +1,5 @@
-import { rpc } from "@web/core/network/rpc";
-import { registry } from "@web/core/registry";
+import { rpc } from "@web/core/services/network/rpc";
+import { registry } from "@web/core/framework/registry";
 import { redirect } from "@web/core/utils/urls";
 import { Interaction } from "@web/public/interaction";
 

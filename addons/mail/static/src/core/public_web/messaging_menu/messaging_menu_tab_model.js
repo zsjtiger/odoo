@@ -1,7 +1,7 @@
 import { fields, Record } from "@mail/model/export";
 import { compareDatetime } from "@mail/utils/common/misc";
 
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 
 /**
  * @typedef {import("models").MessagingMenuTabFilter} MessagingMenuTabFilter

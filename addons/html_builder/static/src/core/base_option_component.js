@@ -1,6 +1,6 @@
 import { useDomState } from "@html_builder/core/utils";
 import { Component, onWillDestroy } from "@odoo/owl";
-import { useEnv } from "@web/owl2/utils";
+import { useEnv } from "@web/core/owl/utils";
 
 /**
  * @typedef { import("@html_editor/editor").EditorContext } EditorContext

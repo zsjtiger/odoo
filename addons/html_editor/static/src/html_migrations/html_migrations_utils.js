@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 export function htmlEditorVersions() {
     return Object.keys(registry.category("html_editor_upgrade").subRegistries).sort(

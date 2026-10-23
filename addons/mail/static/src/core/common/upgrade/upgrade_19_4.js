@@ -1,5 +1,5 @@
 import { addUpgrade } from "@mail/core/common/upgrade/upgrade_helpers";
-import { isMobileOS } from "@web/core/browser/feature_detection";
+import { isMobileOS } from "@web/core/services/browser/feature_detection";
 
 /** @typedef {import("@mail/core/common/upgrade/upgrade_helpers").UpgradeFnParam} UpgradeFnParam */
 /** @typedef {import("@mail/core/common/upgrade/upgrade_helpers").UpgradeFnReturn} UpgradeFnReturn */

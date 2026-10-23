@@ -30,15 +30,15 @@ import {
     useEffect,
     useProps,
 } from "@odoo/owl";
-import { localization } from "@web/core/l10n/localization";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { localization } from "@web/core/data/l10n/localization";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { Mutex } from "@web/core/utils/concurrency";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { useRecordObserver } from "@web/model/relational_model/utils";
-import "@web/views/fields/html/html_field";
+import "@web/views/fields/text/html/html_field";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
-import { TranslationButton } from "@web/views/fields/translation/translation";
+import { TranslationButton } from "@web/views/fields/text/translation/translation";
 
 const HTML_FIELD_METADATA_ATTRIBUTES = ["data-last-history-commits"];
 

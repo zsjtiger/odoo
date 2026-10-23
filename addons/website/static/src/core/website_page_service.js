@@ -1,6 +1,6 @@
-import { jsToPyLocale } from "@web/core/l10n/utils";
-import { registry } from "@web/core/registry";
-import { user } from "@web/core/user";
+import { jsToPyLocale } from "@web/core/data/l10n/utils/locales";
+import { registry } from "@web/core/framework/registry";
+import { user } from "@web/core/services/user";
 
 export const websitePageService = {
     start() {

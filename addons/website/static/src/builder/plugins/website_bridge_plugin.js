@@ -1,5 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 /**
  * @typedef { Object } WebsiteBridgeShared
@@ -31,11 +31,11 @@ export class WebsiteBridgePlugin extends Plugin {
         return this.moduleLoader.require(moduleName);
     }
     getRegistry() {
-        return this.getModule("@web/core/registry").registry;
+        return this.getModule("@web/core/framework/registry").registry;
     }
     get _t() {
         // To ensure terms are exported, they must use the `_t` function (avoid renaming)
-        return this.getModule("@web/core/l10n/translation")._t;
+        return this.getModule("@web/core/data/l10n/translation")._t;
     }
     getWebsiteContextLang() {
         return {
@@ -43,7 +43,7 @@ export class WebsiteBridgePlugin extends Plugin {
         };
     }
     getSession() {
-        return this.getModule("@web/session").session;
+        return this.getModule("@web/boot/session").session;
     }
     // For tests with website builder, use `loadIframeBuilderTemplates: true`
     renderToElement(template, context) {

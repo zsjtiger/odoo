@@ -1,9 +1,9 @@
 import { Interaction } from "@web/public/interaction";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
-import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { _t } from "@web/core/data/l10n/translation";
+import { rpc } from "@web/core/services/network/rpc";
+import { ConfirmationDialog } from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
 
 export class SlideArchive extends Interaction {
     static selector = ".o_wslides_js_slide_archive";

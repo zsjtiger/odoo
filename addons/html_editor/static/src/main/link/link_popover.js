@@ -1,6 +1,6 @@
 import { useCrossDocumentListener } from "../../utils/hooks";
-import { session } from "@web/session";
-import { _t } from "@web/core/l10n/translation";
+import { session } from "@web/boot/session";
+import { _t } from "@web/core/data/l10n/translation";
 import {
     Component,
     useProps,
@@ -13,10 +13,10 @@ import {
 } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { cleanZWChars, deduceURLfromText } from "./utils";
-import { CheckBox } from "@web/core/checkbox/checkbox";
+import { CheckBox } from "@web/core/components/checkbox/checkbox";
 import { isAbsoluteURLInCurrentDomain } from "@html_editor/utils/url";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
 import {
     BUTTON_SHAPES,
     BUTTON_SIZES,

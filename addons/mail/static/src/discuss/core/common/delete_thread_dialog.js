@@ -2,8 +2,8 @@ import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 
 import { Component, types, useProps } from "@odoo/owl";
 
-import { rpc } from "@web/core/network/rpc";
-import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/services/network/rpc";
+import { _t } from "@web/core/data/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
 export class DeleteThreadDialog extends Component {

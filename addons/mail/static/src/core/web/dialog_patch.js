@@ -1,4 +1,4 @@
-import { Dialog } from "@web/core/dialog/dialog";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
 import { patch } from "@web/core/utils/patch";
 
 patch(Dialog.prototype, {

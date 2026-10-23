@@ -1,21 +1,20 @@
-import { browser } from "@web/core/browser/browser";
+import { browser } from "@web/core/services/browser/browser";
 import { signal, t, useProps } from "@odoo/owl";
-import { ColorList } from "@web/core/colorlist/colorlist";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { _t } from "@web/core/l10n/translation";
+import { ColorList } from "@web/core/components/colorlist/colorlist";
+import { ConfirmationDialog } from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
+import { _t } from "@web/core/data/l10n/translation";
 import {
     CardRenderer,
     getFormattedRecord,
-    getImageSrcFromRecordInfo,
     getRawValue,
 } from "@web/views/card/card_renderer";
 import { TOUCH_SELECTION_THRESHOLD } from "@web/views/utils";
 import { KanbanCoverImageDialog } from "./kanban_cover_image_dialog";
 import { KanbanDropdownMenuWrapper } from "./kanban_dropdown_menu_wrapper";
 
-export { getFormattedRecord, getImageSrcFromRecordInfo, getRawValue };
+export { getFormattedRecord, getRawValue };
 
 // These classes determine whether a click on a record should open it.
 export const CANCEL_GLOBAL_CLICK = ["a", ".dropdown", ".oe_kanban_action", "[data-bs-toggle]"].join(

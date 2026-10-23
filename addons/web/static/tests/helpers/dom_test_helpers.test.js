@@ -2,8 +2,8 @@ import { expect, onError, test } from "@odoo/hoot";
 import { on } from "@odoo/hoot-dom";
 import { Component, signal, xml } from "@odoo/owl";
 import { contains, isSmall, mountWithCleanup } from "@web/../tests/web_test_helpers";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
 import { useDraggable } from "@web/core/utils/draggable";
 
 test("contains: all actions", async () => {

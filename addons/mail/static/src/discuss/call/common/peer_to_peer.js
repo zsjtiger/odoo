@@ -1,5 +1,5 @@
-import { rpc } from "@web/core/network/rpc";
-import { browser } from "@web/core/browser/browser";
+import { rpc } from "@web/core/services/network/rpc";
+import { browser } from "@web/core/services/browser/browser";
 
 export const STREAM_TYPE = Object.freeze({
     AUDIO: "audio",

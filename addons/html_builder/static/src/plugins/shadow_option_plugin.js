@@ -1,7 +1,7 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { ClassAction } from "@html_builder/core/core_builder_action_plugin";
 import { Plugin } from "@html_editor/plugin";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { parseBoxShadow } from "@html_builder/utils/utils_css";
 
 const shadowClass = "shadow";

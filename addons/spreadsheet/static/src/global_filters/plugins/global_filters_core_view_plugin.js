@@ -9,8 +9,8 @@
  * @typedef {import("@spreadsheet").DateDefaultValue} DateDefaultValue
  */
 
-import { Domain } from "@web/core/domain";
-import { user } from "@web/core/user";
+import { Domain } from "@web/core/data/domain";
+import { user } from "@web/core/services/user";
 
 import { helpers } from "@odoo/o-spreadsheet";
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
@@ -22,7 +22,7 @@ import {
     getDateGlobalFilterValueFromDefault,
 } from "@spreadsheet/global_filters/helpers";
 import { OdooEvaluationPlugin } from "@spreadsheet/plugins";
-import { serializeDate } from "@web/core/l10n/dates";
+import { serializeDate } from "@web/core/data/l10n/dates";
 import { getFilterCellValue, getFilterValueDomain } from "../helpers";
 const { DateTime } = luxon;
 

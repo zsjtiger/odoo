@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 registry.category("web_tour.tours").add("invite_check_channel_preview_as_logged", {
     steps: () => [

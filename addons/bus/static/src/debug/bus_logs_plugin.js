@@ -1,8 +1,8 @@
 import { Plugin, signal, useListener, usePlugin } from "@odoo/owl";
 
-import { browser } from "@web/core/browser/browser";
-import { registry } from "@web/core/registry";
-import { services } from "@web/core/services";
+import { browser } from "@web/core/services/browser/browser";
+import { registry } from "@web/core/framework/registry";
+import { services } from "@web/core/framework/services";
 import { BusPlugin } from "@bus/services/bus_plugin";
 import { WorkerPlugin } from "@bus/services/worker_plugin";
 

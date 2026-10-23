@@ -1,8 +1,8 @@
 import { Store } from "@mail/core/common/store_service";
 import { MENU_TABS } from "@mail/core/public_web/messaging_menu/messaging_menu_model";
-import { browser } from "@web/core/browser/browser";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { browser } from "@web/core/services/browser/browser";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 

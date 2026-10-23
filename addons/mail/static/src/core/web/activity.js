@@ -7,13 +7,13 @@ import { propComputed } from "@mail/utils/common/hooks";
 
 import { Component, computed, t, useProps } from "@odoo/owl";
 
-import { CopyButton } from "@web/core/copy_button/copy_button";
-import { _t } from "@web/core/l10n/translation";
-import { usePopover } from "@web/core/popover/popover_hook";
+import { CopyButton } from "@web/core/components/copy_button/copy_button";
+import { _t } from "@web/core/data/l10n/translation";
+import { usePopover } from "@web/core/components/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 import { pick } from "@web/core/utils/objects";
 import { FileUploader } from "@web/views/fields/file_handler";
-import { callPhoneNumber, getPhoneHref } from "@web/core/phone/phone_call";
+import { callPhoneNumber, getPhoneHref } from "@web/core/components/phone/phone_call";
 
 export class Activity extends Component {
     static components = { ActivityMailTemplate, CopyButton, FileUploader };

@@ -1,5 +1,6 @@
 # ruff: noqa: E402, I001, RUF067
-import odoo.init  # noqa: I001
+import odoo.core.bootstrap  # noqa: I001
+import odoo.orm  # noqa: F401
 
 # Initialize the global `request`
 import contextvars

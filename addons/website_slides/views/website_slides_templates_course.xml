@@ -184,7 +184,7 @@
                             <div class="tab-content py-4 o_wslides_tabs_content mb-4" id="courseMainTabContent">
                                 <div t-att-class="'tab-pane fade %s' % ('show active' if active_tab == 'home' else '')" id="home" role="tabpanel" aria-labelledby="home-tab">
                                     <!-- ==== Error notification ==== -->
-                                    <div t-if="access_error == 'course_content'" class="alert alert-danger alert-dismissable mb-1" role="alert">
+                                    <div t-if="access_error == 'course_content'" class="alert alert-danger alert-dismissible mb-1" role="alert">
                                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                         You need to join this course to access "<t t-out="access_error_content_name"/>".
                                     </div>
@@ -523,11 +523,6 @@
                     <div class="text-truncate me-auto">
                         <span>Asking Question</span>
                     </div>
-                    <div class="d-flex flex-row">
-                        <span class="badge fw-bold m-1 text-bg-warning">
-                            <i class="oi oi-filled oi-fw" data-icon="flag"/> 10 xp
-                        </span>
-                    </div>
                 </li>
                 <li class="o_wslides_slides_list_slide bg-white-50 border-top-0 d-flex align-items-center ps-2 py-1 pe-2">
                     <i class="oi py-2 mx-2" data-icon="help"/>
@@ -608,10 +603,6 @@
             </t>
             <span t-if="slide.is_new_slide and not channel_progress[slide.id].get('completed')" class="badge text-bg-info badge-arrow-right fw-normal m-1">
                 New
-            </span>
-            <span t-if="slide.question_ids" t-att-class="'badge fw-bold m-1 %s' % ('text-bg-success' if channel_progress[slide.id].get('completed') else 'text-bg-warning')">
-                <i class="oi oi-fw oi-filled" t-attf-data-icon="#{'check' if channel_progress[slide.id].get('completed') else 'flag'}"/>
-                <t t-out="channel_progress[slide.id].get('quiz_karma_won', 0) if channel_progress[slide.id].get('completed') else channel_progress[slide.id].get('quiz_karma_gain', 0)"/> xp
             </span>
         </div>
 

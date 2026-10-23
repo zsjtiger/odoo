@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="advanced_ui.ExpressionBuilder">
+        <div class="o_expression_builder">
+            <ExpressionGroup
+                node="this.state.tree"
+                fields="this.props.fields"
+                readonly="this.props.readonly"
+                depth="0"
+                onChange="this.notify"
+            />
+        </div>
+    </t>
+
+    <t t-name="advanced_ui.ExpressionGroup">
+        <div t-att-class="'o_expression_group' + (this.props.depth ? ' o_expression_nested' : '')">
+            <div class="o_expression_mode d-flex align-items-start gap-2">
+                <div class="flex-grow-1">
+                    <label class="form-label small mb-1">Take Action When</label>
+                    <select
+                        class="o_expression_mode_select form-select"
+                        t-att-disabled="this.props.readonly"
+                        t-on-change="(ev) => this.onModeChange(ev)"
+                    >
+                        <t t-foreach="this.modes" t-as="mode" t-key="mode.value">
+                            <option t-att-value="mode.value" t-att-selected="mode.value === this.props.node.mode" t-out="mode.label"/>
+                        </t>
+                    </select>
+                </div>
+                <button
+                    t-if="this.props.onRemove &amp;&amp; !this.props.readonly"
+                    type="button"
+                    class="o_expression_remove btn btn-link p-1"
+                    aria-label="Remove group"
+                    t-on-click="() => this.props.onRemove()"
+                >
+                    <i class="oi" data-icon="delete"/>
+                </button>
+            </div>
+
+            <!-- All conditions or any condition -->
+            <t t-if="this.props.node.mode === 'all' || this.props.node.mode === 'any'">
+                <div class="o_expression_children mt-3">
+                    <div t-if="this.hasConditions" class="o_expression_headers row small text-muted mb-1 ps-4">
+                        <div class="col-4">Resource</div>
+                        <div class="col-3">Operator</div>
+                        <div class="col-4">Value</div>
+                    </div>
+                    <t t-foreach="this.props.node.children" t-as="child" t-key="child_index">
+                        <div class="o_expression_child d-flex align-items-start gap-2 mb-2">
+                            <div class="o_expression_connector fw-bolder text-end" style="min-width: 2.5rem">
+                                <t t-if="child_index > 0" t-out="this.connectors[this.props.node.mode]"/>
+                            </div>
+                            <t t-if="child.kind === 'group'">
+                                <div class="flex-grow-1 min-w-0">
+                                    <ExpressionGroup
+                                        node="child"
+                                        fields="this.props.fields"
+                                        readonly="this.props.readonly"
+                                        depth="(this.props.depth || 0) + 1"
+                                        onChange="this.props.onChange"
+                                        onRemove="() => this.onRemoveChild(child_index)"
+                                    />
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div class="o_expression_condition flex-grow-1 row g-2">
+                                    <div class="col-4">
+                                        <select
+                                            class="o_expression_resource form-select"
+                                            t-att-disabled="this.props.readonly"
+                                            t-on-change="(ev) => this.onResourceChange(child, ev)"
+                                        >
+                                            <option value="" t-att-selected="!child.resource">Select an Option</option>
+                                            <t t-foreach="this.props.fields" t-as="field" t-key="field.name">
+                                                <option t-att-value="field.name" t-att-selected="field.name === child.resource" t-out="field.label"/>
+                                            </t>
+                                        </select>
+                                    </div>
+                                    <div class="col-3">
+                                        <select
+                                            class="o_expression_operator form-select"
+                                            t-att-disabled="this.props.readonly || !child.resource"
+                                            t-on-change="(ev) => this.onOperatorChange(child, ev)"
+                                        >
+                                            <t t-foreach="this.operatorsOf(child)" t-as="operator" t-key="operator.value">
+                                                <option t-att-value="operator.value" t-att-selected="operator.value === child.operator" t-out="operator.label"/>
+                                            </t>
+                                        </select>
+                                    </div>
+                                    <div class="col-4 o_expression_value">
+                                        <t t-if="!child.resource || !this.isValueNeeded(child)">
+                                            <input type="text" class="form-control" disabled="disabled" value=""/>
+                                        </t>
+                                        <t t-elif="this.fieldOf(child).kind === 'boolean'">
+                                            <select class="form-select" t-att-disabled="this.props.readonly" t-on-change="(ev) => this.onValueChange(child, ev)">
+                                                <option value="true" t-att-selected="child.value === 'true'">True</option>
+                                                <option value="false" t-att-selected="child.value === 'false'">False</option>
+                                            </select>
+                                        </t>
+                                        <t t-elif="this.fieldOf(child).kind === 'selection'">
+                                            <select class="form-select" t-att-disabled="this.props.readonly" t-on-change="(ev) => this.onValueChange(child, ev)">
+                                                <option value="" t-att-selected="!child.value">Select an Option</option>
+                                                <t t-foreach="this.fieldOf(child).choices" t-as="choice" t-key="choice[0]">
+                                                    <option t-att-value="choice[0]" t-att-selected="choice[0] === child.value" t-out="choice[1]"/>
+                                                </t>
+                                            </select>
+                                        </t>
+                                        <t t-else="">
+                                            <input
+                                                t-att-type="this.fieldOf(child).kind === 'number' ? 'number' : this.fieldOf(child).kind === 'date' ? 'date' : 'text'"
+                                                class="form-control"
+                                                t-att-readonly="this.props.readonly"
+                                                t-att-value="child.value"
+                                                t-on-change="(ev) => this.onValueChange(child, ev)"
+                                            />
+                                        </t>
+                                    </div>
+                                </div>
+                                <button
+                                    t-if="!this.props.readonly"
+                                    type="button"
+                                    class="o_expression_remove btn btn-link p-1"
+                                    aria-label="Remove condition"
+                                    t-on-click="() => this.onRemoveChild(child_index)"
+                                >
+                                    <i class="oi" data-icon="delete"/>
+                                </button>
+                            </t>
+                        </div>
+                    </t>
+                </div>
+                <div t-if="!this.props.readonly" class="o_expression_add d-flex gap-2 mt-2">
+                    <button type="button" class="o_expression_add_condition btn btn-outline-primary" t-on-click="this.onAddCondition">
+                        <i class="oi me-1" data-icon="add"/>Add Condition
+                    </button>
+                    <button type="button" class="o_expression_add_group btn btn-outline-primary" t-on-click="this.onAddGroup">
+                        <i class="oi me-1" data-icon="add"/>Add Group
+                    </button>
+                </div>
+            </t>
+
+            <!-- Custom logic: the children are numbered and combined by a text -->
+            <t t-elif="this.props.node.mode === 'custom'">
+                <div class="o_expression_custom mt-3">
+                    <label class="form-label small mb-1">Custom Logic</label>
+                    <input
+                        type="text"
+                        class="o_expression_custom_input form-control"
+                        placeholder="e.g. 1 AND (2 OR 3)"
+                        t-att-readonly="this.props.readonly"
+                        t-att-value="this.props.node.customLogic"
+                        t-on-change="(ev) => this.onCustomLogicChange(ev)"
+                    />
+                    <div t-if="this.customError" class="o_expression_error text-danger small mt-1" t-out="this.customError"/>
+                </div>
+                <div class="o_expression_children mt-3">
+                    <t t-foreach="this.props.node.children" t-as="child" t-key="child_index">
+                        <div class="o_expression_child d-flex align-items-start gap-2 mb-2">
+                            <div class="o_expression_index text-center fw-bolder" style="min-width: 2.5rem" t-out="child_index + 1"/>
+                            <t t-if="child.kind === 'group'">
+                                <div class="flex-grow-1 min-w-0">
+                                    <ExpressionGroup
+                                        node="child"
+                                        fields="this.props.fields"
+                                        readonly="this.props.readonly"
+                                        depth="(this.props.depth || 0) + 1"
+                                        onChange="this.props.onChange"
+                                        onRemove="() => this.onRemoveChild(child_index)"
+                                    />
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div class="o_expression_condition flex-grow-1 small text-muted pt-2" t-out="child.resource ? child.resource + ' ' + child.operator + ' ' + child.value : 'Empty condition'"/>
+                            </t>
+                        </div>
+                    </t>
+                </div>
+                <div t-if="!this.props.readonly" class="o_expression_add d-flex gap-2 mt-2">
+                    <button type="button" class="o_expression_add_condition btn btn-outline-primary" t-on-click="this.onAddCondition">
+                        <i class="oi me-1" data-icon="add"/>Add Condition
+                    </button>
+                    <button type="button" class="o_expression_add_group btn btn-outline-primary" t-on-click="this.onAddGroup">
+                        <i class="oi me-1" data-icon="add"/>Add Group
+                    </button>
+                </div>
+            </t>
+
+            <!-- Always: no criteria -->
+            <t t-elif="this.props.node.mode === 'always'">
+                <div class="o_expression_always mt-3 text-muted small">The action always runs: there is no criteria.</div>
+            </t>
+
+            <!-- Formula: a text evaluated as a whole -->
+            <t t-else="">
+                <div class="o_expression_formula mt-3">
+                    <label class="form-label small mb-1">Formula</label>
+                    <textarea
+                        class="o_expression_formula_input form-control"
+                        rows="3"
+                        t-att-readonly="this.props.readonly"
+                        t-att-value="this.props.node.formula"
+                        t-on-change="(ev) => this.onFormulaChange(ev)"
+                    />
+                </div>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="advanced_ui.ExpressionBuilderField">
+        <ExpressionBuilder
+            fields="this.fields"
+            value="this.tree"
+            readonly="this.props.readonly"
+            onChange="(tree) => this.onChange(tree)"
+        />
+    </t>
+
+</templates>

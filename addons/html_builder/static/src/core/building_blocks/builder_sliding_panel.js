@@ -1,5 +1,5 @@
 import { Component, onMounted, onWillUnmount, proxy, signal, t, useProps } from "@odoo/owl";
-import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+import { useHotkey } from "@web/core/services/hotkeys/hotkey_hook";
 import { BuilderComponent } from "./builder_component";
 import { BuilderRow } from "./builder_row";
 

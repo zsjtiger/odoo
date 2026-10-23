@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="advanced_ui.DataTable">
+        <div class="o_datatable" t-ref="this.rootRef"
+            t-att-class="{
+                'o_datatable_striped': this.props.striped,
+                'o_datatable_bordered': this.props.bordered,
+                'o_datatable_no_hover': this.props.noRowHover,
+                'o_datatable_headless': this.props.headless,
+                'o_datatable_scrollable': this.props.scrollable,
+            }"
+            t-att-style="this.props.scrollable ? 'max-height: ' + (this.props.maxHeight || '400px') : ''"
+            t-on-keydown="(ev) => this.onKeydown(ev)"
+            t-on-scroll="(ev) => this.onScroll(ev)">
+            <table class="table table-sm mb-0"
+                t-att-class="{ 'o_datatable_fixed': this.props.fixedLayout or this.props.resizable }">
+                <thead t-if="!this.props.headless" class="o_datatable_head">
+                    <tr>
+                        <th t-if="this.props.selection === 'multi'" class="o_datatable_select" style="width: 2.5rem;">
+                            <input type="checkbox" class="form-check-input" aria-label="Select all"
+                                t-ref="this.selectAllRef"
+                                t-att-checked="this.allSelected"
+                                t-on-change="() => this.toggleAll()"/>
+                        </th>
+                        <th t-if="this.props.selection === 'single'" class="o_datatable_select" style="width: 2.5rem;"/>
+                        <th t-foreach="this.props.columns" t-as="column" t-key="column.key"
+                            t-att-class="{ 'o_datatable_sortable': column.sortable }"
+                            t-att-style="this.widthStyle(column)"
+                            t-att-aria-sort="column.sortable ? this.ariaSort(column) : null"
+                            t-on-click="() => this.sortBy(column)">
+                            <span class="o_datatable_header_label" t-out="column.label"/>
+                            <span t-if="column.sortable" class="o_datatable_sort_indicator" t-out="this.sortIndicator(column)"/>
+                            <span t-if="this.props.resizable and !column.fixed" class="o_datatable_resizer"
+                                t-on-pointerdown="(ev) => this.startResize(ev, column)"
+                                t-on-click="(ev) => ev.stopPropagation()"/>
+                            <t t-if="column.filter">
+                                <button type="button" class="btn btn-sm o_datatable_filter_toggle" aria-label="Filter"
+                                    t-att-class="{ 'o_datatable_filter_active': this.isFilterActive(column) }"
+                                    t-on-click.stop="() => this.toggleFilter(column)">▼</button>
+                                <div t-if="this.isFilterOpen(column)" class="o_datatable_filter_popover"
+                                    t-att-class="{ 'o_datatable_relation_popover': column.filter === 'relation' }"
+                                    t-on-click.stop="() => {}">
+                                    <t t-if="column.filter === 'text'">
+                                        <select class="form-select form-select-sm mb-2" aria-label="Operator"
+                                            t-on-change="(ev) => this.setDraft('operator', ev.target.value)">
+                                            <option t-foreach="this.textOperators" t-as="op" t-key="op_index"
+                                                t-att-value="op[0]" t-att-selected="this.state.draft.operator === op[0]" t-out="op[1]"/>
+                                        </select>
+                                        <input type="text" class="form-control form-control-sm" aria-label="Value"
+                                            t-att-value="this.state.draft.value"
+                                            t-on-input="(ev) => this.setDraft('value', ev.target.value)"/>
+                                    </t>
+                                    <t t-elif="column.filter === 'selection' or column.filter === 'bool'">
+                                        <div class="o_datatable_search mb-2">
+                                            <svg class="o_datatable_search_icon" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
+                                                            <circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.6"/>
+                                                            <line x1="10.8" y1="10.8" x2="14.5" y2="14.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                                                        </svg>
+                                            <input type="text" class="form-control form-control-sm" placeholder="Search"
+                                            aria-label="Search options"
+                                                t-att-value="this.state.optionSearch"
+                                                t-on-input="(ev) => this.setOptionSearch(ev.target.value)"/>
+                                        </div>
+                                        <div class="small text-muted mb-1">
+                                            <span t-out="this.state.draft.length"/> selected
+                                        </div>
+                                        <div class="form-check">
+                                            <input type="checkbox" class="form-check-input" id="o_datatable_all_options"
+                                                t-att-checked="this.allOptionsSelected(column)"
+                                                t-on-change="() => this.toggleAllOptions(column)"/>
+                                            <label class="form-check-label" for="o_datatable_all_options">All</label>
+                                        </div>
+                                        <div t-foreach="this.visibleOptions(column)" t-as="option" t-key="option_index"
+                                            class="form-check">
+                                            <input type="checkbox" class="form-check-input"
+                                                t-att-checked="this.state.draft.includes(option[0])"
+                                                t-on-change="() => this.toggleOption(option[0])"/>
+                                            <label class="form-check-label" t-out="option[1]"/>
+                                        </div>
+                                    </t>
+                                    <t t-elif="column.filter === 'relation'">
+                                        <div class="o_datatable_search mb-2">
+                                            <svg class="o_datatable_search_icon" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
+                                                            <circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.6"/>
+                                                            <line x1="10.8" y1="10.8" x2="14.5" y2="14.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                                                        </svg>
+                                            <input type="text" class="form-control form-control-sm" placeholder="Search"
+                                            aria-label="Search options"
+                                                t-att-value="this.state.optionSearch"
+                                                t-on-input="(ev) => this.loadRelationOptions(column, ev.target.value)"/>
+                                        </div>
+                                        <div class="small text-muted mb-1">
+                                            <span t-out="this.state.draft.length"/> selected
+                                        </div>
+                                        <div class="o_datatable_relation_list">
+                                            <div t-foreach="this.state.relationOptions" t-as="record" t-key="record.id"
+                                                class="form-check">
+                                                <input type="checkbox" class="form-check-input"
+                                                    t-att-checked="this.isRelationSelected(record)"
+                                                    t-on-change="() => this.toggleRelation(record)"/>
+                                                <label class="form-check-label" t-out="record.name"/>
+                                            </div>
+                                        </div>
+                                    </t>
+                                    <t t-elif="column.filter === 'date' or column.filter === 'datetime'">
+                                        <select class="form-select form-select-sm mb-2" aria-label="Operator"
+                                            t-on-change="(ev) => this.setDraft('operator', ev.target.value)">
+                                            <option t-foreach="this.dateOperators" t-as="op" t-key="op_index"
+                                                t-att-value="op[0]" t-att-selected="this.state.draft.operator === op[0]" t-out="op[1]"/>
+                                        </select>
+                                        <input type="date" class="form-control form-control-sm mb-2" aria-label="From"
+                                            t-att-value="this.state.draft.from"
+                                            t-on-input="(ev) => this.setDraft('from', ev.target.value)"/>
+                                        <input t-if="this.state.draft.operator === 'between'" type="date"
+                                            class="form-control form-control-sm" aria-label="To"
+                                            t-att-value="this.state.draft.to"
+                                            t-on-input="(ev) => this.setDraft('to', ev.target.value)"/>
+                                    </t>
+                                    <t t-elif="column.filter === 'number'">
+                                        <input type="number" class="form-control form-control-sm mb-2" placeholder="Min"
+                                            aria-label="Minimum"
+                                            t-att-value="this.state.draft.min"
+                                            t-on-input="(ev) => this.setDraft('min', ev.target.value)"/>
+                                        <input type="number" class="form-control form-control-sm" placeholder="Max"
+                                            aria-label="Maximum"
+                                            t-att-value="this.state.draft.max"
+                                            t-on-input="(ev) => this.setDraft('max', ev.target.value)"/>
+                                    </t>
+                                    <div class="o_datatable_filter_footer d-flex align-items-center mt-2">
+                                        <Pager t-if="column.filter === 'relation'" class="o_datatable_relation_pager"
+                                            offset="this.state.relationOffset" limit="this.relationPageSize"
+                                            total="this.state.relationCount" isEditable="false"
+                                            onUpdate="(params) => this.loadRelationOptions(column, this.state.optionSearch, params.offset)"/>
+                                        <div class="d-flex gap-2 ms-auto">
+                                            <button type="button" class="btn btn-primary btn-sm o_datatable_filter_apply"
+                                                t-on-click="() => this.applyFilter(column)">Apply</button>
+                                            <button type="button" class="btn btn-secondary btn-sm o_datatable_filter_clear"
+                                                t-on-click="() => this.clearFilter(column)">Clear</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+                        </th>
+                        <th t-if="this.props.rowActions" class="o_datatable_actions" style="width: 2.5rem;"/>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr t-foreach="this.sortedRows" t-as="row" t-key="row.id"
+                        t-att-class="{ 'o_datatable_selected': this.isSelected(row) }">
+                        <td t-if="this.props.selection === 'multi'" class="o_datatable_select">
+                            <input type="checkbox" class="form-check-input" aria-label="Select row"
+                                t-att-checked="this.isSelected(row)"
+                                t-on-change="() => this.selectRow(row)"/>
+                        </td>
+                        <td t-if="this.props.selection === 'single'" class="o_datatable_select">
+                            <input type="radio" class="form-check-input" aria-label="Select row"
+                                t-att-name="this.radioName"
+                                t-att-checked="this.isSelected(row)"
+                                t-on-change="() => this.selectRow(row)"/>
+                        </td>
+                        <td t-foreach="this.props.columns" t-as="column" t-key="column.key"
+                            t-att-data-cell="row_index + '-' + column_index"
+                            t-att-tabindex="this.isFocused(row_index, column_index) ? 0 : -1"
+                            t-on-focus="() => this.setFocus(row_index, column_index)">
+                            <Field t-if="column.type === 'field'" name="column.key" record="row" readonly="true"/>
+                            <t t-else="">
+                                <t t-slot="cell" row="row" column="column" value="row[column.key]" text="this.cellText(column, row)">
+                                    <a t-if="column.type === 'link'" href="#" class="o_datatable_link text-truncate d-block"
+                                        t-on-click="(ev) => ev.preventDefault()" t-out="this.cellText(column, row)"/>
+                                    <a t-elif="column.type === 'email'" class="o_datatable_link text-truncate d-block"
+                                        t-attf-href="mailto:{{ row[column.key] }}" t-out="this.cellText(column, row)"/>
+                                    <span t-else="" class="text-truncate d-block" t-out="this.cellText(column, row)"/>
+                                </t>
+                            </t>
+                        </td>
+                        <td t-if="this.props.rowActions" class="o_datatable_actions">
+                            <button type="button" class="btn btn-sm o_datatable_action_toggle" aria-label="Row actions"
+                                t-on-click="() => this.toggleMenu(row)">▾</button>
+                            <div t-if="this.state.menuRowId === row.id" class="o_datatable_menu dropdown-menu show">
+                                <button t-foreach="this.props.rowActions" t-as="action" t-key="action_index"
+                                    type="button" class="dropdown-item" t-out="action.label"
+                                    t-on-click="() => this.runAction(action, row)"/>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr t-if="this.state.loading" class="o_datatable_loading">
+                        <td t-att-colspan="this.colspan" class="text-center text-muted">Loading…</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </t>
+
+</templates>

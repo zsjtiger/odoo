@@ -1,6 +1,6 @@
 import { proxy } from "@odoo/owl";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 export class TranslateWebpageOption extends BaseOptionComponent {
     static id = "translate_webpage_option";

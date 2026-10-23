@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 registry.category("web_tour.tours").add("discuss_go_back_to_thread_from_breadcrumbs.js", {
     steps: () => [

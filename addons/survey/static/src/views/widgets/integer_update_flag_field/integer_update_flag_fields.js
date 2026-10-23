@@ -1,7 +1,7 @@
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { useProps, t, useListener } from "@odoo/owl";
-import { integerField, IntegerField, integerFieldProps } from "@web/views/fields/integer/integer_field";
+import { integerField, IntegerField, integerFieldProps } from "@web/views/fields/numeric/integer/integer_field";
 
 
 

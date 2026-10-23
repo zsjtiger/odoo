@@ -1,5 +1,5 @@
 declare module "fields" {
-    import { DomainListRepr } from "@web/core/domain";
+    import { DomainListRepr } from "@web/core/data/domain";
 
     interface IFieldDefinition<T extends FieldType> {
         change_default: boolean;

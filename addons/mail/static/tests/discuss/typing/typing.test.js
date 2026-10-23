@@ -22,7 +22,7 @@ import {
 
 import { Store } from "@mail/core/common/store_service";
 import { LONG_TYPING, SHORT_TYPING } from "@mail/discuss/typing/common/composer_patch";
-import { rpc } from "@web/core/network/rpc";
+import { rpc } from "@web/core/services/network/rpc";
 import { ChannelMember } from "@mail/discuss/core/common/channel_member_model";
 
 describe.current.tags("desktop");

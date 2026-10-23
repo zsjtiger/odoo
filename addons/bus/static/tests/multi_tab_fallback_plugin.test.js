@@ -1,8 +1,8 @@
 import { describe, expect, test, after } from "@odoo/hoot";
 import { MultiTabFallbackPlugin } from "@bus/multi_tab_fallback_plugin";
 import { getService, makeTestApp, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { browser } from "@web/core/browser/browser";
-import { services } from "@web/core/services";
+import { browser } from "@web/core/services/browser/browser";
+import { services } from "@web/core/framework/services";
 
 describe.current.tags("desktop");
 

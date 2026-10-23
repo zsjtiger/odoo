@@ -2,13 +2,13 @@ import { Meeting } from "./meeting";
 
 import { proxy } from "@odoo/owl";
 
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 export const callPipService = {
     dependencies: ["mail.popout"],
 
     /**
-     * @param {import("@web/env").OdooEnv} env
+     * @param {import("@web/boot/env").OdooEnv} env
      * @param {import("services").ServiceFactories} services
      */
     start(env, services) {

@@ -1,8 +1,8 @@
 import { Interaction } from "@web/public/interaction";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
-import { rpc } from "@web/core/network/rpc";
-import { utils as uiUtils } from "@web/core/ui/ui_utils";
+import { rpc } from "@web/core/services/network/rpc";
+import { utils as uiUtils } from "@web/core/services/ui/ui_utils";
 import { uniqueId } from "@web/core/utils/functions";
 import { renderToFragment } from "@web/core/utils/render";
 
@@ -11,7 +11,7 @@ import {
     DYNAMIC_SNIPPET_DEFAULT_ITEMS_PER_ROW,
     DYNAMIC_SNIPPET_DEFAULT_ITEMS_PER_ROW_SM,
 } from "@website/utils/dynamic_snippets";
-import { UIPlugin } from "@web/core/ui/ui_plugin";
+import { UIPlugin } from "@web/core/services/ui/ui_plugin";
 
 export class DynamicSnippet extends Interaction {
     static selector = ".s_dynamic_snippet";

@@ -7,9 +7,9 @@ import {
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 
-import { browser } from "@web/core/browser/browser";
-import { scanBarcode } from "@web/core/barcode/barcode_dialog";
-import { BarcodeVideoScanner } from "@web/core/barcode/barcode_video_scanner";
+import { browser } from "@web/core/services/browser/browser";
+import { scanBarcode } from "@web/core/components/barcode/barcode_dialog";
+import { BarcodeVideoScanner } from "@web/core/components/barcode/barcode_video_scanner";
 import { WebClient } from "@web/webclient/webclient";
 
 /* global ZXing */

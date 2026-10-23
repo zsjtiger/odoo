@@ -1,7 +1,7 @@
 import { Interaction } from "@web/public/interaction";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
-import { rpc } from "@web/core/network/rpc";
+import { rpc } from "@web/core/services/network/rpc";
 
 export class SlideTogglePreview extends Interaction {
     static selector = ".o_wslides_js_slide_toggle_is_preview";
@@ -18,7 +18,7 @@ export class SlideTogglePreview extends Interaction {
     };
 
     setup() {
-        this.isPreview = false;
+        this.isPreview = this.el.classList.contains("text-bg-success");
     }
 
     async toggleSlidePreview() {

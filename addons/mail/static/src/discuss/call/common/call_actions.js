@@ -5,9 +5,9 @@ import {
     useAction,
     UseActions,
 } from "@mail/core/common/action";
-import { isMobileOS } from "@web/core/browser/feature_detection";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { isMobileOS } from "@web/core/services/browser/feature_detection";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { ChangeLayoutDialog } from "@mail/discuss/call/common/change_layout_dialog";
 import { QuickVoiceSettings } from "@mail/discuss/call/common/quick_voice_settings";
 import { QuickVideoSettings } from "@mail/discuss/call/common/quick_video_settings";
@@ -16,7 +16,7 @@ import { attClassObjectToString } from "@mail/utils/common/format";
 import { MicrophoneWarning } from "@mail/discuss/call/common/microphone_warning";
 import { TalkingAudioBars } from "@mail/discuss/call/common/talking_audio_bars";
 import { Component, useEffect } from "@odoo/owl";
-import { usePopover } from "@web/core/popover/popover_hook";
+import { usePopover } from "@web/core/components/popover/popover_hook";
 
 export const callActionsRegistry = registry.category("discuss.call/actions");
 export const CALL_ICON_DEAFEN = "hearing_disabled";

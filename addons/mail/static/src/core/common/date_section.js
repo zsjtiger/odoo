@@ -1,5 +1,5 @@
 import { Component, t, useProps } from "@odoo/owl";
-import { isMobileOS } from "@web/core/browser/feature_detection";
+import { isMobileOS } from "@web/core/services/browser/feature_detection";
 
 export class DateSection extends Component {
     static template = "mail.DateSection";

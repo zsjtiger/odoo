@@ -1,8 +1,8 @@
-import { browser } from "@web/core/browser/browser";
-import { rpcBus } from "@web/core/network/rpc";
-import { registry } from "@web/core/registry";
+import { browser } from "@web/core/services/browser/browser";
+import { rpcBus } from "@web/core/services/network/rpc";
+import { registry } from "@web/core/framework/registry";
 import { useBus } from "@web/core/utils/hooks";
-import { Transition } from "@web/core/transition";
+import { Transition } from "@web/core/framework/transition";
 
 import { Component, untrack, proxy } from "@odoo/owl";
 

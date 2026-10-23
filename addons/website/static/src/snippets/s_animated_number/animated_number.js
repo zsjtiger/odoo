@@ -1,5 +1,5 @@
 import { BaseAnimation } from "@website/interactions/base_animation";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 function parseInteger(value, fallback) {
     const parsedValue = Number.parseInt(value, 10);

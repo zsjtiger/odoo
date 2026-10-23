@@ -1,15 +1,15 @@
 import { useService } from "@web/core/utils/hooks";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { location } from "@web/core/browser/browser";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
+import { location } from "@web/core/services/browser/browser";
 import { queryAll, queryFirst, queryOne } from "@odoo/hoot-dom";
 import { Component, proxy, signal, t, useListener, useProps } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
-import { x2ManyCommands } from "@web/core/orm_plugin";
+import { _t } from "@web/core/data/l10n/translation";
+import { x2ManyCommands } from "@web/core/services/orm_plugin";
 import { tourRecorderState } from "./tour_recorder_state";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
+import { ConfirmationDialog } from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
+import { useDropdownState } from "@web/core/components/dropdown/dropdown_hooks";
 
 const PRECISE_IDENTIFIERS = ["data-menu-xmlid", "name", "contenteditable"];
 const ODOO_CLASS_REGEX = /^oe?(-|_)[\w-]+$/;

@@ -1,5 +1,5 @@
 import { dataUrlToBlob } from "@mail/core/common/attachment_uploader_hook";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
 import { useX2ManyCrud } from "@web/views/fields/relational_utils";
 import { Record } from "@web/model/relational_model/record";

@@ -1,11 +1,11 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
+import { useLayoutEffect } from "@web/core/owl/utils";
+import { _t } from "@web/core/data/l10n/translation";
+import { rpc } from "@web/core/services/network/rpc";
 import { useService } from "@web/core/utils/hooks";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { Dialog } from "@web/core/dialog/dialog";
+import { ConfirmationDialog } from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
 import { KeepLast } from "@web/core/utils/concurrency";
-import { user } from "@web/core/user";
+import { user } from "@web/core/services/user";
 import { useDebounced } from "@web/core/utils/timing";
 import { SearchMedia } from "./search_media";
 import { Component, onWillStart, proxy, signal, t, useListener, useProps, xml } from "@odoo/owl";

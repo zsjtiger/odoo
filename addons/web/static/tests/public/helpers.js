@@ -5,7 +5,7 @@ import {
     makeTestApp,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 let activeInteractions = null;
 const elementRegistry = registry.category("public.interactions");

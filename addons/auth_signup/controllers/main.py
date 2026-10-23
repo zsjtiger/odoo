@@ -10,7 +10,7 @@ from odoo.addons.web.controllers.home import ensure_db, Home, SIGN_UP_REQUEST_PA
 from odoo.addons.web.models.res_users import SKIP_CAPTCHA_LOGIN
 from odoo.addons.base_setup.controllers.main import BaseSetup
 from odoo.exceptions import UserError
-from odoo.tools.translate import LazyTranslate
+from odoo.tools import LazyTranslate
 from odoo.http import request
 from odoo.http.session import authenticate
 from markupsafe import Markup

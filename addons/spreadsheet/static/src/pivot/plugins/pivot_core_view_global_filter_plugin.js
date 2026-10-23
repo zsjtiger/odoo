@@ -1,4 +1,4 @@
-import { Domain } from "@web/core/domain";
+import { Domain } from "@web/core/data/domain";
 import { NO_RECORD_AT_THIS_POSITION } from "../pivot_model";
 import { OdooEvaluationPlugin } from "@spreadsheet/plugins";
 

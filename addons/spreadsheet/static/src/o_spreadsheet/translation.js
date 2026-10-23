@@ -1,5 +1,5 @@
 import * as spreadsheet from "@odoo/o-spreadsheet";
-import { _t, appTranslateFn } from "@web/core/l10n/translation";
+import { _t, appTranslateFn } from "@web/core/data/l10n/translation";
 import { OdooEvaluationPlugin } from "@spreadsheet/plugins";
 
 const { arg, toString } = spreadsheet.helpers;

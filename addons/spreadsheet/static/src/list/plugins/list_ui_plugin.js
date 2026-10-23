@@ -1,6 +1,6 @@
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { OdooUIPlugin } from "@spreadsheet/plugins";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 
 const { constants, helpers } = spreadsheet;
 const { PIVOT_STATIC_TABLE_CONFIG } = constants;
