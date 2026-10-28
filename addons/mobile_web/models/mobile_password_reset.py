@@ -46,7 +46,7 @@ class MobilePasswordReset(models.Model):
 
     def reset_link(self):
         self.ensure_one()
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url', '')
+        base_url = self.env['ir.config_parameter'].sudo().get_str('web.base.url', '')
         return f"{base_url}/mobile_web/reset_password/{self.token}"
 
     def deliver(self):
