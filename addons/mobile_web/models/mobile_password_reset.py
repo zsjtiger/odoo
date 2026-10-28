@@ -50,10 +50,8 @@ class MobilePasswordReset(models.Model):
         return f"{base_url}/mobile_web/reset_password/{self.token}"
 
     def deliver(self):
-        """ 发送重置链接. 发送依赖 mail 模块; 未安装时返回 False, 由页面提示"暂未开放" """
+        """ 发送重置链接 (依赖 mail 模块, 由 ai 模块引入) """
         self.ensure_one()
-        if 'mail.mail' not in self.env:
-            return False
         self.env['mail.mail'].sudo().create({
             'subject': _("Reset your password"),
             'body_html': _("<p>Follow this link to set a new password: <a href=\"%s\">%s</a></p>",
@@ -61,7 +59,6 @@ class MobilePasswordReset(models.Model):
             'email_to': self.user_id.email or self.user_id.login,
             'auto_delete': True,
         })
-        return True
 
     def set_password(self, password):
         """ 设置新密码并使令牌失效 """

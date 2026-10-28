@@ -121,11 +121,9 @@ class Home(WebHome):
         values = {'message': None}
         if request.httprequest.method == 'POST':
             reset = request.env['mobile_web.password.reset'].sudo().create_for_login(login) if login else None
-            delivered = bool(reset) and reset.deliver()
-            if delivered:
-                values['message'] = _("If the account exists, a reset link has been sent to its email address.")
-            else:
-                values['message'] = _("Password reset by email is not available yet. Please contact the administrator.")
+            if reset:
+                reset.deliver()
+            values['message'] = _("If the account exists, a reset link has been sent to its email address.")
         response = request.render('mobile_web.login_retrieve_password', values)
         response.headers['X-Frame-Options'] = 'SAMEORIGIN'
         response.headers['Content-Security-Policy'] = "frame-ancestors 'self'"

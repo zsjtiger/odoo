@@ -57,9 +57,11 @@ class TestMobilePasswordResetModel(TransactionCase):
         self.assertTrue(self.user.with_user(self.user)._check_credentials(
             {'type': 'password', 'password': 'a-long-new-password'}, {'interactive': True}))
 
-    def test_delivery_is_unavailable_without_mail(self):
+    def test_delivery_sends_the_link_by_mail(self):
         reset = self.Reset.create_for_login('reset_user@example.com')
-        self.assertFalse(reset.deliver())
+        reset.deliver()
+        mail = self.env['mail.mail'].search([('email_to', '=', 'reset_user@example.com')])
+        self.assertIn(reset.token, mail.body_html)
 
 
 @tagged('post_install', '-at_install')
@@ -79,11 +81,11 @@ class TestMobilePasswordResetPages(HttpCase):
     def test_retrieve_page_renders(self):
         self.assertEqual(self.url_open('/mobile_web/retrieve_password').status_code, 200)
 
-    def test_retrieve_says_delivery_is_not_open_without_mail(self):
+    def test_retrieve_says_the_link_is_sent_if_the_account_exists(self):
         response = self._post('/mobile_web/retrieve_password', '/mobile_web/retrieve_password',
                               {'login': 'page_user@example.com'})
         self.assertEqual(response.status_code, 200)
-        self.assertIn('not available yet', response.text)
+        self.assertIn('If the account exists', response.text)
 
     def test_retrieve_gives_the_same_answer_for_unknown_accounts(self):
         known = self._post('/mobile_web/retrieve_password', '/mobile_web/retrieve_password',
