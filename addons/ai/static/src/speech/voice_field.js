@@ -1,4 +1,4 @@
-import { Component, onWillStart, t, useProps, useState, xml } from "@odoo/owl";
+import { Component, onWillStart, proxy, t, useProps, xml } from "@odoo/owl";
 import { VoiceInputButton } from "@ai/speech/voice_input_button";
 import { isTranscriptionAvailable } from "@ai/speech/speech_service";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
@@ -26,7 +26,7 @@ export function makeVoiceField(FieldComponent, wrapperClass = "o_voice_field") {
             ...standardFieldProps,
             placeholder: t.string().optional(),
         });
-        state = useState({ available: false });
+        state = proxy({ available: false });
         wrapperClass = `${wrapperClass} d-flex align-items-start`;
 
         setup() {

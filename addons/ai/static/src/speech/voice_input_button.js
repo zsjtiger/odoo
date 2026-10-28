@@ -1,4 +1,4 @@
-import { Component, useState, onWillUnmount, t, useProps } from "@odoo/owl";
+import { Component, onWillUnmount, proxy, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/data/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { SpeechRecorder } from "@ai/speech/speech_recorder";
@@ -19,7 +19,7 @@ export class VoiceInputButton extends Component {
     setup() {
         this.notification = useService("notification");
         this.recorder = new SpeechRecorder();
-        this.state = useState({ recording: false, busy: false });
+        this.state = proxy({ recording: false, busy: false });
         onWillUnmount(() => this.recorder.cancel());
     }
 
