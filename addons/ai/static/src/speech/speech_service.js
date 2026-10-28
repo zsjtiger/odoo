@@ -1,16 +1,13 @@
 import { user } from "@web/core/services/user";
 import { rpc } from "@web/core/services/network/rpc";
 
-let availability = null;
-
 /**
- * Whether the transcription model is configured. The answer is requested once.
+ * Whether the transcription model is configured.
  *
  * @returns {Promise<boolean>}
  */
 export function isTranscriptionAvailable() {
-    availability ??= rpc("/ai/transcription/available", {}, { silent: true }).catch(() => false);
-    return availability;
+    return rpc("/ai/transcription/available", {}, { silent: true }).catch(() => false);
 }
 
 /**
