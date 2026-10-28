@@ -16,6 +16,10 @@ for (const [name, label] of [
     ["char", _t("Char with voice input")],
     ["text", _t("Text with voice input")],
 ]) {
+    // The mobile client loads these files too, without the desktop field widgets
+    if (!fieldRegistry.contains(name)) {
+        continue;
+    }
     const field = fieldRegistry.get(name);
     fieldRegistry.add(`${name}_voice`, {
         ...field,
