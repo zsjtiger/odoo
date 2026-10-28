@@ -9,7 +9,7 @@ Odoo Mobile Web core module
 This module provides the core of the Odoo Mobile Web Client.
     """,
     'version': '1.0',
-    'depends': ['base', 'web'],
+    'depends': ['base', 'web', 'ai'],
     'data': [
         'security/ir.access.csv',
         'views/custom_field_views.xml',

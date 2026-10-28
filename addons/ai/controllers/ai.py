@@ -8,8 +8,15 @@ from odoo.exceptions import UserError
 from odoo.http import request
 
 from odoo.addons.ai.llm import LLMError
-from odoo.addons.ai.utils.ai_utils import get_llm_client, get_text_from_parts
+from odoo.addons.ai.llm.config import PARAM_API_KEY, PARAM_TRANSCRIPTION_MODEL
+from odoo.addons.ai.utils.ai_utils import get_ai_str_param, get_llm_client, get_text_from_parts
 from odoo.addons.ai.utils.formatting import markdown_format
+
+TRANSCRIPTION_MIMETYPES = {
+    'audio/flac', 'audio/mp3', 'audio/mp4', 'audio/mpeg', 'audio/ogg', 'audio/wav', 'audio/webm',
+}
+# Same limit as the transcription of the call recordings
+TRANSCRIPTION_MAX_AUDIO_SIZE = 25 * 1024 * 1024
 
 
 class AIController(http.Controller):
@@ -68,15 +75,29 @@ class AIController(http.Controller):
             'session_token': session['client_secret']['value'],
         }
 
+    @http.route("/ai/transcription/available", type="jsonrpc", auth="user", readonly=True)
+    def is_transcription_available(self):
+        """Whether the one-shot transcription is configured, to show the voice input controls."""
+        return bool(
+            get_ai_str_param(request.env, PARAM_API_KEY)
+            and get_ai_str_param(request.env, PARAM_TRANSCRIPTION_MODEL)
+        )
+
     @http.route("/ai/transcription", type="jsonrpc", auth="user")
-    def transcribe(self, audio_base64, language=None):
+    def transcribe(self, audio_base64, language=None, mimetype='audio/mp3'):
         if not audio_base64:
             message = "No audio data provided"
             raise BadRequest(message)
+        # The codec parameters (e.g. "audio/webm;codecs=opus") are not part of the format
+        mimetype = (mimetype or '').split(';')[0].strip()
+        if mimetype not in TRANSCRIPTION_MIMETYPES:
+            message = "Unsupported audio format"
+            raise BadRequest(message)
+        audio = base64.b64decode(audio_base64)
+        if len(audio) > TRANSCRIPTION_MAX_AUDIO_SIZE:
+            raise UserError(request.env._("The audio is too long to transcribe."))
         try:
-            text = get_llm_client(request.env).transcribe(
-                base64.b64decode(audio_base64), mimetype='audio/mp3', language=language,
-            )
+            text = get_llm_client(request.env).transcribe(audio, mimetype=mimetype, language=language)
         except LLMError as e:
             raise UserError(str(e)) from e
         return {'status': 'success', 'text': text}
