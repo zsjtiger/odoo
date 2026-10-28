@@ -1,6 +1,7 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, click } from "@odoo/hoot-dom";
 import { defineModels, fields, models, mountView, onRpc, patchWithCleanup, webModels } from "@web/../tests/web_test_helpers";
+import { defineAIModels } from "./ai_test_helpers";
 
 describe.current.tags("desktop");
 
@@ -19,6 +20,7 @@ class Note extends models.Model {
 }
 
 defineModels({ ...webModels, Note });
+defineAIModels();
 
 class FakeMediaRecorder extends EventTarget {
     static isTypeSupported(mimetype) {
