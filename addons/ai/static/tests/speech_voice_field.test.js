@@ -62,8 +62,9 @@ test("the microphone button is shown only when the transcription is configured",
 test("a recording is transcribed and appended to the text", async () => {
     mockMicrophone();
     onRpc("/ai/transcription/available", () => true);
-    onRpc("/ai/transcription", ({ mimetype }) => {
-        expect.step(mimetype);
+    onRpc("/ai/transcription", async (request) => {
+        const { params } = await request.json();
+        expect.step(params.mimetype);
         return { status: "success", text: "world" };
     });
     await mountView({ type: "form", resModel: "note", resId: 1 });
