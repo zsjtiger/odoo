@@ -101,8 +101,6 @@ This module provides the core of the Odoo Mobile Web Client.
         ],
         # 单元测试覆盖的移动端源码; main.js 会启动整个 webclient, 不放入测试包
         'mobile_web.assets_unit_src': [
-            # voice input widgets import the shared speech modules of ai
-            'ai/static/src/speech/**/*.js',
             'mobile_web/static/src/core/**/*.js',
             'mobile_web/static/src/widgets/**/*.js',
             'mobile_web/static/src/layout/**/*.js',

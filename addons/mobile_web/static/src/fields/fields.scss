@@ -478,3 +478,36 @@
     line-height: 20px;
     text-align: center;
 }
+
+// 语音输入: 字段旁的麦克风按钮
+.m_voice_field {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.m_voice_field_input {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.m_voice_button {
+    flex: 0 0 auto;
+    min-height: 44px;
+    padding: 0 12px;
+    border: 1px solid $line;
+    border-radius: 8px;
+    background: $surface;
+    color: $theme;
+    font-size: 14px;
+
+    &:disabled {
+        opacity: 0.5;
+    }
+}
+
+.m_voice_button_recording {
+    border-color: $theme;
+    color: $theme-btn;
+    background: $theme;
+}
