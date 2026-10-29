@@ -1,5 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { BLOCKQUOTE_PARENT_HANDLERS } from "@html_builder/core/utils";
 
 export const SPECIAL_BLOCKQUOTE_SELECTOR = `${BLOCKQUOTE_PARENT_HANDLERS} > .s_blockquote`;

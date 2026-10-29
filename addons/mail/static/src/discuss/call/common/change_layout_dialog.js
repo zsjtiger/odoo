@@ -2,8 +2,8 @@ import { CALL_GRID_LAYOUT } from "@mail/discuss/call/common/call_layout";
 
 import { Component, t, useEffect, useProps } from "@odoo/owl";
 
-import { Dialog } from "@web/core/dialog/dialog";
-import { _t } from "@web/core/l10n/translation";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
+import { _t } from "@web/core/data/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
 /** @typedef {import("@mail/discuss/call/common/call_layout").CallLayout} CallLayout */

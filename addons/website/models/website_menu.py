@@ -9,7 +9,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.http import request
-from odoo.tools.translate import html_translate
+from odoo.tools import html_translate
 
 
 class WebsiteMenu(models.Model):

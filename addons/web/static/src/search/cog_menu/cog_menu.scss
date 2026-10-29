@@ -6,4 +6,9 @@
     .o_btn_circle {
         --o-btn-circle-radius: var(--btn-border-radius);
     }
+
+    // desktop: the toggle is a caret, the icon stays in the DOM for the tests and the mobile layout
+    .o_btn_split_caret > i {
+        display: none;
+    }
 }

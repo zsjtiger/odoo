@@ -1,4 +1,4 @@
-import { browser } from "@web/core/browser/browser";
+import { browser } from "@web/core/services/browser/browser";
 import { EventBus, Plugin, signal, useListener, usePlugin } from "@odoo/owl";
 import { WorkerPlugin } from "@bus/services/worker_plugin";
 

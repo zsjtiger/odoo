@@ -1,6 +1,6 @@
 import { Interaction } from "@web/public/interaction";
-import { rpc } from "@web/core/network/rpc";
-import { registry } from "@web/core/registry";
+import { rpc } from "@web/core/services/network/rpc";
+import { registry } from "@web/core/framework/registry";
 
 export class SurveyQuickAccess extends Interaction {
     static selector = ".o_survey_quick_access";

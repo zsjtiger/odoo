@@ -1,6 +1,6 @@
 import { fields, getKwArgs, models, serverState } from "@web/../tests/web_test_helpers";
-import { Domain } from "@web/core/domain";
-import { deserializeDate, serializeDate, today } from "@web/core/l10n/dates";
+import { Domain } from "@web/core/data/domain";
+import { deserializeDate, serializeDate, today } from "@web/core/data/l10n/dates";
 import { sortBy, unique } from "@web/core/utils/arrays";
 
 const { DateTime } = luxon;

@@ -1,7 +1,7 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
 import { getBgImageURLFromEl } from "@html_builder/utils/utils_css";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { BackgroundShapeSelector } from "./background_shape_selector";
 import { ratioValueConverter } from "@html_builder/utils/utils";
 

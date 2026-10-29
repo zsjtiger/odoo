@@ -1,8 +1,8 @@
 import { Plugin } from "@html_editor/plugin";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { withSequence } from "@html_editor/utils/resource";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { VideoSelector } from "@html_editor/main/media/media_dialog/video_selector";
 import { getBgImageURLFromEl } from "@html_builder/utils/utils_css";
 

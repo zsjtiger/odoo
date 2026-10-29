@@ -1,9 +1,9 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 export const mailCorePublicWebService = {
     dependencies: ["mail.store"],
     /**
-     * @param {import("@web/env").OdooEnv}
+     * @param {import("@web/boot/env").OdooEnv}
      * @param {Partial<import("services").Services>} services
      */
     start(env, services) {

@@ -1,13 +1,13 @@
 import { Component, onWillStart, signal, t, useProps } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
-import { localeCompare } from "@web/core/l10n/utils";
+import { _t } from "@web/core/data/l10n/translation";
+import { localeCompare } from "@web/core/data/l10n/utils/collation";
 import { useService } from "@web/core/utils/hooks";
 import {
     basicContainerBuilderComponentProps,
     useVisibilityObserver,
     useApplyVisibility,
 } from "@html_builder/core/utils";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { ConfirmationDialog } from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
 import { BuilderSelect } from "@html_builder/core/building_blocks/builder_select";
 import { BuilderSelectItem } from "@html_builder/core/building_blocks/builder_select_item";
 

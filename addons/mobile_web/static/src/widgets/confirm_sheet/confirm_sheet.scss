@@ -1,0 +1,86 @@
+// 确认对话框: 居中的 iOS 风格提示, 消息在上, 底部左取消右确认, 按钮之间以细线分隔
+.m_alert_backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.m_alert {
+    width: 270px;
+    max-width: calc(100% - 64px);
+    overflow: hidden;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
+    text-align: center;
+}
+
+.m_alert_message {
+    margin: 0;
+    padding: 20px 16px;
+    font-size: 17px;
+    line-height: 1.4;
+    color: #000;
+}
+
+.m_alert_footer {
+    display: flex;
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.m_alert_btn {
+    flex: 1;
+    min-height: 44px;
+    padding: 11px 0;
+    border: none;
+    background: none;
+    font-size: 17px;
+    color: #007aff;
+
+    & + & {
+        border-left: 1px solid rgba(0, 0, 0, 0.12);
+    }
+
+    &.is_primary {
+        font-weight: 600;
+    }
+
+    &.is_danger {
+        font-weight: 600;
+        color: #ff3b30;
+    }
+}
+
+// 自定义正文: 位于消息与选项之间
+.m_alert_body {
+    padding: 0 16px 16px;
+}
+
+// 纵向排列的选项: 每项独占一行, 以细线分隔, 点击区域不小于 44px
+.m_alert_choices {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.m_alert_choice {
+    min-height: 44px;
+    padding: 11px 16px;
+    border: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+    background: none;
+    font-size: 17px;
+    color: #007aff;
+
+    &:first-child {
+        border-top: none;
+    }
+
+    &.is_danger {
+        color: #ff3b30;
+    }
+}

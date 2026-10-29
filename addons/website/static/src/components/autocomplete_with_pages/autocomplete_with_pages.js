@@ -1,5 +1,5 @@
 import { t, useEffect, useListener, useProps } from "@odoo/owl";
-import { AutoComplete, autoCompleteProps } from "@web/core/autocomplete/autocomplete";
+import { AutoComplete, autoCompleteProps } from "@web/core/components/autocomplete/autocomplete";
 
 export class AutoCompleteWithPages extends AutoComplete {
     props = useProps({

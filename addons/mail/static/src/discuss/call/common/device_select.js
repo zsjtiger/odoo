@@ -1,11 +1,11 @@
 import { Component, computed, onWillDestroy, onWillStart, signal, t, useProps } from "@odoo/owl";
 
-import { browser } from "@web/core/browser/browser";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { _t } from "@web/core/l10n/translation";
+import { browser } from "@web/core/services/browser/browser";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
+import { _t } from "@web/core/data/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { isBrowserChrome } from "@web/core/browser/feature_detection";
+import { isBrowserChrome } from "@web/core/services/browser/feature_detection";
 
 export class DeviceSelect extends Component {
     static components = { Dropdown, DropdownItem };

@@ -1,5 +1,5 @@
 import { ZoomedBackgroundShape } from "./zoomed_background_shape";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 const ZoomedBackgroundShapeEdit = (I) =>
     class extends I {

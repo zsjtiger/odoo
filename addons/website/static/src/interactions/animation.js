@@ -1,5 +1,5 @@
 import { BaseAnimation } from "./base_animation";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 export class Animation extends BaseAnimation {
     static selector = ".o_animate";

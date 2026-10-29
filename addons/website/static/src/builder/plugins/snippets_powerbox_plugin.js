@@ -1,7 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { withSequence } from "@html_editor/utils/resource";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { closestBlock } from "@html_editor/utils/blocks";
 

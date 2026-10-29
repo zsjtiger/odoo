@@ -1,11 +1,11 @@
 import { Component, useProps } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
-import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
+import { computeM2OProps, Many2One } from "@web/views/fields/relational/many2one/many2one";
 import {
     buildM2OFieldDescription,
     many2OneFieldProps,
-} from "@web/views/fields/many2one/many2one_field";
+} from "@web/views/fields/relational/many2one/many2one_field";
 import { formatPercentage } from "@web/views/fields/formatters";
 
 export class Many2OneResourceCalendarField extends Component {

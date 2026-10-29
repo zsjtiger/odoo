@@ -1,5 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { patch } from "@web/core/utils/patch";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import {

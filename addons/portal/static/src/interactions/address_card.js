@@ -1,6 +1,6 @@
 import { Interaction } from '@web/public/interaction';
-import { registry } from '@web/core/registry';
-import { rpc } from '@web/core/network/rpc';
+import { registry } from '@web/core/framework/registry';
+import { rpc } from '@web/core/services/network/rpc';
 
 export class AddressCard extends Interaction {
     static selector = '.o_portal_addresses';

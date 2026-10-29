@@ -4,7 +4,7 @@ import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpe
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { UrlAutoComplete } from "@website/components/autocomplete_with_pages/url_autocomplete";
 import { AutoCompleteWithPages } from "@website/components/autocomplete_with_pages/autocomplete_with_pages";
-import { render } from "@web/owl2/utils";
+import { render } from "@web/core/owl/utils";
 
 defineMailModels();
 

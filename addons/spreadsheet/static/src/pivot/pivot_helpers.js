@@ -1,6 +1,6 @@
 // @ts-check
 
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { EvaluationError, helpers } from "@odoo/o-spreadsheet";
 import { getFullFieldStringFromPath } from "../data_sources/data_source";
 

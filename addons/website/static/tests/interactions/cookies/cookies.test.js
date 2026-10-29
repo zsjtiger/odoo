@@ -4,7 +4,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import { click, queryOne, waitFor } from "@odoo/hoot-dom";
 import { advanceTime } from "@odoo/hoot-mock";
 
-import { cookie } from "@web/core/browser/cookie";
+import { cookie } from "@web/core/services/browser/cookie";
 
 setupInteractionWhiteList([
     "website.cookies_bar",

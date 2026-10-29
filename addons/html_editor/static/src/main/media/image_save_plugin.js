@@ -5,7 +5,7 @@ import {
     getImageSrc,
 } from "@html_editor/utils/image";
 import { loadImage } from "@html_editor/utils/image_processing";
-import { rpc } from "@web/core/network/rpc";
+import { rpc } from "@web/core/services/network/rpc";
 import { ATTACHMENT_PENDING_RECORD_ID } from "./media_plugin";
 
 /**

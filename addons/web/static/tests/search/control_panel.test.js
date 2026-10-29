@@ -15,10 +15,10 @@ import {
 
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { WebClient } from "@web/webclient/webclient";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
 import { listView } from "@web/views/list/list_view";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 class Foo extends models.Model {
     _views = {

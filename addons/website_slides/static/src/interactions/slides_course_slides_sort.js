@@ -1,5 +1,5 @@
 import { Interaction } from "@web/public/interaction";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 export class WebsiteSlidesSort extends Interaction {
     static selector = ".o_wslides_slides_list";

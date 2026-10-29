@@ -3,7 +3,7 @@
   "keep_odoo_default": true,
   "formatters": {
     "runbot": {
-      "()": "odoo.logging.JSONFormatter",
+      "()": "odoo.core.logging.JSONFormatter",
       "record_keys": ["dbname", "name", "levelname", "pathname", "funcName", "lineno", "test"]
     }
   },

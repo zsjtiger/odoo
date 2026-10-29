@@ -1,5 +1,5 @@
 import { effect, proxy } from "@odoo/owl";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { getOrigin } from "@web/core/utils/urls";
 
 // The tour is ran twice, ensure the correct message is always targetted.

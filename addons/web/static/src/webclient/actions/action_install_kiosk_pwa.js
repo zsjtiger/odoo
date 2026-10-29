@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
 import { standardActionServiceProps } from "./action_plugin";
 

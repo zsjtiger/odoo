@@ -1,9 +1,9 @@
-import { useEnv } from "@web/owl2/utils";
+import { useEnv } from "@web/core/owl/utils";
 import { onMounted, onWillUnmount } from "@odoo/owl";
 import { registries } from "@odoo/o-spreadsheet";
-import { registry } from "@web/core/registry";
-import { DefaultCommandItem } from "@web/core/commands/command_palette";
-import { HotkeyCommandItem } from "@web/core/commands/default_providers";
+import { registry } from "@web/core/framework/registry";
+import { DefaultCommandItem } from "@web/core/services/commands/command_palette";
+import { HotkeyCommandItem } from "@web/core/services/commands/default_providers";
 
 const { topbarMenuRegistry } = registries;
 const commandProviderRegistry = registry.category("command_provider");

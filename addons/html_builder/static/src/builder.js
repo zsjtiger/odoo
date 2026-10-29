@@ -1,4 +1,4 @@
-import { useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/core/owl/utils";
 import { useEditor } from "@html_editor/editor";
 import {
     Component,
@@ -14,9 +14,9 @@ import {
     useProps,
     t,
 } from "@odoo/owl";
-import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
-import { _t } from "@web/core/l10n/translation";
-import { SIZES, MEDIAS_BREAKPOINTS } from "@web/core/ui/ui_utils";
+import { useHotkey } from "@web/core/services/hotkeys/hotkey_hook";
+import { _t } from "@web/core/data/l10n/translation";
+import { SIZES, MEDIAS_BREAKPOINTS } from "@web/core/services/ui/ui_utils";
 import { useService } from "@web/core/utils/hooks";
 import { addLoadingEffect as addButtonLoadingEffect } from "@web/core/utils/ui";
 import { InvisibleElementsPanel } from "@html_builder/sidebar/invisible_elements_panel";
@@ -24,7 +24,7 @@ import { BlockTab } from "@html_builder/sidebar/block_tab";
 import { CustomizeTab } from "@html_builder/sidebar/customize_tab";
 import { useSnippets } from "@html_builder/snippets/snippet_service";
 import { setBuilderCSSVariables } from "@html_builder/utils/utils_css";
-import { TextTruncateTooltipPlugin } from "@web/core/tooltip/text_truncate_tooltip_plugin";
+import { TextTruncateTooltipPlugin } from "@web/core/components/tooltip/text_truncate_tooltip_plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { getHtmlStyle } from "@html_editor/utils/formatting";
 import { isVisible } from "@html_builder/utils/utils";

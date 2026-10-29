@@ -1,5 +1,5 @@
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 
 const diacriticalMarksRegex = /[\u0300-\u036f]/g;
 

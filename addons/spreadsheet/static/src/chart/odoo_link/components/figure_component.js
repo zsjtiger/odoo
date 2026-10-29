@@ -1,6 +1,6 @@
 import { patch } from "@web/core/utils/patch";
 import * as spreadsheet from "@odoo/o-spreadsheet";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { navigateToOdoolinkFromChart } from "../../odoo_chart/odoo_chart_helpers";
 import { SEE_RECORD_LIST, SEE_RECORD_LIST_VISIBLE } from "../../../list/list_actions";
 import { SEE_RECORDS_PIVOT, SEE_RECORDS_PIVOT_VISIBLE } from "../../../pivot/pivot_actions";

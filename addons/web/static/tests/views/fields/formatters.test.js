@@ -2,8 +2,8 @@ import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { allowTranslations, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { markup } from "@odoo/owl";
-import { currencies } from "@web/core/currency";
-import { localization } from "@web/core/l10n/localization";
+import { currencies } from "@web/core/data/currency";
+import { localization } from "@web/core/data/l10n/localization";
 import {
     formatFloat,
     formatFloatFactor,

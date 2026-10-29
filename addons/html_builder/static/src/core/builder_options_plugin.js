@@ -6,12 +6,12 @@ import { getElementsWithOption, isElementInViewport } from "@html_builder/utils/
 import { OptionsContainer } from "@html_builder/sidebar/option_container";
 import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
 import { scrollTo } from "@html_builder/utils/scrolling";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { BorderConfigurator } from "@html_builder/plugins/border_configurator_option";
 import { ShadowOption } from "@html_builder/plugins/shadow_option";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { renderToElement } from "@web/core/utils/render";
 import { omit } from "@web/core/utils/objects";
 

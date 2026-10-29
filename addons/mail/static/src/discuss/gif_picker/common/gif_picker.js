@@ -2,11 +2,11 @@ import { Gif } from "@mail/core/common/gif";
 import { useOnBottomScrolled, useSequential } from "@mail/utils/common/hooks";
 
 import { Component, onWillStart, proxy, signal, t, useOnChange, useProps } from "@odoo/owl";
-import { user } from "@web/core/user";
+import { user } from "@web/core/services/user";
 import { useService, useAutofocus } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
-import { rpc } from "@web/core/network/rpc";
-import { usePicker } from "@web/core/emoji_picker/emoji_picker";
+import { rpc } from "@web/core/services/network/rpc";
+import { usePicker } from "@web/core/components/emoji_picker/emoji_picker";
 
 export function useGifPicker(...args) {
     return usePicker(GifPicker, ...args);

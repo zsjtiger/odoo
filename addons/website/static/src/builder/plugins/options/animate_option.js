@@ -1,7 +1,7 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
 import { isImageSupportedForStyle } from "@html_builder/plugins/image/replace_media_option";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { useProps, t } from "@odoo/owl";
 
 export const animateOptionProps = {

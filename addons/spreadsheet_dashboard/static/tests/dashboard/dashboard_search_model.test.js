@@ -5,7 +5,7 @@ import {
     getServerData,
 } from "@spreadsheet_dashboard/../tests/helpers/data";
 import { createDashboardLoader } from "../helpers/dashboard_action";
-import { rpcBus } from "@web/core/network/rpc";
+import { rpcBus } from "@web/core/services/network/rpc";
 
 defineSpreadsheetDashboardModels();
 

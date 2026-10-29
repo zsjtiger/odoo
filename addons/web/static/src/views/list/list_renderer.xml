@@ -5,8 +5,10 @@
         <t t-set="_canSelectRecord" t-value="this.canSelectRecord"/>
         <div
             class="o_list_renderer o_renderer table-responsive"
+            t-att-class="{ 'o_list_infinite': this.props.archInfo.infiniteScroll }"
             tabindex="-1"
             t-ref="this.rootRef"
+            t-on-scroll="(ev) => this.onScroll(ev)"
         >
             <t t-if="this.showNoContentHelper">
                 <ActionHelper noContentHelp="this.props.noContentHelp"/>
@@ -14,11 +16,11 @@
 
             <t t-set="unGroupedStyleClasses" t-valuef="table-striped"/>
 
-            <table t-attf-class="o_list_table table table-sm table-hover position-relative mb-0 {{this.props.list.isGrouped ? 'o_list_table_grouped' : 'o_list_table_ungrouped ' + unGroupedStyleClasses}}" t-ref="this.tableRef">
+            <table t-attf-class="o_list_table table table-sm position-relative mb-0 {{this.tableLayoutClasses}} {{this.props.list.isGrouped ? 'o_list_table_grouped' : 'o_list_table_ungrouped ' + unGroupedStyleClasses}}" t-ref="this.tableRef">
                 <thead>
                     <tr>
                         <th t-if="this.hasSelectors" class="o_list_record_selector o_list_controller align-middle pe-1 cursor-pointer" tabindex="-1" t-on-keydown="(ev) => this.onCellKeydown(ev)" t-on-click.stop="this.toggleSelection">
-                            <CheckBox disabled="!_canSelectRecord" indeterminate="this.someSelected" value="this.selectAll" className="'d-flex m-0'" onChange.bind="this.toggleSelection"/>
+                            <CheckBox t-if="!this.isSingleSelection" disabled="!_canSelectRecord" indeterminate="this.someSelected" value="this.selectAll" className="'d-flex m-0'" onChange.bind="this.toggleSelection"/>
                         </th>
                         <t t-foreach="this.columns" t-as="column" t-key="column.id">
                             <t t-set="isNumeric" t-value="this.isNumericColumn(column)"/>
@@ -65,6 +67,7 @@
                             <th t-else="" t-on-keydown="(ev) => this.onCellKeydown(ev)" t-att-class="{'o_list_button w-print-0 p-print-0': column.type === 'button_group'}"/>
                         </t>
                         <th t-if="this.hasOpenFormViewColumn" t-on-keydown="(ev) => this.onCellKeydown(ev)" class="o_list_open_form_view w-print-0 p-print-0"/>
+                        <th t-if="this.hasRowMenu" class="o_list_row_menu_header w-print-0 p-print-0"/>
                         <th t-if="this.hasActionsColumn" t-on-keydown="(ev) => this.onCellKeydown(ev)" class="o_list_controller o_list_actions_header w-print-0 p-print-0 position-sticky end-0 z-2">
                             <div t-if="this.displayOptionalFields or this.hasOptionalOpenFormViewColumn" class="o_optional_columns d-print-none text-center border-top-0">
                                 <Dropdown position="'bottom-end'" menuClass="'o_optional_columns_dropdown'">
@@ -324,7 +327,9 @@
             t-on-touchmove="() => this.onRowTouchMove(record)"
         >
             <td t-on-keydown="(ev) => this.onCellKeydown(ev, group, record)" t-if="this.hasSelectors" class="o_list_record_selector user-select-none" t-on-click.stop="() => this.toggleRecordSelection(record)" tabindex="-1">
-                <CheckBox disabled="!_canSelectRecord" value="record.selected" onChange.alike="() => this.toggleRecordSelection(record)" />
+                <input t-if="this.isSingleSelection" type="radio" class="form-check-input" aria-label="Select row"
+                    t-att-name="this.singleSelectionName" t-att-checked="record.selected" t-att-disabled="!_canSelectRecord"/>
+                <CheckBox t-else="" disabled="!_canSelectRecord" value="record.selected" onChange.alike="() => this.toggleRecordSelection(record)" />
             </td>
             <t t-foreach="this.getColumns(record)" t-as="column" t-key="column.id">
                 <t t-if="column.type === 'field'">
@@ -410,6 +415,16 @@
                     >View</button>
                 </td>
             </t>
+
+            <td t-if="this.hasRowMenu" class="o_list_row_menu w-print-0 p-print-0 text-center" tabindex="-1" t-on-click.stop="() => {}">
+                <Dropdown position="'bottom-end'">
+                    <button class="btn btn-link o_list_row_menu_toggle p-0" aria-label="Row actions">▾</button>
+                    <t t-set-slot="content">
+                        <DropdownItem t-if="this.props.openRecord" onSelected="() => this.props.openRecord(record)">Open</DropdownItem>
+                        <DropdownItem t-if="this.canDeleteRecord" onSelected="() => this.onDeleteRecord(record)">Delete</DropdownItem>
+                    </t>
+                </Dropdown>
+            </td>
 
             <t t-set="useUnlink" t-value="'unlink' in this.activeActions" />
             <t t-set="hasX2ManyAction" t-value="this.isX2Many and (useUnlink ? this.activeActions.unlink : this.activeActions.delete)" />

@@ -3,10 +3,10 @@ import {
     StateChangeManager,
     useEmbeddedState,
 } from "@html_editor/others/embedded_component_utils";
-import { useDateTimePicker } from "@web/core/datetime/datetime_picker_hook";
+import { useDateTimePicker } from "@web/core/components/datetime/datetime_picker_hook";
 import { ReadonlyEmbeddedDateComponent } from "../../core/date/readonly_date";
-import { TimePickerPopover } from "@web/core/time_picker/time_picker_popover";
-import { usePopover } from "@web/core/popover/popover_hook";
+import { TimePickerPopover } from "@web/core/components/time_picker/time_picker_popover";
+import { usePopover } from "@web/core/components/popover/popover_hook";
 import { signal } from "@odoo/owl";
 const { DateTime } = luxon;
 

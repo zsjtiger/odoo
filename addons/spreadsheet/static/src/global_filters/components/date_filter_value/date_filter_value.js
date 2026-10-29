@@ -1,8 +1,8 @@
 import { Component, t, useProps } from "@odoo/owl";
-import { Dropdown } from "@web/core/dropdown/dropdown";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
 import { DateFilterDropdown } from "../date_filter_dropdown/date_filter_dropdown";
 import { dateFilterValueToString } from "@spreadsheet/global_filters/helpers";
-import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
+import { useDropdownState } from "@web/core/components/dropdown/dropdown_hooks";
 
 /**
  * This component is used to select a date filter value.

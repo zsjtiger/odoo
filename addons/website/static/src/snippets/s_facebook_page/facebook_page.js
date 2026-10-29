@@ -1,7 +1,7 @@
 import { Interaction } from "@web/public/interaction";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { clamp } from "@web/core/utils/numbers";
 import { pick } from "@web/core/utils/objects";
 

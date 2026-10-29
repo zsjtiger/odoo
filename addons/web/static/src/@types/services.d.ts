@@ -1,21 +1,21 @@
 declare module "services" {
     import { ServicesRegistryShape } from "registries";
 
-    import { commandService } from "@web/core/commands/command_service";
-    import { datetimePickerService } from "@web/core/datetime/datetimepicker_service";
-    import { dialogService } from "@web/core/dialog/dialog_plugin";
-    import { effectService } from "@web/core/effects/effect_plugin";
-    import { fieldService } from "@web/core/field_service";
-    import { fileUploadService } from "@web/core/file_upload/file_upload_service";
-    import { hotkeyService } from "@web/core/hotkeys/hotkey_plugin";
-    import { nameService } from "@web/core/name_service";
-    import { httpService } from "@web/core/network/http_service";
-    import { notificationService } from "@web/core/notifications/notification_plugin";
-    import { offlineService } from "@web/core/offline/offline_plugin";
-    import { overlayService } from "@web/core/overlay/overlay_plugin";
-    import { popoverService } from "@web/core/popover/popover_plugin";
-    import { tooltipService } from "@web/core/tooltip/tooltip_service";
-    import { uiService } from "@web/core/ui/ui_plugin";
+    import { commandService } from "@web/core/services/commands/command_service";
+    import { datetimePickerService } from "@web/core/components/datetime/datetimepicker_service";
+    import { dialogService } from "@web/core/dialogs/dialog/dialog_plugin";
+    import { effectService } from "@web/core/services/effects/effect_plugin";
+    import { fieldService } from "@web/core/services/field_service";
+    import { fileUploadService } from "@web/core/components/file_upload/file_upload_service";
+    import { hotkeyService } from "@web/core/services/hotkeys/hotkey_plugin";
+    import { nameService } from "@web/core/services/name_service";
+    import { httpService } from "@web/core/services/network/http_service";
+    import { notificationService } from "@web/core/services/notifications/notification_plugin";
+    import { offlineService } from "@web/core/services/offline/offline_plugin";
+    import { overlayService } from "@web/core/components/overlay/overlay_plugin";
+    import { popoverService } from "@web/core/components/popover/popover_plugin";
+    import { tooltipService } from "@web/core/components/tooltip/tooltip_service";
+    import { uiService } from "@web/core/services/ui/ui_plugin";
     import { sortableService } from "@web/core/utils/sortable_plugin";
     import { publicInteractionService } from "@web/public/interaction_service";
     import { viewService } from "@web/views/view_service";

@@ -1,6 +1,6 @@
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { Component, onWillStart, proxy, t, useProps } from "@odoo/owl";
-import { rpc } from "@web/core/network/rpc";
+import { rpc } from "@web/core/services/network/rpc";
 import { SearchMedia } from "./search_media";
 
 /**

@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { clickOnEditAndWaitEditMode } from "@website/js/tours/tour_utils";
 import slidesTourTools from "@website_slides/../tests/tours/slides_tour_tools";
 

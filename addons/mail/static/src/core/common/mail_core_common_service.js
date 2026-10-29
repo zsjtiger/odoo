@@ -1,10 +1,10 @@
 import { proxy } from "@odoo/owl";
 
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 export class MailCoreCommon {
     /**
-     * @param {import("@web/env").OdooEnv} env
+     * @param {import("@web/boot/env").OdooEnv} env
      * @param {import("services").ServiceFactories} services
      */
     constructor(env, services) {
@@ -50,7 +50,7 @@ export class MailCoreCommon {
 export const mailCoreCommon = {
     dependencies: ["bus_service", "mail.store"],
     /**
-     * @param {import("@web/env").OdooEnv} env
+     * @param {import("@web/boot/env").OdooEnv} env
      * @param {import("services").ServiceFactories} services
      */
     start(env, services) {

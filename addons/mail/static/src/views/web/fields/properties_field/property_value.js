@@ -1,6 +1,6 @@
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
-import { PropertyValue } from "@web/views/fields/properties/property_value";
+import { PropertyValue } from "@web/views/fields/special/properties/property_value";
 
 /**
  * Allow to open the chatter of the user when we click on the avatar of a Many2one

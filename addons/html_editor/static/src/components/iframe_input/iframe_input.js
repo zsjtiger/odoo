@@ -1,5 +1,5 @@
 import { Component, onMounted, onWillDestroy, signal, useEffect, useProps, t } from "@odoo/owl";
-import { cookie } from "@web/core/browser/cookie";
+import { cookie } from "@web/core/services/browser/cookie";
 
 export class IframeInput extends Component {
     static template = "html_editor.IframeInput";

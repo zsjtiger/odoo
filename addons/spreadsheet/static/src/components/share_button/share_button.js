@@ -1,10 +1,10 @@
 import { Component, proxy, t, useProps } from "@odoo/owl";
-import { browser } from "@web/core/browser/browser";
-import { _t } from "@web/core/l10n/translation";
+import { browser } from "@web/core/services/browser/browser";
+import { _t } from "@web/core/data/l10n/translation";
 
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { CopyButton } from "@web/core/copy_button/copy_button";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
+import { CopyButton } from "@web/core/components/copy_button/copy_button";
 import { waitForDataLoaded, freezeOdooData } from "@spreadsheet/helpers/model";
 import { Model } from "@odoo/o-spreadsheet";
 

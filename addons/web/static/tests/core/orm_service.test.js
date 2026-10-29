@@ -4,9 +4,9 @@ import { microTick } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 import { getService, makeTestApp, mountWithCleanup, onRpc } from "@web/../tests/web_test_helpers";
 
-import { rpc, rpcBus } from "@web/core/network/rpc";
+import { rpc, rpcBus } from "@web/core/services/network/rpc";
 import { useService } from "@web/core/utils/hooks";
-import { RPCCache } from "@web/core/network/rpc_cache";
+import { RPCCache } from "@web/core/services/network/rpc_cache";
 
 describe.current.tags("headless");
 

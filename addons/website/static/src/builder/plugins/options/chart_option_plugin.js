@@ -7,7 +7,7 @@ import {
     randomColor,
 } from "./chart_option_utils";
 import { Plugin } from "@html_editor/plugin";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 /**
  * @typedef { Object } ChartOptionShared

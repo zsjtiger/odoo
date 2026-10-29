@@ -1,7 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { rpc } from "@web/core/network/rpc";
+import { rpc } from "@web/core/services/network/rpc";
 
 export class CoverPropertiesOptionPlugin extends Plugin {
     static id = "coverPropertiesOption";

@@ -1,6 +1,6 @@
 import { t } from "@odoo/owl";
 
-import { Dropdown, dropdownProps } from "@web/core/dropdown/dropdown";
+import { Dropdown, dropdownProps } from "@web/core/components/dropdown/dropdown";
 import { patch } from "@web/core/utils/patch";
 
 Object.assign(dropdownProps, {

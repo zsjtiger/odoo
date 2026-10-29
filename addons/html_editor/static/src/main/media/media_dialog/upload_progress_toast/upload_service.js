@@ -1,8 +1,8 @@
 import { proxy } from "@odoo/owl";
-import { rpc } from "@web/core/network/rpc";
-import { registry } from "@web/core/registry";
+import { rpc } from "@web/core/services/network/rpc";
+import { registry } from "@web/core/framework/registry";
 import { UploadProgressToast } from "./upload_progress_toast";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { checkFileSize } from "@web/core/utils/files";
 import { humanNumber } from "@web/core/utils/numbers";
 import { getDataURLFromFile } from "@web/core/utils/urls";

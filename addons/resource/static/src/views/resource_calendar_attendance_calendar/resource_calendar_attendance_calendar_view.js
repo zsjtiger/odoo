@@ -1,5 +1,5 @@
 import { calendarView } from "@web/views/calendar/calendar_view";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { ResourceCalendarAttendanceCalendarRenderer } from "@resource/views/resource_calendar_attendance_calendar/resource_calendar_attendance_calendar_renderer";
 import { ResourceCalendarAttendanceCalendarModel } from "@resource/views/resource_calendar_attendance_calendar/resource_calendar_attendance_calendar_model";
 import { ResourceCalendarAttendanceCalendarController } from "@resource/views/resource_calendar_attendance_calendar/resource_calendar_attendance_calendar_controller";

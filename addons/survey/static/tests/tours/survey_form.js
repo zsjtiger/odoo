@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { stepUtils } from "@web_tour/tour_utils";
 
 registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers', {

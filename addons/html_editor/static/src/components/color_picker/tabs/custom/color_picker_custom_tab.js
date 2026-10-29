@@ -1,6 +1,6 @@
 import { Component, t, useProps } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { isColorGradient } from "@web/core/utils/colors";
 import { CustomColorPicker } from "../../custom_color_picker/custom_color_picker";
 

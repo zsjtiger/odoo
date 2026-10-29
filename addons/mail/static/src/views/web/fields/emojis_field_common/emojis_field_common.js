@@ -1,5 +1,5 @@
 import { signal } from "@odoo/owl";
-import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
+import { useEmojiPicker } from "@web/core/components/emoji_picker/emoji_picker";
 
 /*
  * Common code for EmojisTextField and EmojisCharField

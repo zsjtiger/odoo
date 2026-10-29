@@ -1,12 +1,12 @@
 import { createSpreadsheetModel, waitForDataLoaded } from "@spreadsheet/helpers/model";
-import { _t } from "@web/core/l10n/translation";
-import { download } from "@web/core/network/download";
-import { registry } from "@web/core/registry";
-import { user } from "@web/core/user";
+import { _t } from "@web/core/data/l10n/translation";
+import { download } from "@web/core/services/network/download";
+import { registry } from "@web/core/framework/registry";
+import { user } from "@web/core/services/user";
 import { useService } from "@web/core/utils/hooks";
 
 /**
- * @param {import("@web/env").OdooEnv} env
+ * @param {import("@web/boot/env").OdooEnv} env
  * @param {object} action
  */
 async function downloadSpreadsheet(env, action) {

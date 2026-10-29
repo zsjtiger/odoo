@@ -262,6 +262,15 @@ export class ListArchParser {
                 treeAttr.groupsLimit = groupsLimitAttr && parseInt(groupsLimitAttr, 10);
 
                 treeAttr.noOpen = exprToBoolean(node.getAttribute("no_open") || "");
+                // layout options, applied as classes by the renderer
+                treeAttr.striped = exprToBoolean(xmlDoc.getAttribute("striped") || "");
+                treeAttr.bordered = exprToBoolean(xmlDoc.getAttribute("bordered") || "");
+                treeAttr.noRowHover = exprToBoolean(xmlDoc.getAttribute("no_row_hover") || "");
+                treeAttr.headless = exprToBoolean(xmlDoc.getAttribute("headless") || "");
+                treeAttr.fixedLayout = exprToBoolean(xmlDoc.getAttribute("fixed_layout") || "");
+                treeAttr.singleSelection = exprToBoolean(xmlDoc.getAttribute("single_selection") || "");
+                treeAttr.rowMenu = exprToBoolean(xmlDoc.getAttribute("row_menu") || "");
+                treeAttr.infiniteScroll = exprToBoolean(xmlDoc.getAttribute("infinite_scroll") || "");
                 treeAttr.rawExpand = xmlDoc.getAttribute("expand");
                 treeAttr.decorations = getDecoration(xmlDoc);
 

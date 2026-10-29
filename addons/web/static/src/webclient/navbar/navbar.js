@@ -10,17 +10,18 @@ import {
     usePlugin,
     useScope,
 } from "@odoo/owl";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownGroup } from "@web/core/dropdown/dropdown_group";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
-import { registry } from "@web/core/registry";
-import { Transition } from "@web/core/transition";
+import { AppLauncher } from "@web/webclient/navbar/app_launcher";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownGroup } from "@web/core/components/dropdown/dropdown_group";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
+import { OfflinePlugin } from "@web/core/services/offline/offline_plugin";
+import { registry } from "@web/core/framework/registry";
+import { Transition } from "@web/core/framework/transition";
 import { ErrorHandler } from "@web/core/utils/components";
 import { useService } from "@web/core/utils/hooks";
 import { debounce } from "@web/core/utils/timing";
-import { render } from "@web/owl2/utils";
+import { render } from "@web/core/owl/utils";
 
 const systrayRegistry = registry.category("systray");
 
@@ -33,6 +34,7 @@ export class MenuDropdown extends Dropdown {}
 export class NavBar extends Component {
     static template = "web.NavBar";
     static components = {
+        AppLauncher,
         Dropdown,
         DropdownItem,
         DropdownGroup,

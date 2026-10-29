@@ -19,8 +19,8 @@ from odoo.http import Controller, request, route
 from odoo.http.session import logout
 from odoo.http.stream import content_disposition
 from odoo.tools import clean_context, consteq, single_email_re, str2bool
-from odoo.tools.partner_identifiers import validation_error_message
-from odoo.tools.translate import LazyTranslate
+from odoo.addons.base.models.partner_identifiers import validation_error_message
+from odoo.tools import LazyTranslate
 
 _lt = LazyTranslate(__name__)
 

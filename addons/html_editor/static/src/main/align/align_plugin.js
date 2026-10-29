@@ -2,7 +2,7 @@ import { proxy } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
 import { closestBlock } from "@html_editor/utils/blocks";
 import { isVisibleTextNode } from "@html_editor/utils/dom_info";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { AlignSelector } from "./align_selector";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { weakMemoize } from "@html_editor/utils/functions";

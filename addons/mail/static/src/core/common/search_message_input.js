@@ -1,10 +1,10 @@
 import { MessageSearchState } from "@mail/core/common/message_search_hook";
 import { Component, t, useListener, useProps } from "@odoo/owl";
-import { browser } from "@web/core/browser/browser";
+import { browser } from "@web/core/services/browser/browser";
 import { SearchInput } from "@mail/core/common/search_input";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { _t } from "@web/core/l10n/translation";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
+import { _t } from "@web/core/data/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
 /**

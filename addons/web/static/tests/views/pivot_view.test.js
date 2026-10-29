@@ -26,7 +26,7 @@ import {
     toggleSaveFavorite,
     toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
-import { download } from "@web/core/network/download";
+import { download } from "@web/core/services/network/download";
 import { PivotController } from "@web/views/pivot/pivot_controller";
 import { WebClient } from "@web/webclient/webclient";
 

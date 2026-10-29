@@ -6,7 +6,7 @@ from PIL import Image, ImageDraw
 
 from odoo.exceptions import UserError
 from odoo.tests.common import TransactionCase, tagged
-from odoo.tools import image as tools
+from odoo.tools.files import image as tools
 
 from odoo.addons.base.tests.files import PNG_RAW
 

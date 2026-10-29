@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { calendarView } from "@web/views/calendar/calendar_view";
 import { ActivityCalendarRender } from "./activity_calendar_renderer";
 

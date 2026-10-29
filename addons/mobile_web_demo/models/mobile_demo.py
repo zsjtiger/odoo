@@ -1,0 +1,169 @@
+from odoo import api, fields, models
+
+
+class MobileDemoTag(models.Model):
+    _name = 'mobile.demo.tag'
+    _description = "Mobile Demo Tag"
+
+    name = fields.Char(required=True)
+    color = fields.Integer()
+
+
+class MobileDemoLine(models.Model):
+    _name = 'mobile.demo.line'
+    _description = "Mobile Demo Line"
+
+    item_id = fields.Many2one('mobile.demo.item', required=True, ondelete='cascade')
+    name = fields.Char(required=True)
+    quantity = fields.Float(default=1.0)
+    date = fields.Date(string="Date", default=fields.Date.context_today)
+    unit_price = fields.Monetary(currency_field='currency_id')
+    currency_id = fields.Many2one(related='item_id.currency_id')
+    amount = fields.Monetary(compute='_compute_amount', store=True, currency_field='currency_id')
+
+    @api.depends('quantity', 'unit_price')
+    def _compute_amount(self):
+        for line in self:
+            line.amount = line.quantity * line.unit_price
+
+
+class MobileDemoRegion(models.Model):
+    """层级数据(省 > 市 > 区), 用于演示级联选择控件 widget="cascade"."""
+    _name = 'mobile.demo.region'
+    _description = "Mobile Demo Region"
+    _order = 'sequence, id'
+
+    name = fields.Char(required=True)
+    sequence = fields.Integer(default=10)
+    parent_id = fields.Many2one('mobile.demo.region', string="Parent", ondelete='cascade', index=True)
+    child_ids = fields.One2many('mobile.demo.region', 'parent_id', string="Children")
+
+    @api.depends('name', 'parent_id.name')
+    def _compute_display_name(self):
+        # 显示名为完整路径, 例如 "北京市 北京市 东城区"
+        for region in self:
+            names = []
+            node = region
+            while node:
+                names.insert(0, node.name or '')
+                node = node.parent_id
+            region.display_name = ' '.join(names)
+
+
+class MobileDemoKeyInfo(models.Model):
+    """关键信息: 内嵌明细表单(widget="one2many_form")的演示模型, 每条是一张表单卡片."""
+    _name = 'mobile.demo.keyinfo'
+    _description = "Mobile Demo Key Info"
+    _order = 'sequence, id'
+
+    item_id = fields.Many2one('mobile.demo.item', string="Item", required=True, ondelete='cascade', index=True)
+    sequence = fields.Integer(default=10)
+    product = fields.Char(string="Product", required=True)
+    key_info = fields.Selection(
+        [('efficacy', "Efficacy"), ('safety', "Safety"), ('usage', "Usage")],
+        string="Key info", required=True,
+    )
+    feedback = fields.Selection(
+        [('positive', "Positive"), ('neutral', "Neutral"), ('negative', "Negative")],
+        string="Feedback", required=True,
+    )
+
+
+class MobileDemoItem(models.Model):
+    _name = 'mobile.demo.item'
+    _inherit = ['gps.mixin']
+    _description = "Mobile Demo Item"
+    _order = 'sequence, id'
+
+    # --- basic ---
+    name = fields.Char(string="Name", required=True, index=True)
+    code = fields.Char(string="Code", readonly=True, copy=False, default="DEMO")
+    active = fields.Boolean(default=True)
+    sequence = fields.Integer(default=10)
+    description = fields.Text(string="Description")
+    notes = fields.Html(string="Notes")
+
+    # --- selections and status ---
+    state = fields.Selection(
+        [('draft', "Draft"), ('confirmed', "Confirmed"), ('done', "Done"), ('cancel', "Cancelled")],
+        string="Status", default='draft', required=True)
+    priority = fields.Selection([('0', "Normal"), ('1', "Important"), ('2', "Urgent")], string="Priority", default='0')
+    visit_type = fields.Selection([('normal', "Normal"), ('urgent', "Urgent")], string="Visit type", default='normal')
+    category = fields.Selection(
+        [('a', "Category A"), ('b', "Category B"), ('c', "Category C"), ('d', "Category D")],
+        string="Category")
+    color = fields.Char(string="Color", default="#0f9b8e")
+    is_urgent = fields.Boolean(string="Urgent")
+    urgent_reason = fields.Char(string="Urgent reason")
+    note_required = fields.Char(string="Required when urgent")
+
+    # --- numbers ---
+    progress = fields.Float(string="Progress", default=0.0)
+    percentage = fields.Float(string="Percentage", default=0.0)
+    qty = fields.Float(string="Quantity", default=1.0)
+    duration = fields.Float(string="Duration (hours)", default=0.5)
+    currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id)
+    amount = fields.Float(string="Amount")
+    price = fields.Monetary(string="Price", currency_field='currency_id')
+    total_amount = fields.Monetary(string="Total", compute='_compute_total', store=True, currency_field='currency_id')
+
+    # --- dates ---
+    date = fields.Date(string="Date", default=fields.Date.context_today)
+    visit_datetime = fields.Datetime(string="Visit at")
+
+    # --- relations ---
+    partner_id = fields.Many2one('res.partner', string="Partner")
+    region_id = fields.Many2one('mobile.demo.region', string="Region")
+    gps_id = fields.Many2one('gps', string="Location", ondelete='set null')
+    company_id = fields.Many2one('res.company', string="Company", default=lambda self: self.env.company)
+    user_id = fields.Many2one('res.users', string="Responsible")
+    tag_ids = fields.Many2many('mobile.demo.tag', string="Tags")
+    line_ids = fields.One2many('mobile.demo.line', 'item_id', string="Lines")
+    keyinfo_ids = fields.One2many('mobile.demo.keyinfo', 'item_id', string="Key info")
+
+    # --- contact and special text fields ---
+    email = fields.Char(string="Email")
+    phone = fields.Char(string="Phone")
+    website = fields.Char(string="Website")
+    secret = fields.Char(string="Secret")
+
+    # --- files and structured data ---
+    image = fields.Binary(string="Image", attachment=True)
+    attachment = fields.Binary(string="Attachment")
+    payload = fields.Json(string="Payload")
+
+    @api.depends('line_ids.amount')
+    def _compute_total(self):
+        for item in self:
+            item.total_amount = sum(item.line_ids.mapped('amount'))
+
+    def action_demo(self):
+        """Button used by the demo form: returns a notification so the mobile client has something to show."""
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {'title': "Demo button", 'message': self.name, 'type': 'success'},
+        }
+
+    @api.model
+    def dynamic_filter_config(self):
+        """ Custom filter panel of the mobile client (see mobile_web dynamic_filter_config). """
+        return [
+            {
+                'name': 'subordinates',
+                'label': "Subordinates",
+                'options': [
+                    {'key': 'mine', 'label': "Only mine", 'domain': [('user_id', '=', self.env.uid)], 'radio': True},
+                ],
+                'cards': {'field': 'user_id', 'subfield': 'login'},
+            },
+            {
+                'name': 'speaker',
+                'label': "Speaker",
+                'options': [
+                    {'key': 'speaker', 'label': "Speaker", 'domain': [('is_urgent', '=', True)]},
+                    {'key': 'not_speaker', 'label': "Non-speaker", 'domain': [('is_urgent', '=', False)]},
+                ],
+            },
+        ]
+

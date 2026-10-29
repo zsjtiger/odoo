@@ -1,5 +1,5 @@
 import { fields, Record } from "@mail/model/export";
-import { browser } from "@web/core/browser/browser";
+import { browser } from "@web/core/services/browser/browser";
 
 /** @typedef {{ thread?: import("models").Thread }} ChatWindowData */
 

@@ -1,9 +1,9 @@
 import { usePlugin } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
-import { browser } from "@web/core/browser/browser";
-import { rpc } from "@web/core/network/rpc";
+import { _t } from "@web/core/data/l10n/translation";
+import { browser } from "@web/core/services/browser/browser";
+import { rpc } from "@web/core/services/network/rpc";
 import { Interaction } from "@web/public/interaction";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 
 class WebsiteLinksCodeEditor extends Interaction {

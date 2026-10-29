@@ -1,5 +1,5 @@
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { EditMenuDialog } from "@website/components/dialog/edit_menu";
 import { OptimizeSEODialog } from "@website/components/dialog/seo";
 import { PagePropertiesDialog } from "@website/components/dialog/page_properties";

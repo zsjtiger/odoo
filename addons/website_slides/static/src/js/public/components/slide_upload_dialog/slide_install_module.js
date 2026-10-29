@@ -1,7 +1,7 @@
 import { Component, proxy, t, useProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { redirect } from "@web/core/utils/urls";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 
 export class SlideInstallModule extends Component {
     static components = {};

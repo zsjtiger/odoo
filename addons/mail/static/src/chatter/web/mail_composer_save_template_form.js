@@ -1,5 +1,5 @@
 import { formView } from "@web/views/form/form_view";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
 
 

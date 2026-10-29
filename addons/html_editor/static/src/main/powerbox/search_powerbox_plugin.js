@@ -1,6 +1,6 @@
 import { fuzzyLookup } from "@web/core/utils/search";
 import { Plugin } from "../../plugin";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { withSequence } from "@html_editor/utils/resource";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 

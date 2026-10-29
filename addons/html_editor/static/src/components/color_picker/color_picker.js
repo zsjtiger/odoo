@@ -1,15 +1,15 @@
 import { CustomColorPicker } from "@html_editor/components/color_picker/custom_color_picker/custom_color_picker";
 import { Component, useProps, proxy, signal, t, useListener } from "@odoo/owl";
-import { cookie } from "@web/core/browser/cookie";
-import { isMobileOS } from "@web/core/browser/feature_detection";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
-import { usePopover } from "@web/core/popover/popover_hook";
-import { POSITION_BUS } from "@web/core/position/position_hook";
-import { registry } from "@web/core/registry";
+import { cookie } from "@web/core/services/browser/cookie";
+import { isMobileOS } from "@web/core/services/browser/feature_detection";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
+import { getActiveHotkey } from "@web/core/services/hotkeys/hotkey_utils";
+import { usePopover } from "@web/core/components/popover/popover_hook";
+import { POSITION_BUS } from "@web/core/components/position/position_hook";
+import { registry } from "@web/core/framework/registry";
 import { isCSSColor, isColorGradient, normalizeCSSColor } from "@web/core/utils/colors";
-import { onWillRender, useLayoutEffect } from "@web/owl2/utils";
+import { onWillRender, useLayoutEffect } from "@web/core/owl/utils";
 
 // These colors are already normalized as per normalizeCSSColor in @web/legacy/js/widgets/colorpicker
 export const DEFAULT_COLORS = [

@@ -294,19 +294,21 @@ hr {
 // // 2. Render '$theme-colors' buttons excluding the ones already generated
 //    using the custom maps.
 @each $-name, $-color in $theme-colors {
+    // o-color() comes with the color palettes of html_editor
+    $-btn-color: if(function-exists('o-color'), o-color($-name), $-color);
     @if (not map-get($o-btns-bs-override, $-name)) {
         .btn-#{$-name} {
-            background-color: o-color($-name);
-            border: 1px solid o-color($-name);
-            color: o-color($-name);
+            background-color: $-btn-color;
+            border: 1px solid $-btn-color;
+            color: $-btn-color;
         }
     }
 
 
     @if (not map-get($o-btns-bs-outline-override, $-name)) {
         .btn-outline-#{$-name} {
-            border: 1px solid o-color($-name);
-            color: o-color($-name);
+            border: 1px solid $-btn-color;
+            color: $-btn-color;
         }
     }
 }

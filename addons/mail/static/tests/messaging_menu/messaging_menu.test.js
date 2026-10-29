@@ -32,8 +32,8 @@ import {
     withUser,
 } from "@web/../tests/web_test_helpers";
 
-import { deserializeDateTime } from "@web/core/l10n/dates";
-import { rpc } from "@web/core/network/rpc";
+import { deserializeDateTime } from "@web/core/data/l10n/dates";
+import { rpc } from "@web/core/services/network/rpc";
 import { getOrigin } from "@web/core/utils/urls";
 
 describe.current.tags("desktop");

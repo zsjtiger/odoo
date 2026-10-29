@@ -1,7 +1,7 @@
 import { pickerGetAnchor, registerComposerAction } from "@mail/core/common/composer_actions";
 import { markup } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
-import { usePopover } from "@web/core/popover/popover_hook";
+import { _t } from "@web/core/data/l10n/translation";
+import { usePopover } from "@web/core/components/popover/popover_hook";
 import { markEventHandled } from "@web/core/utils/misc";
 import { GifPicker } from "./gif_picker";
 

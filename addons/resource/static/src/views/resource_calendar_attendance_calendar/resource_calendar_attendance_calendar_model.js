@@ -1,7 +1,7 @@
 import { usePlugin, providePlugins, useScope } from "@odoo/owl";
 import { CalendarModel } from "@web/views/calendar/calendar_model";
-import { deserializeDate, serializeDate } from "@web/core/l10n/dates";
-import { _t } from "@web/core/l10n/translation";
+import { deserializeDate, serializeDate } from "@web/core/data/l10n/dates";
+import { _t } from "@web/core/data/l10n/translation";
 import { unique } from "@web/core/utils/arrays";
 import { ResourceCalendarPlugin } from "@resource/plugins/resource_calendar_plugin";
 

@@ -1,0 +1,39 @@
+.o_web_studio_model_detail {
+    background-color: $o-web-studio-bg-action;
+
+    .o_web_studio_model_detail_nav {
+        width: 240px;
+        border-right: 1px solid $gray-300;
+        background-color: $white;
+    }
+
+    .o_web_studio_model_body,
+    .o_web_studio_model_fields {
+        min-height: 0;
+    }
+
+    .o_web_studio_model_fields_list,
+    .o_web_studio_model_layouts {
+        min-height: 0;
+    }
+
+    .o_web_studio_field_table code {
+        font-size: 0.85em;
+    }
+
+    .o_web_studio_layout_card {
+        border-radius: 8px;
+    }
+}
+
+.o_web_studio_field_panel {
+    flex: 0 0 380px;
+    width: 380px;
+    min-height: 0;
+    border-left: 1px solid $gray-300;
+    background-color: $white;
+
+    .o_web_studio_field_help {
+        min-height: 80px;
+    }
+}

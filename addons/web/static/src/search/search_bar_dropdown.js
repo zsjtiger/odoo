@@ -1,5 +1,5 @@
 import { types as t, useProps } from "@odoo/owl";
-import { Dropdown, dropdownProps } from "@web/core/dropdown/dropdown";
+import { Dropdown, dropdownProps } from "@web/core/components/dropdown/dropdown";
 
 export class SearchBarDropdown extends Dropdown {
     props = useProps({

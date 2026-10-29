@@ -1,14 +1,14 @@
 import { assertType, onWillStart, Plugin, t, usePlugin, whenReady } from "@odoo/owl";
-import { loadBundle } from "@web/core/assets";
-import { location } from "@web/core/browser/browser";
-import { EffectPlugin } from "@web/core/effects/effect_plugin";
-import { ORM } from "@web/core/orm_plugin";
-import { OverlayPlugin } from "@web/core/overlay/overlay_plugin";
-import { registry } from "@web/core/registry";
-import { services } from "@web/core/services";
+import { loadBundle } from "@web/core/framework/assets";
+import { location } from "@web/core/services/browser/browser";
+import { EffectPlugin } from "@web/core/services/effects/effect_plugin";
+import { ORM } from "@web/core/services/orm_plugin";
+import { OverlayPlugin } from "@web/core/components/overlay/overlay_plugin";
+import { registry } from "@web/core/framework/registry";
+import { services } from "@web/core/framework/services";
 import { redirect } from "@web/core/utils/urls";
-import { useEnv } from "@web/owl2/utils";
-import { session } from "@web/session";
+import { useEnv } from "@web/core/owl/utils";
+import { session } from "@web/boot/session";
 import { TourRecorderPlugin } from "@web_tour/tour_recorder/tour_recorder_plugin";
 import { tourState } from "@web_tour/tour_state";
 import { OnboardingItem } from "@web_tour/widgets/onboarding_item";
@@ -39,6 +39,7 @@ const stepSchemaAuto = {
 const stepSchemaOnboarding = {
     ...stepSchema,
     content: t.or([t.string(), t.object()]).optional(), //allow object(_t && markup)
+    timeout: t.customValidator(t.number(), (value) => value >= 0 && value <= 60000).optional(),
     tooltipPosition: t
         .customValidator(t.string(), (value) => ["top", "bottom", "left", "right"].includes(value))
         .optional(),

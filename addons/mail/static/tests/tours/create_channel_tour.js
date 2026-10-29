@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 registry.category("web_tour.tours").add("can_create_channel_from_form_view", {
     steps: () => [

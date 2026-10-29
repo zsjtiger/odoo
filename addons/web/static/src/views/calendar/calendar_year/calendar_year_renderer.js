@@ -1,5 +1,5 @@
-import { getLocalYearAndWeek } from "@web/core/l10n/dates";
-import { localization } from "@web/core/l10n/localization";
+import { getLocalYearAndWeek } from "@web/core/data/l10n/dates";
+import { localization } from "@web/core/data/l10n/localization";
 import { convertRecordToEvent, getColor } from "@web/views/calendar/utils";
 import { useCalendarPopover } from "@web/views/calendar/hooks/calendar_popover_hook";
 import { useFullCalendar } from "@web/views/calendar/hooks/full_calendar_hook";

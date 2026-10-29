@@ -3,7 +3,6 @@
 from . import common
 from . import test_attendee
 from . import test_embed_detection
-from . import test_gamification_karma
 from . import test_load_chatter_bundle
 from . import test_mail
 from . import test_security

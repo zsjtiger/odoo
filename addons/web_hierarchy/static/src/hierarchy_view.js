@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { HierarchyArchParser } from "./hierarchy_arch_parser";
 import { HierarchyController } from "./hierarchy_controller";
 import { HierarchyModel } from "./hierarchy_model";

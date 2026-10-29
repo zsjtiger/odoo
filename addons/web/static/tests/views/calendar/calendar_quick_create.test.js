@@ -8,7 +8,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { FAKE_MODEL } from "./calendar_test_helpers";
 
-import { MainComponentsContainer } from "@web/core/main_components_container";
+import { MainComponentsContainer } from "@web/core/framework/main_components_container";
 import { CalendarQuickCreate } from "@web/views/calendar/quick_create/calendar_quick_create";
 
 const FAKE_PROPS = {
@@ -20,7 +20,7 @@ const FAKE_PROPS = {
 /**
  * @param {{
  *   props?: object;
- *   dialogOptions?: import("@web/core/dialog/dialog_plugin").DialogOptionSchema;
+ *   dialogOptions?: import("@web/core/dialogs/dialog/dialog_plugin").DialogOptionSchema;
  * }} [params]
  */
 async function start(params = {}) {

@@ -1,8 +1,8 @@
 import { computed, signal, t, usePlugin } from "@odoo/owl";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
-import { registry } from "@web/core/registry";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
+import { registry } from "@web/core/framework/registry";
 import { IndexedDB } from "@web/core/utils/indexed_db";
-import { session } from "@web/session";
+import { session } from "@web/boot/session";
 
 export const menuService = {
     dependencies: ["action"],

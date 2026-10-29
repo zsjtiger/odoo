@@ -1,7 +1,7 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { getFirstItem, getNbColumns, getRow } from "@html_builder/utils/column_layout_utils";
 import { Plugin } from "@html_editor/plugin";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 export class LayoutColumnOptionPlugin extends Plugin {
     static id = "LayoutColumnOption";

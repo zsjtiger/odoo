@@ -6,7 +6,7 @@ import re
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools.translate import LazyTranslate
+from odoo.tools import LazyTranslate
 
 _logger = logging.getLogger(__name__)
 _lt = LazyTranslate(__name__)

@@ -3,7 +3,7 @@ import { NATIVE_MUTATION_TYPES } from "@html_editor/core/dom_observer_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { isElement } from "@html_editor/utils/dom_info";
 import { closestElement, selectElements } from "@html_editor/utils/dom_traversal";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 
 /** @typedef {import("plugins").CSSSelector} CSSSelector */
 /**

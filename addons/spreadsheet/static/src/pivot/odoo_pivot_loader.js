@@ -1,14 +1,14 @@
 //@ts-check
 
 import { EvaluationError, CellErrorType } from "@odoo/o-spreadsheet";
-import { RPCError } from "@web/core/network/rpc";
+import { RPCError } from "@web/core/services/network/rpc";
 import { KeepLast } from "@web/core/utils/concurrency";
 import {
     getFields,
     LOADING_ERROR,
     ModelNotFoundError,
 } from "@spreadsheet/data_sources/data_source";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 
 /**
  * @typedef {import("@spreadsheet").OdooFields} OdooFields

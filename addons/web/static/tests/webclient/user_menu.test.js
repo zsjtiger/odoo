@@ -12,10 +12,10 @@ import {
     serverState,
 } from "@web/../tests/web_test_helpers";
 
-import { browser } from "@web/core/browser/browser";
-import { registry } from "@web/core/registry";
-import { startRouter } from "@web/core/browser/router";
-import { user } from "@web/core/user";
+import { browser } from "@web/core/services/browser/browser";
+import { registry } from "@web/core/framework/registry";
+import { startRouter } from "@web/core/services/browser/router";
+import { user } from "@web/core/services/user";
 import { getOrigin } from "@web/core/utils/urls";
 
 import { UserMenu } from "@web/webclient/user_menu/user_menu";

@@ -3,7 +3,7 @@
 from odoo.tests import tagged, TransactionCase
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('post_install', '-at_install')
 class TestViews(TransactionCase):
 
     def setUp(self):

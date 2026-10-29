@@ -1,6 +1,6 @@
 import { computed, getScope, signal } from "@odoo/owl";
 
-import { browser } from "@web/core/browser/browser";
+import { browser } from "@web/core/services/browser/browser";
 
 /**
  * A computed that arms the timeout marking its own value stale, so a value

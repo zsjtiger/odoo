@@ -1,6 +1,6 @@
-import { EffectPlugin } from "@web/core/effects/effect_plugin";
+import { EffectPlugin } from "@web/core/services/effects/effect_plugin";
 import { useMessageScrolling } from "@mail/utils/common/hooks";
-import { useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/core/owl/utils";
 
 import {
     Component,
@@ -14,11 +14,11 @@ import {
     usePlugin,
     useProps,
 } from "@odoo/owl";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
+import { getActiveHotkey } from "@web/core/services/hotkeys/hotkey_utils";
 
 import { DiscussContent } from "@mail/core/public_web/discuss_content";
 import { MessagingMenu } from "@mail/core/public_web/messaging_menu/messaging_menu";
-import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
+import { ResizablePanel } from "@web/core/components/resizable_panel/resizable_panel";
 import { useService } from "@web/core/utils/hooks";
 
 export class Discuss extends Component {

@@ -1,8 +1,8 @@
 import { checkFilterFieldMatching } from "@spreadsheet/global_filters/helpers";
 import { CommandResult } from "../../o_spreadsheet/cancelled_reason";
-import { Domain } from "@web/core/domain";
+import { Domain } from "@web/core/data/domain";
 import { OdooCorePlugin } from "@spreadsheet/plugins";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 
 /**
  * @typedef {Object} Chart

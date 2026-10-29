@@ -2,8 +2,8 @@ import { Thread } from "@mail/core/common/thread_model";
 import { fields } from "@mail/model/misc";
 
 import { patch } from "@web/core/utils/patch";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { _t } from "@web/core/l10n/translation";
+import { ConfirmationDialog } from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
+import { _t } from "@web/core/data/l10n/translation";
 
 /** @type {import("models").Thread} */
 const threadModelPatch = {

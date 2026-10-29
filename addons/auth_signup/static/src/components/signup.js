@@ -1,8 +1,8 @@
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
-import { browser } from "@web/core/browser/browser";
+import { browser } from "@web/core/services/browser/browser";
 import { useService } from "@web/core/utils/hooks";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { Component, useProps } from "@odoo/owl";
 
 export class ResetPasswordLinkButton extends Component {

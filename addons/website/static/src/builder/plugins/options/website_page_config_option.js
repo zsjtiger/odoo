@@ -1,5 +1,5 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { BaseVisibilityOption } from "./base_visibility_option";
 
 export class TopMenuVisibilityOption extends BaseOptionComponent {

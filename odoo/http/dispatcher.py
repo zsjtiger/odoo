@@ -125,7 +125,7 @@ class conceal_debug_traceback(ContextDecorator):
 
     def __exit__(self, exc_type, exc_value, traceback):
         if exc_type is not None and issubclass(exc_type, self.exceptions):
-            # This attribute is consumed by handle_error (in router.py)
+            # This attribute is consumed by handle_error (in router/application.py)
             # and by serialize_exception.
             exc_value.conceal_debug_traceback = True
 

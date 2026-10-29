@@ -20,7 +20,7 @@ import {
     waitForNone,
 } from "@odoo/hoot";
 import { contains, onRpc, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
-import { browser, location } from "@web/core/browser/browser";
+import { browser, location } from "@web/core/services/browser/browser";
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,

@@ -1,7 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { queryFirst } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
-import { editValue } from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
+import { editValue } from "@web/../tests/core/editors/tree_editor/condition_tree_editor_test_helpers";
 import {
     contains,
     editFavorite,
@@ -15,7 +15,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { defineSearchBarModels } from "./models";
 
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { SearchBar } from "@web/search/search_bar/search_bar";
 import { SearchBarMenu } from "@web/search/search_bar_menu/search_bar_menu";
 

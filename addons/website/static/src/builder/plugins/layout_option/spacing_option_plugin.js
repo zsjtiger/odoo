@@ -1,6 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { isBlock } from "@html_editor/utils/blocks";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { addBackgroundGrid, setElementToMaxZindex } from "@html_builder/utils/grid_layout_utils";
 import { StyleAction } from "@html_builder/core/core_builder_action_plugin";
 import { NATIVE_MUTATION_TYPES } from "@html_editor/core/dom_observer_plugin";

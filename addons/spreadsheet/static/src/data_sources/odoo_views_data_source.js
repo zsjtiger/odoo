@@ -2,8 +2,8 @@
 
 import { LoadingDataError } from "@spreadsheet/o_spreadsheet/errors";
 import { LOADING_ERROR, LoadableDataSource, getFields } from "./data_source";
-import { Domain } from "@web/core/domain";
-import { user } from "@web/core/user";
+import { Domain } from "@web/core/data/domain";
+import { user } from "@web/core/services/user";
 import { omit } from "@web/core/utils/objects";
 
 /**

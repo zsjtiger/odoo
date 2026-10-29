@@ -47,7 +47,7 @@ import {
     isBrowserChrome,
     isBrowserSafari,
     isMacOS,
-} from "@web/core/browser/feature_detection";
+} from "@web/core/services/browser/feature_detection";
 import { normalizeDeepCursorPosition, normalizeFakeBR } from "@html_editor/utils/selection";
 
 /**

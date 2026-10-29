@@ -2,15 +2,15 @@ import { onWillUnmount, useListener, usePlugin } from "@odoo/owl";
 import {
     ConfirmationDialog,
     deleteConfirmationMessage,
-} from "@web/core/confirmation_dialog/confirmation_dialog";
-import { _t } from "@web/core/l10n/translation";
-import { download } from "@web/core/network/download";
-import { rpc } from "@web/core/network/rpc";
-import { ORM } from "@web/core/orm_plugin";
-import { evaluateExpr } from "@web/core/py_js/py";
+} from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
+import { _t } from "@web/core/data/l10n/translation";
+import { download } from "@web/core/services/network/download";
+import { rpc } from "@web/core/services/network/rpc";
+import { ORM } from "@web/core/services/orm_plugin";
+import { evaluateExpr } from "@web/core/data/py_js/py";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { DynamicList } from "@web/model/relational_model/dynamic_list";
-import { useEnv } from "@web/owl2/utils";
+import { useEnv } from "@web/core/owl/utils";
 import { ExportDataDialog } from "@web/views/view_dialogs/export_data_dialog";
 
 /**

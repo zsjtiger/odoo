@@ -16,79 +16,6 @@ class TestConfiguratorCommon(odoo.tests.HttpCase):
     def setUp(self):
         super().setUp()
 
-        def iap_jsonrpc_mocked_configurator(*args, **kwargs):
-            endpoint = args[0]
-            params = kwargs.get('params', {})
-            language = params.get('lang', 'en_US')
-            if endpoint.endswith('/api/website/1/configurator/industries'):
-                if language in ('fr_FR', 'pa_GB'):
-                    return {"industries": [
-                        {"id": 1, "label": "abbey in fr"},
-                        {"id": 2, "label": "aboriginal and torres strait islander organisation in fr"},
-                        {"id": 3, "label": "aboriginal art gallery in fr"},
-                        {"id": 4, "label": "abortion clinic in fr"},
-                        {"id": 5, "label": "abrasives supplier in fr"},
-                        {"id": 6, "label": "abundant life church in fr"}]}
-                else:
-                    return {"industries": [
-                        {"id": 1, "label": "abbey"},
-                        {"id": 2, "label": "aboriginal and torres strait islander organisation"},
-                        {"id": 3, "label": "aboriginal art gallery"},
-                        {"id": 4, "label": "abortion clinic"},
-                        {"id": 5, "label": "abrasives supplier"},
-                        {"id": 6, "label": "abundant life church"}]}
-            elif 'api/olg/1/chat' in endpoint:
-                return {
-                    'status': 'success',
-                    'content': '''
-                    {
-                    "categories": [
-                        {
-                        "name": "New Arrivals",
-                        "description": "Fresh styles just dropped—grab them before they’re gone!"
-                        },
-                        {
-                        "name": "Best Sellers",
-                        "description": "Shop the crowd favorites everyone’s raving about."
-                        },
-                        {
-                        "name": "Limited Editions",
-                        "description": "Exclusive finds you won’t see again. Act fast!"
-                        },
-                        {
-                        "name": "Eco-Friendly Picks",
-                        "description": "Sustainable choices that look good and feel better."
-                        },
-                        {
-                        "name": "Gifts & Bundles",
-                        "description": "Perfectly curated sets for every occasion."
-                        },
-                        {
-                        "name": "Under $50",
-                        "description": "Amazing deals that won’t break the bank."
-                        },
-                        {
-                        "name": "Seasonal Favorites",
-                        "description": "Style your season with trending must-haves."
-                        },
-                        {
-                        "name": "Final Sale",
-                        "description": "Last chance to score these unbeatable deals!"
-                        }
-                    ]
-                    }
-                '''
-                }
-            elif '/api/website/2/configurator/recommended_themes' in endpoint:
-                return []
-            elif '/api/website/2/configurator/custom_resources/' in endpoint:
-                return {'images': {}}
-            elif '/api/olg/1/generate_placeholder' in endpoint:
-                return {"a non existing placeholder": "😠", 'Catchy Headline': 'Welcome to XXXX - Your Super test'}
-
-        iap_patch = patch('odoo.addons.iap.tools.iap_tools.iap_jsonrpc', iap_jsonrpc_mocked_configurator)
-        self.startPatcher(iap_patch)
-
         patcher = patch(
             'odoo.addons.website.models.ir_module_module.IrModuleModule._theme_upgrade_upstream',
             new=TestConfiguratorCommon._theme_upgrade_upstream,
@@ -99,14 +26,17 @@ class TestConfiguratorCommon(odoo.tests.HttpCase):
 @odoo.tests.common.tagged('post_install', '-at_install')
 class TestConfigurator(TestConfiguratorCommon):
 
-    def test_ai_recommend_themes(self):
-        def iap_jsonrpc_mocked_olg(*args, **kwargs):
-            return {
-                'status': 'success',
-                'content': '["theme_clean", "theme_cobalt", "theme_unknown"]',
-            }
+    def _mock_openai_answer(self, text):
+        """Make the configured OpenAI model answer ``text`` to every chat request."""
+        self.env['ir.config_parameter'].sudo().set_str('openai.api_key', 'test-key')
+        self.env['ir.config_parameter'].sudo().set_str('openai.model', 'test-model')
+        return patch(
+            'odoo.addons.ai.llm.client.OpenAICompatibleClient.chat_completion',
+            return_value={'role': 'assistant', 'content': [{'type': 'text', 'text': text}]},
+        )
 
-        with patch('odoo.addons.iap.tools.iap_tools.iap_jsonrpc', iap_jsonrpc_mocked_olg):
+    def test_ai_recommend_themes(self):
+        with self._mock_openai_answer('["theme_clean", "theme_cobalt", "theme_unknown"]'):
             themes = self.env['website']._ai_recommend_themes(
                 {
                     'theme_clean': 'Clean theme',
@@ -121,13 +51,7 @@ class TestConfigurator(TestConfiguratorCommon):
         self.assertEqual(themes, ['theme_clean', 'theme_cobalt'])
 
     def test_ai_recommend_themes_wrong_answer(self):
-        def iap_jsonrpc_mocked_olg(*args, **kwargs):
-            return {
-                'status': 'success',
-                'content': '[{"name": "New Arrivals", "description": "Fresh styles"}]',
-            }
-
-        with patch('odoo.addons.iap.tools.iap_tools.iap_jsonrpc', iap_jsonrpc_mocked_olg):
+        with self._mock_openai_answer('[{"name": "New Arrivals", "description": "Fresh styles"}]'):
             themes = self.env['website']._ai_recommend_themes(
                 {
                     'theme_clean': 'Clean theme',
@@ -140,6 +64,19 @@ class TestConfigurator(TestConfiguratorCommon):
             )
 
         self.assertEqual(themes, [])
+
+    def test_ai_unavailable_without_configuration(self):
+        themes = self.env['website']._ai_recommend_themes(
+            {'theme_clean': 'Clean theme'}, 'restaurant', 'business', 'premium', 6,
+        )
+        self.assertEqual(themes, [])
+
+    def test_ai_generate_placeholders(self):
+        website = self.env.ref('base.default_website')
+        with self._mock_openai_answer('{"Catchy Headline": "Welcome to XXXX", "Other": ""}'):
+            texts = self.env['website']._ai_generate_placeholders(website, ['Catchy Headline', 'Other'], 'bakery')
+
+        self.assertEqual(texts, {'Catchy Headline': f'Welcome to {website.name}'})
 
     def test_configurator_params_step(self):
         self.start_tour('/website/configurator/2', 'configurator_params_step', login='admin')
@@ -190,15 +127,15 @@ class TestConfiguratorPreview(odoo.tests.HttpCase):
 
         def preview_url_mocked(website, theme_name):
             # No module in the test addons path ships a preview file.
-            if theme_name == 'theme_default':
-                return '/theme_default/static/description/preview.html'
+            if theme_name == 'website_theme_default':
+                return '/website_theme_default/static/description/preview.html'
             return None
 
         self.patch(WebsiteModel, '_get_configurator_theme_preview_url', preview_url_mocked)
         self.patch(WebsiteController, '_load_configurator_preview_html', lambda controller, url: self.PREVIEW_HTML)
 
     def _preview(self, **params):
-        params.setdefault('theme_name', 'theme_default')
+        params.setdefault('theme_name', 'website_theme_default')
         query = '&'.join(f'{key}={value}' for key, value in params.items() if value is not None)
         return self.url_open(f'/website/configurator/preview?{query}')
 
@@ -215,7 +152,7 @@ class TestConfiguratorPreview(odoo.tests.HttpCase):
     def test_preview_rejects_an_invalid_theme_name(self):
         self.authenticate('admin', 'admin')
         for theme_name in (
-            'theme_default/../website',     # traversal on a valid theme
+            'website_theme_default/../website',     # traversal on a valid theme
             'theme_unknown',                # no such module
             'website',                      # a module, but not a theme
         ):

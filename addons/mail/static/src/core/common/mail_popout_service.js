@@ -1,9 +1,9 @@
-import { OverlayPlugin } from "@web/core/overlay/overlay_plugin";
+import { OverlayPlugin } from "@web/core/components/overlay/overlay_plugin";
 import { Component, types, useApp, usePlugin, useProps, xml } from "@odoo/owl";
-import { browser } from "@web/core/browser/browser";
-import { useOwnDebugContext } from "@web/core/debug/debug_context";
-import { OverlayContainer } from "@web/core/overlay/overlay_container";
-import { registry } from "@web/core/registry";
+import { browser } from "@web/core/services/browser/browser";
+import { useOwnDebugContext } from "@web/core/services/debug/debug_context";
+import { OverlayContainer } from "@web/core/components/overlay/overlay_container";
+import { registry } from "@web/core/framework/registry";
 
 const DEFAULT_ID = Symbol("default");
 

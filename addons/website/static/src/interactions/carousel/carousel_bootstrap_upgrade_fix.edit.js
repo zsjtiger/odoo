@@ -1,5 +1,5 @@
 import { CarouselBootstrapUpgradeFix } from "@website/interactions/carousel/carousel_bootstrap_upgrade_fix";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { withHistory } from "@website/core/website_edit_service";
 
 const CarouselBootstrapUpgradeFixEdit = (I) =>

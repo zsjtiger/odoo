@@ -1,17 +1,16 @@
 import { usePlugin } from "@odoo/owl";
 import { scrollTo } from "@html_builder/utils/scrolling";
 import { Interaction } from "@web/public/interaction";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 
-import { ReCaptcha } from "@google_recaptcha/js/recaptcha";
-import { localization } from "@web/core/l10n/localization";
-import { _t } from "@web/core/l10n/translation";
-import { formatList } from "@web/core/l10n/utils";
-import { post } from "@web/core/network/http_service";
-import { user } from "@web/core/user";
+import { localization } from "@web/core/data/l10n/localization";
+import { _t } from "@web/core/data/l10n/translation";
+import { formatList } from "@web/core/data/l10n/utils/format_list";
+import { post } from "@web/core/services/network/http_service";
+import { user } from "@web/core/services/user";
 import { delay } from "@web/core/utils/concurrency";
-import { session } from "@web/session";
+import { session } from "@web/boot/session";
 import {
     clampDate,
     formatDate,
@@ -20,7 +19,7 @@ import {
     parseDateTime,
     serializeDate,
     serializeDateTime,
-} from "@web/core/l10n/dates";
+} from "@web/core/data/l10n/dates";
 import { getParsedDataFor } from "@website/js/utils";
 import { generateHTMLId } from "@web/core/utils/strings";
 
@@ -80,7 +79,6 @@ export class Form extends Interaction {
         this.bootstrap = usePlugin(BootstrapInstance);
         this.isHidden = false;
         this.datepickerInitialized = false;
-        this.recaptcha = new ReCaptcha();
         this.initialValues = new Map();
         this.disabledStates = new Map();
         this.visibilityFunctionByFieldEl = new Map();
@@ -98,10 +96,6 @@ export class Form extends Interaction {
     }
 
     async willStart() {
-        if (!this.el.classList.contains("s_website_form_no_recaptcha")) {
-            this.recaptchaLoaded = true;
-            await this.recaptcha.loadLibs();
-        }
         // fetch user data (required by fill-with behavior)
         if (user.userId) {
             this.preFillValues =
@@ -451,15 +445,6 @@ export class Form extends Interaction {
             }
         }
 
-        if (this.recaptchaLoaded) {
-            const tokenObj = await this.waitFor(this.recaptcha.getToken("website_form"));
-            if (tokenObj.token) {
-                formValues["recaptcha_token_response"] = tokenObj.token;
-            } else if (tokenObj.error) {
-                this.updateStatus("error", tokenObj.error);
-                return false;
-            }
-        }
 
         if (odoo.csrf_token) {
             formValues.csrf_token = odoo.csrf_token;

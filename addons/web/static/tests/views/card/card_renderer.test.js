@@ -24,8 +24,8 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { useService } from "@web/core/utils/hooks";
 
-import { currencies } from "@web/core/currency";
-import { registry } from "@web/core/registry";
+import { currencies } from "@web/core/data/currency";
+import { registry } from "@web/core/framework/registry";
 import { parseXML } from "@web/core/utils/xml";
 import { Card } from "@web/views/card/card";
 import { CardCompiler } from "@web/views/card/card_compiler";

@@ -12,10 +12,10 @@ import {
     useListener,
     useScope,
 } from "@odoo/owl";
-import { localization } from "@web/core/l10n/localization";
+import { localization } from "@web/core/data/l10n/localization";
 import { useService } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
-import { useEnv, useSubEnv } from "@web/owl2/utils";
+import { useEnv, useSubEnv } from "@web/core/owl/utils";
 import { BuilderAction } from "./builder_action";
 
 /**
@@ -1004,7 +1004,7 @@ export function useBuilderNumberInputUnits(props) {
  * errors and recovery strategies.
  *
  * @param {Error} error
- * @param {import("@web/env").OdooEnv} env
+ * @param {import("@web/boot/env").OdooEnv} env
  * @param {Element} [editingElement]
  * @throws {Error} If editingElement is not an outdated snippet
  */

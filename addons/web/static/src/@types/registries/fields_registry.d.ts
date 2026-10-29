@@ -1,8 +1,8 @@
 declare module "registries" {
     import { FieldDefinition, FieldType } from "fields";
     import { Component } from "@odoo/owl";
-    import { Domain } from "@web/core/domain";
-    import { _t } from "@web/core/l10n/translation";
+    import { Domain } from "@web/core/data/domain";
+    import { _t } from "@web/core/data/l10n/translation";
 
     type TranslatableString = ReturnType<typeof _t> | string;
 

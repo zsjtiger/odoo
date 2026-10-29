@@ -9,7 +9,7 @@ from werkzeug.exceptions import UnprocessableEntity
 from odoo import _, http
 from odoo.http import request
 from odoo.http.stream import content_disposition
-from odoo.tools import osutil
+from odoo.tools.system import osutil
 
 
 class TableExporter(http.Controller):

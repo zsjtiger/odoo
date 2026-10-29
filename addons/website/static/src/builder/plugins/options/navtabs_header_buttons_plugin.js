@@ -1,6 +1,6 @@
 import { usePlugin } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { uniqueId } from "@web/core/utils/functions";
 import { getElementsWithOption } from "@html_builder/utils/utils";
 import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";

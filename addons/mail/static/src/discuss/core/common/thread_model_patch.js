@@ -2,8 +2,8 @@ import { Thread } from "@mail/core/common/thread_model";
 import { fields } from "@mail/model/export";
 import { useSequential } from "@mail/utils/common/hooks";
 
-import { rpc } from "@web/core/network/rpc";
-import { registry } from "@web/core/registry";
+import { rpc } from "@web/core/services/network/rpc";
+import { registry } from "@web/core/framework/registry";
 import { createElementWithContent } from "@web/core/utils/html";
 import { patch } from "@web/core/utils/patch";
 

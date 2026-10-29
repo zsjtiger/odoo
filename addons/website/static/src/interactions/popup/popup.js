@@ -1,13 +1,13 @@
 import { usePlugin } from "@odoo/owl";
 import { Interaction } from "@web/public/interaction";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
-import { _t } from "@web/core/l10n/translation";
-import { location, browser } from "@web/core/browser/browser";
-import { cookie } from "@web/core/browser/cookie";
+import { _t } from "@web/core/data/l10n/translation";
+import { location, browser } from "@web/core/services/browser/browser";
+import { cookie } from "@web/core/services/browser/cookie";
 import { generateHTMLId } from "@web/core/utils/strings";
 import { getTabableElements } from "@web/core/utils/ui";
-import { utils as uiUtils, SIZES } from "@web/core/ui/ui_utils";
+import { utils as uiUtils, SIZES } from "@web/core/services/ui/ui_utils";
 import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 
 export class Popup extends Interaction {

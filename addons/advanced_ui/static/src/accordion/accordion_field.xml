@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="advanced_ui.AccordionField">
+        <Accordion items="this.items">
+            <t t-set-slot="details" t-slot-scope="scope">
+                <t t-foreach="this.detailFields" t-as="fieldInfo" t-key="fieldInfo.name">
+                    <Field name="fieldInfo.name" record="scope.item.row" fieldInfo="this.getFieldInfo(fieldInfo)"/>
+                </t>
+            </t>
+        </Accordion>
+    </t>
+
+</templates>

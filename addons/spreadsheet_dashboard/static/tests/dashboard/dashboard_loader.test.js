@@ -11,7 +11,7 @@ import {
     Status,
 } from "@spreadsheet_dashboard/bundle/dashboard_action/dashboard_loader_service";
 import { onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { RPCError } from "@web/core/network/rpc";
+import { RPCError } from "@web/core/services/network/rpc";
 import { createDashboardLoader } from "../helpers/dashboard_action";
 
 defineSpreadsheetDashboardModels();

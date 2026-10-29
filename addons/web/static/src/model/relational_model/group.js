@@ -1,4 +1,4 @@
-import { Domain } from "@web/core/domain";
+import { Domain } from "@web/core/data/domain";
 import { DataPoint } from "./datapoint";
 
 /**

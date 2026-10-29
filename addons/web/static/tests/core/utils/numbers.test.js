@@ -1,7 +1,7 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { allowTranslations, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
-import { localization } from "@web/core/l10n/localization";
+import { localization } from "@web/core/data/l10n/localization";
 import {
     clamp,
     floatIsZero,

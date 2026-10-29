@@ -3,7 +3,7 @@ import { useNestedSortable } from "@web/core/utils/nested_sortable";
 import wUtils from "@website/js/utils";
 import { WebsiteDialog } from "./dialog";
 import { Component, onWillStart, proxy, signal, useApp, useEffect, useProps, t } from "@odoo/owl";
-import { rpc } from "@web/core/network/rpc";
+import { rpc } from "@web/core/services/network/rpc";
 import { isEmail } from "@web/core/utils/strings";
 import { AddPageDialog } from "@website/components/dialog/add_page_dialog";
 import { isAbsoluteURLInCurrentDomain } from "@html_editor/utils/url";
@@ -219,6 +219,8 @@ export class EditMenuDialog extends Component {
             handle: "div",
             nest: true,
             maxLevels: 2,
+            onDragStart: () => this.menuEditor().classList.add("o_menu_editor_dragging"),
+            onDragEnd: () => this.menuEditor().classList.remove("o_menu_editor_dragging"),
             onDrop: this._moveMenu.bind(this),
             isAllowed: this._isAllowedMove.bind(this),
             useElementSize: true,

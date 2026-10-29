@@ -277,7 +277,7 @@ class TestUsers(UsersCommonCase):
 
         request = SimpleNamespace()
         request.best_lang = 'es_ES'
-        request_patch = patch('odoo.addons.base.models.res_users.request', request)
+        request_patch = patch('odoo.addons.base.models.res_users.users.request', request)
         self.addCleanup(request_patch.stop)
         request_patch.start()
 

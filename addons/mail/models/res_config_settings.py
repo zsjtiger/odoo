@@ -21,10 +21,6 @@ class ResConfigSettings(models.TransientModel):
         "Use Custom Email Servers",
         config_parameter='base_setup.default_external_email_server')
     fail_counter = fields.Integer('Fail Mail', compute="_compute_fail_counter")
-    alias_domain_id = fields.Many2one(
-        'mail.alias.domain', 'Alias Domain',
-        readonly=False, related='company_id.alias_domain_id',
-        help="If you have setup a catch-all email domain redirected to the Odoo server, enter the domain name here.")
     module_google_gmail = fields.Boolean('Support Gmail Authentication')
     module_microsoft_outlook = fields.Boolean('Support Outlook Authentication')
     restrict_template_rendering = fields.Boolean(
@@ -62,8 +58,6 @@ class ResConfigSettings(models.TransientModel):
         "SFU Client Bundle",
         help="SFU JS client bundle loaded by every SFU participant",
     )
-    email_primary_color = fields.Char(related='company_id.email_primary_color', readonly=False)
-    email_secondary_color = fields.Char(related='company_id.email_secondary_color', readonly=False)
 
     use_tenor_api = fields.Boolean(
         "Use Klipy API",

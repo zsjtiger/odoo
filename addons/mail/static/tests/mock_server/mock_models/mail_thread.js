@@ -1,7 +1,7 @@
 import { Store } from "@mail/../tests/mock_server/store";
 import { parseEmail } from "@mail/utils/common/format";
 
-import { serializeDateTime } from "@web/core/l10n/dates";
+import { serializeDateTime } from "@web/core/data/l10n/dates";
 import {
     Command,
     getKwArgs,

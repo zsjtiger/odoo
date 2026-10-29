@@ -1,7 +1,7 @@
 import { Interaction } from "@web/public/interaction";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { CategoryAddDialog } from "@website_slides/js/public/components/category_add_dialog/category_add_dialog";
 
 export class CategoryAdd extends Interaction {

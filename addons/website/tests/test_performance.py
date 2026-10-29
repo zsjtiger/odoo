@@ -6,7 +6,7 @@ from odoo.addons.base.tests.files import PNG_RAW
 
 from contextlib import closing
 
-from odoo.sql_db import categorize_query
+from odoo.orm.database.sql_db import categorize_query
 from odoo.tools import BinaryBytes, mute_logger
 from odoo.tests.common import tagged
 

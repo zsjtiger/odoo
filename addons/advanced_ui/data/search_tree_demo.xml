@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="partner_category_demo_regions" model="res.partner.category">
+        <field name="name">Regions</field>
+    </record>
+    <record id="partner_category_demo_europe" model="res.partner.category">
+        <field name="name">Europe</field>
+        <field name="parent_id" ref="partner_category_demo_regions"/>
+    </record>
+    <record id="partner_category_demo_france" model="res.partner.category">
+        <field name="name">France</field>
+        <field name="parent_id" ref="partner_category_demo_europe"/>
+    </record>
+    <record id="partner_category_demo_germany" model="res.partner.category">
+        <field name="name">Germany</field>
+        <field name="parent_id" ref="partner_category_demo_europe"/>
+    </record>
+    <record id="partner_category_demo_asia" model="res.partner.category">
+        <field name="name">Asia</field>
+        <field name="parent_id" ref="partner_category_demo_regions"/>
+    </record>
+    <record id="partner_category_demo_japan" model="res.partner.category">
+        <field name="name">Japan</field>
+        <field name="parent_id" ref="partner_category_demo_asia"/>
+    </record>
+    <record id="partner_category_demo_vip" model="res.partner.category">
+        <field name="name">VIP</field>
+    </record>
+
+    <record id="partner_category_demo_archived" model="res.partner.category">
+        <field name="name">Old Regions</field>
+        <field name="parent_id" ref="partner_category_demo_regions"/>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="partner_demo_paris" model="res.partner">
+        <field name="name">Paris Office</field>
+        <field name="category_id" eval="[(6, 0, [ref('partner_category_demo_france')])]"/>
+    </record>
+    <record id="partner_demo_lyon" model="res.partner">
+        <field name="name">Lyon Agency</field>
+        <field name="category_id" eval="[(6, 0, [ref('partner_category_demo_france'), ref('partner_category_demo_vip')])]"/>
+    </record>
+    <record id="partner_demo_berlin" model="res.partner">
+        <field name="name">Berlin Office</field>
+        <field name="category_id" eval="[(6, 0, [ref('partner_category_demo_germany')])]"/>
+    </record>
+    <record id="partner_demo_tokyo" model="res.partner">
+        <field name="name">Tokyo Office</field>
+        <field name="category_id" eval="[(6, 0, [ref('partner_category_demo_japan')])]"/>
+    </record>
+    <record id="partner_demo_hq" model="res.partner">
+        <field name="name">Headquarters</field>
+        <field name="category_id" eval="[(6, 0, [ref('partner_category_demo_vip')])]"/>
+    </record>
+</odoo>

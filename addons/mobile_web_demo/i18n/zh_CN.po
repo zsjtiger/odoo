@@ -1,0 +1,526 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* mobile_web_demo
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 20.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-15 10:43+0000\n"
+"PO-Revision-Date: 2026-10-15 10:43+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: mobile_web_demo
+#: model:ir.module.module,description:base.module_mobile_web_demo
+msgid ""
+"\n"
+"Mobile Web Demo\n"
+"===============\n"
+"\n"
+"A test model covering the field types, widgets and view attributes that the\n"
+"mobile web client supports: list marks (mobile_title / mobile_badge /\n"
+"mobile_subtitle / mobile_date, sortable / filterable, default_order), and form\n"
+"layout (groups, separators, notebook, one2many, required / readonly / invisible).\n"
+msgstr ""
+"移动端 Web 演示\n"
+"==============\n"
+"\n"
+"用于测试移动端 Web 客户端支持的字段类型、部件与视图属性的模型: 列表标记（mobile_title / mobile_badge /\n"
+"mobile_subtitle / mobile_date, sortable / filterable, default_order）以及表单布局（分组、分隔符、分页、\n"
+"一对多、必填 / 只读 / 隐藏）。\n"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__active
+msgid "Active"
+msgstr "启用"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__amount
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_line__amount
+msgid "Amount"
+msgstr "金额"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__attachment
+msgid "Attachment"
+msgstr "附件"
+
+#. module: mobile_web_demo
+#: model_terms:ir.ui.view,arch_db:mobile_web_demo.mobile_demo_item_form
+msgid "Basic info"
+msgstr "基本信息"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields.selection,name:mobile_web_demo.selection__mobile_demo_item__state__cancel
+msgid "Cancelled"
+msgstr "已取消"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__category
+msgid "Category"
+msgstr "分类"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields.selection,name:mobile_web_demo.selection__mobile_demo_item__category__a
+msgid "Category A"
+msgstr "分类 A"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields.selection,name:mobile_web_demo.selection__mobile_demo_item__category__b
+msgid "Category B"
+msgstr "分类 B"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields.selection,name:mobile_web_demo.selection__mobile_demo_item__category__c
+msgid "Category C"
+msgstr "分类 C"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields.selection,name:mobile_web_demo.selection__mobile_demo_item__category__d
+msgid "Category D"
+msgstr "分类 D"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_region__child_ids
+msgid "Children"
+msgstr "下级"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__code
+msgid "Code"
+msgstr "代码"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__color
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_tag__color
+msgid "Color"
+msgstr "颜色"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__company_id
+msgid "Company"
+msgstr "公司"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__x_company_currency_name
+msgid "Company currency"
+msgstr "公司币种"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields.selection,name:mobile_web_demo.selection__mobile_demo_item__state__confirmed
+msgid "Confirmed"
+msgstr "已确认"
+
+#. module: mobile_web_demo
+#: model_terms:ir.ui.view,arch_db:mobile_web_demo.mobile_demo_item_form
+msgid "Contact"
+msgstr "联系人"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__create_uid
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_keyinfo__create_uid
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_line__create_uid
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_region__create_uid
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_tag__create_uid
+msgid "Created by"
+msgstr "创建人"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__create_date
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_keyinfo__create_date
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_line__create_date
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_region__create_date
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_tag__create_date
+msgid "Created on"
+msgstr "创建时间"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__currency_id
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_line__currency_id
+msgid "Currency"
+msgstr "币种"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__date
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_line__date
+msgid "Date"
+msgstr "日期"
+
+#. module: mobile_web_demo
+#: model_terms:ir.ui.view,arch_db:mobile_web_demo.mobile_demo_item_form
+msgid "Dates and relations"
+msgstr "日期与关联"
+
+#. module: mobile_web_demo
+#: model:ir.ui.menu,name:mobile_web_demo.mobile_demo_menu_items
+msgid "Demo Items"
+msgstr "演示明细"
+
+#. module: mobile_web_demo
+#: model:ir.ui.menu,name:mobile_web_demo.mobile_demo_menu_kanban
+msgid "Demo Kanban"
+msgstr "演示看板"
+
+#. module: mobile_web_demo
+#: model_terms:ir.ui.view,arch_db:mobile_web_demo.mobile_demo_item_form
+msgid "Demo button"
+msgstr "演示按钮"
+
+#. module: mobile_web_demo
+#: model:ir.module.module,summary:base.module_mobile_web_demo
+msgid "Demo model and views that exercise every mobile list and form control"
+msgstr "用于演示移动端列表与表单所有控件的模型与视图"
+
+#. module: mobile_web_demo
+#: model_terms:ir.actions.act_window,help:mobile_web_demo.mobile_demo_item_action
+msgid "Demo records that exercise every mobile list and form control."
+msgstr "用于演示移动端列表与表单所有控件的示例记录。"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__description
+msgid "Description"
+msgstr "描述"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__display_name
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_keyinfo__display_name
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_line__display_name
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_region__display_name
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_tag__display_name
+msgid "Display Name"
+msgstr "显示名称"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields.selection,name:mobile_web_demo.selection__mobile_demo_item__state__done
+#: model_terms:ir.ui.view,arch_db:mobile_web_demo.mobile_demo_item_search
+msgid "Done"
+msgstr "已完成"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields.selection,name:mobile_web_demo.selection__mobile_demo_item__state__draft
+msgid "Draft"
+msgstr "草稿"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__duration
+msgid "Duration (hours)"
+msgstr "时长（小时）"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields.selection,name:mobile_web_demo.selection__mobile_demo_keyinfo__key_info__efficacy
+msgid "Efficacy"
+msgstr "疗效"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__email
+msgid "Email"
+msgstr "邮箱"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_keyinfo__feedback
+msgid "Feedback"
+msgstr "反馈"
+
+#. module: mobile_web_demo
+#: model_terms:ir.ui.view,arch_db:mobile_web_demo.mobile_demo_item_form
+msgid "Files"
+msgstr "文件"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__id
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_keyinfo__id
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_line__id
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_region__id
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_tag__id
+msgid "ID"
+msgstr "ID"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__image
+msgid "Image"
+msgstr "图片"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields.selection,name:mobile_web_demo.selection__mobile_demo_item__priority__1
+msgid "Important"
+msgstr "重要"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_keyinfo__item_id
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_line__item_id
+msgid "Item"
+msgstr "明细"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_line__x_mcf_item_id_name
+msgid "Item name"
+msgstr "明细名称"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__keyinfo_ids
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_keyinfo__key_info
+msgid "Key info"
+msgstr "关键信息"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__write_uid
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_keyinfo__write_uid
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_line__write_uid
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_region__write_uid
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_tag__write_uid
+msgid "Last Updated by"
+msgstr "最后更新人"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__write_date
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_keyinfo__write_date
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_line__write_date
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_region__write_date
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_tag__write_date
+msgid "Last Updated on"
+msgstr "最后更新时间"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__line_ids
+#: model_terms:ir.ui.view,arch_db:mobile_web_demo.mobile_demo_item_form
+msgid "Lines"
+msgstr "明细行"
+
+#. module: mobile_web_demo
+#: model:ir.ui.menu,name:mobile_web_demo.mobile_demo_menu_root
+msgid "Mobile Demo"
+msgstr "移动端演示"
+
+#. module: mobile_web_demo
+#: model:ir.model,name:mobile_web_demo.model_mobile_demo_item
+msgid "Mobile Demo Item"
+msgstr "移动端演示明细"
+
+#. module: mobile_web_demo
+#: model:ir.actions.act_window,name:mobile_web_demo.mobile_demo_item_action
+msgid "Mobile Demo Items"
+msgstr "移动端演示明细"
+
+#. module: mobile_web_demo
+#: model:ir.actions.act_window,name:mobile_web_demo.mobile_demo_item_kanban_action
+msgid "Mobile Demo Kanban"
+msgstr "移动端演示看板"
+
+#. module: mobile_web_demo
+#: model:ir.model,name:mobile_web_demo.model_mobile_demo_keyinfo
+msgid "Mobile Demo Key Info"
+msgstr "移动端演示关键信息"
+
+#. module: mobile_web_demo
+#: model:ir.model,name:mobile_web_demo.model_mobile_demo_line
+msgid "Mobile Demo Line"
+msgstr "移动端演示明细行"
+
+#. module: mobile_web_demo
+#: model:ir.model,name:mobile_web_demo.model_mobile_demo_region
+msgid "Mobile Demo Region"
+msgstr "移动端演示地区"
+
+#. module: mobile_web_demo
+#: model:ir.model,name:mobile_web_demo.model_mobile_demo_tag
+msgid "Mobile Demo Tag"
+msgstr "移动端演示标签"
+
+#. module: mobile_web_demo
+#: model:ir.module.module,shortdesc:base.module_mobile_web_demo
+msgid "Mobile Web Demo"
+msgstr "移动端演示"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__name
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_line__name
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_region__name
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_tag__name
+msgid "Name"
+msgstr "名称"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields.selection,name:mobile_web_demo.selection__mobile_demo_keyinfo__feedback__negative
+msgid "Negative"
+msgstr "无效"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields.selection,name:mobile_web_demo.selection__mobile_demo_keyinfo__feedback__neutral
+msgid "Neutral"
+msgstr "中性"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields.selection,name:mobile_web_demo.selection__mobile_demo_item__priority__0
+#: model:ir.model.fields.selection,name:mobile_web_demo.selection__mobile_demo_item__visit_type__normal
+msgid "Normal"
+msgstr "普通"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__notes
+#: model_terms:ir.ui.view,arch_db:mobile_web_demo.mobile_demo_item_form
+msgid "Notes"
+msgstr "备注"
+
+#. module: mobile_web_demo
+#: model_terms:ir.ui.view,arch_db:mobile_web_demo.mobile_demo_item_form
+msgid "Numbers"
+msgstr "数值"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_region__parent_id
+msgid "Parent"
+msgstr "上级"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__partner_id
+msgid "Partner"
+msgstr "联系人"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__payload
+msgid "Payload"
+msgstr "载荷"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__percentage
+msgid "Percentage"
+msgstr "百分比"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__phone
+msgid "Phone"
+msgstr "电话"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields.selection,name:mobile_web_demo.selection__mobile_demo_keyinfo__feedback__positive
+msgid "Positive"
+msgstr "有效"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__price
+msgid "Price"
+msgstr "单价"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__priority
+msgid "Priority"
+msgstr "优先级"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_keyinfo__product
+msgid "Product"
+msgstr "产品"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__progress
+msgid "Progress"
+msgstr "进度"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__qty
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_line__quantity
+msgid "Quantity"
+msgstr "数量"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__region_id
+msgid "Region"
+msgstr "地区"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__note_required
+msgid "Required when urgent"
+msgstr "紧急时必填"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__user_id
+msgid "Responsible"
+msgstr "负责人"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields.selection,name:mobile_web_demo.selection__mobile_demo_keyinfo__key_info__safety
+msgid "Safety"
+msgstr "安全性"
+
+#. module: mobile_web_demo
+#: model_terms:ir.ui.view,arch_db:mobile_web_demo.mobile_demo_item_form
+msgid "Search a partner by name"
+msgstr "按名称搜索联系人"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__secret
+msgid "Secret"
+msgstr "机密"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__sequence
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_keyinfo__sequence
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_region__sequence
+msgid "Sequence"
+msgstr "序号"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__state
+#: model_terms:ir.ui.view,arch_db:mobile_web_demo.mobile_demo_item_search
+msgid "Status"
+msgstr "状态"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__tag_ids
+msgid "Tags"
+msgstr "标签"
+
+#. module: mobile_web_demo
+#: model_terms:ir.ui.view,arch_db:mobile_web_demo.mobile_demo_item_form
+msgid "Timeline"
+msgstr "时间线"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__total_amount
+#: model_terms:ir.ui.view,arch_db:mobile_web_demo.mobile_demo_line_list
+msgid "Total"
+msgstr "合计"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_line__unit_price
+msgid "Unit Price"
+msgstr "单价"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__is_urgent
+#: model:ir.model.fields.selection,name:mobile_web_demo.selection__mobile_demo_item__priority__2
+#: model:ir.model.fields.selection,name:mobile_web_demo.selection__mobile_demo_item__visit_type__urgent
+#: model_terms:ir.ui.view,arch_db:mobile_web_demo.mobile_demo_item_search
+msgid "Urgent"
+msgstr "紧急"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__urgent_reason
+msgid "Urgent reason"
+msgstr "紧急原因"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields.selection,name:mobile_web_demo.selection__mobile_demo_keyinfo__key_info__usage
+msgid "Usage"
+msgstr "用法"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__visit_datetime
+msgid "Visit at"
+msgstr "拜访时间"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__visit_type
+msgid "Visit type"
+msgstr "拜访类型"
+
+#. module: mobile_web_demo
+#: model:ir.model.fields,field_description:mobile_web_demo.field_mobile_demo_item__website
+msgid "Website"
+msgstr "网站"

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_gps" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.gps</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <form position="inside">
+                <app name="web" string="Web" logo="/web/static/img/default_icon_app.png">
+                    <block title="GPS Location" name="gps_location">
+                        <setting string="AMap Key" help="Key of the AMap JS API. Without it the GPS field shows a placeholder map.">
+                            <field name="gps_amap_key"/>
+                        </setting>
+                        <setting string="Geocoder URL" help="Base URL of the geocoding service. Empty uses the default service.">
+                            <field name="gps_geocoder_url"/>
+                        </setting>
+                    </block>
+                </app>
+            </form>
+        </field>
+    </record>
+</odoo>

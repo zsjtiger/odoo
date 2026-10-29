@@ -9,14 +9,14 @@ import {
     useOnChange,
     useProps,
 } from "@odoo/owl";
-import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+import { useHotkey } from "@web/core/services/hotkeys/hotkey_hook";
 import { CallDebriefTimeline } from "@mail/views/fields/call_debrief/call_debrief_timeline";
 import { CallDebriefMediaControls } from "@mail/views/fields/call_debrief/call_debrief_media_controls";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
-import { deserializeDateTime } from "@web/core/l10n/dates";
-import { _t } from "@web/core/l10n/translation";
+import { deserializeDateTime } from "@web/core/data/l10n/dates";
+import { _t } from "@web/core/data/l10n/translation";
 
 const { DateTime } = luxon;
 

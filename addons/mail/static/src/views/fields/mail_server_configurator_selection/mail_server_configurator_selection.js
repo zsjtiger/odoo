@@ -1,9 +1,9 @@
 import { proxy } from "@odoo/owl";
 
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
-import { SelectionField, selectionField } from "@web/views/fields/selection/selection_field";
-import { user } from "@web/core/user";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
+import { SelectionField, selectionField } from "@web/views/fields/selection/selection/selection_field";
+import { user } from "@web/core/services/user";
 import { useService } from "@web/core/utils/hooks";
 
 export class MailServerConfiguratorSelection extends SelectionField {

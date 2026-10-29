@@ -1,6 +1,6 @@
 import { Component, t, useProps } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
-import { TimePicker } from "@web/core/time_picker/time_picker";
+import { _t } from "@web/core/data/l10n/translation";
+import { TimePicker } from "@web/core/components/time_picker/time_picker";
 import { useService } from "@web/core/utils/hooks";
 import { Record } from "@web/model/record";
 import { useCallbackRecorder } from "@web/search/action_hook";

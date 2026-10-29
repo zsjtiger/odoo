@@ -4,7 +4,7 @@ import { openChannelInvitationDialog } from "@mail/discuss/core/common/channel_i
 import { SearchInput } from "@mail/core/common/search_input";
 
 import { Component, computed, t, useOnChange, useProps } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 
 import { useService } from "@web/core/utils/hooks";
 import { useSearch } from "@mail/utils/common/hooks";

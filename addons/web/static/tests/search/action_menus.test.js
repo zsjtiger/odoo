@@ -10,7 +10,7 @@ import {
 } from "../web_test_helpers";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 /** Foo is dummy model to test `action.report` with domain of its field `value`. **/
 class Foo extends models.Model {
@@ -159,7 +159,7 @@ test("render ActionMenus in form view", async () => {
     ]);
 
     // select CogMenu
-    await contains(`.o_cp_action_menus i[data-icon="more_vert"]`).click();
+    await contains(`.o_cp_action_menus button`).click();
 
     // select Print dropdown
     await contains(`button.o-dropdown:contains(Print)`).click();
@@ -176,7 +176,7 @@ test("render ActionMenus in form view", async () => {
     await contains(`button.o_form_button_save`).click();
     expect(`.o_pager_counter`).toHaveText("2 / 2");
     expect.verifySteps(["onchange", "web_save"]);
-    await contains(`.o_cp_action_menus i[data-icon="more_vert"]`).click();
+    await contains(`.o_cp_action_menus button`).click();
     await contains(`button.o-dropdown:contains(Print)`).click();
     expect(queryAllTexts(`.o-dropdown--menu-submenu span.o-dropdown-item`)).toEqual([
         "Some Report always visible",
@@ -187,7 +187,7 @@ test("render ActionMenus in form view", async () => {
     // switch back to first record
     await contains(`.o_pager_previous`).click();
     expect(`.o_pager_counter`).toHaveText("1 / 2");
-    await contains(`.o_cp_action_menus i[data-icon="more_vert"]`).click();
+    await contains(`.o_cp_action_menus button`).click();
     await contains(`button.o-dropdown:contains(Print)`).click();
     expect(queryAllTexts(`.o-dropdown--menu-submenu span.o-dropdown-item`)).toEqual([
         "Some Report always visible",

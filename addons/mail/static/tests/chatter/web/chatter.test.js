@@ -31,7 +31,7 @@ import {
     serverState,
 } from "@web/../tests/web_test_helpers";
 
-import { DELAY_FOR_SPINNER } from "@mail/chatter/web_portal_project/chatter";
+import { DELAY_FOR_SPINNER } from "@mail/chatter/web/chatter_patch";
 import { click as clickField, edit, queryFirst } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");

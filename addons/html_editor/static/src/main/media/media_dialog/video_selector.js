@@ -1,4 +1,4 @@
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { debounce } from "@web/core/utils/timing";
 

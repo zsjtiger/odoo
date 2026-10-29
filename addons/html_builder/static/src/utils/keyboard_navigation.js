@@ -1,7 +1,7 @@
 import { onMounted, onPatched } from "@odoo/owl";
-import { browser } from "@web/core/browser/browser";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
-import { localization } from "@web/core/l10n/localization";
+import { browser } from "@web/core/services/browser/browser";
+import { getActiveHotkey } from "@web/core/services/hotkeys/hotkey_utils";
+import { localization } from "@web/core/data/l10n/localization";
 
 /**
  * Makes a 2D matrix of elements from left to right and from top to bottom.

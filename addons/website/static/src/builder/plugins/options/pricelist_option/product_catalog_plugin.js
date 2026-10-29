@@ -1,6 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { isElement } from "@html_editor/utils/dom_info";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 export class ProductCatalogOptionPlugin extends Plugin {
     static id = "productCatalogOptionPlugin";

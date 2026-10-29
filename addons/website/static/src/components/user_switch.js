@@ -1,5 +1,5 @@
-import { UserSwitch } from "@web/core/user_switch/user_switch";
-import { registry } from "@web/core/registry";
+import { UserSwitch } from "@web/core/services/user_switch/user_switch";
+import { registry } from "@web/core/framework/registry";
 export class UserSwitchEdit extends UserSwitch {
     static template = "website.login_user_switch.edit";
 }

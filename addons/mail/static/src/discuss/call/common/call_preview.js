@@ -1,4 +1,4 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/core/owl/utils";
 import { Action, ACTION_TAGS } from "@mail/core/common/action";
 import { ActionList } from "@mail/core/common/action_list";
 import {
@@ -24,7 +24,7 @@ import {
     useProps,
 } from "@odoo/owl";
 
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
 export class CallPreview extends Component {

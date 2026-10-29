@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import TransactionCase, tagged
-from odoo.tools.barcode import check_barcode_encoding, get_barcode_check_digit
+from odoo.tools.files.barcode import check_barcode_encoding, get_barcode_check_digit
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install

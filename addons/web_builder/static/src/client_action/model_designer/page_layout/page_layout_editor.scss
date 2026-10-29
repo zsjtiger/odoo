@@ -1,0 +1,28 @@
+.o_web_studio_page_layout {
+    background-color: $o-web-studio-bg-action;
+
+    .o_web_studio_page_layout_palette {
+        width: 280px;
+        border-right: 1px solid $gray-300;
+        background-color: $white;
+    }
+
+    .o_web_studio_palette_field,
+    .o_web_studio_palette_button {
+        padding: 4px 8px;
+        border: 1px solid $gray-300;
+        border-radius: 6px;
+        margin-bottom: 4px;
+        background-color: $white;
+        cursor: grab;
+    }
+
+    .o_web_studio_layout_column {
+        min-height: 120px;
+        background-color: $gray-100;
+    }
+
+    .o_web_studio_layout_field {
+        cursor: grab;
+    }
+}

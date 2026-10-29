@@ -1,5 +1,6 @@
-import { localeCompare, normalize } from "@web/core/l10n/utils";
-import { registry } from "@web/core/registry";
+import { localeCompare } from "@web/core/data/l10n/utils/collation";
+import { normalize } from "@web/core/data/l10n/utils/normalize";
+import { registry } from "@web/core/framework/registry";
 
 /**
  * Registry of functions to sort partner suggestions.

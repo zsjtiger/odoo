@@ -5,8 +5,8 @@ import { ChannelMemberContextMenu } from "@mail/discuss/core/common/channel_memb
 import { propComputed, useRightClickMenu } from "@mail/utils/common/hooks";
 
 import { Component, signal, t } from "@odoo/owl";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { useDropdownState } from "@web/core/components/dropdown/dropdown_hooks";
 
 import { useService } from "@web/core/utils/hooks";
 import { ActionList } from "@mail/core/common/action_list";

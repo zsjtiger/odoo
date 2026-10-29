@@ -71,9 +71,9 @@ class TestPerfSessionInfo(common.HttpCase):
 
         # cold fields cache:
         # - Web only: 0
-        # - All modules: 1 (web_studio + 1)
+        # - All modules: 1 (web_builder + 1)
         has_studio = self.env['ir.module.module'].sudo().search_count(
-            [('name', '=', 'web_studio'), ('state', '=', 'installed')])
+            [('name', '=', 'web_builder'), ('state', '=', 'installed')])
         self.env.invalidate_all()
         with self.assertQueryCount(has_studio):
             self.env['ir.ui.menu'].load_web_menus(False)
@@ -87,9 +87,9 @@ class TestPerfSessionInfo(common.HttpCase):
 
         # cold fields cache:
         # - Web only: 0
-        # - All modules: 1 (web_studio + 1)
+        # - All modules: 1 (web_builder + 1)
         has_studio = self.env['ir.module.module'].sudo().search_count(
-            [('name', '=', 'web_studio'), ('state', '=', 'installed')])
+            [('name', '=', 'web_builder'), ('state', '=', 'installed')])
         self.env.invalidate_all()
         with self.assertQueryCount(has_studio):
             self.env['ir.ui.menu'].load_menus(False)

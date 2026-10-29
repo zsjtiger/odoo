@@ -1,6 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
-import { rpc } from "@web/core/network/rpc";
-import { registry } from "@web/core/registry";
+import { rpc } from "@web/core/services/network/rpc";
+import { registry } from "@web/core/framework/registry";
 import { Cache } from "@web/core/utils/cache";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { ClassAction } from "@html_builder/core/core_builder_action_plugin";

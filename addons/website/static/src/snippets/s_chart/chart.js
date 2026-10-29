@@ -1,8 +1,8 @@
 import { Interaction } from "@web/public/interaction";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 import { getCSSVariableValue } from "@html_editor/utils/formatting";
-import { loadBundle } from "@web/core/assets";
+import { loadBundle } from "@web/core/framework/assets";
 import { convertCSSColorToRgba } from "@web/core/utils/colors";
 
 export class Chart extends Interaction {

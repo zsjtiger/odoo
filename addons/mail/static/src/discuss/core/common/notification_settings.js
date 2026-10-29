@@ -1,12 +1,12 @@
 import { Component, signal, t, useProps, xml } from "@odoo/owl";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
 import { useService } from "@web/core/utils/hooks";
 import { DiscussNotificationSettingsClientAction } from "./discuss_notification_settings_client_action";
-import { Dialog } from "@web/core/dialog/dialog";
-import { DROPDOWN_NESTING } from "@web/core/dropdown/_behaviours/dropdown_nesting";
-import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
+import { DROPDOWN_NESTING } from "@web/core/components/dropdown/_behaviours/dropdown_nesting";
+import { useDropdownState } from "@web/core/components/dropdown/dropdown_hooks";
 import { useHover } from "@mail/utils/common/hooks";
 
 class NotificationDialog extends Component {

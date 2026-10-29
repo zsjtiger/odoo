@@ -9,7 +9,7 @@ import {
     webModels,
 } from "@web/../tests/web_test_helpers";
 import { mailModels } from "@mail/../tests/mail_test_helpers";
-import { RPCError } from "@web/core/network/rpc";
+import { RPCError } from "@web/core/services/network/rpc";
 
 /**
  * @typedef {object} ServerData

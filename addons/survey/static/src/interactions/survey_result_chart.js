@@ -1,7 +1,7 @@
-import { _t } from "@web/core/l10n/translation";
-import { loadBundle } from "@web/core/assets";
+import { _t } from "@web/core/data/l10n/translation";
+import { loadBundle } from "@web/core/framework/assets";
 import { Interaction } from "@web/public/interaction";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 import { D3_COLORS } from "@survey/interactions/utils";
 

@@ -2,7 +2,7 @@ import { HistoryDialog } from "@html_editor/components/history_dialog/history_di
 import { expect, test } from "@odoo/hoot";
 import { waitFor } from "@odoo/hoot-dom";
 import { getService, mountWithCleanup, onRpc } from "@web/../tests/web_test_helpers";
-import { MainComponentsContainer } from "@web/core/main_components_container";
+import { MainComponentsContainer } from "@web/core/framework/main_components_container";
 
 test("HistoryDialog links are clickable and open in new tab", async () => {
     await mountWithCleanup(MainComponentsContainer);

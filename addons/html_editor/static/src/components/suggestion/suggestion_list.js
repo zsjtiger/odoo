@@ -1,5 +1,5 @@
 import { Component, signal, t, useProps } from "@odoo/owl";
-import { useNavigation } from "@web/core/navigation/navigation";
+import { useNavigation } from "@web/core/components/navigation/navigation";
 
 export class SuggestionList extends Component {
     props = useProps({

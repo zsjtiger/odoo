@@ -13,7 +13,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import { queryFirst } from "@odoo/hoot-dom";
 import { disableAnimations } from "@odoo/hoot-mock";
 import { getService, serverState } from "@web/../tests/web_test_helpers";
-import { deserializeDateTime } from "@web/core/l10n/dates";
+import { deserializeDateTime } from "@web/core/data/l10n/dates";
 
 import { range } from "@web/core/utils/numbers";
 import { getOrigin } from "@web/core/utils/urls";

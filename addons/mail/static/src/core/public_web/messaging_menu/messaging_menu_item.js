@@ -7,13 +7,13 @@ import { propSignal, useLongPress, useRightClickMenu } from "@mail/utils/common/
 
 import { Component, computed, signal, types, useProps } from "@odoo/owl";
 
-import { hasTouch, isMobileOS } from "@web/core/browser/feature_detection";
-import { DROPDOWN_NESTING } from "@web/core/dropdown/_behaviours/dropdown_nesting";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
-import { _t } from "@web/core/l10n/translation";
+import { hasTouch, isMobileOS } from "@web/core/services/browser/feature_detection";
+import { DROPDOWN_NESTING } from "@web/core/components/dropdown/_behaviours/dropdown_nesting";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { useDropdownState } from "@web/core/components/dropdown/dropdown_hooks";
+import { _t } from "@web/core/data/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { useEnv, useSubEnv } from "@web/owl2/utils";
+import { useEnv, useSubEnv } from "@web/core/owl/utils";
 
 const EXCLUDED_ACTIONS = new Set(["reaction", "reply-to"]);
 const BOOKMARK_TAB_ACTIONS = new Set(["add-bookmark", "remove-bookmark", "copy-link"]);

@@ -1,6 +1,6 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { Plugin } from "@html_editor/plugin";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 export class CarouselSlidesOptionPlugin extends Plugin {
     static id = "carouselSlidesOption";
@@ -71,7 +71,7 @@ export class SetSlideAnchorUrlAction extends BuilderAction {
         const linkEl = editingElement.querySelector("a.slide-link");
 
         if (!url) {
-            linkEl.remove();
+            linkEl?.remove();
             return;
         }
         if (linkEl) {

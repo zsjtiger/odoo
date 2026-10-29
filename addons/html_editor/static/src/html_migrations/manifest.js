@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 // See `HtmlUpgradeManager` docstring for usage details.
 const html_upgrade = registry.category("html_editor_upgrade");

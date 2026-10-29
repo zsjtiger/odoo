@@ -1,7 +1,7 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useGetItemValue } from "@html_builder/core/utils";
 import { useProps, t } from "@odoo/owl";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { WebsiteBackgroundOption } from "@website/builder/plugins/options/background_option";
 
 export class BlockquoteOption extends BaseOptionComponent {

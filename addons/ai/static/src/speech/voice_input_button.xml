@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="ai.VoiceInputButton">
+        <button
+            type="button"
+            class="o_voice_input_button btn btn-link px-2"
+            t-att-class="{'o_voice_input_recording text-danger': this.state.recording}"
+            t-att-disabled="this.props.disabled or this.state.busy"
+            t-att-title="this.title"
+            t-att-aria-label="this.title"
+            t-on-click="this.onClick"
+        >
+            <i t-if="this.state.busy" class="fa fa-spinner fa-spin"/>
+            <i t-elif="this.state.recording" class="fa fa-stop-circle"/>
+            <i t-else="" class="fa fa-microphone"/>
+        </button>
+    </t>
+
+</templates>

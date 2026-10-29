@@ -16,4 +16,6 @@ class TestWebsiteWebsiteBuilderAssetsBundle(HttpCase):
     def test_website_builder_assets_bundle_no_edit_scss(self):
         for file in self.bundle.files:
             filename = file["filename"]
+            if not filename:  # attachment url, not a file on disk
+                continue
             self.assertFalse(filename.endswith("edit.scss"), msg="website.website_builder_assets must not contain *.edit.scss files. Remove " + filename)

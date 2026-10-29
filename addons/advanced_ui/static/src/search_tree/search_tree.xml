@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="advanced_ui.SearchTreeLoadMore" t-inherit="web.SearchPanel.Section" t-inherit-mode="extension">
+        <xpath expr="//ul[hasclass('o_search_panel_field')]" position="after">
+            <div t-if="section.tree and section.hasMore" class="o_search_tree_more ps-2 pt-1">
+                <button type="button" class="btn btn-link btn-sm p-0 o_search_tree_more_button" t-on-click="() => this.loadMoreTreeValues(section.id)">
+                    Load more
+                </button>
+            </div>
+        </xpath>
+    </t>
+
+</templates>

@@ -21,7 +21,7 @@ from odoo.release import major_version
 from odoo.tools import BinaryBytes, SQL, convert_file
 from odoo.tools import file_open, file_path, file_open_temporary_directory
 from odoo.tools.misc import OrderedSet, topological_sort
-from odoo.tools.translate import JAVASCRIPT_TRANSLATION_COMMENT, CodeTranslations, TranslationImporter, get_base_langs
+from odoo.tools.text.translate import JAVASCRIPT_TRANSLATION_COMMENT, CodeTranslations, TranslationImporter, get_base_langs
 
 from odoo.addons.base.models.ir_asset import is_wildcard_glob
 
@@ -143,7 +143,7 @@ class IrModuleModule(models.Model):
             to_install.button_immediate_install()
             # Rebrowse to use the new registry
             return self.env[self._name].browse(self._ids)._import_module(module, path, force=force, with_demo=with_demo)
-        elif 'web_studio' not in installed_mods and _is_studio_custom(path):
+        elif 'web_builder' not in installed_mods and _is_studio_custom(path):
             raise UserError(_("Studio customizations require the Odoo Studio app."))
 
         mod = known_mods_names.get(module)
@@ -700,7 +700,7 @@ class IrModuleModule(models.Model):
                 extract_method = 'odoo.tools.babel:extract_javascript'
                 extract_keywords = {'_t': None}
             else:
-                extract_method = 'odoo.tools.translate:babel_extract_qweb'
+                extract_method = 'odoo.tools.text.translate:babel_extract_qweb'
                 extract_keywords = {}
             try:
                 with attachment.raw.open() as fileobj:

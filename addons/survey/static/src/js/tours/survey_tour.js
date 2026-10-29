@@ -1,5 +1,5 @@
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { stepUtils } from "@web_tour/tour_utils";
 
 import { markup } from "@odoo/owl";

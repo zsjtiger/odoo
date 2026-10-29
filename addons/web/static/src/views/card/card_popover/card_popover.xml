@@ -33,10 +33,4 @@
         </div>
     </t>
 
-    <t t-name="web.CardPopover.DefaultFooterButtons">
-        <button class="btn btn-sm btn-primary o_open_record_btn" t-on-click="(ev) => this.onFooterBtnClicked(() => this.props.openRecord(ev))">
-            <t t-out="this.openRecordButtonLabel"/>
-        </button>
-    </t>
-
 </templates>
