@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="ai_default_agent" model="ai.agent">
-        <field name="name">Odoo AI</field>
+        <field name="name">AI Assistent</field>
         <field name="subtitle">I'm your Odoo sidekick for most day-to-day tasks.</field>
         <field name="sequence">1</field>
         <field name="is_system_agent">True</field>
