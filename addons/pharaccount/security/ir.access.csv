@@ -1,0 +1,10 @@
+id,name,model_id,group_id/id,operation,domain
+access_pharaccount_account_user,pharaccount.account user,pharaccount.account,pharaccount.group_user,cru,
+access_pharaccount_account_manager,pharaccount.account manager,pharaccount.account,pharaccount.group_manager,crud,
+pharaccount_account_record_type_rule,pharaccount.account by record type,pharaccount.account,,crud,"['|', ('record_type_id.has_group_restriction', '=', False), ('record_type_id.allowed_group_ids', 'in', user.all_group_ids.ids)]"
+access_pharaccount_record_type_user,pharaccount.record.type user,pharaccount.record.type,pharaccount.group_user,r,
+access_pharaccount_record_type_config,pharaccount.record.type config,pharaccount.record.type,pharaccount.group_config,crud,
+access_pharaccount_picklist_user,pharaccount.picklist user,pharaccount.picklist,pharaccount.group_user,r,
+access_pharaccount_picklist_config,pharaccount.picklist config,pharaccount.picklist,pharaccount.group_config,crud,
+access_pharaccount_picklist_value_user,pharaccount.picklist.value user,pharaccount.picklist.value,pharaccount.group_user,r,
+access_pharaccount_picklist_value_config,pharaccount.picklist.value config,pharaccount.picklist.value,pharaccount.group_config,crud,

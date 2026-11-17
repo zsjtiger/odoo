@@ -109,9 +109,8 @@ vrux 对应：`roles`、`role_to_object_permissions`、`orion_users.role`（一�
 
 ### 记录级规则（ir.rule）
 
-- 用户只能看到自己所属组可用的记录类型下的账户：
-  `record_type_id.group_ids` 与用户的 `groups_id` 有交集。
-- 没有任何组可用的记录类型，只有 `group_config` 能看到。
+- 用户只能看到自己所属组可用的记录类型下的账户：`record_type_id.allowed_group_ids` 与用户的 `all_group_ids` 有交集。
+- 记录类型没有配置任何组时，所有用户可见（与 picklist 选项的规则一致，空表示不限制）。
 
 ### 选项级过滤
 
