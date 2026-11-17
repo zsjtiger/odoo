@@ -39,7 +39,7 @@
                     <group>
                         <group string="基本信息">
                             <field name="record_type_id"/>
-                            <field name="pharmacy_level_id"/>
+                            <field name="pharmacy_level_id" widget="pharaccount_picklist" options="{'picklist': 'pharmacy_level'}"/>
                             <field name="state_id"/>
                             <field name="alias"/>
                             <field name="is_important"/>
@@ -93,6 +93,67 @@
                                 <field name="openid_register_time"/>
                             </group>
                         </page>
+                        <page string="员工" name="staff">
+                            <field name="staff_ids">
+                                <list editable="bottom">
+                                    <field name="name"/>
+                                    <field name="staff_type_id"/>
+                                    <field name="gender_id" optional="show"/>
+                                    <field name="age" optional="show"/>
+                                    <field name="telephone"/>
+                                    <field name="shift_time" optional="show"/>
+                                    <field name="in_service_status_id" optional="show"/>
+                                    <field name="description" optional="hide"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="医院关联" name="hospital_links">
+                            <field name="hospital_link_ids">
+                                <list editable="bottom">
+                                    <field name="hospital_id"/>
+                                    <field name="year"/>
+                                    <field name="month"/>
+                                    <field name="package"/>
+                                    <field name="proportion"/>
+                                    <field name="external_id" optional="hide"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="关联药店" name="pharma_links">
+                            <p class="text-muted">以本药店为医院时，哪些药店通过本机构供货。</p>
+                            <field name="pharma_link_ids" readonly="1">
+                                <list>
+                                    <field name="pharmacy_id"/>
+                                    <field name="year"/>
+                                    <field name="month"/>
+                                    <field name="package"/>
+                                    <field name="proportion"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="产品包库存" name="package_inventory">
+                            <field name="package_inventory_ids">
+                                <list editable="bottom">
+                                    <field name="inventory_date"/>
+                                    <field name="yearmonth" optional="show"/>
+                                    <field name="package"/>
+                                    <field name="quantity_in"/>
+                                    <field name="quantity_out"/>
+                                    <field name="stock"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="竞品" name="competitive_products">
+                            <field name="competitive_product_ids">
+                                <list editable="bottom">
+                                    <field name="product"/>
+                                    <field name="competitive_product"/>
+                                    <field name="price"/>
+                                    <field name="sales_quantity"/>
+                                    <field name="comments" optional="show"/>
+                                </list>
+                            </field>
+                        </page>
                         <page string="备注" name="notes">
                             <field name="description" nolabel="1" placeholder="备注"/>
                         </page>
@@ -113,7 +174,7 @@
                     <group>
                         <field name="name" placeholder="药店名称"/>
                         <field name="record_type_id"/>
-                        <field name="pharmacy_level_id"/>
+                        <field name="pharmacy_level_id" widget="pharaccount_picklist" options="{'picklist': 'pharmacy_level'}"/>
                         <field name="state_id"/>
                         <field name="mobile"/>
                         <field name="telephone"/>

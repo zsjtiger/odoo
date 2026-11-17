@@ -135,3 +135,59 @@ class TestPharaccount(TransactionCase):
         self.assertEqual(account.geo_district, 'Chaoyang')
         self.assertTrue(account.is_important)
         self.assertFalse(account.is_public)
+
+    def test_widget_options_follow_record_type(self):
+        picklist = self.env['pharaccount.picklist'].create({'name': 'test_widget', 'label': 'Widget'})
+        first = self.Picklist.create({'picklist_id': picklist.id, 'name': 'W1', 'label': 'W1', 'sequence': 1})
+        second = self.Picklist.create({'picklist_id': picklist.id, 'name': 'W2', 'label': 'W2', 'sequence': 2})
+        limited = self.RecordType.create({'name': 'widget_t', 'label': 'Widget type',
+                                          'picklist_value_ids': [(6, 0, [second.id])]})
+        self.assertEqual(
+            [o['id'] for o in self.Picklist.get_widget_options('test_widget')],
+            [first.id, second.id],
+        )
+        self.assertEqual(
+            [o['id'] for o in self.Picklist.get_widget_options('test_widget', limited.id)],
+            [second.id],
+        )
+
+    def test_child_tables_cascade_with_pharmacy(self):
+        record_type = self.RecordType.create({'name': 'child_t', 'label': 'Child type'})
+        Account = self.env['pharaccount.account']
+        pharmacy = Account.create({'name': 'Parent pharmacy', 'record_type_id': record_type.id})
+        staff = self.env['pharaccount.pharmacy.staff'].create({'name': 'Zhang', 'pharmacy_id': pharmacy.id})
+        link = self.env['pharaccount.hospital.link'].create({
+            'pharmacy_id': pharmacy.id,
+            'hospital_id': Account.create({'name': 'Hospital', 'record_type_id': record_type.id}).id,
+            'package': 'P1',
+        })
+        inventory = self.env['pharaccount.package.inventory'].create({'pharmacy_id': pharmacy.id, 'stock': 5})
+        competitor = self.env['pharaccount.competitive.product'].create({
+            'pharmacy_id': pharmacy.id, 'product': 'Ours', 'competitive_product': 'Theirs',
+        })
+        self.assertEqual(pharmacy.staff_ids, staff)
+        self.assertEqual(pharmacy.hospital_link_ids, link)
+        self.assertEqual(pharmacy.package_inventory_ids, inventory)
+        self.assertEqual(pharmacy.competitive_product_ids, competitor)
+        children = {
+            'pharaccount.pharmacy.staff': staff.id,
+            'pharaccount.hospital.link': link.id,
+            'pharaccount.package.inventory': inventory.id,
+            'pharaccount.competitive.product': competitor.id,
+        }
+        pharmacy.unlink()
+        for model, record_id in children.items():
+            self.assertFalse(self.env[model].browse(record_id).exists(), model)
+
+    def test_child_rows_follow_record_type_permission(self):
+        restricted_group = self.group_a
+        record_type = self.RecordType.create({'name': 'child_rule_t', 'label': 'Child rule type',
+                                              'group_ids': [(6, 0, [restricted_group.id])]})
+        pharmacy = self.env['pharaccount.account'].create({'name': 'Hidden pharmacy',
+                                                           'record_type_id': record_type.id})
+        staff = self.env['pharaccount.pharmacy.staff'].create({'name': 'Li', 'pharmacy_id': pharmacy.id})
+        outsider = self._user([self.group_b], 'pharma_child_outsider')
+        insider = self._user([restricted_group], 'pharma_child_insider')
+        Staff = self.env['pharaccount.pharmacy.staff']
+        self.assertFalse(Staff.with_user(outsider).search([('id', '=', staff.id)]))
+        self.assertEqual(Staff.with_user(insider).search([('id', '=', staff.id)]), staff)

@@ -10,3 +10,15 @@ access_pharaccount_picklist_value_user,pharaccount.picklist.value user,pharaccou
 access_pharaccount_picklist_value_config,pharaccount.picklist.value config,pharaccount.picklist.value,pharaccount.group_config,crud,
 access_pharaccount_account_state_user,pharaccount.account.state user,pharaccount.account.state,pharaccount.group_user,r,
 access_pharaccount_account_state_config,pharaccount.account.state config,pharaccount.account.state,pharaccount.group_config,crud,
+access_pharaccount_pharmacy_staff_user,pharaccount.pharmacy.staff user,pharaccount.pharmacy.staff,pharaccount.group_user,cru,
+access_pharaccount_pharmacy_staff_manager,pharaccount.pharmacy.staff manager,pharaccount.pharmacy.staff,pharaccount.group_manager,crud,
+pharaccount_pharmacy_staff_record_type_rule,pharaccount.pharmacy.staff by pharmacy record type,pharaccount.pharmacy.staff,,crud,"['|', ('pharmacy_id.record_type_id.has_group_restriction', '=', False), ('pharmacy_id.record_type_id.allowed_group_ids', 'in', user.all_group_ids.ids)]"
+access_pharaccount_hospital_link_user,pharaccount.hospital.link user,pharaccount.hospital.link,pharaccount.group_user,cru,
+access_pharaccount_hospital_link_manager,pharaccount.hospital.link manager,pharaccount.hospital.link,pharaccount.group_manager,crud,
+pharaccount_hospital_link_record_type_rule,pharaccount.hospital.link by pharmacy record type,pharaccount.hospital.link,,crud,"['|', ('pharmacy_id.record_type_id.has_group_restriction', '=', False), ('pharmacy_id.record_type_id.allowed_group_ids', 'in', user.all_group_ids.ids)]"
+access_pharaccount_package_inventory_user,pharaccount.package.inventory user,pharaccount.package.inventory,pharaccount.group_user,cru,
+access_pharaccount_package_inventory_manager,pharaccount.package.inventory manager,pharaccount.package.inventory,pharaccount.group_manager,crud,
+pharaccount_package_inventory_record_type_rule,pharaccount.package.inventory by pharmacy record type,pharaccount.package.inventory,,crud,"['|', ('pharmacy_id.record_type_id.has_group_restriction', '=', False), ('pharmacy_id.record_type_id.allowed_group_ids', 'in', user.all_group_ids.ids)]"
+access_pharaccount_competitive_product_user,pharaccount.competitive.product user,pharaccount.competitive.product,pharaccount.group_user,cru,
+access_pharaccount_competitive_product_manager,pharaccount.competitive.product manager,pharaccount.competitive.product,pharaccount.group_manager,crud,
+pharaccount_competitive_product_record_type_rule,pharaccount.competitive.product by pharmacy record type,pharaccount.competitive.product,,crud,"['|', ('pharmacy_id.record_type_id.has_group_restriction', '=', False), ('pharmacy_id.record_type_id.allowed_group_ids', 'in', user.all_group_ids.ids)]"

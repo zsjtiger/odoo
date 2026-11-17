@@ -170,3 +170,20 @@ Odoo 没有按设备区分视图的机制，所以用两组菜单和动作区分
 | 药店（移动端）→ 配置 | 记录类型、下拉列表、账户状态的卡片 + 表单 | `group_config` |
 
 移动端表单通过 `ir.actions.act_window.view` 绑定到移动端动作，PC 表单默认使用 priority 16，移动端精简表单使用 priority 32，所以 PC 动作不会误用移动端表单。
+
+## 8. picklist 控件与子表
+
+**picklist 控件 `pharaccount_picklist`**（`static/src/fields/`）：用在药店表单的药店级别字段上，`options="{'picklist': 'pharmacy_level'}"`。选项由服务端 `pharaccount.picklist.value.get_widget_options` 返回，已经按当前用户的组和记录类型过滤。记录类型变化时会重新加载选项。如果已保存的值当前不可选，仍然显示（禁用状态），不会被自动清空。
+
+**子表**（都在药店表单的页签中以可编辑列表显示，移动端表单不显示）：
+
+| 模型 | 对应 vrux | 说明 |
+|---|---|---|
+| `pharaccount.pharmacy.staff` | `pharmacy_staffs` | 员工；职位、性别、在职状态使用 picklist `pharmacy_staff_type`、`gender`、`pharmacy_staff_in_service_status` |
+| `pharaccount.hospital.link` | `pharma_hospital_links` | 药店与医院的供货关系；年、月、包为文本 |
+| `pharaccount.package.inventory` | `account_package_inventories` | 产品包月度库存 |
+| `pharaccount.competitive.product` | `account_competitive_products` | 竞品记录 |
+
+所有子表都随药店级联删除，权限跟随所属药店的记录类型（同一条记录类型限制规则）。
+
+**暂未迁移的引用：** 子表中的产品包、产品、竞品、岗位、拜访记录在 vrux 中是外键，这里暂存为文本，等对应模型迁移后再改为 Many2one。

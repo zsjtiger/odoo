@@ -64,3 +64,16 @@ class PharaccountPicklistValue(models.Model):
         if record_type and record_type.allowed_picklist_value_ids:
             values &= record_type.allowed_picklist_value_ids
         return values
+
+    @api.model
+    def get_widget_options(self, picklist_name, record_type_id=False):
+        """Options for the ``pharaccount_picklist`` control, as plain dicts.
+
+        Called from the browser, so it takes the record type id, not a recordset.
+        """
+        record_type = self.env['pharaccount.record.type'].browse(record_type_id or [])
+        values = self.get_selectable(picklist_name, record_type)
+        return [
+            {'id': value.id, 'name': value.name, 'label': value.label}
+            for value in values.sorted(lambda v: (v.sequence, v.id))
+        ]

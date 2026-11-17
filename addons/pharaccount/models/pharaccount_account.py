@@ -54,6 +54,14 @@ class PharaccountAccount(models.Model):
     agency_id = fields.Many2one('pharaccount.account', string='Agency', ondelete='set null')
     dealer_id = fields.Many2one('pharaccount.account', string='Dealer', ondelete='set null')
 
+    staff_ids = fields.One2many('pharaccount.pharmacy.staff', 'pharmacy_id', string='Staff')
+    hospital_link_ids = fields.One2many('pharaccount.hospital.link', 'pharmacy_id', string='Hospital links')
+    pharma_link_ids = fields.One2many('pharaccount.hospital.link', 'hospital_id', string='Linked pharmacies')
+    package_inventory_ids = fields.One2many('pharaccount.package.inventory', 'pharmacy_id',
+                                            string='Package inventory')
+    competitive_product_ids = fields.One2many('pharaccount.competitive.product', 'pharmacy_id',
+                                              string='Competitive products')
+
     @api.onchange('record_type_id')
     def _onchange_record_type_id(self):
         """Drop the picklist value when it is not allowed for the new record type."""

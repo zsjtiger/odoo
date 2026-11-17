@@ -28,6 +28,12 @@ First version, following vrux:
         'views/pharaccount_views.xml',
         'views/pharaccount_menus.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'pharaccount/static/src/fields/pharaccount_picklist_field.js',
+            'pharaccount/static/src/fields/pharaccount_picklist_field.xml',
+        ],
+    },
     'installable': True,
     'application': False,
     'auto_install': False,
