@@ -1,5 +1,5 @@
 import { Component, useProps } from "@odoo/owl";
-import { CheckBox } from "@web/core/checkbox/checkbox";
+import { CheckBox } from "@web/core/components/checkbox/checkbox";
 import {
     clickableBuilderComponentProps,
     useActionInfo,

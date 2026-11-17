@@ -1,6 +1,6 @@
 import { Component, useProps, t } from "@odoo/owl";
 
-import { evaluateBooleanExpr } from "@web/core/py_js/py";
+import { evaluateBooleanExpr } from "@web/core/data/py_js/py";
 import { Field } from "@web/views/fields/field";
 import { Record } from "@web/model/record";
 import { ViewButton } from "@web/views/view_button/view_button";

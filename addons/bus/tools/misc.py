@@ -4,7 +4,7 @@ from contextlib import ExitStack, contextmanager, suppress
 
 from psycopg2.pool import PoolError
 
-from odoo.sql_db import db_connect
+from odoo.orm.database.sql_db import db_connect
 
 
 def tuplify(key):

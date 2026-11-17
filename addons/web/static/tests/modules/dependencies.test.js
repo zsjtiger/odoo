@@ -15,8 +15,8 @@ function invalidImportsFrom(folder, allowedFolders) {
     const invalidDeps = {};
     for (const module of modulesToCheck) {
         const invalid = odoo.loader.factories.get(module).deps.filter((dep) => {
-            // owl and @web/session are allowed everywhere
-            if (dep === "@odoo/owl" || dep === "@web/session" || dep.startsWith(`@web/owl2/`)) {
+            // owl and @web/boot/session are allowed everywhere
+            if (dep === "@odoo/owl" || dep === "@web/boot/session" || dep.startsWith(`@web/core/owl/`)) {
                 return false;
             }
             return !allowedFolders.some((allowed) => dep.startsWith(`@web/${allowed}/`));

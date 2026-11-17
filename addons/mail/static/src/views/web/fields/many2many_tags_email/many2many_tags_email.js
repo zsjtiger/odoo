@@ -1,13 +1,13 @@
 import { RecipientTag, useRecipientChecker } from "@mail/core/web/recipient_tag";
 import { parseEmail } from "@mail/utils/common/format";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { t, useProps } from "@odoo/owl";
 import {
     Many2ManyTagsField,
     many2ManyTagsField,
     many2ManyTagsFieldProps,
-} from "@web/views/fields/many2many_tags/many2many_tags_field";
+} from "@web/views/fields/relational/many2many_tags/many2many_tags_field";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 
 export class FieldMany2ManyTagsEmailMany2xAutocomplete extends Many2XAutocomplete {

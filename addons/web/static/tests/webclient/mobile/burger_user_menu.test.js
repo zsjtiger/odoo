@@ -1,6 +1,6 @@
 import { BurgerUserMenu } from "@web/webclient/burger_menu/burger_user_menu/burger_user_menu";
 import { preferencesItem } from "@web/webclient/user_menu/user_menu_items";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 import {
     clearRegistry,

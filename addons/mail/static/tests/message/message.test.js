@@ -46,9 +46,9 @@ import {
     withUser,
     getService,
 } from "@web/../tests/web_test_helpers";
-import { browser } from "@web/core/browser/browser";
-import { deserializeDateTime } from "@web/core/l10n/dates";
-import { user } from "@web/core/user";
+import { browser } from "@web/core/services/browser/browser";
+import { deserializeDateTime } from "@web/core/data/l10n/dates";
+import { user } from "@web/core/services/user";
 import { getOrigin, url } from "@web/core/utils/urls";
 
 const { DateTime } = luxon;

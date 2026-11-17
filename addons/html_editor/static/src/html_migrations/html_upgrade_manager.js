@@ -4,7 +4,7 @@ import {
     VERSION_SELECTOR,
     htmlEditorVersions,
 } from "@html_editor/html_migrations/html_migrations_utils";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { fixInvalidHTML } from "@html_editor/utils/sanitize";
 
 /**

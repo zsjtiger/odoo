@@ -1,6 +1,6 @@
-import { makeContext } from "@web/core/context";
-import { _t } from "@web/core/l10n/translation";
-import { evaluateBooleanExpr, evaluateExpr } from "@web/core/py_js/py";
+import { makeContext } from "@web/core/data/context";
+import { _t } from "@web/core/data/l10n/translation";
+import { evaluateBooleanExpr, evaluateExpr } from "@web/core/data/py_js/py";
 import { visitXML } from "@web/core/utils/xml";
 import { DEFAULT_INTERVAL, RELATIVE_FILTER_OPTIONS } from "@web/search/utils/dates";
 

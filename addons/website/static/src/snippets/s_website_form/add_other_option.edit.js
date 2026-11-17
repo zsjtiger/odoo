@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { AddOtherOption } from "./add_other_option";
 
 const AddOtherOptionEdit = (I) =>

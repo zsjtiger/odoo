@@ -106,8 +106,7 @@ class SlideChannelPartner(models.Model):
             We do not do any update on the 'invited' records.
             One should first set member_status to 'joined' before recomputing those values
             when enrolling an invited or archived attendee.
-            It takes into account the previous completion value to add or remove karma for
-            completing the course to the attendee (see _post_completion_update_hook)
+            It takes into account the previous completion value.
         """
         read_group_res = self.env['slide.slide.partner'].sudo()._read_group(
             ['&', '&', ('channel_id', 'in', self.mapped('channel_id').ids),
@@ -146,11 +145,7 @@ class SlideChannelPartner(models.Model):
                 record.member_status = 'ongoing'
 
         if completed_records:
-            completed_records._post_completion_update_hook(completed=True)
             completed_records._send_completed_mail()
-
-        if uncompleted_records:
-            uncompleted_records._post_completion_update_hook(completed=False)
 
     def unlink(self):
         """
@@ -172,30 +167,6 @@ class SlideChannelPartner(models.Model):
         self.ensure_one()
         token = (self.partner_id.id, self.channel_id.id)
         return tools.hmac(self.env(su=True), 'website_slides-channel-invite', token)
-
-    def _post_completion_update_hook(self, completed=True):
-        """ Post hook of _recompute_completion. Adds or removes
-        karma given for completing the course.
-
-        :param completed:
-            True if course is completed.
-            False if we remove an existing course completion.
-        """
-        for channel, memberships in self.grouped("channel_id").items():
-
-            karma = channel.karma_gen_channel_finish
-            if karma <= 0:
-                continue
-
-            karma_per_users = {}
-            for user in memberships.sudo().partner_id.user_ids:
-                karma_per_users[user] = {
-                    'gain': karma if completed else karma * -1,
-                    'source': channel,
-                    'reason': _('Course Finished') if completed else _('Course Set Uncompleted'),
-                }
-
-            self.env['res.users']._add_karma_batch(karma_per_users)
 
     def _send_completed_mail(self):
         """ Send an email to the attendee when they have successfully completed a course. """

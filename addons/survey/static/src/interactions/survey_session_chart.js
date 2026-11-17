@@ -1,8 +1,8 @@
 /* global ChartDataLabels */
 
-import { loadJS } from "@web/core/assets";
+import { loadJS } from "@web/core/framework/assets";
 import { D3_COLORS } from "@survey/interactions/utils";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { Interaction } from "@web/public/interaction";
 
 export class SurveySessionChart extends Interaction {

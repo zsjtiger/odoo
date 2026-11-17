@@ -10,9 +10,9 @@ import {
     onRpc,
     serverState,
 } from "@web/../tests/web_test_helpers";
-import { Domain } from "@web/core/domain";
-import { serializeDateTime } from "@web/core/l10n/dates";
-import { registry } from "@web/core/registry";
+import { Domain } from "@web/core/data/domain";
+import { serializeDateTime } from "@web/core/data/l10n/dates";
+import { registry } from "@web/core/framework/registry";
 import { createDocumentFragmentFromContent } from "@web/core/utils/html";
 
 const mockRpcRegistry = registry.category("mail.mock_rpc");

@@ -2,7 +2,7 @@ import { Thread } from "@mail/core/common/thread";
 
 import { useListener, useOnChange } from "@odoo/owl";
 
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 
 /** @type {Thread} */

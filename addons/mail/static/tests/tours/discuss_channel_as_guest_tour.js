@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 registry.category("web_tour.tours").add("discuss_channel_as_guest_tour.js", {
     steps: () => [

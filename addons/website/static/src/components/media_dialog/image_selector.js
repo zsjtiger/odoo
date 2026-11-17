@@ -1,4 +1,4 @@
-import { Domain } from "@web/core/domain";
+import { Domain } from "@web/core/data/domain";
 import { patch } from "@web/core/utils/patch";
 import { IMAGE_MIMETYPES } from "@html_editor/main/media/media_dialog/file_selector";
 import { ImageSelector as HtmlImageSelector } from "@html_editor/main/media/media_dialog/image_selector";

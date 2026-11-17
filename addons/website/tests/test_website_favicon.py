@@ -5,7 +5,7 @@ from PIL import Image
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 from odoo.tools import BinaryBytes
-from odoo.tools.image import binary_to_image, image_apply_opt
+from odoo.tools.files.image import binary_to_image, image_apply_opt
 
 
 @tagged('-post_install', 'at_install')

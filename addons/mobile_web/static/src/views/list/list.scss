@@ -1,0 +1,224 @@
+// 列表视图: 行、主副字段、紧凑单元格、无限滚动哨兵
+
+// -----------------------------------------------------------------------------
+// 列表 / 看板
+// -----------------------------------------------------------------------------
+
+// 工具条: 排序菜单居中
+.m_list_meta {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    padding: 4px 16px;
+    font-size: 13px;
+    color: $muted;
+}
+
+.m_list_meta > .m_sort_menu {
+    grid-column: 2;
+}
+
+
+// 下拉刷新指示器: 高度跟随下拉距离, 松手后保持在刷新中的高度
+.m_pull_indicator {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    overflow: hidden;
+    padding-bottom: 8px;
+    box-sizing: border-box;
+    font-size: 13px;
+    color: $muted;
+}
+
+.m_list,
+.m_kanban {
+    list-style: none;
+    margin: 0;
+}
+
+// 列表没有外边距; 看板的内边距在 kanban.scss 中设置
+.m_list {
+    padding: 0;
+}
+
+.m_list_row {
+    display: block;
+    width: 100%;
+    min-height: 44px;
+    box-sizing: border-box;
+    padding: 8px 14px;
+    border: none;
+    border-bottom: 1px solid $line;
+    background: $surface;
+    text-align: left;
+    &:active {
+        background: #f0fafa;
+    }
+}
+
+.m_list_primary {
+    font-size: 16px;
+    font-weight: 700;
+    color: $text;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+// 副字段每个值独占一行, 与看板卡片一样不用分隔符串在一起
+.m_list_secondary {
+    margin-top: 2px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 13px;
+    color: $muted;
+}
+
+
+
+
+// 无限滚动的哨兵: 滚动到这里时自动加载下一页, 这里只显示状态文字
+.m_load_sentinel {
+    min-height: 44px;
+    padding: 12px 16px 24px;
+    text-align: center;
+    font-size: 13px;
+    color: $muted;
+}
+
+// 记录操作: 每行右侧的 ⋯ 按钮, 有操作时为行留出空间
+.m_list > li,
+.m_kanban > li {
+    position: relative;
+}
+
+.m_row_more {
+    position: absolute;
+    top: 50%;
+    right: 4px;
+    transform: translateY(-50%);
+    min-width: 44px;
+    min-height: 44px;
+    border: none;
+    background: transparent;
+    color: $muted;
+    font-size: 20px;
+    line-height: 1;
+}
+
+.m_list > li.has_more .m_list_row,
+.m_kanban > li.has_more > .m_kanban_card {
+    padding-right: 52px;
+}
+
+// -----------------------------------------------------------------------------
+// 列表卡片: 标题与状态胶囊在第一行, 副标题, 底部是其它字段与日期
+// -----------------------------------------------------------------------------
+
+.m_list_row.m_list_card {
+    display: block;
+    width: calc(100% - 24px);
+    margin: 8px 12px;
+    padding: 12px 14px;
+    border: none;
+    border-radius: 10px;
+    background: $surface;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+    text-align: left;
+}
+
+.m_card_head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+
+    .m_list_primary {
+        flex: 1;
+        min-width: 0;
+    }
+}
+
+// 状态胶囊: 颜色由 decoration-success / decoration-danger 决定
+.m_card_badge {
+    flex: 0 0 auto;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: $line;
+    color: $muted;
+    font-size: 12px;
+    line-height: 18px;
+
+    &.is_success {
+        background: #0f9b8e;
+        color: #fff;
+    }
+
+    &.is_danger {
+        background: #f4a08a;
+        color: #fff;
+    }
+
+    .m_badge {
+        padding: 0;
+        background: transparent;
+        color: inherit;
+        font-size: 12px;
+    }
+}
+
+.m_card_sub {
+    margin-top: 6px;
+    font-size: 13px;
+    color: $muted;
+}
+
+.m_card_foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 8px;
+    font-size: 13px;
+    color: $muted;
+}
+
+.m_card_lines {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 12px;
+    min-width: 0;
+
+    // 图片字段在卡片中只显示缩略图
+    img,
+    .m_field_image {
+        width: auto;
+        height: auto;
+        max-width: 96px;
+        max-height: 28px;
+        object-fit: contain;
+        border-radius: 6px;
+    }
+}
+
+.m_card_date {
+    flex: 0 0 auto;
+    white-space: nowrap;
+}
+
+// 卡片中的图片: 放在最前面, 按图像完整展示 (不显示字段标签)
+.m_list_card .m_card_image {
+    margin: 0 0 10px;
+    .m_field_image {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        max-height: 160px;
+        border: none;
+        border-radius: 8px;
+        object-fit: cover;
+    }
+}

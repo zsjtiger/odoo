@@ -1,8 +1,8 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { ClassAction } from "@html_builder/core/core_builder_action_plugin";
 import { Plugin } from "@html_editor/plugin";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { ImagePositionOverlay } from "@html_builder/plugins/image/image_position_overlay";
 import { onceAllImagesLoaded } from "@website/utils/images";
 

@@ -3,7 +3,7 @@ import { Plugin } from "@html_editor/plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { getCSSVariableValue, getHtmlStyle, removeStyle } from "@html_editor/utils/formatting";
 import { withSequence } from "@html_editor/utils/resource";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { normalizeCSSColor } from "@web/core/utils/colors";
 import { ColorSelector } from "@html_editor/main/font/color_selector";
 import { TableBorderStyleSelector } from "./table_border_style_selector";

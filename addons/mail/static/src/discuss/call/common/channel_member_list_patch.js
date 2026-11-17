@@ -1,6 +1,6 @@
 import { MEMBER_CATEGORIES } from "@mail/discuss/core/common/channel_member_list";
 
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 
 MEMBER_CATEGORIES.push(
     {

@@ -9,8 +9,8 @@ import {
     mockWebSocket,
     registerDebugInfo,
 } from "@odoo/hoot";
-import { makeErrorFromResponse, rpc, RPCError } from "@web/core/network/rpc";
-import { RPCCache } from "@web/core/network/rpc_cache";
+import { makeErrorFromResponse, rpc, RPCError } from "@web/core/services/network/rpc";
+import { RPCCache } from "@web/core/services/network/rpc_cache";
 import { ensureArray, isIterable } from "@web/core/utils/arrays";
 import { isObject } from "@web/core/utils/objects";
 import { hashCode } from "@web/core/utils/strings";
@@ -29,7 +29,7 @@ import {
     safeSplit,
 } from "./mock_server_utils";
 
-import { loadLanguages } from "@web/core/l10n/translation";
+import { loadLanguages } from "@web/core/data/l10n/translation";
 
 const { DateTime } = luxon;
 
@@ -39,7 +39,7 @@ const { DateTime } = luxon;
  *  [key: string]: any;
  * }} ActionDefinition
  *
- * @typedef {import("@web/core/domain").DomainListRepr} DomainListRepr
+ * @typedef {import("@web/core/data/domain").DomainListRepr} DomainListRepr
  *
  * @typedef {import("./mock_fields").FieldDefinition} FieldDefinition
  *
@@ -309,7 +309,7 @@ class MockServerBaseEnvironment {
     }
 
     /**
-     * @type {import("@web/core/context").Context}
+     * @type {import("@web/core/data/context").Context}
      */
     get context() {
         return {

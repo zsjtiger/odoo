@@ -9,7 +9,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, UserError
 from odoo.fields import Domain
-from odoo.tools.translate import LazyTranslate
+from odoo.tools import LazyTranslate
 
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.addons.auth_signup.models.res_partner import SignupError

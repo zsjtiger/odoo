@@ -17,7 +17,7 @@ import {
     descendants,
     selectElements,
 } from "@html_editor/utils/dom_traversal";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { FontTypeSelector } from "./font_type_selector";
 import {
     getBaseContainerSelector,

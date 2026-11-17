@@ -1,11 +1,11 @@
 import { Component } from "@odoo/owl";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
 import { ImStatus } from "./im_status";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
-import { rpc } from "@web/core/network/rpc";
+import { rpc } from "@web/core/services/network/rpc";
 
 export class ImStatusDropdown extends Component {
     static components = { Dropdown, DropdownItem, ImStatus };

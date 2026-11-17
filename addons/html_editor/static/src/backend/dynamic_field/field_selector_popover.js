@@ -1,8 +1,8 @@
 import { Component, proxy, signal, t, usePlugin, useProps } from "@odoo/owl";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
-import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
-import { ModelFieldSelectorPopover } from "@web/core/model_field_selector/model_field_selector_popover";
-import { usePopover } from "@web/core/popover/popover_hook";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
+import { useHotkey } from "@web/core/services/hotkeys/hotkey_hook";
+import { ModelFieldSelectorPopover } from "@web/core/editors/model_field_selector/model_field_selector_popover";
+import { usePopover } from "@web/core/components/popover/popover_hook";
 import { useAutofocus } from "@web/core/utils/hooks";
 
 class EditorModelFieldSelectorPopover extends ModelFieldSelectorPopover {

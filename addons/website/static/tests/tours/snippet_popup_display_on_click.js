@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import {
     clickOnEditAndWaitEditMode,
     clickOnElement,
@@ -8,7 +8,7 @@ import {
     unfoldOptionsGroup,
     waitForEditMode,
 } from "@website/js/tours/tour_utils";
-import { browser } from "@web/core/browser/browser";
+import { browser } from "@web/core/services/browser/browser";
 
 const oldWriteText = browser.navigator.clipboard.writeText;
 

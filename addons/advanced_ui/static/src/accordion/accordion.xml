@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="advanced_ui.Accordion">
+        <div class="o_accordion">
+            <t t-foreach="this.props.items" t-as="item" t-key="item.id">
+                <div class="o_accordion_item" t-att-class="{ 'o_accordion_item_open': this.isOpen(item) }">
+                    <div class="o_accordion_summary d-flex align-items-center gap-2" role="button" tabindex="0"
+                        t-att-aria-expanded="this.isOpen(item) ? 'true' : 'false'"
+                        t-on-click="() => this.toggle(item)"
+                        t-on-keydown="(ev) => this.onSummaryKeydown(ev, item)">
+                        <span class="o_accordion_chevron" t-att-class="{ 'o_accordion_chevron_open': this.isOpen(item) }"/>
+                        <span class="o_accordion_title flex-grow-1 text-truncate" t-out="item.summary"/>
+                        <button type="button" class="o_accordion_menu btn btn-sm" tabindex="-1" aria-label="More">
+                            <span class="o_accordion_caret"/>
+                        </button>
+                    </div>
+                    <div t-if="this.isOpen(item)" class="o_accordion_details">
+                        <div class="o_accordion_group o_group">
+                            <t t-if="item.details" t-out="item.details"/>
+                            <t t-slot="details" item="item"/>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

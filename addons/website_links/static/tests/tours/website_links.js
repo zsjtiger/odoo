@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { redirect } from "@web/core/utils/urls";
 
 function getMenu(inputID) {

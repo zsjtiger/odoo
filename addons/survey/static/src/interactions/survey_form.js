@@ -1,7 +1,7 @@
-import { cookie } from "@web/core/browser/cookie";
-import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { cookie } from "@web/core/services/browser/cookie";
+import { _t } from "@web/core/data/l10n/translation";
+import { rpc } from "@web/core/services/network/rpc";
+import { ConfirmationDialog } from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
 import {
     deserializeDate,
     deserializeDateTime,
@@ -9,9 +9,9 @@ import {
     parseDate,
     serializeDateTime,
     serializeDate,
-} from "@web/core/l10n/dates";
-import { registry } from "@web/core/registry";
-import { utils as uiUtils } from "@web/core/ui/ui_utils";
+} from "@web/core/data/l10n/dates";
+import { registry } from "@web/core/framework/registry";
+import { utils as uiUtils } from "@web/core/services/ui/ui_utils";
 import { resizeTextArea } from "@web/core/utils/autoresize";
 import { Interaction } from "@web/public/interaction";
 import { redirect } from "@web/core/utils/urls";

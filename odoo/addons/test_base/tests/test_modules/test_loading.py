@@ -3,7 +3,7 @@ from unittest import SkipTest
 from odoo.tests.common import standalone
 from odoo.tests.test_module_operations import install
 from odoo.tools import mute_logger
-from odoo.tools.convert import ParseError
+from odoo.tools.loading.convert import ParseError
 
 
 @standalone('test_isolated_install')

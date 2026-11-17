@@ -77,10 +77,6 @@ class SlideSlide(models.Model):
     # Quiz related fields
     question_ids = fields.One2many("slide.question", "slide_id", string="Questions", copy=True)
     questions_count = fields.Integer(string="Numbers of Questions", compute='_compute_questions_count')
-    quiz_first_attempt_reward = fields.Integer("Reward: first attempt", default=10)
-    quiz_second_attempt_reward = fields.Integer("Reward: second attempt", default=7)
-    quiz_third_attempt_reward = fields.Integer("Reward: third attempt", default=5,)
-    quiz_fourth_attempt_reward = fields.Integer("Reward: every attempt after the third try", default=2)
     # content
     can_self_mark_completed = fields.Boolean('Can Mark Completed', compute='_compute_mark_complete_actions',
         help='The slide can be marked as completed even without opening it')
@@ -224,7 +220,7 @@ class SlideSlide(models.Model):
 
         We can't mark a slide with questions as completed manually because we need to
         complete the quiz first. But we can mark as uncompleted a slide with questions,
-        and the answers will be reset, the karma removed, etc (see mark_uncompleted).
+        and the answers will be reset, etc (see mark_uncompleted).
         """
         for slide in self:
             slide.can_self_mark_uncompleted = slide.website_published and slide.channel_id.is_member
@@ -712,8 +708,8 @@ class SlideSlide(models.Model):
 
     def message_post(self, *, message_type='notification', **kwargs):
         self.ensure_one()
-        if message_type == 'comment' and not self.channel_id.can_comment:  # user comments have a restriction on karma
-            raise AccessError(_('Not enough karma to comment'))
+        if message_type == 'comment' and not self.channel_id.can_comment:  # user comments require course membership
+            raise AccessError(_('You must be a member of the course to comment'))
         return super().message_post(message_type=message_type, **kwargs)
 
     def _get_access_action(self, access_uid=None, force_website=False):
@@ -883,7 +879,6 @@ class SlideSlide(models.Model):
         uncompleted_slides = self.filtered(lambda slide: not slide.user_has_completed)
 
         target_partner = self.env.user.partner_id
-        uncompleted_slides._action_set_quiz_done()
         SlidePartnerSudo = self.env['slide.slide.partner'].sudo()
         existing_sudo = SlidePartnerSudo.search([
             ('slide_id', 'in', uncompleted_slides.ids),
@@ -905,51 +900,10 @@ class SlideSlide(models.Model):
 
         completed_slides = self.filtered(lambda slide: slide.user_has_completed)
 
-        # Remove the Karma point gained
-        completed_slides._action_set_quiz_done(completed=False)
-
         self.env['slide.slide.partner'].sudo().search([
             ('slide_id', 'in', completed_slides.ids),
             ('partner_id', '=', self.env.user.partner_id.id),
         ]).completed = False
-
-    def _action_set_quiz_done(self, completed=True):
-        """Add or remove karma point related to the quiz.
-
-        :param completed:
-            True if the quiz will be marked as completed (karma will be increased)
-            If set to False, we will remove the karma instead of increasing it,
-            so that the user can take the quiz multiple times but not gain karma infinitely
-        """
-        if any(not slide.channel_id.is_member or not slide.website_published for slide in self):
-            raise UserError(
-                _('You cannot mark a slide quiz as completed if you are not among its members or it is unpublished.') if completed
-                else _('You cannot mark a slide quiz as not completed if you are not among its members or it is unpublished.')
-            )
-
-        points = 0
-        for slide in self:
-            user_membership_sudo = slide.user_membership_id.sudo()
-            if not user_membership_sudo \
-               or user_membership_sudo.completed == completed \
-               or not user_membership_sudo.quiz_attempts_count \
-               or not slide.question_ids:
-                continue
-
-            gains = [slide.quiz_first_attempt_reward,
-                     slide.quiz_second_attempt_reward,
-                     slide.quiz_third_attempt_reward,
-                     slide.quiz_fourth_attempt_reward]
-            points = gains[min(user_membership_sudo.quiz_attempts_count, len(gains)) - 1]
-            if points:
-                if completed:
-                    reason = _('Quiz Completed')
-                else:
-                    points *= -1
-                    reason = _('Quiz Set Uncompleted')
-                self.env.user.sudo()._add_karma(points, slide, reason)
-
-        return True
 
     def action_view_embeds(self):
         self.ensure_one()
@@ -958,7 +912,7 @@ class SlideSlide(models.Model):
         action['context'] = {'search_default_slide_id': self.id}
         return action
 
-    def _compute_quiz_info(self, target_partner, quiz_done=False):
+    def _compute_quiz_info(self, target_partner):
         result = dict.fromkeys(self.ids, False)
         slide_partners = self.env['slide.slide.partner'].sudo().search([
             ('slide_id', 'in', self.ids),
@@ -966,25 +920,10 @@ class SlideSlide(models.Model):
         ])
         slide_partners_map = dict((sp.slide_id.id, sp) for sp in slide_partners)
         for slide in self:
-            if not slide.question_ids:
-                gains = [0]
-            else:
-                gains = [slide.quiz_first_attempt_reward,
-                         slide.quiz_second_attempt_reward,
-                         slide.quiz_third_attempt_reward,
-                         slide.quiz_fourth_attempt_reward]
-            result[slide.id] = {
-                'quiz_karma_max': gains[0],  # what could be gained if succeed at first try
-                'quiz_karma_gain': gains[0],  # what would be gained at next test
-                'quiz_karma_won': 0,  # what has been gained
-                'quiz_attempts_count': 0,  # number of attempts
-            }
+            result[slide.id] = {'quiz_attempts_count': 0}
             slide_partner = slide_partners_map.get(slide.id)
             if slide.question_ids and slide_partner and slide_partner.quiz_attempts_count:
-                result[slide.id]['quiz_karma_gain'] = gains[slide_partner.quiz_attempts_count] if slide_partner.quiz_attempts_count < len(gains) else gains[-1]
                 result[slide.id]['quiz_attempts_count'] = slide_partner.quiz_attempts_count
-                if quiz_done or slide_partner.completed:
-                    result[slide.id]['quiz_karma_won'] = gains[slide_partner.quiz_attempts_count-1] if slide_partner.quiz_attempts_count < len(gains) else gains[-1]
         return result
 
     # --------------------------------------------------

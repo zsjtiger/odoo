@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { Plugin } from "@html_editor/plugin";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { showAddFontDialog } from "./add_font_dialog";

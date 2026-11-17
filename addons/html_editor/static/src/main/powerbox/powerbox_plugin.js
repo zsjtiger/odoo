@@ -1,6 +1,6 @@
 import { proxy } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { rotate } from "@web/core/utils/arrays";
 import { Powerbox } from "./powerbox";
 import { withSequence } from "@html_editor/utils/resource";

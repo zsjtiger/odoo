@@ -1,5 +1,5 @@
 import { onWillUnmount, proxy, useListener } from "@odoo/owl";
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/core/owl/utils";
 import { makeDraggableHook as nativeMakeDraggableHook } from "./draggable_hook_builder";
 import { useThrottleForAnimation } from "./timing";
 

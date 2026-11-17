@@ -1,6 +1,6 @@
 declare module "registries" {
     import { Component } from "@odoo/owl";
-    import { OdooEnv } from "@web/env";
+    import { OdooEnv } from "@web/boot/env";
     import { Interaction } from "@web/public/interaction";
     import { Compiler } from "@web/views/view_compiler";
     import { ActionDescription } from "@web/webclient/actions/action_plugin";

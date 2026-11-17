@@ -22,7 +22,7 @@ import { describe, test } from "@odoo/hoot";
 import { advanceTime, pointerDown, press } from "@odoo/hoot-dom";
 import { mockTouch, mockUserAgent } from "@odoo/hoot-mock";
 
-import { location } from "@web/core/browser/browser";
+import { location } from "@web/core/services/browser/browser";
 import { serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("mobile");

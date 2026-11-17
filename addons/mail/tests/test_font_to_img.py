@@ -4,7 +4,7 @@
 from PIL import ImageChops
 
 from odoo.tests.common import HttpCase
-from odoo.tools.image import binary_to_image
+from odoo.tools.files.image import binary_to_image
 from odoo.tools.misc import file_open
 
 from odoo.addons.web.icons import ICONS

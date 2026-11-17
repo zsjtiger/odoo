@@ -6,7 +6,7 @@ from werkzeug.urls import url_unquote_plus
 
 from odoo.addons.base.tests.files import GIF_RAW
 from odoo.tests.common import HttpCase, new_test_user, tagged
-from odoo.tools.image import binary_to_image
+from odoo.tools.files.image import binary_to_image
 from odoo.tools.misc import limited_field_access_token
 
 

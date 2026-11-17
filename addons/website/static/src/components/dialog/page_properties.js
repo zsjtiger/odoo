@@ -1,5 +1,5 @@
-import { CheckBox } from "@web/core/checkbox/checkbox";
-import { _t } from "@web/core/l10n/translation";
+import { CheckBox } from "@web/core/components/checkbox/checkbox";
+import { _t } from "@web/core/data/l10n/translation";
 import { useService, useAutofocus } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { WebsiteDialog } from "./dialog";
@@ -19,7 +19,7 @@ import {
     usePlugin,
 } from "@odoo/owl";
 import { FormController, formControllerProps } from "@web/views/form/form_controller";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { addLoadingEffect } from "@web/core/utils/ui";
 import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 

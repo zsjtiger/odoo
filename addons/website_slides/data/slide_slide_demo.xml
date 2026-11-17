@@ -388,10 +388,6 @@
         <field name="public_views">0</field>
         <field name="completion_time">1</field>
         <field name="tag_ids" eval="[(4, ref('website_slides.slide_tag_demo_howto'))]"/>
-        <field name="quiz_first_attempt_reward">100</field>
-        <field name="quiz_second_attempt_reward">75</field>
-        <field name="quiz_third_attempt_reward">50</field>
-        <field name="quiz_fourth_attempt_reward">25</field>
         <field name="description">A summary of know-how: what are the main trees categories and how to differentiate them.</field>
     </record>
         <!-- LINKS -->
@@ -538,10 +534,6 @@
         <field name="public_views">0</field>
         <field name="completion_time">2</field>
         <field name="tag_ids" eval="[(4, ref('website_slides.slide_tag_demo_cheatsheet'))]"/>
-        <field name="quiz_first_attempt_reward">100</field>
-        <field name="quiz_second_attempt_reward">75</field>
-        <field name="quiz_third_attempt_reward">50</field>
-        <field name="quiz_fourth_attempt_reward">25</field>
         <field name="description">Knowing wood characteristics is a requirement in order to know which kind of wood to use in a given situation.</field>
     </record>
 

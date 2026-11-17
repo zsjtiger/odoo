@@ -1,7 +1,7 @@
 import { Component, t, useProps, xml } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
-import { LazyComponent } from "@web/core/lazy_component";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
+import { LazyComponent } from "@web/core/framework/lazy_component";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 class GlobalFilterWidgetLoader extends Component {

@@ -1,5 +1,5 @@
 import * as urlUtils from "@html_editor/utils/url";
-import { rpc } from "@web/core/network/rpc";
+import { rpc } from "@web/core/services/network/rpc";
 import { patch } from "@web/core/utils/patch";
 import { UrlAutoComplete } from "@website/components/autocomplete_with_pages/url_autocomplete";
 

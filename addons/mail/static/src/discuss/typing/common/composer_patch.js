@@ -1,10 +1,10 @@
 import { Composer } from "@mail/core/common/composer";
 import { Typing } from "@mail/discuss/typing/common/typing";
-import { rpc } from "@web/core/network/rpc";
+import { rpc } from "@web/core/services/network/rpc";
 
 import { onWillDestroy } from "@odoo/owl";
-import { browser } from "@web/core/browser/browser";
-import { registry } from "@web/core/registry";
+import { browser } from "@web/core/services/browser/browser";
+import { registry } from "@web/core/framework/registry";
 import { patch } from "@web/core/utils/patch";
 import { useDebounced } from "@web/core/utils/timing";
 

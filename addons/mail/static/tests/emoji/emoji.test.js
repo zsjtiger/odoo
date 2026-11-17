@@ -20,7 +20,7 @@ import { describe, expect, getFixture, queryFirst, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
 
 import { signal } from "@odoo/owl";
-import { emojiLoader } from "@web/core/emoji_picker/emoji_loader";
+import { emojiLoader } from "@web/core/components/emoji_picker/emoji_loader";
 
 describe.current.tags("desktop");
 defineMailModels();

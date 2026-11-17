@@ -1,7 +1,7 @@
 import { usePlugin } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { removableNodePredicates as deletePluginPredicates } from "@html_editor/core/delete_plugin";
 import { isUnremovableQWebElement } from "@html_editor/others/qweb_plugin";
 import { isEditable } from "@html_builder/utils/utils";

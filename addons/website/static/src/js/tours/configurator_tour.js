@@ -9,7 +9,7 @@ import {
     selectNested,
     registerThemeHomepageTour,
 } from "@website/js/tours/tour_utils";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 
 registerThemeHomepageTour("configurator_tour", () => {
     let titleSelector = "#wrap > section:first-child";

@@ -3,7 +3,7 @@
 from base64 import b64encode
 
 from odoo.tests.common import TransactionCase, tagged
-from odoo.tools.binary import BinaryBytes
+from odoo.tools.files.binary import BinaryBytes
 
 
 @tagged('at_install', '-post_install')

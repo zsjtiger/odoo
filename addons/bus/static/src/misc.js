@@ -1,4 +1,4 @@
-import { browser } from "@web/core/browser/browser";
+import { browser } from "@web/core/services/browser/browser";
 
 /**
  * Returns a function, that, when invoked, will only be triggered at most once

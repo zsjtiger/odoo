@@ -1,0 +1,92 @@
+// 自定义筛选面板: 分组标题, 选项按钮 / 单选, 卡片 (多对一记录)
+.m_filter_sheet {
+    max-height: 80vh;
+}
+
+.m_filter_body {
+    overflow-y: auto;
+    padding: 4px 16px 16px;
+}
+
+.m_filter_section {
+    padding: 12px 0;
+    border-bottom: 1px solid $line;
+    &:last-child {
+        border-bottom: none;
+    }
+}
+
+.m_filter_title {
+    margin: 0 0 10px;
+    font-size: 15px;
+    font-weight: 500;
+    color: $text;
+}
+
+.m_filter_options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.m_filter_chip,
+.m_filter_radio {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 36px;
+    padding: 0 14px;
+    border: 1px solid #d9d9d9;
+    border-radius: 6px;
+    background: $surface;
+    color: $text;
+    font-size: 14px;
+    &.is_on {
+        border-color: $theme-btn;
+        color: $theme-btn;
+    }
+}
+
+.m_filter_radio_dot {
+    width: 14px;
+    height: 14px;
+    border: 1px solid #b0b4bb;
+    border-radius: 50%;
+    .is_on > & {
+        border: 4px solid $theme-btn;
+    }
+}
+
+.m_filter_cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.m_filter_card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 120px;
+    max-width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #d9d9d9;
+    border-radius: 6px;
+    background: $surface;
+    text-align: left;
+    &.is_on {
+        border-color: $theme-btn;
+        box-shadow: inset 0 0 0 1px $theme-btn;
+    }
+}
+
+.m_filter_card_name {
+    font-size: 14px;
+    color: $text;
+}
+
+.m_filter_card_sub {
+    font-size: 12px;
+    color: $muted;
+}

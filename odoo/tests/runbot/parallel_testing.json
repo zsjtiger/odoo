@@ -1,7 +1,7 @@
 {
     "name": "Parallel testing",
     "vars": {
-        "module_filter": "*,-hw_*,-*l10n_*,-theme_*,-account_bacs,-account_reports_cash_basis,-auth_ldap,-base_gengo,-document_ftp,-iot_drivers,-note_pad,-odoo_referral,-odoo_referral_portal,-pad,-pad_project,-pos_blackbox_be,-pos_cache,-pos_six,-social_demo,-website_gengo,-website_instantclick,test_l10n_be_hr_payroll_account,test_l10n_us_hr_payroll_account,-test_translation_mode"
+        "module_filter": "*,-hw_*,-*l10n_*,-theme_*,-account_bacs,-account_reports_cash_basis,-auth_external,-base_gengo,-document_ftp,-iot_drivers,-note_pad,-odoo_referral,-odoo_referral_portal,-pad,-pad_project,-pos_blackbox_be,-pos_cache,-pos_six,-social_demo,-website_gengo,-website_instantclick,test_l10n_be_hr_payroll_account,test_l10n_us_hr_payroll_account,-test_translation_mode"
     },
     "steps": [
         {
@@ -39,8 +39,8 @@
             "job_type": "create_build",
             "for_each_vars": [
                 {"test_module_filter": "-> !account_auto_transfer"},
-                {"test_module_filter": "account_auto_transfer -> !auth_totp"},
-                {"test_module_filter": "auth_totp -> !html_builder"},
+                {"test_module_filter": "account_auto_transfer -> !auth_security"},
+                {"test_module_filter": "auth_security -> !html_builder"},
                 {"test_module_filter": "html_builder -> !mail"},
                 {"test_module_filter": "mail -> !partner_autocomplete"},
                 {"test_module_filter": "partner_autocomplete -> !pos"},

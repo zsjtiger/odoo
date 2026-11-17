@@ -1,7 +1,7 @@
 import { ImStatusMixin } from "@mail/core/common/im_status_mixin";
 import { fields } from "@mail/model/export";
 
-import { rpc } from "@web/core/network/rpc";
+import { rpc } from "@web/core/services/network/rpc";
 import { imageUrl } from "@web/core/utils/urls";
 
 const TRANSPARENT_AVATAR =

@@ -1,14 +1,14 @@
-import { useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/core/owl/utils";
 import { Component, signal } from "@odoo/owl";
 
 import { ActionList } from "@mail/core/common/action_list";
 import { useCallActions } from "@mail/discuss/call/common/call_actions";
 import { TalkingAudioBars } from "@mail/discuss/call/common/talking_audio_bars";
 
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { registry } from "@web/core/registry";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
-import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
+import { useDropdownState } from "@web/core/components/dropdown/dropdown_hooks";
 
 export class CallMenu extends Component {
     static template = "discuss.CallMenu";

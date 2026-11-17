@@ -1,13 +1,13 @@
 import { Component, signal, t, useProps } from "@odoo/owl";
-import { Dropdown } from "@web/core/dropdown/dropdown";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
 import { toolbarButtonProps } from "../toolbar/toolbar";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import {
     useDropdownAutoVisibility,
     useToolbarDropdownFocus,
 } from "@html_editor/toolbar_dropdown_hook";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
+import { useDropdownState } from "@web/core/components/dropdown/dropdown_hooks";
 
 export class ListSelector extends Component {
     static template = "html_editor.ListSelector";

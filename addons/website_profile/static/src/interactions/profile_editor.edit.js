@@ -1,5 +1,5 @@
 import { ProfileEditor } from "./profile_editor";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 const ProfileEditorEdit = I => class extends I {
     setup() { }

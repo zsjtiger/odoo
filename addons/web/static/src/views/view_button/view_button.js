@@ -1,7 +1,7 @@
 import { Component, t, usePlugin, useProps } from "@odoo/owl";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
-import { useDropdownCloser } from "@web/core/dropdown/dropdown_hooks";
-import { _t } from "@web/core/l10n/translation";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
+import { useDropdownCloser } from "@web/core/components/dropdown/dropdown_hooks";
+import { _t } from "@web/core/data/l10n/translation";
 import { pick } from "@web/core/utils/objects";
 import { debounce as debounceFn } from "@web/core/utils/timing";
 import { useViewButtonHandler } from "@web/views/view_button/view_button_hook";

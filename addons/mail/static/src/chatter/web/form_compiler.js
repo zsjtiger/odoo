@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { patch } from "@web/core/utils/patch";
 import { append, createElement, extractAttributes, setAttributes } from "@web/core/utils/xml";
 import { FormCompiler } from "@web/views/form/form_compiler";

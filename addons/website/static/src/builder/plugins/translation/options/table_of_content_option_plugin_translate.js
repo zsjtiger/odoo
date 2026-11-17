@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { TableOfContentOptionPlugin } from "../../options/table_of_content_option_plugin";
 
 export class TranslateTableOfContentOptionPlugin extends TableOfContentOptionPlugin {

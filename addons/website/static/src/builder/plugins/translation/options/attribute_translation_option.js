@@ -1,6 +1,6 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { TRANSLATABLE_ATTRIBUTES } from "@website/builder/plugins/translation/options/attribute_translation_plugin";
 
 export class TranslateAttributeOption extends BaseOptionComponent {

@@ -1,7 +1,7 @@
 import { MENU_TABS } from "@mail/core/public_web/messaging_menu/messaging_menu_model";
 import { fields, Record } from "@mail/model/export";
 
-import { router } from "@web/core/browser/router";
+import { router } from "@web/core/services/browser/router";
 
 const SIDEBAR_WIDTH = 400;
 

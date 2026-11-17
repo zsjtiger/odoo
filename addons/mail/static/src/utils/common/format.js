@@ -10,9 +10,9 @@ import { createElementFromContent, getInnerHtml, getOuterHtml } from "@mail/util
 
 import { htmlEscape, markup } from "@odoo/owl";
 
-import { router } from "@web/core/browser/router";
-import { emojiLoader } from "@web/core/emoji_picker/emoji_loader";
-import { formatList } from "@web/core/l10n/utils";
+import { router } from "@web/core/services/browser/router";
+import { emojiLoader } from "@web/core/components/emoji_picker/emoji_loader";
+import { formatList } from "@web/core/data/l10n/utils/format_list";
 import {
     createElementWithContent,
     htmlJoin,

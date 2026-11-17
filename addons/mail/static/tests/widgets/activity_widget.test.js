@@ -11,7 +11,7 @@ import {
 import { describe, expect, test } from "@odoo/hoot";
 import { tick } from "@odoo/hoot-dom";
 import { mockService, onRpc, serverState } from "@web/../tests/web_test_helpers";
-import { serializeDate } from "@web/core/l10n/dates";
+import { serializeDate } from "@web/core/data/l10n/dates";
 
 defineMailModels();
 describe.current.tags("desktop");

@@ -1,5 +1,5 @@
-import { browser } from "@web/core/browser/browser";
-import { registry } from "@web/core/registry";
+import { browser } from "@web/core/services/browser/browser";
+import { registry } from "@web/core/framework/registry";
 
 export const AWAY_DELAY = 30 * 60 * 1000; // 30 minutes
 

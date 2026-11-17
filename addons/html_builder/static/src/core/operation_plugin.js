@@ -1,6 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
-import { _t } from "@web/core/l10n/translation";
-import { useEnv } from "@web/owl2/utils";
+import { _t } from "@web/core/data/l10n/translation";
+import { useEnv } from "@web/core/owl/utils";
 import { Operation } from "./operation";
 
 /** @typedef {import("./operation").OperationParams} OperationParams */

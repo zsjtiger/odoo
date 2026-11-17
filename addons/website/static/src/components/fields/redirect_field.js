@@ -1,5 +1,5 @@
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { pick } from "@web/core/utils/objects";
 import { Component, useProps } from "@odoo/owl";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";

@@ -15,10 +15,10 @@ import {
     stepAllNetworkCalls,
 } from "@web/../tests/web_test_helpers";
 
-import { router } from "@web/core/browser/router";
-import { download } from "@web/core/network/download";
-import { rpc } from "@web/core/network/rpc";
-import { registry } from "@web/core/registry";
+import { router } from "@web/core/services/browser/router";
+import { download } from "@web/core/services/network/download";
+import { rpc } from "@web/core/services/network/rpc";
+import { registry } from "@web/core/framework/registry";
 import { ReportAction } from "@web/webclient/actions/reports/report_action";
 import { downloadReport } from "@web/webclient/actions/reports/utils";
 import { WebClient } from "@web/webclient/webclient";

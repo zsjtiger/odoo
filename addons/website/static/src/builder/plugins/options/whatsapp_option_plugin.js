@@ -2,7 +2,7 @@ import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { useDomState } from "@html_builder/core/utils";
 import { Plugin } from "@html_editor/plugin";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { ShowOnOption } from "../floating_snippets_plugin";
 
 export class WhatsappOption extends BaseOptionComponent {
@@ -27,6 +27,9 @@ class WhatsappOptionPlugin extends Plugin {
             WhatsappNumberAction,
         },
         floating_snippets_selectors: ".s_whatsapp",
+        // Whatsapp snippet shouldn't create a new dropzone or be regarded as a
+        // visible sibling since it is visually independent of other snippets
+        ignored_sibling_selectors: ".s_whatsapp",
         system_attributes: ["data-should-show-chatbox"],
         should_remove_overlay_options_predicates: (el) => {
             if (el.matches(".s_whatsapp")) {

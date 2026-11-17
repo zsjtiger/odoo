@@ -1,0 +1,18 @@
+// 只读位置预览: 地图区域与经纬度 (桌面端与移动端共用)
+
+.o_gps_preview {
+    margin-top: 8px;
+}
+
+.o_gps_preview_map {
+    width: 100%;
+    border-radius: 8px;
+    background: #e9eef2;
+    overflow: hidden;
+}
+
+.o_gps_preview_coords {
+    margin-top: 4px;
+    font-size: 12px;
+    color: #666;
+}

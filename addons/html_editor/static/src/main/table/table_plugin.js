@@ -30,12 +30,12 @@ import {
     getTableCells,
     getSelectedCellsMergeInfo,
 } from "@html_editor/utils/table";
-import { isBrowserFirefox } from "@web/core/browser/feature_detection";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
+import { isBrowserFirefox } from "@web/core/services/browser/feature_detection";
+import { getActiveHotkey } from "@web/core/services/hotkeys/hotkey_utils";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { BG_CLASSES_REGEX } from "@html_editor/utils/color";
 import { rgbaToHex } from "@web/core/utils/colors";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 
 export const BORDER_SENSITIVITY = 5;
 const LONG_PRESS_DELAY = 200;

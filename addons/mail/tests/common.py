@@ -33,7 +33,7 @@ from odoo.tests import common, RecordCapturer, new_test_user
 from odoo.tools import LazyTranslate, mute_logger, mail as mail_lib
 from odoo.tools.mail import email_normalize, email_split_and_format_normalize, formataddr
 from odoo.tools.misc import formatLang, format_amount
-from odoo.tools.translate import code_translations
+from odoo.tools.text.translate import code_translations
 
 _logger = logging.getLogger(__name__)
 _test_lt = LazyTranslate(__name__)

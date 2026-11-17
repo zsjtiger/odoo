@@ -4,8 +4,8 @@ import json as json_
 import re
 
 import markupsafe
-from .binary import BinaryValue
-from .func import lazy
+from odoo.tools.files.binary import BinaryValue
+from odoo.tools.func import lazy
 
 JSON_SCRIPTSAFE_MAPPER = {
     '&': r'\u0026',

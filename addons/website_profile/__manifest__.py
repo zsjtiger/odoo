@@ -4,18 +4,13 @@
     'name': 'Website profile',
     'category': 'Website/Website',
     'summary': 'Access the website profile of the users',
-    'description': "Allows to access the website profile of the users and see their statistics (karma, badges, etc..)",
+    'description': "Allows to access the website profile of the users",
     'depends': [
         'html_editor',
         'website_partner',
-        'gamification'
     ],
     'data': [
-        'data/mail_template_data.xml',
-        'views/gamification_badge_views.xml',
         'views/website_profile.xml',
-        'views/website_views.xml',
-        'security/ir.access.csv',
     ],
     'assets': {
         'web.assets_frontend': [

@@ -1,6 +1,6 @@
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
-import { user } from "@web/core/user";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
+import { user } from "@web/core/services/user";
 import { getParsedDataFor } from "@website/js/utils";
 
 /**

@@ -11,9 +11,9 @@ import {
     tick,
 } from "@odoo/hoot";
 import { Component, onMounted, t, useProps, xml } from "@odoo/owl";
-import { Dialog } from "@web/core/dialog/dialog";
-import { MainComponentsContainer } from "@web/core/main_components_container";
-import { useSubEnv } from "@web/owl2/utils";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
+import { MainComponentsContainer } from "@web/core/framework/main_components_container";
+import { useSubEnv } from "@web/core/owl/utils";
 import { View } from "@web/views/view";
 import { getService } from "./app_test_helpers";
 import { mountWithCleanup } from "./component_test_helpers";
@@ -32,7 +32,7 @@ import { isSmall } from "./ui_test_helpers";
  * @typedef {ViewProps & {
  *  archs?: Record<string, string>
  *  config?: Config;
- *  env?: import("@web/env").OdooEnv;
+ *  env?: import("@web/boot/env").OdooEnv;
  *  resId?: number;
  *  [key: string]: any;
  * }} MountViewParams

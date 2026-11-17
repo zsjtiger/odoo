@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ================= Pharmacy account ================= -->
+
+    <!-- PC: list -->
+    <record id="view_pharaccount_account_list" model="ir.ui.view">
+        <field name="name">pharaccount.account.list</field>
+        <field name="model">pharaccount.account</field>
+        <field name="arch" type="xml">
+            <list string="药店">
+                <field name="name"/>
+                <field name="record_type_id"/>
+                <field name="pharmacy_level_id"/>
+                <field name="state_id" optional="show"/>
+                <field name="geo_province" optional="show"/>
+                <field name="geo_city" optional="show"/>
+                <field name="telephone" optional="show"/>
+                <field name="mobile" optional="hide"/>
+                <field name="sales" optional="show"/>
+                <field name="last_called_on" optional="hide"/>
+                <field name="is_important" optional="show"/>
+                <field name="active" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- PC: full form -->
+    <record id="view_pharaccount_account_form" model="ir.ui.view">
+        <field name="name">pharaccount.account.form</field>
+        <field name="model">pharaccount.account</field>
+        <field name="priority">16</field>
+        <field name="arch" type="xml">
+            <form string="药店">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="药店名称"/></h1>
+                    </div>
+                    <group>
+                        <group string="基本信息">
+                            <field name="record_type_id"/>
+                            <field name="pharmacy_level_id" widget="pharaccount_picklist" options="{'picklist': 'pharmacy_level'}"/>
+                            <field name="state_id"/>
+                            <field name="alias"/>
+                            <field name="is_important"/>
+                            <field name="is_public"/>
+                            <field name="active"/>
+                        </group>
+                        <group string="联系方式">
+                            <field name="telephone"/>
+                            <field name="mobile"/>
+                            <field name="email"/>
+                            <field name="address"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="区域" name="geo">
+                            <group>
+                                <field name="geo_province"/>
+                                <field name="geo_city"/>
+                                <field name="geo_district"/>
+                            </group>
+                        </page>
+                        <page string="关联药店" name="relations">
+                            <group>
+                                <field name="superior_id"/>
+                                <field name="headquarters_id"/>
+                                <field name="hospital_id"/>
+                                <field name="agency_id"/>
+                                <field name="dealer_id"/>
+                            </group>
+                        </page>
+                        <page string="经营" name="business">
+                            <group>
+                                <field name="creation_time"/>
+                                <field name="last_called_on"/>
+                                <field name="sales"/>
+                                <field name="authorized_packages"/>
+                                <field name="account_distributer_code"/>
+                            </group>
+                        </page>
+                        <page string="拼音" name="pinyin">
+                            <group>
+                                <field name="name_pinyin"/>
+                                <field name="pinyin"/>
+                                <field name="alias_pinyin"/>
+                                <field name="pinyin_with_separator"/>
+                            </group>
+                        </page>
+                        <page string="微信" name="wechat">
+                            <group>
+                                <field name="openid"/>
+                                <field name="openid_register_time"/>
+                            </group>
+                        </page>
+                        <page string="员工" name="staff">
+                            <field name="staff_ids">
+                                <list editable="bottom">
+                                    <field name="name"/>
+                                    <field name="staff_type_id"/>
+                                    <field name="gender_id" optional="show"/>
+                                    <field name="age" optional="show"/>
+                                    <field name="telephone"/>
+                                    <field name="shift_time" optional="show"/>
+                                    <field name="in_service_status_id" optional="show"/>
+                                    <field name="description" optional="hide"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="医院关联" name="hospital_links">
+                            <field name="hospital_link_ids">
+                                <list editable="bottom">
+                                    <field name="hospital_id"/>
+                                    <field name="year"/>
+                                    <field name="month"/>
+                                    <field name="package"/>
+                                    <field name="proportion"/>
+                                    <field name="external_id" optional="hide"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="供货药店" name="pharma_links">
+                            <p class="text-muted">以本机构为医院时，哪些药店通过它供货。</p>
+                            <field name="pharma_link_ids" readonly="1">
+                                <list>
+                                    <field name="pharmacy_id"/>
+                                    <field name="year"/>
+                                    <field name="month"/>
+                                    <field name="package"/>
+                                    <field name="proportion"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="产品包库存" name="package_inventory">
+                            <field name="package_inventory_ids">
+                                <list editable="bottom">
+                                    <field name="inventory_date"/>
+                                    <field name="yearmonth" optional="show"/>
+                                    <field name="package"/>
+                                    <field name="quantity_in"/>
+                                    <field name="quantity_out"/>
+                                    <field name="stock"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="竞品" name="competitive_products">
+                            <field name="competitive_product_ids">
+                                <list editable="bottom">
+                                    <field name="product"/>
+                                    <field name="competitive_product"/>
+                                    <field name="price"/>
+                                    <field name="sales_quantity"/>
+                                    <field name="comments" optional="show"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="备注" name="notes">
+                            <field name="description" nolabel="1" placeholder="备注"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Mobile: simplified form (higher priority number, so the PC form stays the default) -->
+    <record id="view_pharaccount_account_form_mobile" model="ir.ui.view">
+        <field name="name">pharaccount.account.form.mobile</field>
+        <field name="model">pharaccount.account</field>
+        <field name="priority">32</field>
+        <field name="arch" type="xml">
+            <form string="药店">
+                <sheet>
+                    <group>
+                        <field name="name" placeholder="药店名称"/>
+                        <field name="record_type_id"/>
+                        <field name="pharmacy_level_id" widget="pharaccount_picklist" options="{'picklist': 'pharmacy_level'}"/>
+                        <field name="state_id"/>
+                        <field name="mobile"/>
+                        <field name="telephone"/>
+                        <field name="geo_province"/>
+                        <field name="geo_city"/>
+                        <field name="address"/>
+                        <field name="is_important"/>
+                        <field name="description"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Mobile: card view -->
+    <record id="view_pharaccount_account_kanban_mobile" model="ir.ui.view">
+        <field name="name">pharaccount.account.kanban.mobile</field>
+        <field name="model">pharaccount.account</field>
+        <field name="arch" type="xml">
+            <kanban string="药店">
+                <field name="name"/>
+                <field name="record_type_id"/>
+                <field name="pharmacy_level_id"/>
+                <field name="geo_city"/>
+                <field name="mobile"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_content">
+                            <div><strong><field name="name"/></strong></div>
+                            <div class="text-muted">
+                                <field name="record_type_id"/>
+                                <t t-if="record.pharmacy_level_id.raw_value"> · <field name="pharmacy_level_id"/></t>
+                            </div>
+                            <div class="text-muted">
+                                <field name="geo_city"/>
+                                <t t-if="record.mobile.raw_value"> · <field name="mobile"/></t>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_pharaccount_account_search" model="ir.ui.view">
+        <field name="name">pharaccount.account.search</field>
+        <field name="model">pharaccount.account</field>
+        <field name="arch" type="xml">
+            <search string="搜索药店">
+                <field name="name" string="名称"/>
+                <field name="alias" string="别名"/>
+                <field name="telephone" string="电话"/>
+                <field name="mobile" string="手机"/>
+                <field name="record_type_id"/>
+                <field name="pharmacy_level_id"/>
+                <field name="state_id"/>
+                <filter name="important" string="重要" domain="[('is_important', '=', True)]"/>
+                <filter name="public" string="公开" domain="[('is_public', '=', True)]"/>
+                <filter name="inactive" string="已停用" domain="[('active', '=', False)]"/>
+                <separator/>
+                <filter name="group_record_type" string="记录类型" context="{'group_by': 'record_type_id'}"/>
+                <filter name="group_level" string="药店级别" context="{'group_by': 'pharmacy_level_id'}"/>
+                <filter name="group_state" string="状态" context="{'group_by': 'state_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- ================= Record type ================= -->
+
+    <record id="view_pharaccount_record_type_list" model="ir.ui.view">
+        <field name="name">pharaccount.record.type.list</field>
+        <field name="model">pharaccount.record.type</field>
+        <field name="arch" type="xml">
+            <list string="记录类型">
+                <field name="sequence" widget="handle"/>
+                <field name="label"/>
+                <field name="name"/>
+                <field name="parent_id"/>
+                <field name="code_prefix" optional="hide"/>
+                <field name="allowed_group_ids" widget="many2many_tags" optional="show"/>
+                <field name="active" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_pharaccount_record_type_form" model="ir.ui.view">
+        <field name="name">pharaccount.record.type.form</field>
+        <field name="model">pharaccount.record.type</field>
+        <field name="priority">16</field>
+        <field name="arch" type="xml">
+            <form string="记录类型">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="label"/>
+                        <h1><field name="label" placeholder="例如：单体药店"/></h1>
+                    </div>
+                    <group>
+                        <group string="基本信息">
+                            <field name="name" placeholder="技术编码，例如 pharmacy_monomer"/>
+                            <field name="parent_id"/>
+                            <field name="sequence"/>
+                            <field name="code_prefix"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="可用组" name="groups">
+                            <field name="group_ids" widget="many2many_tags"/>
+                            <p class="text-muted">留空表示所有人可见。子类型会自动并入父类型的组。</p>
+                            <label for="allowed_group_ids" string="最终生效的组（含继承）"/>
+                            <field name="allowed_group_ids" widget="many2many_tags" readonly="1"/>
+                        </page>
+                        <page string="可用选项" name="picklist_values">
+                            <field name="picklist_value_ids" widget="many2many_tags"/>
+                            <p class="text-muted">留空表示不限制选项。子类型会自动并入父类型的选项。</p>
+                            <label for="allowed_picklist_value_ids" string="最终生效的选项（含继承）"/>
+                            <field name="allowed_picklist_value_ids" widget="many2many_tags" readonly="1"/>
+                        </page>
+                        <page string="子类型" name="children">
+                            <field name="child_ids" readonly="1">
+                                <list>
+                                    <field name="label"/>
+                                    <field name="name"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_pharaccount_record_type_kanban_mobile" model="ir.ui.view">
+        <field name="name">pharaccount.record.type.kanban.mobile</field>
+        <field name="model">pharaccount.record.type</field>
+        <field name="arch" type="xml">
+            <kanban string="记录类型">
+                <field name="label"/>
+                <field name="name"/>
+                <field name="parent_id"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_content">
+                            <div><strong><field name="label"/></strong></div>
+                            <div class="text-muted"><field name="name"/></div>
+                            <div class="text-muted">
+                                <t t-if="record.parent_id.raw_value">上级：<field name="parent_id"/></t>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- ================= Picklist ================= -->
+
+    <record id="view_pharaccount_picklist_list" model="ir.ui.view">
+        <field name="name">pharaccount.picklist.list</field>
+        <field name="model">pharaccount.picklist</field>
+        <field name="arch" type="xml">
+            <list string="下拉列表">
+                <field name="label"/>
+                <field name="name"/>
+                <field name="description" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_pharaccount_picklist_form" model="ir.ui.view">
+        <field name="name">pharaccount.picklist.form</field>
+        <field name="model">pharaccount.picklist</field>
+        <field name="priority">16</field>
+        <field name="arch" type="xml">
+            <form string="下拉列表">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="label"/>
+                        <h1><field name="label" placeholder="例如：药店级别"/></h1>
+                    </div>
+                    <group>
+                        <field name="name" placeholder="技术编码，例如 pharmacy_level"/>
+                        <field name="description"/>
+                    </group>
+                    <notebook>
+                        <page string="选项" name="values">
+                            <field name="value_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="label"/>
+                                    <field name="value"/>
+                                    <field name="group_ids" widget="many2many_tags"/>
+                                    <field name="is_disabled"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_pharaccount_picklist_kanban_mobile" model="ir.ui.view">
+        <field name="name">pharaccount.picklist.kanban.mobile</field>
+        <field name="model">pharaccount.picklist</field>
+        <field name="arch" type="xml">
+            <kanban string="下拉列表">
+                <field name="label"/>
+                <field name="name"/>
+                <field name="description"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_content">
+                            <div><strong><field name="label"/></strong></div>
+                            <div class="text-muted"><field name="name"/></div>
+                            <div class="text-muted"><field name="description"/></div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- ================= Account state ================= -->
+
+    <record id="view_pharaccount_account_state_list" model="ir.ui.view">
+        <field name="name">pharaccount.account.state.list</field>
+        <field name="model">pharaccount.account.state</field>
+        <field name="arch" type="xml">
+            <list string="账户状态">
+                <field name="sequence" widget="handle"/>
+                <field name="label"/>
+                <field name="name"/>
+                <field name="color" optional="show"/>
+                <field name="is_default" optional="show"/>
+                <field name="is_locked" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_pharaccount_account_state_form" model="ir.ui.view">
+        <field name="name">pharaccount.account.state.form</field>
+        <field name="model">pharaccount.account.state</field>
+        <field name="priority">16</field>
+        <field name="arch" type="xml">
+            <form string="账户状态">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="label"/>
+                        <h1><field name="label" placeholder="例如：正常"/></h1>
+                    </div>
+                    <group>
+                        <group string="基本信息">
+                            <field name="name" placeholder="技术编码"/>
+                            <field name="sequence"/>
+                            <field name="color"/>
+                        </group>
+                        <group string="行为">
+                            <field name="is_default"/>
+                            <field name="is_locked"/>
+                        </group>
+                    </group>
+                    <field name="description" placeholder="说明"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_pharaccount_account_state_kanban_mobile" model="ir.ui.view">
+        <field name="name">pharaccount.account.state.kanban.mobile</field>
+        <field name="model">pharaccount.account.state</field>
+        <field name="arch" type="xml">
+            <kanban string="账户状态">
+                <field name="label"/>
+                <field name="name"/>
+                <field name="is_locked"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_content">
+                            <div><strong><field name="label"/></strong></div>
+                            <div class="text-muted"><field name="name"/></div>
+                            <div class="text-muted" t-if="record.is_locked.raw_value">已锁定</div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+</odoo>

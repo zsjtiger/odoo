@@ -3,7 +3,7 @@
 from datetime import timedelta
 
 from odoo import api, fields, models, tools
-from odoo.sql_db import PG_CONCURRENCY_EXCEPTIONS_TO_RETRY
+from odoo.orm.database.sql_db import PG_CONCURRENCY_EXCEPTIONS_TO_RETRY
 
 from odoo.addons.mail.tools.discuss import Store
 

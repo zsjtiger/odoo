@@ -1,4 +1,4 @@
-import { useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/core/owl/utils";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 import { Component, onWillStart, proxy, useProps, xml } from "@odoo/owl";

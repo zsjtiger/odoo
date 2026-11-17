@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_users_form_preferences_systray" model="ir.ui.view">
+        <field name="name">res.users.preferences.form.systray</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
+        <field name="arch" type="xml">
+            <group name="other_preferences" position="inside">
+                <group string="Navigation Bar" name="systray_preferences">
+                    <field name="systray_show_ai" readonly="0" widget="boolean_toggle"/>
+                    <field name="systray_show_messaging" readonly="0" widget="boolean_toggle"/>
+                    <field name="systray_show_activity" readonly="0" widget="boolean_toggle"/>
+                    <field name="systray_show_studio" readonly="0" widget="boolean_toggle"/>
+                    <field name="systray_show_company" readonly="0" widget="boolean_toggle"/>
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>

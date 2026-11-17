@@ -1,5 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { ClassAction } from "@html_builder/core/core_builder_action_plugin";
 
 export class VerticalAlignmentOptionPlugin extends Plugin {

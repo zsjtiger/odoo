@@ -1,5 +1,5 @@
 import { MediaWebsitePlugin } from "@html_builder/core/media_website_plugin";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import {
     translateDocumentOptionSelector,
     translateImageOptionSelector,

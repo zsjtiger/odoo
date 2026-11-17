@@ -13,9 +13,9 @@ import { describe, expect, test } from "@odoo/hoot";
 import { mockFetch, mockUserAgent } from "@odoo/hoot-mock";
 import { patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
 
-import { downloadFile } from "@web/core/network/download";
+import { downloadFile } from "@web/core/services/network/download";
 import { getOrigin } from "@web/core/utils/urls";
-import { isMobileOS } from "@web/core/browser/feature_detection";
+import { isMobileOS } from "@web/core/services/browser/feature_detection";
 
 describe.current.tags("desktop");
 defineMailModels();

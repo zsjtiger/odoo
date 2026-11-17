@@ -10,8 +10,8 @@ import {
     getCurrentFieldInputEl,
     getModelName,
 } from "./utils";
-import { formatDate, formatDateTime } from "@web/core/l10n/dates";
-import { _t } from "@web/core/l10n/translation";
+import { formatDate, formatDateTime } from "@web/core/data/l10n/dates";
+import { _t } from "@web/core/data/l10n/translation";
 
 const { DateTime } = luxon;
 

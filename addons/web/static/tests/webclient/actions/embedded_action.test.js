@@ -16,10 +16,10 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { animationFrame, mockTouch, runAllTimers } from "@odoo/hoot-mock";
-import { location } from "@web/core/browser/browser";
-import { router, routerBus } from "@web/core/browser/router";
-import { rpcBus } from "@web/core/network/rpc";
-import { user } from "@web/core/user";
+import { location } from "@web/core/services/browser/browser";
+import { router, routerBus } from "@web/core/services/browser/router";
+import { rpcBus } from "@web/core/services/network/rpc";
+import { user } from "@web/core/services/user";
 import { WebClient } from "@web/webclient/webclient";
 
 describe.current.tags("desktop");

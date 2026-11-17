@@ -1,10 +1,10 @@
-import { useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/core/owl/utils";
 import { ACTION_TAGS } from "@mail/core/common/action";
 import { registerThreadAction } from "@mail/core/common/thread_actions";
 import { SubChannelList } from "@mail/discuss/core/public_web/sub_channel_list";
 import { attClassObjectToString } from "@mail/utils/common/format";
-import { _t } from "@web/core/l10n/translation";
-import { usePopover } from "@web/core/popover/popover_hook";
+import { _t } from "@web/core/data/l10n/translation";
+import { usePopover } from "@web/core/components/popover/popover_hook";
 
 export const joinChannelAction = {
     condition: ({ channel, store }) =>

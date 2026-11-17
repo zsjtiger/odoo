@@ -30,12 +30,13 @@ from odoo.http.session import SessionExpiredException
 from odoo.http.stream import STATIC_CACHE_LONG
 from odoo.tools import OrderedSet, py_to_js_locale
 from odoo.tools import html_escape as escape
-from odoo.tools.image import hex_to_rgb
+from odoo.tools.files.image import hex_to_rgb
 from odoo.tools.json import scriptsafe as json
-from odoo.tools.mimetypes import guess_mimetype
+from odoo.tools.files.mimetypes import guess_mimetype
 from odoo.tools.misc import file_open
 from odoo.tools.sql import escape_like_value
-from odoo.tools.translate import LazyTranslate, TRANSLATED_ELEMENTS
+from odoo.tools import LazyTranslate
+from odoo.tools.text.translate import TRANSLATED_ELEMENTS
 
 from odoo.addons.base.models.ir_http import EXTENSION_TO_WEB_MIMETYPES
 from odoo.addons.portal.controllers.portal import pager as portal_pager
@@ -994,8 +995,8 @@ class Website(Home):
         suggested_controllers = []
         for name, url, mod in self.env.website.get_suggested_controllers():
             if needle.lower() in name.lower() or needle.lower() in url.lower():
-                module_sudo = mod and request.env.ref('base.module_%s' % mod, False).sudo()
-                icon = mod and '%s' % (module_sudo and module_sudo.icon or mod) or ''
+                module = mod and request.env.ref('base.module_%s' % mod, False)
+                icon = mod and '%s' % (module and module.sudo().icon or mod) or ''
                 suggested_controllers.append({
                     'value': url,
                     'icon': icon,
@@ -1538,13 +1539,16 @@ class Website(Home):
 
     @http.route('/website/save_xml', type='jsonrpc', auth='user', website=True)
     def save_xml(self, view_id, arch):
+        request.env['ir.ui.view'].browse(view_id).with_context(
+            lang=self.env.website.default_lang_id.code,
+            delay_translations=self._get_delay_translations(),
+        ).arch = arch
+
+    def _get_delay_translations(self):
         disable_delay_translations = self.env['ir.config_parameter'].sudo().get_bool(
             'website.disable_delay_translations'
         )
-        request.env['ir.ui.view'].browse(view_id).with_context(
-            lang=self.env.website.default_lang_id.code,
-            delay_translations=not disable_delay_translations,
-        ).arch = arch
+        return not disable_delay_translations
 
     @http.route("/website/get_switchable_related_views", type="jsonrpc", auth="user", website=True, readonly=True)
     def get_switchable_related_views(self, key):
@@ -1681,7 +1685,7 @@ class Website(Home):
                     modified = True
             if modified:
                 new_html_content = html.tostring(tree, encoding='unicode', method='html')
-                record.write({img['field']: new_html_content})
+                record.with_context(delay_translations=self._get_delay_translations()).write({img['field']: new_html_content})
 
     @staticmethod
     def _get_image_id(model, model_id, field, index):
@@ -1708,7 +1712,7 @@ class Website(Home):
                     modified = True
             if modified:
                 new_html_content = html.tostring(tree, encoding='unicode', method='html')
-                record.write({link['field']: new_html_content})
+                record.with_context(delay_translations=self._get_delay_translations()).write({link['field']: new_html_content})
 
     @http.route(['/website/get_seo_data'], type='jsonrpc', auth="user", website=True, readonly=True)
     def get_seo_data(self, res_id, res_model):
@@ -1920,6 +1924,7 @@ class Website(Home):
         """
         return {
             'web.assets_frontend': request.env['ir.qweb']._get_asset_link_urls('web.assets_frontend', request.session.debug),
+            'font_urls': self.env.website._get_font_urls(),
         }
 
     @http.route(['/website/update_footer_template'], type='jsonrpc', auth='user', website=True)

@@ -1,5 +1,5 @@
-import { _t } from "@web/core/l10n/translation";
-import { localeCompare } from "@web/core/l10n/utils";
+import { _t } from "@web/core/data/l10n/translation";
+import { localeCompare } from "@web/core/data/l10n/utils/collation";
 import { generateHTMLId } from "@web/core/utils/strings";
 import { isSmallInteger } from "@html_builder/utils/utils";
 
@@ -593,7 +593,8 @@ export function rerenderField(fieldEl, renderToElement, fields) {
  * @param {HTMLElement} fieldEl
  */
 export function getDescriptionPosition(fieldEl) {
-    if (!fieldEl.querySelector(".s_website_form_field_description")) {
+    const descriptionEl = fieldEl.querySelector(".s_website_form_field_description");
+    if (!descriptionEl || descriptionEl.classList.contains("d-none")) {
         return "none";
     } else {
         const descriptionPositionClass = [...fieldEl.classList].find((cls) =>

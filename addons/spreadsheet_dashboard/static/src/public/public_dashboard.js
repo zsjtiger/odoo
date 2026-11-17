@@ -5,8 +5,8 @@ import { useSpreadsheetNotificationStore } from "@spreadsheet/hooks";
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { Spreadsheet, Model } from "@odoo/o-spreadsheet";
-import { registry } from "@web/core/registry";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
+import { registry } from "@web/core/framework/registry";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
 
 export class PublicDashboard extends Component {
     static template = "spreadsheet_dashboard.PublicDashboard";

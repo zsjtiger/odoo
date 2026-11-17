@@ -14,8 +14,8 @@ import {
 } from "@odoo/hoot-dom";
 import { advanceTime } from "@odoo/hoot-mock";
 
-import { location } from "@web/core/browser/browser";
-import { cookie } from "@web/core/browser/cookie";
+import { location } from "@web/core/services/browser/browser";
+import { cookie } from "@web/core/services/browser/cookie";
 import { defineStyle } from "@web/../tests/web_test_helpers";
 
 setupInteractionWhiteList("website.popup");

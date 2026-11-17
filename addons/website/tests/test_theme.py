@@ -7,7 +7,7 @@ class TestTheme(common.TransactionCase):
     def test_theme_remove_on_current_website(self):
         """This test ensure theme can be removed through the backend route."""
         website = self.env.ref('base.default_website')
-        theme = self.env['ir.module.module'].search([('name', '=', 'theme_default')])
+        theme = self.env['ir.module.module'].search([('name', '=', 'website_theme_default')])
         website.theme_id = theme
 
         theme.with_context(host_id=website.id).button_remove_theme()
@@ -44,7 +44,7 @@ class TestTheme(common.TransactionCase):
         """The theme in use is flagged for the current website only."""
         website = self.env.ref('base.default_website')
         other_website = self.env['website'].create({'name': 'Other Website'})
-        theme = self.env['ir.module.module'].search([('name', '=', 'theme_default')])
+        theme = self.env['ir.module.module'].search([('name', '=', 'website_theme_default')])
         website.theme_id = theme
 
         for context, installed in [

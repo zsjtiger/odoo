@@ -20,12 +20,12 @@ from odoo.orm.models import (
     regex_order,
     to_record_ids,
 )
-from odoo.orm.model_classes import is_model_class, is_model_definition
-from odoo.orm.models_cached import CachedModel
-from odoo.orm.models_transient import TransientModel
-from odoo.orm.query import Query, TableSQL
-from odoo.orm.table_objects import Constraint, Index, UniqueIndex
-from odoo.orm.utils import (
+from odoo.orm.models.classes import is_model_class, is_model_definition
+from odoo.orm.models.cached import CachedModel
+from odoo.orm.models.transient import TransientModel
+from odoo.orm.database.query import Query, TableSQL
+from odoo.orm.database.table_objects import Constraint, Index, UniqueIndex
+from odoo.orm.core.utils import (
     READ_GROUP_NUMBER_GRANULARITY,
     READ_GROUP_TIME_GRANULARITY,
     check_object_name,

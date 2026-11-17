@@ -1,15 +1,15 @@
 import { Component, t, useProps } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
-import { computeM2OProps, KanbanMany2One } from "@web/views/fields/many2one/many2one";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
+import { computeM2OProps, KanbanMany2One } from "@web/views/fields/relational/many2one/many2one";
 import {
     buildM2OFieldDescription,
     extractM2OFieldProps,
     m2oSupportedOptions,
     many2OneFieldProps,
-} from "@web/views/fields/many2one/many2one_field";
+} from "@web/views/fields/relational/many2one/many2one_field";
 import { Avatar } from "../avatar/avatar";
-import { user } from "@web/core/user";
+import { user } from "@web/core/services/user";
 
 export class CardMany2OneAvatarUserField extends Component {
     static template = "mail.CardMany2OneAvatarUserField";

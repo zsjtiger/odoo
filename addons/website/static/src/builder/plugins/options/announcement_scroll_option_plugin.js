@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { Plugin } from "@html_editor/plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
 

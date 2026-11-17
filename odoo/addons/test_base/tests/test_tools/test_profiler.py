@@ -8,9 +8,10 @@ from psycopg2.errors import UndefinedTable
 from odoo.exceptions import AccessError, UserError
 from odoo.tests.common import BaseCase, HttpCase, TransactionCase, new_test_user, tagged
 from odoo.tests.result import stats_logger
-from odoo.tools import mute_logger, profiler
-from odoo.tools.profiler import ExecutionContext, Profiler
-from odoo.tools.speedscope import Speedscope
+from odoo.tools import mute_logger
+from odoo.tools.profiling import profiler
+from odoo.tools.profiling.profiler import ExecutionContext, Profiler
+from odoo.tools.profiling.speedscope import Speedscope
 
 
 @tagged('post_install', '-at_install', 'profiling')
@@ -581,7 +582,7 @@ class TestProfiling(TransactionCase):
 
         self.assertGreater(first_query['time'], 0)
         self.assertEqual(first_query['stack'][-1][2], 'execute')
-        self.assertEqual(first_query['stack'][-1][0].split('/')[-1], 'sql_db.py')
+        self.assertEqual(first_query['stack'][-1][0].split('/')[-1], 'cursor.py')
 
     def test_profiler_return(self):
         # Enter test mode to avoid the profiler to commit the result

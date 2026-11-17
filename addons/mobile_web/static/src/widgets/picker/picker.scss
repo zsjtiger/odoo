@@ -1,0 +1,32 @@
+// 选择器按钮: 显示当前值或占位文字, 右侧箭头
+.m_picker_button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    min-height: 44px;
+    box-sizing: border-box;
+    padding: 8px 12px;
+    border: 1px solid $line;
+    border-radius: 8px;
+    background: $surface;
+    font-size: 16px;
+    color: $text;
+    text-align: left;
+    &.m_picker_button_compact {
+        width: auto;
+        min-width: 88px;
+        justify-content: center;
+        color: $theme;
+        margin-top: 8px;
+    }
+}
+
+.m_picker_placeholder {
+    color: #bebebe;
+}
+
+.m_picker_caret {
+    color: $muted;
+    margin-left: 8px;
+}

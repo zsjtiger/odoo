@@ -1,6 +1,6 @@
-import { useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/core/owl/utils";
 import { DependencyManager } from "../core/dependency_manager";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 
 /**
  * Retrieves the default name corresponding to the edited element (to display it

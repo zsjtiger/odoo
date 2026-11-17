@@ -1,5 +1,5 @@
 import { DynamicSnippet } from "./dynamic_snippet";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 const DynamicSnippetEdit = (I) =>
     class extends I {

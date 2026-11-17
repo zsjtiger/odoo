@@ -348,7 +348,7 @@ class TestPartner(TransactionCaseWithUserDemo):
 
     def test_display_name_translation(self):
         self.env['res.lang']._activate_lang('fr_FR')
-        self.env.ref('base.module_base')._update_translations(['fr_FR'])
+        self.env.ref('base.selection__res_partner__type__other').update_field_translations('name', {'fr_FR': 'Autre'})
 
         res_partner = self.env['res.partner']
 

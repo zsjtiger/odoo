@@ -1,7 +1,7 @@
 import { useProps, signal, t } from "@odoo/owl";
-import { MainComponentsContainer } from "@web/core/main_components_container";
-import { registry } from "@web/core/registry";
-import { useRegistry } from "@web/core/registry_hook";
+import { MainComponentsContainer } from "@web/core/framework/main_components_container";
+import { registry } from "@web/core/framework/registry";
+import { useRegistry } from "@web/core/framework/registry_hook";
 
 /**
  * TODO ABD: refactor to propagate a reactive object instead of using a registry with an identifier

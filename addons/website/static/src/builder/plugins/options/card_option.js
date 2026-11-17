@@ -3,7 +3,7 @@ import { useGetItemValue } from "@html_builder/core/utils";
 import { WebsiteBackgroundOption } from "@website/builder/plugins/options/background_option";
 import { CardImageOption } from "./card_image_option";
 import { useProps, t } from "@odoo/owl";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 export class CardOption extends BaseOptionComponent {
     static id = "card_option";

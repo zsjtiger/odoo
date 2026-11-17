@@ -14,7 +14,7 @@ import {
     SELECTORS,
     selectValue,
     toggleConnector,
-} from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
+} from "@web/../tests/core/editors/tree_editor/condition_tree_editor_test_helpers";
 import {
     contains,
     defineModels,

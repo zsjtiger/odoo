@@ -1,0 +1,1013 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* mobile_web
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 20.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-15 13:14+0000\n"
+"PO-Revision-Date: 2026-10-15 13:14+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: mobile_web
+#: model:ir.module.module,description:base.module_mobile_web
+msgid ""
+"\n"
+"Odoo Mobile Web core module\n"
+"============================\n"
+"\n"
+"This module provides the core of the Odoo Mobile Web Client.\n"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/act_window/act_window_controller.js:0
+msgid "%s - New"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-python
+#: code:addons/mobile_web/models/custom_field.py:0
+msgid "'%(part)s' is not a field of the path %(path)s"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-python
+#: code:addons/mobile_web/models/custom_field.py:0
+msgid "'%(part)s' must be a many2one field to follow the path %(path)s"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-python
+#: code:addons/mobile_web/models/mobile_password_reset.py:0
+msgid "<p>Follow this link to set a new password: <a href=\"%s\">%s</a></p>"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__help
+msgid "Action Description"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model,name:mobile_web.model_ir_actions_mobile_page
+msgid "Action Mobile Page"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__name
+msgid "Action Name"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__type
+msgid "Action Type"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/kanban/mobile_kanban_view.js:0
+#: code:addons/mobile_web/static/src/views/list/mobile_list_view.js:0
+msgid "Action failed"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/widgets/action_sheet/action_sheet.js:0
+msgid "Actions"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/core/texts.js:0
+msgid "Add line"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/widgets/gps_sheet/gps_sheet.js:0
+msgid "Address"
+msgstr ""
+
+#. module: mobile_web
+#: model_terms:ir.ui.view,arch_db:mobile_web.login_retrieve_password
+msgid "Back to log in"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model,name:mobile_web.model_base
+msgid "Base"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__binding_model_id
+msgid "Binding Model"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__binding_type
+msgid "Binding Type"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__binding_view_types
+msgid "Binding View Types"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields.selection,name:mobile_web.selection__ir_ui_menu__device_type__both
+msgid "Both"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/core/texts.js:0
+msgid "Cancel"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/core/texts.js:0
+msgid "Change image"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/core/texts.js:0
+msgid "Clear"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/layout/toast/toast.js:0
+msgid "Close"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/pages/my/my_page.js:0
+msgid "Company"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/core/texts.js:0
+#: code:addons/mobile_web/static/src/widgets/confirm_sheet/confirm_sheet.js:0
+msgid "Confirm"
+msgstr ""
+
+#. module: mobile_web
+#: model_terms:ir.ui.view,arch_db:mobile_web.login_new_password
+msgid "Confirm the new password"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/widgets/gps_sheet/gps_sheet.js:0
+msgid "Could not get the device location."
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__create_uid
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_custom_field__create_uid
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page__create_uid
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page_actions__create_uid
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_password_reset__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__create_date
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_custom_field__create_date
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page__create_date
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page_actions__create_date
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_password_reset__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model,name:mobile_web.model_mobile_custom_field
+msgid "Custom Related Field"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.actions.act_window,name:mobile_web.mobile_custom_field_action
+#: model:ir.ui.menu,name:mobile_web.mobile_custom_field_menu
+msgid "Custom Related Fields"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/reports/home_report/home_report.js:0
+msgid "Data 1"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/reports/home_report/home_report.js:0
+msgid "Data 2"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/reports/home_report/home_report.js:0
+msgid "Data 3"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/core/texts.js:0
+#: code:addons/mobile_web/static/src/views/list/mobile_list_view.js:0
+msgid "Delete"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/core/texts.js:0
+msgid "Delete line"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/list/mobile_list_view.js:0
+msgid "Delete this record?"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/form/mobile_form_view.js:0
+msgid "Discard"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__display_name
+#: model:ir.model.fields,field_description:mobile_web.field_ir_http__display_name
+#: model:ir.model.fields,field_description:mobile_web.field_ir_ui_menu__display_name
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_custom_field__display_name
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page__display_name
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page_actions__display_name
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_password_reset__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields,help:mobile_web.field_mobile_custom_field__path
+msgid ""
+"Dotted path of many2one fields ending with the field to show, e.g. "
+"doctor_id.hospital_id.address"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/core/texts.js:0
+#: code:addons/mobile_web/static/src/views/form/mobile_form_view.js:0
+msgid "Edit"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/core/texts.js:0
+msgid "Edit line"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/core/texts.js:0
+msgid "Edit line items on the desktop"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/core/texts.js:0
+msgid "Edit rich text on the desktop"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/pages/my/my_page.js:0
+msgid "Email"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/widgets/gps_sheet/gps_sheet.js:0
+msgid "Enter a valid latitude and longitude first."
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_password_reset__expires_at
+msgid "Expires At"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__explanation
+msgid "Explanation"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__xml_id
+msgid "External ID"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/pages/my/my_page.js:0
+#: code:addons/mobile_web/static/src/pages/schedule/schedule_page.js:0
+#: code:addons/mobile_web/static/src/pages/todo/todo_page.js:0
+#: code:addons/mobile_web/static/src/views/kanban/mobile_kanban_view.js:0
+#: code:addons/mobile_web/static/src/views/list/mobile_list_view.js:0
+msgid "Failed to load, please try again"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_custom_field__field_id
+msgid "Field"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/core/texts.js:0
+msgid "Filter"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/widgets/gps_sheet/gps_sheet.js:0
+msgid "Find address"
+msgstr ""
+
+#. module: mobile_web
+#: model_terms:ir.ui.view,arch_db:mobile_web.login
+msgid "Forgot password?"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/fields/gps_field.js:0
+msgid "Get location"
+msgstr ""
+
+#. module: mobile_web
+#: model_terms:ir.ui.view,arch_db:mobile_web.login_new_password
+msgid "Go to log in"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model,name:mobile_web.model_ir_http
+msgid "HTTP Routing"
+msgstr ""
+
+#. module: mobile_web
+#: model:mobile_web.mobile.page,name:mobile_web.home_page
+msgid "Home Page"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__id
+#: model:ir.model.fields,field_description:mobile_web.field_ir_http__id
+#: model:ir.model.fields,field_description:mobile_web.field_ir_ui_menu__id
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_custom_field__id
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page__id
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page_actions__id
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_password_reset__id
+msgid "ID"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-python
+#: code:addons/mobile_web/controllers/home.py:0
+msgid ""
+"If the account exists, a reset link has been sent to its email address."
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_custom_field__name
+msgid "Label"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__write_uid
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_custom_field__write_uid
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page__write_uid
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page_actions__write_uid
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_password_reset__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__write_date
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_custom_field__write_date
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page__write_date
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page_actions__write_date
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_password_reset__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/widgets/gps_sheet/gps_sheet.js:0
+msgid "Latitude"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/core/texts.js:0
+#: code:addons/mobile_web/static/src/views/form/mobile_form_view.js:0
+#: code:addons/mobile_web/static/src/views/kanban/mobile_kanban_view.js:0
+#: code:addons/mobile_web/static/src/views/list/mobile_list_view.js:0
+msgid "Loading…"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/widgets/gps_sheet/gps_sheet.js:0
+msgid "Locate me"
+msgstr ""
+
+#. module: mobile_web
+#: model_terms:ir.ui.view,arch_db:mobile_web.login
+msgid "Log in"
+msgstr ""
+
+#. module: mobile_web
+#: model_terms:ir.ui.view,arch_db:mobile_web.login_successful
+msgid "Logged in successfully"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/pages/my/my_page.js:0
+msgid "Login"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/widgets/gps_sheet/gps_sheet.js:0
+msgid "Longitude"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/widgets/gps_sheet/gps_sheet.js:0
+msgid "Map is not configured. Enter the coordinates below."
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model,name:mobile_web.model_ir_ui_menu
+msgid "Menu"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_ir_ui_menu__device_type
+msgid "Menu Show Device Type"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields.selection,name:mobile_web.selection__ir_ui_menu__device_type__mobile
+msgid "Mobile"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.module.module,shortdesc:base.module_mobile_web
+msgid "Mobile Web"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.actions.mobile_page,name:mobile_web.home_page_action
+msgid "Mobile Web Home Page Action"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.actions.mobile_page,name:mobile_web.schedule_page_action
+msgid "Mobile Web Schedule Page Action"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.actions.mobile_page,name:mobile_web.todo_page_action
+msgid "Mobile Web TODO Page Action"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.actions.mobile_page,name:mobile_web.user_my_page_action
+msgid "Mobile Web UserMy Page Action"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model,name:mobile_web.model_mobile_web_password_reset
+msgid "Mobile password reset token"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_custom_field__model
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_custom_field__model_id
+msgid "Model"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/reports/home_report/home_report.js:0
+msgid "More >"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/kanban/mobile_kanban_view.js:0
+#: code:addons/mobile_web/static/src/views/list/mobile_list_view.js:0
+msgid "More actions"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/pages/my/my_page.js:0
+msgid "My"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/pages/my/my_page.js:0
+msgid "Name"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/core/texts.js:0
+msgid "New line"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/core/texts.js:0
+msgid "No"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/widgets/gps_sheet/gps_sheet.js:0
+msgid "No address was found for this point."
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/pages/schedule/schedule_page.js:0
+msgid "No events today"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/core/texts.js:0
+msgid "No matching results"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/kanban/mobile_kanban_view.js:0
+#: code:addons/mobile_web/static/src/views/list/mobile_list_view.js:0
+msgid "No records"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/pages/home/components/suggestion_list.js:0
+msgid "No suggestions yet"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/core/texts.js:0
+msgid "None"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/pages/shared/components/unavailable.js:0
+msgid "Not available yet"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/pages/todo/todo_page.js:0
+msgid "Nothing to do"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-python
+#: code:addons/mobile_web/controllers/home.py:0
+msgid ""
+"Only employees can access this database. Please contact the administrator."
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/form/mobile_form_view.js:0
+msgid "Operation failed"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields,help:mobile_web.field_ir_actions_mobile_page__help
+msgid ""
+"Optional help text for the users with a description of the target view, such"
+" as its usage and purpose."
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page__page_component_id
+msgid "Owl Component ID which defined in frontend MobilePage registry"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields.selection,name:mobile_web.selection__ir_ui_menu__device_type__pc
+msgid "PC"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/form/layout.js:0
+msgid "Page %s"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-python
+#: code:addons/mobile_web/controllers/home.py:0
+msgid ""
+"Password reset by email is not available yet. Please contact the "
+"administrator."
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_custom_field__path
+msgid "Path"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__path
+msgid "Path to show in the URL"
+msgstr ""
+
+#. module: mobile_web
+#: model_terms:ir.ui.view,arch_db:mobile_web.login
+msgid "Please enter your password"
+msgstr ""
+
+#. module: mobile_web
+#: model_terms:ir.ui.view,arch_db:mobile_web.login
+#: model_terms:ir.ui.view,arch_db:mobile_web.login_retrieve_password
+msgid "Please enter your username"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/form/layout.js:0
+msgid "Progress"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/pull_to_refresh.js:0
+msgid "Pull to refresh"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/pull_to_refresh.js:0
+msgid "Refreshing…"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page_actions__name
+msgid "Relation Action Name"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/pull_to_refresh.js:0
+msgid "Release to refresh"
+msgstr ""
+
+#. module: mobile_web
+#: model_terms:ir.ui.view,arch_db:mobile_web.login
+msgid "Remember password"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/core/texts.js:0
+msgid "Remove filter"
+msgstr ""
+
+#. module: mobile_web
+#: model_terms:ir.ui.view,arch_db:mobile_web.login_new_password
+msgid "Request a new reset link"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-python
+#: code:addons/mobile_web/models/mobile_password_reset.py:0
+msgid "Reset your password"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/core/texts.js:0
+#: code:addons/mobile_web/static/src/views/form/mobile_form_view.js:0
+msgid "Save"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/form/mobile_form_view.js:0
+msgid "Save your changes before running this action"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/form/mobile_form_view.js:0
+msgid "Saved"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/form/mobile_form_view.js:0
+msgid "Saving…"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/pages/schedule/schedule_page.js:0
+msgid "Schedule"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/core/texts.js:0
+msgid "Search"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/act_window/act_window_controller.js:0
+msgid "Search %s for: %s"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/widgets/gps_sheet/gps_sheet.js:0
+msgid "Search address"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/core/texts.js:0
+msgid "Select image"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/core/texts.js:0
+msgid "Select…"
+msgstr ""
+
+#. module: mobile_web
+#: model_terms:ir.ui.view,arch_db:mobile_web.login_retrieve_password
+msgid "Send reset link"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_custom_field__sequence
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page_actions__sequence
+msgid "Sequence"
+msgstr ""
+
+#. module: mobile_web
+#: model_terms:ir.ui.view,arch_db:mobile_web.login_new_password
+msgid "Set a new password (at least 10 characters)"
+msgstr ""
+
+#. module: mobile_web
+#: model_terms:ir.ui.view,arch_db:mobile_web.login_new_password
+msgid "Set new password"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields,help:mobile_web.field_ir_actions_mobile_page__binding_model_id
+msgid ""
+"Setting a value makes this action available in the sidebar for the given "
+"model."
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_custom_field__list_view
+msgid "Show in list"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/widgets/sort_menu/sort_menu.js:0
+msgid "Sort"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_custom_field__store
+msgid "Stored"
+msgstr ""
+
+#. module: mobile_web
+#: model_terms:ir.ui.view,arch_db:mobile_web.mobile_custom_field_form
+msgid "Stored fields can be sorted and searched in the database."
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields,help:mobile_web.field_mobile_custom_field__store
+msgid ""
+"Stored fields can be sorted and searched in the database. Changing this may "
+"need a server restart."
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_custom_field__field_name
+msgid "Technical name"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/widgets/gps_sheet/gps_sheet.js:0
+msgid "The %s is missing or out of range."
+msgstr ""
+
+#. module: mobile_web
+#. odoo-python
+#: code:addons/mobile_web/models/custom_field.py:0
+msgid ""
+"The field '%(part)s' has the type %(type)s, which cannot be shown this way"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-python
+#: code:addons/mobile_web/models/custom_field.py:0
+msgid "The model %s has no list view to show the field in."
+msgstr ""
+
+#. module: mobile_web
+#. odoo-python
+#: code:addons/mobile_web/models/mobile_password_reset.py:0
+msgid "The password must be at least %s characters long."
+msgstr ""
+
+#. module: mobile_web
+#. odoo-python
+#: code:addons/mobile_web/controllers/home.py:0
+msgid "The passwords do not match."
+msgstr ""
+
+#. module: mobile_web
+#. odoo-python
+#: code:addons/mobile_web/models/custom_field.py:0
+msgid "The path is empty or has an empty step: %s"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/form/mobile_form_view.js:0
+msgid "The record does not exist or has been deleted"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.constraint,message:mobile_web.constraint_mobile_web_password_reset_token_unique
+msgid "The reset token must be unique."
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/actions/action_service.js:0
+msgid "This action is not available on mobile yet: %s"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/form/form_blocks.js:0
+msgid "This field is required"
+msgstr ""
+
+#. module: mobile_web
+#: model_terms:ir.ui.view,arch_db:mobile_web.login_new_password
+msgid "This reset link is invalid or has expired."
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/pages/todo/todo_page.js:0
+msgid "To do"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_password_reset__token
+msgid "Token"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/views/form/mobile_form_view.js:0
+msgid "Unsaved changes"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_password_reset__used
+msgid "Used"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_password_reset__user_id
+msgid "User"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields,help:mobile_web.field_ir_actions_mobile_page__explanation
+msgid "Verbose description of what this action actually does"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_custom_field__view_id
+msgid "View"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-python
+#: code:addons/mobile_web/controllers/home.py:0
+msgid "Wrong login/password"
+msgstr ""
+
+#. module: mobile_web
+#. odoo-javascript
+#: code:addons/mobile_web/static/src/core/texts.js:0
+msgid "Yes"
+msgstr ""
+
+#. module: mobile_web
+#: model_terms:ir.ui.view,arch_db:mobile_web.login_new_password
+msgid "Your password has been reset."
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_ir_actions_mobile_page__binding_mobile_page
+msgid ""
+"action type: `ir.actions.mobile_page` binding mobile_web.mobile.page record"
+msgstr ""
+
+#. module: mobile_web
+#: model_terms:ir.ui.view,arch_db:mobile_web.mobile_custom_field_form
+msgid "e.g. company_id.currency_id.name"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page__binding_views
+msgid "ir.ui.view records which bind to current MobilePage"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model,name:mobile_web.model_mobile_web_mobile_page
+msgid "mobile_web.mobile.page"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model,name:mobile_web.model_mobile_web_mobile_page_actions
+msgid "mobile_web.mobile.page.actions"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page__name
+msgid "page name"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page_actions__ir_action
+msgid "relation ir_action"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page_actions__mobile_page
+msgid "relation mobile_page"
+msgstr ""
+
+#. module: mobile_web
+#: model:ir.model.fields,field_description:mobile_web.field_mobile_web_mobile_page_actions__svg_icon_href
+msgid "svg use item href(xlink:href) property, such as `#crossnow-icon-TabMy`"
+msgstr ""
+
+#. module: mobile_web
+#: model:mobile_web.mobile.page,name:mobile_web.todo_page
+msgid "待办"
+msgstr ""
+
+#. module: mobile_web
+#: model:mobile_web.mobile.page,name:mobile_web.user_my_page
+msgid "我的"
+msgstr ""
+
+#. module: mobile_web
+#: model:mobile_web.mobile.page,name:mobile_web.schedule_page
+msgid "日程"
+msgstr ""

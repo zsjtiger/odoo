@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { AnnouncementScroll } from "./announcement_scroll";
 
 export const AnnouncementScrollEdit = (I) =>

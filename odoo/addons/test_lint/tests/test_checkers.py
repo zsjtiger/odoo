@@ -6,7 +6,7 @@ import unittest
 from subprocess import run, PIPE
 from textwrap import dedent
 
-from odoo.tools.which import which
+from odoo.tools.system.which import which
 
 from .test_sql_injection import SQLInjectionLinter
 from .common import LintCase

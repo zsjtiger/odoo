@@ -1,0 +1,43 @@
+// 看板视图: 卡片、标题与内容行
+
+.m_kanban {
+    padding: 8px 16px;
+    display: grid;
+    gap: 8px;
+}
+
+.m_kanban_card {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px 12px;
+    border: 1px solid $line;
+    border-radius: 10px;
+    background: $surface;
+    text-align: left;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    &:active {
+        background: #f0fafa;
+    }
+}
+
+.m_kanban_title {
+    font-size: 16px;
+    font-weight: 700;
+    color: $text;
+}
+
+.m_kanban_lines {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 16px;
+    margin-top: 2px;
+    font-size: 13px;
+    color: $muted;
+}
+
+.m_kanban_line {
+    display: inline-flex;
+    align-items: center;
+}

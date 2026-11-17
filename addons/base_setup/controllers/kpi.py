@@ -9,7 +9,7 @@ from odoo.http import Controller, route
 from odoo.modules import Manifest
 from odoo.modules import module as odoo_modules_module
 from odoo.release import series as release_series
-from odoo.sql_db import db_connect
+from odoo.orm.database.sql_db import db_connect
 from odoo.tools import SQL
 
 from odoo.addons.base.models.res_users import _check_apikey_credentials

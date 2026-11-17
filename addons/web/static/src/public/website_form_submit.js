@@ -1,5 +1,5 @@
 import { Interaction } from "@web/public/interaction";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { addLoadingEffect } from "@web/core/utils/ui";
 
 export class WebsiteFormSubmit extends Interaction {

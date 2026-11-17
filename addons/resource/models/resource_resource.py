@@ -11,7 +11,7 @@ from dateutil.relativedelta import relativedelta, weekdays
 from odoo import api, fields, models
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.tools import get_lang, babel_locale_parse
-from odoo.tools.intervals import Intervals
+from odoo.tools.numeric.intervals import Intervals
 from odoo.tools.date_utils import localized, sum_intervals, to_timezone, weeknumber
 
 

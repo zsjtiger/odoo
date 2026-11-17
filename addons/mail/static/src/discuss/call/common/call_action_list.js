@@ -1,10 +1,10 @@
 import { Component, computed, signal, toRaw, types, useProps } from "@odoo/owl";
 
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { useCallActions } from "@mail/discuss/call/common/call_actions";
-import { usePopover } from "@web/core/popover/popover_hook";
-import { Tooltip } from "@web/core/tooltip/tooltip";
+import { usePopover } from "@web/core/components/popover/popover_hook";
+import { Tooltip } from "@web/core/components/tooltip/tooltip";
 import { ActionList } from "@mail/core/common/action_list";
 import { ACTION_TAGS } from "@mail/core/common/action";
 import { attClassObjectToString } from "@mail/utils/common/format";

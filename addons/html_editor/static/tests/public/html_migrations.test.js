@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, test } from "@odoo/hoot";
 import { animationFrame, queryOne } from "@odoo/hoot-dom";
 import { setupInteractionWhiteList, startInteractions } from "@web/../tests/public/helpers";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { setupMigrateFunctions } from "@html_editor/../tests/public/html_migrations_test_utils";
 
 setupInteractionWhiteList("html_editor.html_migrations");

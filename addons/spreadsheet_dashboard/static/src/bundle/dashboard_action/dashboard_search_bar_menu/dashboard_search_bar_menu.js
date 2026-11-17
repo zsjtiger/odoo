@@ -1,9 +1,9 @@
 import { Component, onWillStart, proxy, t, useProps } from "@odoo/owl";
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/core/owl/utils";
 import { useService } from "@web/core/utils/hooks";
 import { deepEqual } from "@web/core/utils/objects";
-import { CheckboxItem } from "@web/core/dropdown/checkbox_item";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { CheckboxItem } from "@web/core/components/dropdown/checkbox_item";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
 import {
     getDefaultValue,
     getEmptyFilterValue,

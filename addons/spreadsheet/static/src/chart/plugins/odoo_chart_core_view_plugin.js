@@ -1,4 +1,4 @@
-import { Domain } from "@web/core/domain";
+import { Domain } from "@web/core/data/domain";
 import { ChartDataSource, chartTypeToDataSourceMode } from "../data_source/chart_data_source";
 import { OdooEvaluationPlugin } from "@spreadsheet/plugins";
 import { deepEqual } from "@web/core/utils/objects";

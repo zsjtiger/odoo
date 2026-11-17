@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_timepicker_demo" model="ir.actions.client">
+        <field name="name">Time Picker</field>
+        <field name="tag">advanced_ui.timepicker_demo</field>
+    </record>
+
+    <menuitem id="menu_timepicker_demo"
+        name="Time Picker"
+        parent="base.menu_custom"
+        action="action_timepicker_demo"
+        sequence="60"/>
+</odoo>

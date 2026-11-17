@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import tagged, TransactionCase
-from odoo.tools.mimetypes import guess_mimetype
+from odoo.tools.files.mimetypes import guess_mimetype
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install

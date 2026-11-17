@@ -1,8 +1,8 @@
 import { usePlugin, Plugin } from "@odoo/owl";
-import { browser } from "@web/core/browser/browser";
-import { registry } from "@web/core/registry";
+import { browser } from "@web/core/services/browser/browser";
+import { registry } from "@web/core/framework/registry";
 import { url } from "@web/core/utils/urls";
-import { services } from "@web/core/services";
+import { services } from "@web/core/framework/services";
 
 export class SoundEffectsPlugin extends Plugin {
     setup() {

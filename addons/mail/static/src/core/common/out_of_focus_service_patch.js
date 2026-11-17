@@ -1,6 +1,6 @@
 import { OutOfFocusService } from "./out_of_focus_service";
 import { usePlugin } from "@odoo/owl";
-import { TitlePlugin } from "@web/core/browser/title_plugin";
+import { TitlePlugin } from "@web/core/services/browser/title_plugin";
 import { patch } from "@web/core/utils/patch";
 
 patch(OutOfFocusService.prototype, {

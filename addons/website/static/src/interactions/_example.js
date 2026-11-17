@@ -1,4 +1,4 @@
-// import { registry } from "@web/core/registry";
+// import { registry } from "@web/core/framework/registry";
 import { Component, xml, proxy, useProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 

@@ -1,6 +1,6 @@
-import { Dialog } from "@web/core/dialog/dialog";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
-import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+import { useHotkey } from "@web/core/services/hotkeys/hotkey_hook";
 import { memoize } from "@web/core/utils/functions";
 import {
     Component,
@@ -13,16 +13,16 @@ import {
     t,
     usePlugin,
 } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
-import { user } from "@web/core/user";
+import { _t } from "@web/core/data/l10n/translation";
+import { user } from "@web/core/services/user";
 import { HtmlViewer } from "@html_editor/components/html_viewer/html_viewer";
 import { READONLY_MAIN_EMBEDDINGS } from "@html_editor/others/embedded_components/embedding_sets";
-import { location } from "@web/core/browser/browser";
-import { cookie } from "@web/core/browser/cookie";
-import { loadBundle } from "@web/core/assets";
+import { location } from "@web/core/services/browser/browser";
+import { cookie } from "@web/core/services/browser/cookie";
+import { loadBundle } from "@web/core/framework/assets";
 import { htmlReplaceAll } from "@web/core/utils/html";
 import { scrollTo } from "@web/core/utils/scrolling";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
 
 const { DateTime } = luxon;
 

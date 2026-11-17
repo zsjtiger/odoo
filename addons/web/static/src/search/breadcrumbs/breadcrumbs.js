@@ -1,7 +1,7 @@
 import { Component, t, useProps } from "@odoo/owl";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { _t } from "@web/core/l10n/translation";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
+import { _t } from "@web/core/data/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
 export class Breadcrumbs extends Component {

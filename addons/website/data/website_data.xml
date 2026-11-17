@@ -502,7 +502,6 @@
         <field name="description">Blogging and posting relevant content</field>
         <field name="sequence">6</field>
         <field name="website_config_preselection">blog</field>
-        <field name="module_id" ref="base.module_website_blog"/>
         <field name="icon">rss_feed</field>
         <field name="icon_class"></field>
         <field name="menu_company">True</field>
@@ -513,7 +512,6 @@
         <field name="name">Career</field>
         <field name="description">Publish job opportunities</field>
         <field name="sequence">8</field>
-        <field name="module_id" ref="base.module_website_hr_recruitment"/>
         <field name="icon">contact_mail</field>
         <field name="icon_class">oi-filled</field>
     </record>
@@ -522,7 +520,6 @@
         <field name="description">Sell more with an eCommerce</field>
         <field name="sequence">9</field>
         <field name="website_config_preselection">online_store</field>
-        <field name="module_id" ref="base.module_website_sale"/>
         <field name="icon">shopping_cart</field>
         <field name="icon_class"></field>
         <field name="menu_sequence">15</field>
@@ -533,7 +530,6 @@
         <field name="description">Publish on-site and online events</field>
         <field name="sequence">10</field>
         <field name="website_config_preselection">event</field>
-        <field name="module_id" ref="base.module_website_event"/>
         <field name="icon">confirmation_number</field>
         <field name="icon_class"></field>
         <field name="menu_sequence">20</field>
@@ -543,7 +539,6 @@
         <field name="name">Live Chat</field>
         <field name="description">Chat with visitors to improve traction</field>
         <field name="sequence">12</field>
-        <field name="module_id" ref="base.module_website_livechat"/>
         <field name="icon">forum</field>
         <field name="icon_class">oi-filled</field>
     </record>
@@ -552,7 +547,6 @@
         <field name="description">Share knowledge publicly or for a fee</field>
         <field name="sequence">13</field>
         <field name="website_config_preselection">elearning</field>
-        <field name="module_id" ref="base.module_website_slides"/>
         <field name="icon">school</field>
         <field name="icon_class"></field>
         <field name="menu_sequence">25</field>

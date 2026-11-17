@@ -1,10 +1,10 @@
 import { Component, proxy, types, useProps } from "@odoo/owl";
 
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { memoize } from "@web/core/utils/functions";
 import { useService } from "@web/core/utils/hooks";
-import { ModelSelector } from "@web/core/model_selector/model_selector";
-import { registry } from "@web/core/registry";
+import { ModelSelector } from "@web/core/editors/model_selector/model_selector";
+import { registry } from "@web/core/framework/registry";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 import { Record } from "@web/model/relational_model/record";
 

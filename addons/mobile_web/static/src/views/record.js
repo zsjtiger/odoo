@@ -1,0 +1,115 @@
+import { normalizeFromServer, serializeForServer } from "@mobile_web/views/record_model";
+
+/**
+ * 一条记录在界面上的状态: 当前值(data, 界面格式) 与 尚未保存的改动(changes, 服务端格式)
+ */
+export class MobileRecord {
+    /**
+     * @param {Object} fields  字段定义
+     * @param {number|null|false} resId  null 或 false 表示新建
+     * @param {Object} data  界面格式的值
+     */
+    constructor(fields, resId, data) {
+        this.fields = fields;
+        this.resId = resId;
+        this.data = data;
+        this.changes = {};
+        // 打开时的值(用于计算明细的删除), 以及明细中每条记录的界面改动 (name -> {id: {字段: 值}})
+        this.original = data;
+        this.lineEdits = {};
+        // 字段组件注册的额外校验 (名称 -> 返回 true 表示通过), 例如内嵌表单的明细必填项, 保存前检查
+        this.validators = {};
+    }
+
+    get isNew() {
+        return !this.resId;
+    }
+
+    get isDirty() {
+        return Object.keys(this.changes).length > 0;
+    }
+
+    /**
+     * 更新一个字段的界面值, 并记录需要写入服务端的值
+     */
+    update(name, value) {
+        this.data = { ...this.data, [name]: value };
+        this.markChanged(name, value);
+    }
+
+    /**
+     * 字段值需要写入服务端时记录下来; 服务端只读(例如计算字段)的字段不写入
+     */
+    markChanged(name, value) {
+        const field = this.fields[name];
+        if (!field || field.readonly) {
+            return;
+        }
+        const serialized = serializeForServer(field, value);
+        if (serialized !== undefined) {
+            this.changes = { ...this.changes, [name]: serialized };
+        }
+    }
+
+    /**
+     * 只更新界面值, 不标记为已修改 (用于 onchange 返回值与默认值)
+     */
+    setQuiet(name, value) {
+        this.data = { ...this.data, [name]: value };
+    }
+
+    /**
+     * 记录的默认值需要随新建一起写入
+     */
+    markDefaults(names) {
+        for (const name of names) {
+            this.markChanged(name, this.data[name]);
+        }
+    }
+
+    /**
+     * 保存成功后用服务端返回的数据重置状态
+     */
+    reset(resId, data) {
+        this.resId = resId;
+        this.data = data;
+        this.original = data;
+        this.changes = {};
+        this.lineEdits = {};
+    }
+
+    /**
+     * 明细(one2many)的列表与改动: pairs 为界面列表, edits 为每条明细的界面改动, commands 为写入服务端的命令
+     */
+    setLines(name, pairs, edits, commands) {
+        this.data = { ...this.data, [name]: pairs };
+        this.lineEdits = { ...this.lineEdits, [name]: edits };
+        const changes = { ...this.changes };
+        if (commands.length) {
+            changes[name] = commands;
+        } else {
+            delete changes[name];
+        }
+        this.changes = changes;
+    }
+}
+
+/**
+ * 服务端返回的一条记录(web 格式) -> 界面格式的 data
+ *
+ * @param {Object} fields
+ * @param {Object} raw
+ * @param {Iterable<string>} fieldNames
+ * @returns {Object}
+ */
+export function toUIData(fields, raw, fieldNames) {
+    const data = {};
+    for (const name of fieldNames) {
+        if (!fields[name]) {
+            continue;
+        }
+        data[name] = normalizeFromServer(fields[name], raw[name]);
+    }
+    data.display_name = raw.display_name ?? false;
+    return data;
+}

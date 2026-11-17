@@ -1,6 +1,6 @@
 import { Component, t, useProps } from "@odoo/owl";
-import { Dialog } from "@web/core/dialog/dialog";
-import { formatDate } from "@web/core/l10n/dates";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
+import { formatDate } from "@web/core/data/l10n/dates";
 import { useService } from "@web/core/utils/hooks";
 import { getFormattedDateSpan } from "@web/views/calendar/utils";
 import { getColor } from "../utils";

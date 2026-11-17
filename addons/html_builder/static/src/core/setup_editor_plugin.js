@@ -2,7 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { isEmptyBlock } from "@html_editor/utils/dom_info";
 import { withSequence } from "@html_editor/utils/resource";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 
 /**
  * @typedef { Object } SetupEditorShared

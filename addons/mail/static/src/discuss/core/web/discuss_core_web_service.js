@@ -1,11 +1,11 @@
 import { proxy } from "@odoo/owl";
 
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 
 export class DiscussCoreWeb {
     /**
-     * @param {import("@web/env").OdooEnv} env
+     * @param {import("@web/boot/env").OdooEnv} env
      * @param {import("services").ServiceFactories} services
      */
     constructor(env, services) {
@@ -45,7 +45,7 @@ export class DiscussCoreWeb {
 export const discussCoreWeb = {
     dependencies: ["bus_service", "mail.store", "notification", "ui", "multi_tab"],
     /**
-     * @param {import("@web/env").OdooEnv} env
+     * @param {import("@web/boot/env").OdooEnv} env
      * @param {import("services").ServiceFactories} services
      */
     start(env, services) {

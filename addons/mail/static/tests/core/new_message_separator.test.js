@@ -29,7 +29,7 @@ import {
     withUser,
 } from "@web/../tests/web_test_helpers";
 
-import { rpc } from "@web/core/network/rpc";
+import { rpc } from "@web/core/services/network/rpc";
 
 describe.current.tags("desktop");
 defineMailModels();

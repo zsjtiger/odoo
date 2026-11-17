@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { GallerySlider001 } from "@website/snippets/s_image_gallery/gallery_slider_001";
 
 const GallerySlider001Edit = (I) =>

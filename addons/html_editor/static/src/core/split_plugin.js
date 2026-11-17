@@ -25,7 +25,7 @@ import {
 } from "../utils/dom_traversal";
 import { DIRECTIONS, childNodeIndex, nodeSize } from "../utils/position";
 import { isProtected, isProtecting } from "@html_editor/utils/dom_info";
-import { isBrowserSafari } from "@web/core/browser/feature_detection";
+import { isBrowserSafari } from "@web/core/services/browser/feature_detection";
 
 const isInList = (node, editable) =>
     ancestors(node, editable).find((ancestor) => isListItem(ancestor));

@@ -17,8 +17,8 @@ from odoo.tests.common import TransactionCase, tagged
 from odoo.tools import pdf
 from odoo.tools.misc import file_open
 from odoo.tools.pdf import reshape_text
-from odoo.tools.pdf.incremental_pdf_merge import IncrementalPdfMerge, get_page_media_box
-from odoo.tools.pdf.signature import (
+from odoo.addons.test_base.tests.test_tools.pdf_signing.incremental_pdf_merge import IncrementalPdfMerge, get_page_media_box
+from odoo.addons.test_base.tests.test_tools.pdf_signing.signature import (
     PdfSigner,
     SignaturePolicy,
     build_cms_signature,
@@ -422,7 +422,7 @@ class TestSignature(TransactionCase):
 
         def visible_signature_rects_patch(rects):
             """ What the page is already signed with. """
-            return patch('odoo.tools.pdf.signature.visible_signature_rects', lambda page: rects)
+            return patch('odoo.addons.test_base.tests.test_tools.pdf_signing.signature.visible_signature_rects', lambda page: rects)
 
         with visible_signature_rects_patch([]):
             self.assertEqual(next_signature_appearance_origin(PDF_RAW, appearance), (left, bottom))

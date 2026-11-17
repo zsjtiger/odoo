@@ -1,4 +1,4 @@
-import { render } from "@web/owl2/utils";
+import { render } from "@web/core/owl/utils";
 import { describe, expect, test } from "@odoo/hoot";
 import { click, queryAllTexts } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
@@ -20,7 +20,7 @@ import {
 } from "@spreadsheet/../tests/helpers/commands";
 import { toRangeData } from "@spreadsheet/../tests/helpers/zones";
 import { FilterValue } from "@spreadsheet/global_filters/components/filter_value/filter_value";
-import { user } from "@web/core/user";
+import { user } from "@web/core/services/user";
 
 import { OdooDataProvider } from "@spreadsheet/data_sources/odoo_data_provider";
 import { Component, onWillUnmount, t, useProps, xml } from "@odoo/owl";

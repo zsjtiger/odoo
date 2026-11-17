@@ -1,8 +1,8 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { Interaction } from "@web/public/interaction";
 
-import { isBrowserSafari } from "@web/core/browser/feature_detection";
-import { location } from "@web/core/browser/browser";
+import { isBrowserSafari } from "@web/core/services/browser/feature_detection";
+import { location } from "@web/core/services/browser/browser";
 import { verifyHttpsUrl } from "@website/utils/misc";
 
 export class SearchBarResults extends Interaction {

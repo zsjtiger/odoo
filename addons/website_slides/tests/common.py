@@ -73,8 +73,6 @@ class SlidesCase(MailCase):
             'enroll': 'public',
             'visibility': 'public',
             'is_published': True,
-            'karma_gen_channel_finish': 100,
-            'karma_gen_channel_rank': 10,
         })
         cls.slide = cls.env['slide.slide'].with_user(cls.user_officer).create({
             'name': 'How To Cook Humans',
@@ -106,7 +104,6 @@ class SlidesCase(MailCase):
             'is_published': True,
             'completion_time': 1.5,
             'sequence': 4,
-            'quiz_first_attempt_reward': 42,
         })
         cls.question_1 = cls.env['slide.question'].with_user(cls.user_officer).create({
             'question': 'How long should be cooked a human?',

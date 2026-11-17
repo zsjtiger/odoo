@@ -1,9 +1,5 @@
 import { DIRECTIONS, nodeSize } from "@html_editor/utils/position";
-import {
-    ensureFocus,
-    getAdjacentCharacter,
-    getCursorDirection,
-} from "@html_editor/utils/selection";
+import { getAdjacentCharacter, getCursorDirection } from "@html_editor/utils/selection";
 import { describe, expect, test } from "@odoo/hoot";
 import { dispatch } from "@odoo/hoot-dom";
 import { insertText, setupEditor, testEditor } from "../_helpers/editor";
@@ -11,6 +7,8 @@ import { unformat } from "../_helpers/format";
 
 describe("ensureFocus", () => {
     // TODO @phoenix: unskipped when ensureFocus is add in the code base
+    // (ensureFocus is not exported by @html_editor/utils/selection yet, so these
+    // tests stay as todo until it is added)
     test.todo(
         "should preserve the focus on the child of this.editable when executing a powerbox command even if it is enclosed in a contenteditable=false",
         async () => {

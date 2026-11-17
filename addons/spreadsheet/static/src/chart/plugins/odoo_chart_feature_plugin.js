@@ -1,4 +1,4 @@
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { OdooUIPlugin } from "@spreadsheet/plugins";
 import { getBestGranularity, getValidGranularities } from "../../global_filters/helpers";
 

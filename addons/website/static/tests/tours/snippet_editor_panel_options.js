@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import {
     changeOption,
     changeOptionInPopover,
@@ -9,7 +9,7 @@ import {
     unfoldOptionsGroup,
     waitForEditMode,
 } from "@website/js/tours/tour_utils";
-import { browser } from "@web/core/browser/browser";
+import { browser } from "@web/core/services/browser/browser";
 import { delay } from "@web/core/utils/concurrency";
 
 const checkIfParagraphSelected = (trigger) => ({

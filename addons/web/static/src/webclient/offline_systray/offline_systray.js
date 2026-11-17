@@ -1,12 +1,12 @@
 import { Component, computed, usePlugin } from "@odoo/owl";
-import { registry } from "@web/core/registry";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
+import { registry } from "@web/core/framework/registry";
+import { OfflinePlugin } from "@web/core/services/offline/offline_plugin";
 import { useService } from "@web/core/utils/hooks";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { _t } from "../../core/l10n/translation";
-import { formatDateTime } from "@web/core/l10n/dates";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
+import { _t } from "../../core/data/l10n/translation";
+import { formatDateTime } from "@web/core/data/l10n/dates";
+import { ConfirmationDialog } from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
 
 const { DateTime } = luxon;
 

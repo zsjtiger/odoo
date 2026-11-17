@@ -1,9 +1,9 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { DependencyManager } from "@html_builder/core/dependency_manager";
 import { Component, onMounted, onWillDestroy, proxy, signal, useProps, t } from "@odoo/owl";
-import { usePopover } from "@web/core/popover/popover_hook";
-import { POSITION_BUS } from "@web/core/position/position_hook";
-import { useSubEnv } from "@web/owl2/utils";
+import { usePopover } from "@web/core/components/popover/popover_hook";
+import { POSITION_BUS } from "@web/core/components/position/position_hook";
+import { useSubEnv } from "@web/core/owl/utils";
 import { AnimateOption, animateOptionProps } from "./animate_option";
 
 export class AnimateTextPopover extends BaseOptionComponent {

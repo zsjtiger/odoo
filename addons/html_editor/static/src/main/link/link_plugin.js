@@ -2,7 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { closestElement, descendants, selectElements } from "@html_editor/utils/dom_traversal";
 import { mergeAdjacentTextNodes, unwrapContents } from "@html_editor/utils/dom";
 import { findInSelection, callbacksForCursorUpdate } from "@html_editor/utils/selection";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { LinkPopover } from "./link_popover";
 import { DIRECTIONS, leftPos, nodeSize, rightPos } from "@html_editor/utils/position";
 import { EMAIL_REGEX, URL_REGEX, cleanZWChars, deduceURLfromText } from "./utils";
@@ -18,13 +18,13 @@ import {
     ICON_SELECTOR,
 } from "@html_editor/utils/dom_info";
 import { KeepLast } from "@web/core/utils/concurrency";
-import { rpc } from "@web/core/network/rpc";
+import { rpc } from "@web/core/services/network/rpc";
 import { memoize } from "@web/core/utils/functions";
 import { withSequence } from "@html_editor/utils/resource";
 import { isBlock, closestBlock } from "@html_editor/utils/blocks";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
-import { isBrowserFirefox, isBrowserSafari } from "@web/core/browser/feature_detection";
-import { session } from "@web/session";
+import { isBrowserFirefox, isBrowserSafari } from "@web/core/services/browser/feature_detection";
+import { session } from "@web/boot/session";
 
 /** @typedef {import("@odoo/owl").Component} Component */
 /** @typedef {import("plugins").CSSSelector} CSSSelector */

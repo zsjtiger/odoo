@@ -1,5 +1,5 @@
 import { Interaction } from "@web/public/interaction";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 /**
  * @todo while this solution mitigates the issue, it is not fixing it entirely

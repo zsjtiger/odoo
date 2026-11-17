@@ -1,5 +1,5 @@
-import { registry } from "@web/core/registry";
-import { SIZES } from "@web/core/ui/ui_utils";
+import { registry } from "@web/core/framework/registry";
+import { SIZES } from "@web/core/services/ui/ui_utils";
 import {
     append,
     combineAttributes,

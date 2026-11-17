@@ -12,7 +12,7 @@ from werkzeug.urls import iri_to_uri
 from odoo.http import request, router
 from odoo.http.session import get_default_session, session_store
 from odoo.tools.misc import file_open
-from odoo.tools.translate import JAVASCRIPT_TRANSLATION_COMMENT
+from odoo.tools.text.translate import JAVASCRIPT_TRANSLATION_COMMENT
 
 _logger = logging.getLogger(__name__)
 

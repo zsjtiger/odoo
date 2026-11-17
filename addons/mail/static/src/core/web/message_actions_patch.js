@@ -1,8 +1,8 @@
 import { prepareBodyForEditing, parseEmail } from "@mail/utils/common/format";
 import { registerMessageAction } from "@mail/core/common/message_actions";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { renderToMarkup } from "@web/core/utils/render";
-import { rpc } from "@web/core/network/rpc";
+import { rpc } from "@web/core/services/network/rpc";
 
 export function messageActionOpenFullComposer(title, context, component) {
     const message = component.props.message;

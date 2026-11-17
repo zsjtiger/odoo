@@ -1,9 +1,9 @@
-import { browser } from "@web/core/browser/browser";
+import { browser } from "@web/core/services/browser/browser";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 import { WebClient } from "@web/webclient/webclient";
 import { onWillDestroy } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 
 const USER_DEVICES_MODEL = "mail.push.device";
 

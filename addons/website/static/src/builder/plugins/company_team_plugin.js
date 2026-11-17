@@ -1,5 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { isMediaElement } from "@html_editor/utils/dom_info";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 

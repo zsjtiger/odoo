@@ -1,9 +1,9 @@
-import { browser } from "@web/core/browser/browser";
-import { registry } from "@web/core/registry";
+import { browser } from "@web/core/services/browser/browser";
+import { registry } from "@web/core/framework/registry";
 import { MultiTabFallbackPlugin } from "./multi_tab_fallback_plugin";
 import { MultiTabSharedWorkerPlugin } from "./multi_tab_shared_worker_plugin";
 import { usePlugin } from "@odoo/owl";
-import { services } from "@web/core/services";
+import { services } from "@web/core/framework/services";
 
 const Base = browser.SharedWorker ? MultiTabSharedWorkerPlugin : MultiTabFallbackPlugin;
 

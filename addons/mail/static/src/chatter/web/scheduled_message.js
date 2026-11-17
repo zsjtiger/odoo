@@ -6,9 +6,9 @@ import { toggleFn } from "@mail/utils/common/signal";
 
 import { Component, signal, types, useProps } from "@odoo/owl";
 
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { _t } from "@web/core/l10n/translation";
-import { usePopover } from "@web/core/popover/popover_hook";
+import { ConfirmationDialog } from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
+import { _t } from "@web/core/data/l10n/translation";
+import { usePopover } from "@web/core/components/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 
 export const SCHEDULED_MESSAGE_TRUNCATE_THRESHOLD = 50; // arbitrary, ~ 1 line on large screen

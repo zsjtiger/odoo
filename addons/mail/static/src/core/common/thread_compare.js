@@ -1,6 +1,6 @@
 import { compareDatetime } from "@mail/utils/common/misc";
 
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 /**
  * Registry of functions to sort threads in messaging menu.

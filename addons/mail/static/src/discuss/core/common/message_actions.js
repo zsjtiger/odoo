@@ -1,7 +1,7 @@
 import { registerMessageAction } from "@mail/core/common/message_actions";
 
-import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
+import { _t } from "@web/core/data/l10n/translation";
+import { rpc } from "@web/core/services/network/rpc";
 
 registerMessageAction("set-new-message-separator", {
     condition: ({ message, channel }) =>

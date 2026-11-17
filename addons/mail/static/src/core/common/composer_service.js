@@ -2,8 +2,8 @@ import { subscribeToStorage } from "@mail/utils/common/local_storage";
 
 import { signal } from "@odoo/owl";
 
-import { browser } from "@web/core/browser/browser";
-import { registry } from "@web/core/registry";
+import { browser } from "@web/core/services/browser/browser";
+import { registry } from "@web/core/framework/registry";
 
 export const composerService = {
     dependencies: ["mail.store"],

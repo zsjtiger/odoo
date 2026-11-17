@@ -18,10 +18,10 @@ import {
     useEffect,
     useProps,
 } from "@odoo/owl";
-import { getBundle } from "@web/core/assets";
-import { location } from "@web/core/browser/browser";
+import { getBundle } from "@web/core/framework/assets";
+import { location } from "@web/core/services/browser/browser";
 import { memoize } from "@web/core/utils/functions";
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/core/owl/utils";
 
 export class HtmlViewer extends Component {
     static template = "html_editor.HtmlViewer";

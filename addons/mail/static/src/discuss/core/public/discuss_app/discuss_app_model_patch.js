@@ -1,5 +1,5 @@
 import { DiscussApp } from "@mail/core/public_web/discuss_app/discuss_app_model";
-import { location, browser } from "@web/core/browser/browser";
+import { location, browser } from "@web/core/services/browser/browser";
 
 import { patch } from "@web/core/utils/patch";
 

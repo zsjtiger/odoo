@@ -38,17 +38,17 @@ import { click, contains, TIMEOUT } from "./mail_test_helpers_contains";
 
 import { closeStream, mailGlobal } from "@mail/utils/common/misc";
 import { Component, onMounted, onPatched } from "@odoo/owl";
-import { browser } from "@web/core/browser/browser";
-import { emojiLoader } from "@web/core/emoji_picker/emoji_loader";
-import { registry } from "@web/core/registry";
-import { MEDIAS_BREAKPOINTS, utils as uiUtils } from "@web/core/ui/ui_utils";
+import { browser } from "@web/core/services/browser/browser";
+import { emojiLoader } from "@web/core/components/emoji_picker/emoji_loader";
+import { registry } from "@web/core/framework/registry";
+import { MEDIAS_BREAKPOINTS, utils as uiUtils } from "@web/core/services/ui/ui_utils";
 import { useService } from "@web/core/utils/hooks";
 import { IndexedDB } from "@web/core/utils/indexed_db";
 import { pick } from "@web/core/utils/objects";
 import { patch } from "@web/core/utils/patch";
-import { session } from "@web/session";
+import { session } from "@web/boot/session";
 import { WebClient } from "@web/webclient/webclient";
-export { SIZES } from "@web/core/ui/ui_utils";
+export { SIZES } from "@web/core/services/ui/ui_utils";
 
 import { SoundEffectsPlugin } from "@mail/core/common/sound_effects_plugin";
 import { Store as StoreService } from "@mail/core/common/store_service";

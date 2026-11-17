@@ -4,8 +4,8 @@ import {
     useEmbeddedState,
 } from "@html_editor/others/embedded_component_utils";
 import { Component, onWillStart, signal, types as t, useEffect, useProps } from "@odoo/owl";
-import { loadBundle } from "@web/core/assets";
-import { cookie } from "@web/core/browser/cookie";
+import { loadBundle } from "@web/core/framework/assets";
+import { cookie } from "@web/core/services/browser/cookie";
 import {
     getPreValue,
     highlightPre,

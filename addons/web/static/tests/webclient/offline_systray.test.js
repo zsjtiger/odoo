@@ -1,5 +1,5 @@
 import { WebClient } from "@web/webclient/webclient";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
+import { OfflinePlugin } from "@web/core/services/offline/offline_plugin";
 
 import { animationFrame, expect, queryAllTexts, runAllTimers, test } from "@odoo/hoot";
 import {

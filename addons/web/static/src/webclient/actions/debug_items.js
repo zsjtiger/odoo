@@ -1,8 +1,8 @@
-import { _t } from "@web/core/l10n/translation";
-import { editModelDebug } from "@web/core/debug/debug_utils";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { editModelDebug } from "@web/core/services/debug/debug_utils";
+import { registry } from "@web/core/framework/registry";
 import { usePlugin } from "@odoo/owl";
-import { ORM } from "@web/core/orm_plugin";
+import { ORM } from "@web/core/services/orm_plugin";
 import { useService } from "@web/core/utils/hooks";
 
 const debugRegistry = registry.category("debug");

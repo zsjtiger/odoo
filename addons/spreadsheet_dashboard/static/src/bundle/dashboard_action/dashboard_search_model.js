@@ -1,11 +1,11 @@
 import { proxy } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import {
     getDefaultValue,
     getFacetInfo,
     isEmptyFilterValue,
 } from "@spreadsheet/global_filters/helpers";
-import { user } from "@web/core/user";
+import { user } from "@web/core/services/user";
 import { deepEqual } from "@web/core/utils/objects";
 
 export function getActiveFilterValuesById(filterNodes) {

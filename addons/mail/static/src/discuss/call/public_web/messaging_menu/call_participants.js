@@ -5,8 +5,8 @@ import { toggleFn } from "@mail/utils/common/signal";
 
 import { Component, computed, signal, t, useOnChange, useProps } from "@odoo/owl";
 
-import { localeCompare } from "@web/core/l10n/utils/collation";
-import { _t } from "@web/core/l10n/translation";
+import { localeCompare } from "@web/core/data/l10n/utils/collation";
+import { _t } from "@web/core/data/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
 export class MessagingMenuCallParticipants extends Component {

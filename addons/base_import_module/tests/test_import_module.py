@@ -15,7 +15,7 @@ from odoo import release
 from odoo.addons import __path__ as __addons_path__
 from odoo.exceptions import UserError
 from odoo.tools import BinaryBytes, file_open, file_open_temporary_directory, mute_logger
-from odoo.tools.translate import TranslationModuleReader
+from odoo.tools.text.translate import TranslationModuleReader
 
 
 @odoo.tests.tagged('post_install', '-at_install')

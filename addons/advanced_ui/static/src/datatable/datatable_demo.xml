@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="advanced_ui.DataTableDemo">
+        <div class="o_datatable_demo p-4">
+            <h1 class="mb-4">Data table</h1>
+
+            <section class="mb-5">
+                <h2 class="h4 mb-3">Basic</h2>
+                <DataTable columns="this.basicColumns" rows="this.opportunities"/>
+            </section>
+
+            <section class="mb-5">
+                <h2 class="h4 mb-3">Basic: Fluid and Striped</h2>
+                <DataTable columns="this.basicColumns" rows="this.opportunities" striped="true"/>
+            </section>
+
+            <section class="mb-5">
+                <h2 class="h4 mb-3">Basic: No row hover</h2>
+                <DataTable columns="this.basicColumns" rows="this.opportunities" noRowHover="true"/>
+            </section>
+
+            <section class="mb-5">
+                <h2 class="h4 mb-3">Basic: Columns bordered</h2>
+                <DataTable columns="this.basicColumns" rows="this.opportunities" bordered="true"/>
+            </section>
+
+            <section class="mb-5">
+                <h2 class="h4 mb-3">Basic: Headless</h2>
+                <DataTable columns="this.basicColumns" rows="this.opportunities" headless="true"/>
+            </section>
+
+            <section class="mb-5">
+                <h2 class="h4 mb-3">Fixed Layout</h2>
+                <DataTable columns="this.basicColumns" rows="this.opportunities" fixedLayout="true"/>
+            </section>
+
+            <section class="mb-5">
+                <h2 class="h4 mb-3">Advanced</h2>
+                <DataTable columns="this.advancedColumns" rows="this.accounts"
+                    sortKey="'name'" selection="'multi'" rowActions="this.rowActions"/>
+            </section>
+
+            <section class="mb-5">
+                <h2 class="h4 mb-3">Advanced: Single Selection</h2>
+                <DataTable columns="this.advancedColumns" rows="this.accounts"
+                    sortKey="'name'" selection="'single'" rowActions="this.rowActions"/>
+            </section>
+
+            <section class="mb-5">
+                <h2 class="h4 mb-3">Advanced: Fixed Header</h2>
+                <DataTable columns="this.advancedColumns" rows="this.largeRows"
+                    sortKey="'name'" selection="'multi'" scrollable="true" maxHeight="'300px'"/>
+            </section>
+
+            <section class="mb-5">
+                <h2 class="h4 mb-3">Infinite Scrolling</h2>
+                <DataTable columns="this.advancedColumns" rows="this.infiniteRows"
+                    sortKey="'name'" selection="'multi'" scrollable="true" maxHeight="'300px'"
+                    onLoadMore="() => this.loadMore()"/>
+            </section>
+
+            <section class="mb-5">
+                <h2 class="h4 mb-3">Resizable Columns</h2>
+                <h3 class="h6 text-muted mb-2">With keyboard navigation</h3>
+                <DataTable columns="this.advancedColumns" rows="this.largeRows"
+                    resizable="true" scrollable="true" maxHeight="'220px'"/>
+            </section>
+
+            <section class="mb-5">
+                <h2 class="h4 mb-3">Pagination (the parent controls the page)</h2>
+                <div class="d-flex justify-content-end mb-2">
+                    <Pager offset="this.page.offset" limit="this.page.limit" total="this.pagedRows.length"
+                        onUpdate="(params) => this.onPageUpdate(params)"/>
+                </div>
+                <DataTable columns="this.advancedColumns" rows="this.currentPage"/>
+            </section>
+
+            <section class="mb-5">
+                <h2 class="h4 mb-3">Header filters with pagination</h2>
+                <div class="d-flex justify-content-end mb-2">
+                    <Pager offset="this.filterState.offset" limit="this.filterState.limit" total="this.filteredRows.length"
+                        onUpdate="(params) => this.onFilterPageUpdate(params)"/>
+                </div>
+                <DataTable columns="this.filterColumns" rows="this.filterPage" filters="this.filterState.filters"
+                    onFilterChange="(key, value) => this.onFilterChange(key, value)"/>
+            </section>
+
+            <section class="mb-5">
+                <h2 class="h4 mb-3">Custom cells (slot)</h2>
+                <DataTable columns="this.advancedColumns" rows="this.accounts">
+                    <t t-set-slot="cell" t-slot-scope="scope">
+                        <span t-if="scope.column.key === 'stage'" class="badge text-bg-info" t-out="scope.value"/>
+                        <span t-else="" class="text-truncate d-block" t-out="scope.text"/>
+                    </t>
+                </DataTable>
+            </section>
+
+            <section class="mb-5">
+                <h2 class="h6 mb-2">Resizeable: Columns 0 and 3 fixed</h2>
+                <DataTable columns="this.fixedColumns" rows="this.accounts" resizable="true"
+                    scrollable="true" maxHeight="'220px'"/>
+            </section>
+        </div>
+    </t>
+
+</templates>

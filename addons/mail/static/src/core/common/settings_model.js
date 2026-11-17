@@ -1,7 +1,7 @@
 import { hasHardwareAcceleration } from "@mail/utils/common/misc";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { Record } from "@mail/model/export";
-import { rpc } from "@web/core/network/rpc";
+import { rpc } from "@web/core/services/network/rpc";
 
 export class Settings extends Record {
     static singleton = true;

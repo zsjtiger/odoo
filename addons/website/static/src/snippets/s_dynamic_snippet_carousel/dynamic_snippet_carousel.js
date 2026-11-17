@@ -1,7 +1,7 @@
 import { DynamicSnippet } from "@website/snippets/s_dynamic_snippet/dynamic_snippet";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
-import { utils as uiUtils } from "@web/core/ui/ui_utils";
+import { utils as uiUtils } from "@web/core/services/ui/ui_utils";
 
 export class DynamicSnippetCarousel extends DynamicSnippet {
     static selector = ".s_dynamic_snippet_carousel";

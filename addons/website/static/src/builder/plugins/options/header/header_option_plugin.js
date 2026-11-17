@@ -1,6 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { HeaderTemplateChoice } from "./header_template_option";
 import { HeaderTopOptions } from "./header_top_options";
 import { WebsiteConfigAction } from "../../customize_website_plugin";

@@ -21,7 +21,7 @@ import {
     firstLeaf,
     lastLeaf,
 } from "@html_editor/utils/dom_traversal";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
+import { getActiveHotkey } from "@web/core/services/hotkeys/hotkey_utils";
 import { Plugin } from "../plugin";
 import { DIRECTIONS, leftPos, nodeSize, rightPos } from "../utils/position";
 import {

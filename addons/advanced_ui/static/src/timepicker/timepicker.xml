@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="advanced_ui.TimePicker">
+        <span t-if="this.props.readonly" class="o_timepicker_readonly" t-out="this.props.value || ''"/>
+        <div t-else="" class="o_timepicker position-relative">
+            <input
+                t-ref="this.inputRef"
+                type="text"
+                role="combobox"
+                class="o_input o_timepicker_input pe-5"
+                autocomplete="off"
+                t-att-id="this.props.id"
+                t-att-name="this.props.name"
+                t-att-value="this.currentText"
+                t-att-placeholder="this.props.placeholder || '00:00'"
+                t-att-aria-expanded="this.state.open ? 'true' : 'false'"
+                t-on-input="(ev) => this.onInput(ev)"
+                t-on-focus="this.onFocus"
+                t-on-blur="this.onBlur"
+                t-on-keydown="(ev) => this.onKeydown(ev)"
+            />
+            <i class="oi o_timepicker_icon position-absolute" data-icon="schedule"/>
+            <ul t-if="this.state.open and this.options.length" class="o_timepicker_list list-unstyled m-0" role="listbox">
+                <t t-foreach="this.options" t-as="time" t-key="time">
+                    <li
+                        role="option"
+                        class="o_timepicker_option px-3 py-1"
+                        t-att-class="{ 'active': this.state.highlight === time_index }"
+                        t-att-aria-selected="this.state.highlight === time_index ? 'true' : 'false'"
+                        t-on-mousedown="(ev) => this.onOptionMouseDown(ev, time)"
+                        t-out="time"
+                    />
+                </t>
+            </ul>
+        </div>
+    </t>
+
+    <t t-name="advanced_ui.TimePickerField">
+        <TimePicker
+            id="this.props.id"
+            name="this.props.name"
+            value="this.text"
+            step="this.props.step || 30"
+            readonly="this.props.readonly"
+            placeholder="this.props.placeholder"
+            onChange="(time) => this.onChange(time)"
+        />
+    </t>
+
+</templates>

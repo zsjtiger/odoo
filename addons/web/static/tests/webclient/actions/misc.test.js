@@ -21,9 +21,9 @@ import {
     webModels,
 } from "@web/../tests/web_test_helpers";
 
-import { location, browser } from "@web/core/browser/browser";
-import { registry } from "@web/core/registry";
-import { router } from "@web/core/browser/router";
+import { location, browser } from "@web/core/services/browser/browser";
+import { registry } from "@web/core/framework/registry";
+import { router } from "@web/core/services/browser/router";
 import { listView } from "@web/views/list/list_view";
 import { PivotModel } from "@web/views/pivot/pivot_model";
 import { WebClient } from "@web/webclient/webclient";

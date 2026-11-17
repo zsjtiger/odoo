@@ -1,8 +1,8 @@
 import { Component, proxy, t, useProps } from "@odoo/owl";
-import { CheckBox } from "@web/core/checkbox/checkbox";
-import { Dialog } from "@web/core/dialog/dialog";
-import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
+import { CheckBox } from "@web/core/components/checkbox/checkbox";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
+import { _t } from "@web/core/data/l10n/translation";
+import { rpc } from "@web/core/services/network/rpc";
 
 export class SlideUnsubscribeDialog extends Component {
     static template = "website_slides.SlideUnsubscribeDialog";

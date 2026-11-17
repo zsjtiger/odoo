@@ -1,4 +1,4 @@
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { Plugin } from "../plugin";
 import { closestBlock } from "../utils/blocks";
 import { closestElement } from "../utils/dom_traversal";

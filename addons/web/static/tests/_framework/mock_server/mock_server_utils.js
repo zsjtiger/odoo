@@ -1,9 +1,9 @@
-import { makeErrorFromResponse } from "@web/core/network/rpc";
+import { makeErrorFromResponse } from "@web/core/services/network/rpc";
 
 /**
  * @typedef {{
  *  code?: number;
- *  context?: import("@web/core/context").Context;
+ *  context?: import("@web/core/data/context").Context;
  *  description?: string;
  *  message?: string;
  *  subType?: string;

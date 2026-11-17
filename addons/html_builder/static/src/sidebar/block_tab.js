@@ -1,8 +1,8 @@
 import { Component, onMounted, onWillDestroy, proxy, signal, useProps, t } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-import { Tooltip } from "@web/core/tooltip/tooltip";
+import { Tooltip } from "@web/core/components/tooltip/tooltip";
 import { closestScrollableY, getScrollingElement, isScrollableY } from "@web/core/utils/scrolling";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { closest } from "@web/core/utils/ui";
 import { useDragAndDrop } from "@html_editor/utils/drag_and_drop";
 import { getCSSVariableValue } from "@html_editor/utils/formatting";

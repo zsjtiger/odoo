@@ -1,8 +1,8 @@
 import { t, usePlugin, useProps } from "@odoo/owl";
-import { useOwnDebugContext } from "@web/core/debug/debug_context";
-import { DebugMenu } from "@web/core/debug/debug_menu";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
-import { Dialog, dialogProps } from "@web/core/dialog/dialog";
+import { useOwnDebugContext } from "@web/core/services/debug/debug_context";
+import { DebugMenu } from "@web/core/services/debug/debug_menu";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
+import { Dialog, dialogProps } from "@web/core/dialogs/dialog/dialog";
 
 export class ActionDialog extends Dialog {
     static components = { ...Dialog.components, DebugMenu };

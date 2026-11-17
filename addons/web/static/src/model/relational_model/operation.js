@@ -1,4 +1,4 @@
-import { smartDateUnits } from "@web/core/l10n/dates";
+import { smartDateUnits } from "@web/core/data/l10n/dates";
 export class Operation {
     static supportedOperators = [];
     static parse() {}

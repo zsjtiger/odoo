@@ -2,7 +2,7 @@ import { Plugin } from "../plugin";
 
 /**
  * @typedef {typeof import("@odoo/owl").Component} Component
- * @typedef {import("@web/core/dialog/dialog_plugin").DialogOptionSchema} DialogOptionSchema
+ * @typedef {import("@web/core/dialogs/dialog/dialog_plugin").DialogOptionSchema} DialogOptionSchema
  */
 
 /**

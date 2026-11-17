@@ -1,6 +1,6 @@
 import { CodeBlockPlugin } from "@html_editor/main/code_block_plugin";
 import { withSequence } from "@html_editor/utils/resource";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 
 export class MailCodeBlockPlugin extends CodeBlockPlugin {
     static id = "mailCodeBlock";

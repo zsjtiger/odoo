@@ -5,9 +5,9 @@ import { Component, signal, xml } from "@odoo/owl";
 
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useViewButtonHandler, useViewButtons } from "@web/views/view_button/view_button_hook";
-import { registry } from "@web/core/registry";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { registry } from "@web/core/framework/registry";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
 
 test("action can be prevented", async () => {
     registry.category("services").add(

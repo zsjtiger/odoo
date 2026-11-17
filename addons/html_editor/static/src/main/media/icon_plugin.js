@@ -1,6 +1,6 @@
 import { withSequence } from "@html_editor/utils/resource";
 import { Plugin } from "../../plugin";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { MediaDialog } from "./media_dialog/media_dialog";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import {

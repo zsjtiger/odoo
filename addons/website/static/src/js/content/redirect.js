@@ -1,4 +1,4 @@
-import { session } from "@web/session";
+import { session } from "@web/boot/session";
 
 /**
  * This script, served with frontend pages, displays buttons in the top left

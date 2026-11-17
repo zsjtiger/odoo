@@ -3,7 +3,7 @@
 import { __debug__, after, afterEach, expect, getFixture, globals } from "@odoo/hoot";
 import { queryAll, queryFirst } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
-import { isMacOS } from "@web/core/browser/feature_detection";
+import { isMacOS } from "@web/core/services/browser/feature_detection";
 import { isVisible } from "@web/core/utils/ui";
 
 /**

@@ -1,7 +1,7 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
 import { allowedToCreateLink } from "@html_editor/main/link/link_plugin";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 export class ImagePopUpOption extends BaseOptionComponent {
     static id = "image_pop_up_option";

@@ -1,4 +1,4 @@
-import { loadBundle } from "@web/core/assets";
+import { loadBundle } from "@web/core/framework/assets";
 import { onMounted, onPatched, onWillStart, onWillUnmount, signal } from "@odoo/owl";
 
 /**

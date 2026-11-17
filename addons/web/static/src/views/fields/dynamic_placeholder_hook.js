@@ -1,6 +1,6 @@
 import { useProps } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
-import { usePopover } from "@web/core/popover/popover_hook";
+import { _t } from "@web/core/data/l10n/translation";
+import { usePopover } from "@web/core/components/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 import { DynamicPlaceholderPopover } from "./dynamic_placeholder_popover";
 

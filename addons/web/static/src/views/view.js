@@ -1,7 +1,7 @@
-import { render, useSubEnv } from "@web/owl2/utils";
-import { useDebugCategory } from "@web/core/debug/debug_context";
-import { evaluateBooleanExpr } from "@web/core/py_js/py";
-import { registry } from "@web/core/registry";
+import { render, useSubEnv } from "@web/core/owl/utils";
+import { useDebugCategory } from "@web/core/services/debug/debug_context";
+import { evaluateBooleanExpr } from "@web/core/data/py_js/py";
+import { registry } from "@web/core/framework/registry";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
 import { deepCopy, pick } from "@web/core/utils/objects";
@@ -11,8 +11,8 @@ import { extractLayoutComponents } from "@web/search/layout";
 import { WithSearch, withSearchProps } from "@web/search/with_search/with_search";
 import { useActionLinks } from "@web/views/view_hook";
 import { computeViewClassName } from "./utils";
-import { loadBundle } from "@web/core/assets";
-import { cookie } from "@web/core/browser/cookie";
+import { loadBundle } from "@web/core/framework/assets";
+import { cookie } from "@web/core/services/browser/cookie";
 import {
     Component,
     markRaw,
@@ -24,7 +24,7 @@ import {
     t,
     applyDefaults,
 } from "@odoo/owl";
-import { session } from "@web/session";
+import { session } from "@web/boot/session";
 
 /**
  * @typedef Config
@@ -37,8 +37,8 @@ import { session } from "@web/session";
  * @property {Record<string, any>[]} viewSwitcherEntry
  * @property {typeof Component} Banner
  *
- * @typedef {import("@web/core/context").Context} Context
- * @typedef {import("@web/env").OdooEnv} OdooEnv
+ * @typedef {import("@web/core/data/context").Context} Context
+ * @typedef {import("@web/boot/env").OdooEnv} OdooEnv
  * @typedef {import("@web/search/utils/order_by").OrderTerm} OrderTerm
  *
  * @typedef ViewProps
@@ -193,7 +193,7 @@ const STANDARD_PROPS = [
 
 const ACTIONS = ["create", "delete", "edit", "group_create", "group_delete", "group_edit"];
 
-/** @extends {Component<ViewProps, import("@web/env").OdooEnv>} */
+/** @extends {Component<ViewProps, import("@web/boot/env").OdooEnv>} */
 export const viewProps = {
     display: t.any().optional({}),
     context: t.any().optional({}),

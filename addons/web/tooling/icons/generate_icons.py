@@ -60,7 +60,7 @@ Usage
 -----
 ::
 
-    pip install 'fonttools[pathops]' brotli
+    uv pip install 'fonttools[pathops]' brotli
     npm install fontext          # or make `npx fontext` resolvable
     python3 generate_icons.py
 """
@@ -93,7 +93,7 @@ try:
 except ImportError as exc:
     raise SystemExit(
         "fontTools (with the pathops extra) is required.\n"
-        "Install with:  pip install 'fonttools[pathops]' brotli",
+        "Install with:  uv pip install 'fonttools[pathops]' brotli",
     ) from exc
 
 from fontTools.misc import timeTools

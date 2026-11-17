@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 registry.category("web_tour.tours").add("sidebar_in_public_page_tour", {
     steps: () => [

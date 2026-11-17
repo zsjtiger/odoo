@@ -26,9 +26,9 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { getWebSocketWorker, onWebsocketEvent } from "./mock_websocket";
 
-import { browser } from "@web/core/browser/browser";
-import { user } from "@web/core/user";
-import { session } from "@web/session";
+import { browser } from "@web/core/services/browser/browser";
+import { user } from "@web/core/services/user";
+import { session } from "@web/boot/session";
 import { BusPlugin } from "@bus/services/bus_plugin";
 import { MultiTabPlugin } from "@bus/multi_tab_plugin";
 import { BusParametersPlugin } from "@bus/bus_parameters_plugin";

@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 export const uploadLocalFileService = {
     dependencies: ["upload", "orm"],

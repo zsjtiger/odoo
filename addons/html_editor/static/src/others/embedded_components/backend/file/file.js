@@ -1,5 +1,5 @@
 import { proxy, signal } from "@odoo/owl";
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/core/owl/utils";
 import {
     applyObjectPropertyDifference,
     getEmbeddedProps,

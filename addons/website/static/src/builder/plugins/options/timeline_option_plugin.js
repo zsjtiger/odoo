@@ -2,9 +2,9 @@ import { isElement } from "@html_editor/utils/dom_info";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { _t } from "@web/core/l10n/translation";
-import { localization } from "@web/core/l10n/localization";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { localization } from "@web/core/data/l10n/localization";
+import { registry } from "@web/core/framework/registry";
 
 function isTimelineCard(el) {
     return el.matches(".s_timeline_card");

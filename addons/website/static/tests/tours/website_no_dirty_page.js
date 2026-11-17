@@ -1,4 +1,4 @@
-import { browser } from "@web/core/browser/browser";
+import { browser } from "@web/core/services/browser/browser";
 import {
     clickOnEditAndWaitEditMode,
     clickOnSave,

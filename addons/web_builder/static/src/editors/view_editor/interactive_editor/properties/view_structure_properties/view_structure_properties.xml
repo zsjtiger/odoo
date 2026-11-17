@@ -1,0 +1,9 @@
+<templates>
+
+<t t-name="web_builder.ViewStructureProperties">
+    <t t-call-slot="default" />
+    <LimitGroupVisibility node="this.viewEditorModel.activeNode" />
+    <SidebarPropertiesToolbox />
+</t>
+
+</templates>

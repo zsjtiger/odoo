@@ -1,5 +1,5 @@
 import { before, withFetch } from "@odoo/hoot";
-import { loadBundle } from "@web/core/assets";
+import { loadBundle } from "@web/core/framework/assets";
 import { patch } from "@web/core/utils/patch";
 import * as _fields from "./_framework/mock_server/mock_fields";
 import * as _models from "./_framework/mock_server/mock_model";

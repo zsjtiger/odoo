@@ -28,7 +28,7 @@ import { Composer, MENTION_AMOUNT_WARNING } from "@mail/core/common/composer";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { NavigableList } from "@mail/core/common/navigable_list";
 import { press } from "@odoo/hoot-dom";
-import { rpc } from "@web/core/network/rpc";
+import { rpc } from "@web/core/services/network/rpc";
 import { range } from "@web/core/utils/numbers";
 
 describe.current.tags("desktop");

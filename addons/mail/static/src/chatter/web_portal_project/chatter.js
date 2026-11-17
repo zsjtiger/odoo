@@ -1,12 +1,12 @@
-import { useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/core/owl/utils";
 import { Composer } from "@mail/core/common/composer";
 import { Thread } from "@mail/core/common/thread";
 import { propComputed, useMessageScrolling } from "@mail/utils/common/hooks";
 
 import { Component, onMounted, proxy, signal, t, useOnChange } from "@odoo/owl";
 
-import { _t } from "@web/core/l10n/translation";
-import { router } from "@web/core/browser/router";
+import { _t } from "@web/core/data/l10n/translation";
+import { router } from "@web/core/services/browser/router";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 

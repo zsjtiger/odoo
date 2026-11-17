@@ -1,6 +1,6 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
-import { ImageField, imageField } from "@web/views/fields/image/image_field";
+import { ImageField, imageField } from "@web/views/fields/media/image/image_field";
 import { saveSingleAttachment } from "@web/core/utils/image_library";
 import { CustomMediaDialog } from "@html_editor/fields/x2many_field/custom_media_dialog";
 

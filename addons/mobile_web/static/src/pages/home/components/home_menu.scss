@@ -1,0 +1,94 @@
+// 首页应用网格: 5 列 x 2 行, 图标在上文字在下, 超过一页左右滑动, 底部页码点
+$theme: #03a09c;
+
+.m_home_menu {
+    margin: 12px 12px 0;
+    padding: 14px 0 10px;
+    background: #fff;
+    border-radius: 12px;
+}
+
+.m_home_menu_track {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+.m_home_menu_page {
+    flex: 0 0 100%;
+    box-sizing: border-box;
+    padding: 0 6px;
+    scroll-snap-align: start;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    row-gap: 14px;
+    align-content: start;
+}
+
+.m_home_menu_item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 0;
+    padding: 0 2px;
+    border: none;
+    background: none;
+    &:active .m_home_menu_icon {
+        opacity: 0.7;
+    }
+}
+
+.m_home_menu_icon {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    border-radius: 12px;
+}
+
+.m_home_menu_fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.m_home_menu_label {
+    width: 100%;
+    margin-top: 6px;
+    font-size: 12px;
+    line-height: 16px;
+    color: #333;
+    text-align: center;
+    // 名称最多两行, 超出部分省略
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    word-break: break-word;
+}
+
+.m_home_menu_dots {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.m_home_menu_dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 3px;
+    background: #d9d9d9;
+    transition: all 0.2s;
+    &.is_active {
+        width: 14px;
+        background: #f0a030;
+    }
+}

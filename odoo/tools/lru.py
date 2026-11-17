@@ -1,7 +1,7 @@
 import threading
 from collections.abc import Iterable, Iterator, MutableMapping
 
-from .misc import SENTINEL
+from odoo.tools.misc import SENTINEL
 
 __all__ = ['LRU']
 

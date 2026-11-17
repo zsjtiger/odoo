@@ -1,6 +1,6 @@
 // @ts-check
 
-import { Domain } from "@web/core/domain";
+import { Domain } from "@web/core/data/domain";
 import { OdooCorePlugin } from "@spreadsheet/plugins";
 
 export class PivotOdooCorePlugin extends OdooCorePlugin {

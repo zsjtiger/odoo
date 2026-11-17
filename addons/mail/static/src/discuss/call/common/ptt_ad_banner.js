@@ -1,7 +1,7 @@
 import { Component, signal } from "@odoo/owl";
 
-import { browser } from "@web/core/browser/browser";
-import { isMobileOS } from "@web/core/browser/feature_detection";
+import { browser } from "@web/core/services/browser/browser";
+import { isMobileOS } from "@web/core/services/browser/feature_detection";
 import { useService } from "@web/core/utils/hooks";
 
 export class PttAdBanner extends Component {

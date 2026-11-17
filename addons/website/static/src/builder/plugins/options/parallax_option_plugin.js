@@ -1,7 +1,7 @@
 import { applyFunDependOnSelectorAndExclude } from "@html_builder/plugins/utils";
 import { filterExtends } from "@html_builder/utils/utils";
 import { Plugin } from "@html_editor/plugin";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { WebsiteBackgroundOption } from "./background_option";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { withSequence } from "@html_editor/utils/resource";

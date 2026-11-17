@@ -4,19 +4,19 @@ import { attClassObjectToString, generateEmojisOnHtml } from "@mail/utils/common
 
 import { proxy, usePlugin } from "@odoo/owl";
 
-import { location } from "@web/core/browser/browser";
-import { cookie } from "@web/core/browser/cookie";
-import { isMobileOS } from "@web/core/browser/feature_detection";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
-import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
-import { registry } from "@web/core/registry";
-import { user } from "@web/core/user";
+import { location } from "@web/core/services/browser/browser";
+import { cookie } from "@web/core/services/browser/cookie";
+import { isMobileOS } from "@web/core/services/browser/feature_detection";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
+import { _t } from "@web/core/data/l10n/translation";
+import { rpc } from "@web/core/services/network/rpc";
+import { registry } from "@web/core/framework/registry";
+import { user } from "@web/core/services/user";
 import { Mutex } from "@web/core/utils/concurrency";
 import { renderToElement } from "@web/core/utils/render";
 import { debounce } from "@web/core/utils/timing";
 import { getOrigin } from "@web/core/utils/urls";
-import { session } from "@web/session";
+import { session } from "@web/boot/session";
 import { isMarkup, createDocumentFragmentFromContent } from "@web/core/utils/html";
 
 const { DateTime } = luxon;
@@ -848,7 +848,7 @@ Store.register();
 export const storeService = {
     dependencies: ["bus_service", "im_status", "ui", "popover", "discuss.upgrade"],
     /**
-     * @param {import("@web/env").OdooEnv} env
+     * @param {import("@web/boot/env").OdooEnv} env
      * @param {import("services").ServiceFactories} services
      * @returns {import("models").Store}
      */

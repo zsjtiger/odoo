@@ -1,9 +1,9 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { Interaction } from "@web/public/interaction";
 import { getDataURLFromFile } from "@web/core/utils/urls";
 import { checkFileSize } from "@web/core/utils/files";
-import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
+import { _t } from "@web/core/data/l10n/translation";
+import { rpc } from "@web/core/services/network/rpc";
 
 export class PortalProfileEditor extends Interaction {
     static selector = ".o_portal_profile_card";

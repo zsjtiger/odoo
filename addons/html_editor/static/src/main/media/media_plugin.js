@@ -9,7 +9,7 @@ import {
     isProtecting,
     paragraphRelatedElementsSelector,
 } from "@html_editor/utils/dom_info";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { MediaDialog } from "./media_dialog/media_dialog";
 import { TABS } from "./media_dialog/media_dialog_utils";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";

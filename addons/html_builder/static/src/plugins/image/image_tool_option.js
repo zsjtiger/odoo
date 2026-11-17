@@ -6,7 +6,7 @@ import { ImageFormatOption } from "@html_builder/plugins/image/image_format_opti
 import { ImageTransformOption } from "./image_transform_option";
 import { MediaSizeOption } from "./media_size_option";
 import { dynamicSVGSelector } from "../utils";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { getMimetypeBeforeShape } from "@html_builder/utils/image";
 import { isImageSupportedForProcessing } from "@html_editor/main/media/image_post_process_plugin";
 

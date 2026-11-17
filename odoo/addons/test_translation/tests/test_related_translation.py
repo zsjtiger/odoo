@@ -3,7 +3,7 @@ from hashlib import sha256
 from unittest.mock import patch
 
 import odoo.tests
-from odoo.tools.translate import StoredTranslations, TranslationImporter
+from odoo.tools.text.translate import StoredTranslations, TranslationImporter
 from odoo.exceptions import ValidationError
 
 

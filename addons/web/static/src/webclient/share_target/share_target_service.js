@@ -1,5 +1,5 @@
-import { registry } from "@web/core/registry";
-import { location, browser } from "@web/core/browser/browser";
+import { registry } from "@web/core/framework/registry";
+import { location, browser } from "@web/core/services/browser/browser";
 import { ShareTargetDialog } from "@web/webclient/share_target/share_target_dialog";
 
 export const shareTargetService = {

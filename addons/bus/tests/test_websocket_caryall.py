@@ -16,7 +16,8 @@ except ImportError:
     ws = None
 
 from odoo.api import Environment
-from odoo.tests import mute_logger, new_test_user
+from odoo.tests import new_test_user
+from odoo.tools import mute_logger
 
 from odoo.addons.bus import websocket as websocket_module
 from odoo.addons.bus.bus_dispatcher import BusDispatcher, ChannelTopic, dispatch

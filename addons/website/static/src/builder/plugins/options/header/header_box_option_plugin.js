@@ -7,7 +7,7 @@ import {
     shadowToString,
 } from "@html_builder/plugins/shadow_option_plugin";
 import { StyleAction } from "@html_builder/core/core_builder_action_plugin";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { Plugin } from "@html_editor/plugin";
 
 export class HeaderBoxOptionPlugin extends Plugin {

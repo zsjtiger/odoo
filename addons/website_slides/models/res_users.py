@@ -26,11 +26,3 @@ class ResUsers(models.Model):
             added_group_ids = self.env['res.groups'].browse(group_ids).all_implied_ids.ids
             self.env['slide.channel'].sudo().search([('enroll_group_ids', 'in', added_group_ids)])._action_add_members(self.mapped('partner_id'))
         return res
-
-    def get_gamification_redirection_data(self):
-        res = super().get_gamification_redirection_data()
-        res.append({
-            'url': '/slides',
-            'label': _('See our eLearning')
-        })
-        return res

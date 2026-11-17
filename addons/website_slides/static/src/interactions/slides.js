@@ -1,7 +1,7 @@
 import { Interaction } from "@web/public/interaction";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
-import { deserializeDateTime } from "@web/core/l10n/dates";
+import { deserializeDateTime } from "@web/core/data/l10n/dates";
 
 export class Slides extends Interaction {
     static selector = "timeago.timeago";

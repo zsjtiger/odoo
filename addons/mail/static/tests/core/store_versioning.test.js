@@ -3,7 +3,7 @@ import { defineMailModels, start as start2 } from "@mail/../tests/mail_test_help
 
 import { afterEach, beforeEach, expect, test } from "@odoo/hoot";
 
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { getService, mockService } from "@web/../tests/web_test_helpers";
 
 const localRegistry = registry.category("discuss.model.test");

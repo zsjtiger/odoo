@@ -7,7 +7,7 @@ from odoo import http, modules
 from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.tools import BinaryBytes, file_open, file_path
-from odoo.tools.image import image_process
+from odoo.tools.files.image import image_process
 
 
 class WebManifest(http.Controller):
@@ -98,7 +98,7 @@ class WebManifest(http.Controller):
     def _get_service_worker_content(self):
         """ Returns a ServiceWorker javascript file scoped for the backend (aka. '/odoo')
         """
-        with file_open('web/static/src/service_worker.js') as f:
+        with file_open('web/static/src/boot/service_worker.js') as f:
             body = f.read()
             return body
 

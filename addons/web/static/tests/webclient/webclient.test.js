@@ -3,7 +3,7 @@ import { animationFrame } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 
 import { contains, mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { WebClient } from "@web/webclient/webclient";
 
 test("can be rendered", async () => {

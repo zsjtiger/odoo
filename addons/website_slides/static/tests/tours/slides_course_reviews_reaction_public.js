@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 /**
  * This tour tests that a public user can not react to messages

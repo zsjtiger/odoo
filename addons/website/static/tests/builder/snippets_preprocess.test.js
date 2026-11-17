@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { contains } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
 import {

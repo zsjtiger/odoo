@@ -6,7 +6,7 @@ import typing
 
 from odoo.api import SUPERUSER_ID, Environment
 from odoo.http.session import session_store
-from odoo.sql_db import SQL
+from odoo.tools.sql import SQL
 from odoo.tools.lru import LRU
 from odoo.tools.misc import consteq
 

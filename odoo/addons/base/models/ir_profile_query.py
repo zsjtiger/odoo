@@ -5,7 +5,7 @@ import logging
 import psycopg2
 
 from odoo import api, fields, models
-from odoo.tools.speedscope import shorten
+from odoo.tools.profiling.speedscope import shorten
 from odoo.tools.sql import format_query
 from odoo.exceptions import AccessError, UserError
 

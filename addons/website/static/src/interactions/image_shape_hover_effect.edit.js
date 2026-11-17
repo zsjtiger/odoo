@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { ImageShapeHoverEffect } from "./image_shape_hover_effect";
 
 const ImageShapeHoverEffectEdit = (I) =>

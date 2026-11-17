@@ -1,6 +1,6 @@
 import { usePlugin } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { Interaction } from "@web/public/interaction";
 import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 

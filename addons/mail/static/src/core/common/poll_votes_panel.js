@@ -4,7 +4,7 @@ import { onExternalClick } from "@mail/utils/common/hooks";
 
 import { Component, signal, t, useProps } from "@odoo/owl";
 
-import { Dialog } from "@web/core/dialog/dialog";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
 
 export class PollVotesPanel extends Component {

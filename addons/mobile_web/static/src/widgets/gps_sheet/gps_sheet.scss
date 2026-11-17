@@ -1,0 +1,119 @@
+// 位置编辑页: 全屏, 上方地图, 中间搜索与候选地址 (可滚动), 底部取消与确认
+
+.m_gps_sheet {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    background: $surface;
+}
+
+.m_gps_map {
+    position: relative;
+    flex: 0 0 46%;
+    background: #e9eef2;
+}
+
+.m_gps_map_placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    text-align: center;
+    font-size: 14px;
+    color: $muted;
+}
+
+.m_gps_locate {
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    height: 36px;
+    padding: 0 12px;
+    border: 1px solid $line;
+    border-radius: 18px;
+    background: $surface;
+    color: $theme;
+    font-size: 14px;
+}
+
+.m_gps_body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.m_gps_results {
+    margin: 0;
+    padding: 0;
+}
+
+.m_gps_form {
+    padding: 8px 16px 16px;
+}
+
+.m_gps_coords {
+    display: flex;
+    gap: 12px;
+    > div {
+        flex: 1 1 0;
+    }
+}
+
+.m_gps_label {
+    display: block;
+    margin-top: 12px;
+    font-size: 13px;
+    color: $muted;
+}
+
+.m_gps_form input[type="text"],
+.m_gps_form input[type="number"] {
+    width: 100%;
+    height: 40px;
+    box-sizing: border-box;
+    border: none;
+    border-bottom: 1px solid $line;
+    background: transparent;
+    font-size: 16px;
+    color: $text;
+}
+
+.m_gps_find {
+    margin-top: 12px;
+}
+
+.m_gps_footer {
+    flex: 0 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 56px;
+    padding: 0 16px;
+    padding-bottom: env(safe-area-inset-bottom);
+    border-top: 1px solid $line;
+    box-sizing: content-box;
+}
+
+// 搜索框: 样式与选择弹层一致 (共用的 m_sheet 样式只在 .m_sheet 内生效, 这里单独设置)
+.m_gps_sheet .m_sheet_search {
+    padding: 8px 16px;
+}
+
+.m_gps_sheet .m_sheet_search .m_sheet_search_input {
+    width: 100%;
+    height: 36px;
+    box-sizing: border-box;
+    padding: 0 12px;
+    border: none;
+    border-radius: 18px;
+    background: #f4f5f7;
+    font-size: 15px;
+    color: $text;
+    &::placeholder {
+        color: #aaa;
+    }
+}

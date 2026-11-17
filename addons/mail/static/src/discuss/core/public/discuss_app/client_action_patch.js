@@ -1,6 +1,6 @@
 import { DiscussClientAction } from "@mail/core/public_web/discuss_app/client_action";
 import { WelcomePage } from "@mail/discuss/core/public/welcome_page";
-import { location, browser } from "@web/core/browser/browser";
+import { location, browser } from "@web/core/services/browser/browser";
 import { patch } from "@web/core/utils/patch";
 
 DiscussClientAction.components = { ...DiscussClientAction.components, WelcomePage };

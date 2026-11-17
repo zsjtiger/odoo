@@ -1,14 +1,14 @@
 import { proxy } from "@odoo/owl";
 
-import { location, browser } from "@web/core/browser/browser";
+import { location, browser } from "@web/core/services/browser/browser";
 import {
     isAndroidApp,
     isDisplayStandalone,
     isIOS,
     isIosApp,
-} from "@web/core/browser/feature_detection";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+} from "@web/core/services/browser/feature_detection";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 
 async function getIosPwaPermission() {
     if (location.protocol !== "https:") {
@@ -33,7 +33,7 @@ export const notificationPermissionService = {
     },
 
     /**
-     * @param {import("@web/env").OdooEnv} env
+     * @param {import("@web/boot/env").OdooEnv} env
      * @param {import("services").ServiceFactories} services
      */
     async start(env, services) {

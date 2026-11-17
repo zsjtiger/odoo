@@ -1,9 +1,9 @@
 import { Component, types, useProps } from "@odoo/owl";
-import { DateTimeInput } from "@web/core/datetime/datetime_input";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { serializeDate } from "@web/core/l10n/dates";
-import { registry } from "@web/core/registry";
+import { DateTimeInput } from "@web/core/components/datetime/datetime_input";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
+import { serializeDate } from "@web/core/data/l10n/dates";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
 import { Record } from "@web/model/relational_model/record";
 const { DateTime } = luxon;

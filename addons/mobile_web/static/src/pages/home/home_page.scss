@@ -1,0 +1,12 @@
+.m_home_page {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.card {
+    margin: 5px 0;
+    border-radius: 4px;
+    border: 2px solid $box-shadow-color;
+}

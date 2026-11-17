@@ -1,8 +1,8 @@
 import { useProps } from "@odoo/owl";
-import { useCommand } from "@web/core/commands/command_hook";
-import { Domain } from "@web/core/domain";
-import { _t } from "@web/core/l10n/translation";
-import { user } from "@web/core/user";
+import { useCommand } from "@web/core/services/commands/command_hook";
+import { Domain } from "@web/core/data/domain";
+import { _t } from "@web/core/data/l10n/translation";
+import { user } from "@web/core/services/user";
 import { useService } from "@web/core/utils/hooks";
 import { getFieldDomain } from "@web/model/relational_model/utils";
 

@@ -1,8 +1,8 @@
 import { proxy } from "@odoo/owl";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { Cache } from "@web/core/utils/cache";
 import { Plugin } from "@html_editor/plugin";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { ConfirmationDialog } from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
 import { redirect } from "@web/core/utils/urls";
 import { FormOptionAddFieldButton } from "./form_option_add_field_button";
 import {
@@ -36,7 +36,7 @@ import {
     getDescriptionPosition,
 } from "./utils";
 import { SyncCache } from "@html_builder/utils/sync_cache";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { omit } from "@web/core/utils/objects";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { BuilderAction } from "@html_builder/core/builder_action";
@@ -1223,7 +1223,7 @@ export class AddActionFieldAction extends BuilderAction {
             }
         }
         const fieldName = params.fieldName;
-        if (params.isSelect === "true") {
+        if (params.isSelect) {
             value = parseInt(value);
         }
         this.dependencies.websiteFormOption.addHiddenField(el, value, fieldName);
@@ -1568,18 +1568,25 @@ export class SetDescriptionAction extends BuilderAction {
         // This action is used for two scenarios:
         // 1. The target field is a checkbox: The field description will be set
         // with the position specified in the `value`.
-        // 2. Otherwise, the field description will be simply toggled.
-        const toggleMode = !value || value === "none" || !field.description;
+        // 2. Otherwise, the field description will be visibly toggled
+        // Non-visible descriptions will be removed on save
+        const toggleMode =
+            !value ||
+            value === "none" ||
+            !field.description ||
+            field.description.classList.contains("d-none");
         field.formatInfo.textPosition = value;
         if (toggleMode) {
-            // If enabled, the field description will be changed to the
-            // default one in qweb.
-            field.description = !field.description;
+            if (field.description) {
+                field.description.classList.toggle("d-none");
+            } else {
+                field.description = true; // Will be changed to default description in qweb
+            }
         }
         this.dependencies.websiteFormOption.replaceField(fieldEl, field, fields);
         const description = fieldEl.querySelector(".s_website_form_field_description")
             ?.childNodes[0];
-        if (description) {
+        if (description && !description.parentElement.classList.contains("d-none")) {
             if (!isPreviewing) {
                 this.editable.focus();
             }

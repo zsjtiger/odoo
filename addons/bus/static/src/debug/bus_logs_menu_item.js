@@ -1,9 +1,9 @@
 import { Component, signal, usePlugin } from "@odoo/owl";
 
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { ConfirmationDialog } from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
 import { BusLogsPlugin } from "@bus/debug/bus_logs_plugin";
 import { BusPlugin } from "@bus/services/bus_plugin";

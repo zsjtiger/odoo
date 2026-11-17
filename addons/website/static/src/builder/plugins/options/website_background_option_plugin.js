@@ -1,5 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { BLOCKQUOTE_PARENT_HANDLERS, CARD_PARENT_HANDLERS } from "@html_builder/core/utils";
 
 export const BASE_ONLY_BG_IMAGE_SELECTOR = "footer .oe_structure > *:not(.o_footer_bottom_part)";

@@ -1,6 +1,6 @@
 import { escapeTextNodes } from "@html_builder/utils/escaping";
 import { Plugin } from "@html_editor/plugin";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 /**
  * @typedef { Object } WebsiteSaveShared

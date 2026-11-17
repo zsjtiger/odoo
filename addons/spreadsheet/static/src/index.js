@@ -15,7 +15,7 @@
 
 /** TODO: Introduce a position parameter to the plugin registry in order to load them in a specific order */
 import * as spreadsheet from "@odoo/o-spreadsheet";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 
 const { corePluginRegistry, evaluationPluginRegistry, featurePluginRegistry } =
     spreadsheet.registries;

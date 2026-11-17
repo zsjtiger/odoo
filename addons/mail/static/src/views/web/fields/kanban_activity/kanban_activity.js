@@ -2,7 +2,7 @@ import { ActivityButton } from "@mail/core/web/activity_button";
 
 import { Component, types, useProps } from "@odoo/owl";
 
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { Record } from "@web/model/relational_model/record";
 
 export class KanbanActivity extends Component {

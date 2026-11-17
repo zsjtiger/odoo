@@ -1,6 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 const monetarySel = "[data-oe-field][data-oe-type=monetary]";
 

@@ -1,5 +1,5 @@
 import odoo.tests
-from odoo.tools.translate import StoredTranslations, code_translations, mark_as_copy
+from odoo.tools.text.translate import StoredTranslations, code_translations, mark_as_copy
 
 
 class TestCopyTranslations(odoo.tests.TransactionCase):
@@ -8,7 +8,7 @@ class TestCopyTranslations(odoo.tests.TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.env['res.lang']._activate_lang('fr_FR')
-        # mark_as_copy uses env._ from odoo.tools.translate → module "base"
+        # mark_as_copy uses env._ from odoo.tools.text.translate → module "base"
         key = ('base', 'fr_FR')
         previous = code_translations.get_python_translations(*key)
         code_translations.python_translations[key] = {

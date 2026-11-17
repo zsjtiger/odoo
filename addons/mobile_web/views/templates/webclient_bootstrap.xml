@@ -1,0 +1,23 @@
+<odoo>
+    <template id="mobile_web.webclient_bootstrap">
+        <t t-set="head">
+            <script type="text/javascript">
+                // Block to avoid leaking variables in the script scope
+                {
+                    // the `session_info`` is from the `request.env['ir.http'].webclient_rendering_context()`,
+                    // and provide the `session` variable in '@web/boot/session'
+                    odoo.__session_info__ =<t t-out="json.dumps(session_info)"/>;
+                }
+            </script>
+
+            <!-- 加载顺序即依赖顺序: 启动基础 -> web 的 JS(不含样式) -> 移动端代码 -> 挂载入口 -->
+            <!-- web 的样式(视图组件需要) -->
+            <t t-call-assets="mobile_web.assets_web_backend" t-js="false"/>
+            <t t-call-assets="mobile_web.assets_boot" t-css="false"/>
+            <t t-call-assets="mobile_web.assets_web_backend" t-css="false"/>
+            <t t-call-assets="mobile_web.assets_backend"/>
+            <t t-call-assets="mobile_web.assets_start" t-css="false"/>
+        </t>
+        <t t-call="mobile_web.layout" head="head"/>
+    </template>
+</odoo>

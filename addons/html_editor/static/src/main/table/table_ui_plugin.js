@@ -1,16 +1,16 @@
 import { proxy } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { MobileTablePicker } from "./mobile_table_picker";
 import { TableMenu } from "./table_menu";
 import { TablePicker } from "./table_picker";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { TableDragDrop } from "./table_drag_drop";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { getRowIndex } from "@html_editor/utils/table";
 import { allowsParagraphRelatedElements, isTableCell } from "@html_editor/utils/dom_info";
-import { hasTouch } from "@web/core/browser/feature_detection";
+import { hasTouch } from "@web/core/services/browser/feature_detection";
 
 /**
  * This plugin only contains the table ui feature (table picker, menus, ...).

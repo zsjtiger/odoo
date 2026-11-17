@@ -1,5 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 const HEADER_SEARCHBAR_SELECTOR = ".o_header_searchbar";
 const DIRTY_CLASS = "o_dirty_header_search";

@@ -1,0 +1,513 @@
+// 字段组件: 值展示、输入框、选择器、开关、多对多、图片
+
+// -----------------------------------------------------------------------------
+// 字段控件
+// -----------------------------------------------------------------------------
+
+.m_field_value {
+    font-size: 16px;
+    color: $text;
+    word-break: break-word;
+}
+
+.m_field_link {
+    color: $theme;
+    text-decoration: underline;
+}
+
+.m_field_multiline {
+    margin: 0;
+    white-space: pre-wrap;
+}
+
+.m_field_number {
+    font-variant-numeric: tabular-nums;
+}
+
+.m_field_hint {
+    margin: 4px 0 0;
+    font-size: 12px;
+    color: $muted;
+}
+
+.m_input {
+    width: 100%;
+    min-height: 44px;
+    box-sizing: border-box;
+    padding: 8px 12px;
+    border: 1px solid $line;
+    border-radius: 8px;
+    background: $surface;
+    font-size: 16px;
+    color: $text;
+    &:focus {
+        outline: none;
+        border-color: $theme-btn;
+    }
+}
+
+.m_textarea {
+    min-height: 88px;
+    resize: vertical;
+}
+
+// 原生输入控件(日期 / 数字)与文本框保持一致的高度
+.m_input_date,
+.m_input_datetime,
+.m_input_number {
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+// 多对多的标签
+.m_tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.m_tag {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 14px;
+    background: #e6f4f4;
+    color: $theme;
+    font-size: 14px;
+}
+
+.m_one2many_list {
+    margin: 0;
+    padding-left: 18px;
+    font-size: 15px;
+    color: $text;
+    li {
+        min-height: 28px;
+    }
+}
+
+// 图片
+.m_field_image {
+    display: block;
+    max-width: 160px;
+    max-height: 160px;
+    border-radius: 8px;
+    border: 1px solid $line;
+    object-fit: contain;
+}
+
+.m_binary_actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+// 列表与看板中的图片缩略图
+.m_list_primary,
+.m_list_secondary,
+.m_kanban_card {
+    .m_field_image {
+        max-width: 28px;
+        max-height: 28px;
+        border-radius: 4px;
+    }
+}
+
+// 单选按钮组
+.m_radio_group {
+    display: flex;
+    flex-direction: column;
+}
+
+.m_radio {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    font-size: 16px;
+    input {
+        width: 20px;
+        height: 20px;
+        margin: 0;
+        accent-color: $theme-btn;
+    }
+}
+
+// 状态条: 选项横向排列, 当前状态高亮
+.m_statusbar {
+    display: inline-flex;
+    max-width: 100%;
+    overflow-x: auto;
+    border: 1px solid $line;
+    border-radius: 6px;
+}
+
+.m_statusbar_item {
+    flex: 1 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 36px;
+    padding: 0 12px;
+    border: none;
+    border-right: 1px solid $line;
+    background: $surface;
+    color: $muted;
+    font-size: 14px;
+    &:last-child {
+        border-right: none;
+    }
+    &.is_active {
+        background: $theme-btn;
+        color: #fff;
+        font-weight: 600;
+    }
+}
+
+// 星级
+.m_priority {
+    display: flex;
+    gap: 4px;
+}
+
+.m_priority_star {
+    min-width: 44px;
+    min-height: 44px;
+    border: none;
+    background: transparent;
+    color: #d0d0d0;
+    font-size: 24px;
+    &.is_active {
+        color: #f0a030;
+    }
+}
+
+// 多选复选框
+.m_checkbox_list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.m_checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    font-size: 16px;
+    input {
+        width: 20px;
+        height: 20px;
+        margin: 0;
+        accent-color: $theme-btn;
+    }
+}
+
+// -----------------------------------------------------------------------------
+// 标签、颜色、进度与 JSON
+// -----------------------------------------------------------------------------
+
+.m_badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 999px;
+    font-size: 13px;
+    color: $theme;
+    background: $theme-bg-color;
+}
+
+.m_field_color {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.m_field_color_swatch {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    border: 1px solid $line;
+}
+
+.m_input_color {
+    width: 64px;
+    min-height: 44px;
+    padding: 4px;
+}
+
+.m_progressbar {
+    position: relative;
+    // 放在列表或卡片的值区域中时没有自然宽度, 需要一个最小宽度才可见
+    width: 100%;
+    min-width: 120px;
+    height: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+    background: $line;
+}
+
+.m_progressbar_fill {
+    height: 100%;
+    background: $theme-btn;
+}
+
+.m_progressbar_label {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: $text;
+    // 文字压在填充色上时用白色描边保证对比度
+    text-shadow: 0 0 2px #fff, 0 0 2px #fff;
+}
+
+.m_field_json {
+    margin: 0;
+    font-family: monospace;
+    font-size: 13px;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+// 明细(one2many)的行: 无列表符号, 行间细线; 编辑模式下可点击
+.m_one2many_rows {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 15px;
+    color: $text;
+}
+
+.m_one2many_row {
+    padding: 10px 0;
+    border-bottom: 1px solid $line;
+    &.is_clickable {
+        cursor: pointer;
+    }
+    &:active {
+        background: #f5f5f5;
+    }
+}
+
+.m_one2many_add {
+    margin-top: 12px;
+    padding: 6px 0;
+    border: none;
+    background: none;
+    font-size: 15px;
+    color: $theme;
+    white-space: nowrap;
+}
+
+// 明细编辑页: 全屏覆盖表单, 与表单同样的字段布局
+.m_line_editor {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    display: flex;
+    flex-direction: column;
+    background: $surface;
+}
+
+.m_line_editor_head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 16px;
+    border-bottom: 1px solid $line;
+}
+
+.m_line_editor_title {
+    font-size: 16px;
+    font-weight: 600;
+    color: $text;
+}
+
+.m_line_editor_cancel {
+    border: none;
+    background: none;
+    font-size: 15px;
+    color: $muted;
+}
+
+.m_line_editor .m_line_editor_body.m_form_view {
+    flex: 1 1 0;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 0 0 16px;
+}
+
+.m_line_editor_foot {
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+    border-top: 1px solid $line;
+}
+
+.m_line_editor_delete {
+    width: 100%;
+    color: #e5484d;
+}
+
+// 时间线 (一对多 widget="timeline"): 左侧日期, 中间竖线与圆点, 右侧卡片
+.m_timeline {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.m_timeline_item {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 0 0 12px;
+    cursor: pointer;
+    &::before {
+        content: "";
+        position: absolute;
+        left: 72px;
+        top: 0;
+        bottom: 0;
+        width: 1px;
+        background: $theme-btn;
+    }
+    &:last-child::before {
+        bottom: auto;
+        height: 14px;
+    }
+}
+
+.m_timeline_date {
+    flex: 0 0 60px;
+    padding-top: 10px;
+    font-size: 13px;
+    text-align: right;
+    color: $text;
+}
+
+.m_timeline_dot {
+    flex: 0 0 12px;
+    width: 10px;
+    height: 10px;
+    margin: 13px 1px 0;
+    border: 2px solid $theme-btn;
+    border-radius: 50%;
+    background: $surface;
+    position: relative;
+    z-index: 1;
+}
+
+.m_timeline_card {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: #f2f2f2;
+}
+
+.m_timeline_title {
+    font-size: 15px;
+    color: $text;
+}
+
+.m_timeline_line {
+    margin-top: 4px;
+    font-size: 13px;
+    color: $muted;
+}
+
+// -----------------------------------------------------------------------------
+// one2many_form: 标题行 + 每条明细一张卡片(卡片中是关联模型的表单)
+// -----------------------------------------------------------------------------
+
+.m_o2m_head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 40px;
+    padding: 0 16px;
+    background: $theme-bg-color;
+}
+
+.m_o2m_title {
+    font-size: 15px;
+    color: $theme;
+}
+
+.m_o2m_add {
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: $theme-btn;
+    color: #fff;
+    font-size: 20px;
+    line-height: 28px;
+    text-align: center;
+}
+
+.m_o2m_card {
+    position: relative;
+    margin: 12px 16px;
+    padding: 20px 12px 0;
+    border: 1px solid $line;
+    border-radius: 8px;
+    background: $surface;
+}
+
+// 卡片内的表单不需要为底部操作栏留空白 (覆盖 .m_form_view 的默认内边距)
+.m_o2m_card .m_form_view.m_o2m_body {
+    padding: 0 0 4px;
+}
+
+.m_o2m_card_delete {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 24px;
+    height: 24px;
+    border: 1px solid $line;
+    border-radius: 50%;
+    background: $surface;
+    color: $muted;
+    font-size: 16px;
+    line-height: 20px;
+    text-align: center;
+}
+
+// 语音输入: 字段旁的麦克风按钮
+.m_voice_field {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.m_voice_field_input {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.m_voice_button {
+    flex: 0 0 auto;
+    min-height: 44px;
+    padding: 0 12px;
+    border: 1px solid $line;
+    border-radius: 8px;
+    background: $surface;
+    color: $theme;
+    font-size: 14px;
+
+    &:disabled {
+        opacity: 0.5;
+    }
+}
+
+.m_voice_button_recording {
+    border-color: $theme;
+    color: $theme-btn;
+    background: $theme;
+}

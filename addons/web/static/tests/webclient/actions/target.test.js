@@ -17,8 +17,8 @@ import {
     webModels,
 } from "@web/../tests/web_test_helpers";
 
-import { ClientErrorDialog } from "@web/core/errors/error_dialogs";
-import { registry } from "@web/core/registry";
+import { ClientErrorDialog } from "@web/core/services/errors/error_dialogs";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
 import { WebClient } from "@web/webclient/webclient";
 

@@ -3,9 +3,9 @@ import {
     globalFilterDateRegistry,
     getDateGlobalFilterTypes,
 } from "@spreadsheet/global_filters/helpers";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { _t } from "@web/core/l10n/translation";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
+import { _t } from "@web/core/data/l10n/translation";
 
 /**
  * This component is used to select a default value for a date filter.

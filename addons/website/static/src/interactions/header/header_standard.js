@@ -1,5 +1,5 @@
 import { BaseHeader } from "@website/interactions/header/base_header";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 export class HeaderStandard extends BaseHeader {
     static selector = "header.o_header_standard:not(.o_header_sidebar)";

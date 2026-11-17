@@ -10,7 +10,7 @@ from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.tools import format_time
 from odoo.tools.date_utils import float_to_time, parse_iso_date
-from odoo.tools.intervals import Intervals
+from odoo.tools.numeric.intervals import Intervals
 from odoo.tools.misc import format_date, format_duration
 
 

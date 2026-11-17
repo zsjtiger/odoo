@@ -387,16 +387,16 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
         "smtp_server": "example.com",
     })
     def test_mail_server_config_bin(self):
-        """ Test the configuration provided in the odoo-bin arguments. This config
+        """ Test the configuration provided in the command-line arguments. This config
         is used when no mail server exists. Test with and without giving a
         pre-configured SMTP session, should not impact results.
 
         Also check "mail.default.from_filter" parameter usage that should overwrite
-        odoo-bin argument "--from-filter".
+        command-line argument "--from-filter".
         """
         IrMailServer = self.env['ir.mail_server']
 
-        # Remove all mail server so we will use the odoo-bin arguments
+        # Remove all mail server so we will use the command-line arguments
         IrMailServer.search([]).unlink()
         self.assertFalse(IrMailServer.search([]))
 
@@ -440,7 +440,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
                         from_filter="dummy@example.com, test.mycompany.com, dummy2@example.com",
                     )
 
-        # for from_filter in ICP, overwrite the one from odoo-bin
+        # for from_filter in ICP, overwrite the one from cross-cli.py
         self.env['ir.config_parameter'].sudo().set_str('mail.default.from_filter', 'icp.example.com')
 
         # Use an email in the domain of the config parameter "mail.default.from_filter"
@@ -458,7 +458,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
     @patch.dict(config.options, {'from_filter': 'fake.com', 'smtp_server': 'cli_example.com'})
     def test_mail_server_config_cli(self):
         """ Test the mail server configuration when the "smtp_authentication" is
-        "cli". It should take the configuration from the odoo-bin argument. The
+        "cli". It should take the configuration from the command-line argument. The
         "from_filter" of the mail server should overwrite the one set in the CLI
         arguments.
         """
@@ -476,7 +476,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
 
         for mail_from, (expected_smtp_from, expected_msg_from, expected_mail_server) in zip(
             [
-                # check that the CLI server take the configuration in the odoo-bin argument
+                # check that the CLI server take the configuration in the command-line argument
                 # except the from_filter which is taken on the mail server
                 'test@cli_example.com',
                 # other mail servers still work

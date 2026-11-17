@@ -2,7 +2,7 @@ import { fields } from "@mail/model/export";
 import { CALL_GRID_LAYOUT } from "@mail/discuss/call/common/call_layout";
 import { DiscussChannel } from "@mail/discuss/core/common/discuss_channel_model";
 
-import { localeCompare } from "@web/core/l10n/utils";
+import { localeCompare } from "@web/core/data/l10n/utils/collation";
 import { patch } from "@web/core/utils/patch";
 
 /** @import { AwaitChatHubInit } from "@mail/core/common/chat_hub_model" */

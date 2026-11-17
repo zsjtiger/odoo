@@ -169,28 +169,6 @@
                                     <field name="certification_mail_template_id"
                                         placeholder="Pick a Template..."
                                         invisible="not certification"/>
-                                    <label for="certification_give_badge"
-                                           invisible="not certification or not users_login_required"/>
-                                    <div class="float-start o_checkbox_optional_field"
-                                        invisible="not certification or not users_login_required">
-                                        <field name="certification_give_badge"/>
-                                        <div invisible="not certification_give_badge">
-                                            <field name="certification_badge_id"
-                                                placeholder="Pick a Badge..."
-                                                invisible="not certification_give_badge or certification_badge_id"
-                                                required="certification_give_badge"
-                                                domain="[('survey_id', '=', id), ('survey_id', '!=', False)]"
-                                                context="{'default_name': title,
-                                                        'default_description': 'Congratulations, you have succeeded this certification',
-                                                        'default_rule_auth': 'nobody',
-                                                        'default_level': None,
-                                                        'form_view_ref': 'survey.gamification_badge_form_view_simplified'}"/>
-                                            <field name="certification_badge_id_dummy" invisible="not certification_give_badge or not certification_badge_id"
-                                                placeholder="Pick a Badge..."
-                                                options="{'no_create': True}"
-                                                context="{'form_view_ref': 'survey.gamification_badge_form_view_simplified'}"/>
-                                        </div>
-                                    </div>
                                 </group>
                                 <group string="Live Session" name="live_session" invisible="not session_available">
                                     <field name="access_token" invisible="1"/>  <!-- dependency of 'session_code' -->

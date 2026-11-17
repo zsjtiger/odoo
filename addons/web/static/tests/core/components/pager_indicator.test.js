@@ -1,8 +1,8 @@
-import { PagerIndicator } from "@web/core/pager/pager_indicator";
+import { PagerIndicator } from "@web/core/components/pager/pager_indicator";
 import { mountWithCleanup, patchWithCleanup } from "../../web_test_helpers";
-import { config as transitionConfig } from "@web/core/transition";
+import { config as transitionConfig } from "@web/core/framework/transition";
 import { expect, test } from "@odoo/hoot";
-import { PAGER_UPDATED_EVENT, pagerBus } from "@web/core/pager/pager";
+import { PAGER_UPDATED_EVENT, pagerBus } from "@web/core/components/pager/pager";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 
 test("displays the pager indicator", async () => {

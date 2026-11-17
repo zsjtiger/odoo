@@ -1,6 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
-import { rpc } from "@web/core/network/rpc";
-import { registry } from "@web/core/registry";
+import { rpc } from "@web/core/services/network/rpc";
+import { registry } from "@web/core/framework/registry";
 
 /**
  * @typedef { Object } SwitchableViewsShared

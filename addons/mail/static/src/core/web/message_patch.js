@@ -6,8 +6,8 @@ import {
     deserializeDateTime,
     formatDate,
     formatDateTime,
-} from "@web/core/l10n/dates";
-import { _t } from "@web/core/l10n/translation";
+} from "@web/core/data/l10n/dates";
+import { _t } from "@web/core/data/l10n/translation";
 import {
     formatChar,
     formatFloat,
@@ -15,7 +15,7 @@ import {
     formatMonetary,
     formatText,
 } from "@web/views/fields/formatters";
-import { usePopover } from "@web/core/popover/popover_hook";
+import { usePopover } from "@web/core/components/popover/popover_hook";
 import { patch } from "@web/core/utils/patch";
 import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
 

@@ -1,6 +1,6 @@
 import { usePlugin } from "@odoo/owl";
 import { Interaction } from "@web/public/interaction";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 import { isScrollableY } from "@web/core/utils/scrolling";
 import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";

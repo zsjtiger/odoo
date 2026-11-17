@@ -1,4 +1,4 @@
-import { location } from "@web/core/browser/browser";
+import { location } from "@web/core/services/browser/browser";
 import { PortalRatingPlugin } from "@portal_rating/chatter/portal/portal_rating_plugin";
 import { Chatter } from "@mail/chatter/web_portal_project/chatter";
 import { useMaybePlugin } from "@mail/utils/common/hooks";

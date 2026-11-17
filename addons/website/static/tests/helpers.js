@@ -1,5 +1,5 @@
 import { animationFrame } from "@odoo/hoot-mock";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { buildEditableInteractions } from "@website/core/website_edit_service";
 import { setupInteractionWhiteList } from "@web/../tests/public/helpers";
 import { Website } from "./mock_server/mock_models/website";

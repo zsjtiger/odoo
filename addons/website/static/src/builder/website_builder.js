@@ -3,22 +3,22 @@ import { CORE_PLUGINS, MAIN_PLUGINS } from "@html_builder/core/core_plugins";
 import { removePlugins } from "@html_builder/utils/utils";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { Component, onMounted, onWillStart, onWillUnmount, useProps, t } from "@odoo/owl";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { ConfirmationDialog } from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
 import { useSetupAction } from "@web/search/action_hook";
 import { ThemeTab } from "./plugins/theme/theme_tab";
 import { Plugin } from "@html_editor/plugin";
 import { revertPreview } from "@html_builder/core/utils";
-import { rpc } from "@web/core/network/rpc";
+import { rpc } from "@web/core/services/network/rpc";
 import { redirect } from "@web/core/utils/urls";
-import { browser } from "@web/core/browser/browser";
+import { browser } from "@web/core/services/browser/browser";
 import {
     localStorageNoDialogKey,
     TranslatorInfoDialog,
 } from "./translation_components/translatorInfoDialog";
-import { router } from "@web/core/browser/router";
+import { router } from "@web/core/services/browser/router";
 
 // Other Plugins depend on those 2 plugins, but they are not used in translation
 // mode.

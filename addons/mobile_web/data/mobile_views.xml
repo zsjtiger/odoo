@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        移动端列表/看板的标题字段: 在视图 arch 中给字段加 class="mobile_title", 移动端的列表和看板会把它
+        加粗显示作为标题, 其他字段紧凑地显示为值. 只影响移动端的渲染, 桌面端忽略该类名.
+        (不用 title 属性: Odoo 的视图 schema 不允许 field 上的 title 属性)
+    -->
+    <record id="mobile_company_list_title" model="ir.ui.view">
+        <field name="name">mobile_web.company.list.title</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="class" add="mobile_title" separator=" "/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mobile_users_list_title" model="ir.ui.view">
+        <field name="name">mobile_web.users.list.title</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="class" add="mobile_title" separator=" "/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mobile_partner_list_title" model="ir.ui.view">
+        <field name="name">mobile_web.partner.list.title</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='display_name']" position="attributes">
+                <attribute name="class" add="mobile_title" separator=" "/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mobile_partner_kanban_title" model="ir.ui.view">
+        <field name="name">mobile_web.partner.kanban.title</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.res_partner_kanban_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="class" add="mobile_title" separator=" "/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

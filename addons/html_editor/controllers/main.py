@@ -15,19 +15,17 @@ from odoo.exceptions import AccessError, MissingError, UserError
 from odoo.fields import Domain
 from odoo.http import Controller, request, route
 from odoo.http.stream import STATIC_CACHE_LONG
-from odoo.tools.image import image_process
-from odoo.tools.mimetypes import guess_mimetype
+from odoo.tools.files.image import image_process
+from odoo.tools.files.mimetypes import guess_mimetype
 
 from odoo.addons.web.icons import search_icons
 
 from ..models.ir_attachment import SUPPORTED_IMAGE_MIMETYPES
+from ..tools import openai_chat_completion
 from .svg_utils import get_shape_svg, make_shaped_image, update_svg_colors
-from odoo.addons.iap.tools import iap_tools
 from odoo.addons.mail.tools import link_preview
 
 DEFAULT_LIBRARY_ENDPOINT = 'https://media-api.odoo.com'
-DEFAULT_OLG_ENDPOINT = 'https://olg.api.odoo.com'
-DEFAULT_OTS_ENDPOINT = 'https://ots.api.odoo.com'
 API_WEBSITE_IMAGES_URL = 'https://website-image.api.odoo.com/images/'
 
 # Regex definitions to apply speed modification in SVG files
@@ -675,47 +673,23 @@ class HTML_Editor(Controller):
 
     @route(["/web_editor/generate_text", "/html_editor/generate_text"], type="jsonrpc", auth="user")
     def generate_text(self, prompt, conversation_history):
+        messages = [*(conversation_history or []), {'role': 'user', 'content': prompt}]
         try:
-            IrConfigParameter = request.env['ir.config_parameter'].sudo()
-            olg_api_endpoint = IrConfigParameter.get_str('html_editor.olg_api_endpoint') or DEFAULT_OLG_ENDPOINT
-            database_id = IrConfigParameter.get_str('database.uuid')
-            response = iap_tools.iap_jsonrpc(olg_api_endpoint + "/api/olg/1/chat", params={
-                'prompt': prompt,
-                'conversation_history': conversation_history or [],
-                'database_id': database_id,
-            }, timeout=30)
-            if response['status'] == 'success':
-                return response['content']
-            elif response['status'] == 'error_prompt_too_long':
-                raise UserError(_("Sorry, your prompt is too long. Try to say it in fewer words."))
-            elif response['status'] == 'limit_call_reached':
-                raise UserError(_("You have reached the maximum number of requests for this service. Try again later."))
-            else:
-                raise UserError(_("Sorry, we could not generate a response. Please try again later."))
+            return openai_chat_completion(request.env, messages)
         except requests.RequestException:
             raise UserError(_("Oops, it looks like our AI is unreachable!"))
 
     @route(["/web_editor/google_translate", "/html_editor/google_translate"], type="jsonrpc", auth="user")
     def google_translate(self, originalText, targetLang):
+        messages = [
+            {'role': 'system', 'content': f"Translate the user's text to {targetLang}. Return only the translation."},
+            {'role': 'user', 'content': originalText},
+        ]
         try:
-            IrConfigParameter = request.env['ir.config_parameter'].sudo()
-            gtl_api_endpoint = DEFAULT_OTS_ENDPOINT
-            db_uuid = IrConfigParameter.get_str('database.uuid')
-            response = iap_tools.iap_jsonrpc(gtl_api_endpoint + "/api/html_editor_translate/1/google_translate", params={
-                'original_text': originalText,
-                'target_lang': targetLang,
-                'db_uuid': db_uuid,
-            }, timeout=30)
-
-            if response['status'] == 'success':
-                return {'translated_text': response['translated_text'], 'isError': False}
-            if response['status'] == 'limit_call_reached':
-                raise UserError(_("You have reached the maximum number of requests for this service. Try again later."))
-            if response['status'] == 'text_too_long':
-                raise UserError(_("The text you are trying to translate is too long. Please select less text and try it again."))
-            raise UserError(_("Sorry, we could not translate the text. Please try again later."))
+            translated_text = openai_chat_completion(request.env, messages)
         except requests.RequestException:
             raise UserError(_("Oops, it looks like google translation service is unreachable!"))
+        return {'translated_text': translated_text, 'isError': False}
 
     @route(["/web_editor/get_ice_servers", "/html_editor/get_ice_servers"], type='jsonrpc', auth="user")
     def get_ice_servers(self):

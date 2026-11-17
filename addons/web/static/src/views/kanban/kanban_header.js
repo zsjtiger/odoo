@@ -1,10 +1,10 @@
 import { Component, signal, t, useProps } from "@odoo/owl";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { _t } from "@web/core/l10n/translation";
-import { usePopover } from "@web/core/popover/popover_hook";
-import { registry } from "@web/core/registry";
-import { utils } from "@web/core/ui/ui_utils";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
+import { _t } from "@web/core/data/l10n/translation";
+import { usePopover } from "@web/core/components/popover/popover_hook";
+import { registry } from "@web/core/framework/registry";
+import { utils } from "@web/core/services/ui/ui_utils";
 import { memoize } from "@web/core/utils/functions";
 import { useService } from "@web/core/utils/hooks";
 import { odoomark } from "@web/core/utils/html";

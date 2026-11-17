@@ -2,7 +2,7 @@ import { discussComponentRegistry } from "./discuss_component_registry";
 
 import { Component, types, useProps } from "@odoo/owl";
 
-import { Dialog } from "@web/core/dialog/dialog";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
 
 export class MessageDeleteDialog extends Component {

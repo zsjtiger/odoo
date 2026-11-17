@@ -1,6 +1,6 @@
 import { Component, proxy, useProps } from "@odoo/owl";
-import { DateTimePicker } from "@web/core/datetime/datetime_picker";
-import { _t } from "@web/core/l10n/translation";
+import { DateTimePicker } from "@web/core/components/datetime/datetime_picker";
+import { _t } from "@web/core/data/l10n/translation";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { CalendarFilterSection } from "@web/views/calendar/calendar_filter_section/calendar_filter_section";
 import { CalendarScheduleSection } from "@web/views/calendar/calendar_schedule_section/calendar_schedule_section";

@@ -2,7 +2,7 @@
 
 from odoo import fields, models, api
 from odoo.tools import LazyTranslate
-from odoo.tools.translate import mark_as_copy
+from odoo.tools.text.translate import mark_as_copy
 from odoo.addons.mail.tools.discuss import Store
 
 _lt = LazyTranslate(__name__)

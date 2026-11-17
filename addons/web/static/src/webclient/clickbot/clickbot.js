@@ -4,8 +4,8 @@
  */
 
 import { App, effect, proxy } from "@odoo/owl";
-import { browser } from "@web/core/browser/browser";
-import { rpcBus } from "@web/core/network/rpc";
+import { browser } from "@web/core/services/browser/browser";
+import { rpcBus } from "@web/core/services/network/rpc";
 import { ClickbotOverlay } from "@web/webclient/clickbot/clickbot_overlay";
 
 export const SUCCESS_SIGNAL = "clickbot test succeeded";

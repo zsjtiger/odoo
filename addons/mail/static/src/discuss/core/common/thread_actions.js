@@ -1,4 +1,4 @@
-import { useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/core/owl/utils";
 import { ACTION_GROUP_TAGS, ACTION_TAGS } from "@mail/core/common/action";
 import { describeThreadActionGroup, registerThreadAction } from "@mail/core/common/thread_actions";
 import { AttachmentPanel } from "@mail/discuss/core/common/attachment_panel";
@@ -10,8 +10,8 @@ import { NotificationSettings } from "@mail/discuss/core/common/notification_set
 import { PinnedMessagesPanel } from "@mail/discuss/core/common/pinned_messages_panel";
 import { attClassObjectToString } from "@mail/utils/common/format";
 
-import { _t } from "@web/core/l10n/translation";
-import { usePopover } from "@web/core/popover/popover_hook";
+import { _t } from "@web/core/data/l10n/translation";
+import { usePopover } from "@web/core/components/popover/popover_hook";
 
 describeThreadActionGroup(10, { tags: ACTION_GROUP_TAGS.INLINE_SWITCHER_LOOK });
 

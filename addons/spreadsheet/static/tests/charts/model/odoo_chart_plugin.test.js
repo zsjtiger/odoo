@@ -20,7 +20,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { makeStoreWithModel } from "@spreadsheet/../tests/helpers/stores";
-import { user } from "@web/core/user";
+import { user } from "@web/core/services/user";
 import {
     getBasicServerData,
     defineSpreadsheetActions,

@@ -15,18 +15,18 @@ import {
     useProps,
     t,
 } from "@odoo/owl";
-import { loadBundle } from "@web/core/assets";
-import { location, browser } from "@web/core/browser/browser";
-import { isBrowserChrome, isBrowserMicrosoftEdge } from "@web/core/browser/feature_detection";
-import { router } from "@web/core/browser/router";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
-import { _t } from "@web/core/l10n/translation";
-import { LazyComponent } from "@web/core/lazy_component";
-import { post } from "@web/core/network/http_service";
-import { rpc, RPCError } from "@web/core/network/rpc";
-import { registry } from "@web/core/registry";
-import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
+import { loadBundle } from "@web/core/framework/assets";
+import { location, browser } from "@web/core/services/browser/browser";
+import { isBrowserChrome, isBrowserMicrosoftEdge } from "@web/core/services/browser/feature_detection";
+import { router } from "@web/core/services/browser/router";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
+import { getActiveHotkey } from "@web/core/services/hotkeys/hotkey_utils";
+import { _t } from "@web/core/data/l10n/translation";
+import { LazyComponent } from "@web/core/framework/lazy_component";
+import { post } from "@web/core/services/network/http_service";
+import { rpc, RPCError } from "@web/core/services/network/rpc";
+import { registry } from "@web/core/framework/registry";
+import { ResizablePanel } from "@web/core/components/resizable_panel/resizable_panel";
 import { uniqueId } from "@web/core/utils/functions";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { renderToElement } from "@web/core/utils/render";

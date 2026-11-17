@@ -46,6 +46,6 @@ export function mockAssetsFactory(name) {
         if (loader.modules.has(name)) {
             return loader.modules.get(name);
         }
-        return startWithMockModules(name, { "@web/session": { session: {} } });
+        return startWithMockModules(name, { "@web/boot/session": { session: {} } });
     };
 }

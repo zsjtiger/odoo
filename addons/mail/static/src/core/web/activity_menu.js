@@ -1,14 +1,15 @@
 import { Component } from "@odoo/owl";
 
 import { useDiscussSystray } from "@mail/utils/common/hooks";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
-import { registry } from "@web/core/registry";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { useDropdownState } from "@web/core/components/dropdown/dropdown_hooks";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
-import { Domain } from "@web/core/domain";
-import { user } from "@web/core/user";
-import { useCommand } from "@web/core/commands/command_hook";
-import { _t } from "@web/core/l10n/translation";
+import { Domain } from "@web/core/data/domain";
+import { user } from "@web/core/services/user";
+import { useCommand } from "@web/core/services/commands/command_hook";
+import { _t } from "@web/core/data/l10n/translation";
+import { isSystrayItemVisible } from "@web/webclient/navbar/systray_visibility";
 
 export class ActivityMenu extends Component {
     static components = { Dropdown };
@@ -131,4 +132,8 @@ export class ActivityMenu extends Component {
 
 registry
     .category("systray")
-    .add("mail.activity_menu", { Component: ActivityMenu }, { sequence: 20 });
+    .add(
+        "mail.activity_menu",
+        { Component: ActivityMenu, isDisplayed: () => isSystrayItemVisible("activity") },
+        { sequence: 20 }
+    );

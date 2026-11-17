@@ -1,7 +1,7 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
 import { useProps, t } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { CustomizeWebsiteVariableAction } from "../customize_website_plugin";
 
 export function getParsedWeight(value) {

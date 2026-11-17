@@ -1,0 +1,36 @@
+.snow_mdm_dashboard_card_container {
+    height: 100%;
+    width: 100%;
+
+    display: flex;
+    justify-content: space-around;
+    gap: 10px;
+    cursor: pointer;
+    flex-wrap: wrap;
+
+    .snow_mdm_dashboard_card {
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        box-sizing: border-box;
+        padding: 10px;
+
+        background-color: #017e84;
+        
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        .snow_mdm_dashboard_card_title {
+            color: #fff;
+        }
+
+        .snow_mdm_dashboard_card_value {
+            color: #fff;
+        }
+    }
+
+    .snow_mdm_dashboard_card_placeholder {
+        visibility: hidden;
+    }
+}

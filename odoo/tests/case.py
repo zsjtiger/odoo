@@ -4,7 +4,6 @@ import contextlib
 import inspect
 import logging
 import sys
-from pathlib import PurePath
 from unittest import SkipTest
 from unittest import TestCase as _TestCase
 

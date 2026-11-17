@@ -13,7 +13,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 import { press } from "@odoo/hoot-dom";
 
-import { rpc } from "@web/core/network/rpc";
+import { rpc } from "@web/core/services/network/rpc";
 
 describe.current.tags("desktop");
 defineMailModels();

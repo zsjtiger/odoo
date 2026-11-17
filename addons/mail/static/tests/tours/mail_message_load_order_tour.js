@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 registry.category("web_tour.tours").add("mail_message_load_order_tour", {
     steps: () => [

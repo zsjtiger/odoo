@@ -1,5 +1,5 @@
 import { Component, onMounted, useProps, t } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 
 export class DragAndDropMoveHandle extends Component {
     static template = "html_builder.DragAndDropMoveHandle";

@@ -1,10 +1,10 @@
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { _t } from "@web/core/l10n/translation";
+import { ConfirmationDialog } from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
+import { _t } from "@web/core/data/l10n/translation";
 import { memoize, uniqueId } from "@web/core/utils/functions";
 import { Reactive } from "@web/core/utils/reactive";
 import { AddSnippetDialog } from "./add_snippet_dialog";
-import { registry } from "@web/core/registry";
-import { user } from "@web/core/user";
+import { registry } from "@web/core/framework/registry";
+import { user } from "@web/core/services/user";
 import { markup, proxy } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";

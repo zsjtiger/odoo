@@ -1,10 +1,10 @@
 import { t, useProps } from "@odoo/owl";
 
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import {
     NotificationAlertDialog,
     notificationAlertDialogProps,
-} from "@web/core/notification_alert_dialog/notification_alert_dialog";
+} from "@web/core/dialogs/notification_alert_dialog/notification_alert_dialog";
 import { useService } from "@web/core/utils/hooks";
 
 export class CallPermissionDeniedDialog extends NotificationAlertDialog {

@@ -6,7 +6,7 @@ from odoo import Command, models
 from odoo.exceptions import AccessError, LockError
 from odoo.tests.common import TransactionCase, tagged
 from odoo.tools import SQL, lazy, mute_logger, unique
-from odoo.tools.version_tag_reset import assign_version_tag
+from odoo.tools.system.version_tag_reset import assign_version_tag
 
 from .common import TestOrmPartnerCommon
 

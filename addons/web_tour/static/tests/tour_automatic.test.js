@@ -16,10 +16,10 @@ import {
     onRpc,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-import { location, browser } from "@web/core/browser/browser";
-import { Dialog } from "@web/core/dialog/dialog";
-import { Macro } from "@web/core/macro";
-import { registry } from "@web/core/registry";
+import { location, browser } from "@web/core/services/browser/browser";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
+import { Macro } from "@web/core/framework/macro";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
 
 describe.current.tags("desktop");

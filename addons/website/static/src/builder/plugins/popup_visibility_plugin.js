@@ -1,7 +1,7 @@
 import { usePlugin } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
 import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { patch } from "@web/core/utils/patch";
 
 /**

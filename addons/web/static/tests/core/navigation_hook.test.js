@@ -12,7 +12,7 @@ import {
 } from "@odoo/hoot";
 import { Component, onMounted, proxy, signal, xml } from "@odoo/owl";
 import { destroyApp, mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { ACTIVE_ELEMENT_CLASS, Navigator, useNavigation } from "@web/core/navigation/navigation";
+import { ACTIVE_ELEMENT_CLASS, Navigator, useNavigation } from "@web/core/components/navigation/navigation";
 import { useAutofocus } from "@web/core/utils/hooks";
 
 class BasicHookParent extends Component {

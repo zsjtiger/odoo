@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- 移动端报表: 与桌面端的仪表盘不同, 移动端用表单纵向排列各个图表字段.
+         优先级低于默认 (数值大), 不影响桌面端 reporting.demo 的表单视图 -->
+    <record id="mobile_reporting_demo_form" model="ir.ui.view">
+        <field name="name">mobile.reporting.demo.form</field>
+        <field name="model">reporting.demo</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <!-- 报表只读: 不显示保存/放弃 -->
+            <form edit="false" create="false">
+                <field name="chart_bar" widget="board_dashboard_bar"/>
+                <field name="chart_line" widget="board_dashboard_line"/>
+                <field name="chart_pie" widget="board_dashboard_pie"/>
+                <field name="chart_gauge" widget="board_dashboard_gauge"/>
+                <field name="chart_radar" widget="board_dashboard_radar"/>
+                <field name="chart_card" widget="board_dashboard_card"/>
+                <field name="chart_smooth" widget="board_dashboard_smooth_line"/>
+                <field name="chart_stacked" widget="board_dashboard_stacked_line"/>
+                <field name="chart_marked" widget="board_dashboard_marked_line"/>
+                <field name="chart_pie_line" widget="board_dashboard_pie_line"/>
+                <field name="chart_polar_radial" widget="board_dashboard_polar_radial"/>
+                <field name="chart_polar_tangential" widget="board_dashboard_polar_tangential"/>
+                <field name="chart_polar_end_angle" widget="board_dashboard_polar_end_angle"/>
+                <field name="chart_bar_horizontal" widget="board_dashboard_bar_horizontal"/>
+                <field name="chart_bar_axis_break" widget="board_dashboard_bar_axis_break"/>
+                <field name="chart_bar_gradient" widget="board_dashboard_bar_gradient"/>
+                <field name="chart_doughnut" widget="board_dashboard_doughnut"/>
+                <field name="chart_doughnut_rounded" widget="board_dashboard_doughnut_rounded"/>
+                <field name="chart_doughnut_half" widget="board_dashboard_doughnut_half"/>
+                <field name="chart_pie_pad" widget="board_dashboard_pie_pad_angle"/>
+                <field name="chart_scatter" widget="board_dashboard_scatter"/>
+                <field name="chart_scatter_quartet" widget="board_dashboard_scatter_quartet"/>
+                <field name="chart_scatter_cluster" widget="board_dashboard_scatter_cluster"/>
+                <field name="chart_scatter_cluster_process" widget="board_dashboard_scatter_cluster_process"/>
+                <field name="chart_scatter_regression" widget="board_dashboard_scatter_regression"/>
+                <field name="chart_scatter_effect" widget="board_dashboard_scatter_effect"/>
+            </form>
+        </field>
+    </record>
+
+    <!-- 移动端的动作不使用 res_id 打开记录: 先列出报表, 点击后进入只读的表单 -->
+    <record id="mobile_reporting_demo_list" model="ir.ui.view">
+        <field name="name">mobile.reporting.demo.list</field>
+        <field name="model">reporting.demo</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" class="mobile_title"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="mobile_reporting_demo_action" model="ir.actions.act_window">
+        <field name="name">Chart Demo</field>
+        <field name="res_model">reporting.demo</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="mobile_reporting_demo_list"/>
+    </record>
+
+    <record id="mobile_reporting_demo_action_form" model="ir.actions.act_window.view">
+        <field name="sequence">2</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="mobile_reporting_demo_form"/>
+        <field name="act_window_id" ref="mobile_reporting_demo_action"/>
+    </record>
+
+    <!-- 顶级菜单带动作: 移动端首页的应用图标直接打开报表列表 -->
+    <menuitem id="mobile_reporting_menu_root" name="Mobile Reporting" sequence="226"
+              action="mobile_reporting_demo_action"/>
+</odoo>

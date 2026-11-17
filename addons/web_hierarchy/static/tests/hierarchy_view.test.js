@@ -18,7 +18,7 @@ import {
     toggleMenuItem,
     toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
-import { browser } from "@web/core/browser/browser";
+import { browser } from "@web/core/services/browser/browser";
 import { WebClient } from "@web/webclient/webclient";
 import { HierarchyModel } from "@web_hierarchy/hierarchy_model";
 

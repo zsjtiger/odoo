@@ -1,12 +1,12 @@
 import { OdooViewsDataSource } from "@spreadsheet/data_sources/odoo_views_data_source";
 import { EvaluationError } from "@odoo/o-spreadsheet";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import {
     formatDateTime,
     deserializeDateTime,
     formatDate,
     deserializeDate,
-} from "@web/core/l10n/dates";
+} from "@web/core/data/l10n/dates";
 import { orderByToString } from "@web/search/utils/order_by";
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
@@ -433,7 +433,7 @@ export class ListDataSource extends OdooViewsDataSource {
      * @param {number} position
      * @param {string} fieldPath
      * @param {string} currencyFieldName
-     * @returns {import("@spreadsheet/currency/currency_data_source").Currency | undefined}
+     * @returns {import("@spreadsheet/currency/helpers").Currency | undefined}
      */
     getListCurrency(position, fieldPath, currencyFieldName) {
         this.assertIsValid();
@@ -460,7 +460,7 @@ export class ListDataSource extends OdooViewsDataSource {
     /**
      * @param {object | object[]} recordOrRecords
      * @param {string} currencyFieldName
-     * @returns {import("@spreadsheet/currency/currency_data_source").Currency | undefined}
+     * @returns {import("@spreadsheet/currency/helpers").Currency | undefined}
      */
     _getCurrency(position, fieldPath, currencyFieldName) {
         const recordOrRecords = this._getRecordFromRelation(this.data[position], fieldPath);

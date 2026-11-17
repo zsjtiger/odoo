@@ -3,10 +3,12 @@
 import logging
 import re
 
+import requests
+
 from odoo import _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.http import request
-from odoo.tools.translate import adapt_translated_field_value
+from odoo.tools.text.translate import adapt_translated_field_value
 
 logger = logging.getLogger(__name__)
 diverging_history_regex = 'data-last-history-commits="([0-9,]+)"'
@@ -79,3 +81,25 @@ def _handle_history_divergence(record, html_field_name, incoming_html):
 
     # Save only the latest id.
     return incoming_html[0:incoming_history_matches.start(1)] + last_commit_id + incoming_html[incoming_history_matches.end(1):]
+
+
+def openai_chat_completion(env, messages, timeout=60):
+    """Return the text of an OpenAI-compatible chat completion.
+
+    The endpoint is configured with the system parameters ``openai.api_base``
+    (defaults to the OpenAI API), ``openai.api_key`` and ``openai.model``.
+    """
+    IrConfigParameter = env['ir.config_parameter'].sudo()
+    api_key = IrConfigParameter.get_str('openai.api_key')
+    model = IrConfigParameter.get_str('openai.model')
+    if not api_key or not model:
+        raise UserError(_("The AI service is not configured. Set the system parameters openai.api_key and openai.model."))
+    api_base = IrConfigParameter.get_str('openai.api_base') or 'https://api.openai.com/v1'
+    response = requests.post(
+        f"{api_base.rstrip('/')}/chat/completions",
+        headers={'Authorization': f'Bearer {api_key}'},
+        json={'model': model, 'messages': messages},
+        timeout=timeout,
+    )
+    response.raise_for_status()
+    return response.json()['choices'][0]['message']['content']

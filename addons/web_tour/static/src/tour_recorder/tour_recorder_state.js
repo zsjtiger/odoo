@@ -1,4 +1,4 @@
-import { browser } from "@web/core/browser/browser";
+import { browser } from "@web/core/services/browser/browser";
 
 const CURRENT_TOUR_RECORDER_LOCAL_STORAGE = "current_tour_recorder";
 const CURRENT_TOUR_RECORDER_RECORD_LOCAL_STORAGE = "current_tour_recorder.record";

@@ -1,8 +1,8 @@
-import { radioField, RadioField } from "@web/views/fields/radio/radio_field";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { radioField, RadioField } from "@web/views/fields/selection/radio/radio_field";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { ConfirmationDialog } from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
 
 export class CalendarTypeConfirmRadioField extends RadioField {
     /**

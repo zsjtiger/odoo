@@ -1,7 +1,7 @@
 import { onWillDestroy, Plugin, usePlugin } from "@odoo/owl";
 import { BusPlugin } from "@bus/services/bus_plugin";
-import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
-import { services } from "@web/core/services";
+import { NotificationPlugin } from "@web/core/services/notifications/notification_plugin";
+import { services } from "@web/core/framework/services";
 
 export class SimpleNotificationPlugin extends Plugin {
     bus = usePlugin(BusPlugin);
