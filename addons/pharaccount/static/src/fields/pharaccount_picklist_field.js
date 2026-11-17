@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { Component, t, useEffect, useProps, useState } from "@odoo/owl";
+import { Component, signal, t, useEffect, useProps } from "@odoo/owl";
 import { _t } from "@web/core/data/l10n/translation";
 import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -25,7 +25,7 @@ export class PharaccountPicklistField extends Component {
 
     setup() {
         this.orm = useService("orm");
-        this.state = useState({ options: [] });
+        this.options = signal([]);
 
         useEffect(
             () => {
@@ -46,7 +46,7 @@ export class PharaccountPicklistField extends Component {
     }
 
     get choices() {
-        const choices = this.state.options.map((option) => ({
+        const choices = this.options().map((option) => ({
             id: option.id,
             label: option.label,
         }));
@@ -61,14 +61,15 @@ export class PharaccountPicklistField extends Component {
 
     async loadOptions() {
         if (!this.props.picklist) {
-            this.state.options = [];
+            this.options.set([]);
             return;
         }
-        this.state.options = await this.orm.call(
+        const options = await this.orm.call(
             "pharaccount.picklist.value",
             "get_widget_options",
             [this.props.picklist, this.recordTypeId]
         );
+        this.options.set(options);
     }
 
     onChange(ev) {

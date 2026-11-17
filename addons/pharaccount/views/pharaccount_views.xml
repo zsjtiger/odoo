@@ -119,8 +119,8 @@
                                 </list>
                             </field>
                         </page>
-                        <page string="关联药店" name="pharma_links">
-                            <p class="text-muted">以本药店为医院时，哪些药店通过本机构供货。</p>
+                        <page string="供货药店" name="pharma_links">
+                            <p class="text-muted">以本机构为医院时，哪些药店通过它供货。</p>
                             <field name="pharma_link_ids" readonly="1">
                                 <list>
                                     <field name="pharmacy_id"/>
