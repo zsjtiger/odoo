@@ -19,7 +19,7 @@ vrux 对应：`object_record_types`、`record_type_to_record_type_relations`。
 
 | 字段 | 类型 | 说明 |
 |---|---|---|
-| name | Char，必填 | 编码，药店为 `pharma`（对应 vrux 的 `record_type__name='pharma'`） |
+| name | Char，必填 | 编码。父类型 `pharma`（药店），子类型 `pharmacy_chain_head`（连锁总店）、`pharmacy_chain_branch`（连锁门店）、`pharmacy_monomer`（单体药店） |
 | label | Char，必填 | 界面名称 |
 | sequence | Integer | 显示顺序 |
 | parent_id | Many2one `pharaccount.record.type` | 父记录类型，用于继承 |
@@ -33,9 +33,19 @@ vrux 对应：`object_record_types`、`record_type_to_record_type_relations`。
 
 - 子记录类型继承父记录类型的 `group_ids` 和 `picklist_value_ids`；子类型自己配置的值与父类型取并集。
 - 不允许循环继承（约束检查）。
-- 账户主表 `accounts.record_type` 指向 `pharaccount.record.type`，药店账户固定为 `pharma`（或其子类型）。
+- 账户主表 `accounts.record_type` 指向 `pharaccount.record.type`，药店账户使用三个子类型之一。
+- 查询"药店"时同时匹配父类型和子类型（vrux 中是 `record_type__name='pharma'` 或 `record_type__parent__name='pharma'`），即子类型自动属于父类型。
 
 ## 3. Picklist
+
+第一个 picklist 已经在 vrux 中确定：`pharmacy_level`（药店级别），`multi_select=0`，`source=system`，选项为：
+
+| 选项 name | 选项 label | order |
+|---|---|---|
+| A | A级 | 1 |
+| B | B级 | 2 |
+| C | C级 | 3 |
+| D | D级 | 4 |
 
 vrux 对应：`picklists`、`picklist_values`、`role_to_picklist_values`。
 
@@ -130,8 +140,10 @@ vrux 对应 `accounts`，只保留药店相关字段。
 
 子表（员工、医院关联、库存、竞品）在下一步设计。
 
-## 6. 待确认
+## 6. 已确认的答案
 
-1. 继承时的取并集规则是否合适，还是子类型应该覆盖父类型？
-2. `pharmacy_level` 等 picklist 的具体选项，需要从 vrux 的数据里导出。
-3. 第一版是否需要导入、导出的功能，还是只保留权限位？
+1. **继承规则：取并集。** 子类型的可用组和选项 = 父类型的 ∪ 子类型自己配置的。依据：vrux 查询药店时父子类型都会匹配。子类型不能删掉父类型已有的选项。
+2. **picklist 选项：** `pharmacy_level` 为 A/B/C/D 四级，见第 3 节。依据：`server/scripts/metadata-backups/py/V003_201811051520_add_pharmacy_list.py`。
+3. **导入导出：** 第一版只保留权限位（`group_manager` 上的 `allow_import`、`allow_export`），不实现导入导出功能。依据：第一版范围已经收窄为组权限和主表，导入导出是独立的功能。
+
+以上三条是我根据代码给出的推荐答案，需要你最终确认。
