@@ -25,6 +25,8 @@ First version, following vrux:
         'security/pharaccount_security.xml',
         'security/ir.access.csv',
         'data/pharaccount_data.xml',
+        'views/pharaccount_views.xml',
+        'views/pharaccount_menus.xml',
     ],
     'installable': True,
     'application': False,

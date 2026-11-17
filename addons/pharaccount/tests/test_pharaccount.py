@@ -76,6 +76,47 @@ class TestPharaccount(TransactionCase):
         outsider = self._user([self.group_b], 'pharma_open_outsider')
         self.assertEqual(self.env['pharaccount.account'].with_user(outsider).search([('id', '=', account.id)]), account)
 
+    def test_pc_and_mobile_views_load(self):
+        # Every PC and mobile view must load for its model (validates fields and arch).
+        expected = {
+            'pharaccount.account': [
+                ('pharaccount.view_pharaccount_account_list', 'list'),
+                ('pharaccount.view_pharaccount_account_form', 'form'),
+                ('pharaccount.view_pharaccount_account_form_mobile', 'form'),
+                ('pharaccount.view_pharaccount_account_kanban_mobile', 'kanban'),
+                ('pharaccount.view_pharaccount_account_search', 'search'),
+            ],
+            'pharaccount.record.type': [
+                ('pharaccount.view_pharaccount_record_type_list', 'list'),
+                ('pharaccount.view_pharaccount_record_type_form', 'form'),
+                ('pharaccount.view_pharaccount_record_type_kanban_mobile', 'kanban'),
+            ],
+            'pharaccount.picklist': [
+                ('pharaccount.view_pharaccount_picklist_list', 'list'),
+                ('pharaccount.view_pharaccount_picklist_form', 'form'),
+                ('pharaccount.view_pharaccount_picklist_kanban_mobile', 'kanban'),
+            ],
+            'pharaccount.account.state': [
+                ('pharaccount.view_pharaccount_account_state_list', 'list'),
+                ('pharaccount.view_pharaccount_account_state_form', 'form'),
+                ('pharaccount.view_pharaccount_account_state_kanban_mobile', 'kanban'),
+            ],
+        }
+        for model, views in expected.items():
+            for xmlid, view_type in views:
+                view = self.env.ref(xmlid)
+                self.assertEqual(view.model, model)
+                self.assertEqual(view.type, view_type)
+                self.env[model].with_context(lang='en_US').get_views([(view.id, view_type)])
+
+    def test_mobile_actions_use_kanban_and_simplified_form(self):
+        action = self.env.ref('pharaccount.action_pharaccount_account_mobile')
+        self.assertEqual(action.view_mode, 'kanban,form')
+        mapped = {v.view_mode: v.view_id for v in action.view_ids}
+        self.assertEqual(mapped['kanban'], self.env.ref('pharaccount.view_pharaccount_account_kanban_mobile'))
+        self.assertEqual(mapped['form'], self.env.ref('pharaccount.view_pharaccount_account_form_mobile'))
+        self.assertEqual(self.env.ref('pharaccount.action_pharaccount_account').view_mode, 'list,form')
+
     def test_account_extended_fields(self):
         record_type = self.RecordType.create({'name': 'ext_t', 'label': 'Ext type'})
         state = self.env['pharaccount.account.state'].create({'name': 'ext_state', 'label': 'Ext state'})
