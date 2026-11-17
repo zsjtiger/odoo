@@ -92,22 +92,4 @@
               action="action_pharaccount_account_state" sequence="30"
               groups="pharaccount.group_config"/>
 
-    <!-- ================= Menus: Mobile ================= -->
-
-    <menuitem id="menu_pharaccount_mobile_root" name="药店（移动端）" sequence="20"
-              groups="pharaccount.group_user"/>
-    <menuitem id="menu_pharaccount_mobile_account" name="药店" parent="menu_pharaccount_mobile_root"
-              action="action_pharaccount_account_mobile" sequence="10"
-              groups="pharaccount.group_user"/>
-    <menuitem id="menu_pharaccount_mobile_config" name="配置" parent="menu_pharaccount_mobile_root"
-              sequence="90" groups="pharaccount.group_config"/>
-    <menuitem id="menu_pharaccount_mobile_record_type" name="记录类型" parent="menu_pharaccount_mobile_config"
-              action="action_pharaccount_record_type_mobile" sequence="10"
-              groups="pharaccount.group_config"/>
-    <menuitem id="menu_pharaccount_mobile_picklist" name="下拉列表" parent="menu_pharaccount_mobile_config"
-              action="action_pharaccount_picklist_mobile" sequence="20"
-              groups="pharaccount.group_config"/>
-    <menuitem id="menu_pharaccount_mobile_account_state" name="账户状态" parent="menu_pharaccount_mobile_config"
-              action="action_pharaccount_account_state_mobile" sequence="30"
-              groups="pharaccount.group_config"/>
 </odoo>

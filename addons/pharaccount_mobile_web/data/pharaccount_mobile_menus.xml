@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Mobile Web menus. Top-level with an action, because the Mobile Web home grid shows only those.
+         device_type = 'mobile' makes them visible in /mobile_web only. -->
+    <record id="menu_pharaccount_mobile_account" model="ir.ui.menu">
+        <field name="name">药店</field>
+        <field name="action" eval="'ir.actions.act_window,%d' % ref('pharaccount.action_pharaccount_account_mobile')"/>
+        <field name="sequence">10</field>
+        <field name="device_type">mobile</field>
+        <field name="group_ids" eval="[(6, 0, [ref('pharaccount.group_user')])]"/>
+    </record>
+    <record id="menu_pharaccount_mobile_record_type" model="ir.ui.menu">
+        <field name="name">药店记录类型</field>
+        <field name="action" eval="'ir.actions.act_window,%d' % ref('pharaccount.action_pharaccount_record_type_mobile')"/>
+        <field name="sequence">20</field>
+        <field name="device_type">mobile</field>
+        <field name="group_ids" eval="[(6, 0, [ref('pharaccount.group_config')])]"/>
+    </record>
+    <record id="menu_pharaccount_mobile_picklist" model="ir.ui.menu">
+        <field name="name">药店下拉列表</field>
+        <field name="action" eval="'ir.actions.act_window,%d' % ref('pharaccount.action_pharaccount_picklist_mobile')"/>
+        <field name="sequence">30</field>
+        <field name="device_type">mobile</field>
+        <field name="group_ids" eval="[(6, 0, [ref('pharaccount.group_config')])]"/>
+    </record>
+    <record id="menu_pharaccount_mobile_account_state" model="ir.ui.menu">
+        <field name="name">药店账户状态</field>
+        <field name="action" eval="'ir.actions.act_window,%d' % ref('pharaccount.action_pharaccount_account_state_mobile')"/>
+        <field name="sequence">40</field>
+        <field name="device_type">mobile</field>
+        <field name="group_ids" eval="[(6, 0, [ref('pharaccount.group_config')])]"/>
+    </record>
+</odoo>
