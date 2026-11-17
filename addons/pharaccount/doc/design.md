@@ -122,20 +122,31 @@ vrux 对应 `accounts`，只保留药店相关字段。
 
 | 字段 | 类型 | 说明 |
 |---|---|---|
-| name | Char，必填 | 名称 |
+| name | Char，必填，索引 | 名称 |
 | alias | Char | 别名 |
+| name_pinyin / pinyin | Char | 名称拼音（pinyin 无分隔符） |
+| alias_pinyin / pinyin_with_separator | Text | 别名拼音、带分隔符的拼音 |
 | address | Char | 地址 |
-| telephone / mobile | Char | 联系方式 |
-| email | Char | 邮箱 |
-| record_type_id | Many2one `pharaccount.record.type` | 记录类型，药店为 `pharma` |
-| pharmacy_level | Many2one `pharaccount.picklist.value`（控件 `pharaccount_picklist`） | 药店等级 |
+| geo_province / geo_city / geo_district | Char | 省、市、区 |
+| telephone / mobile / email | Char | 联系方式 |
+| description | Text | 备注 |
+| creation_time | Date | 创建日期，默认当天 |
+| last_called_on | Date | 最后拜访日期 |
+| sales | Float | 销售额 |
+| is_important / is_public | Boolean | 重要标记、公开标记 |
+| authorized_packages | Char | 授权的产品包 |
+| openid / openid_register_time | Char / Datetime | 微信 openid 及绑定时间 |
+| account_distributer_code | Char | 经销商编码 |
+| state_id | Many2one `pharaccount.account.state` | 状态（见下） |
+| record_type_id | Many2one `pharaccount.record.type` | 记录类型，药店为 `pharma` 下的子类型 |
+| pharmacy_level_id | Many2one `pharaccount.picklist.value`（控件 `pharaccount_picklist`） | 药店等级 |
 | superior_id | Many2one `pharaccount.account`（自关联） | 上级药店 |
 | headquarters_id | Many2one `pharaccount.account`（自关联） | 总部药店 |
 | hospital_id | Many2one `pharaccount.account`（自关联） | 所属医院（可选） |
 | agency_id / dealer_id | Many2one `pharaccount.account`（自关联） | 代理商、经销商 |
-| description | Text | 备注 |
-| last_called_on | Date | 最后拜访日期 |
 | active | Boolean | 启用/停用 |
+
+状态 `pharaccount.account.state` 是独立配置表：name（唯一）、label、sequence、color、is_default、is_locked、description。第一版只有配置权限（`group_config`）可以维护，普通用户只读。
 
 子表（员工、医院关联、库存、竞品）在下一步设计。
 

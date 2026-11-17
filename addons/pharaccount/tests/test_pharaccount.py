@@ -75,3 +75,22 @@ class TestPharaccount(TransactionCase):
         account = self.env['pharaccount.account'].create({'name': 'Open pharmacy', 'record_type_id': record_type.id})
         outsider = self._user([self.group_b], 'pharma_open_outsider')
         self.assertEqual(self.env['pharaccount.account'].with_user(outsider).search([('id', '=', account.id)]), account)
+
+    def test_account_extended_fields(self):
+        record_type = self.RecordType.create({'name': 'ext_t', 'label': 'Ext type'})
+        state = self.env['pharaccount.account.state'].create({'name': 'ext_state', 'label': 'Ext state'})
+        account = self.env['pharaccount.account'].create({
+            'name': 'Extended pharmacy',
+            'record_type_id': record_type.id,
+            'state_id': state.id,
+            'geo_province': 'Beijing',
+            'geo_city': 'Beijing',
+            'geo_district': 'Chaoyang',
+            'sales': 1200.5,
+            'is_important': True,
+        })
+        self.assertTrue(account.creation_time)
+        self.assertEqual(account.state_id, state)
+        self.assertEqual(account.geo_district, 'Chaoyang')
+        self.assertTrue(account.is_important)
+        self.assertFalse(account.is_public)

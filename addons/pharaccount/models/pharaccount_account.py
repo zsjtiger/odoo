@@ -14,13 +14,30 @@ class PharaccountAccount(models.Model):
 
     name = fields.Char(required=True, index=True)
     alias = fields.Char()
+    name_pinyin = fields.Char(string='Name pinyin', help='Pinyin of the name, used for search.')
+    pinyin = fields.Char(help='Pinyin of the name without separators.')
+    alias_pinyin = fields.Text(string='Alias pinyin')
+    pinyin_with_separator = fields.Text(string='Pinyin with separator')
     address = fields.Char()
+    geo_province = fields.Char(string='Province')
+    geo_city = fields.Char(string='City')
+    geo_district = fields.Char(string='District')
     telephone = fields.Char()
     mobile = fields.Char()
     email = fields.Char()
     description = fields.Text()
+    creation_time = fields.Date(string='Creation time', default=fields.Date.context_today)
     last_called_on = fields.Date(string='Last called on')
+    sales = fields.Float(string='Sales')
+    is_important = fields.Boolean(string='Important')
+    is_public = fields.Boolean(string='Public')
+    authorized_packages = fields.Char(string='Authorized packages')
+    openid = fields.Char(string='WeChat openid')
+    openid_register_time = fields.Datetime(string='WeChat binding time')
+    account_distributer_code = fields.Char(string='Distributor code')
     active = fields.Boolean(default=True)
+
+    state_id = fields.Many2one('pharaccount.account.state', string='State', index=True)
 
     record_type_id = fields.Many2one(
         'pharaccount.record.type', string='Record type', required=True, index=True,
