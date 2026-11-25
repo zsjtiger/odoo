@@ -1,4 +1,4 @@
-import { Component, onWillStart, onWillUpdateProps, proxy, t, useProps, xml } from "@odoo/owl";
+import { Component, onMounted, onWillStart, onWillUnmount, onWillUpdateProps, proxy, signal, t, useProps, xml } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/data/l10n/translation";
 import { deserializeDate, deserializeDateTime, serializeDate, serializeDateTime } from "@web/core/data/l10n/dates";
@@ -50,23 +50,45 @@ export class MobileCalendarView extends Component {
     texts = TEXTS;
     static template = xml`
         <t t-name="mobile_web.MobileCalendarView">
-            <div class="m_cal">
-                <div class="m_cal_head">
-                    <button type="button" class="m_cal_nav" data-dir="-1" t-att-aria-label="this.texts.prev" t-on-click="this.onNav">
-                        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M10 3.5 5.5 8 10 12.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    </button>
-                    <strong class="m_cal_title"><t t-esc="this.title"/></strong>
-                    <button type="button" class="m_cal_nav" data-dir="1" t-att-aria-label="this.texts.next" t-on-click="this.onNav">
-                        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    </button>
-                    <button type="button" class="m_cal_today" t-on-click="this.onToday"><t t-esc="this.texts.today"/></button>
-                </div>
-                <div class="m_cal_modes" role="group">
-                    <button type="button" t-attf-class="m_cal_mode {{ this.state.mode === 'month' ? 'is_active' : '' }}" data-mode="month" t-on-click="this.onMode"><t t-esc="this.texts.month"/></button>
-                    <button type="button" t-attf-class="m_cal_mode {{ this.state.mode === 'week' ? 'is_active' : '' }}" data-mode="week" t-on-click="this.onMode"><t t-esc="this.texts.week"/></button>
+            <div class="m_cal" t-ref="this.root">
+                <!-- sticky header: navigation, mode; in week mode also the week strip and the day header -->
+                <div class="m_cal_sticky">
+                    <div class="m_cal_head">
+                        <button type="button" class="m_cal_nav" data-dir="-1" t-att-aria-label="this.texts.prev" t-on-click="this.onNav">
+                            <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M10 3.5 5.5 8 10 12.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+                        <strong class="m_cal_title"><t t-esc="this.title"/></strong>
+                        <button type="button" class="m_cal_nav" data-dir="1" t-att-aria-label="this.texts.next" t-on-click="this.onNav">
+                            <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+                        <button type="button" class="m_cal_today" t-on-click="this.onToday"><t t-esc="this.texts.today"/></button>
+                    </div>
+                    <div class="m_cal_modes" role="group">
+                        <button type="button" t-attf-class="m_cal_mode {{ this.state.mode === 'month' ? 'is_active' : '' }}" data-mode="month" t-on-click="this.onMode"><t t-esc="this.texts.month"/></button>
+                        <button type="button" t-attf-class="m_cal_mode {{ this.state.mode === 'week' ? 'is_active' : '' }}" data-mode="week" t-on-click="this.onMode"><t t-esc="this.texts.week"/></button>
+                    </div>
+                    <t t-if="this.state.mode === 'week'">
+                        <div class="m_cal_grid m_cal_week_grid">
+                            <button type="button" t-foreach="this.weekCells" t-as="cell" t-key="cell.key"
+                                    t-attf-class="m_cal_day m_cal_week_day {{ cell.isToday ? 'is_today' : '' }} {{ cell.isSelected ? 'is_selected' : '' }}"
+                                    t-att-data-day="cell.key" t-on-click="this.onSelectDay">
+                                <span class="m_cal_day_name"><t t-esc="cell.weekday"/></span>
+                                <span class="m_cal_day_num"><t t-esc="cell.day"/></span>
+                                <span class="m_cal_dots">
+                                    <span t-foreach="cell.dots" t-as="dot" t-key="dot_index" class="m_cal_dot" t-att-style="'background:' + dot"/>
+                                </span>
+                            </button>
+                        </div>
+                        <div class="m_cal_agenda_head">
+                            <span class="m_cal_agenda_date"><t t-esc="this.selectedTitle"/></span>
+                            <button type="button" class="m_cal_add" t-att-aria-label="this.texts.newEvent" t-att-title="this.texts.newEvent" t-on-click="this.onAdd">
+                                <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M8 3v10M3 8h10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                            </button>
+                        </div>
+                    </t>
                 </div>
 
-                <!-- month: month grid -->
+                <!-- month: month grid, then the day header -->
                 <t t-if="this.state.mode === 'month'">
                     <div class="m_cal_weekdays">
                         <span t-foreach="this.weekdays" t-as="weekday" t-key="weekday_index"><t t-esc="weekday"/></span>
@@ -81,32 +103,12 @@ export class MobileCalendarView extends Component {
                             </span>
                         </button>
                     </div>
-                </t>
-
-                <!-- week: seven days -->
-                <t t-else="">
-                    <div class="m_cal_grid m_cal_week_grid">
-                        <button type="button" t-foreach="this.weekCells" t-as="cell" t-key="cell.key"
-                                t-attf-class="m_cal_day m_cal_week_day {{ cell.isToday ? 'is_today' : '' }} {{ cell.isSelected ? 'is_selected' : '' }}"
-                                t-att-data-day="cell.key" t-on-click="this.onSelectDay">
-                            <span class="m_cal_day_name"><t t-esc="cell.weekday"/></span>
-                            <span class="m_cal_day_num"><t t-esc="cell.day"/></span>
-                            <span class="m_cal_dots">
-                                <span t-foreach="cell.dots" t-as="dot" t-key="dot_index" class="m_cal_dot" t-att-style="'background:' + dot"/>
-                            </span>
-                        </button>
-                    </div>
-                </t>
-
-                <div class="m_cal_agenda_head">
-                    <span class="m_cal_agenda_date"><t t-esc="this.selectedTitle"/></span>
-                    <button type="button" class="m_cal_add" t-att-aria-label="this.texts.newEvent" t-att-title="this.texts.newEvent" t-on-click="this.onAdd">
-                        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M8 3v10M3 8h10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                    </button>
-                </div>
-
-                <!-- month: events of the selected day -->
-                <t t-if="this.state.mode === 'month'">
+                    <div class="m_cal_agenda_head">
+                            <span class="m_cal_agenda_date"><t t-esc="this.selectedTitle"/></span>
+                            <button type="button" class="m_cal_add" t-att-aria-label="this.texts.newEvent" t-att-title="this.texts.newEvent" t-on-click="this.onAdd">
+                                <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M8 3v10M3 8h10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                            </button>
+                        </div>
                     <ul class="m_cal_agenda">
                         <li t-foreach="this.agenda" t-as="event" t-key="event.id + ':' + this.selectedKey">
                             <button type="button" class="m_cal_event" t-att-data-id="event.id" t-on-click="this.onRowClick">
@@ -180,6 +182,20 @@ export class MobileCalendarView extends Component {
         this.dateOnly = this.props.fields[this.dateStart]?.type === "date";
         this.fieldNames = [...new Set([this.dateStart, this.dateStop, this.allDayField, this.colorField, this.titleField, "display_name"].filter(Boolean))];
         this.weekdays = luxon.Info.weekdays("short");
+        this.root = signal.ref();
+        // the controller keeps its search bar sticky at the top: the calendar header sticks below it
+        let observer = null;
+        onMounted(() => {
+            const bar = this.root()?.closest(".m_act_window_controller")?.querySelector(".m_search_bar");
+            if (bar && typeof ResizeObserver !== "undefined") {
+                observer = new ResizeObserver(() => this.setStickyTop(bar));
+                observer.observe(bar);
+            }
+            if (bar) {
+                this.setStickyTop(bar);
+            }
+        });
+        onWillUnmount(() => observer?.disconnect());
         this.loadedRange = null;
         onWillStart(() => this.load(this.props));
         // reload only when the search domain changes; the period is changed by the view itself
@@ -188,6 +204,10 @@ export class MobileCalendarView extends Component {
                 return this.load(nextProps, true);
             }
         });
+    }
+
+    setStickyTop(bar) {
+        this.root()?.style.setProperty("--m_cal_sticky_top", `${bar.offsetHeight}px`);
     }
 
     /** 当前显示范围: 月视图为月历格子覆盖的范围, 周视图为一周 */

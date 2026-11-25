@@ -233,3 +233,14 @@
         padding: 4px 8px;
     }
 }
+
+// 粘性头部: 滚动时停在内容区顶部. 负边距让它占满整行, 底色盖住滚动的内容
+.m_cal_sticky {
+    position: sticky;
+    top: var(--m_cal_sticky_top, 0);
+    z-index: 3;
+    margin: 0 -12px;
+    padding: 8px 12px 0;
+    background: $surface;
+    border-bottom: 1px solid $line;
+}
