@@ -113,6 +113,7 @@ class MobileDemoItem(models.Model):
     # --- dates ---
     date = fields.Date(string="Date", default=fields.Date.context_today)
     visit_datetime = fields.Datetime(string="Visit at")
+    visit_end = fields.Datetime(string="Visit end")
 
     # --- relations ---
     partner_id = fields.Many2one('res.partner', string="Partner")

@@ -118,6 +118,7 @@
         <field name="price">1200</field>
         <field name="date">2024-11-28</field>
         <field name="visit_datetime">2026-11-25 02:30:00</field>
+        <field name="visit_end">2026-11-25 03:30:00</field>
         <field name="email">alpha@example.com</field>
         <field name="phone">+86 10 1234 5678</field>
         <field name="website">https://www.odoo.com</field>
@@ -156,6 +157,7 @@
         <field name="color">#e5484d</field>
         <field name="partner_id" ref="mobile_demo_partner_b"/>
         <field name="visit_datetime" eval="'2026-11-25 01:00:00'"/>
+        <field name="visit_end" eval="'2026-11-25 02:00:00'"/>
         <field name="user_ids" eval="[(6, 0, [ref('base.user_admin')])]"/>
         <field name="ref_id" eval="'res.users,%d' % ref('base.user_admin')"/>
         <field name="discount">0.05</field>
@@ -167,6 +169,7 @@
     <record id="mobile_demo_item_3" model="mobile.demo.item">
         <field name="name">Gamma internal review</field>
         <field name="visit_datetime" eval="'2026-11-25 06:30:00'"/>
+        <field name="visit_end" eval="'2026-11-25 07:30:00'"/>
         <field name="sequence">30</field>
         <field name="state">draft</field>
         <field name="priority">0</field>

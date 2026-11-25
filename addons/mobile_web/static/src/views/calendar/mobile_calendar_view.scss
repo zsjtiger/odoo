@@ -193,44 +193,112 @@
     font-size: 12px;
 }
 
-// 周视图时间线
+// 时间轴 (日视图与周视图): 全天事件在上, 下面是 24 小时的网格, 事件块按时长定位
 .m_cal_timeline {
     margin-top: 4px;
 }
 
-.m_cal_hour {
+.m_cal_allday {
     display: flex;
     gap: 8px;
-    min-height: 40px;
-    border-top: 1px solid $line;
-    &.is_allday {
-        min-height: 0;
-        padding: 6px 0;
-        border-top: none;
-        border-bottom: 1px solid $line;
-    }
+    padding: 6px 0;
+    border-bottom: 1px solid $line;
+}
+
+.m_cal_allday_events {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
 }
 
 .m_cal_hour_label {
-    flex: 0 0 48px;
-    padding-top: 6px;
     color: $muted;
     font-size: 12px;
 }
 
-.m_cal_hour_events {
+.m_cal_time_grid {
+    position: relative;
+    margin-left: 52px;
+}
+
+.m_cal_hour_mark {
+    position: absolute;
+    left: -52px;
+    right: 0;
+    height: 0;
+    border-top: 1px solid $line;
+    .m_cal_hour_label {
+        position: absolute;
+        top: -8px;
+        left: 0;
+        width: 44px;
+        text-align: right;
+        padding-right: 4px;
+        background: $surface;
+    }
+}
+
+// 事件块: 左边的色条表示颜色, 同一时段的事件按列并排
+.m_cal_block {
+    position: absolute;
+    box-sizing: border-box;
     display: flex;
-    flex: 1;
     flex-direction: column;
     min-width: 0;
-    gap: 4px;
-    padding: 2px 0;
-    .m_cal_event {
-        border-bottom: none;
-        border-radius: 6px;
-        background: $theme-bg-color;
-        min-height: 36px;
-        padding: 4px 8px;
+    margin: 0 2px;
+    padding: 3px 6px 6px 8px;
+    overflow: hidden;
+    border: none;
+    border-left: 4px solid var(--m_cal_color, $theme);
+    border-radius: 6px;
+    background: $theme-bg-color;
+    color: $text;
+    font-size: 13px;
+    text-align: left;
+    &.is_draggable {
+        cursor: grab;
+    }
+    &.is_dragging {
+        z-index: 4;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+        opacity: 0.92;
+        touch-action: none;
+    }
+}
+
+.m_cal_block_time {
+    color: $muted;
+    font-size: 11px;
+    line-height: 1.2;
+}
+
+.m_cal_block_title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 600;
+    line-height: 1.25;
+}
+
+// 底部的把手: 拖动它改变结束时间
+.m_cal_resize {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 12px;
+    cursor: ns-resize;
+    touch-action: none;
+    &::after {
+        content: "";
+        display: block;
+        width: 24px;
+        height: 3px;
+        margin: 4px auto 0;
+        border-radius: 2px;
+        background: rgba(0, 0, 0, 0.25);
     }
 }
 

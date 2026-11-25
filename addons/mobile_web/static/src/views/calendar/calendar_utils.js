@@ -134,3 +134,74 @@ export function hourRows(events) {
     }
     return rows;
 }
+
+/** 时间轴: 一小时的高度 (px) 与拖拽吸附的分钟数 */
+export const HOUR_HEIGHT = 56;
+export const SNAP_MINUTES = 15;
+/** 时长最短的块高度 (px), 很短的事件也能点到 */
+export const MIN_BLOCK_HEIGHT = 26;
+
+/**
+ * 把一天的非全天事件排成时间轴上的块. 跨天事件只取当天的部分.
+ * 同一时段重叠的事件分成若干列, 每列等宽并排 (与桌面端的日历相同).
+ *
+ * @param {{ id: number, start: DateTime, stop: DateTime, allDay: boolean }[]} events
+ * @param {DateTime} day 当天 (任意时刻)
+ * @returns {{ event: object, top: number, height: number, left: number, width: number }[]}
+ */
+export function layoutTimedEvents(events, day) {
+    const dayStart = day.startOf("day");
+    const dayEnd = dayStart.plus({ days: 1 });
+    const items = events
+        .filter((event) => !event.allDay && event.start < dayEnd && (event.stop ?? event.start) >= dayStart)
+        .map((event) => {
+            const start = event.start < dayStart ? dayStart : event.start;
+            const stopRaw = event.stop && event.stop > event.start ? event.stop : start;
+            const stop = stopRaw > dayEnd ? dayEnd : stopRaw;
+            const startMin = start.diff(dayStart, "minutes").minutes;
+            const endMin = Math.max(stop.diff(dayStart, "minutes").minutes, startMin + SNAP_MINUTES);
+            return { event, startMin, endMin };
+        })
+        .sort((a, b) => a.startMin - b.startMin || b.endMin - a.endMin);
+
+    const blocks = [];
+    let cluster = [];
+    let clusterEnd = -Infinity;
+    const flush = () => {
+        const columns = cluster.reduce((max, item) => Math.max(max, item.col + 1), 0);
+        for (const item of cluster) {
+            blocks.push({
+                event: item.event,
+                top: (item.startMin / 60) * HOUR_HEIGHT,
+                height: Math.max(((item.endMin - item.startMin) / 60) * HOUR_HEIGHT, MIN_BLOCK_HEIGHT),
+                left: (item.col / columns) * 100,
+                width: (1 / columns) * 100,
+            });
+        }
+        cluster = [];
+    };
+    for (const item of items) {
+        if (item.startMin >= clusterEnd) {
+            flush();
+            clusterEnd = -Infinity;
+        }
+        // first column whose last event has ended before this one starts
+        const columnEnds = [];
+        for (const placed of cluster) {
+            columnEnds[placed.col] = Math.max(columnEnds[placed.col] ?? -Infinity, placed.endMin);
+        }
+        let col = columnEnds.findIndex((end) => end <= item.startMin);
+        if (col === -1) {
+            col = columnEnds.length;
+        }
+        cluster.push({ ...item, col });
+        clusterEnd = Math.max(clusterEnd, item.endMin);
+    }
+    flush();
+    return blocks;
+}
+
+/** 把块的位置 (分钟) 吸附到 SNAP_MINUTES */
+export function snapMinutes(minutes) {
+    return Math.round(minutes / SNAP_MINUTES) * SNAP_MINUTES;
+}

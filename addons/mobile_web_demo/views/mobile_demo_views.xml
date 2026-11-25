@@ -229,12 +229,12 @@
     </record>
 
     <!-- ============================ demo item: calendar ============================ -->
-    <!-- 移动端日历: date_start 为日期时间; 第一个非日期字段 (name) 作为事件标题 -->
+    <!-- 移动端日历: date_start / date_stop 为日期时间 (拖动改时间与时长); 第一个非日期字段 (name) 作为标题 -->
     <record id="mobile_demo_item_calendar" model="ir.ui.view">
         <field name="name">mobile.demo.item.calendar</field>
         <field name="model">mobile.demo.item</field>
         <field name="arch" type="xml">
-            <calendar date_start="visit_datetime">
+            <calendar date_start="visit_datetime" date_stop="visit_end">
                 <field name="name"/>
                 <field name="partner_id"/>
             </calendar>

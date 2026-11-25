@@ -11,7 +11,11 @@ import {
     eventColor,
     gridRange,
     groupEventsByDay,
-    hourRows,
+    HOUR_HEIGHT,
+    layoutTimedEvents,
+    MIN_BLOCK_HEIGHT,
+    SNAP_MINUTES,
+    snapMinutes,
     weekRange,
 } from "@mobile_web/views/calendar/calendar_utils";
 
@@ -20,17 +24,23 @@ const TEXTS = {
     prev: _t("Previous"),
     next: _t("Next"),
     today: _t("Today"),
-    month: _t("Month"),
+    day: _t("Day"),
     week: _t("Week"),
+    month: _t("Month"),
     newEvent: _t("New event"),
     allDay: _t("All day"),
     untitled: _t("Untitled"),
     noEvents: _t("No events on this day"),
     loadFailed: _t("Failed to load, please try again"),
+    saveFailed: _t("Could not move the event"),
 };
 
 /** 一天的第一个事件默认开始的时刻 (新建事件时使用) */
 const DEFAULT_START_HOUR = 9;
+/** 长按多久后开始拖动事件 (毫秒); 在此之前移动手指视为滚动 */
+const LONG_PRESS_MS = 400;
+/** 长按前允许的最大移动距离 (px) */
+const SCROLL_TOLERANCE = 8;
 
 /** 字段值 (many2one 为 [id, name]) 转为显示文字 */
 function displayValue(value) {
@@ -40,18 +50,30 @@ function displayValue(value) {
     return value === false || value === undefined || value === null ? "" : String(value);
 }
 
+const HOUR_LABELS = Array.from({ length: 24 }, (_, hour) => ({
+    hour,
+    label: `${String(hour).padStart(2, "0")}:00`,
+    top: hour * HOUR_HEIGHT,
+}));
+
 /**
- * 移动端日历视图: 月视图 (月历格子 + 选中日期的事件列表) 与周视图 (7 天 + 选中日期的小时时间线).
+ * 移动端日历视图: 日视图 / 周视图 / 月视图.
+ *
+ * - 月视图: 月历格子 + 选中日期的事件列表
+ * - 周视图: 7 天 + 选中日期的时间轴
+ * - 日视图: 选中日期的时间轴
+ *
+ * 时间轴上的事件按时长定位, 同一时段重叠的事件并排显示. 长按事件后可以上下拖动改时间,
+ * 拖动底部的把手可以改时长 (需要 date_stop 字段). 全天事件和纯日期的事件不能拖动.
  *
  * arch 属性: date_start (必须), date_stop, all_day, color; 第一个非日期字段作为事件标题, 没有时使用显示名称.
- * 跨天事件出现在它覆盖的每一天. 只显示开始日期落在当前显示范围内的事件.
  */
 export class MobileCalendarView extends Component {
     texts = TEXTS;
     static template = xml`
         <t t-name="mobile_web.MobileCalendarView">
             <div class="m_cal" t-ref="this.root">
-                <!-- sticky header: navigation, mode; in week mode also the week strip and the day header -->
+                <!-- sticky header: navigation and mode; the week strip and the day header of the selected day -->
                 <div class="m_cal_sticky">
                     <div class="m_cal_head">
                         <button type="button" class="m_cal_nav" data-dir="-1" t-att-aria-label="this.texts.prev" t-on-click="this.onNav">
@@ -64,8 +86,9 @@ export class MobileCalendarView extends Component {
                         <button type="button" class="m_cal_today" t-on-click="this.onToday"><t t-esc="this.texts.today"/></button>
                     </div>
                     <div class="m_cal_modes" role="group">
-                        <button type="button" t-attf-class="m_cal_mode {{ this.state.mode === 'month' ? 'is_active' : '' }}" data-mode="month" t-on-click="this.onMode"><t t-esc="this.texts.month"/></button>
+                        <button type="button" t-attf-class="m_cal_mode {{ this.state.mode === 'day' ? 'is_active' : '' }}" data-mode="day" t-on-click="this.onMode"><t t-esc="this.texts.day"/></button>
                         <button type="button" t-attf-class="m_cal_mode {{ this.state.mode === 'week' ? 'is_active' : '' }}" data-mode="week" t-on-click="this.onMode"><t t-esc="this.texts.week"/></button>
+                        <button type="button" t-attf-class="m_cal_mode {{ this.state.mode === 'month' ? 'is_active' : '' }}" data-mode="month" t-on-click="this.onMode"><t t-esc="this.texts.month"/></button>
                     </div>
                     <t t-if="this.state.mode === 'week'">
                         <div class="m_cal_grid m_cal_week_grid">
@@ -79,16 +102,16 @@ export class MobileCalendarView extends Component {
                                 </span>
                             </button>
                         </div>
-                        <div class="m_cal_agenda_head">
-                            <span class="m_cal_agenda_date"><t t-esc="this.selectedTitle"/></span>
-                            <button type="button" class="m_cal_add" t-att-aria-label="this.texts.newEvent" t-att-title="this.texts.newEvent" t-on-click="this.onAdd">
-                                <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M8 3v10M3 8h10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                            </button>
-                        </div>
                     </t>
+                    <div t-if="this.state.mode !== 'month'" class="m_cal_agenda_head">
+                        <span class="m_cal_agenda_date"><t t-esc="this.selectedTitle"/></span>
+                        <button type="button" class="m_cal_add" t-att-aria-label="this.texts.newEvent" t-att-title="this.texts.newEvent" t-on-click="this.onAdd">
+                            <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M8 3v10M3 8h10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                        </button>
+                    </div>
                 </div>
 
-                <!-- month: month grid, then the day header -->
+                <!-- month: month grid, the day header and the events of the selected day -->
                 <t t-if="this.state.mode === 'month'">
                     <div class="m_cal_weekdays">
                         <span t-foreach="this.weekdays" t-as="weekday" t-key="weekday_index"><t t-esc="weekday"/></span>
@@ -104,11 +127,11 @@ export class MobileCalendarView extends Component {
                         </button>
                     </div>
                     <div class="m_cal_agenda_head">
-                            <span class="m_cal_agenda_date"><t t-esc="this.selectedTitle"/></span>
-                            <button type="button" class="m_cal_add" t-att-aria-label="this.texts.newEvent" t-att-title="this.texts.newEvent" t-on-click="this.onAdd">
-                                <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M8 3v10M3 8h10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                            </button>
-                        </div>
+                        <span class="m_cal_agenda_date"><t t-esc="this.selectedTitle"/></span>
+                        <button type="button" class="m_cal_add" t-att-aria-label="this.texts.newEvent" t-att-title="this.texts.newEvent" t-on-click="this.onAdd">
+                            <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M8 3v10M3 8h10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                        </button>
+                    </div>
                     <ul class="m_cal_agenda">
                         <li t-foreach="this.agenda" t-as="event" t-key="event.id + ':' + this.selectedKey">
                             <button type="button" class="m_cal_event" t-att-data-id="event.id" t-on-click="this.onRowClick">
@@ -121,25 +144,29 @@ export class MobileCalendarView extends Component {
                     <p t-if="!this.agenda.length and !this.state.loading and !this.state.error" class="m_empty"><t t-esc="this.texts.noEvents"/></p>
                 </t>
 
-                <!-- week: timeline of the selected day -->
+                <!-- day and week: timeline of the selected day -->
                 <t t-else="">
                     <div class="m_cal_timeline">
-                        <div t-if="this.allDayEvents.length" class="m_cal_hour is_allday">
+                        <div t-if="this.allDayEvents.length" class="m_cal_allday">
                             <span class="m_cal_hour_label"><t t-esc="this.texts.allDay"/></span>
-                            <div class="m_cal_hour_events">
+                            <div class="m_cal_allday_events">
                                 <button type="button" t-foreach="this.allDayEvents" t-as="event" t-key="event.id" class="m_cal_event" t-att-data-id="event.id" t-on-click="this.onRowClick">
                                     <span class="m_cal_event_bar" t-att-style="'background:' + event.color"/>
                                     <span class="m_cal_event_title"><t t-esc="event.title"/></span>
                                 </button>
                             </div>
                         </div>
-                        <div t-foreach="this.hours" t-as="row" t-key="row.hour" class="m_cal_hour">
-                            <span class="m_cal_hour_label"><t t-esc="row.label"/></span>
-                            <div class="m_cal_hour_events">
-                                <button type="button" t-foreach="row.events" t-as="event" t-key="event.id" class="m_cal_event" t-att-data-id="event.id" t-on-click="this.onRowClick">
-                                    <span class="m_cal_event_bar" t-att-style="'background:' + event.color"/>
-                                    <span class="m_cal_event_title"><t t-esc="event.title"/></span>
-                                </button>
+                        <div class="m_cal_time_grid" t-att-style="'height:' + this.gridHeight + 'px'">
+                            <div t-foreach="this.hourLabels" t-as="row" t-key="row.hour" class="m_cal_hour_mark" t-att-style="'top:' + row.top + 'px'">
+                                <span class="m_cal_hour_label"><t t-esc="row.label"/></span>
+                            </div>
+                            <div t-foreach="this.blocks" t-as="block" t-key="block.event.id"
+                                 t-attf-class="m_cal_block {{ this.state.drag and this.state.drag.id === block.event.id and this.state.drag.active ? 'is_dragging' : '' }} {{ this.canDrag ? 'is_draggable' : '' }}"
+                                 t-att-style="block.style" t-att-data-id="block.event.id"
+                                 t-on-click="this.onBlockClick" t-on-pointerdown="this.onBlockPointerDown">
+                                <span class="m_cal_block_time"><t t-esc="block.event.timeLabel"/></span>
+                                <span class="m_cal_block_title"><t t-esc="block.event.title"/></span>
+                                <span t-if="this.canResize" class="m_cal_resize" t-att-data-id="block.event.id" t-on-pointerdown="this.onResizePointerDown"/>
                             </div>
                         </div>
                     </div>
@@ -162,12 +189,16 @@ export class MobileCalendarView extends Component {
     notification = useService("notification");
     state = proxy({
         mode: "month",
-        // the selected day decides the shown month or week
+        // the selected day decides the shown day, week or month
         selected: luxon.DateTime.local().startOf("day"),
         records: [],
         loading: false,
         error: false,
+        // the event being moved or resized: { id, mode: "move" | "resize", delta (minutes), active, moved }
+        drag: null,
     });
+    hourLabels = HOUR_LABELS;
+    gridHeight = 24 * HOUR_HEIGHT;
 
     setup() {
         const node = parseArch(this.props.arch);
@@ -180,9 +211,17 @@ export class MobileCalendarView extends Component {
         );
         this.titleField = titleNode ? titleNode.attrs.name : null;
         this.dateOnly = this.props.fields[this.dateStart]?.type === "date";
+        // timed events on a datetime field can be moved, and resized when there is a stop field
+        this.canDrag = !this.dateOnly;
+        this.canResize = this.canDrag && Boolean(this.dateStop);
         this.fieldNames = [...new Set([this.dateStart, this.dateStop, this.allDayField, this.colorField, this.titleField, "display_name"].filter(Boolean))];
         this.weekdays = luxon.Info.weekdays("short");
+        this.loadedRange = null;
         this.root = signal.ref();
+        this.justDragged = false;
+        this.timer = null;
+        this.dragContext = null;
+
         // the controller keeps its search bar sticky at the top: the calendar header sticks below it
         let observer = null;
         onMounted(() => {
@@ -195,8 +234,10 @@ export class MobileCalendarView extends Component {
                 this.setStickyTop(bar);
             }
         });
-        onWillUnmount(() => observer?.disconnect());
-        this.loadedRange = null;
+        onWillUnmount(() => {
+            observer?.disconnect();
+            this.endDrag();
+        });
         onWillStart(() => this.load(this.props));
         // reload only when the search domain changes; the period is changed by the view itself
         onWillUpdateProps((nextProps) => {
@@ -210,9 +251,16 @@ export class MobileCalendarView extends Component {
         this.root()?.style.setProperty("--m_cal_sticky_top", `${bar.offsetHeight}px`);
     }
 
-    /** 当前显示范围: 月视图为月历格子覆盖的范围, 周视图为一周 */
+    /** 当前显示范围: 日视图为选中的一天, 周视图为一周, 月视图为月历格子覆盖的范围 */
     get range() {
-        return this.state.mode === "week" ? weekRange(this.state.selected) : gridRange(this.state.selected.startOf("month"));
+        const selected = this.state.selected;
+        if (this.state.mode === "day") {
+            return { start: selected.startOf("day"), end: selected.startOf("day").plus({ days: 1 }) };
+        }
+        if (this.state.mode === "week") {
+            return weekRange(selected);
+        }
+        return gridRange(selected.startOf("month"));
     }
 
     /** 查询条件: 显示范围内开始的事件 */
@@ -279,9 +327,12 @@ export class MobileCalendarView extends Component {
         };
     }
 
+    get events() {
+        return this.state.records.map((record) => this.toEvent(record)).filter(Boolean);
+    }
+
     get byDay() {
-        const events = this.state.records.map((record) => this.toEvent(record)).filter(Boolean);
-        return groupEventsByDay(events);
+        return groupEventsByDay(this.events);
     }
 
     get selectedKey() {
@@ -292,17 +343,36 @@ export class MobileCalendarView extends Component {
         return this.byDay.get(this.selectedKey) || [];
     }
 
-    /** 周视图: 选中日期的全天事件 */
+    /** 时间轴: 选中日期的全天事件 */
     get allDayEvents() {
         return this.agenda.filter((event) => event.allDay);
     }
 
-    /** 周视图: 选中日期的 24 小时时间线 */
-    get hours() {
-        return hourRows(this.agenda);
+    /**
+     * 时间轴: 选中日期的定时事件, 带位置样式. 拖动中的事件使用预览的位置
+     */
+    get blocks() {
+        const drag = this.state.drag;
+        return layoutTimedEvents(this.agenda, this.state.selected).map((block) => {
+            let { top, height } = block;
+            if (drag && drag.active && drag.id === block.event.id) {
+                if (drag.mode === "move") {
+                    top += (drag.delta / 60) * HOUR_HEIGHT;
+                } else {
+                    height = Math.max(height + (drag.delta / 60) * HOUR_HEIGHT, MIN_BLOCK_HEIGHT);
+                }
+            }
+            return {
+                ...block,
+                style: `top:${top}px;height:${height}px;left:${block.left}%;width:${block.width}%;--m_cal_color:${block.event.color}`,
+            };
+        });
     }
 
     get title() {
+        if (this.state.mode === "day") {
+            return this.state.selected.toFormat("ccc, LLL d, yyyy");
+        }
         if (this.state.mode === "week") {
             const { start, end } = weekRange(this.state.selected);
             const last = end.minus({ days: 1 });
@@ -338,7 +408,7 @@ export class MobileCalendarView extends Component {
         });
     }
 
-    /** 切换到另一天, 必要时切换月份 (月视图) 或周 (周视图) 并重新查询 */
+    /** 切换到另一天, 并重新查询 (范围变化时) */
     selectDay(day) {
         this.state.selected = day.startOf("day");
         return this.load(this.props);
@@ -347,6 +417,9 @@ export class MobileCalendarView extends Component {
     onNav(ev) {
         const direction = Number(ev.currentTarget.dataset.dir);
         const selected = this.state.selected;
+        if (this.state.mode === "day") {
+            return this.selectDay(selected.plus({ days: direction }));
+        }
         if (this.state.mode === "week") {
             return this.selectDay(selected.plus({ weeks: direction }));
         }
@@ -370,6 +443,123 @@ export class MobileCalendarView extends Component {
 
     onRowClick(ev) {
         this.props.onSelect(Number(ev.currentTarget.dataset.id));
+    }
+
+    onBlockClick(ev) {
+        // a drag ends with a click on the same block: it must not open the record
+        if (this.justDragged) {
+            this.justDragged = false;
+            return;
+        }
+        this.props.onSelect(Number(ev.currentTarget.dataset.id));
+    }
+
+    /* ---- moving and resizing timed events ---- */
+
+    /**
+     * 按下事件块: 长按后开始拖动; 在长按前上下滑动则视为滚动时间轴
+     */
+    onBlockPointerDown(ev) {
+        if (!this.canDrag || ev.button > 0) {
+            return;
+        }
+        this.beginDrag(Number(ev.currentTarget.dataset.id), "move", ev, false);
+    }
+
+    /** 按下底部把手: 立即开始调整时长 */
+    onResizePointerDown(ev) {
+        if (!this.canResize || ev.button > 0) {
+            return;
+        }
+        ev.stopPropagation();
+        this.beginDrag(Number(ev.currentTarget.dataset.id), "resize", ev, true);
+    }
+
+    beginDrag(id, mode, ev, immediate) {
+        this.endDrag();
+        this.dragContext = { startX: ev.clientX, startY: ev.clientY, id, mode };
+        this.state.drag = { id, mode, delta: 0, active: immediate, moved: false };
+        window.addEventListener("pointermove", this.onPointerMove);
+        window.addEventListener("pointerup", this.onPointerUp);
+        window.addEventListener("pointercancel", this.onPointerUp);
+        if (!immediate) {
+            this.timer = setTimeout(() => {
+                this.timer = null;
+                if (this.state.drag) {
+                    this.state.drag.active = true;
+                }
+            }, LONG_PRESS_MS);
+        }
+    }
+
+    onPointerMove = (ev) => {
+        const drag = this.state.drag;
+        const context = this.dragContext;
+        if (!drag || !context) {
+            return;
+        }
+        const dx = ev.clientX - context.startX;
+        const dy = ev.clientY - context.startY;
+        if (!drag.active) {
+            // the finger moved before the long press: this is a scroll, not a drag
+            if (Math.abs(dx) > SCROLL_TOLERANCE || Math.abs(dy) > SCROLL_TOLERANCE) {
+                this.endDrag();
+            }
+            return;
+        }
+        ev.preventDefault();
+        drag.moved = true;
+        drag.delta = snapMinutes((dy / HOUR_HEIGHT) * 60);
+    };
+
+    onPointerUp = () => {
+        const drag = this.state.drag;
+        this.endDrag();
+        if (drag && drag.active && drag.moved && drag.delta !== 0) {
+            this.justDragged = true;
+            return this.commitDrag(drag);
+        }
+    };
+
+    /** 结束拖动: 清理计时器和监听, 不保存 */
+    endDrag() {
+        if (this.timer) {
+            clearTimeout(this.timer);
+            this.timer = null;
+        }
+        window.removeEventListener("pointermove", this.onPointerMove);
+        window.removeEventListener("pointerup", this.onPointerUp);
+        window.removeEventListener("pointercancel", this.onPointerUp);
+        this.dragContext = null;
+        this.state.drag = null;
+    }
+
+    /** 保存新的时间: 开始时间 (移动) 与结束时间 (移动或调整时长) */
+    async commitDrag(drag) {
+        const record = this.state.records.find((r) => r.id === drag.id);
+        const event = record && this.toEvent(record);
+        if (!event) {
+            return;
+        }
+        const minutes = drag.delta;
+        const values = {};
+        if (drag.mode === "move") {
+            values[this.dateStart] = serializeDateTime(event.start.plus({ minutes }));
+            if (this.dateStop) {
+                values[this.dateStop] = serializeDateTime(event.stop.plus({ minutes }));
+            }
+        } else {
+            const stop = event.stop.plus({ minutes });
+            // the event keeps at least one snap step
+            const minStop = event.start.plus({ minutes: SNAP_MINUTES });
+            values[this.dateStop] = serializeDateTime(stop < minStop ? minStop : stop);
+        }
+        try {
+            await this.orm.write(this.props.resModel, [drag.id], values, { context: this.props.context || {} });
+        } catch (error) {
+            notify(this.notification, error?.data?.message || error?.message || this.texts.saveFailed, { type: "danger" });
+        }
+        await this.load(this.props, true);
     }
 
     /** 新建事件: 开始时间为选中的日期, 默认值通过 context 的 default_ 键传给表单 */
