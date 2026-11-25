@@ -1,0 +1,65 @@
+// 移动端主题配置: 颜色与样式令牌的取值.
+// 本文件在 mobile_web 的样式之前加载, 这里的赋值覆盖 mobile_web/static/src/styles/00_tokens.scss 中的默认值.
+// 修改这里的值即可换肤; 不要在这里写 !default. 别名 (如 $theme-color) 由 mobile_web 根据令牌自动生成, 不需要修改.
+
+// ---- brand ----
+$theme: #017e84;  // primary: active elements, links, icons
+$theme-btn: #03a09c;  // buttons and accents
+$theme-bg: #f4fbfb;  // light tint behind content
+$theme-soft: #e6f4f4;  // tags and soft badges
+$theme-tint: #f0fafa;  // hover and alternate rows
+$theme-gradient: #effaff;  // gradient start and selected background
+$theme-accent: #0f9b8e;  // list accent
+$view-color: #377f7f;  // view-specific accent
+$info-bg: #2dc7c3;  // information badge
+// ---- text ----
+$title-text: #101010;
+$text: #333;
+$text-secondary: #666;
+$muted: #999;
+$text-hint: #aaa;
+$text-disabled: #c4c4c4;
+$placeholder: #bebebe;
+// ---- surfaces ----
+$surface: #fff;  // cards, sheets, inputs
+$page: #f5f5f5;  // page background
+$surface-soft: #f2f2f2;
+$surface-gray: #f4f5f7;
+$surface-info: #e9eef2;
+$btn-bg: #eee;
+// ---- lines and borders ----
+$line: #e8e5e5;  // default border
+$line-strong: #d9d9d9;
+$line-dark: #d0d0d0;
+$border-top: #efefef;
+$border-control: #c0c4cc;
+$control: #b0b4bb;  // gray controls
+$undertint: #ccc;
+$box-shadow: #f0f0f0;
+$switch-off: #e0e0e0;
+// ---- icons ----
+$icon: #9a9a9a;
+$icon-gray: #a0a09e;
+// ---- status ----
+$danger: #d1101f;
+$danger-strong: #e5484d;
+$danger-ios: #ff3b30;
+$success: #2da44e;
+$info: #007aff;
+$info-soft: #8ec8ff;
+$warn: #ffc000;
+$warn-strong: #f0a030;
+$warn-dark: #d29922;
+$hint: #e99c42;
+$select: #ffd966;
+$accent-coral: #f4a08a;
+$black: #000;
+// ---- style (not colors) ----
+$font-family: inherit;
+$radius: 8px;  // inputs, pickers, cards
+$radius-sm: 6px;  // small controls
+// ---- palettes used by the scripts (exported as CSS variables below) ----
+$calendar-palette: #017e84, #e5484d, #f5a524, #46a758, #3e63dd, #8e4ec6, #d6409f, #64748b;
+$home-palette: #03a09c, #f0a030, #5a7bd8, #e0624f, #8a6fd1, #3aa86b;
+// ---- names used by older style files: kept as aliases ----
+$border-bottom-color: #eee;

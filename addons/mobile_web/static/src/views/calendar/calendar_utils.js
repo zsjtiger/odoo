@@ -9,7 +9,12 @@ export const GRID_WEEKS = 6;
 /** 一个事件最多展开到的天数, 防止异常数据生成过多格子 */
 export const MAX_SPAN_DAYS = 42;
 
-/** 事件颜色的调色板 (字段为整数时按序号取色) */
+import { paletteColor } from "@mobile_web/core/theme";
+
+/**
+ * 事件颜色的调色板 (字段为整数时按序号取色). 默认值与样式令牌中的 $calendar-palette 相同;
+ * 实际颜色由主题提供 (--m-calendar-<n>)
+ */
 export const PALETTE = ["#017e84", "#e5484d", "#f5a524", "#46a758", "#3e63dd", "#8e4ec6", "#d6409f", "#64748b"];
 
 /**
@@ -80,9 +85,9 @@ export function eventColor(value) {
         return value;
     }
     if (typeof value === "number" && value >= 0) {
-        return PALETTE[value % PALETTE.length];
+        return paletteColor("calendar", PALETTE, value);
     }
-    return PALETTE[0];
+    return paletteColor("calendar", PALETTE, 0);
 }
 
 /** 周视图覆盖的范围: 包含 date 的那一周 (周一开始), [起始, 结束) */

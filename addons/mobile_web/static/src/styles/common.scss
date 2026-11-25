@@ -2,3 +2,10 @@ body {
   margin: 0;
   padding: 0;
 }
+
+// the font comes from the web base styles unless the theme sets one
+@if $font-family != inherit {
+  body {
+    font-family: $font-family;
+  }
+}

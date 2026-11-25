@@ -16,7 +16,7 @@
         width: 51px;
         height: 31px;
         border-radius: 16px;
-        background: #e0e0e0;
+        background: $switch-off;
         transition: background 0.2s;
         &::after {
             content: "";
@@ -26,7 +26,7 @@
             width: 27px;
             height: 27px;
             border-radius: 50%;
-            background: #fff;
+            background: $surface;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
             transition: transform 0.2s;
         }

@@ -38,7 +38,7 @@
     min-height: 44px;
     min-width: 88px;
     padding: 0 16px;
-    border-radius: 8px;
+    border-radius: $radius;
     border: 1px solid transparent;
     font-size: 16px;
     font-weight: 500;
@@ -46,9 +46,9 @@
 
 .m_btn_primary {
     background: $theme-btn;
-    color: #fff;
+    color: $surface;
     &:disabled {
-        background: #bebebe;
+        background: $placeholder;
     }
 }
 

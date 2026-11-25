@@ -6,8 +6,8 @@
 
 .m_search_bar {
     padding: 8px 16px;
-    background: #fff;
-    border-bottom: 1px solid #e8e5e5;
+    background: $surface;
+    border-bottom: 1px solid $line;
     position: sticky;
     top: 0;
     z-index: 10; // 高于浮动的新建按钮, 其中的排序/筛选面板才能盖住它
@@ -18,9 +18,9 @@
     height: 44px;
     box-sizing: border-box;
     padding: 0 14px;
-    border: 1px solid #e8e5e5;
+    border: 1px solid $line;
     border-radius: 22px;
-    background: #f5f5f5;
+    background: $page;
     font-size: 16px; // 小于 16px 时 iOS 会自动放大页面
 }
 
@@ -33,8 +33,8 @@
     height: 56px;
     border: none;
     border-radius: 50%;
-    background: #03a09c;
-    color: #fff;
+    background: $theme-btn;
+    color: $surface;
     font-size: 28px;
     line-height: 56px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
@@ -53,9 +53,9 @@
     min-height: 44px;
     box-sizing: border-box;
     padding: 4px 8px;
-    border: 1px solid #e8e5e5;
+    border: 1px solid $line;
     border-radius: 16px;
-    background: #f5f5f5;
+    background: $page;
     // 条件多时在一行内水平滚动, 不向下增高
     flex-wrap: nowrap;
     overflow-x: auto;
@@ -225,6 +225,6 @@
     width: 18px;
     height: 18px;
     margin: 0 2px 0 4px;
-    color: #b0b4bb;
+    color: $control;
     pointer-events: none;
 }

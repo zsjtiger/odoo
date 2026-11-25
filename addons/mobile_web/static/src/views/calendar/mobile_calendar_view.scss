@@ -38,7 +38,7 @@
     padding: 4px 12px;
     border: 1px solid $theme;
     border-radius: 999px;
-    background: #fff;
+    background: $surface;
     color: $theme;
     font-size: 14px;
 }
@@ -68,7 +68,7 @@
     color: $text;
     font-size: 15px;
     &.is_other {
-        color: #c4c4c4;
+        color: $text-disabled;
     }
     &.is_today .m_cal_day_num {
         color: $theme;
@@ -76,7 +76,7 @@
     }
     &.is_selected .m_cal_day_num {
         background: $theme;
-        color: #fff;
+        color: $surface;
     }
 }
 
@@ -167,7 +167,7 @@
     min-height: 32px;
     padding: 4px 16px;
     border: 1px solid $theme;
-    background: #fff;
+    background: $surface;
     color: $theme;
     font-size: 14px;
     &:first-child {
@@ -179,7 +179,7 @@
     }
     &.is_active {
         background: $theme;
-        color: #fff;
+        color: $surface;
     }
 }
 
@@ -252,7 +252,7 @@
     overflow: hidden;
     border: none;
     border-left: 4px solid var(--m_cal_color, $theme);
-    border-radius: 6px;
+    border-radius: $radius-sm;
     background: $theme-bg-color;
     color: $text;
     font-size: 13px;
@@ -341,7 +341,7 @@
     border: none;
     border-radius: 3px;
     background: var(--m_cal_color, $theme);
-    color: #fff;
+    color: $surface;
     font-size: 10px;
     line-height: 14px;
     text-align: left;

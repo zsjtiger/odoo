@@ -16,25 +16,25 @@
     align-items: flex-start;
     gap: 8px;
     padding: 12px 8px 12px 14px;
-    border-left: 4px solid #d29922;
+    border-left: 4px solid $warn-dark;
     border-radius: 12px;
     background: rgba(40, 40, 40, 0.94);
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-    color: #fff;
+    color: $surface;
     font-size: 15px;
     line-height: 1.4;
     pointer-events: auto;
 
     &.is_danger {
-        border-left-color: #e5484d;
+        border-left-color: $danger-strong;
     }
 
     &.is_success {
-        border-left-color: #2da44e;
+        border-left-color: $success;
     }
 
     &.is_info {
-        border-left-color: #007aff;
+        border-left-color: $info;
     }
 }
 
@@ -59,7 +59,7 @@
     padding: 0;
     border: none;
     background: none;
-    color: #8ec8ff;
+    color: $info-soft;
     font-weight: 600;
 }
 
@@ -68,7 +68,7 @@
     min-height: 44px;
     border: none;
     background: none;
-    color: #fff;
+    color: $surface;
     font-size: 22px;
     line-height: 1;
 }

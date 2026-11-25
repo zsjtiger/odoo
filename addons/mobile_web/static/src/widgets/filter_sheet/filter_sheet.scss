@@ -36,8 +36,8 @@
     gap: 8px;
     min-height: 36px;
     padding: 0 14px;
-    border: 1px solid #d9d9d9;
-    border-radius: 6px;
+    border: 1px solid $line-strong;
+    border-radius: $radius-sm;
     background: $surface;
     color: $text;
     font-size: 14px;
@@ -50,7 +50,7 @@
 .m_filter_radio_dot {
     width: 14px;
     height: 14px;
-    border: 1px solid #b0b4bb;
+    border: 1px solid $control;
     border-radius: 50%;
     .is_on > & {
         border: 4px solid $theme-btn;
@@ -71,8 +71,8 @@
     min-width: 120px;
     max-width: 100%;
     padding: 8px 12px;
-    border: 1px solid #d9d9d9;
-    border-radius: 6px;
+    border: 1px solid $line-strong;
+    border-radius: $radius-sm;
     background: $surface;
     text-align: left;
     &.is_on {

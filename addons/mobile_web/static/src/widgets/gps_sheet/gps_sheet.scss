@@ -12,7 +12,7 @@
 .m_gps_map {
     position: relative;
     flex: 0 0 46%;
-    background: #e9eef2;
+    background: $surface-info;
 }
 
 .m_gps_map_placeholder {
@@ -110,10 +110,10 @@
     padding: 0 12px;
     border: none;
     border-radius: 18px;
-    background: #f4f5f7;
+    background: $surface-gray;
     font-size: 15px;
     color: $text;
     &::placeholder {
-        color: #aaa;
+        color: $text-hint;
     }
 }

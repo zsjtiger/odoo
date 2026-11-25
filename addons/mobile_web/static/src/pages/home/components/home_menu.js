@@ -2,6 +2,7 @@ import { Component, onWillStart, proxy, xml } from "@odoo/owl";
 import { browser } from "@web/core/services/browser/browser";
 import { session } from "@web/boot/session";
 import { useService } from "@web/core/utils/hooks";
+import { paletteColor } from "@mobile_web/core/theme";
 
 
 /**
@@ -21,6 +22,7 @@ const ROWS_PER_PAGE = 2;
 const MENUS_PER_PAGE = COLUMNS * ROWS_PER_PAGE;
 
 // 没有图标的应用使用的底色, 按 id 取色, 保证同一个应用颜色固定
+// 默认值与样式令牌中的 $home-palette 相同; 实际颜色由主题提供 (--m-home-<n>)
 const FALLBACK_COLORS = ["#03a09c", "#f0a030", "#5a7bd8", "#e0624f", "#8a6fd1", "#3aa86b"];
 
 
@@ -87,7 +89,7 @@ export class HomeMenu extends Component {
     }
 
     colorOf(menu) {
-        return FALLBACK_COLORS[Number(menu.id) % FALLBACK_COLORS.length];
+        return paletteColor("home", FALLBACK_COLORS, Number(menu.id));
     }
 
     initialOf(menu) {

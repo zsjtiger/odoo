@@ -24,7 +24,7 @@
     padding: 20px 16px;
     font-size: 17px;
     line-height: 1.4;
-    color: #000;
+    color: $black;
 }
 
 .m_alert_footer {
@@ -39,7 +39,7 @@
     border: none;
     background: none;
     font-size: 17px;
-    color: #007aff;
+    color: $info;
 
     & + & {
         border-left: 1px solid rgba(0, 0, 0, 0.12);
@@ -51,7 +51,7 @@
 
     &.is_danger {
         font-weight: 600;
-        color: #ff3b30;
+        color: $danger-ios;
     }
 }
 
@@ -74,13 +74,13 @@
     border-top: 1px solid rgba(0, 0, 0, 0.12);
     background: none;
     font-size: 17px;
-    color: #007aff;
+    color: $info;
 
     &:first-child {
         border-top: none;
     }
 
     &.is_danger {
-        color: #ff3b30;
+        color: $danger-ios;
     }
 }

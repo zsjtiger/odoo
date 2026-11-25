@@ -1,10 +1,10 @@
 // 首页应用网格: 5 列 x 2 行, 图标在上文字在下, 超过一页左右滑动, 底部页码点
-$theme: #03a09c;
+$theme: $theme-btn;
 
 .m_home_menu {
     margin: 12px 12px 0;
     padding: 14px 0 10px;
-    background: #fff;
+    background: $surface;
     border-radius: 12px;
 }
 
@@ -54,7 +54,7 @@ $theme: #03a09c;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #fff;
+    color: $surface;
     font-size: 20px;
     font-weight: 600;
 }
@@ -64,7 +64,7 @@ $theme: #03a09c;
     margin-top: 6px;
     font-size: 12px;
     line-height: 16px;
-    color: #333;
+    color: $text;
     text-align: center;
     // 名称最多两行, 超出部分省略
     display: -webkit-box;
@@ -85,10 +85,10 @@ $theme: #03a09c;
     width: 6px;
     height: 6px;
     border-radius: 3px;
-    background: #d9d9d9;
+    background: $line-strong;
     transition: all 0.2s;
     &.is_active {
         width: 14px;
-        background: #f0a030;
+        background: $warn-strong;
     }
 }

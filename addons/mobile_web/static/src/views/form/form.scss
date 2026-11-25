@@ -69,14 +69,14 @@
         box-shadow: none;
     }
     &::placeholder {
-        color: #c0c4cc;
+        color: $border-control;
     }
 }
 
 .m_form_field.is_stacked .m_form_value .m_input {
     padding: 8px 10px;
     border: 1px solid $line;
-    border-radius: 6px;
+    border-radius: $radius-sm;
 }
 
 // 选择类控件与输入框一样只有底部横线
@@ -92,21 +92,21 @@
 // 必填字段的红色星号
 .m_form_required {
     margin-left: 2px;
-    color: #e5484d;
+    color: $danger-strong;
 }
 
 // 必填但未填写: 横线与提示文字为红色
 .m_form_field.is_invalid {
     .m_input,
     .m_picker_button {
-        border-bottom-color: #e5484d;
+        border-bottom-color: $danger-strong;
     }
 }
 
 .m_form_error {
     margin: 4px 0 0;
     font-size: 13px;
-    color: #e5484d;
+    color: $danger-strong;
 }
 
 // 分组标题: 整行的浅绿色底, 绿色文字, 与 PC 端的分组标题一致
@@ -175,7 +175,7 @@
     bottom: calc(100% + 4px);
     font-size: 13px;
     white-space: nowrap;
-    color: #e99c42;
+    color: $hint;
 }
 
 .m_form_footer_actions {
@@ -230,7 +230,7 @@
     .m_form_label {
         flex: 0 0 96px;
         font-size: 14px;
-        color: #666;
+        color: $text-secondary;
         line-height: 22px;
     }
 
