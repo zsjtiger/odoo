@@ -9,7 +9,11 @@ export class Button extends Component {
             <button type="button" t-attf-class="m_button m_picker_button {{ this.props.compact ? 'm_picker_button_compact' : '' }} {{ this.props.danger ? 'm_button_danger' : '' }}"
                     t-on-click="this.onClick">
                 <t t-esc="this.props.label"/>
-                <span t-if="this.props.caret" class="m_picker_caret">›</span>
+                <span t-if="this.props.caret" class="m_button_caret" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" width="12" height="12">
+                        <path d="M3.5 6 8 10.5 12.5 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </span>
             </button>
         </t>
     `;

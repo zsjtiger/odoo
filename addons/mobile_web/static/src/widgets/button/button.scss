@@ -2,3 +2,14 @@
 .m_button_danger {
     color: $danger;
 }
+
+// 右侧的下箭头: 内联 SVG, 颜色跟随按钮文字, 放在文字之后
+.m_button_caret {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 6px;
+    color: currentColor;
+    svg {
+        display: block;
+    }
+}
