@@ -13,3 +13,16 @@
         display: block;
     }
 }
+
+// 只有图标的编辑按钮 (多对多字段): 无边框, 图标颜色为主题色, 触摸区域不小于 44px
+.m_picker_button.m_button_icon {
+    width: auto;
+    min-width: 44px;
+    min-height: 44px;
+    margin-top: 4px;
+    padding: 0 4px;
+    border: none;
+    background: transparent;
+    color: $theme;
+    justify-content: flex-start;
+}

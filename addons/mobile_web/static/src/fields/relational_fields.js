@@ -158,7 +158,7 @@ export class Many2manyField extends Component {
                 <span t-foreach="this.pairs" t-as="pair" t-key="pair[0]" class="m_tag"><t t-esc="pair[1]"/></span>
                 <span t-if="!this.pairs.length and !this.props.compact" class="m_field_value m_field_empty"><t t-esc="this.texts.none"/></span>
             </div>
-            <Button t-if="!this.props.readonly" label="this.texts.edit" compact="true" caret="true" onClick="this.openSheet"/>
+            <Button t-if="!this.props.readonly" label="this.texts.edit" icon="true" onClick="this.openSheet"/>
             <MobileSelectSheet t-if="this.state.open" title="this.props.field.string" multiple="true"
                 search="this.search" searchPlaceholder="this.props.attrs.placeholder || ''" selected="this.currentItems"
                 onConfirm="this.onConfirm" onClose="this.close"/>
@@ -607,7 +607,7 @@ export class Many2manyTagsAvatarField extends Many2manyField {
                 </span>
                 <span t-if="!this.pairs.length and !this.props.compact" class="m_field_value m_field_empty"><t t-esc="this.texts.none"/></span>
             </div>
-            <Button t-if="!this.props.readonly" label="this.texts.edit" compact="true" caret="true" onClick="this.openSheet"/>
+            <Button t-if="!this.props.readonly" label="this.texts.edit" icon="true" onClick="this.openSheet"/>
             <MobileSelectSheet t-if="this.state.open" title="this.props.field.string" multiple="true"
                 search="this.search" searchPlaceholder="this.props.attrs.placeholder || ''" selected="this.currentItems"
                 onConfirm="this.onConfirm" onClose="this.close"/>
