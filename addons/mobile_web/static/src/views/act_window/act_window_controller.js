@@ -431,6 +431,7 @@ export class MobileActWindowController extends Component {
         const relation = this.fields[row.name].relation;
         const results = await this.orm.call(relation, "name_search", [], {
             name: row.text,
+            domain: [],
             operator: "ilike",
             limit: 20,
             context: this.context,

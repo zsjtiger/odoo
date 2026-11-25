@@ -38,9 +38,10 @@ function pairName(pair) {
  */
 function makeNameSearch(orm, relation, context) {
     return async (text, args = []) => {
+        // Odoo 20 name_search takes the domain as `domain` (not `args`)
         const results = await orm.call(relation, "name_search", [], {
             name: text,
-            args,
+            domain: args,
             operator: "ilike",
             limit: 30,
             context,
