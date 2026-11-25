@@ -27,6 +27,10 @@ the theme too.
         'mobile_web.assets_frontend': [
             ('prepend', 'mobile_web_theme/static/src/scss/theme.scss'),
         ],
+        # desktop web: core Bootstrap and Odoo brand variables mapped from the same palette
+        'web.assets_backend': [
+            ('prepend', 'mobile_web_theme/static/src/scss/web_theme.scss'),
+        ],
     },
     'installable': True,
     'application': False,

@@ -1,0 +1,25 @@
+// 桌面 web 的核心颜色映射: 取值与 theme.scss (移动端) 保持一致, 让两端看起来是同一套颜色.
+// 本文件作为 web.assets_backend 的第一个文件加载 (prepend), 早于 web 的 pre_variables 和
+// primary_variables, 因此这里的普通赋值 (不带 !default) 会覆盖 web 的默认值.
+// 这一版只映射核心变量: Odoo 品牌色、Bootstrap 主色/语义色/正文/链接/边框/圆角.
+// 没有映射的写死十六进制颜色, 以及暗色主题, 暂不处理.
+
+// ---- Odoo brand (primary_variables.scss) ----
+$o-community-color: #017e84;  // = mobile $theme
+$o-brand-odoo: $o-community-color;
+$o-brand-primary: $o-community-color;
+
+// ---- Bootstrap core (pre_variables.scss, _variables.scss) ----
+$primary: #017e84;  // = mobile $theme
+$secondary: #666;  // = mobile $text-secondary
+$success: #2da44e;  // = mobile $success
+$info: #007aff;  // = mobile $info
+$warning: #ffc000;  // = mobile $warn
+$danger: #d1101f;  // = mobile $danger
+
+$body-color: #333;  // = mobile $text
+$body-bg: #f5f5f5;  // = mobile $page
+$o-webclient-background-color: #f5f5f5;  // = mobile $page; the desktop body background comes from this variable
+$link-color: #017e84;  // = mobile $theme
+$border-color: #e8e5e5;  // = mobile $line
+$border-radius: 8px;  // = mobile $radius
