@@ -61,6 +61,7 @@
 
     <t t-name="web.FormView.Buttons">
         <button t-if="this.canCreate" type="button" class="btn btn-outline-primary o_form_button_create" data-hotkey="c" t-on-click.stop="this.create" t-att-data-available-offline="this.isNewButtonAvailableOffline">New</button>
+        <button t-if="this.model.root.isInEdition" type="button" class="btn btn-primary o_form_toolbar_save" t-on-click.stop="() => this.saveButtonClicked()">Save</button>
     </t>
 
     <t t-name="web.DefaultButtonsSlot">

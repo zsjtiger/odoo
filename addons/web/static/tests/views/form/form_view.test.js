@@ -9224,7 +9224,7 @@ test(`buttons are disabled until status bar action is resolved`, async () => {
         resId: 1,
     });
     // Contains invisible buttons that are only displayed under xl screens
-    expect(`.o_control_panel_breadcrumbs button:not(.oi):not(:disabled)`).toHaveCount(3);
+    expect(`.o_control_panel_breadcrumbs button:not(.oi):not(:disabled)`).toHaveCount(4);
     expect(`.o_form_statusbar button:not(:disabled)`).toHaveCount(2);
     expect(`.o-form-buttonbox button:not(:disabled)`).toHaveCount(1);
 
@@ -9232,13 +9232,13 @@ test(`buttons are disabled until status bar action is resolved`, async () => {
     await animationFrame();
 
     // The unresolved promise lets us check the state of the buttons
-    expect(`.o_control_panel_breadcrumbs button:not(.oi):disabled`).toHaveCount(3);
+    expect(`.o_control_panel_breadcrumbs button:not(.oi):disabled`).toHaveCount(4);
     expect(`.o_form_statusbar button:disabled`).toHaveCount(2);
     expect(`.o-form-buttonbox button:disabled`).toHaveCount(1);
 
     deferred.resolve();
     await animationFrame();
-    expect(`.o_control_panel_breadcrumbs button:not(.oi):not(:disabled)`).toHaveCount(3);
+    expect(`.o_control_panel_breadcrumbs button:not(.oi):not(:disabled)`).toHaveCount(4);
     expect(`.o_form_statusbar button:not(:disabled)`).toHaveCount(2);
     expect(`.o-form-buttonbox button:not(:disabled)`).toHaveCount(1);
 });
