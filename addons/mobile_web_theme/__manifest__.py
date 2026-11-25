@@ -33,6 +33,7 @@ the theme too.
         ],
         # login, portal and website pages
         'web.assets_frontend': [
+            ('prepend', 'mobile_web_theme/static/src/scss/web_theme_frontend.scss'),
             ('prepend', 'mobile_web_theme/static/src/scss/web_theme.scss'),
         ],
     },

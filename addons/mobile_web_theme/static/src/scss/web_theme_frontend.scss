@@ -1,0 +1,5 @@
+// 登录、门户和官网页面的覆盖: 页面背景保持白色 (桌面后台仍使用 web_theme.scss 中的 $page).
+// 本文件在 web_theme.scss 之后加载, 因此这里的赋值覆盖它.
+
+$body-bg: #fff;
+$o-webclient-background-color: #fff;
