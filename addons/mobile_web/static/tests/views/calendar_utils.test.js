@@ -1,5 +1,16 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { buildMonthCells, eventColor, gridRange, groupEventsByDay, GRID_WEEKS, MAX_SPAN_DAYS, PALETTE } from "@mobile_web/views/calendar/calendar_utils";
+import {
+    buildMonthCells,
+    buildWeekCells,
+    eventColor,
+    gridRange,
+    groupEventsByDay,
+    GRID_WEEKS,
+    hourRows,
+    MAX_SPAN_DAYS,
+    PALETTE,
+    weekRange,
+} from "@mobile_web/views/calendar/calendar_utils";
 
 describe.current.tags("mobile");
 
@@ -68,4 +79,37 @@ test("event color: strings are used as they are, integers pick from the palette"
     expect(eventColor(2)).toBe(PALETTE[2]);
     expect(eventColor(undefined)).toBe(PALETTE[0]);
     expect(eventColor("not a color")).toBe(PALETTE[0]);
+});
+
+test("week cells are the seven days from Monday, with the selected and today flags", () => {
+    const selected = DateTime.fromISO("2026-11-25");
+    const cells = buildWeekCells(selected, DateTime.fromISO("2026-11-25"), selected);
+    expect(cells.map((c) => c.key)).toEqual([
+        "2026-11-23",
+        "2026-11-24",
+        "2026-11-25",
+        "2026-11-26",
+        "2026-11-27",
+        "2026-11-28",
+        "2026-11-29",
+    ]);
+    expect(cells.filter((c) => c.isSelected).map((c) => c.key)).toEqual(["2026-11-25"]);
+    expect(cells.filter((c) => c.isToday).map((c) => c.key)).toEqual(["2026-11-25"]);
+});
+
+test("week range is Monday to the next Monday", () => {
+    const { start, end } = weekRange(DateTime.fromISO("2026-11-25"));
+    expect(start.toISODate()).toBe("2026-11-23");
+    expect(end.toISODate()).toBe("2026-11-30");
+});
+
+test("hour rows put a timed event in its start hour and leave all-day events out", () => {
+    const day = DateTime.fromISO("2026-11-25");
+    const rows = hourRows([
+        { id: 1, start: day.set({ hour: 6, minute: 30 }), allDay: false },
+        { id: 2, start: day, allDay: true },
+    ]);
+    expect(rows.length).toBe(24);
+    expect(rows[6].events.map((e) => e.id)).toEqual([1]);
+    expect(rows.flatMap((r) => r.events).map((e) => e.id)).toEqual([1]);
 });

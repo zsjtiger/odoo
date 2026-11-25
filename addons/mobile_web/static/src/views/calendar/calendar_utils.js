@@ -84,3 +84,53 @@ export function eventColor(value) {
     }
     return PALETTE[0];
 }
+
+/** 周视图覆盖的范围: 包含 date 的那一周 (周一开始), [起始, 结束) */
+export function weekRange(date) {
+    const start = date.startOf("week");
+    return { start, end: start.plus({ days: 7 }) };
+}
+
+/**
+ * 周视图顶部的 7 天格子
+ *
+ * @param {DateTime} date 包含在该周内的任意一天
+ * @param {DateTime} today
+ * @param {DateTime} selected 选中的日期
+ */
+export function buildWeekCells(date, today, selected) {
+    const { start } = weekRange(date);
+    const todayKey = today.toISODate();
+    const selectedKey = selected.toISODate();
+    return Array.from({ length: 7 }, (_, i) => {
+        const day = start.plus({ days: i });
+        return {
+            key: day.toISODate(),
+            day: day.day,
+            weekday: day.toFormat("ccc"),
+            isToday: day.toISODate() === todayKey,
+            isSelected: day.toISODate() === selectedKey,
+            date: day,
+        };
+    });
+}
+
+/**
+ * 一天的时间线: 0-23 点的小时行, 每行列出开始于该小时的非全天事件
+ *
+ * @param {{ start: DateTime, allDay: boolean }[]} events 当天的事件
+ * @returns {{ hour: number, label: string, events: typeof events }[]}
+ */
+export function hourRows(events) {
+    const rows = Array.from({ length: 24 }, (_, hour) => ({
+        hour,
+        label: `${String(hour).padStart(2, "0")}:00`,
+        events: [],
+    }));
+    for (const event of events) {
+        if (!event.allDay) {
+            rows[event.start.hour].events.push(event);
+        }
+    }
+    return rows;
+}

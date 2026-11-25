@@ -155,3 +155,81 @@
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+
+// 月 / 周 切换
+.m_cal_modes {
+    display: flex;
+    justify-content: center;
+    margin-top: 4px;
+}
+
+.m_cal_mode {
+    min-height: 32px;
+    padding: 4px 16px;
+    border: 1px solid $theme;
+    background: #fff;
+    color: $theme;
+    font-size: 14px;
+    &:first-child {
+        border-radius: 999px 0 0 999px;
+    }
+    &:last-child {
+        border-radius: 0 999px 999px 0;
+        border-left: none;
+    }
+    &.is_active {
+        background: $theme;
+        color: #fff;
+    }
+}
+
+// 周视图: 星期名与日期, 高度略高于月视图
+.m_cal_week_day {
+    min-height: 64px;
+}
+
+.m_cal_day_name {
+    color: $muted;
+    font-size: 12px;
+}
+
+// 周视图时间线
+.m_cal_timeline {
+    margin-top: 4px;
+}
+
+.m_cal_hour {
+    display: flex;
+    gap: 8px;
+    min-height: 40px;
+    border-top: 1px solid $line;
+    &.is_allday {
+        min-height: 0;
+        padding: 6px 0;
+        border-top: none;
+        border-bottom: 1px solid $line;
+    }
+}
+
+.m_cal_hour_label {
+    flex: 0 0 48px;
+    padding-top: 6px;
+    color: $muted;
+    font-size: 12px;
+}
+
+.m_cal_hour_events {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+    gap: 4px;
+    padding: 2px 0;
+    .m_cal_event {
+        border-bottom: none;
+        border-radius: 6px;
+        background: $theme-bg-color;
+        min-height: 36px;
+        padding: 4px 8px;
+    }
+}
