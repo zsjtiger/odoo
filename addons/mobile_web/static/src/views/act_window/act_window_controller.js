@@ -90,7 +90,7 @@ export class MobileActWindowController extends Component {
                     selected="this.state.mobileSelected" onConfirm="this.onMobileFilterConfirm" onClose="this.closeFilters"/>
                 <MobileSelectSheet t-if="this.state.filterSheet" title="this.texts.filter" options="this.filterOptions"
                     selected="this.selectedFilterItems" multiple="true" onConfirm="this.onFilterConfirm" onClose="this.closeFilters"/>
-                <button type="button" class="m_create_btn" t-if="this.state.ready and this.state.type !== 'form' and this.hasForm"
+                <button type="button" class="m_create_btn" t-if="this.state.ready and this.state.type !== 'form' and this.state.type !== 'calendar' and this.hasForm"
                         t-on-click="this.onCreateClick">+</button>
             </div>
         </t>
@@ -189,6 +189,8 @@ export class MobileActWindowController extends Component {
         }
 
         this.context = context;
+        // context of the action; create-with-defaults adds keys to it temporarily
+        this.baseContext = context;
         this.state.type = type;
         this.state.resId = props.resId === "new" ? undefined : props.resId || false;
         this.applyFacets();
@@ -242,6 +244,8 @@ export class MobileActWindowController extends Component {
             domain: this.state.domain,
             order: this.state.order,
             onSelect: (resId) => this._onSelectRecord(resId),
+            // calendar: create a record on the selected day (default values are passed as context)
+            onCreate: (defaults) => this._onCreateRecord(defaults),
         };
     }
 
@@ -464,6 +468,7 @@ export class MobileActWindowController extends Component {
         if (!hasFormView(this.props.action)) {
             return;
         }
+        this.context = this.baseContext;
         this._switchToForm(resId);
         this._pushRouteState(resId);
         this._setNavbarTitle(this.props.action.display_name || "CrossNow");
@@ -472,11 +477,13 @@ export class MobileActWindowController extends Component {
     /**
      * 新建记录, 切换到 form 视图的 "new" 状态
      */
-    _onCreateRecord() {
+    _onCreateRecord(defaults = {}) {
         const action = this.props.action;
         if (!hasFormView(action)) {
             return;
         }
+        // defaults (default_<field>) only apply to this new record
+        this.context = { ...this.baseContext, ...defaults };
         // web 的视图使用 undefined 表示新建记录, "new" 只保留在 URL 状态中
         this._switchToForm(undefined);
         this._pushRouteState("new");

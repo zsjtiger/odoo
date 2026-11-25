@@ -2,4 +2,5 @@
 import "@mobile_web/views/list/mobile_list_view";
 import "@mobile_web/views/kanban/mobile_kanban_view";
 import "@mobile_web/views/form/mobile_form_view";
+import "@mobile_web/views/calendar/mobile_calendar_view";
 import "@mobile_web/fields/index";
