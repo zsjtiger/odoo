@@ -31,6 +31,10 @@ the theme too.
         'web.assets_backend': [
             ('prepend', 'mobile_web_theme/static/src/scss/web_theme.scss'),
         ],
+        # login, portal and website pages
+        'web.assets_frontend': [
+            ('prepend', 'mobile_web_theme/static/src/scss/web_theme.scss'),
+        ],
     },
     'installable': True,
     'application': False,

@@ -8,6 +8,8 @@
 $o-community-color: #017e84;  // = mobile $theme
 $o-brand-odoo: $o-community-color;
 $o-brand-primary: $o-community-color;
+// Enterprise purple: feeds the website palette (--o-color-1, --primary) on login and portal pages
+$o-enterprise-color: #017e84;  // = mobile $theme
 
 // ---- Bootstrap core (pre_variables.scss, _variables.scss) ----
 $primary: #017e84;  // = mobile $theme
