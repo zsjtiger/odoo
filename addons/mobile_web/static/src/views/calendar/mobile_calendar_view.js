@@ -12,6 +12,8 @@ import {
     gridRange,
     groupEventsByDay,
     HOUR_HEIGHT,
+    isMultiDay,
+    layoutMonthBars,
     layoutTimedEvents,
     MIN_BLOCK_HEIGHT,
     SNAP_MINUTES,
@@ -33,6 +35,8 @@ const TEXTS = {
     noEvents: _t("No events on this day"),
     loadFailed: _t("Failed to load, please try again"),
     saveFailed: _t("Could not move the event"),
+    continues: _t("Continues"),
+    endsAt: _t("Ends"),
 };
 
 /** 一天的第一个事件默认开始的时刻 (新建事件时使用) */
@@ -116,7 +120,7 @@ export class MobileCalendarView extends Component {
                     <div class="m_cal_weekdays">
                         <span t-foreach="this.weekdays" t-as="weekday" t-key="weekday_index"><t t-esc="weekday"/></span>
                     </div>
-                    <div class="m_cal_grid">
+                    <div class="m_cal_grid m_cal_month_grid">
                         <button type="button" t-foreach="this.monthCells" t-as="cell" t-key="cell.key"
                                 t-attf-class="m_cal_day {{ cell.inMonth ? '' : 'is_other' }} {{ cell.isToday ? 'is_today' : '' }} {{ cell.isSelected ? 'is_selected' : '' }}"
                                 t-att-data-day="cell.key" t-on-click="this.onSelectDay">
@@ -125,6 +129,12 @@ export class MobileCalendarView extends Component {
                                 <span t-foreach="cell.dots" t-as="dot" t-key="dot_index" class="m_cal_dot" t-att-style="'background:' + dot"/>
                             </span>
                         </button>
+                        <div class="m_cal_bars">
+                            <button type="button" t-foreach="this.monthBars" t-as="bar" t-key="bar.key" class="m_cal_bar"
+                                    t-att-style="bar.style" t-att-data-id="bar.event.id" t-on-click="this.onRowClick">
+                                <t t-esc="bar.event.title"/>
+                            </button>
+                        </div>
                     </div>
                     <div class="m_cal_agenda_head">
                         <span class="m_cal_agenda_date"><t t-esc="this.selectedTitle"/></span>
@@ -339,8 +349,47 @@ export class MobileCalendarView extends Component {
         return this.state.selected.toISODate();
     }
 
+    /**
+     * 选中日期的事件, 时间标签按这一天来写 (跨天事件在开始日、中间日、结束日的标签不同)
+     */
     get agenda() {
-        return this.byDay.get(this.selectedKey) || [];
+        const day = this.state.selected;
+        return (this.byDay.get(this.selectedKey) || []).map((event) => ({
+            ...event,
+            timeLabel: this.labelFor(event, day),
+        }));
+    }
+
+    labelFor(event, day) {
+        if (event.allDay) {
+            return event.timeLabel;
+        }
+        const dayStart = day.startOf("day");
+        const dayEnd = dayStart.plus({ days: 1 });
+        const stop = event.stop && event.stop > event.start ? event.stop : event.start;
+        const startsBefore = event.start < dayStart;
+        const endsAfter = stop > dayEnd;
+        if (startsBefore && endsAfter) {
+            return this.texts.continues;
+        }
+        if (startsBefore) {
+            return `${this.texts.endsAt} ${stop.toFormat("HH:mm")}`;
+        }
+        if (endsAfter) {
+            return `${event.start.toFormat("HH:mm")} → ${stop.toFormat("LLL d")}`;
+        }
+        return event.timeLabel;
+    }
+
+    /**
+     * 月视图: 跨天事件的横条, 按周行和列定位
+     */
+    get monthBars() {
+        return layoutMonthBars(this.events, this.monthCells, 2).map((bar) => ({
+            ...bar,
+            key: `${bar.event.id}:${bar.row}`,
+            style: `grid-row:${bar.row + 1};grid-column:${bar.startCol + 1} / ${bar.endCol + 2};margin-top:${38 + bar.lane * 16}px;--m_cal_color:${bar.event.color}`,
+        }));
     }
 
     /** 时间轴: 选中日期的全天事件 */
@@ -395,11 +444,12 @@ export class MobileCalendarView extends Component {
         return this.cellsWithDots(buildWeekCells(this.state.selected, luxon.DateTime.local(), this.state.selected));
     }
 
+    /** 格子上的圆点: 单日事件; 跨天事件画成横条 */
     cellsWithDots(cells) {
         const byDay = this.byDay;
         const selectedKey = this.selectedKey;
         return cells.map((cell) => {
-            const events = byDay.get(cell.key) || [];
+            const events = (byDay.get(cell.key) || []).filter((event) => !isMultiDay(event));
             return {
                 ...cell,
                 dots: events.slice(0, 3).map((event) => event.color),

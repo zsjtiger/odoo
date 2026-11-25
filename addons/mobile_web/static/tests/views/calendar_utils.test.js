@@ -8,6 +8,8 @@ import {
     GRID_WEEKS,
     hourRows,
     HOUR_HEIGHT,
+    isMultiDay,
+    layoutMonthBars,
     layoutTimedEvents,
     snapMinutes,
     MAX_SPAN_DAYS,
@@ -176,4 +178,49 @@ test("drag positions snap to quarter hours", () => {
     expect(snapMinutes(22)).toBe(15);
     expect(snapMinutes(23)).toBe(30);
     expect(snapMinutes(-7)).toBe(0);
+});
+
+test("a multi-day event is recognised, a same-day event is not", () => {
+    const trip = { start: DateTime.fromISO("2026-11-25T10:00"), stop: DateTime.fromISO("2026-11-27T12:00") };
+    const meeting = { start: DateTime.fromISO("2026-11-25T10:00"), stop: DateTime.fromISO("2026-11-25T11:00") };
+    expect(isMultiDay(trip)).toBe(true);
+    expect(isMultiDay(meeting)).toBe(false);
+});
+
+test("a multi-day event becomes a bar in each week row it touches, with the columns it covers", () => {
+    const cells = buildMonthCells(DateTime.fromISO("2026-11-15"), DateTime.fromISO("2026-11-25"));
+    // 25 Nov (Wed) to 27 Nov (Fri), all in the row of 23-29 Nov
+    const trip = { id: 1, start: DateTime.fromISO("2026-11-25T10:00"), stop: DateTime.fromISO("2026-11-27T12:00") };
+    const bars = layoutMonthBars([trip], cells);
+    expect(bars.length).toBe(1);
+    expect(bars[0].startCol).toBe(2);
+    expect(bars[0].endCol).toBe(4);
+    expect(bars[0].lane).toBe(0);
+});
+
+test("a bar that crosses a week boundary is split into one bar per row", () => {
+    const cells = buildMonthCells(DateTime.fromISO("2026-11-15"), DateTime.fromISO("2026-11-25"));
+    // 28 Nov (Sat) to 2 Dec (Wed): two rows
+    const event = { id: 2, start: DateTime.fromISO("2026-11-28T09:00"), stop: DateTime.fromISO("2026-12-02T09:00") };
+    const bars = layoutMonthBars([event], cells);
+    expect(bars.map((b) => [b.row, b.startCol, b.endCol])).toEqual([
+        [4, 5, 6],
+        [5, 0, 2],
+    ]);
+});
+
+test("overlapping bars use separate lanes, and lanes beyond the limit are not drawn", () => {
+    const cells = buildMonthCells(DateTime.fromISO("2026-11-15"), DateTime.fromISO("2026-11-25"));
+    const make = (id, from, to) => ({ id, start: DateTime.fromISO(from), stop: DateTime.fromISO(to) });
+    // all three overlap on 25 Nov, so three lanes would be needed; the one that starts last (2) is not drawn
+    const events = [
+        make(1, "2026-11-24T09:00", "2026-11-26T09:00"),
+        make(2, "2026-11-25T09:00", "2026-11-27T09:00"),
+        make(3, "2026-11-24T09:00", "2026-11-25T09:00"),
+    ];
+    const bars = layoutMonthBars(events, cells, 2);
+    const lanes = Object.fromEntries(bars.map((b) => [b.event.id, b.lane]));
+    expect(lanes[1]).toBe(0);
+    expect(lanes[3]).toBe(1);
+    expect(lanes[2]).toBe(undefined);
 });

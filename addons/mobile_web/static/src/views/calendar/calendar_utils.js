@@ -205,3 +205,61 @@ export function layoutTimedEvents(events, day) {
 export function snapMinutes(minutes) {
     return Math.round(minutes / SNAP_MINUTES) * SNAP_MINUTES;
 }
+
+/** 事件是否跨越多天 (结束日期晚于开始日期) */
+export function isMultiDay(event) {
+    const stop = event.stop && event.stop > event.start ? event.stop : event.start;
+    return stop.startOf("day") > event.start.startOf("day");
+}
+
+/**
+ * 月视图中跨天事件的横条: 每一周一行, 每条横条按周内的列 (startCol..endCol) 占位.
+ * 同一周内重叠的横条放在不同的行 (lane); 超过 maxLanes 的不画, 它们仍在事件列表中.
+ *
+ * @param {{ event: object, start: DateTime, stop: DateTime }[]} events
+ * @param {{ date: DateTime }[]} cells 月历格子 (6 周 * 7 天)
+ * @param {number} maxLanes
+ * @returns {{ event: object, row: number, startCol: number, endCol: number, lane: number }[]}
+ */
+export function layoutMonthBars(events, cells, maxLanes = 2) {
+    const first = cells[0].date.startOf("day");
+    const indexOf = (dt) => Math.round(dt.startOf("day").diff(first, "days").days);
+    const bars = [];
+    for (const event of events) {
+        if (!isMultiDay(event)) {
+            continue;
+        }
+        const from = indexOf(event.start);
+        const stop = event.stop && event.stop > event.start ? event.stop : event.start;
+        const to = indexOf(stop);
+        for (let row = 0; row < cells.length / 7; row++) {
+            const rowStart = row * 7;
+            const rowEnd = rowStart + 6;
+            const a = Math.max(from, rowStart);
+            const b = Math.min(to, rowEnd);
+            if (a <= b) {
+                bars.push({ event, row, startCol: a - rowStart, endCol: b - rowStart });
+            }
+        }
+    }
+    const result = [];
+    for (let row = 0; row < cells.length / 7; row++) {
+        const rowBars = bars
+            .filter((bar) => bar.row === row)
+            .sort((x, y) => x.startCol - y.startCol || y.endCol - x.endCol);
+        const laneEnds = [];
+        for (const bar of rowBars) {
+            let lane = laneEnds.findIndex((end) => end < bar.startCol);
+            if (lane === -1) {
+                lane = laneEnds.length;
+                laneEnds.push(bar.endCol);
+            } else {
+                laneEnds[lane] = bar.endCol;
+            }
+            if (lane < maxLanes) {
+                result.push({ ...bar, lane });
+            }
+        }
+    }
+    return result;
+}
