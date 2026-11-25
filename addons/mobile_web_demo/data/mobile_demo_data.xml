@@ -127,11 +127,17 @@
         <field name="notes">&lt;p&gt;Rich text with &lt;b&gt;bold&lt;/b&gt; and a &lt;a href="https://www.odoo.com"&gt;link&lt;/a&gt;.&lt;/p&gt;</field>
         <field name="payload" eval="{'source': 'demo', 'rank': 1, 'tags': ['a', 'b']}"/>
         <field name="partner_id" ref="mobile_demo_partner_a"/>
+        <!-- controls demo: many2many_tags_avatar, reference, float_toggle (10 %), image_url -->
+        <field name="user_ids" eval="[(6, 0, [ref('base.user_admin')])]"/>
+        <field name="ref_id" eval="'res.partner,%d' % ref('mobile_demo_partner_a')"/>
+        <field name="discount">0.1</field>
+        <field name="category">b</field>
+        <field name="image_url">/web/static/img/placeholder.png</field>
         <field name="region_id" ref="mobile_demo_region_bj_dc"/>
         <field name="keyinfo_ids" eval="[(0, 0, {'product': '测试', 'key_info': 'efficacy', 'feedback': 'positive'}), (0, 0, {'product': '鼓翘颗粒', 'key_info': 'safety', 'feedback': 'neutral'})]"/>
         <field name="user_id" ref="base.user_admin"/>
         <field name="tag_ids" eval="[(6, 0, [ref('mobile_demo_tag_vip'), ref('mobile_demo_tag_followup')])]"/>
-        <field name="line_ids" eval="[(0, 0, {'name': 'Consultation', 'quantity': 1, 'unit_price': 300}), (0, 0, {'name': 'Medicine', 'quantity': 2, 'unit_price': 450})]"/>
+        <field name="line_ids" eval="[(0, 0, {'name': 'Consultation', 'quantity': 1, 'unit_price': 300, 'sequence': 10}), (0, 0, {'name': 'Medicine', 'quantity': 2, 'unit_price': 450, 'sequence': 20})]"/>
     </record>
 
     <record id="mobile_demo_item_2" model="mobile.demo.item">
@@ -149,6 +155,9 @@
         <field name="phone">+86 21 5550 1000</field>
         <field name="color">#e5484d</field>
         <field name="partner_id" ref="mobile_demo_partner_b"/>
+        <field name="user_ids" eval="[(6, 0, [ref('base.user_admin')])]"/>
+        <field name="ref_id" eval="'res.users,%d' % ref('base.user_admin')"/>
+        <field name="discount">0.05</field>
         <field name="user_id" ref="base.user_admin"/>
         <field name="tag_ids" eval="[(6, 0, [ref('mobile_demo_tag_followup')])]"/>
         <field name="line_ids" eval="[(0, 0, {'name': 'Follow-up call', 'quantity': 1, 'unit_price': 250})]"/>

@@ -6,6 +6,7 @@
         <field name="model">mobile.demo.line</field>
         <field name="arch" type="xml">
             <list editable="bottom">
+                <field name="sequence" widget="handle"/>
                 <field name="date" class="mobile_date"/>
                 <field name="name" class="mobile_title"/>
                 <field name="quantity"/>
@@ -92,9 +93,9 @@
                         <field name="active"/>
                         <field name="priority" widget="priority"/>
                         <field name="visit_type" widget="radio"/>
-                        <field name="category"/>
+                        <field name="category" widget="badges_selection"/>
                         <field name="color" widget="color"/>
-                        <field name="is_urgent"/>
+                        <field name="is_urgent" widget="boolean_toggle"/>
                         <field name="urgent_reason" invisible="not is_urgent"/>
                         <field name="note_required" required="is_urgent"/>
                     </group>
@@ -114,7 +115,7 @@
                     <group string="Dates and relations">
                         <field name="date"/>
                         <field name="visit_datetime"/>
-                        <field name="partner_id" placeholder="Search a partner by name"/>
+                        <field name="partner_id" widget="many2one_avatar" placeholder="Search a partner by name"/>
                         <field name="region_id" widget="cascade"/>
                         <field name="gps_id" widget="gps"/>
                         <field name="company_id"/>
@@ -127,6 +128,13 @@
                         <field name="phone" widget="phone"/>
                         <field name="website" widget="url"/>
                         <field name="secret" widget="password"/>
+                    </group>
+
+                    <group string="Controls">
+                        <field name="user_ids" widget="many2many_tags_avatar"/>
+                        <field name="ref_id"/>
+                        <field name="discount" widget="float_toggle" options="{'range': [0, 5, 10, 20], 'factor': 100}"/>
+                        <field name="image_url" widget="image_url"/>
                     </group>
 
                     <field name="keyinfo_ids" widget="one2many_form"/>

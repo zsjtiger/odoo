@@ -12,8 +12,11 @@ class MobileDemoTag(models.Model):
 class MobileDemoLine(models.Model):
     _name = 'mobile.demo.line'
     _description = "Mobile Demo Line"
+    _order = 'sequence, id'
 
     item_id = fields.Many2one('mobile.demo.item', required=True, ondelete='cascade')
+    # widget="handle": drag handle of the list, its order is the line order
+    sequence = fields.Integer(default=10)
     name = fields.Char(required=True)
     quantity = fields.Float(default=1.0)
     date = fields.Date(string="Date", default=fields.Date.context_today)
@@ -120,6 +123,15 @@ class MobileDemoItem(models.Model):
     tag_ids = fields.Many2many('mobile.demo.tag', string="Tags")
     line_ids = fields.One2many('mobile.demo.line', 'item_id', string="Lines")
     keyinfo_ids = fields.One2many('mobile.demo.keyinfo', 'item_id', string="Key info")
+    # --- controls: many2many_tags_avatar, many2one_avatar, reference ---
+    user_ids = fields.Many2many('res.users', 'mobile_demo_item_user_rel', string="Watchers")
+    ref_id = fields.Reference(
+        selection=[('res.partner', "Partner"), ('res.users', "User"), ('mobile.demo.item', "Demo item")],
+        string="Reference")
+
+    # --- controls: float_toggle (stored as a fraction, shown as a percentage), image_url ---
+    discount = fields.Float(string="Discount", default=0.0)
+    image_url = fields.Char(string="Image URL")
 
     # --- contact and special text fields ---
     email = fields.Char(string="Email")
