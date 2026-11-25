@@ -576,3 +576,179 @@ export class BinaryField extends Component {
 }
 mobileFieldRegistry.add("binary", BinaryField);
 mobileFieldRegistry.add("image", BinaryField);
+
+// -----------------------------------------------------------------------------
+// 头像: 关联记录的 avatar_128 图片 (与桌面端的 /web/image 地址相同)
+// -----------------------------------------------------------------------------
+
+function avatarUrl(relation, id) {
+    return `/web/image/${relation}/${id}/avatar_128`;
+}
+
+// -----------------------------------------------------------------------------
+// many2many_tags: 标签形式的多选, 与 many2many 的移动端实现相同
+// -----------------------------------------------------------------------------
+
+mobileFieldRegistry.add("many2many_tags", Many2manyField);
+
+// -----------------------------------------------------------------------------
+// many2many_tags_avatar: 与 many2many_tags 相同, 每个标签前显示头像
+// -----------------------------------------------------------------------------
+
+export class Many2manyTagsAvatarField extends Many2manyField {
+    static components = { MobileSelectSheet, Button };
+    static template = xml`
+        <t t-name="mobile_web.Many2manyTagsAvatarField">
+            <div class="m_tags">
+                <span t-foreach="this.pairs" t-as="pair" t-key="pair[0]" class="m_tag m_tag_avatar">
+                    <img class="m_avatar" t-att-src="this.avatarUrl(pair[0])" alt=""/>
+                    <t t-esc="pair[1]"/>
+                </span>
+                <span t-if="!this.pairs.length and !this.props.compact" class="m_field_value m_field_empty"><t t-esc="this.texts.none"/></span>
+            </div>
+            <Button t-if="!this.props.readonly" label="this.texts.edit" compact="true" caret="true" onClick="this.openSheet"/>
+            <MobileSelectSheet t-if="this.state.open" title="this.props.field.string" multiple="true"
+                search="this.search" searchPlaceholder="this.props.attrs.placeholder || ''" selected="this.currentItems"
+                onConfirm="this.onConfirm" onClose="this.close"/>
+        </t>
+    `;
+
+    avatarUrl(id) {
+        return avatarUrl(this.props.field.relation, id);
+    }
+}
+mobileFieldRegistry.add("many2many_tags_avatar", Many2manyTagsAvatarField);
+
+// -----------------------------------------------------------------------------
+// many2one_avatar: 与 many2one 相同, 只读时在名称前显示头像
+// -----------------------------------------------------------------------------
+
+export class Many2oneAvatarField extends Many2oneField {
+    static components = { MobileSelectSheet, PickerButton };
+    static template = xml`
+        <t t-name="mobile_web.Many2oneAvatarField">
+            <span t-if="this.props.readonly" class="m_field_value m_avatar_value">
+                <img t-if="this.current" class="m_avatar" t-att-src="this.avatarSrc" alt=""/>
+                <t t-esc="this.displayName"/>
+            </span>
+            <t t-else="">
+                <PickerButton value="this.current ? this.displayName : false" placeholder="this.texts.select" onClick="this.openSheet"/>
+                <MobileSelectSheet t-if="this.state.open" title="this.props.field.string"
+                    search="this.search" searchPlaceholder="this.props.attrs.placeholder || ''" selected="this.currentItems"
+                    onConfirm="this.onConfirm" onClose="this.close"/>
+            </t>
+        </t>
+    `;
+
+    get avatarSrc() {
+        return avatarUrl(this.props.field.relation, this.current[0]);
+    }
+}
+mobileFieldRegistry.add("many2one_avatar", Many2oneAvatarField);
+
+// -----------------------------------------------------------------------------
+// reference: 先选择模型 (字段的 selection), 再选择该模型中的记录
+// 值为 "model,id" 字符串, 与服务端一致
+// -----------------------------------------------------------------------------
+
+export class ReferenceField extends Component {
+    texts = fieldTexts;
+    static components = { MobileSelectSheet, PickerButton };
+    static template = xml`
+        <t t-name="mobile_web.ReferenceField">
+            <span t-if="this.props.readonly" class="m_field_value"><t t-esc="this.state.name"/></span>
+            <t t-else="">
+                <PickerButton value="this.modelLabel" placeholder="this.texts.selectModel" onClick="this.openModelSheet"/>
+                <PickerButton t-if="this.state.model" value="this.state.name || false" placeholder="this.texts.select" onClick="this.openRecordSheet"/>
+                <MobileSelectSheet t-if="this.state.sheet === 'model'" title="this.props.field.string"
+                    options="this.modelOptions" selected="this.modelSelected"
+                    onConfirm="this.onModelConfirm" onClose="this.closeSheet"/>
+                <MobileSelectSheet t-if="this.state.sheet === 'record'" title="this.props.field.string"
+                    search="this.search" selected="this.recordSelected"
+                    onConfirm="this.onRecordConfirm" onClose="this.closeSheet"/>
+            </t>
+        </t>
+    `;
+    props = useProps(fieldProps);
+    orm = useService("orm");
+    state = proxy({ sheet: null, model: "", name: "" });
+
+    setup() {
+        this.search = (text) => makeNameSearch(this.orm, this.state.model, {})(text);
+        // 读取已保存记录的名称, 并同步模型
+        useEffect(
+            () => {
+                const stored = this.stored;
+                untrack(() => {
+                    if (!stored) {
+                        return;
+                    }
+                    this.state.model = stored.model;
+                    this.orm
+                        .read(stored.model, [stored.id], ["display_name"])
+                        .then(([record]) => {
+                            this.state.name = record ? record.display_name : `#${stored.id}`;
+                        })
+                        .catch(() => {
+                            this.state.name = `#${stored.id}`;
+                        });
+                });
+            },
+            () => [this.props.record.data[this.props.name]]
+        );
+    }
+
+    get stored() {
+        const value = this.props.record.data[this.props.name];
+        if (!value) {
+            return null;
+        }
+        const [model, id] = value.split(",");
+        return { model, id: Number(id) };
+    }
+    get modelLabel() {
+        const option = (this.props.field.selection || []).find(([value]) => value === this.state.model);
+        return option ? option[1] : false;
+    }
+    get modelOptions() {
+        return (this.props.field.selection || []).map(([value, label]) => ({ id: value, name: label }));
+    }
+    get modelSelected() {
+        return this.state.model ? [{ id: this.state.model, name: this.modelLabel }] : [];
+    }
+    get recordSelected() {
+        return this.stored ? [{ id: this.stored.id, name: this.state.name }] : [];
+    }
+    openModelSheet = () => {
+        this.state.sheet = "model";
+    };
+    openRecordSheet = () => {
+        this.state.sheet = "record";
+    };
+    closeSheet = () => {
+        this.state.sheet = null;
+    };
+    onModelConfirm = (selected) => {
+        const model = selected.length ? selected[0].id : "";
+        if (model !== this.state.model) {
+            this.state.model = model;
+            this.state.name = "";
+            // 换了模型, 之前选择的记录不再有效
+            if (this.stored) {
+                this.props.onChange(false);
+            }
+        }
+        this.closeSheet();
+    };
+    onRecordConfirm = (selected) => {
+        const item = selected[0];
+        if (!item) {
+            this.props.onChange(false);
+        } else {
+            this.state.name = item.name;
+            this.props.onChange(`${this.state.model},${item.id}`);
+        }
+        this.closeSheet();
+    };
+}
+mobileFieldRegistry.add("reference", ReferenceField);

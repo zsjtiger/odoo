@@ -511,3 +511,70 @@
     color: $theme-btn;
     background: $theme;
 }
+
+.m_badges_group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.m_badge_option {
+    min-height: 36px;
+    padding: 4px 14px;
+    border: 1px solid $theme;
+    border-radius: 999px;
+    background: #fff;
+    color: $theme;
+    font-size: 14px;
+}
+
+.m_badge_option_active {
+    background: $theme;
+    color: #fff;
+}
+
+.m_float_toggle {
+    min-height: 36px;
+    padding: 4px 14px;
+    border: 1px solid $theme;
+    border-radius: 6px;
+    background: #fff;
+    color: $theme;
+    font-size: 16px;
+}
+
+.m_avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
+    vertical-align: middle;
+    margin-right: 6px;
+}
+
+.m_avatar_value {
+    display: inline-flex;
+    align-items: center;
+}
+
+.m_tag_avatar {
+    display: inline-flex;
+    align-items: center;
+    padding-left: 4px;
+}
+
+.m_image_url {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.m_image_url_preview {
+    max-width: 100%;
+    max-height: 160px;
+    object-fit: contain;
+}
+
+.m_handle_hidden {
+    display: none;
+}

@@ -105,3 +105,28 @@ export class PriorityField extends SelectionBase {
     }
 }
 mobileFieldRegistry.add("priority", PriorityField);
+
+// -----------------------------------------------------------------------------
+// badges_selection: 选项以标签按钮列出, 点击选中; 与 radio 一样是单选
+// -----------------------------------------------------------------------------
+
+export class BadgesSelectionField extends SelectionBase {
+    static template = xml`
+        <t t-name="mobile_web.BadgesSelectionField">
+            <span t-if="this.props.readonly" class="m_field_value"><t t-esc="this.label"/></span>
+            <div t-else="" class="m_badges_group" role="group">
+                <button type="button" t-foreach="this.options" t-as="option" t-key="option_index"
+                        t-att-data-index="option_index" t-on-click="this.onSelect"
+                        t-att-class="option[0] === this.currentValue ? 'm_badge_option m_badge_option_active' : 'm_badge_option'"
+                        t-att-aria-pressed="option[0] === this.currentValue ? 'true' : 'false'">
+                    <t t-esc="option[1]"/>
+                </button>
+            </div>
+        </t>
+    `;
+
+    onSelect(ev) {
+        this.props.onChange(this.options[Number(ev.currentTarget.dataset.index)][0]);
+    }
+}
+mobileFieldRegistry.add("badges_selection", BadgesSelectionField);

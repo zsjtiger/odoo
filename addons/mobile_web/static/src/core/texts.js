@@ -9,6 +9,7 @@ export const fieldTexts = {
     no: _t("No"),
     none: _t("None"),
     select: _t("Select…"),
+    selectModel: _t("Select a model…"),
     edit: _t("Edit"),
     changeImage: _t("Change image"),
     selectImage: _t("Select image"),

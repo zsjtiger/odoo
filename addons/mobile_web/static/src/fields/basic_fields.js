@@ -220,6 +220,8 @@ export class BooleanField extends Component {
     };
 }
 mobileFieldRegistry.add("boolean", BooleanField);
+// boolean_toggle: 桌面端的开关, 移动端的 boolean 本身就是开关
+mobileFieldRegistry.add("boolean_toggle", BooleanField);
 
 // -----------------------------------------------------------------------------
 // selection (底部弹层选择)

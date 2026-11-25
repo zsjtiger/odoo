@@ -2,7 +2,9 @@ import { Component, signal, useProps, xml } from "@odoo/owl";
 import { mobileFieldRegistry } from "@mobile_web/views/registries";
 import { fieldProps, displayOrEmpty } from "@mobile_web/fields/field_utils";
 import { useInputField } from "@web/views/fields/input_field_hook";
-import { formatFloatTime, formatPercentage } from "@web/views/fields/formatters";
+import { formatFloat, formatFloatTime, formatPercentage } from "@web/views/fields/formatters";
+import { evaluateExpr } from "@web/core/data/py_js/py";
+import { fieldTexts } from "@mobile_web/core/texts";
 import { InvalidNumberError, parseFloatTime, parsePercentage } from "@web/views/fields/parsers";
 
 /** 相对运算的写法, 如 "+=2"; 移动端不提交 Operation 对象, 直接视为无效输入 */
@@ -109,3 +111,53 @@ export class FloatTimeField extends NumericBase {
     }
 }
 mobileFieldRegistry.add("float_time", FloatTimeField);
+
+// -----------------------------------------------------------------------------
+// float_toggle: 点击按钮在 options.range 中的取值之间循环切换 (与桌面端相同)
+// 存储值 = 显示值 / factor; 显示值 = 存储值 * factor
+// -----------------------------------------------------------------------------
+
+export class FloatToggleField extends Component {
+    texts = fieldTexts;
+    static template = xml`
+        <t t-name="mobile_web.FloatToggleField">
+            <span t-if="this.props.readonly" class="m_field_value"><t t-esc="this.displayValue"/></span>
+            <button t-else="" type="button" class="m_float_toggle" t-on-click="this.onClick"><t t-esc="this.displayValue"/></button>
+        </t>
+    `;
+    props = useProps(fieldProps);
+
+    get options() {
+        if (!this.props.attrs.options) {
+            return {};
+        }
+        try {
+            return evaluateExpr(this.props.attrs.options) || {};
+        } catch {
+            return {};
+        }
+    }
+    get factor() {
+        return Number(this.options.factor ?? 1) || 1;
+    }
+    get range() {
+        return Array.isArray(this.options.range) ? this.options.range : [];
+    }
+    get value() {
+        const value = this.props.record.data[this.props.name];
+        return value === undefined || value === false ? false : value * this.factor;
+    }
+    get displayValue() {
+        return this.value === false ? "" : formatFloat(this.value);
+    }
+    onClick() {
+        const range = this.range;
+        if (!range.length) {
+            return;
+        }
+        const index = range.findIndex((option) => option === this.value);
+        const next = range[(index + 1) % range.length];
+        this.props.onChange(next / this.factor);
+    }
+}
+mobileFieldRegistry.add("float_toggle", FloatToggleField);

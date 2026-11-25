@@ -2,6 +2,7 @@ import { Component, useProps, xml } from "@odoo/owl";
 import { mobileFieldRegistry } from "@mobile_web/views/registries";
 import { fieldProps, displayOrEmpty } from "@mobile_web/fields/field_utils";
 import { NumberField, SelectionField } from "@mobile_web/fields/basic_fields";
+import { fieldTexts } from "@mobile_web/core/texts";
 
 // -----------------------------------------------------------------------------
 // badge: 只读时显示为标签; 选择类与多对一字段显示其名称
@@ -145,3 +146,46 @@ export class JsonField extends Component {
     }
 }
 mobileFieldRegistry.add("json", JsonField);
+
+// -----------------------------------------------------------------------------
+// handle: 桌面端列表的拖拽排序手柄. 移动端列表与看板不显示手柄 (见 views/arch.js),
+// 因此这里不渲染任何内容, 只为了让带有该控件的视图能正常加载
+// -----------------------------------------------------------------------------
+
+export class HandleField extends Component {
+    static template = xml`
+        <t t-name="mobile_web.HandleField">
+            <span class="m_handle_hidden"/>
+        </t>
+    `;
+    props = useProps(fieldProps);
+}
+mobileFieldRegistry.add("handle", HandleField);
+
+// -----------------------------------------------------------------------------
+// image_url: 图片地址; 只读时显示图片, 可编辑时输入地址并预览
+// -----------------------------------------------------------------------------
+
+export class ImageUrlField extends Component {
+    texts = fieldTexts;
+    static template = xml`
+        <t t-name="mobile_web.ImageUrlField">
+            <div class="m_image_url">
+                <img t-if="this.url" class="m_image_url_preview" t-att-src="this.url" alt=""/>
+                <input t-if="!this.props.readonly" type="url" class="o_input"
+                       t-att-value="this.url || ''" t-att-placeholder="this.props.attrs.placeholder || ''"
+                       t-on-change="this.onChange"/>
+            </div>
+        </t>
+    `;
+    props = useProps(fieldProps);
+
+    get url() {
+        const value = this.props.record.data[this.props.name];
+        return value || false;
+    }
+    onChange(ev) {
+        this.props.onChange(ev.target.value.trim() || false);
+    }
+}
+mobileFieldRegistry.add("image_url", ImageUrlField);
