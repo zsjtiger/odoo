@@ -30,3 +30,15 @@
     color: $muted;
     margin-left: 8px;
 }
+
+// 右侧的下箭头图标: 与按钮的 Edit 箭头相同. 不使用 .m_picker_caret, 表单中的该类会被旋转
+.m_picker_chevron {
+    display: inline-flex;
+    align-items: center;
+    flex: 0 0 auto;
+    margin-left: 8px;
+    color: $muted;
+    svg {
+        display: block;
+    }
+}

@@ -9,7 +9,11 @@ export class PickerButton extends Component {
             <button type="button" class="m_picker_button" t-on-click="this.onClick">
                 <span t-if="this.props.value" class="m_picker_value"><t t-esc="this.props.value"/></span>
                 <span t-else="" class="m_picker_placeholder"><t t-esc="this.props.placeholder"/></span>
-                <span class="m_picker_caret">›</span>
+                <span class="m_picker_chevron" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" width="12" height="12">
+                        <path d="M3.5 6 8 10.5 12.5 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </span>
             </button>
         </t>
     `;
