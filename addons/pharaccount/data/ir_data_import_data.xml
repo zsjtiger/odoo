@@ -14,4 +14,30 @@
         <field name="perm_import" eval="True"/>
         <field name="perm_template" eval="True"/>
     </record>
+
+    <!-- Import template for pharmacy accounts: Chinese headers, required name, one example row. -->
+    <record id="ir_data_import_template_pharaccount" model="ir.data.import.template">
+        <field name="name">药店导入模板</field>
+        <field name="model_id" ref="model_pharaccount_account"/>
+        <field name="include_example" eval="True"/>
+        <field name="sheet_name">药店</field>
+        <field name="column_ids" eval="[
+            (0, 0, {'sequence': 10, 'field_id': ref('field_pharaccount_account__name'), 'header': '药店名称',
+                    'required_on_create': True, 'example': '示例药店', 'column_width': 24}),
+            (0, 0, {'sequence': 20, 'field_id': ref('field_pharaccount_account__telephone'), 'header': '电话',
+                    'example': '010-88888888', 'column_width': 16}),
+            (0, 0, {'sequence': 30, 'field_id': ref('field_pharaccount_account__mobile'), 'header': '手机',
+                    'example': '13800000000', 'column_width': 16}),
+            (0, 0, {'sequence': 40, 'field_id': ref('field_pharaccount_account__geo_province'), 'header': '省',
+                    'example': '北京', 'column_width': 12}),
+            (0, 0, {'sequence': 50, 'field_id': ref('field_pharaccount_account__geo_city'), 'header': '市',
+                    'example': '北京', 'column_width': 12}),
+            (0, 0, {'sequence': 60, 'field_id': ref('field_pharaccount_account__address'), 'header': '地址',
+                    'example': '朝阳路 1 号', 'column_width': 32}),
+            (0, 0, {'sequence': 70, 'field_id': ref('field_pharaccount_account__pharmacy_level_id'), 'header': '药店级别',
+                    'column_width': 14}),
+            (0, 0, {'sequence': 80, 'field_id': ref('field_pharaccount_account__is_important'), 'header': '重要',
+                    'dropdown': True, 'align': 'center', 'column_width': 10}),
+        ]"/>
+    </record>
 </odoo>

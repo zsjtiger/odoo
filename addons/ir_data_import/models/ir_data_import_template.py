@@ -35,10 +35,15 @@ def auto_columns(env, Model):
     if not Model.has_access('read'):
         return []
     columns = []
+    excluded = set(getattr(Model, '_import_exclude', ()))  # fields filled by the system, e.g. pinyin
     for name, field in Model._fields.items():
-        if name in SKIP_AUTO or name in RESERVED_COLUMNS:
+        if name in SKIP_AUTO or name in RESERVED_COLUMNS or name in excluded:
+            continue
+        if name == 'record_type_id':  # shown as the Record Type column instead
             continue
         if field.type in NOT_IMPORTABLE_TYPES or not field.store or field.readonly:
+            continue
+        if field.compute and not field.inverse:  # computed values are not imported
             continue
         header = field.string or name
         options = _selection_options(env, field) if field.type == 'selection' else None
@@ -211,7 +216,7 @@ class IrDataImportTemplate(models.Model):
         """Download action for the general template of a model (used by the import dialog)."""
         content, filename = self._build_xlsx(model_name)
         attachment = self.env['ir.attachment'].create({
-            'name': filename, 'datas': base64.b64encode(content),
+            'name': filename, 'raw': content,
             'res_model': 'ir.data.import.wizard', 'res_id': 0,
         })
         return {'type': 'ir.actions.act_url', 'url': f'/web/content/{attachment.id}?download=true', 'target': 'self'}
@@ -220,7 +225,7 @@ class IrDataImportTemplate(models.Model):
         self.ensure_one()
         content, filename = self._build_xlsx(self.model_name)
         attachment = self.env['ir.attachment'].create({
-            'name': filename, 'datas': base64.b64encode(content),
+            'name': filename, 'raw': content,
             'res_model': self._name, 'res_id': self.id,
         })
         return {'type': 'ir.actions.act_url', 'url': f'/web/content/{attachment.id}?download=true', 'target': 'self'}
@@ -252,6 +257,12 @@ class IrDataImportTemplateColumn(models.Model):
     def _compute_header(self):
         for column in self:
             column.header = column.field_id.field_description if column.field_id else False
+
+    @api.constrains('dropdown', 'field_id')
+    def _check_dropdown(self):
+        for column in self.filtered('dropdown'):
+            if column.field_id.ttype not in ('selection', 'boolean'):
+                raise ValidationError(_('Dropdowns are only available for selection and boolean fields.'))
 
     @api.constrains('field_id', 'template_id')
     def _check_field_model(self):

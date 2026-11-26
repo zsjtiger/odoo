@@ -10,6 +10,8 @@ class PharaccountAccount(models.Model):
     """
     _name = 'pharaccount.account'
     _inherit = ['ir.data.import.mixin']  # Import button action
+    # fields filled by the system (pinyin is computed from the name); not part of the import template
+    _import_exclude = ('name_pinyin', 'pinyin', 'alias_pinyin', 'pinyin_with_separator')
     _description = 'Pharmacy Account'
     _order = 'name, id'
     _record_type = True  # adds record_type_id (ir.record.type); permissions come from the type

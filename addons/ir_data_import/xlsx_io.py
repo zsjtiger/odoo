@@ -71,13 +71,16 @@ def build_template(columns, style, example=None, help_rows=None):
                 dv.add(f'{letter}{DATA_START_ROW}:{letter}2000')
                 ws.add_data_validation(dv)
         if col['name'] == 'action':
-            for row in range(DATA_START_ROW, 2001):
-                ws.cell(row=row, column=index).fill = _fill(style.get('action_fill_color') or '#FFF2CC')
+            ws.cell(row=HEADER_ROW, column=index).fill = _fill(style.get('header_fill_color') or '#0E7C86')
     if example:
         for index, col in enumerate(columns, start=1):
             value = example.get(col['name'])
-            if value not in (None, ''):
+            if value not in (None, '', False):  # Odoo returns False for empty fields
                 ws.cell(row=DATA_START_ROW, column=index, value=value).alignment = _align(columns[index - 1].get('align'))
+    # action cells of the data rows are tinted only by the validation dropdown (no styled cells are created)
+    action_index = next((i for i, c in enumerate(columns, start=1) if c['name'] == 'action'), None)
+    if action_index:
+        ws.cell(row=DATA_START_ROW, column=action_index).fill = _fill(style.get('action_fill_color') or '#FFF2CC')
     ws.row_dimensions[HEADER_ROW].height = style.get('header_height', 24)
     if style.get('freeze_header', True):
         ws.freeze_panes = f'A{DATA_START_ROW}'
