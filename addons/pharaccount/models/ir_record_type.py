@@ -8,6 +8,9 @@ DEFAULT_RECORD_TYPES = [
     ('pharmacy_chain_head', '连锁总店', 10, 'pharma'),
     ('pharmacy_chain_branch', '连锁门店', 20, 'pharma'),
     ('pharmacy_monomer', '单体药店', 30, 'pharma'),
+    # shared pharmacy account model, other record types of the same model
+    ('hospital', '医院', 40, False),
+    ('doctor', '医生', 50, False),
 ]
 
 
@@ -33,14 +36,34 @@ class IrRecordType(models.Model):
 
     @api.model
     def _pharaccount_create_default_types(self):
-        """Create the pharmacy types on install. Existing types are left untouched."""
+        """Create the pharmacy record types that do not exist yet.
+
+        A new type gets the default access (group_user reads, writes and creates; group_manager
+        also deletes) and the group_user default goes to the pharmacy type if there is none.
+        Existing types and their configuration are left untouched.
+        """
         model = self.env['ir.model']._get('pharaccount.account')
+        group_user = self.env.ref('pharaccount.group_user')
+        group_manager = self.env.ref('pharaccount.group_manager')
+        Permission = self.env['ir.record.type.permission']
+        Default = self.env['ir.record.type.default']
         created = self.browse()
         for code, label, sequence, parent_code in DEFAULT_RECORD_TYPES:
             record_type = self.search([('model_id', '=', model.id), ('code', '=', code)], limit=1)
             if not record_type:
                 record_type = self.create({'name': label, 'code': code, 'model_id': model.id, 'sequence': sequence})
                 created |= record_type
+                Permission.create([
+                    {'record_type_id': record_type.id, 'group_id': group_user.id,
+                     'perm_read': True, 'perm_write': True, 'perm_create': True},
+                    {'record_type_id': record_type.id, 'group_id': group_manager.id,
+                     'perm_read': True, 'perm_write': True, 'perm_create': True, 'perm_unlink': True},
+                ])
             if parent_code and not record_type.parent_id:
                 record_type.parent_id = self.search([('model_id', '=', model.id), ('code', '=', parent_code)], limit=1)
+        pharma = self.search([('model_id', '=', model.id), ('code', '=', 'pharma')], limit=1)
+        # a default must be granted to its group, so it is only set when the type grants group_user
+        if (pharma and pharma.permission_ids.filtered(lambda p: p.group_id == group_user)
+                and not Default.search([('model_id', '=', model.id), ('group_id', '=', group_user.id)], limit=1)):
+            Default.create({'model_id': model.id, 'group_id': group_user.id, 'record_type_id': pharma.id})
         return created

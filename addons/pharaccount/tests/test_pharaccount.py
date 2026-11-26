@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from odoo.exceptions import AccessError
 from odoo.tests import TransactionCase, tagged
 
 
@@ -70,9 +69,8 @@ class TestPharaccount(TransactionCase):
         account = self.env['pharaccount.account'].create({'name': 'Rule pharmacy', 'record_type_id': record_type.id})
         outsider = self._user([self.group_b], 'pharma_rule_outsider')
         insider = self._user([self.group_a], 'pharma_rule_insider')
-        # no grant matches the outsider: the framework answers with an access error, not an empty result
-        with self.assertRaises(AccessError):
-            self.env['pharaccount.account'].with_user(outsider).search([('id', '=', account.id)])
+        # the outsider's groups match no type of this account: nothing is returned
+        self.assertFalse(self.env['pharaccount.account'].with_user(outsider).search([('id', '=', account.id)]))
         self.assertEqual(self.env['pharaccount.account'].with_user(insider).search([('id', '=', account.id)]), account)
 
     def test_account_hidden_when_record_type_has_no_groups(self):
@@ -80,8 +78,7 @@ class TestPharaccount(TransactionCase):
         record_type = self._ir_type('open_t')
         account = self.env['pharaccount.account'].create({'name': 'Open pharmacy', 'record_type_id': record_type.id})
         outsider = self._user([self.group_b], 'pharma_open_outsider')
-        with self.assertRaises(AccessError):
-            self.env['pharaccount.account'].with_user(outsider).search([('id', '=', account.id)])
+        self.assertFalse(self.env['pharaccount.account'].with_user(outsider).search([('id', '=', account.id)]))
 
     def test_pc_and_mobile_views_load(self):
         # Every PC and mobile view must load for its model (validates fields and arch).
