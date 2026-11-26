@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo.exceptions import ValidationError
+from odoo.exceptions import AccessError, ValidationError
 from odoo.tests import TransactionCase, tagged
 
 
@@ -192,3 +192,33 @@ class TestIrRecordTypeViewsAndDefaults(TransactionCase):
 
     def test_creatable_types_empty_for_model_without_record_types(self):
         self.assertEqual(self.env['ir.record.type'].get_creatable_types('res.partner'), [])
+
+    def test_user_sees_and_creates_only_permitted_types(self):
+        RecordType = self.env['ir.record.type']
+        model = self.env['ir.model']._get('ir.recordtype.test')
+        group_user = self.env.ref('base.group_user')
+        model.supports_record_type = True
+        allowed = RecordType.create({'name': 'p1', 'code': 'p1', 'model_id': model.id})
+        forbidden = RecordType.create({'name': 'p2', 'code': 'p2', 'model_id': model.id})
+        self.env['ir.record.type.permission'].create({
+            'record_type_id': allowed.id, 'group_id': group_user.id,
+            'perm_read': True, 'perm_write': True, 'perm_create': True,
+        })
+        rec_allowed = self.env['ir.recordtype.test'].create({'name': 'a', 'record_type_id': allowed.id})
+        rec_forbidden = self.env['ir.recordtype.test'].create({'name': 'f', 'record_type_id': forbidden.id})
+        user = self.env['res.users'].create({
+            'name': 'Limited', 'login': 'limited_user', 'group_ids': [(6, 0, [group_user.id])],
+        })
+        Model = self.env['ir.recordtype.test'].with_user(user)
+        # list and search: only records of the types the user can read
+        self.assertEqual(Model.search([]).ids, [rec_allowed.id])
+        self.assertEqual(Model.search_count([('name', 'ilike', 'f')]), 0)
+        with self.assertRaises(AccessError):
+            Model.browse(rec_forbidden.id).read(['name'])
+        # picker: only the types the user can create
+        self.assertEqual([t['id'] for t in RecordType.with_user(user).get_creatable_types('ir.recordtype.test')],
+                         [allowed.id])
+        # creating a record of a type without create permission is refused
+        with self.assertRaises(AccessError):
+            Model.create({'name': 'x', 'record_type_id': forbidden.id})
+        self.assertTrue(Model.create({'name': 'y', 'record_type_id': allowed.id}))
