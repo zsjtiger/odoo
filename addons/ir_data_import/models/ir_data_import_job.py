@@ -67,7 +67,7 @@ class IrDataImportJob(models.Model):
     def _run(self, commit):
         self.ensure_one()
         perm = self.env['ir.data.import.permission']
-        if not perm._user_can(self.model_name, 'perm_import'):
+        if not perm._user_can(self.model_name, 'allow_import'):
             raise AccessError(_('You are not allowed to import %s.', self.model_id.name))
         if not self.source_file:
             raise UserError(_('No file uploaded.'))

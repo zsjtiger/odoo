@@ -51,7 +51,7 @@
 |---|---|
 | `model_id` | 模型 |
 | `group_id` | 用户组 |
-| `perm_import` | 允许导入（上传并执行） |
+| `allow_import` | 允许导入（上传并执行） |
 | `perm_template` | 允许下载模板（默认与导入相同，可单独关闭） |
 
 约束：同一组、同一模型唯一；至少一个权限勾选。
@@ -67,6 +67,18 @@
 | D | 记录所属类型有 `unlink` 权限 |
 
 这些检查复用 `ir.record.type._can_use(operation)`，不新造规则。
+
+### 3.2.1 统一的开关名：`allow_import`
+
+导入相关的"允许导入"都叫 `allow_import`，判断顺序如下：
+
+| 层级 | 位置 | 含义 |
+|---|---|---|
+| 模型 + 用户组 | `ir.data.import.permission.allow_import` | 该组能否打开导入向导并导入该模型 |
+| 记录类型 | `ir.record.type.allow_import` | 该类型的记录能否通过导入处理（关闭则对所有人禁止） |
+| 记录类型 + 用户组 | `ir.record.type.permission.allow_import` | 该组能否通过导入处理该类型的记录 |
+
+每一行按上表从上到下判断，任一层不允许则该行报错。模板下载仍由 `allow_template` 相关的 `perm_template` 控制（不在此开关之内）。
 
 ### 3.3 导入按钮的显示
 
@@ -438,7 +450,7 @@ ir.cron 每次处理一批（默认 200 行）→ 更新作业的进度 → 本�
 
 ## 10. 安全
 
-- 没有 `perm_import` 的用户：不能上传，服务端直接拒绝。
+- 没有 `allow_import` 的用户：不能上传，服务端直接拒绝。
 - D 操作需要 `unlink` 权限，并且在界面上要求二次确认。
 - 上传的文件类型只允许 xlsx（以及 csv，阶段 2）。
 - 文件大小限制（默认 10 MB）和行数限制（默认 2000 行）。

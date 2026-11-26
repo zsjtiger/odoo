@@ -178,7 +178,7 @@ class TestDataImport(TransactionCase):
         })
         self.env['ir.data.import.permission'].create({
             'model_id': self.model.id, 'group_id': self.env.ref('base.group_user').id,
-            'perm_import': True, 'perm_template': True,
+            'allow_import': True, 'perm_template': True,
         })
         job = self._job(['action', 'name'], [{'action': 'N', 'name': 'Allowed'}], user=user)
         job.with_user(user).action_validate()

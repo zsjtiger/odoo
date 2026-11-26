@@ -37,7 +37,7 @@ class IrDataImportWizard(models.TransientModel):
 
     def _check_template_or_import(self):
         perm = self.env['ir.data.import.permission']
-        if not (perm._user_can(self.model_name, 'perm_template') or perm._user_can(self.model_name, 'perm_import')):
+        if not (perm._user_can(self.model_name, 'perm_template') or perm._user_can(self.model_name, 'allow_import')):
             raise AccessError(_('You are not allowed to use the import of %s.', self.model_id.name))
 
     def action_download_template(self):

@@ -10,7 +10,7 @@ class IrDataImportMixin(models.AbstractModel):
 
     def action_open_data_import(self):
         perm = self.env['ir.data.import.permission']
-        if not (perm._user_can(self._name, 'perm_import') or perm._user_can(self._name, 'perm_template')):
+        if not (perm._user_can(self._name, 'allow_import') or perm._user_can(self._name, 'perm_template')):
             raise AccessError(_('You are not allowed to import %s.', self.env[self._name]._description))
         model = self.env['ir.model']._get(self._name)
         return {

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Data Import',
-    'version': '20.0.1.0.0',
+    'version': '20.0.1.1.0',
     'category': 'Technical',
     'summary': 'Import records from Excel templates with New / Update / Delete actions and row validation',
     'description': """
