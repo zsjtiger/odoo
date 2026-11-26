@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_model_form_record_type" model="ir.ui.view">
+        <field name="name">ir.model.form.record.type</field>
+        <field name="model">ir.model</field>
+        <field name="inherit_id" ref="base.view_model_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_enable_record_type" type="object" string="Enable Record Types"
+                        class="btn-secondary" invisible="supports_record_type"/>
+                <button name="action_disable_record_type" type="object" string="Disable Record Types"
+                        class="btn-secondary" invisible="not supports_record_type"/>
+            </xpath>
+            <xpath expr="//sheet" position="inside">
+                <group string="Record Types">
+                    <field name="supports_record_type" readonly="1"/>
+                    <field name="record_type_ids" readonly="1" invisible="not supports_record_type"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

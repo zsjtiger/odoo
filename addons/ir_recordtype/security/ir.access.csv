@@ -1,0 +1,7 @@
+id,name,model_id/id,group_id/id,operation,domain
+access_ir_record_type_admin,ir.record.type administrators,model_ir_record_type,base.group_system,crud,
+access_ir_record_type_user,ir.record.type users,model_ir_record_type,base.group_user,r,
+access_ir_record_type_permission_admin,ir.record.type.permission administrators,model_ir_record_type_permission,base.group_system,crud,
+access_ir_record_type_permission_user,ir.record.type.permission users,model_ir_record_type_permission,base.group_user,r,
+access_ir_record_type_default_admin,ir.record.type.default administrators,model_ir_record_type_default,base.group_system,crud,
+access_ir_record_type_default_user,ir.record.type.default users,model_ir_record_type_default,base.group_user,r,
