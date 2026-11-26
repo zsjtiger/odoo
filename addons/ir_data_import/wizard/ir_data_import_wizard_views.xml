@@ -19,6 +19,8 @@
                     <p class="mb-0">2. 验证数据：上传填好的文件并点击"Validate"。有错误的行会在结果文件的 Validation Error 列写明原因，修正后重新上传。</p>
                 </div>
                 <group invisible="state != 'upload'">
+                    <field name="has_record_types" invisible="1"/>
+                    <field name="record_type_id" invisible="not has_record_types"/>
                     <field name="file" filename="filename"/>
                     <field name="filename" invisible="1"/>
                 </group>

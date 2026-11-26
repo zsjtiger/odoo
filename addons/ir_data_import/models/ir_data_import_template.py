@@ -198,10 +198,11 @@ class IrDataImportTemplate(models.Model):
             {'name': 'id', 'header': _('ID'), 'required': False, 'width': 12, 'align': 'right', 'options': None,
              'note': _('Database ID or external ID (module.xmlid). Required for U and D, empty for N.')},
         ]
+        record_types = self.env['ir.record.type'].search([('model_name', '=', model_name)]) if has_types else []
         if has_types:
             columns.append({'name': 'record_type', 'header': _('Record Type'), 'required': False, 'width': 16,
-                            'align': 'left', 'options': None,
-                            'note': _('Code or name of the record type. Empty: default type.')})
+                            'align': 'left', 'options': record_types.mapped('code') or None,
+                            'note': _('Code of the record type (see the Help sheet). Empty: default type.')})
         columns += fields_columns
         columns.append({'name': 'action', 'header': _('Action (N/U/D)'), 'required': False, 'width': 10,
                         'align': 'center', 'options': ['N', 'U', 'D'],
@@ -210,13 +211,20 @@ class IrDataImportTemplate(models.Model):
         for column in columns:
             help_rows.append((column['header'], column['name'], 'yes' if column.get('required') else '',
                               column.get('note') or ''))
+        if record_types:
+            help_rows.append(())
+            help_rows.append((_('Record type'), _('Code'), _('Name'), _('Active')))
+            for type_record in record_types:
+                help_rows.append((type_record.name, type_record.code, type_record.name,
+                                  'yes' if type_record.active else 'no'))
         content = build_template(columns, style, example=example, help_rows=help_rows)
-        return content, f'{model_name}_template.xlsx'
+        name = f'{model_name}_{record_type.code}' if record_type else model_name
+        return content, f'{name}_template.xlsx'
 
     @api.model
-    def _download_general(self, model_name):
-        """Download action for the general template of a model (used by the import dialog)."""
-        content, filename = self._build_xlsx(model_name)
+    def _download_template(self, model_name, record_type=None):
+        """Download action for the template of a model, or of one record type (used by the import dialog)."""
+        content, filename = self._build_xlsx(model_name, record_type)
         attachment = self.env['ir.attachment'].create({
             'name': filename, 'raw': content,
             'res_model': 'ir.data.import.wizard', 'res_id': 0,

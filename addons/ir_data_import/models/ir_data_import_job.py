@@ -43,6 +43,10 @@ class IrDataImportJob(models.Model):
     updated_rows = fields.Integer(readonly=True)
     deleted_rows = fields.Integer(readonly=True)
     message = fields.Text(readonly=True)
+    record_type_id = fields.Many2one(
+        'ir.record.type', string='Default record type', readonly=True,
+        help='Used for new rows that do not name a record type.',
+    )
 
     # ------------------------------------------------------------------ entry points
 
@@ -130,6 +134,8 @@ class IrDataImportJob(models.Model):
             raise UserError(_('Action must be N (new), U (update) or D (delete).'))
         rec_id = self._resolve_id(Model, row.get('id'))
         record_type = self._resolve_record_type(Model, row.get('record_type'))
+        if not record_type and action == 'N' and self.record_type_id:
+            record_type = self.record_type_id
         values = self._convert_values(Model, row)
 
         if action == 'N':

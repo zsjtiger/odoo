@@ -254,3 +254,57 @@ class TestPharaccount(TransactionCase):
         wb.save(out)
         return base64.b64encode(out.getvalue()).decode()
 
+    def test_import_record_type_support(self):
+        import io
+        from openpyxl import load_workbook
+        Account = self.env['pharaccount.account']
+        hospital = self.env['ir.record.type'].search([('code', '=', 'hospital')])
+        model = self.env['ir.model']._get('pharaccount.account')
+
+        # the template of a record type: its code in the Help sheet and in the record type dropdown
+        content, filename = self.env['ir.data.import.template']._build_xlsx('pharaccount.account', hospital)
+        self.assertIn('hospital', filename)
+        wb = load_workbook(io.BytesIO(content))
+        help_values = [c.value for row in wb['Help'].iter_rows() for c in row]
+        self.assertIn('hospital', help_values)
+        formulas = [dv.formula1 for dv in wb.worksheets[0].data_validations.dataValidation]
+        self.assertTrue(any('hospital' in (f or '') for f in formulas))
+
+        # the wizard's record type is the default for new rows that name no type
+        wizard = self.env['ir.data.import.wizard'].create({
+            'model_id': model.id, 'record_type_id': hospital.id,
+            'file': self._xlsx_bytes(['action', 'name'], [{'action': 'N', 'name': 'Default typed'}]),
+            'filename': 'typed.xlsx',
+        })
+        wizard.action_validate()
+        self.assertEqual(wizard.job_id.record_type_id, hospital)
+        wizard.action_import()
+        self.assertEqual(Account.search([('name', '=', 'Default typed')]).record_type_id, hospital)
+
+    def test_delete_needs_unlink_on_record_type(self):
+        hospital = self.env['ir.record.type'].search([('code', '=', 'hospital')])
+        model = self.env['ir.model']._get('pharaccount.account')
+        record = self.env['pharaccount.account'].create({'name': 'Protected', 'record_type_id': hospital.id})
+        # the pharmacy user may read, write and create hospitals, but not delete them
+        user = self.env['res.users'].create({
+            'name': 'Pharmacy user', 'login': 'pharmacy_import_user',
+            'group_ids': [(6, 0, [self.env.ref('base.group_user').id, self.env.ref('pharaccount.group_user').id])],
+        })
+        job = self.env['ir.data.import.job'].with_user(user).create({
+            'model_id': model.id,
+            'source_file': self._xlsx_bytes(['action', 'id'], [{'action': 'D', 'id': record.id}]),
+        })
+        job.with_user(user).action_validate()
+        self.assertEqual(job.error_rows, 1)
+        wb = load_workbook_bytes(job.result_file)
+        self.assertIn('not allowed to unlink', wb)
+        self.assertTrue(record.exists())
+
+
+def load_workbook_bytes(result_file):
+    """All text of the first sheet of a result file, joined (for simple assertions)."""
+    import io
+    from openpyxl import load_workbook
+    ws = load_workbook(io.BytesIO(bytes(result_file))).worksheets[0]
+    return ' '.join(str(c.value) for row in ws.iter_rows() for c in row if c.value is not None)
+
