@@ -9,7 +9,8 @@
 | 导入权限、模板（列与样式）、模板下载 xlsx | 异步导入（ir.cron 分批）、取消、断点重试 |
 | N / U / D、逐行 savepoint 校验、Validation Error 结果文件 | csv 导入、外部 ID 之外的其他匹配方式 |
 | 声明式规则（domain + message）、`_import_validate_row` 钩子 | `_import_validate_file` 和 `_import_after_row` 钩子 |
-| 记录类型列、按类型的模板、类型权限检查 | Many2one 下拉框（Excel 中） |
+| 记录类型：列与下拉、按类型下载模板、向导的默认类型、类型权限检查 | Many2one 下拉框（Excel 中） |
+| 开关 `allow_import`：记录类型级与记录类型 + 用户组级（第 3.2.1 节） | 按类型配置模板的界面入口（目前在模板表单中选择类型） |
 | 导入向导（列表齿轮菜单中的"导入"） | 移动端导入（不做） |
 
 **实现的约定（与上文不同之处）**
@@ -19,7 +20,14 @@
 - 导入结果为"全部成功才导入"；校验与导入共用同一段代码，导入时会再校验一遍。
 - 一次最多 2000 行。
 - Binary 字段读取为原始字节，写入使用 base64 字符串（Odoo 20 的要求）。
+
 试点模型：`pharaccount.account`（药店）。仅支持 Web 端，不做移动端导入。
+
+**相关模块的说明**
+
+- 本文件：`ir_data_import/doc/design.md`（设计与实现状态）。
+- 记录类型相关的开关：`ir_recordtype/doc/import.md`。
+- 药店的导入配置：`pharaccount/doc/data_import.md`。
 
 ## 1. 目标
 

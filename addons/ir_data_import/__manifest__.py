@@ -14,6 +14,8 @@ Data Import
 * Row validation in a savepoint per row; errors are written to a Validation Error column of the
   result file. Nothing is saved while validating, and an import is all-or-nothing.
 * Declarative rules (domain + message) and Python hooks (_import_validate_row) for custom checks.
+
+Design: doc/design.md. Record type switches: ir_recordtype/doc/import.md.
     """,
     'author': 'pharaccount',
     'license': 'LGPL-3',
