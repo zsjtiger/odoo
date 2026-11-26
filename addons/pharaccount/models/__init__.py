@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from . import pharaccount_picklist
-from . import pharaccount_record_type
+from . import ir_record_type
 from . import pharaccount_account_state
 from . import pharaccount_pharmacy_staff
 from . import pharaccount_hospital_link

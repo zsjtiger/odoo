@@ -1,6 +1,4 @@
 id,name,model_id,group_id/id,operation,domain
-access_pharaccount_record_type_user,pharaccount.record.type user,pharaccount.record.type,pharaccount.group_user,r,
-access_pharaccount_record_type_config,pharaccount.record.type config,pharaccount.record.type,pharaccount.group_config,crud,
 access_pharaccount_picklist_user,pharaccount.picklist user,pharaccount.picklist,pharaccount.group_user,r,
 access_pharaccount_picklist_config,pharaccount.picklist config,pharaccount.picklist,pharaccount.group_config,crud,
 access_pharaccount_picklist_value_user,pharaccount.picklist.value user,pharaccount.picklist.value,pharaccount.group_user,r,

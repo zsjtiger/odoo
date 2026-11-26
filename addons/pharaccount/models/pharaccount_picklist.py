@@ -48,8 +48,8 @@ class PharaccountPicklistValue(models.Model):
         """Return the options of a picklist the current user can select.
 
         :param picklist_name: the picklist ``name``, e.g. ``pharmacy_level``
-        :param record_type: optional ``pharaccount.record.type``. When it has configured
-            options (including its parents'), only those options are returned.
+        :param record_type: optional ``ir.record.type``. When it has configured options
+            (including its parents'), only those options are returned.
         """
         domain = [
             ('picklist_id.name', '=', picklist_name),
@@ -69,11 +69,9 @@ class PharaccountPicklistValue(models.Model):
     def get_widget_options(self, picklist_name, record_type_id=False):
         """Options for the ``pharaccount_picklist`` control, as plain dicts.
 
-        Called from the browser with the ir.record.type id; the picklist limits live on the
-        legacy type mirrored to it.
+        Called from the browser, so it takes the ``ir.record.type`` id, not a recordset.
         """
-        record_type = self.env['pharaccount.record.type'].search(
-            [('ir_record_type_id', '=', record_type_id)], limit=1) if record_type_id else self.env['pharaccount.record.type']
+        record_type = self.env['ir.record.type'].browse(record_type_id or [])
         values = self.get_selectable(picklist_name, record_type)
         return [
             {'id': value.id, 'name': value.name, 'label': value.label}

@@ -12,12 +12,6 @@
         </field>
     </record>
 
-    <record id="action_pharaccount_record_type" model="ir.actions.act_window">
-        <field name="name">记录类型</field>
-        <field name="res_model">pharaccount.record.type</field>
-        <field name="view_mode">list,form</field>
-    </record>
-
     <record id="action_pharaccount_picklist" model="ir.actions.act_window">
         <field name="name">下拉列表</field>
         <field name="res_model">pharaccount.picklist</field>
@@ -52,13 +46,6 @@
         <field name="act_window_id" ref="action_pharaccount_account_mobile"/>
     </record>
 
-    <record id="action_pharaccount_record_type_mobile" model="ir.actions.act_window">
-        <field name="name">记录类型</field>
-        <field name="res_model">pharaccount.record.type</field>
-        <field name="view_mode">kanban,form</field>
-        <field name="view_id" ref="view_pharaccount_record_type_kanban_mobile"/>
-    </record>
-
     <record id="action_pharaccount_picklist_mobile" model="ir.actions.act_window">
         <field name="name">下拉列表</field>
         <field name="res_model">pharaccount.picklist</field>
@@ -82,9 +69,6 @@
               groups="pharaccount.group_user"/>
     <menuitem id="menu_pharaccount_pc_config" name="配置" parent="menu_pharaccount_pc_root"
               sequence="90" groups="pharaccount.group_config"/>
-    <menuitem id="menu_pharaccount_pc_record_type" name="记录类型" parent="menu_pharaccount_pc_config"
-              action="action_pharaccount_record_type" sequence="10"
-              groups="pharaccount.group_config"/>
     <menuitem id="menu_pharaccount_pc_picklist" name="下拉列表" parent="menu_pharaccount_pc_config"
               action="action_pharaccount_picklist" sequence="20"
               groups="pharaccount.group_config"/>

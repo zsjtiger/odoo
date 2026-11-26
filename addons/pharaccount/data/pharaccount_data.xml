@@ -31,29 +31,5 @@
             <field name="sequence">4</field>
         </record>
 
-        <!-- record types: parent pharma, children as in vrux -->
-        <record id="record_type_pharma" model="pharaccount.record.type">
-            <field name="name">pharma</field>
-            <field name="label">药店</field>
-            <field name="sequence">1</field>
-        </record>
-        <record id="record_type_pharmacy_chain_head" model="pharaccount.record.type">
-            <field name="name">pharmacy_chain_head</field>
-            <field name="label">连锁总店</field>
-            <field name="parent_id" ref="record_type_pharma"/>
-            <field name="sequence">10</field>
-        </record>
-        <record id="record_type_pharmacy_chain_branch" model="pharaccount.record.type">
-            <field name="name">pharmacy_chain_branch</field>
-            <field name="label">连锁门店</field>
-            <field name="parent_id" ref="record_type_pharma"/>
-            <field name="sequence">20</field>
-        </record>
-        <record id="record_type_pharmacy_monomer" model="pharaccount.record.type">
-            <field name="name">pharmacy_monomer</field>
-            <field name="label">单体药店</field>
-            <field name="parent_id" ref="record_type_pharma"/>
-            <field name="sequence">30</field>
-        </record>
     </data>
 </odoo>

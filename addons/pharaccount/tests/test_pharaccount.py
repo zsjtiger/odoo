@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo.exceptions import AccessError, ValidationError
+from odoo.exceptions import AccessError
 from odoo.tests import TransactionCase, tagged
 
 
@@ -8,15 +8,17 @@ class TestPharaccount(TransactionCase):
 
     def setUp(self):
         super().setUp()
-        self.RecordType = self.env['pharaccount.record.type']
         self.Picklist = self.env['pharaccount.picklist.value']
         self.group_a = self.env['res.groups'].create({'name': 'Pharma test group A'})
         self.group_b = self.env['res.groups'].create({'name': 'Pharma test group B'})
 
-    def _ir_type(self, code, groups=()):
-        """A framework record type on pharaccount.account, readable/writable by the given groups."""
+    def _ir_type(self, code, groups=(), picklist=None, parent=None):
+        """A framework record type on pharaccount.account, usable by the given groups."""
         model = self.env['ir.model']._get('pharaccount.account')
-        record_type = self.env['ir.record.type'].create({'name': code, 'code': code, 'model_id': model.id})
+        vals = {'name': code, 'code': code, 'model_id': model.id, 'parent_id': parent and parent.id}
+        if picklist is not None:
+            vals['picklist_value_ids'] = [(6, 0, picklist.ids)]
+        record_type = self.env['ir.record.type'].create(vals)
         for group in groups:
             self.env['ir.record.type.permission'].create({
                 'record_type_id': record_type.id, 'group_id': group.id,
@@ -31,52 +33,43 @@ class TestPharaccount(TransactionCase):
             'group_ids': [(6, 0, [self.env.ref('pharaccount.group_user').id] + [g.id for g in groups])],
         })
 
-    def test_child_inherits_parent_groups_as_union(self):
-        parent = self.RecordType.create({'name': 'parent_t', 'label': 'Parent', 'group_ids': [(6, 0, [self.group_a.id])]})
-        child = self.RecordType.create({'name': 'child_t', 'label': 'Child', 'parent_id': parent.id,
-                                        'group_ids': [(6, 0, [self.group_b.id])]})
-        self.assertEqual(child.allowed_group_ids, self.group_a | self.group_b)
-        self.assertEqual(parent.allowed_group_ids, self.group_a)
-
-    def test_parent_change_propagates_to_children(self):
-        parent = self.RecordType.create({'name': 'parent_p', 'label': 'Parent'})
-        child = self.RecordType.create({'name': 'child_p', 'label': 'Child', 'parent_id': parent.id})
-        parent.group_ids = [(4, self.group_a.id)]
-        self.assertIn(self.group_a, child.allowed_group_ids)
-
-    def test_cycle_is_rejected(self):
-        parent = self.RecordType.create({'name': 'parent_c', 'label': 'Parent'})
-        child = self.RecordType.create({'name': 'child_c', 'label': 'Child', 'parent_id': parent.id})
-        with self.assertRaises(ValidationError):
-            parent.parent_id = child
+    def _picklist(self, name):
+        return self.env['pharaccount.picklist'].create({'name': name, 'label': name})
 
     def test_picklist_value_visible_only_to_allowed_groups(self):
-        picklist = self.env['pharaccount.picklist'].create({'name': 'test_level', 'label': 'Test level'})
+        picklist = self._picklist('test_level')
         open_value = self.Picklist.create({'picklist_id': picklist.id, 'name': 'O', 'label': 'Open'})
         restricted = self.Picklist.create({'picklist_id': picklist.id, 'name': 'R', 'label': 'Restricted',
                                            'group_ids': [(6, 0, [self.group_a.id])]})
         outsider = self._user([self.group_b], 'pharma_outsider')
         insider = self._user([self.group_a], 'pharma_insider')
-        seen_outsider = self.Picklist.with_user(outsider).get_selectable('test_level')
-        seen_insider = self.Picklist.with_user(insider).get_selectable('test_level')
-        self.assertEqual(seen_outsider, open_value)
-        self.assertEqual(seen_insider, open_value | restricted)
+        self.assertEqual(self.Picklist.with_user(outsider).get_selectable('test_level'), open_value)
+        self.assertEqual(self.Picklist.with_user(insider).get_selectable('test_level'), open_value | restricted)
 
     def test_record_type_limits_picklist_values(self):
-        picklist = self.env['pharaccount.picklist'].create({'name': 'test_limit', 'label': 'Test limit'})
+        picklist = self._picklist('test_limit')
         first = self.Picklist.create({'picklist_id': picklist.id, 'name': 'X', 'label': 'X'})
         second = self.Picklist.create({'picklist_id': picklist.id, 'name': 'Y', 'label': 'Y'})
-        record_type = self.RecordType.create({'name': 'limited_t', 'label': 'Limited',
-                                              'picklist_value_ids': [(6, 0, [first.id])]})
+        record_type = self._ir_type('limited_t', picklist=first)
         self.assertEqual(self.Picklist.get_selectable('test_limit', record_type), first)
         self.assertEqual(self.Picklist.get_selectable('test_limit'), first | second)
 
+    def test_child_type_adds_parent_picklist_values(self):
+        picklist = self._picklist('test_union')
+        first = self.Picklist.create({'picklist_id': picklist.id, 'name': 'P1', 'label': 'P1'})
+        second = self.Picklist.create({'picklist_id': picklist.id, 'name': 'P2', 'label': 'P2'})
+        parent = self._ir_type('parent_union', picklist=first)
+        child = self._ir_type('child_union', picklist=second, parent=parent)
+        self.assertEqual(child.allowed_picklist_value_ids, first | second)
+        self.assertEqual(parent.allowed_picklist_value_ids, first)
+        parent.picklist_value_ids = [(6, 0, [first.id, second.id])]
+        self.assertEqual(child.allowed_picklist_value_ids, first | second)
+
     def test_account_hidden_when_record_type_not_allowed_for_user(self):
-        restricted_group = self.group_a
-        record_type = self._ir_type('rule_t', [restricted_group])
+        record_type = self._ir_type('rule_t', [self.group_a])
         account = self.env['pharaccount.account'].create({'name': 'Rule pharmacy', 'record_type_id': record_type.id})
         outsider = self._user([self.group_b], 'pharma_rule_outsider')
-        insider = self._user([restricted_group], 'pharma_rule_insider')
+        insider = self._user([self.group_a], 'pharma_rule_insider')
         # no grant matches the outsider: the framework answers with an access error, not an empty result
         with self.assertRaises(AccessError):
             self.env['pharaccount.account'].with_user(outsider).search([('id', '=', account.id)])
@@ -99,11 +92,6 @@ class TestPharaccount(TransactionCase):
                 ('pharaccount.view_pharaccount_account_form_mobile', 'form'),
                 ('pharaccount.view_pharaccount_account_kanban_mobile', 'kanban'),
                 ('pharaccount.view_pharaccount_account_search', 'search'),
-            ],
-            'pharaccount.record.type': [
-                ('pharaccount.view_pharaccount_record_type_list', 'list'),
-                ('pharaccount.view_pharaccount_record_type_form', 'form'),
-                ('pharaccount.view_pharaccount_record_type_kanban_mobile', 'kanban'),
             ],
             'pharaccount.picklist': [
                 ('pharaccount.view_pharaccount_picklist_list', 'list'),
@@ -151,13 +139,10 @@ class TestPharaccount(TransactionCase):
         self.assertFalse(account.is_public)
 
     def test_widget_options_follow_record_type(self):
-        picklist = self.env['pharaccount.picklist'].create({'name': 'test_widget', 'label': 'Widget'})
+        picklist = self._picklist('test_widget')
         first = self.Picklist.create({'picklist_id': picklist.id, 'name': 'W1', 'label': 'W1', 'sequence': 1})
         second = self.Picklist.create({'picklist_id': picklist.id, 'name': 'W2', 'label': 'W2', 'sequence': 2})
-        legacy = self.RecordType.create({'name': 'widget_t', 'label': 'Widget type',
-                                         'picklist_value_ids': [(6, 0, [second.id])]})
-        limited = self._ir_type('widget_t')
-        legacy.ir_record_type_id = limited
+        limited = self._ir_type('widget_t', picklist=second)
         self.assertEqual(
             [o['id'] for o in self.Picklist.get_widget_options('test_widget')],
             [first.id, second.id],
@@ -196,13 +181,13 @@ class TestPharaccount(TransactionCase):
             self.assertFalse(self.env[model].browse(record_id).exists(), model)
 
     def test_child_rows_follow_record_type_permission(self):
-        restricted_group = self.group_a
-        record_type = self._ir_type('child_rule_t', [restricted_group])
+        record_type = self._ir_type('child_rule_t', [self.group_a])
         pharmacy = self.env['pharaccount.account'].create({'name': 'Hidden pharmacy',
                                                            'record_type_id': record_type.id})
         staff = self.env['pharaccount.pharmacy.staff'].create({'name': 'Li', 'pharmacy_id': pharmacy.id})
         outsider = self._user([self.group_b], 'pharma_child_outsider')
-        insider = self._user([restricted_group], 'pharma_child_insider')
+        insider = self._user([self.group_a], 'pharma_child_insider')
         Staff = self.env['pharaccount.pharmacy.staff']
+        # child rows are filtered through the pharmacy's type, so the outsider just gets nothing
         self.assertFalse(Staff.with_user(outsider).search([('id', '=', staff.id)]))
         self.assertEqual(Staff.with_user(insider).search([('id', '=', staff.id)]), staff)
