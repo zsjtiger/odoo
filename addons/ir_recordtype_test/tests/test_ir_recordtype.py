@@ -9,7 +9,11 @@ class TestIrRecordType(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.model = cls.env['ir.model']._get('res.partner')
+        cls.model = cls.env['ir.model']._get('ir.recordtype.test')
+        if not cls.model:
+            # the test model is only registered in test mode: reflect it into ir.model
+            cls.env['ir.model']._reflect_models(['ir.recordtype.test'])
+            cls.model = cls.env['ir.model']._get('ir.recordtype.test')
         cls.group_user = cls.env.ref('base.group_user')
         cls.group_portal = cls.env.ref('base.group_portal')
         cls.RecordType = cls.env['ir.record.type']
@@ -48,7 +52,7 @@ class TestIrRecordType(TransactionCase):
             })
 
     def test_parent_must_be_same_model(self):
-        other = self.env['ir.model']._get('res.users')
+        other = self.env['ir.model']._get('res.partner')
         parent = self.RecordType.create({'name': 'p', 'code': 'p', 'model_id': other.id})
         with self.assertRaises(ValidationError):
             self._type('t4', parent_id=parent.id)
@@ -107,7 +111,7 @@ class TestIrRecordType(TransactionCase):
             self.model.supports_record_type = False
 
     def test_access_row_type_must_match_model(self):
-        other = self.env['ir.model']._get('res.users')
+        other = self.env['ir.model']._get('res.partner')
         rt = self._type('t8')
         with self.assertRaises(ValidationError):
             self.env['ir.access'].create({

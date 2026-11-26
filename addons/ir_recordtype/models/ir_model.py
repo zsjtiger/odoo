@@ -52,18 +52,13 @@ class IrModel(models.Model):
             ))
 
     def _ensure_record_type_field(self):
+        """The field comes from the model class (``_record_type = True``), not from metadata."""
         self.ensure_one()
-        IrModelFields = self.env['ir.model.fields'].sudo()
-        if not IrModelFields.search([('model_id', '=', self.id), ('name', '=', 'record_type_id')], limit=1):
-            IrModelFields.create({
-                'name': 'record_type_id',
-                'field_description': 'Record Type',
-                'ttype': 'many2one',
-                'relation': 'ir.record.type',
-                'model_id': self.id,
-                'state': 'manual',
-                'on_delete': 'restrict',
-            })
+        if self.model not in self.env or 'record_type_id' not in self.env[self.model]._fields:
+            raise UserError(self.env._(
+                "Model %(model)s must declare _record_type = True before record types can be enabled.",
+                model=self.model,
+            ))
 
     def _ensure_admin_grant(self):
         self.ensure_one()

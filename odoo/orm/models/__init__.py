@@ -211,6 +211,7 @@ class MetaModel(type):
     _name: str
     _register: bool  # need to define on each Model, default: True
     _log_access: bool  # when defined, add update log columns
+    _record_type: bool  # when True, add the record_type_id field (see ir_recordtype)
     _module: str | None
     _abstract: bool
     _auto: bool
@@ -283,6 +284,12 @@ class MetaModel(type):
                     'res.users', string='Last Updated by', readonly=True))
                 add_default('write_date', Datetime(
                     string='Last Updated on', readonly=True))
+
+            if attrs.get('_record_type', False):
+                from odoo.orm.fields.relational import Many2one  # noqa: PLC0415
+                add_default('record_type_id', Many2one(
+                    'ir.record.type', string='Record Type', index=True, ondelete='restrict',
+                    help="Record type of the record; its permissions, menu and defaults come from the type."))
 
     @property
     def _inherit(cls):
