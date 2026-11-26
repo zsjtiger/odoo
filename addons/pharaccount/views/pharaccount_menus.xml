@@ -67,6 +67,10 @@
     <menuitem id="menu_pharaccount_pc_account" name="药店" parent="menu_pharaccount_pc_root"
               action="action_pharaccount_account" sequence="10"
               groups="pharaccount.group_user"/>
+    <!-- the generic account menu is replaced by one menu per record type (ir_recordtype) -->
+    <record id="menu_pharaccount_pc_account" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
     <menuitem id="menu_pharaccount_pc_config" name="配置" parent="menu_pharaccount_pc_root"
               sequence="90" groups="pharaccount.group_config"/>
     <menuitem id="menu_pharaccount_pc_picklist" name="下拉列表" parent="menu_pharaccount_pc_config"

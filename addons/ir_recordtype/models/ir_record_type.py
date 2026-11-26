@@ -28,6 +28,10 @@ class IrRecordType(models.Model):
     access_ids = fields.One2many('ir.access', 'record_type_id', string='Access Rows')
     view_ids = fields.One2many('ir.ui.view', 'record_type_id', string='Views')
     action_id = fields.Many2one('ir.actions.act_window', string='Action', readonly=True, copy=False, ondelete='set null')
+    menu_parent_id = fields.Many2one(
+        'ir.ui.menu', string='Menu Parent', ondelete='set null',
+        help="Parent of the menu generated for this type. Empty means a top-level menu.",
+    )
     group_ids = fields.Many2many('res.groups', compute='_compute_group_ids', string='Granted Groups')
     has_permissions = fields.Boolean(compute='_compute_group_ids')
 
@@ -62,7 +66,7 @@ class IrRecordType(models.Model):
 
     def write(self, vals):
         res = super().write(vals)
-        if vals.keys() & {'name', 'sequence', 'active', 'model_id'}:
+        if vals.keys() & {'name', 'sequence', 'active', 'model_id', 'menu_parent_id'}:
             self._sync_action_and_menu()
         return res
 
@@ -103,6 +107,7 @@ class IrRecordType(models.Model):
                 'sequence': record.sequence,
                 'action': f'ir.actions.act_window,{record.action_id.id}',
                 'record_type_id': record.id,
+                'parent_id': record.menu_parent_id.id,
             }
             if menu:
                 menu.write(vals)

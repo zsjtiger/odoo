@@ -35,6 +35,18 @@ class IrRecordType(models.Model):
             record.allowed_picklist_value_ids = record.picklist_value_ids | record.parent_id.allowed_picklist_value_ids
 
     @api.model
+    def _pharaccount_grant_pharmacy_access(self, record_type):
+        """The pharmacy type is granted to the user groups like the others, if it has no permission yet."""
+        if record_type.permission_ids:
+            return
+        self.env['ir.record.type.permission'].create([
+            {'record_type_id': record_type.id, 'group_id': self.env.ref('pharaccount.group_user').id,
+             'perm_read': True, 'perm_write': True, 'perm_create': True},
+            {'record_type_id': record_type.id, 'group_id': self.env.ref('pharaccount.group_manager').id,
+             'perm_read': True, 'perm_write': True, 'perm_create': True, 'perm_unlink': True},
+        ])
+
+    @api.model
     def _pharaccount_create_default_types(self):
         """Create the pharmacy record types that do not exist yet.
 
@@ -45,6 +57,7 @@ class IrRecordType(models.Model):
         model = self.env['ir.model']._get('pharaccount.account')
         group_user = self.env.ref('pharaccount.group_user')
         group_manager = self.env.ref('pharaccount.group_manager')
+        root_menu = self.env.ref('pharaccount.menu_pharaccount_pc_root')
         Permission = self.env['ir.record.type.permission']
         Default = self.env['ir.record.type.default']
         created = self.browse()
@@ -61,7 +74,12 @@ class IrRecordType(models.Model):
                 ])
             if parent_code and not record_type.parent_id:
                 record_type.parent_id = self.search([('model_id', '=', model.id), ('code', '=', parent_code)], limit=1)
+            # the types are shown under the pharmacy root menu
+            if not record_type.menu_parent_id:
+                record_type.menu_parent_id = root_menu
         pharma = self.search([('model_id', '=', model.id), ('code', '=', 'pharma')], limit=1)
+        if pharma:
+            self._pharaccount_grant_pharmacy_access(pharma)
         # a default must be granted to its group, so it is only set when the type grants group_user
         if (pharma and pharma.permission_ids.filtered(lambda p: p.group_id == group_user)
                 and not Default.search([('model_id', '=', model.id), ('group_id', '=', group_user.id)], limit=1)):
