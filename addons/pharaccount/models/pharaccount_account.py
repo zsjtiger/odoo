@@ -11,6 +11,7 @@ class PharaccountAccount(models.Model):
     _name = 'pharaccount.account'
     _description = 'Pharmacy Account'
     _order = 'name, id'
+    _record_type = True  # adds record_type_id (ir.record.type); permissions come from the type
 
     name = fields.Char(required=True, index=True)
     alias = fields.Char()
@@ -39,9 +40,9 @@ class PharaccountAccount(models.Model):
 
     state_id = fields.Many2one('pharaccount.account.state', string='State', index=True)
 
-    record_type_id = fields.Many2one(
-        'pharaccount.record.type', string='Record type', required=True, index=True,
-        domain="[('active', '=', True)]",
+    # the legacy type this account was created with; kept for picklist limits until removed
+    legacy_record_type_id = fields.Many2one(
+        'pharaccount.record.type', string='Legacy record type', index=True,
     )
     pharmacy_level_id = fields.Many2one(
         'pharaccount.picklist.value', string='Pharmacy level',
@@ -65,9 +66,9 @@ class PharaccountAccount(models.Model):
     @api.onchange('record_type_id')
     def _onchange_record_type_id(self):
         """Drop the picklist value when it is not allowed for the new record type."""
-        if self.pharmacy_level_id and self.record_type_id:
-            allowed = self.env['pharaccount.picklist.value'].get_selectable(
-                'pharmacy_level', self.record_type_id,
-            )
+        legacy = self.env['pharaccount.record.type'].search(
+            [('ir_record_type_id', '=', self.record_type_id.id)], limit=1) if self.record_type_id else False
+        if self.pharmacy_level_id and legacy:
+            allowed = self.env['pharaccount.picklist.value'].get_selectable('pharmacy_level', legacy)
             if self.pharmacy_level_id not in allowed:
                 self.pharmacy_level_id = False

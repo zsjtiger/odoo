@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo.exceptions import ValidationError
+from odoo.exceptions import AccessError, ValidationError
 from odoo.tests import TransactionCase, tagged
 
 
@@ -12,6 +12,17 @@ class TestPharaccount(TransactionCase):
         self.Picklist = self.env['pharaccount.picklist.value']
         self.group_a = self.env['res.groups'].create({'name': 'Pharma test group A'})
         self.group_b = self.env['res.groups'].create({'name': 'Pharma test group B'})
+
+    def _ir_type(self, code, groups=()):
+        """A framework record type on pharaccount.account, readable/writable by the given groups."""
+        model = self.env['ir.model']._get('pharaccount.account')
+        record_type = self.env['ir.record.type'].create({'name': code, 'code': code, 'model_id': model.id})
+        for group in groups:
+            self.env['ir.record.type.permission'].create({
+                'record_type_id': record_type.id, 'group_id': group.id,
+                'perm_read': True, 'perm_write': True, 'perm_create': True,
+            })
+        return record_type
 
     def _user(self, groups, login):
         return self.env['res.users'].create({
@@ -62,19 +73,22 @@ class TestPharaccount(TransactionCase):
 
     def test_account_hidden_when_record_type_not_allowed_for_user(self):
         restricted_group = self.group_a
-        record_type = self.RecordType.create({'name': 'rule_t', 'label': 'Rule type',
-                                              'group_ids': [(6, 0, [restricted_group.id])]})
+        record_type = self._ir_type('rule_t', [restricted_group])
         account = self.env['pharaccount.account'].create({'name': 'Rule pharmacy', 'record_type_id': record_type.id})
         outsider = self._user([self.group_b], 'pharma_rule_outsider')
         insider = self._user([restricted_group], 'pharma_rule_insider')
-        self.assertFalse(self.env['pharaccount.account'].with_user(outsider).search([('id', '=', account.id)]))
+        # no grant matches the outsider: the framework answers with an access error, not an empty result
+        with self.assertRaises(AccessError):
+            self.env['pharaccount.account'].with_user(outsider).search([('id', '=', account.id)])
         self.assertEqual(self.env['pharaccount.account'].with_user(insider).search([('id', '=', account.id)]), account)
 
-    def test_account_visible_when_record_type_has_no_groups(self):
-        record_type = self.RecordType.create({'name': 'open_t', 'label': 'Open type'})
+    def test_account_hidden_when_record_type_has_no_groups(self):
+        # a type without any permission is invisible to non-admin users
+        record_type = self._ir_type('open_t')
         account = self.env['pharaccount.account'].create({'name': 'Open pharmacy', 'record_type_id': record_type.id})
         outsider = self._user([self.group_b], 'pharma_open_outsider')
-        self.assertEqual(self.env['pharaccount.account'].with_user(outsider).search([('id', '=', account.id)]), account)
+        with self.assertRaises(AccessError):
+            self.env['pharaccount.account'].with_user(outsider).search([('id', '=', account.id)])
 
     def test_pc_and_mobile_views_load(self):
         # Every PC and mobile view must load for its model (validates fields and arch).
@@ -118,7 +132,7 @@ class TestPharaccount(TransactionCase):
         self.assertEqual(self.env.ref('pharaccount.action_pharaccount_account').view_mode, 'list,form')
 
     def test_account_extended_fields(self):
-        record_type = self.RecordType.create({'name': 'ext_t', 'label': 'Ext type'})
+        record_type = self._ir_type('ext_t')
         state = self.env['pharaccount.account.state'].create({'name': 'ext_state', 'label': 'Ext state'})
         account = self.env['pharaccount.account'].create({
             'name': 'Extended pharmacy',
@@ -140,8 +154,10 @@ class TestPharaccount(TransactionCase):
         picklist = self.env['pharaccount.picklist'].create({'name': 'test_widget', 'label': 'Widget'})
         first = self.Picklist.create({'picklist_id': picklist.id, 'name': 'W1', 'label': 'W1', 'sequence': 1})
         second = self.Picklist.create({'picklist_id': picklist.id, 'name': 'W2', 'label': 'W2', 'sequence': 2})
-        limited = self.RecordType.create({'name': 'widget_t', 'label': 'Widget type',
-                                          'picklist_value_ids': [(6, 0, [second.id])]})
+        legacy = self.RecordType.create({'name': 'widget_t', 'label': 'Widget type',
+                                         'picklist_value_ids': [(6, 0, [second.id])]})
+        limited = self._ir_type('widget_t')
+        legacy.ir_record_type_id = limited
         self.assertEqual(
             [o['id'] for o in self.Picklist.get_widget_options('test_widget')],
             [first.id, second.id],
@@ -152,7 +168,7 @@ class TestPharaccount(TransactionCase):
         )
 
     def test_child_tables_cascade_with_pharmacy(self):
-        record_type = self.RecordType.create({'name': 'child_t', 'label': 'Child type'})
+        record_type = self._ir_type('child_t')
         Account = self.env['pharaccount.account']
         pharmacy = Account.create({'name': 'Parent pharmacy', 'record_type_id': record_type.id})
         staff = self.env['pharaccount.pharmacy.staff'].create({'name': 'Zhang', 'pharmacy_id': pharmacy.id})
@@ -181,8 +197,7 @@ class TestPharaccount(TransactionCase):
 
     def test_child_rows_follow_record_type_permission(self):
         restricted_group = self.group_a
-        record_type = self.RecordType.create({'name': 'child_rule_t', 'label': 'Child rule type',
-                                              'group_ids': [(6, 0, [restricted_group.id])]})
+        record_type = self._ir_type('child_rule_t', [restricted_group])
         pharmacy = self.env['pharaccount.account'].create({'name': 'Hidden pharmacy',
                                                            'record_type_id': record_type.id})
         staff = self.env['pharaccount.pharmacy.staff'].create({'name': 'Li', 'pharmacy_id': pharmacy.id})

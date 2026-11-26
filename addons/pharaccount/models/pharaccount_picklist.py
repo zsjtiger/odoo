@@ -69,9 +69,11 @@ class PharaccountPicklistValue(models.Model):
     def get_widget_options(self, picklist_name, record_type_id=False):
         """Options for the ``pharaccount_picklist`` control, as plain dicts.
 
-        Called from the browser, so it takes the record type id, not a recordset.
+        Called from the browser with the ir.record.type id; the picklist limits live on the
+        legacy type mirrored to it.
         """
-        record_type = self.env['pharaccount.record.type'].browse(record_type_id or [])
+        record_type = self.env['pharaccount.record.type'].search(
+            [('ir_record_type_id', '=', record_type_id)], limit=1) if record_type_id else self.env['pharaccount.record.type']
         values = self.get_selectable(picklist_name, record_type)
         return [
             {'id': value.id, 'name': value.name, 'label': value.label}
