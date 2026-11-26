@@ -221,6 +221,96 @@
 - **对约束的检查**：`create/write` 会触发模型的 `_check_*` 约束，错误信息直接取异常的文字。
 - **大文件**：超过 `N` 行（默认 2000）拒绝导入，提示分批（阶段 3 改为后台任务）。
 
+### 6.1 自定义校验
+
+校验分三层，客户按需要选择，简单的不用写代码。
+
+**第 1 层：模型约束（已有）**
+
+`required`、`_sql_constraints`、`models.Constraint`、`@api.constrains`。这些在逐行执行 create/write 时自动触发，错误文字直接写入 `Validation Error`。大多数规则应放在这一层，因为界面、API、导入都受同样的约束。
+
+**第 2 层：声明式规则（配置，不写代码）**
+
+新增 `ir.data.import.rule`，由管理员在界面配置：
+
+| 字段 | 说明 |
+|---|---|
+| `model_id` | 模型 |
+| `record_type_id` | 可选，只对该类型的行生效 |
+| `action` | 适用的操作：N、U、D 或组合 |
+| `domain` | 行必须满足的条件，例如 `[('telephone', '!=', False)]` |
+| `message` | 不满足时写入 `Validation Error` 的文字 |
+| `sequence` | 执行顺序 |
+| `active` | 是否启用 |
+
+例：药店导入时要求电话或手机至少填一个：
+
+- `domain`：`['|', ('telephone', '!=', False), ('mobile', '!=', False)]`
+- `message`：`电话和手机至少填写一项`
+
+实现要点：
+
+- 只接受 domain，不接受任意 Python 表达式，避免配置被用来执行代码。
+- 规则在行的值上检查：对 N，检查导入后的值；对 U，检查合并后的值（原记录的值加上文件中的修改）。
+- 规则的字段必须在模型中存在，并对当前用户可读，保存时校验。
+
+**第 3 层：代码钩子（开发者编写）**
+
+客户的模块继承模型，覆盖约定的方法。框架在每行的 savepoint 中调用，不影响其他行。
+
+```python
+from odoo import models, _
+from odoo.exceptions import ValidationError
+
+
+class PharaccountAccount(models.Model):
+    _inherit = 'pharaccount.account'
+
+    def _import_validate_row(self, action, vals, record=None):
+        """Called for every imported row (action 'N', 'U' or 'D').
+
+        vals: the values from the file (for 'U' only the changed fields).
+        record: the existing record for 'U' and 'D', empty for 'N'.
+        Raise ValidationError to reject the row; the message goes to Validation Error.
+        """
+        super()._import_validate_row(action, vals, record)
+        if action == 'N' and vals.get('geo_province') == '北京' and not vals.get('geo_city'):
+            raise ValidationError(_('北京的药店必须填写城市'))
+```
+
+框架提供的钩子：
+
+| 钩子 | 调用时机 | 用途 |
+|---|---|---|
+| `_import_validate_row(action, vals, record)` | 每行，savepoint 内 | 行级的复杂规则，需要查询其他数据时使用 |
+| `_import_validate_file(rows)` | 文件解析后、逐行执行前 | 跨行的规则，例如同一文件中名称重复、同一 ID 重复 |
+| `_import_after_row(action, record)` | 每行执行成功后 | 记录日志、触发其他操作（只在确认导入时调用，预览不调用） |
+
+规则：
+
+- 钩子中的异常一律转为该行的 `Validation Error`；其他异常视为系统错误，中止整个导入并记录到导入作业。
+- 钩子必须可以在预览和确认中重复执行，不能有外部副作用（如发送邮件），外部副作用放在 `_import_after_row` 且只在确认时执行。
+- 钩子的代码随模块发布，由开发者维护；界面上不能编辑。
+
+**执行顺序**
+
+```
+解析文件 → _import_validate_file（文件级）
+  → 逐行 savepoint:
+      数据类型转换 → 第 2 层规则 → _import_validate_row（代码钩子）
+      → create / write / unlink → 第 1 层约束（在 create/write 时触发）
+  → 有错误则写 Validation Error；全部通过才允许确认
+```
+
+**给客户的交付方式**
+
+- 第 2 层：客户管理员在界面自己配置，无需开发。
+- 第 3 层：作为客户模块的一部分交付，写明每条规则对应的业务要求，并附测试。
+
+**测试**
+
+每条规则至少一个通过和一个失败的测试：构造一个文件，断言失败行的 `Validation Error` 文字正确，成功行为空。
+
 ## 7. 结果文件
 
 - 输入的 xlsx 原样保留所有列，并在最后追加 `Validation Error` 列。
