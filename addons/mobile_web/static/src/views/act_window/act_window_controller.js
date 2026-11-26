@@ -90,6 +90,8 @@ export class MobileActWindowController extends Component {
                     selected="this.state.mobileSelected" onConfirm="this.onMobileFilterConfirm" onClose="this.closeFilters"/>
                 <MobileSelectSheet t-if="this.state.filterSheet" title="this.texts.filter" options="this.filterOptions"
                     selected="this.selectedFilterItems" multiple="true" onConfirm="this.onFilterConfirm" onClose="this.closeFilters"/>
+                <MobileSelectSheet t-if="this.state.typeSheet" title="this.texts.recordType" options="this.state.typeSheet"
+                    onConfirm="this.onTypePicked" onClose="this.closeTypeSheet"/>
                 <button type="button" class="m_create_btn" t-if="this.state.ready and this.state.type !== 'form' and this.state.type !== 'calendar' and this.hasForm"
                         t-on-click="this.onCreateClick">+</button>
             </div>
@@ -122,6 +124,8 @@ export class MobileActWindowController extends Component {
             // 模型自定义的筛选面板: 已选的选项与卡片, 以及打开时的分组 (含卡片记录)
             mobileSelected: { options: [], cards: {} },
             filterPanel: null,
+            // 新建时选择记录类型的弹层: 可选的类型 ({id, name}), 为 null 时关闭
+            typeSheet: null,
         });
         this.mobileFilterSections = [];
         this.facetCounter = 0;
@@ -455,9 +459,45 @@ export class MobileActWindowController extends Component {
         this.applyFacets();
     }
 
-    onCreateClick() {
-        this._onCreateRecord();
+    /**
+     * "+" 按钮: 模型启用了记录类型时, 先让用户选择有权限的类型, 再进入 form.
+     * 动作已指定类型(例如类型菜单), 或只有一个可选类型时直接新建.
+     */
+    async onCreateClick() {
+        if (this.baseContext?.default_record_type_id) {
+            this._onCreateRecord();
+            return;
+        }
+        const types = await this.loadCreatableTypes();
+        if (types.length > 1) {
+            this.state.typeSheet = types;
+            return;
+        }
+        this._onCreateRecord(types.length === 1 ? { default_record_type_id: types[0].id } : {});
     }
+
+    /** 当前用户有新建权限的记录类型; 模型未启用记录类型时为空 */
+    async loadCreatableTypes() {
+        try {
+            const types = await this.orm.call("ir.record.type", "get_creatable_types", [], {
+                model_name: this.props.action.res_model,
+            });
+            return types || [];
+        } catch {
+            return [];
+        }
+    }
+
+    // 作为子组件的回调传递, 用箭头函数保持 this
+    onTypePicked = (items) => {
+        this.state.typeSheet = null;
+        const [type] = items;
+        this._onCreateRecord({ default_record_type_id: type.id });
+    };
+
+    closeTypeSheet = () => {
+        this.state.typeSheet = null;
+    };
 
     /**
      * 切换到 form 视图显示一条记录

@@ -1011,3 +1011,6 @@ msgstr ""
 #: model:mobile_web.mobile.page,name:mobile_web.schedule_page
 msgid "日程"
 msgstr ""
+
+msgid "Select record type"
+msgstr ""

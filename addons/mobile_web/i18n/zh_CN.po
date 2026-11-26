@@ -975,3 +975,6 @@ msgstr "搜索地址"
 
 msgid "The %s is missing or out of range."
 msgstr "%s 缺失或超出范围。"
+
+msgid "Select record type"
+msgstr "选择记录类型"

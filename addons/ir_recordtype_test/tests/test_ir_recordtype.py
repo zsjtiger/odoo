@@ -168,3 +168,27 @@ class TestIrRecordTypeViewsAndDefaults(TransactionCase):
         })
         # group default wins over sequence
         self.assertEqual(RecordType.with_user(user)._get_default_for_user(self.model.model), first)
+
+    def test_creatable_types_for_user(self):
+        RecordType = self.env['ir.record.type']
+        model = self.env['ir.model']._get('ir.recordtype.test')
+        group_user = self.env.ref('base.group_user')
+        model.supports_record_type = True  # the picker is only offered for models with record types
+        visible = RecordType.create({'name': 'c1', 'code': 'c1', 'model_id': model.id, 'sequence': 2})
+        hidden = RecordType.create({'name': 'c2', 'code': 'c2', 'model_id': model.id, 'sequence': 1})
+        self.env['ir.record.type.permission'].create({
+            'record_type_id': visible.id, 'group_id': group_user.id,
+            'perm_read': True, 'perm_create': True,
+        })
+        self.env['ir.record.type.permission'].create({
+            'record_type_id': hidden.id, 'group_id': group_user.id, 'perm_read': True,
+        })
+        user = self.env['res.users'].create({
+            'name': 'Creator', 'login': 'creatable_user', 'group_ids': [(6, 0, [group_user.id])],
+        })
+        types = RecordType.with_user(user).get_creatable_types('ir.recordtype.test')
+        # only the type the user may create records of is offered
+        self.assertEqual([t['id'] for t in types], [visible.id])
+
+    def test_creatable_types_empty_for_model_without_record_types(self):
+        self.assertEqual(self.env['ir.record.type'].get_creatable_types('res.partner'), [])

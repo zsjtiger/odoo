@@ -29,4 +29,5 @@ export const fieldTexts = {
     filter: _t("Filter"),
     loading: _t("Loading…"),
     noMatch: _t("No matching results"),
+    recordType: _t("Select record type"),
 };

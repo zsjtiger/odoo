@@ -150,6 +150,18 @@ class IrRecordType(models.Model):
         group_ids = set(self.env.user.all_group_ids.ids)
         return any(perm.group_id.id in group_ids and perm[field] for perm in self.permission_ids)
 
+    @api.model
+    def get_creatable_types(self, model_name):
+        """Active types of a model the current user may create records of (used by the mobile type picker).
+
+        Returns an empty list when the model does not use record types.
+        """
+        model = self.env['ir.model']._get(model_name)
+        if not model or not model.supports_record_type:
+            return []
+        types = self.search([('model_name', '=', model_name)])
+        return [{'id': rt.id, 'name': rt.name} for rt in types if rt._can_use('create')]
+
     def _check_can_use(self, model_name, operation):
         for record in self:
             if record.model_name != model_name:
