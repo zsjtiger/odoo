@@ -1,3 +1,5 @@
+> **已取代**：本文档是按药店单独设计的版本，已被通用设计 `addons/record_type/doc/design.md` 取代。保留仅供参考。
+
 # Record Type 设计（Odoo 原生方式，类似 ir.rule / ir.ui.view）
 
 状态：设计稿，待确认后实现。
