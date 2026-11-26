@@ -68,3 +68,19 @@ class PharaccountAccount(models.Model):
             )
             if self.pharmacy_level_id not in allowed:
                 self.pharmacy_level_id = False
+
+    def action_new_staff(self):
+        """Open a new staff form for this pharmacy, with the pharmacy and its telephone filled in."""
+        self.ensure_one()
+        self.env['pharaccount.pharmacy.staff'].check_access('create')
+        return {
+            'type': 'ir.actions.act_window',
+            'name': self.env._('New Staff'),
+            'res_model': 'pharaccount.pharmacy.staff',
+            'view_mode': 'form',
+            'target': 'current',
+            'context': {
+                'default_pharmacy_id': self.id,
+                'default_telephone': self.telephone or self.mobile,
+            },
+        }

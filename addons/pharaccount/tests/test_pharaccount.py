@@ -188,3 +188,13 @@ class TestPharaccount(TransactionCase):
         # child rows are filtered through the pharmacy's type, so the outsider just gets nothing
         self.assertFalse(Staff.with_user(outsider).search([('id', '=', staff.id)]))
         self.assertEqual(Staff.with_user(insider).search([('id', '=', staff.id)]), staff)
+
+    def test_new_staff_action_prefills_pharmacy(self):
+        pharmacy = self.env['pharaccount.account'].create({'name': 'Staff Pharmacy', 'telephone': '0100'})
+        action = pharmacy.action_new_staff()
+        self.assertEqual(action['res_model'], 'pharaccount.pharmacy.staff')
+        self.assertEqual(action['view_mode'], 'form')
+        defaults = self.env['pharaccount.pharmacy.staff'].with_context(action['context']).default_get(
+            ['pharmacy_id', 'telephone'])
+        self.assertEqual(defaults['pharmacy_id'], pharmacy.id)
+        self.assertEqual(defaults['telephone'], '0100')
