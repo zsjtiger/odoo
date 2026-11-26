@@ -57,7 +57,7 @@ class IrRecordType(models.Model):
         model = self.env['ir.model']._get('pharaccount.account')
         group_user = self.env.ref('pharaccount.group_user')
         group_manager = self.env.ref('pharaccount.group_manager')
-        root_menu = self.env.ref('pharaccount.menu_pharaccount_pc_root')
+        master_menu = self.env.ref('pharaccount.menu_pharaccount_master_data')
         Permission = self.env['ir.record.type.permission']
         Default = self.env['ir.record.type.default']
         created = self.browse()
@@ -74,9 +74,9 @@ class IrRecordType(models.Model):
                 ])
             if parent_code and not record_type.parent_id:
                 record_type.parent_id = self.search([('model_id', '=', model.id), ('code', '=', parent_code)], limit=1)
-            # the types are shown under the pharmacy root menu
-            if not record_type.menu_parent_id:
-                record_type.menu_parent_id = root_menu
+            # the types are shown under the master data menu
+            if record_type.menu_parent_id in (False, self.env.ref('pharaccount.menu_pharaccount_pc_root')):
+                record_type.menu_parent_id = master_menu
         pharma = self.search([('model_id', '=', model.id), ('code', '=', 'pharma')], limit=1)
         if pharma:
             self._pharaccount_grant_pharmacy_access(pharma)
