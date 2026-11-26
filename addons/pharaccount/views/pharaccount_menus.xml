@@ -62,10 +62,11 @@
 
     <!-- ================= Menus: PC ================= -->
 
-    <menuitem id="menu_pharaccount_master_data" name="主数据管理" sequence="5"
-              groups="pharaccount.group_user"/>
     <menuitem id="menu_pharaccount_pc_root" name="药店（PC）" sequence="10"
               groups="pharaccount.group_user"/>
+    <!-- master data: dropdown under the pharmacy app; holds the hospital, doctor and pharmacy types -->
+    <menuitem id="menu_pharaccount_master_data" name="主数据管理" parent="menu_pharaccount_pc_root"
+              sequence="5" groups="pharaccount.group_user"/>
     <menuitem id="menu_pharaccount_pc_account" name="药店" parent="menu_pharaccount_pc_root"
               action="action_pharaccount_account" sequence="10"
               groups="pharaccount.group_user"/>

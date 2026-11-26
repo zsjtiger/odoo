@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Pharmacy Account',
-    'version': '20.0.6.0.0',
+    'version': '20.0.7.0.0',
     'category': 'Sales/CRM',
     'summary': 'Pharmacy accounts with record types, picklists and group permissions',
     'description': """
