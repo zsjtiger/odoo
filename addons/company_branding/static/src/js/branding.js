@@ -19,6 +19,10 @@
     }
 
     function safeUrl(url) {
+        if (!url) {
+            // an empty setting must mean "use the default", not the current page
+            return "";
+        }
         try {
             var parsed = new URL(url, window.location.href);
             return parsed.protocol === "http:" || parsed.protocol === "https:" ? parsed.href : "";
