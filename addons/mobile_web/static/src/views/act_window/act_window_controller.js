@@ -204,7 +204,10 @@ export class MobileActWindowController extends Component {
     buildContext(props) {
         const action = props.action;
         let actionContext = {};
-        if (action.context) {
+        if (action.context && typeof action.context === "object") {
+            // 动作由方法返回时 context 已是对象, 不需要求值
+            actionContext = action.context;
+        } else if (action.context) {
             try {
                 actionContext = makeContext([evaluateExpr(action.context)]);
             } catch (e) {

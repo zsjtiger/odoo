@@ -79,7 +79,8 @@ export async function runRecordButton({
     }
     const result = await orm.call(resModel, node.attrs.name, [resIds], { context });
     if (result && result.type) {
-        await mobileAction.doAction(result);
+        // 返回的动作是一次新的导航: 不沿用当前记录的 resId (否则会打开当前记录而不是新建)
+        await mobileAction.doAction(result, { resId: false });
     }
     return true;
 }
