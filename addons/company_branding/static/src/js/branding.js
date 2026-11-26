@@ -83,6 +83,14 @@
         }
     }
 
+    // the small default logo in the corner of the mobile login page is hidden once a company logo is set
+    function hideDefaultMobileCorner() {
+        var corner = document.querySelector("img[src*='/mobile_web/static/public/img/login/logo.png']");
+        if (corner) {
+            corner.style.setProperty("display", "none", "important");
+        }
+    }
+
     function apply(config) {
         var path = window.location.pathname;
         var mobile = isMobile(path);
@@ -96,6 +104,9 @@
         if (isLoginPage(path)) {
             applyLogo(logo);
             applyBackground(background);
+            if (mobile && logo) {
+                hideDefaultMobileCorner();
+            }
         }
     }
 
