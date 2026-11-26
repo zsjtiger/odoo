@@ -22,6 +22,7 @@ Data Import
     'data': [
         'security/ir.access.csv',
         'views/ir_data_import_views.xml',
+        'views/ir_record_type_import_views.xml',
         'views/ir_data_import_menus.xml',
         'wizard/ir_data_import_wizard_views.xml',
     ],

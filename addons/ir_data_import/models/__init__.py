@@ -4,3 +4,4 @@ from . import ir_data_import_template
 from . import ir_data_import_rule
 from . import ir_data_import_job
 from . import ir_data_import_mixin
+from . import ir_record_type_import

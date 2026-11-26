@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ir_record_type_form_import" model="ir.ui.view">
+        <field name="name">ir.record.type.form.import</field>
+        <field name="model">ir.record.type</field>
+        <field name="inherit_id" ref="ir_recordtype.view_ir_record_type_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='active']" position="after">
+                <field name="allow_import"/>
+            </xpath>
+            <xpath expr="//field[@name='permission_ids']/list/field[@name='perm_unlink']" position="after">
+                <field name="allow_import"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

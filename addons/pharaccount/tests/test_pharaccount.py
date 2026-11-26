@@ -324,3 +324,38 @@ class TestPharaccount(TransactionCase):
         job.with_user(user).action_validate()
         self.assertEqual(job.error_rows, 1)
         self.assertIn('is required', load_workbook_bytes(job.result_file))
+
+    def test_allow_import_on_record_type_and_group(self):
+        hospital = self.env['ir.record.type'].search([('code', '=', 'hospital')])
+        model = self.env['ir.model']._get('pharaccount.account')
+        Job = self.env['ir.data.import.job']
+        content = self._xlsx_bytes(['action', 'name', 'record_type'], [
+            {'action': 'N', 'name': 'Switch row', 'record_type': 'hospital'},
+        ])
+        # the type switch closes the type for everyone (the administrator included)
+        hospital.allow_import = False
+        job = Job.create({'model_id': model.id, 'source_file': content})
+        job.action_validate()
+        self.assertEqual(job.error_rows, 1)
+        self.assertIn('does not allow import', load_workbook_bytes(job.result_file))
+        hospital.allow_import = True
+
+        # a group switch closes the type for that group only
+        user = self.env['res.users'].create({
+            'name': 'Switch user', 'login': 'switch_import_user',
+            'group_ids': [(6, 0, [self.env.ref('base.group_user').id, self.env.ref('pharaccount.group_user').id])],
+        })
+        perm = self.env['ir.record.type.permission'].search([
+            ('record_type_id', '=', hospital.id), ('group_id', '=', self.env.ref('pharaccount.group_user').id),
+        ])
+        self.assertTrue(perm.allow_import)  # new permission rows allow import by default
+        perm.allow_import = False
+        job = Job.with_user(user).create({'model_id': model.id, 'source_file': content})
+        job.with_user(user).action_validate()
+        self.assertEqual(job.error_rows, 1)
+        self.assertIn('not allowed to import records of type', load_workbook_bytes(job.result_file))
+        perm.allow_import = True
+        job = Job.with_user(user).create({'model_id': model.id, 'source_file': content})
+        job.with_user(user).action_validate()
+        self.assertEqual(job.error_rows, 0)
+

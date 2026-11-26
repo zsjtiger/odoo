@@ -142,12 +142,11 @@ class IrDataImportJob(models.Model):
             if rec_id:
                 raise UserError(_('Leave ID empty for new records.'))
             self._check_required(Model, record_type, values, cache)
+            if not record_type and self._has_record_types(Model):
+                record_type = self.env['ir.record.type']._get_default_for_user(Model._name)
             if record_type:
+                record_type._check_import_allowed()
                 values['record_type_id'] = record_type.id
-            elif self._has_record_types(Model):
-                default = self.env['ir.record.type']._get_default_for_user(Model._name)
-                if default:
-                    values['record_type_id'] = default.id
             record = Model.create(values)
         else:
             if not rec_id:
@@ -158,8 +157,11 @@ class IrDataImportJob(models.Model):
             record = Model.browse(rec_id)
             if not record.exists():
                 raise UserError(_('ID %s does not exist.', rec_id))
+            if self._has_record_types(Model) and record.record_type_id:
+                record.record_type_id._check_import_allowed()  # the type the record has now
             if action == 'U':
                 if record_type:
+                    record_type._check_import_allowed()  # the type the record moves to
                     values['record_type_id'] = record_type.id
                 if values:
                     record.write(values)

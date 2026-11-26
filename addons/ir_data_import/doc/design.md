@@ -78,7 +78,9 @@
 | 记录类型 | `ir.record.type.allow_import` | 该类型的记录能否通过导入处理（关闭则对所有人禁止） |
 | 记录类型 + 用户组 | `ir.record.type.permission.allow_import` | 该组能否通过导入处理该类型的记录 |
 
-每一行按上表从上到下判断，任一层不允许则该行报错。模板下载仍由 `allow_template` 相关的 `perm_template` 控制（不在此开关之内）。
+每一行按上表从上到下判断，任一层不允许则该行报错。
+
+默认值：三个开关都默认允许（实现时定为固定默认值，而不是跟随 create 权限，这样已有的配置不受影响）。模板下载仍由 `allow_template` 相关的 `perm_template` 控制（不在此开关之内）。
 
 ### 3.3 导入按钮的显示
 
