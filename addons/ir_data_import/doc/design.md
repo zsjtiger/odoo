@@ -59,7 +59,7 @@
 
 ### 4.0 模板配置（需要一张表）
 
-模板的内容需要配置，所以需要两张表：模板头和模板行。
+模板的内容需要配置，所以需要两张表：模板和模板列。
 
 **`ir.data.import.template`（模板）**
 
@@ -69,13 +69,13 @@
 | `model_id` | 模型，如 `pharaccount.account` |
 | `record_type_id` | 可选。有值时，模板只用于该记录类型，列和必填规则按类型定；空表示通用模板 |
 | `active` | 是否启用 |
-| `line_ids` | 模板行 |
+| `column_ids` | 模板列 |
 | `match_by` | Many2one 的匹配方式：`name`（默认）或 `xmlid` |
 | `include_example` | 下载时是否带一行样例数据 |
 
 约束：同一模型、同一记录类型（或都为空）只能有一个启用的模板。
 
-**`ir.data.import.template.line`（模板行）**
+**`ir.data.import.template.column`（模板列）**
 
 | 字段 | 说明 |
 |---|---|
@@ -108,7 +108,7 @@
 
 ### 4.0.4 下载 Excel 的样式配置
 
-样式属于模板的配置，存在模板表和模板行表中，不写死在代码里。
+样式属于模板的配置，存在模板表和模板列表中，不写死在代码里。
 
 **模板级（`ir.data.import.template`）**
 
@@ -126,7 +126,7 @@
 | `show_help_sheet` | 是否生成 Help 工作表 | 是 |
 | `help_sheet_name` | Help 工作表名称 | `Help` |
 
-**列级（`ir.data.import.template.line`）**
+**列级（`ir.data.import.template.column`）**
 
 | 字段 | 说明 | 默认 |
 |---|---|---|
