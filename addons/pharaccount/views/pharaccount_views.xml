@@ -171,7 +171,7 @@
         <field name="arch" type="xml">
             <form string="药店">
                 <header>
-                    <button type="object" name="action_new_staff" string="药店dcr"/>
+                    <button type="object" name="action_new_dcr" string="药店dcr"/>
                 </header>
                 <sheet>
                     <group>

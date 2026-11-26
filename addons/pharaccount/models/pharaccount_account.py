@@ -69,19 +69,27 @@ class PharaccountAccount(models.Model):
             if self.pharmacy_level_id not in allowed:
                 self.pharmacy_level_id = False
 
-    def action_new_staff(self):
-        """Open a new staff form for this pharmacy, with the pharmacy and its telephone filled in."""
+    def action_new_dcr(self):
+        """Open a new DCR for this pharmacy, with the pharmacy information copied into it."""
         self.ensure_one()
-        self.env['pharaccount.pharmacy.staff'].check_access('create')
+        self.env['pharaccount.dcr'].check_access('create')
         return {
             'type': 'ir.actions.act_window',
-            'name': self.env._('New Staff'),
-            'res_model': 'pharaccount.pharmacy.staff',
+            'name': self.env._('Pharmacy DCR'),
+            'res_model': 'pharaccount.dcr',
             'view_mode': 'form',
             'target': 'current',
             'context': {
-                'default_pharmacy_id': self.id,
                 'default_name': self.name,
-                'default_telephone': self.telephone or self.mobile,
+                'default_pharmacy_id': self.id,
+                'default_pharmacy_record_type_id': self.record_type_id.id,
+                'default_pharmacy_level_id': self.pharmacy_level_id.id,
+                'default_state_id': self.state_id.id,
+                'default_mobile': self.mobile,
+                'default_telephone': self.telephone,
+                'default_geo_province': self.geo_province,
+                'default_geo_city': self.geo_city,
+                'default_address': self.address,
+                'default_is_important': self.is_important,
             },
         }

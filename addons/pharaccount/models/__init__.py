@@ -7,3 +7,4 @@ from . import pharaccount_hospital_link
 from . import pharaccount_package_inventory
 from . import pharaccount_competitive_product
 from . import pharaccount_account
+from . import pharaccount_dcr

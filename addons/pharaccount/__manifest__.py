@@ -27,6 +27,7 @@ First version, following vrux:
         'security/ir.access.csv',
         'data/pharaccount_data.xml',
         'views/pharaccount_views.xml',
+        'views/pharaccount_dcr_views.xml',
         'views/pharaccount_menus.xml',
     ],
     'assets': {

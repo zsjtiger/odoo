@@ -17,3 +17,6 @@ access_pharaccount_package_inventory_admin,pharaccount.package.inventory adminis
 access_pharaccount_competitive_product_user,pharaccount.competitive.product user,pharaccount.competitive.product,pharaccount.group_user,cru,"['|', ('pharmacy_id', '=', False), ('pharmacy_id.record_type_id.permission_ids.group_id', 'in', user.all_group_ids.ids)]"
 access_pharaccount_competitive_product_manager,pharaccount.competitive.product manager,pharaccount.competitive.product,pharaccount.group_manager,crud,"['|', ('pharmacy_id', '=', False), ('pharmacy_id.record_type_id.permission_ids.group_id', 'in', user.all_group_ids.ids)]"
 access_pharaccount_competitive_product_admin,pharaccount.competitive.product administrators,pharaccount.competitive.product,base.group_system,crud,
+access_pharaccount_dcr_user,pharaccount.dcr user,pharaccount.dcr,pharaccount.group_user,cru,"['|', ('pharmacy_id', '=', False), ('pharmacy_id.record_type_id.permission_ids.group_id', 'in', user.all_group_ids.ids)]"
+access_pharaccount_dcr_manager,pharaccount.dcr manager,pharaccount.dcr,pharaccount.group_manager,crud,"['|', ('pharmacy_id', '=', False), ('pharmacy_id.record_type_id.permission_ids.group_id', 'in', user.all_group_ids.ids)]"
+access_pharaccount_dcr_admin,pharaccount.dcr administrators,pharaccount.dcr,base.group_system,crud,

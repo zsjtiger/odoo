@@ -189,13 +189,19 @@ class TestPharaccount(TransactionCase):
         self.assertFalse(Staff.with_user(outsider).search([('id', '=', staff.id)]))
         self.assertEqual(Staff.with_user(insider).search([('id', '=', staff.id)]), staff)
 
-    def test_new_staff_action_prefills_pharmacy(self):
-        pharmacy = self.env['pharaccount.account'].create({'name': 'Staff Pharmacy', 'telephone': '0100'})
-        action = pharmacy.action_new_staff()
-        self.assertEqual(action['res_model'], 'pharaccount.pharmacy.staff')
+    def test_new_dcr_action_copies_pharmacy_info(self):
+        pharmacy = self.env['pharaccount.account'].create({
+            'name': 'DCR Pharmacy', 'telephone': '0100', 'mobile': '13800000000',
+            'geo_city': 'Beijing', 'is_important': True,
+        })
+        action = pharmacy.action_new_dcr()
+        self.assertEqual(action['res_model'], 'pharaccount.dcr')
         self.assertEqual(action['view_mode'], 'form')
-        defaults = self.env['pharaccount.pharmacy.staff'].with_context(action['context']).default_get(
-            ['pharmacy_id', 'telephone', 'name'])
-        self.assertEqual(defaults['name'], 'Staff Pharmacy')
+        defaults = self.env['pharaccount.dcr'].with_context(action['context']).default_get(
+            ['name', 'pharmacy_id', 'telephone', 'mobile', 'geo_city', 'is_important'])
+        self.assertEqual(defaults['name'], 'DCR Pharmacy')
         self.assertEqual(defaults['pharmacy_id'], pharmacy.id)
         self.assertEqual(defaults['telephone'], '0100')
+        self.assertEqual(defaults['mobile'], '13800000000')
+        self.assertEqual(defaults['geo_city'], 'Beijing')
+        self.assertTrue(defaults['is_important'])
