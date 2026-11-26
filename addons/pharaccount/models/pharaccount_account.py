@@ -81,6 +81,7 @@ class PharaccountAccount(models.Model):
             'target': 'current',
             'context': {
                 'default_pharmacy_id': self.id,
+                'default_name': self.name,
                 'default_telephone': self.telephone or self.mobile,
             },
         }

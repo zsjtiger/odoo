@@ -195,6 +195,7 @@ class TestPharaccount(TransactionCase):
         self.assertEqual(action['res_model'], 'pharaccount.pharmacy.staff')
         self.assertEqual(action['view_mode'], 'form')
         defaults = self.env['pharaccount.pharmacy.staff'].with_context(action['context']).default_get(
-            ['pharmacy_id', 'telephone'])
+            ['pharmacy_id', 'telephone', 'name'])
+        self.assertEqual(defaults['name'], 'Staff Pharmacy')
         self.assertEqual(defaults['pharmacy_id'], pharmacy.id)
         self.assertEqual(defaults['telephone'], '0100')
