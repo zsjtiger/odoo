@@ -72,7 +72,7 @@ class IrDataImportJob(models.Model):
             tech, rows = read_upload(content)
         except Exception as exc:  # openpyxl raises several error types for broken files
             raise UserError(_('The file is not a valid Excel (.xlsx) file.')) from exc
-        if not tech or tech[0] != 'action':
+        if 'action' not in tech:  # the column order does not matter; the names do
             raise UserError(_('The file does not match the template. Download the template and use it.'))
         if len(rows) > MAX_ROWS:
             raise UserError(_('The file has %(rows)s rows; the limit is %(limit)s rows per import.',

@@ -193,9 +193,8 @@ class IrDataImportTemplate(models.Model):
             fields_columns = auto_columns(self.env, Model)
             example = {}
         has_types = 'record_type_id' in Model._fields
+        # ID and Record Type come first; the Action column is last, after the fields
         columns = [
-            {'name': 'action', 'header': _('Action (N/U/D)'), 'required': False, 'width': 10, 'align': 'center',
-             'options': ['N', 'U', 'D'], 'note': _('N = new, U = update, D = delete')},
             {'name': 'id', 'header': _('ID'), 'required': False, 'width': 12, 'align': 'right', 'options': None,
              'note': _('Database ID or external ID (module.xmlid). Required for U and D, empty for N.')},
         ]
@@ -204,6 +203,9 @@ class IrDataImportTemplate(models.Model):
                             'align': 'left', 'options': None,
                             'note': _('Code or name of the record type. Empty: default type.')})
         columns += fields_columns
+        columns.append({'name': 'action', 'header': _('Action (N/U/D)'), 'required': False, 'width': 10,
+                        'align': 'center', 'options': ['N', 'U', 'D'],
+                        'note': _('N = new, U = update, D = delete. Required on every row.')})
         help_rows = [(_('Column'), _('Technical name'), _('Required'), _('Help'))]
         for column in columns:
             help_rows.append((column['header'], column['name'], 'yes' if column.get('required') else '',

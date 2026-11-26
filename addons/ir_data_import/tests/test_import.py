@@ -51,9 +51,9 @@ class TestDataImport(TransactionCase):
         content, filename = self.env['ir.data.import.template']._build_xlsx('res.partner')
         self.assertTrue(filename.endswith('_template.xlsx'))
         wb = load_workbook(io.BytesIO(content))
-        self.assertEqual(wb.worksheets[0].cell(row=2, column=1).value, 'action')
-        self.assertEqual(wb.worksheets[0].cell(row=2, column=2).value, 'id')
         techs = [c.value for c in wb.worksheets[0][2]]
+        self.assertEqual(techs[0], 'id')
+        self.assertEqual(techs[-1], 'action')  # Action is the last column
         self.assertIn('name', techs)
         self.assertNotIn('child_ids', techs)  # one2many is not importable
         self.assertIn('Help', wb.sheetnames)

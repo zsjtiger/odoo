@@ -11,10 +11,13 @@
                 <field name="error_rows" invisible="1"/>
                 <group>
                     <group>
-                        <button type="object" name="action_download_template" string="Download template" class="btn-secondary"
-                                icon="fa-download"/>
+                        <button type="object" name="action_download_template" string="Download template" class="btn-secondary"/>
                     </group>
                 </group>
+                <div class="text-danger mb-3" invisible="state != 'upload'">
+                    <p class="mb-1">1. 下载模板：点击上方按钮下载 Excel 模板，按模板填写数据。Action 列填 N（新建）、U（更新）或 D（删除），U 和 D 需要填写 ID。</p>
+                    <p class="mb-0">2. 验证数据：上传填好的文件并点击"Validate"。有错误的行会在结果文件的 Validation Error 列写明原因，修正后重新上传。</p>
+                </div>
                 <group invisible="state != 'upload'">
                     <field name="file" filename="filename"/>
                     <field name="filename" invisible="1"/>
