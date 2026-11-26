@@ -106,6 +106,51 @@
 - 有记录类型的模型：可以建通用模板，也可以为某个记录类型单独建模板。导入时，`Record Type` 列决定使用哪个模板的列；若该类型没有专用模板，使用通用模板。
 - 同一个文件中如果混有多种类型，列以文件表头为准，每行的类型按 `Record Type` 列单独校验；必填规则按每行的类型取。
 
+### 4.0.4 下载 Excel 的样式配置
+
+样式属于模板的配置，存在模板表和模板行表中，不写死在代码里。
+
+**模板级（`ir.data.import.template`）**
+
+| 字段 | 说明 | 默认 |
+|---|---|---|
+| `sheet_name` | 工作表名称 | 模型名称 |
+| `header_font_color` | 表头字体颜色（十六进制） | `#FFFFFF` |
+| `header_fill_color` | 表头背景色 | `#0E7C86` |
+| `header_bold` | 表头加粗 | 是 |
+| `header_height` | 表头行高（点） | 24 |
+| `freeze_header` | 冻结表头 | 是 |
+| `show_gridlines` | 显示网格线 | 是 |
+| `action_fill_color` | `Action` 列的背景色（区分操作标记） | `#FFF2CC` |
+| `required_fill_color` | 必填列表头的背景色（覆盖 `header_fill_color`） | `#C0392B` |
+| `show_help_sheet` | 是否生成 Help 工作表 | 是 |
+| `help_sheet_name` | Help 工作表名称 | `Help` |
+
+**列级（`ir.data.import.template.line`）**
+
+| 字段 | 说明 | 默认 |
+|---|---|---|
+| `column_width` | 列宽（字符数） | 按标签长度，最少 12 |
+| `number_format` | 数字或日期的显示格式，如 `0.00`、`yyyy-mm-dd` | 按字段类型 |
+| `align` | 对齐：左 / 中 / 右 | 文本左，数字右 |
+| `dropdown` | 是否生成下拉框：Selection、Boolean、Many2one（取名称列表）| Selection 和 Boolean 为是 |
+| `hidden` | 隐藏列（仍保留在文件中，用于 ID 等） | 否 |
+| `locked` | 锁定列，工作表保护时不可编辑 | 否 |
+| `header_note` | 表头批注（鼠标悬停提示），内容为填写说明 | 来自 `help` |
+
+**生效规则**
+
+- 下载时按模板的样式生成；没有配置模板时使用上表的默认值。
+- 颜色必须是 `#RRGGBB` 格式，保存时校验，错误则拒绝保存。
+- `dropdown` 的选项来自字段的 Selection 标签，或 Many2one 的名称列表（最多 500 项，超过则不生成下拉框，提示改用 ID）。
+- `Validation Error` 列（结果文件）固定为红色表头，不受模板样式影响。
+- 结果文件保留模板中的列宽和表头样式，便于用户继续使用。
+
+**界面**
+
+- 模板表单中增加"样式"页签，包含模板级样式字段；行列表中增加样式列。
+- 提供"预览"按钮，立即生成一份样例 xlsx 下载，用于确认样式。
+
 ### 4.1 列
 
 | 列 | 说明 |
