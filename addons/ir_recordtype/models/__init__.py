@@ -5,3 +5,4 @@ from . import ir_record_type
 from . import ir_record_type_permission
 from . import ir_record_type_default
 from . import base_record_type
+from . import ir_ui_view

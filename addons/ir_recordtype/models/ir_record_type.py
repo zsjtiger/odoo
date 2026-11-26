@@ -26,6 +26,7 @@ class IrRecordType(models.Model):
     permission_ids = fields.One2many('ir.record.type.permission', 'record_type_id', string='Permissions', copy=True)
     default_ids = fields.One2many('ir.record.type.default', 'record_type_id', string='Default For')
     access_ids = fields.One2many('ir.access', 'record_type_id', string='Access Rows')
+    view_ids = fields.One2many('ir.ui.view', 'record_type_id', string='Views')
     action_id = fields.Many2one('ir.actions.act_window', string='Action', readonly=True, copy=False, ondelete='set null')
     group_ids = fields.Many2many('res.groups', compute='_compute_group_ids', string='Granted Groups')
     has_permissions = fields.Boolean(compute='_compute_group_ids')
@@ -95,6 +96,7 @@ class IrRecordType(models.Model):
                 })
             else:
                 record.action_id.name = record.name
+            record._sync_action_views()
             menu = Menu.search([('record_type_id', '=', record.id)], limit=1)
             vals = {
                 'name': record.name,
@@ -107,6 +109,20 @@ class IrRecordType(models.Model):
             else:
                 Menu.create(vals | {'parent_id': False})
         self._sync_menu_groups()
+
+    def _sync_action_views(self):
+        """The action shows the type's form view (if any) instead of the model default form."""
+        self.ensure_one()
+        ActionView = self.env['ir.actions.act_window.view'].sudo()
+        form_view = self.view_ids.filtered(lambda v: v.type == 'form')[:1]
+        ActionView.search([('act_window_id', '=', self.action_id.id), ('view_mode', '=', 'form')]).unlink()
+        if form_view:
+            ActionView.create({
+                'act_window_id': self.action_id.id,
+                'view_mode': 'form',
+                'view_id': form_view.id,
+                'sequence': 2,
+            })
 
     def _sync_menu_groups(self):
         """A menu is visible to the groups that can read the type, and only while the type is active."""

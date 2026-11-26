@@ -118,3 +118,53 @@ class TestIrRecordType(TransactionCase):
                 'name': 'mismatch', 'model_id': other.id,
                 'group_id': self.group_user.id, 'operation': 'r', 'record_type_id': rt.id,
             })
+
+
+@tagged('post_install', '-at_install')
+class TestIrRecordTypeViewsAndDefaults(TransactionCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.model = cls.env['ir.model']._get('ir.recordtype.test')
+        cls.group_user = cls.env.ref('base.group_user')
+
+    def test_type_form_view_is_used_by_action(self):
+        rt = self.env['ir.record.type'].create({'name': 'v', 'code': 'v', 'model_id': self.model.id})
+        view = self.env['ir.ui.view'].create({
+            'name': 'v form', 'model': 'ir.recordtype.test', 'type': 'form', 'arch': '<form><field name="name"/></form>',
+            'record_type_id': rt.id,
+        })
+        self.assertEqual(view.record_type_id, rt)
+        rt.write({'name': 'v2'})
+        action_view = self.env['ir.actions.act_window.view'].search([
+            ('act_window_id', '=', rt.action_id.id), ('view_mode', '=', 'form'),
+        ])
+        self.assertEqual(action_view.view_id, view)
+
+    def test_type_view_must_be_form_of_same_model(self):
+        rt = self.env['ir.record.type'].create({'name': 'v3', 'code': 'v3', 'model_id': self.model.id})
+        with self.assertRaises(ValidationError):
+            self.env['ir.ui.view'].create({
+                'name': 'list', 'model': 'ir.recordtype.test', 'type': 'list', 'arch': '<list><field name="name"/></list>',
+                'record_type_id': rt.id,
+            })
+
+    def test_default_for_user_follows_group_default(self):
+        RecordType = self.env['ir.record.type']
+        first = RecordType.create({'name': 'd1', 'code': 'd1', 'model_id': self.model.id, 'sequence': 5})
+        second = RecordType.create({'name': 'd2', 'code': 'd2', 'model_id': self.model.id, 'sequence': 1})
+        for rt in (first, second):
+            self.env['ir.record.type.permission'].create({
+                'record_type_id': rt.id, 'group_id': self.group_user.id, 'perm_read': True, 'perm_create': True,
+            })
+        user = self.env['res.users'].create({
+            'name': 'default user', 'login': 'default_user_rt', 'group_ids': [(6, 0, self.group_user.ids)],
+        })
+        # no group default: the usable type with the lowest sequence wins
+        self.assertEqual(RecordType.with_user(user)._get_default_for_user(self.model.model), second)
+        self.env['ir.record.type.default'].create({
+            'model_id': self.model.id, 'group_id': self.group_user.id, 'record_type_id': first.id,
+        })
+        # group default wins over sequence
+        self.assertEqual(RecordType.with_user(user)._get_default_for_user(self.model.model), first)
