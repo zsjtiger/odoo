@@ -302,7 +302,7 @@ class IrDataImportJob(models.Model):
         key = (Model._name, record_type.id if record_type else False)
         if key not in cache:
             template = self.env['ir.data.import.template']._find_template(Model._name, record_type)
-            cache[key] = template.column_ids.filtered('required_on_create') if template else []
+            cache[key] = template.sudo().column_ids.filtered('required_on_create') if template else []
         for column in cache[key]:
             if values.get(column.field_id.name) in (None, False, ''):
                 raise UserError(_('%s is required.', column.header or column.field_id.field_description))

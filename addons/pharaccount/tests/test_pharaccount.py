@@ -3,6 +3,13 @@ from odoo.exceptions import UserError
 from odoo.tests import TransactionCase, tagged
 
 
+def load_workbook_bytes(result_file):
+    """All text of the first sheet of a result file, joined (for simple assertions)."""
+    import io
+    from openpyxl import load_workbook
+    ws = load_workbook(io.BytesIO(bytes(result_file))).worksheets[0]
+    return ' '.join(str(c.value) for row in ws.iter_rows() for c in row if c.value is not None)
+
 @tagged('post_install', '-at_install')
 class TestPharaccount(TransactionCase):
 
@@ -300,11 +307,20 @@ class TestPharaccount(TransactionCase):
         self.assertIn('not allowed to unlink', wb)
         self.assertTrue(record.exists())
 
-
-def load_workbook_bytes(result_file):
-    """All text of the first sheet of a result file, joined (for simple assertions)."""
-    import io
-    from openpyxl import load_workbook
-    ws = load_workbook(io.BytesIO(bytes(result_file))).worksheets[0]
-    return ' '.join(str(c.value) for row in ws.iter_rows() for c in row if c.value is not None)
-
+    def test_pharmacy_user_can_download_template_and_import(self):
+        user = self.env['res.users'].create({
+            'name': 'Pharmacy staff', 'login': 'pharmacy_staff_perm',
+            'group_ids': [(6, 0, [self.env.ref('base.group_user').id, self.env.ref('pharaccount.group_user').id])],
+        })
+        model = self.env['ir.model']._get('pharaccount.account')
+        wizard = self.env['ir.data.import.wizard'].with_user(user).create({'model_id': model.id})
+        action = wizard.action_download_template()
+        self.assertEqual(action['type'], 'ir.actions.act_url')
+        # the configured template requires the name: a new row without one is an error
+        job = self.env['ir.data.import.job'].with_user(user).create({
+            'model_id': model.id,
+            'source_file': self._xlsx_bytes(['action', 'telephone'], [{'action': 'N', 'telephone': '010-9'}]),
+        })
+        job.with_user(user).action_validate()
+        self.assertEqual(job.error_rows, 1)
+        self.assertIn('is required', load_workbook_bytes(job.result_file))

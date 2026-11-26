@@ -159,7 +159,9 @@ class IrDataImportTemplate(models.Model):
     def _column_specs(self):
         self.ensure_one()
         specs = []
-        for column in self.column_ids:
+        # the template is configuration: its columns and field metadata are read with sudo,
+        # so users who may download the template need no read access on ir.model.fields
+        for column in self.sudo().column_ids:
             field = column.field_id
             if not field:
                 continue
