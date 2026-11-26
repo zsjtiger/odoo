@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo.exceptions import UserError
 from odoo.tests import TransactionCase, tagged
 
 
@@ -205,3 +206,51 @@ class TestPharaccount(TransactionCase):
         self.assertEqual(defaults['mobile'], '13800000000')
         self.assertEqual(defaults['geo_city'], 'Beijing')
         self.assertTrue(defaults['is_important'])
+
+    def test_import_creates_pharmacies_with_record_type(self):
+        Job = self.env['ir.data.import.job']
+        model = self.env['ir.model']._get('pharaccount.account')
+        content = self._xlsx_bytes(['action', 'name', 'record_type', 'telephone'], [
+            {'action': 'N', 'name': 'Imported Hospital', 'record_type': 'hospital', 'telephone': '010-1'},
+            {'action': 'N', 'name': 'Imported Pharma', 'record_type': 'pharma'},
+            {'action': 'N', 'name': 'Bad type', 'record_type': 'no_such_type'},
+        ])
+        job = Job.create({'model_id': model.id, 'source_file': content, 'source_filename': 'pa.xlsx'})
+        job.action_validate()
+        self.assertEqual(job.error_rows, 1)
+        with self.assertRaises(UserError):
+            job.action_import()
+        # without the bad row the import goes through
+        content = self._xlsx_bytes(['action', 'name', 'record_type', 'telephone'], [
+            {'action': 'N', 'name': 'Imported Hospital', 'record_type': 'hospital', 'telephone': '010-1'},
+            {'action': 'N', 'name': 'Imported Pharma', 'record_type': 'pharma'},
+        ])
+        job = Job.create({'model_id': model.id, 'source_file': content, 'source_filename': 'pa.xlsx'})
+        job.action_validate()
+        job.action_import()
+        self.assertEqual(job.state, 'done')
+        hospital = self.env['pharaccount.account'].search([('name', '=', 'Imported Hospital')])
+        self.assertEqual(hospital.record_type_id.code, 'hospital')
+        self.assertEqual(hospital.telephone, '010-1')
+
+    def test_import_button_opens_wizard(self):
+        account = self.env['pharaccount.account'].create({'name': 'Button check'})
+        action = account.action_open_data_import()
+        self.assertEqual(action['res_model'], 'ir.data.import.wizard')
+        self.assertEqual(action['context']['default_model_id'], self.env['ir.model']._get('pharaccount.account').id)
+
+    @staticmethod
+    def _xlsx_bytes(tech, rows):
+        import base64
+        import io
+        from openpyxl import Workbook
+        wb = Workbook()
+        ws = wb.active
+        ws.append([t.upper() for t in tech])
+        ws.append(tech)
+        for row in rows:
+            ws.append([row.get(t) for t in tech])
+        out = io.BytesIO()
+        wb.save(out)
+        return base64.b64encode(out.getvalue()).decode()
+

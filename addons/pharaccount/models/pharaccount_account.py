@@ -9,6 +9,7 @@ class PharaccountAccount(models.Model):
     point at ``pharaccount.picklist.value`` and the self references at this model.
     """
     _name = 'pharaccount.account'
+    _inherit = ['ir.data.import.mixin']  # Import button action
     _description = 'Pharmacy Account'
     _order = 'name, id'
     _record_type = True  # adds record_type_id (ir.record.type); permissions come from the type

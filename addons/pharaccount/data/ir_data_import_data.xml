@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Pharmacy staff and managers may import and download templates. Deleting still needs the
+         delete right on the record's type, checked by the import. -->
+    <record id="ir_data_import_pharaccount_user" model="ir.data.import.permission">
+        <field name="model_id" ref="model_pharaccount_account"/>
+        <field name="group_id" ref="pharaccount.group_user"/>
+        <field name="perm_import" eval="True"/>
+        <field name="perm_template" eval="True"/>
+    </record>
+    <record id="ir_data_import_pharaccount_manager" model="ir.data.import.permission">
+        <field name="model_id" ref="model_pharaccount_account"/>
+        <field name="group_id" ref="pharaccount.group_manager"/>
+        <field name="perm_import" eval="True"/>
+        <field name="perm_template" eval="True"/>
+    </record>
+</odoo>

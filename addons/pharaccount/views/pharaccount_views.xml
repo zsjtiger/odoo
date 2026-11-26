@@ -8,6 +8,9 @@
         <field name="model">pharaccount.account</field>
         <field name="arch" type="xml">
             <list string="药店">
+                <header>
+                    <button type="object" name="action_open_data_import" string="导入"/>
+                </header>
                 <field name="name"/>
                 <field name="record_type_id"/>
                 <field name="pharmacy_level_id"/>

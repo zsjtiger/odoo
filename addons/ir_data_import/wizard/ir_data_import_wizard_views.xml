@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ir_data_import_wizard_form" model="ir.ui.view">
+        <field name="name">ir.data.import.wizard.form</field>
+        <field name="model">ir.data.import.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Import">
+                <field name="model_id" invisible="1"/>
+                <field name="model_name" invisible="1"/>
+                <field name="state" invisible="1"/>
+                <field name="error_rows" invisible="1"/>
+                <group>
+                    <group>
+                        <button type="object" name="action_download_template" string="Download template" class="btn-secondary"
+                                icon="fa-download"/>
+                    </group>
+                </group>
+                <group invisible="state != 'upload'">
+                    <field name="file" filename="filename"/>
+                    <field name="filename" invisible="1"/>
+                </group>
+                <group invisible="state == 'upload'">
+                    <group>
+                        <field name="total_rows"/>
+                        <field name="error_rows"/>
+                    </group>
+                    <group>
+                        <field name="created_rows" invisible="state != 'done'"/>
+                        <field name="updated_rows" invisible="state != 'done'"/>
+                        <field name="deleted_rows" invisible="state != 'done'"/>
+                    </group>
+                </group>
+                <div class="alert alert-warning" role="alert" invisible="not message">
+                    <field name="message"/>
+                </div>
+                <group invisible="state == 'upload' or not result_file">
+                    <field name="result_file" filename="result_filename"/>
+                </group>
+                <footer>
+                    <button type="object" name="action_validate" string="Validate" class="btn-primary"
+                            invisible="state != 'upload'"/>
+                    <button type="object" name="action_import" string="Import" class="btn-primary"
+                            invisible="state != 'validated' or error_rows"/>
+                    <button type="object" name="action_new_file" string="Another file" class="btn-secondary"
+                            invisible="state == 'upload'"/>
+                    <button special="cancel" string="Close" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
