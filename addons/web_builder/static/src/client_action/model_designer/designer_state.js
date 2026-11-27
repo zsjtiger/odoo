@@ -6,7 +6,7 @@ export const designerState = proxy({
     selectedModelId: null,
     // Snapshot of the selected model, used by the editor breadcrumb: { id, name, model }
     selectedModel: null,
-    // "fields" | "field" | "layouts" | "buttons" | "record_types" | "page_layout"
+    // "fields" | "field" | "layouts" | "buttons" | "record_types" | "mobile" | "page_layout"
     section: "fields",
     selectedFieldId: null,
     // View type of the page layout being edited: "form" or "list"

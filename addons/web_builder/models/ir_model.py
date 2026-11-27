@@ -642,6 +642,55 @@ class IrModel(models.Model):
         }
 
     @api.model
+    def studio_mobile_infos(self, model_name):
+        """Mobile configuration of a model for the Studio "Mobile" page (needs mobile_web).
+
+        Returns {'available': False} when mobile_web is not installed.
+        """
+        if 'mobile.custom.field' not in self.env.registry:
+            return {'available': False}
+        model = self._get(model_name)
+        Action = self.env['ir.actions.act_window']
+        actions = Action.search([('res_model', '=', model_name)])
+        menus = self.env['ir.ui.menu'].search([
+            ('action', 'in', [f'ir.actions.act_window,{action.id}' for action in actions]),
+        ]) if actions else self.env['ir.ui.menu']
+        custom_fields = self.env['mobile.custom.field'].search([('model_id', '=', model.id)])
+        nav_items = self.env['mobile_web.mobile.page.actions'].search([('ir_action', 'in', actions.ids)]) \
+            if actions else self.env['mobile_web.mobile.page.actions']
+        pages = self.env['mobile_web.mobile.page'].search([])
+        capabilities = self.env['mobile.capabilities'].get_capabilities()
+        return {
+            'available': True,
+            'model_id': model.id,
+            'action_id': actions[:1].id or False,
+            'menus': [{
+                'id': menu.id,
+                'name': menu.complete_name,
+                'device_type': menu.device_type,
+            } for menu in menus],
+            'custom_fields': [{
+                'id': cf.id,
+                'name': cf.name,
+                'path': cf.path,
+                'store': cf.store,
+                'list_view': cf.list_view,
+                'sequence': cf.sequence,
+                'field_name': cf.field_name or '',
+            } for cf in custom_fields],
+            'nav_items': [{
+                'id': item.id,
+                'name': item.name,
+                'mobile_page_id': item.mobile_page.id,
+                'mobile_page_name': item.mobile_page.display_name,
+                'svg_icon_href': item.svg_icon_href or '',
+                'sequence': item.sequence,
+            } for item in nav_items],
+            'pages': [{'id': page.id, 'name': page.display_name} for page in pages],
+            'icons': capabilities['icons'],
+        }
+
+    @api.model
     def _quick_create_model(self, model_values, parent_field_type=None):
         model_name = model_values.pop("model")
         model_name = model_name if model_name.startswith("x_") else "x_" + model_name

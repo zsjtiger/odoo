@@ -13,3 +13,4 @@ from . import test_exports
 from . import test_report
 from . import test_page_layout
 from . import test_record_type_studio
+from . import test_mobile_studio

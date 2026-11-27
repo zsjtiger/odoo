@@ -1,6 +1,21 @@
 # Studio 支持移动端配置（mobile_web）：设计方案
 
-状态：设计草案，尚未实现。范围：在 Studio（web_builder）的模型设计器里配置 mobile_web 的移动端界面。
+状态：阶段 1 已实现（菜单显示端、移动端自定义字段、导航项、能力清单）。移动端布局（阶段 2）和筛选（阶段 3）尚未实现。范围：在 Studio（web_builder）的模型设计器里配置 mobile_web 的移动端界面。
+
+**实现情况**
+
+| 项 | 位置 | 说明 |
+|---|---|---|
+| 能力清单 | `mobile_web/models/mobile_capabilities.py` | 字段组件、视图、表单标签、支持的字段类型、图标；`tests/test_mobile_capabilities.py` 与前端注册表保持一致 |
+| 菜单显示端 | Studio → Mobile → Menus | 只列出打开本模型动作的菜单，可改 mobile / pc / both |
+| 移动端自定义字段 | Studio → Mobile → Fields | 通过 `mobile.custom.field` 创建、开关"在列表中显示"与"存储"、删除 |
+| 导航项 | Studio → Mobile → Navigation | 只能选已注册的页面和图标包中的图标，加入后即出现在导航中 |
+| 服务端 | `ir.model.studio_mobile_infos` | mobile_web 未安装时返回不可用 |
+
+**与原设计的差异**
+
+- 导航的页面只能选已有页面（`mobile_web.mobile.page`），图标只能选图标包中的 symbol，与 9.5 一致。
+- 布局与筛选仍然在代码中配置；Mobile 页签中已有提示。
 
 ## 1. 背景
 
