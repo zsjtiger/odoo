@@ -29,11 +29,23 @@
       </div>
       <div class="small text-muted text-center mt-1">Mobile preview</div>
     </div>
-    <StudioView
-      t-props="this.viewEditorModel.studioViewProps"
-      t-key="this.viewEditorModel.studioViewKey"
-      autoClick="scope and scope.autoClick"
-    />
+    <div class="o_web_studio_canvas_column">
+      <div t-if="this.isMobile" class="o_web_studio_mobile_titlebar">
+        <t t-out="this.studio.editedAction?.name"/>
+      </div>
+      <StudioView
+        t-props="this.viewEditorModel.studioViewProps"
+        t-key="this.viewEditorModel.studioViewKey"
+        autoClick="scope and scope.autoClick"
+      />
+      <div t-if="this.isMobile" class="o_web_studio_mobile_footer">
+        <button type="button" class="btn btn-secondary" tabindex="-1">Discard</button>
+        <button type="button" class="btn btn-primary" tabindex="-1">Save</button>
+      </div>
+      <div t-if="this.isMobile" class="small text-muted mt-2">
+        On mobile, the header buttons show only on saved records; a new record shows none.
+      </div>
+    </div>
   </div>
 </t>
 
