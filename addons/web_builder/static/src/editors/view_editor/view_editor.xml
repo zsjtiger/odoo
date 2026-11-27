@@ -22,7 +22,7 @@
 </t>
 
 <t t-name="web_builder.ViewEditor.View">
-  <div class="o_web_studio_view_renderer overflow-auto h-100 pe-auto" t-ref="this.viewRendererRef">
+  <div t-attf-class="o_web_studio_view_renderer overflow-auto h-100 pe-auto {{ this.isMobile ? 'o_web_studio_device_mobile' : '' }}" t-ref="this.viewRendererRef">
     <StudioView
       t-props="this.viewEditorModel.studioViewProps"
       t-key="this.viewEditorModel.studioViewKey"

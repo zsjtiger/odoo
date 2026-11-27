@@ -1,0 +1,9 @@
+// Mobile display of the view editor: the canvas is as wide as a phone.
+.o_web_studio_view_renderer.o_web_studio_device_mobile {
+    .o_form_view, .o_list_view, .o_kanban_view {
+        max-width: 390px;
+        margin: 0 auto;
+        border-left: 1px solid $border-color;
+        border-right: 1px solid $border-color;
+    }
+}

@@ -1,5 +1,5 @@
 import { render, useSubEnv } from "@web/core/owl/utils";
-import { Component, onWillUpdateProps, markRaw, useProps, proxy, signal, t } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, markRaw, useProps, proxy, signal, t } from "@odoo/owl";
 
 import { useBus, useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/framework/registry";
@@ -56,6 +56,11 @@ export class ViewEditor extends Component {
         /* Services */
         this.studio = useService("studio");
         this.orm = useService("orm");
+        this.mobileActionId = false;
+        onWillStart(async () => {
+            const info = await this.orm.call("ir.model", "studio_mobile_infos", [this.studio.editedAction.res_model]);
+            this.mobileActionId = info.available ? info.mobile_action_id : false;
+        });
         /* MISC */
         // Avoid pollution from the real actionService's env
         // Set config compatible with View.js
@@ -90,6 +95,11 @@ export class ViewEditor extends Component {
                 });
             },
         });
+    }
+
+    /** The edited form is the mobile one: the canvas is shown as a phone. */
+    get isMobile() {
+        return Boolean(this.mobileActionId) && this.studio.editedAction?.id === this.mobileActionId;
     }
 
     get interactiveEditorKey() {

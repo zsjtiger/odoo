@@ -17,6 +17,7 @@ import { _t } from "@web/core/data/l10n/translation";
 import { SidebarViewToolbox } from "@web_builder/editors/view_editor/interactive_editor/sidebar_view_toolbox/sidebar_view_toolbox";
 import { useEditNodeAttributes } from "@web_builder/editors/view_editor/view_editor_model";
 import { WidgetProperties } from "@web_builder/editors/view_editor/interactive_editor/properties/widget_properties/widget_properties";
+import { DeviceSwitch } from "@web_builder/editors/view_editor/editors/components/device_switch";
 import { OTdLabelProperties } from "./properties/o_td_label_properties/o_td_label_properties";
 
 export class FormEditorSidebar extends Component {
@@ -35,6 +36,7 @@ export class FormEditorSidebar extends Component {
         Properties,
         ViewStructures,
         SidebarViewToolbox,
+        DeviceSwitch,
     };
     static get viewStructures() {
         return {

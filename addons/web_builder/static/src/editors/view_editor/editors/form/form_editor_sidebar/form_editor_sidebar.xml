@@ -8,6 +8,7 @@
                 <ExistingFields resModel="this.viewEditorModel.resModel" fields="this.viewEditorModel.fields" fieldsInArch="this.viewEditorModel.fieldsInArch"/>
             </t>
             <t t-set-slot="view">
+                <DeviceSwitch/>
                 <Property
                     name="'create'"
                     value="this.getActiveAction('create')"
