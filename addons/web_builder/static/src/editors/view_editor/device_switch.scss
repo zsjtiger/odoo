@@ -30,33 +30,15 @@
     border: 0;
 }
 
-// Mobile mode of the canvas: the look of the mobile client.
+// Mobile mode of the canvas: the look of the mobile client, with no extra elements.
 .o_web_studio_mobile_split {
     .o_field_statusbar {
         display: none !important;
     }
-    .o_web_studio_canvas_column {
-        flex: 0 0 390px;
-        width: 390px;
-        background: #fff;
-        border: 1px solid $border-color;
-        border-radius: 12px;
-        overflow: hidden;
-        padding-bottom: 8px;
-    }
-    .o_web_studio_mobile_titlebar {
-        background: #017e84;
-        color: #fff;
-        text-align: center;
-        font-weight: 600;
-        line-height: 48px;
-    }
-    .o_web_studio_mobile_footer {
-        display: flex;
-        justify-content: flex-end;
-        gap: 8px;
-        padding: 10px 12px;
-        border-top: 1px solid $border-color;
+    // add-button placeholders are editor hooks, not part of the mobile form
+    .o-web-studio-editor--add-button-action,
+    .o_web_studio_button_hook {
+        display: none !important;
     }
     .o_field_widget {
         border-bottom: 1px solid $border-color;
