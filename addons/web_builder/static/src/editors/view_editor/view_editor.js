@@ -57,11 +57,17 @@ export class ViewEditor extends Component {
         this.studio = useService("studio");
         this.orm = useService("orm");
         this.mobileActionId = false;
+        // a saved record, so that the preview shows the header buttons (the mobile client hides them on a new record)
+        this.previewRecordId = false;
         // the phone preview reloads after every change of the view
         this.preview = proxy({ key: 0 });
         onWillStart(async () => {
             const info = await this.orm.call("ir.model", "studio_mobile_infos", [this.studio.editedAction.res_model]);
             this.mobileActionId = info.available ? info.mobile_action_id : false;
+            if (this.mobileActionId) {
+                const [record] = await this.orm.searchRead(this.studio.editedAction.res_model, [], ["id"], { limit: 1 });
+                this.previewRecordId = record ? record.id : false;
+            }
         });
         /* MISC */
         // Avoid pollution from the real actionService's env
@@ -106,9 +112,10 @@ export class ViewEditor extends Component {
         });
     }
 
-    /** The mobile client's form for a new record, as the users of the mobile app see it. */
+    /** The mobile client's form as the users of the mobile app see it: a saved record when there is one, else a new record. */
     get previewUrl() {
-        return `/mobile_web/action-${this.mobileActionId}/new?preview=${this.preview.key}`;
+        const resId = this.previewRecordId || "new";
+        return `/mobile_web/action-${this.mobileActionId}/${resId}?preview=${this.preview.key}`;
     }
 
     /** The edited form is the mobile one: the canvas is shown as a phone. */
