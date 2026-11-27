@@ -12,6 +12,7 @@ import { PageLayoutEditor } from "../page_layout/page_layout_editor";
 import { ModelButtons } from "./model_buttons";
 import { RecordTypeSection } from "../record_types/record_type_section";
 import { NewFormViewDialog } from "./new_form_view_dialog";
+import { NewListViewDialog } from "./new_list_view_dialog";
 import { MobileSection } from "../mobile/mobile_section";
 import { NewFieldDialog } from "./new_field_dialog";
 
@@ -86,6 +87,36 @@ export class ModelDetail extends Component {
     /** Form views of the model and where each one is used. */
     async loadForms(model) {
         this.state.forms = await this.orm.call("ir.model", "studio_form_views", [model.model]);
+        this.state.lists = await this.orm.call("ir.model", "studio_list_views", [model.model]);
+    }
+
+    get listRows() {
+        return (this.state.lists?.views || []).map((view) => ({
+            ...view,
+            kind: view.type === "kanban" ? "Kanban" : "List",
+            devices: this.deviceIcons(view.used_by),
+            usage: view.used_by.map((use) => this.usageLabel(use)).join(", ") || "Not used",
+            editable: view.used_by.length > 0,
+        }));
+    }
+
+    openNewList() {
+        this.dialog.add(NewListViewDialog, {
+            modelName: this.props.model.model,
+            info: this.state.lists,
+            onSaved: () => this.loadForms(this.props.model),
+        });
+    }
+
+    /** Opens the list in Studio's view editor: on the PC action when it is used there, else on the mobile action. */
+    async editList(view) {
+        const usesPc = view.used_by.includes("pc");
+        const actionId = usesPc ? this.state.lists.pc_action_id : this.state.lists.mobile_action_id;
+        if (!actionId) {
+            return;
+        }
+        const action = await this.action.loadAction(actionId);
+        this.studio.setParams({ action, viewType: usesPc ? "list" : "kanban", mode: this.studio.MODES.EDITOR, editorTab: "views" });
     }
 
     get formRows() {

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+<t t-name="web_builder.NewListViewDialog">
+    <Dialog title="'New List'">
+        <div class="o_web_studio_new_list_view d-flex flex-column gap-3">
+            <div>
+                <label class="form-label" for="o_web_studio_new_list_name">Name</label>
+                <input id="o_web_studio_new_list_name" class="form-control o_web_studio_new_list_name"
+                    t-att-value="this.state.name" t-on-input="(ev) => this.state.name = ev.target.value"/>
+                <div class="form-text">The new list is a copy of the list now used on PC, or of the mobile list.</div>
+            </div>
+            <div>
+                <label class="form-label" for="o_web_studio_new_list_slot">Use it in</label>
+                <select id="o_web_studio_new_list_slot" class="form-select o_web_studio_new_list_slot"
+                    t-on-change="(ev) => this.state.slot = ev.target.value">
+                    <t t-foreach="this.slots" t-as="slot" t-key="slot.key">
+                        <option t-att-value="slot.key" t-att-selected="slot.key === this.state.slot" t-out="slot.label"/>
+                    </t>
+                </select>
+            </div>
+            <div class="alert alert-info mb-0 small">
+                The list used in this place before is kept, but it is no longer used there.
+            </div>
+        </div>
+        <t t-set-slot="footer">
+            <button type="button" class="btn btn-primary o_web_studio_save_list_view" t-att-disabled="!this.canSave" t-on-click="this.save">Create</button>
+            <button type="button" class="btn btn-secondary" t-on-click="() => this.props.close()">Cancel</button>
+        </t>
+    </Dialog>
+</t>
+
+</templates>

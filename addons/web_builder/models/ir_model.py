@@ -804,6 +804,82 @@ class IrModel(models.Model):
         return new.id
 
     @api.model
+    def studio_list_views(self, model_name):
+        """List views of a model and the kanban views of its mobile action, with where each one is used (PC, mobile, both)."""
+        model = self._get(model_name)
+        pc_action, mobile_action = self._studio_slots(model)
+        View = self.env['ir.ui.view']
+        list_views = View.search([('model', '=', model_name), ('type', '=', 'list'), ('mode', '=', 'primary')],
+                                 order='priority, id')
+        pc_views = pc_action.view_ids.filtered(lambda v: v.view_mode == 'list').view_id
+        # without a list entry the PC action uses the default list of the model
+        pc_views = pc_views or list_views[:1]
+        mobile_views = mobile_action.view_ids.filtered(lambda v: v.view_mode == 'kanban').view_id
+        views = list_views | mobile_views
+        used = {view.id: [] for view in views}
+        for view in pc_views:
+            used[view.id].append('pc')
+        for view in mobile_views:
+            used[view.id].append('mobile')
+        return {
+            'views': [{
+                'id': view.id,
+                'name': view.name,
+                'type': view.type,
+                'priority': view.priority,
+                'used_by': used[view.id],
+            } for view in views.sorted(lambda v: (v.type, v.priority, v.id))],
+            'pc_action_id': pc_action.id or False,
+            'mobile_action_id': mobile_action.id or False,
+        }
+
+    @api.model
+    def studio_create_list_view(self, model_name, name, slot):
+        """Create a list of the model and put it in a slot.
+
+        slot: 'pc' (a list view on the PC action), 'mobile' (a kanban view on the mobile action),
+        or 'both' (a list view on the PC action and the same view on the mobile action, which shows it as cards).
+        The list that used the slot before is kept, but no longer used there.
+        """
+        model = self._get(model_name)
+        pc_action, mobile_action = self._studio_slots(model)
+        View = self.env['ir.ui.view']
+        if slot in ('pc', 'both') and not pc_action:
+            raise UserError(self.env._('The model has no PC action yet.'))
+        if slot in ('mobile', 'both') and not mobile_action:
+            raise UserError(self.env._('The model has no mobile action (kanban and form) yet.'))
+
+        default_list = View.search([('model', '=', model_name), ('type', '=', 'list'), ('mode', '=', 'primary')],
+                                   order='priority, id', limit=1)
+        if slot == 'mobile':
+            base = mobile_action.view_ids.filtered(lambda v: v.view_mode == 'kanban')[:1].view_id
+            view_type = 'kanban'
+        else:
+            base = pc_action.view_ids.filtered(lambda v: v.view_mode == 'list')[:1].view_id or default_list
+            view_type = 'list'
+        if not base:
+            raise UserError(self.env._('The model has no list to copy.'))
+        top = View.search([('model', '=', model_name), ('type', '=', view_type), ('mode', '=', 'primary')],
+                          order='priority desc', limit=1).priority
+        new = View.create({
+            'name': name,
+            'model': model_name,
+            'type': view_type,
+            'mode': 'primary',
+            'priority': max(top or 0, 16) + 1,
+            'arch': base.arch,
+        })
+        ActWindowView = self.env['ir.actions.act_window.view']
+        if slot in ('pc', 'both'):
+            pc_action.view_ids.filtered(lambda v: v.view_mode == 'list').unlink()
+            ActWindowView.create({'act_window_id': pc_action.id, 'view_mode': 'list', 'view_id': new.id, 'sequence': 1})
+        if slot in ('mobile', 'both'):
+            mobile_action.view_ids.filtered(lambda v: v.view_mode == 'kanban').unlink()
+            ActWindowView.create({'act_window_id': mobile_action.id, 'view_mode': 'kanban', 'view_id': new.id,
+                                  'sequence': 1})
+        return new.id
+
+    @api.model
     def _quick_create_model(self, model_values, parent_field_type=None):
         model_name = model_values.pop("model")
         model_name = model_name if model_name.startswith("x_") else "x_" + model_name
