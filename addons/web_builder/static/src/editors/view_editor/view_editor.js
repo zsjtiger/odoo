@@ -112,8 +112,14 @@ export class ViewEditor extends Component {
         });
     }
 
-    /** The mobile client's form as the users of the mobile app see it: a saved record when there is one, else a new record. */
+    /**
+     * The mobile client as the users of the mobile app see it: the list when the kanban view is edited,
+     * else the form on a saved record (or a new record when there is none).
+     */
     get previewUrl() {
+        if (this.viewEditorModel.viewType === "kanban") {
+            return `/mobile_web/action-${this.mobileActionId}?preview=${this.preview.key}`;
+        }
         const resId = this.previewRecordId || "new";
         return `/mobile_web/action-${this.mobileActionId}/${resId}?preview=${this.preview.key}`;
     }
