@@ -107,3 +107,80 @@ Studio 目前只管理 PC 端的视图、字段和菜单，没有移动端的入
 1. 阶段 1 是否先做？（建议：是，改动最小，且能立即看到效果。）
 2. 移动端布局是否需要"移动端视图"与 PC 视图完全分开（推荐：是，与现有的移动端动作一致）。
 3. 筛选是否需要在阶段 3 中实现，还是暂时只保留代码配置？
+
+## 9. 控件与布局的支持范围
+
+Studio 的编辑器能放的控件，与移动端能渲染的控件并不完全相同。移动端编辑器只能提供移动端能显示的内容，否则配置后在手机上看不到。下面按代码核对的结果列出两边的对应关系。
+
+### 9.1 字段类型（Studio 的 "Data Type" 与移动端字段组件）
+
+| Studio 类型 | 移动端组件 | 处理 |
+|---|---|---|
+| Checkbox（boolean） | boolean（另有 boolean_toggle） | 支持 |
+| Text（char） | char | 支持 |
+| Long text（text） | text | 支持（标签放在上方） |
+| Rich text（html） | html | 支持 |
+| Number（integer） | integer | 支持 |
+| Decimal（float） | float | 支持 |
+| Currency（monetary） | monetary | 支持 |
+| Date / Date/Time | date / datetime | 支持 |
+| Picklist（selection） | selection，widget 为 radio / badge / priority / statusbar 时使用对应组件 | 支持 |
+| Lookup（many2one） | many2one（或 many2one_avatar） | 支持 |
+| Multi-select lookup（many2many） | many2many、many2many_tags、many2many_checkboxes | 支持 |
+| Related list（one2many） | one2many、one2many_form（内嵌表单） | 支持 |
+| File（binary）、Image（image） | binary、image | 支持 |
+| Properties（properties） | 无对应组件，回退为 fallback | 不支持：移动端隐藏 |
+| Signature（视图编辑器的新字段列表中有） | 无 | 不支持：移动端隐藏 |
+| Related field（related） | 按目标字段类型渲染 | 支持 |
+
+`widget` 属性：移动端只识别已注册的 widget 名（见 `mobile_web/static/src/fields/`）。Studio 中设置的 PC 专用 widget（如 `statinfo`、`ace`、`html_frame`）在移动端会回退为字段类型的默认组件。编辑器需要在选择 widget 时显示"移动端的显示方式"，并对回退的情况给出提示。
+
+### 9.2 布局结构
+
+| Studio 结构 | 移动端 | 处理 |
+|---|---|---|
+| 表头按钮（header buttons） | 底部按钮栏（只在表头） | 支持，只允许放在表头 |
+| 状态条（statusbar） | statusbar 组件，显示为 "进度: 状态" | 支持 |
+| 分区（Section，带标题） | 带标题的分组（group） | 支持 |
+| 分区的多列（Column，两列及以上） | 单列：多列被压平 | 不支持多列：移动端编辑器只允许一列，已有的多列配置显示提示 |
+| 标签页（Tabs，notebook / page） | notebook，每页一个标签 | 支持 |
+| 分隔线（separator） | separator | 支持 |
+| 聊天框（chatter） | 不渲染 | 不支持：移动端隐藏 |
+| 表单正文中的按钮（button） | 不渲染（只在表头） | 不支持：移动端隐藏，并提示改放到表头 |
+| 原样保留的 XML 块（raw blocks） | 不渲染 | 不支持：移动端隐藏 |
+| 看板卡片模板（kanban templates） | 移动端看板使用自己的卡片渲染 | 待确认：只支持字段与标题字段 |
+| 列表的字段列 | list 视图的列 | 支持 |
+
+### 9.3 视图类型
+
+| Studio 视图 | 移动端 | 处理 |
+|---|---|---|
+| form | form | 支持 |
+| list | list | 支持 |
+| kanban | kanban | 支持（卡片见 9.2） |
+| calendar | calendar | 支持（与 PC 共用视图 arch） |
+| graph、pivot、gantt、activity | 不支持 | 移动端隐藏；移动端布局的视图选择只列出支持的类型 |
+| search | 作为移动端的筛选来源（facets） | 不在本方案的编辑范围内，沿用现有搜索视图 |
+
+### 9.4 字段属性
+
+| 属性 | 移动端 | 处理 |
+|---|---|---|
+| invisible、readonly、required | 支持（`views/form/modifiers.js`） | 支持 |
+| domain、context（关系字段） | 待确认，需要核对移动端的选择器是否使用 | 待确认 |
+| widget | 见 9.1 | 提示 |
+
+### 9.5 设计决定
+
+1. **能力的唯一来源**：在 `mobile_web` 中新增 `models/mobile_capabilities.py`，列出字段组件、表单标签、视图类型。一个测试扫描前端的 `mobileFieldRegistry.add(...)` 与 `mobileViewRegistry.add(...)`，确认与这个列表一致，避免两边不同步。
+2. **编辑器的移动端模式**：页面布局编辑器增加"移动端"模式（与 PC 的布局并排）。移动端模式只显示 9.1 至 9.3 中"支持"的控件，多列只允许一列，不支持的结构隐藏。
+3. **已有配置的处理**：打开移动端模式时，如果已有不支持的配置（如多列、正文按钮），不自动删除，而是在界面上列出警告，由用户决定是否修改。
+4. **保存时校验**：视图类型不支持的（如移动端配置了 graph）拒绝保存；控件层面的不支持只给警告，保存仍然允许，因为 PC 端仍然需要这些配置。
+5. **PC 与移动端的 arch 分开**：移动端的布局保存为移动端动作上的视图（见 3.2），PC 视图不被修改。但字段的定义（字段本身）是共享的，修改字段类型会同时影响两端，编辑器需要提示。
+
+### 9.6 需要决定的问题
+
+1. 警告与拒绝的边界是否如 9.5 第 4 点？（建议：视图类型拒绝，控件只警告。）
+2. 看板卡片在移动端是否只支持字段与标题字段？（需要先核对 `mobile_kanban_view.js` 的卡片结构。）
+3. 关系字段的 domain、context 在移动端是否生效？（需要核对。）
+4. Signature 与 Properties 在移动端是否直接隐藏，还是允许配置但在移动端不显示？（建议：隐藏。）
