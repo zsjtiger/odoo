@@ -114,6 +114,19 @@
                 <h3 class="mb-1">Page Layouts</h3>
                 <p class="text-muted mb-3">Design the form, list, kanban and search layouts here. Other views open in the view editor.</p>
                 <div class="row g-3">
+                    <div t-if="this.mobileFormInfo" class="col-12 col-md-6 col-xl-4">
+                        <div class="o_web_studio_layout_card o_web_studio_mobile_form_card card h-100">
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title">Mobile Form</h5>
+                                <p class="card-text text-muted small mb-3">
+                                    The form of <t t-out="this.props.model.name"/> in the mobile client. It is separate from the PC form.
+                                </p>
+                                <button t-if="this.mobileFormInfo.mobile_action_id" type="button" class="btn btn-primary mt-auto o_web_studio_edit_mobile_form"
+                                    t-on-click="this.openMobileForm">Edit Mobile Form</button>
+                                <p t-else="" class="text-muted small mb-0">The model has no mobile action (kanban and form) yet.</p>
+                            </div>
+                        </div>
+                    </div>
                     <t t-foreach="this.layoutTypes" t-as="viewType" t-key="viewType">
                         <div class="col-12 col-md-6 col-xl-4">
                             <div class="o_web_studio_layout_card card h-100">

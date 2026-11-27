@@ -63,15 +63,36 @@ export class ModelDetail extends Component {
 
         this.visibleFields = computed(() => this.filteredFields().slice(0, this.state.limit));
 
-        onWillStart(() => this.loadFields(this.props.model));
+        this.state.mobile = null;
+        onWillStart(() => Promise.all([this.loadFields(this.props.model), this.loadMobile(this.props.model)]));
         onWillUpdateProps((nextProps) => {
             if (nextProps.model.id !== this.props.model.id) {
                 this.designerState.selectedFieldId = null;
                 this.state.limit = PAGE_SIZE;
                 this.state.loading = true;
-                return this.loadFields(nextProps.model);
+                return Promise.all([this.loadFields(nextProps.model), this.loadMobile(nextProps.model)]);
             }
         });
+    }
+
+    /** Mobile action and form of the model (null when mobile_web is not installed). */
+    async loadMobile(model) {
+        const info = await this.orm.call("ir.model", "studio_mobile_infos", [model.model]);
+        this.state.mobile = info.available ? info : null;
+    }
+
+    get mobileFormInfo() {
+        return this.state.mobile;
+    }
+
+    /** Opens the mobile form (the form of the mobile kanban action) in Studio's view editor. */
+    async openMobileForm() {
+        const actionId = this.state.mobile?.mobile_action_id;
+        if (!actionId) {
+            return;
+        }
+        const action = await this.action.loadAction(actionId);
+        this.studio.setParams({ action, viewType: "form", mode: this.studio.MODES.EDITOR, editorTab: "views" });
     }
 
     async loadFields(model) {

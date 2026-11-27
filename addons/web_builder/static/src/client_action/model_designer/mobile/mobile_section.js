@@ -83,7 +83,7 @@ export class MobileSection extends Component {
 
     openNav() {
         this.dialog.add(MobileNavDialog, {
-            actionId: this.info.action_id,
+            actionId: this.info.mobile_action_id,
             pages: this.info.pages,
             icons: this.info.icons,
             onSaved: () => this.load(this.props.model),

@@ -652,18 +652,24 @@ class IrModel(models.Model):
         model = self._get(model_name)
         Action = self.env['ir.actions.act_window']
         actions = Action.search([('res_model', '=', model_name)])
+        # The mobile client's action is the kanban one (kanban,form); the PC one is list,form
+        mobile_actions = actions.filtered(lambda a: 'kanban' in a.view_mode.split(',') and 'list' not in a.view_mode.split(','))
+        pc_actions = actions - mobile_actions
         menus = self.env['ir.ui.menu'].search([
-            ('action', 'in', [f'ir.actions.act_window,{action.id}' for action in actions]),
-        ]) if actions else self.env['ir.ui.menu']
+            ('action', 'in', [f'ir.actions.act_window,{action.id}' for action in pc_actions]),
+        ]) if pc_actions else self.env['ir.ui.menu']
         custom_fields = self.env['mobile.custom.field'].search([('model_id', '=', model.id)])
-        nav_items = self.env['mobile_web.mobile.page.actions'].search([('ir_action', 'in', actions.ids)]) \
-            if actions else self.env['mobile_web.mobile.page.actions']
+        nav_items = self.env['mobile_web.mobile.page.actions'].search([('ir_action', 'in', mobile_actions.ids)]) \
+            if mobile_actions else self.env['mobile_web.mobile.page.actions']
         pages = self.env['mobile_web.mobile.page'].search([])
         capabilities = self.env['mobile.capabilities'].get_capabilities()
         return {
             'available': True,
             'model_id': model.id,
-            'action_id': actions[:1].id or False,
+            'action_id': pc_actions[:1].id or False,
+            'mobile_action_id': mobile_actions[:1].id or False,
+            'mobile_form_id': mobile_actions[:1].view_ids.filtered(lambda v: v.view_mode == 'form')[:1].view_id.id
+                if mobile_actions else False,
             'menus': [{
                 'id': menu.id,
                 'name': menu.complete_name,

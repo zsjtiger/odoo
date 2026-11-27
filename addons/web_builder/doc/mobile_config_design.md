@@ -17,6 +17,12 @@
 - 导航的页面只能选已有页面（`mobile_web.mobile.page`），图标只能选图标包中的 symbol，与 9.5 一致。
 - 布局与筛选仍然在代码中配置；Mobile 页签中已有提示。
 
+**移动端和 PC 各一套表单（已实现）**
+
+- Page Layouts 中新增 "Mobile Form" 卡片，打开移动端动作（`kanban,form`）的表单，使用 Studio 的视图编辑器编辑。PC 的 Form 卡片仍编辑 PC 表单。
+- 移动端动作由 `ir.model.studio_mobile_infos` 找出：`kanban` 且没有 `list` 的动作。没有移动端动作时，卡片显示说明。
+- 导航项改为指向移动端动作（修正了 v1 指向 PC 动作的问题）。
+
 ## 1. 背景
 
 mobile_web 的移动端配置现在分散在几个模型里，只能通过代码或数据文件修改，Studio 里看不到：
