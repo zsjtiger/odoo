@@ -147,6 +147,16 @@ export class ModelDetail extends Component {
         this.studio.setParams({ action, viewType: "form", mode: this.studio.MODES.EDITOR, editorTab: "views" });
     }
 
+    /** Opens the mobile list (the kanban of the mobile action) in Studio's view editor. */
+    async openMobileList() {
+        const actionId = this.state.mobile?.mobile_action_id;
+        if (!actionId) {
+            return;
+        }
+        const action = await this.action.loadAction(actionId);
+        this.studio.setParams({ action, viewType: "kanban", mode: this.studio.MODES.EDITOR, editorTab: "views" });
+    }
+
     async loadFields(model) {
         const fields = await this.orm.searchRead(
             "ir.model.fields",
