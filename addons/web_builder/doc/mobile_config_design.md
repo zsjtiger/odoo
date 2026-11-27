@@ -92,6 +92,38 @@ Studio 目前只管理 PC 端的视图、字段和菜单，没有移动端的入
 - 图标选择器读取图标包中的 symbol id，与 `get_sprite_icon_ids()` 一致。
 - 导航项指向一个动作（`ir.actions.act_window` 或 `ir.actions.mobile_page`），在 Studio 中选择即可。
 
+## 3A. 修订：移动端有自己的菜单、列表和表单
+
+（这一节修正第 3 节的前提：移动端不是 PC 配置的一个开关，它有自己的入口、列表和表单。）
+
+代码中的实际结构（以 pharaccount 为例）：
+
+| 移动端的部分 | 实际实现 | PC 的对应 |
+|---|---|---|
+| 底部导航（菜单） | `mobile_web.mobile.page.actions`：页面（`mobile_web.mobile.page`）+ 导航项 + 图标 + 序号，**指向移动端动作** | PC 菜单（`ir.ui.menu`）指向 PC 动作 |
+| 应用网格（首页菜单） | `ir.ui.menu`，`device_type` 为 mobile 或 both 时显示 | 同一个菜单记录，device_type 为 pc 或 both |
+| 动作 | 独立的 `ir.actions.act_window`，如动作 99 `kanban,form` | 动作 95 `list,form` |
+| 列表 | 移动端看板（kanban），视图为 `view_pharaccount_account_kanban_mobile` | PC 列表视图 |
+| 表单 | 独立的移动端表单视图 `view_pharaccount_account_form_mobile`（priority 32） | PC 表单视图（priority 16） |
+
+由此得出的设计：
+
+1. **移动端动作是模型在移动端的入口**。Studio 为每个模型维护一个移动端动作（名称 "<模型名> (Mobile)"，`view_mode` 为 `kanban,form`），与 PC 动作分开。没有时由 Studio 创建，并记录在 `ir.model.data` 中。
+2. **移动端的菜单有两处，Studio 都要管理**：
+   - 底部导航：加入某页面时，指向**移动端动作**（不是 PC 动作）。
+   - 应用网格：为移动端动作创建 `ir.ui.menu`，`device_type` 为 mobile，挂在与 PC 菜单相同的父级下，或由用户指定父级。
+   - PC 菜单的 device_type（pc / both）仍可在 Mobile 页签中修改，但它只影响 PC 的菜单可见性，不是移动端的菜单。
+3. **移动端的列表是移动端动作上的 kanban 视图**，表单是移动端动作上的 form 视图。两者由 Studio 的页面布局编辑器编辑（阶段 2），保存的是移动端视图的 arch，不改 PC 视图。
+4. **PC 动作和移动端动作互不影响**。修改模型的字段时，两者都会用到同一批字段，因此字段变更要提示两端都会受影响。
+
+与当前 v1 的差异（需要修正）：
+
+| 项 | v1 现状 | 修正 |
+|---|---|---|
+| Mobile 页签的"菜单"部分 | 列的是 PC 菜单（打开 PC 动作的菜单） | 改为：移动端应用网格菜单（为移动端动作创建或修改）+ PC 菜单的 device_type（单独标注为 PC） |
+| 导航项指向的动作 | `studio_mobile_infos` 取模型的第一个动作（PC 动作 95） | 取模型的移动端动作；没有时先创建，再加入导航 |
+| 列表与表单 | 未做 | 阶段 2：移动端动作上的 kanban 与 form 视图，用页面布局编辑器编辑 |
+
 ## 4. 权限
 
 - 只有 Studio 用户（`base.group_system` 或 Studio 的开发组）可以编辑移动端配置。
