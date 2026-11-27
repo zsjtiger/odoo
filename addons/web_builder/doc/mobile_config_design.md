@@ -129,8 +129,8 @@ Studio 的编辑器能放的控件，与移动端能渲染的控件并不完全�
 | Multi-select lookup（many2many） | many2many、many2many_tags、many2many_checkboxes | 支持 |
 | Related list（one2many） | one2many、one2many_form（内嵌表单） | 支持 |
 | File（binary）、Image（image） | binary、image | 支持 |
-| Properties（properties） | 无对应组件，回退为 fallback | 不支持：移动端隐藏 |
-| Signature（视图编辑器的新字段列表中有） | 无 | 不支持：移动端隐藏 |
+| Properties（properties） | 无对应组件，回退为 fallback（只读显示值） | 不支持：编辑器隐藏；已有的字段在移动端只读显示 |
+| Signature（视图编辑器的新字段列表中有） | 无，回退为 fallback（只读显示值） | 不支持：编辑器隐藏；已有的字段在移动端只读显示 |
 | Related field（related） | 按目标字段类型渲染 | 支持 |
 
 `widget` 属性：移动端只识别已注册的 widget 名（见 `mobile_web/static/src/fields/`）。Studio 中设置的 PC 专用 widget（如 `statinfo`、`ace`、`html_frame`）在移动端会回退为字段类型的默认组件。编辑器需要在选择 widget 时显示"移动端的显示方式"，并对回退的情况给出提示。
@@ -148,7 +148,7 @@ Studio 的编辑器能放的控件，与移动端能渲染的控件并不完全�
 | 聊天框（chatter） | 不渲染 | 不支持：移动端隐藏 |
 | 表单正文中的按钮（button） | 不渲染（只在表头） | 不支持：移动端隐藏，并提示改放到表头 |
 | 原样保留的 XML 块（raw blocks） | 不渲染 | 不支持：移动端隐藏 |
-| 看板卡片模板（kanban templates） | 移动端看板使用自己的卡片渲染 | 待确认：只支持字段与标题字段 |
+| 看板卡片模板（kanban templates） | 卡片的标题是第一个字段，其余字段是卡片内容；只读取 arch 中的 field 节点，QWeb 指令（t-if、t-att 等）被忽略 | 部分支持：只允许字段，不允许条件与样式指令 |
 | 列表的字段列 | list 视图的列 | 支持 |
 
 ### 9.3 视图类型
@@ -167,7 +167,9 @@ Studio 的编辑器能放的控件，与移动端能渲染的控件并不完全�
 | 属性 | 移动端 | 处理 |
 |---|---|---|
 | invisible、readonly、required | 支持（`views/form/modifiers.js`） | 支持 |
-| domain、context（关系字段） | 待确认，需要核对移动端的选择器是否使用 | 待确认 |
+| domain（多对一） | 支持：多对一选择器使用字段的 domain，可引用记录上的其他字段 | 支持 |
+| domain（多对多、一对多） | 不支持：多对多的选择器不使用 domain | 编辑器提示；不支持的字段不设置 domain |
+| context（关系字段） | 不支持：移动端的名称搜索 context 固定为空 | 编辑器隐藏 context 相关配置 |
 | widget | 见 9.1 | 提示 |
 
 ### 9.5 设计决定
@@ -178,9 +180,19 @@ Studio 的编辑器能放的控件，与移动端能渲染的控件并不完全�
 4. **保存时校验**：视图类型不支持的（如移动端配置了 graph）拒绝保存；控件层面的不支持只给警告，保存仍然允许，因为 PC 端仍然需要这些配置。
 5. **PC 与移动端的 arch 分开**：移动端的布局保存为移动端动作上的视图（见 3.2），PC 视图不被修改。但字段的定义（字段本身）是共享的，修改字段类型会同时影响两端，编辑器需要提示。
 
-### 9.6 需要决定的问题
+### 9.6 核对结果与待决定的问题
 
-1. 警告与拒绝的边界是否如 9.5 第 4 点？（建议：视图类型拒绝，控件只警告。）
-2. 看板卡片在移动端是否只支持字段与标题字段？（需要先核对 `mobile_kanban_view.js` 的卡片结构。）
-3. 关系字段的 domain、context 在移动端是否生效？（需要核对。）
-4. Signature 与 Properties 在移动端是否直接隐藏，还是允许配置但在移动端不显示？（建议：隐藏。）
+9.6.1 核对结果（已对照代码）
+
+| 问题 | 核对结果 |
+|---|---|
+| 看板卡片能支持到什么程度 | `mobile_kanban_view.js`：标题取第一个字段，其余字段作为卡片内容；只读取 field 节点，QWeb 指令被忽略。因此看板模板只能配置字段，不能配置条件或样式。 |
+| 关系字段的 domain、context 是否生效 | domain：只有多对一选择器使用（`relational_fields.js`，可引用记录上的其他字段）；多对多和一对多不使用。context：所有关系字段的名称搜索都传入空 context，不生效。 |
+| Signature、Properties 的处理 | 移动端回退为只读的 fallback 组件，显示值，不会报错，也不会隐藏。因此编辑器隐藏这两种字段，但已有的字段在手机上仍会以只读形式出现。 |
+
+9.6.2 待决定的问题
+
+1. **警告与拒绝的边界**：建议与 9.5 第 4 点一致：视图类型不支持的拒绝保存；控件层面的不支持只警告。（这是策略问题，代码无法判断。）
+2. **看板卡片**：建议只允许字段，不允许 QWeb 指令；编辑器中的看板模板在移动端模式下去掉条件和样式。
+3. **domain、context**：建议多对一保留 domain 配置；多对多、一对多的 domain 在移动端模式下隐藏并提示；context 在移动端模式下隐藏。
+4. **Signature、Properties**：建议编辑器隐藏；已有字段在移动端只读显示，编辑器给出提示说明这一点。
