@@ -10,6 +10,7 @@ import { FieldDetailPage } from "./field_detail_page";
 import { getFieldTypeLabels } from "./field_types";
 import { PageLayoutEditor } from "../page_layout/page_layout_editor";
 import { ModelButtons } from "./model_buttons";
+import { RecordTypeSection } from "../record_types/record_type_section";
 import { NewFieldDialog } from "./new_field_dialog";
 
 const PAGE_SIZE = 100;
@@ -18,7 +19,7 @@ const LAYOUT_PRIORITY = ["form", "list"];
 
 export class ModelDetail extends Component {
     static template = "web_builder.ModelDetail";
-    static components = { FieldDetailPage, ModelButtons, PageLayoutEditor };
+    static components = { FieldDetailPage, ModelButtons, PageLayoutEditor, RecordTypeSection };
 
     props = useProps({
         model: t.object(),

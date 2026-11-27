@@ -28,9 +28,12 @@
                 <button type="button" class="o_web_studio_model_section btn w-100 text-start mb-1"
                     t-att-class="this.section === 'layouts' ? 'btn-primary' : 'btn-light'"
                     t-on-click="() => this.showSection('layouts')">Page Layouts</button>
-                <button type="button" class="o_web_studio_model_section btn w-100 text-start"
+                <button type="button" class="o_web_studio_model_section btn w-100 text-start mb-1"
                     t-att-class="this.section === 'buttons' ? 'btn-primary' : 'btn-light'"
                     t-on-click="() => this.showSection('buttons')">Buttons, Links, and Actions</button>
+                <button type="button" class="o_web_studio_model_section o_web_studio_record_types_section btn w-100 text-start"
+                    t-att-class="this.section === 'record_types' ? 'btn-primary' : 'btn-light'"
+                    t-on-click="() => this.showSection('record_types')">Record Types</button>
             </nav>
 
 
@@ -96,6 +99,7 @@
 
             <FieldDetailPage t-elif="this.section === 'field'" model="this.props.model" fieldId="this.selectedFieldId" onChanged.bind="this.onFieldsChanged"/>
             <ModelButtons t-elif="this.section === 'buttons'" model="this.props.model"/>
+            <RecordTypeSection t-elif="this.section === 'record_types'" model="this.props.model"/>
 
             <PageLayoutEditor t-elif="this.section === 'page_layout'" t-key="this.designerState.layoutViewType" model="this.props.model"
                 viewType="this.designerState.layoutViewType"

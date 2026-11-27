@@ -591,6 +591,57 @@ class IrModel(models.Model):
         return res
 
     @api.model
+    def studio_record_type_infos(self, model_name):
+        """Record types of a model, for the Studio "Record Types" page.
+
+        Returns {'available': False} when the record type module is not installed.
+        """
+        if 'ir.record.type' not in self.env.registry:
+            return {'available': False}
+        model = self._get(model_name)
+        Model = self.env[model_name]
+        RecordType = self.env['ir.record.type']
+        has_allow_import = 'allow_import' in RecordType._fields
+        types = RecordType.with_context(active_test=False).search([('model_id', '=', model.id)],
+                                                                  order='sequence, id')
+        permissions = self.env['ir.record.type.permission'].search([('record_type_id', 'in', types.ids)])
+        defaults = self.env['ir.record.type.default'].search([('model_id', '=', model.id)])
+        groups = self.env['res.groups'].search([], order='name', limit=500)
+        return {
+            'available': True,
+            'model_id': model.id,
+            'enabled': bool(model.supports_record_type),
+            # the model must declare _record_type = True in its code before the types can be enabled
+            'declared': 'record_type_id' in Model._fields,
+            'has_allow_import': has_allow_import,
+            'groups': [(group.id, group.display_name) for group in groups],
+            'types': [{
+                'id': rt.id,
+                'name': rt.name,
+                'code': rt.code,
+                'sequence': rt.sequence,
+                'active': rt.active,
+                'allow_import': rt.allow_import if has_allow_import else True,
+            } for rt in types],
+            'permissions': [{
+                'id': perm.id,
+                'record_type_id': perm.record_type_id.id,
+                'group_id': perm.group_id.id,
+                'group_name': perm.group_id.display_name,
+                'perm_read': perm.perm_read,
+                'perm_write': perm.perm_write,
+                'perm_create': perm.perm_create,
+                'perm_unlink': perm.perm_unlink,
+                'allow_import': perm.allow_import if has_allow_import else True,
+            } for perm in permissions],
+            'defaults': [{
+                'id': default.id,
+                'record_type_id': default.record_type_id.id,
+                'group_id': default.group_id.id,
+            } for default in defaults],
+        }
+
+    @api.model
     def _quick_create_model(self, model_values, parent_field_type=None):
         model_name = model_values.pop("model")
         model_name = model_name if model_name.startswith("x_") else "x_" + model_name
