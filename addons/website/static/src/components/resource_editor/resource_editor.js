@@ -1,12 +1,12 @@
-import { CodeEditor } from "@web/core/code_editor/code_editor";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { CheckboxItem } from "@web/core/dropdown/checkbox_item";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
-import { SelectMenu } from "@web/core/select_menu/select_menu";
-import { user } from "@web/core/user";
+import { CodeEditor } from "@web/core/components/code_editor/code_editor";
+import { ConfirmationDialog } from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { CheckboxItem } from "@web/core/components/dropdown/checkbox_item";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
+import { _t } from "@web/core/data/l10n/translation";
+import { rpc } from "@web/core/services/network/rpc";
+import { SelectMenu } from "@web/core/components/select_menu/select_menu";
+import { user } from "@web/core/services/user";
 import { sortBy } from "@web/core/utils/arrays";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
@@ -25,7 +25,7 @@ import {
     useEffect,
     usePlugin,
 } from "@odoo/owl";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
 
 const BUNDLES_RESTRICTION = [
     "web.assets_frontend",

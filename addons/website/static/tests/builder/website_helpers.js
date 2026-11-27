@@ -22,9 +22,9 @@ import {
     patchWithCleanup,
     waitUntilIdle,
 } from "@web/../tests/web_test_helpers";
-import { loadBundle } from "@web/core/assets";
-import { isBrowserFirefox } from "@web/core/browser/feature_detection";
-import { Registry, registry } from "@web/core/registry";
+import { loadBundle } from "@web/core/framework/assets";
+import { isBrowserFirefox } from "@web/core/services/browser/feature_detection";
+import { Registry, registry } from "@web/core/framework/registry";
 import { uniqueId } from "@web/core/utils/functions";
 import { WebClient } from "@web/webclient/webclient";
 import { EditInteractionPlugin } from "@website/builder/plugins/edit_interaction_plugin";
@@ -35,10 +35,10 @@ import { mockImageRequests } from "./image_test_helpers";
 import { getWebsiteSnippets } from "./snippets_getter.hoot";
 import { revertPreview } from "@html_builder/core/utils";
 import { WebsiteBuilder } from "@website/builder/website_builder";
-import { session } from "@web/session";
+import { session } from "@web/boot/session";
 import { getTranslatedElements } from "./translated_elements_getter.hoot";
 import { BackgroundShapeOptionPlugin } from "@html_builder/plugins/background_option/background_shape_option_plugin";
-import { _t, translatedTerms, translationLoaded } from "@web/core/l10n/translation";
+import { _t, translatedTerms, translationLoaded } from "@web/core/data/l10n/translation";
 
 class Website extends models.Model {
     _name = "website";
@@ -216,12 +216,12 @@ export async function setupWebsiteBuilder(
                 // Load the builder's *.edit.xml, needed for some options
                 await loadBundle("website.assets_inside_builder_iframe_tests", { targetDoc });
                 // Reuse the translation in the iframe to avoid loading them
-                const translation = contentWindow.odoo.loader.require("@web/core/l10n/translation");
+                const translation = contentWindow.odoo.loader.require("@web/core/data/l10n/translation");
                 translation.translatedTerms[translation.translationLoaded] =
                     translatedTerms[translationLoaded];
 
                 withIframeRegistry?.(
-                    contentWindow.odoo.loader.require("@web/core/registry").registry
+                    contentWindow.odoo.loader.require("@web/core/framework/registry").registry
                 );
             }
             await resolveEditAssetsLoaded();

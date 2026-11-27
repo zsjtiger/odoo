@@ -40,7 +40,7 @@ export const BUTTON_HANDLER_SELECTOR =
  * @param {function} fct
  *      The function which is to be used as a handler. If a promise
  *      is returned, it is used to determine when the handler's action is
- *      finished. Otherwise, the return is used as jQuery uses it.
+ *      finished. In any case, the handler returns it unchanged.
  * @param {boolean} preventEventPropagation
  *      set to true if the handler should prevent event propagation
  */
@@ -86,7 +86,7 @@ export function makeAsyncHandler(fct, preventEventPropagation = false) {
  * @param {function} fct
  *      The function which is to be used as a button click handler. If a
  *      promise is returned, it is used to determine when the button can be
- *      re-enabled. Otherwise, the return is used as jQuery uses it.
+ *      re-enabled. In any case, the handler returns it unchanged.
  * @param {boolean} preventEventPropagation
  *      set to true if the handler should prevent event propagation
  */

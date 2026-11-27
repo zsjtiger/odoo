@@ -4,12 +4,12 @@ import { useHover, useMovable } from "@mail/utils/common/hooks";
 import { Component, computed, proxy, signal, useListener } from "@odoo/owl";
 
 import { Action } from "@mail/core/common/action";
-import { browser } from "@web/core/browser/browser";
-import { isMobileOS } from "@web/core/browser/feature_detection";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { browser } from "@web/core/services/browser/browser";
+import { isMobileOS } from "@web/core/services/browser/feature_detection";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { useDropdownState } from "@web/core/components/dropdown/dropdown_hooks";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
 import { ChatBubble } from "./chat_bubble";
 

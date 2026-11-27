@@ -1,0 +1,510 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- 图表演示: 每个图表一个表单视图与动作, 用于仪表盘的各个格子 -->
+    <record id="board_demo_view_bar" model="ir.ui.view">
+        <field name="name">reporting.demo.bar.form</field>
+        <field name="model">reporting.demo</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="chart_bar" widget="board_dashboard_bar" options="{'direction': 'vertical'}"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="board_demo_view_line" model="ir.ui.view">
+        <field name="name">reporting.demo.line.form</field>
+        <field name="model">reporting.demo</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="chart_line" widget="board_dashboard_line"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="board_demo_view_pie" model="ir.ui.view">
+        <field name="name">reporting.demo.pie.form</field>
+        <field name="model">reporting.demo</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="chart_pie" widget="board_dashboard_pie"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="board_demo_view_gauge" model="ir.ui.view">
+        <field name="name">reporting.demo.gauge.form</field>
+        <field name="model">reporting.demo</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="chart_gauge" widget="board_dashboard_gauge"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="board_demo_view_radar" model="ir.ui.view">
+        <field name="name">reporting.demo.radar.form</field>
+        <field name="model">reporting.demo</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="chart_radar" widget="board_dashboard_radar"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="board_demo_view_card" model="ir.ui.view">
+        <field name="name">reporting.demo.card.form</field>
+        <field name="model">reporting.demo</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="chart_card" widget="board_dashboard_card" options="{'column': 3}"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="board_demo_action_bar" model="ir.actions.act_window">
+        <field name="name">Bar</field>
+        <field name="res_model">reporting.demo</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="board_demo_view_bar"/>
+        <field name="res_id" ref="board_demo_record"/>
+        <field name="target">current</field>
+    </record>
+    <record id="board_demo_action_line" model="ir.actions.act_window">
+        <field name="name">Line</field>
+        <field name="res_model">reporting.demo</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="board_demo_view_line"/>
+        <field name="res_id" ref="board_demo_record"/>
+        <field name="target">current</field>
+    </record>
+    <record id="board_demo_action_pie" model="ir.actions.act_window">
+        <field name="name">Pie</field>
+        <field name="res_model">reporting.demo</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="board_demo_view_pie"/>
+        <field name="res_id" ref="board_demo_record"/>
+        <field name="target">current</field>
+    </record>
+    <record id="board_demo_action_gauge" model="ir.actions.act_window">
+        <field name="name">Gauge</field>
+        <field name="res_model">reporting.demo</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="board_demo_view_gauge"/>
+        <field name="res_id" ref="board_demo_record"/>
+        <field name="target">current</field>
+    </record>
+    <record id="board_demo_action_radar" model="ir.actions.act_window">
+        <field name="name">Radar</field>
+        <field name="res_model">reporting.demo</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="board_demo_view_radar"/>
+        <field name="res_id" ref="board_demo_record"/>
+        <field name="target">current</field>
+    </record>
+    <record id="board_demo_action_card" model="ir.actions.act_window">
+        <field name="name">Card</field>
+        <field name="res_model">reporting.demo</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="board_demo_view_card"/>
+        <field name="res_id" ref="board_demo_record"/>
+        <field name="target">current</field>
+    </record>
+
+    <record id="board_demo_view_smooth" model="ir.ui.view">
+        <field name="name">reporting.demo.smooth.form</field>
+        <field name="model">reporting.demo</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="chart_smooth" widget="board_dashboard_smooth_line"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="board_demo_view_stacked" model="ir.ui.view">
+        <field name="name">reporting.demo.stacked.form</field>
+        <field name="model">reporting.demo</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="chart_stacked" widget="board_dashboard_stacked_line"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="board_demo_view_marked" model="ir.ui.view">
+        <field name="name">reporting.demo.marked.form</field>
+        <field name="model">reporting.demo</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="chart_marked" widget="board_dashboard_marked_line"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="board_demo_view_pie_line" model="ir.ui.view">
+        <field name="name">reporting.demo.pie_line.form</field>
+        <field name="model">reporting.demo</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="chart_pie_line" widget="board_dashboard_pie_line"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="board_demo_view_polar_radial" model="ir.ui.view">
+        <field name="name">reporting.demo.polar_radial.form</field>
+        <field name="model">reporting.demo</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="chart_polar_radial" widget="board_dashboard_polar_radial"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="board_demo_view_polar_tangential" model="ir.ui.view">
+        <field name="name">reporting.demo.polar_tangential.form</field>
+        <field name="model">reporting.demo</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="chart_polar_tangential" widget="board_dashboard_polar_tangential"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="board_demo_view_polar_end_angle" model="ir.ui.view">
+        <field name="name">reporting.demo.polar_end_angle.form</field>
+        <field name="model">reporting.demo</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="chart_polar_end_angle" widget="board_dashboard_polar_end_angle"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="board_demo_view_bar_horizontal" model="ir.ui.view">
+        <field name="name">reporting.demo.bar_horizontal.form</field>
+        <field name="model">reporting.demo</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="chart_bar_horizontal" widget="board_dashboard_bar_horizontal"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="board_demo_view_bar_axis_break" model="ir.ui.view">
+        <field name="name">reporting.demo.bar_axis_break.form</field>
+        <field name="model">reporting.demo</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="chart_bar_axis_break" widget="board_dashboard_bar_axis_break"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="board_demo_view_bar_gradient" model="ir.ui.view">
+        <field name="name">reporting.demo.bar_gradient.form</field>
+        <field name="model">reporting.demo</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="chart_bar_gradient" widget="board_dashboard_bar_gradient"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="board_demo_action_smooth" model="ir.actions.act_window">
+        <field name="name">Smooth Line</field>
+        <field name="res_model">reporting.demo</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="board_demo_view_smooth"/>
+        <field name="res_id" ref="board_demo_record"/>
+        <field name="target">current</field>
+    </record>
+    <record id="board_demo_action_stacked" model="ir.actions.act_window">
+        <field name="name">Stacked Line</field>
+        <field name="res_model">reporting.demo</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="board_demo_view_stacked"/>
+        <field name="res_id" ref="board_demo_record"/>
+        <field name="target">current</field>
+    </record>
+    <record id="board_demo_action_marked" model="ir.actions.act_window">
+        <field name="name">Marked Line</field>
+        <field name="res_model">reporting.demo</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="board_demo_view_marked"/>
+        <field name="res_id" ref="board_demo_record"/>
+        <field name="target">current</field>
+    </record>
+    <record id="board_demo_action_pie_line" model="ir.actions.act_window">
+        <field name="name">Pie and Line</field>
+        <field name="res_model">reporting.demo</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="board_demo_view_pie_line"/>
+        <field name="res_id" ref="board_demo_record"/>
+        <field name="target">current</field>
+    </record>
+    <record id="board_demo_action_polar_radial" model="ir.actions.act_window">
+        <field name="name">Polar Radial</field>
+        <field name="res_model">reporting.demo</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="board_demo_view_polar_radial"/>
+        <field name="res_id" ref="board_demo_record"/>
+        <field name="target">current</field>
+    </record>
+    <record id="board_demo_action_polar_tangential" model="ir.actions.act_window">
+        <field name="name">Polar Tangential</field>
+        <field name="res_model">reporting.demo</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="board_demo_view_polar_tangential"/>
+        <field name="res_id" ref="board_demo_record"/>
+        <field name="target">current</field>
+    </record>
+    <record id="board_demo_action_polar_end_angle" model="ir.actions.act_window">
+        <field name="name">Polar End Angle</field>
+        <field name="res_model">reporting.demo</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="board_demo_view_polar_end_angle"/>
+        <field name="res_id" ref="board_demo_record"/>
+        <field name="target">current</field>
+    </record>
+    <record id="board_demo_action_bar_horizontal" model="ir.actions.act_window">
+        <field name="name">Horizontal Bar</field>
+        <field name="res_model">reporting.demo</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="board_demo_view_bar_horizontal"/>
+        <field name="res_id" ref="board_demo_record"/>
+        <field name="target">current</field>
+    </record>
+    <record id="board_demo_action_bar_axis_break" model="ir.actions.act_window">
+        <field name="name">Bar Axis Break</field>
+        <field name="res_model">reporting.demo</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="board_demo_view_bar_axis_break"/>
+        <field name="res_id" ref="board_demo_record"/>
+        <field name="target">current</field>
+    </record>
+    <record id="board_demo_action_bar_gradient" model="ir.actions.act_window">
+        <field name="name">Gradient Bar</field>
+        <field name="res_model">reporting.demo</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="board_demo_view_bar_gradient"/>
+        <field name="res_id" ref="board_demo_record"/>
+        <field name="target">current</field>
+    </record>
+
+    <record id="board_demo_view_doughnut" model="ir.ui.view">
+        <field name="name">reporting.demo.doughnut.form</field>
+        <field name="model">reporting.demo</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="chart_doughnut" widget="board_dashboard_doughnut"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="board_demo_view_doughnut_rounded" model="ir.ui.view">
+        <field name="name">reporting.demo.doughnut_rounded.form</field>
+        <field name="model">reporting.demo</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="chart_doughnut_rounded" widget="board_dashboard_doughnut_rounded"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="board_demo_view_doughnut_half" model="ir.ui.view">
+        <field name="name">reporting.demo.doughnut_half.form</field>
+        <field name="model">reporting.demo</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="chart_doughnut_half" widget="board_dashboard_doughnut_half"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="board_demo_view_pie_pad" model="ir.ui.view">
+        <field name="name">reporting.demo.pie_pad.form</field>
+        <field name="model">reporting.demo</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="chart_pie_pad" widget="board_dashboard_pie_pad_angle"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="board_demo_view_scatter" model="ir.ui.view">
+        <field name="name">reporting.demo.scatter.form</field>
+        <field name="model">reporting.demo</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="chart_scatter" widget="board_dashboard_scatter"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="board_demo_view_scatter_quartet" model="ir.ui.view">
+        <field name="name">reporting.demo.scatter_quartet.form</field>
+        <field name="model">reporting.demo</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="chart_scatter_quartet" widget="board_dashboard_scatter_quartet"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="board_demo_view_scatter_cluster" model="ir.ui.view">
+        <field name="name">reporting.demo.scatter_cluster.form</field>
+        <field name="model">reporting.demo</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="chart_scatter_cluster" widget="board_dashboard_scatter_cluster"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="board_demo_view_scatter_cluster_process" model="ir.ui.view">
+        <field name="name">reporting.demo.scatter_cluster_process.form</field>
+        <field name="model">reporting.demo</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="chart_scatter_cluster_process" widget="board_dashboard_scatter_cluster_process"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="board_demo_view_scatter_regression" model="ir.ui.view">
+        <field name="name">reporting.demo.scatter_regression.form</field>
+        <field name="model">reporting.demo</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="chart_scatter_regression" widget="board_dashboard_scatter_regression"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="board_demo_view_scatter_effect" model="ir.ui.view">
+        <field name="name">reporting.demo.scatter_effect.form</field>
+        <field name="model">reporting.demo</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="chart_scatter_effect" widget="board_dashboard_scatter_effect"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="board_demo_action_doughnut" model="ir.actions.act_window">
+        <field name="name">Doughnut</field>
+        <field name="res_model">reporting.demo</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="board_demo_view_doughnut"/>
+        <field name="res_id" ref="board_demo_record"/>
+        <field name="target">current</field>
+    </record>
+    <record id="board_demo_action_doughnut_rounded" model="ir.actions.act_window">
+        <field name="name">Rounded Doughnut</field>
+        <field name="res_model">reporting.demo</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="board_demo_view_doughnut_rounded"/>
+        <field name="res_id" ref="board_demo_record"/>
+        <field name="target">current</field>
+    </record>
+    <record id="board_demo_action_doughnut_half" model="ir.actions.act_window">
+        <field name="name">Half Doughnut</field>
+        <field name="res_model">reporting.demo</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="board_demo_view_doughnut_half"/>
+        <field name="res_id" ref="board_demo_record"/>
+        <field name="target">current</field>
+    </record>
+    <record id="board_demo_action_pie_pad" model="ir.actions.act_window">
+        <field name="name">Pie Pad Angle</field>
+        <field name="res_model">reporting.demo</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="board_demo_view_pie_pad"/>
+        <field name="res_id" ref="board_demo_record"/>
+        <field name="target">current</field>
+    </record>
+    <record id="board_demo_action_scatter" model="ir.actions.act_window">
+        <field name="name">Scatter</field>
+        <field name="res_model">reporting.demo</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="board_demo_view_scatter"/>
+        <field name="res_id" ref="board_demo_record"/>
+        <field name="target">current</field>
+    </record>
+    <record id="board_demo_action_scatter_quartet" model="ir.actions.act_window">
+        <field name="name">Scatter Quartet</field>
+        <field name="res_model">reporting.demo</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="board_demo_view_scatter_quartet"/>
+        <field name="res_id" ref="board_demo_record"/>
+        <field name="target">current</field>
+    </record>
+    <record id="board_demo_action_scatter_cluster" model="ir.actions.act_window">
+        <field name="name">Scatter Cluster</field>
+        <field name="res_model">reporting.demo</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="board_demo_view_scatter_cluster"/>
+        <field name="res_id" ref="board_demo_record"/>
+        <field name="target">current</field>
+    </record>
+    <record id="board_demo_action_scatter_cluster_process" model="ir.actions.act_window">
+        <field name="name">Scatter Cluster Process</field>
+        <field name="res_model">reporting.demo</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="board_demo_view_scatter_cluster_process"/>
+        <field name="res_id" ref="board_demo_record"/>
+        <field name="target">current</field>
+    </record>
+    <record id="board_demo_action_scatter_regression" model="ir.actions.act_window">
+        <field name="name">Scatter Regression</field>
+        <field name="res_model">reporting.demo</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="board_demo_view_scatter_regression"/>
+        <field name="res_id" ref="board_demo_record"/>
+        <field name="target">current</field>
+    </record>
+    <record id="board_demo_action_scatter_effect" model="ir.actions.act_window">
+        <field name="name">Scatter Effect</field>
+        <field name="res_model">reporting.demo</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="board_demo_view_scatter_effect"/>
+        <field name="res_id" ref="board_demo_record"/>
+        <field name="target">current</field>
+    </record>
+
+    <record id="board_demo_action" model="ir.actions.act_window">
+        <field name="name">Chart Demo</field>
+        <field name="res_model">reporting.demo</field>
+        <field name="view_mode">form</field>
+        <field name="res_id" ref="board_demo_record"/>
+        <field name="target">current</field>
+    </record>
+
+    <menuitem id="board_demo_menu" name="Chart Demo" parent="board_menu_root" action="board_demo_action" sequence="20"/>
+</odoo>

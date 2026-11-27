@@ -3,7 +3,7 @@ import { Plugin } from "@html_editor/plugin";
 import { unwrapContents } from "@html_editor/utils/dom";
 import { childNodeIndex, DIRECTIONS, nodeSize } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { TextEffectSelector } from "./text_effect_selector";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import {

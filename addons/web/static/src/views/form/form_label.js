@@ -1,7 +1,7 @@
 import { Component, t, usePlugin, useProps } from "@odoo/owl";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
-import { _t } from "@web/core/l10n/translation";
-import { user } from "@web/core/user";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
+import { _t } from "@web/core/data/l10n/translation";
+import { user } from "@web/core/services/user";
 import { fieldVisualFeedback } from "@web/views/fields/field";
 import { getTooltipInfo } from "@web/views/fields/field_tooltip";
 

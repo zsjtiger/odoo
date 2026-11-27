@@ -1,6 +1,6 @@
 import { isRecord, STORE_SYM } from "@mail/model/misc";
 import { Component, computed, proxy, signal, useScope } from "@odoo/owl";
-import { DropdownState } from "@web/core/dropdown/dropdown_hooks";
+import { DropdownState } from "@web/core/components/dropdown/dropdown_hooks";
 import { useService } from "@web/core/utils/hooks";
 import { markEventHandled } from "@web/core/utils/misc";
 import { Reactive } from "@web/core/utils/reactive";
@@ -125,7 +125,7 @@ export class Action {
      * When this action opens a popover, must save usePopover() in this attribute, i.e. action.popover = usePopover().
      * Useful for action that open an action panel in some contexts and popovers in others. See @actionPanel
      *
-     * @type {import("@web/core/popover/popover_hook").PopoverHookReturnType}
+     * @type {import("@web/core/components/popover/popover_hook").PopoverHookReturnType}
      */
     popover = null;
     /** @type {string} Unique id of this action. */
@@ -844,7 +844,7 @@ function useActionState({ UseActionClass, component }) {
 /**
  * @template ActionParams_T
  * @template Action_T
- * @param {import("@web/core/registry").Registry<ActionDefinition<ActionParams_T, Action_T>>} actionRegistry
+ * @param {import("@web/core/framework/registry").Registry<ActionDefinition<ActionParams_T, Action_T>>} actionRegistry
  * @param {typeof UseActionClass_T} UseActionClass
  * @param {typeof Action_T} ActionClass
  * @param {ActionParams_T & ActionRootRefParam} actionClassParams Forwarded to the `ActionClass`

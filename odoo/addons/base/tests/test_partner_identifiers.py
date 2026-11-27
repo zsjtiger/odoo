@@ -1,6 +1,6 @@
 from odoo.exceptions import ValidationError
 from odoo.tests import TransactionCase, tagged
-from odoo.tools.partner_identifiers import TIN_METADATA
+from odoo.addons.base.models.partner_identifiers import TIN_METADATA
 
 
 @tagged('post_install', '-at_install')

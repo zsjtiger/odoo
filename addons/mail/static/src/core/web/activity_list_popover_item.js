@@ -7,9 +7,9 @@ import { toggleFn } from "@mail/utils/common/signal";
 
 import { Component, computed, signal, t, useProps } from "@odoo/owl";
 
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { usePopover } from "@web/core/popover/popover_hook";
+import { usePopover } from "@web/core/components/popover/popover_hook";
 import { FileUploader } from "@web/views/fields/file_handler";
 
 export class ActivityListPopoverItem extends Component {

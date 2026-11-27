@@ -9,12 +9,12 @@ import {
     useOnChange,
     xml,
 } from "@odoo/owl";
-import { OVERLAY_SYMBOL } from "@web/core/overlay/overlay_container";
-import { usePosition } from "@web/core/position/position_hook";
-import { getIFrame } from "@web/core/position/utils";
-import { useActiveElement } from "@web/core/ui/ui_plugin";
+import { OVERLAY_SYMBOL } from "@web/core/components/overlay/overlay_container";
+import { usePosition } from "@web/core/components/position/position_hook";
+import { getIFrame } from "@web/core/components/position/utils";
+import { useActiveElement } from "@web/core/services/ui/ui_plugin";
 import { useService } from "@web/core/utils/hooks";
-import { useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/core/owl/utils";
 import { useCrossDocumentListener } from "../utils/hooks";
 
 export class EditorOverlay extends Component {

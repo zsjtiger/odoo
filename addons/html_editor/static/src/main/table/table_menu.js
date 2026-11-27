@@ -8,10 +8,10 @@ import {
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { getRowIndex } from "@html_editor/utils/table";
 import { Component, onMounted, onWillUnmount, useProps, signal, t, useListener } from "@odoo/owl";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { _t } from "@web/core/l10n/translation";
-import { useLayoutEffect } from "@web/owl2/utils";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
+import { _t } from "@web/core/data/l10n/translation";
+import { useLayoutEffect } from "@web/core/owl/utils";
 import { useCrossDocumentListener } from "../../utils/hooks";
 
 export class TableMenu extends Component {

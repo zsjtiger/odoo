@@ -1,5 +1,5 @@
 import { Component, t, useProps } from "@odoo/owl";
-import { Dialog } from "@web/core/dialog/dialog";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
 
 export class ThemeColorsPreviewDialog extends Component {
     static template = "website.ThemeColorsPreviewDialog";

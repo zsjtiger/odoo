@@ -8,8 +8,10 @@ from contextlib import redirect_stdout
 from io import BytesIO, TextIOWrapper
 from pathlib import Path
 
-from odoo.cli.command import commands, load_addons_commands, load_internal_commands
-from odoo.cli.i18n import I18n
+from odoo.cli.base import commands
+from odoo.cli.commands.i18n import I18n
+from odoo.cli.registry import load_addons_commands, load_internal_commands
+from odoo.modules.module import get_module_path
 from odoo.tests import BaseCase, TransactionCase, tagged
 from odoo.tests.common import Like
 from odoo.tools import config, file_path
@@ -21,7 +23,7 @@ class TestCommand(BaseCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.odoo_bin = Path(__file__).parents[5].resolve() / 'odoo-bin'
+        cls.odoo_bin = Path(__file__).parents[5].resolve() / 'cross-cli.py'
         addons_path = config.format('addons_path', config['addons_path'])
         cls.run_args = (sys.executable, cls.odoo_bin, f'--addons-path={addons_path}')
 
@@ -48,9 +50,9 @@ class TestCommand(BaseCase):
         load_addons_commands()
         for name, cmd in commands.items():
             self.assertTrue(cmd.__doc__,
-                msg=f"Command {name} needs a docstring to be displayed with 'odoo-bin help'")
+                msg=f"Command {name} needs a docstring to be displayed with 'cross-cli.py help'")
             self.assertFalse('\n' in cmd.__doc__ or len(cmd.__doc__) > 120,
-                msg=f"Command {name}'s docstring format is invalid for 'odoo-bin help'")
+                msg=f"Command {name}'s docstring format is invalid for 'cross-cli.py help'")
 
     def test_unknown_command(self):
         for name in ('bonbon', 'café'):
@@ -59,24 +61,17 @@ class TestCommand(BaseCase):
                 self.assertEqual(
                     command_output,
                     f"Unknown command '{name}'.\n"
-                    "Use 'odoo-bin --help' to see the list of available commands.",
+                    "Use 'cross-cli.py --help' to see the list of available commands.",
                 )
 
     def test_help(self):
         expected = {
-            'cloc',
             'db',
-            'deploy',
-            'help',
-            'neutralize',
-            'obfuscate',
-            'populate',
-            'scaffold',
             'server',
             'shell',
-            'start',
-            'upgrade_code',
         }
+        if get_module_path('populate', display_warning=False):
+            expected.add('populate')  # provided by the populate addon
         for option in ('help', '-h', '--help'):
             with self.subTest(option=option):
                 actual = set()
@@ -91,27 +86,6 @@ class TestCommand(BaseCase):
         for name in commands:
             with self.subTest(command=name):
                 self.run_command(name, '--help', timeout=10)
-
-    def test_upgrade_code_example(self):
-        proc = self.run_command('upgrade_code', '--script', '17.5-00-example', '--dry-run')
-        self.assertFalse(proc.stdout, "there should be no file modified by the example script")
-        self.assertFalse(proc.stderr)
-
-    def test_upgrade_code_help(self):
-        proc = self.run_command('upgrade_code', '--help')
-        self.assertIn("usage: ", proc.stdout)
-        self.assertIn("Rewrite the entire source code", proc.stdout)
-        self.assertFalse(proc.stderr)
-
-    def test_upgrade_code_standalone(self):
-        from odoo.cli import upgrade_code  # noqa: PLC0415
-        proc = sp.run(
-            [sys.executable, upgrade_code.__file__, '--help'],
-            check=True, capture_output=True, text=True,
-        )
-        self.assertIn("usage: ", proc.stdout)
-        self.assertIn("Rewrite the entire source code", proc.stdout)
-        self.assertFalse(proc.stderr)
 
     @unittest.skipIf(os.name != 'posix', '`os.openpty` only available on POSIX systems')
     def test_shell(self):
@@ -182,7 +156,7 @@ class TestCommandUsingDb(TestCommand, TransactionCase):
                 return reader_mock_result
             return inner
 
-        with unittest.mock.patch('odoo.tools.translate.TranslationModuleReader', new_callable=mock_result):
+        with unittest.mock.patch('odoo.tools.text.translate.export.TranslationModuleReader', new_callable=mock_result):
             output_buffer = BytesIO()
             output_wrapper = TextIOWrapper(output_buffer, encoding="utf-8")
             with redirect_stdout(output_wrapper):

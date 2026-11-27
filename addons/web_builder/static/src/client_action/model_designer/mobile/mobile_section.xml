@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+<t t-name="web_builder.MobileSection">
+    <section class="o_web_studio_mobile flex-grow-1 p-4 overflow-auto">
+        <div t-if="this.state.loading" class="text-center p-5">
+            <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>
+        </div>
+
+        <t t-elif="!this.info.available">
+            <h3 class="mb-1">Mobile</h3>
+            <p class="text-muted">The mobile client (mobile_web) is not installed.</p>
+        </t>
+
+        <t t-else="">
+            <h3 class="mb-1">Mobile</h3>
+            <p class="text-muted mb-4">
+                How the mobile client shows <t t-out="this.props.model.name"/>. Layouts and filters on mobile come in the next version.
+            </p>
+
+            <!-- Menus -->
+            <div class="mb-4">
+                <h5 class="mb-2">Menus</h5>
+                <p t-if="!this.info.menus.length" class="text-muted mb-0">No menu opens an action of this model.</p>
+                <table t-else="" class="o_web_studio_mobile_menus table table-sm bg-view mb-0">
+                    <thead><tr><th scope="col">Menu</th><th scope="col">Shown on</th></tr></thead>
+                    <tbody>
+                        <t t-foreach="this.info.menus" t-as="menu" t-key="menu.id">
+                            <tr class="o_web_studio_mobile_menu_row">
+                                <td t-out="menu.name"/>
+                                <td>
+                                    <select class="form-select form-select-sm w-auto o_web_studio_menu_device"
+                                        t-on-change="(ev) => this.setDevice(menu, ev.target.value)">
+                                        <t t-foreach="this.deviceOptions" t-as="option" t-key="option[0]">
+                                            <option t-att-value="option[0]" t-att-selected="option[0] === menu.device_type" t-out="option[1]"/>
+                                        </t>
+                                    </select>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Custom fields -->
+            <div class="mb-4">
+                <div class="d-flex align-items-center gap-3 mb-2">
+                    <h5 class="m-0 me-auto">Fields in the mobile list</h5>
+                    <button type="button" class="btn btn-sm btn-primary o_web_studio_new_mobile_field" t-on-click="this.openField">New Field</button>
+                </div>
+                <p t-if="!this.info.custom_fields.length" class="text-muted mb-0">No field added. Use a path such as <code>partner_id.city</code>.</p>
+                <table t-else="" class="o_web_studio_mobile_fields table table-sm bg-view mb-0">
+                    <thead>
+                        <tr>
+                            <th scope="col">Label</th>
+                            <th scope="col">Path</th>
+                            <th scope="col" class="text-center">In list</th>
+                            <th scope="col" class="text-center">Stored</th>
+                            <th scope="col">Sequence</th>
+                            <th scope="col"/>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="this.info.custom_fields" t-as="field" t-key="field.id">
+                            <tr class="o_web_studio_mobile_field_row">
+                                <td t-out="field.name"/>
+                                <td><code t-out="field.path"/></td>
+                                <td class="text-center"><input type="checkbox" class="form-check-input" t-att-checked="field.list_view" t-on-change="(ev) => this.toggleCustomField(field, 'list_view', ev.target.checked)"/></td>
+                                <td class="text-center"><input type="checkbox" class="form-check-input" t-att-checked="field.store" t-on-change="(ev) => this.toggleCustomField(field, 'store', ev.target.checked)"/></td>
+                                <td t-out="field.sequence"/>
+                                <td class="text-end"><button type="button" class="btn btn-sm btn-link text-danger o_web_studio_delete_mobile_field" t-on-click="() => this.deleteField(field)">Remove</button></td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Navigation -->
+            <div>
+                <div class="d-flex align-items-center gap-3 mb-2">
+                    <h5 class="m-0 me-auto">Navigation</h5>
+                    <button t-if="this.info.mobile_action_id" type="button" class="btn btn-sm btn-primary o_web_studio_new_nav_item" t-on-click="this.openNav">Add to a page</button>
+                </div>
+                <p t-if="!this.info.mobile_action_id" class="text-muted mb-0">The model has no mobile action (a kanban and form action) yet.</p>
+                <p t-elif="!this.info.nav_items.length" class="text-muted mb-0">This model is not in the mobile navigation.</p>
+                <table t-else="" class="o_web_studio_mobile_nav table table-sm bg-view mb-0">
+                    <thead>
+                        <tr><th scope="col">Item</th><th scope="col">Page</th><th scope="col">Icon</th><th scope="col">Sequence</th><th scope="col"/></tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="this.info.nav_items" t-as="item" t-key="item.id">
+                            <tr class="o_web_studio_mobile_nav_row">
+                                <td t-out="item.name"/>
+                                <td t-out="item.mobile_page_name"/>
+                                <td><code t-out="item.svg_icon_href"/></td>
+                                <td t-out="item.sequence"/>
+                                <td class="text-end"><button type="button" class="btn btn-sm btn-link text-danger o_web_studio_delete_nav_item" t-on-click="() => this.deleteNav(item)">Remove</button></td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </section>
+</t>
+
+<t t-name="web_builder.MobileFieldDialog">
+    <Dialog title="'New Mobile Field'">
+        <div class="o_web_studio_mobile_field_form d-flex flex-column gap-3">
+            <div>
+                <label class="form-label" for="o_web_studio_mobile_field_name">Label</label>
+                <input id="o_web_studio_mobile_field_name" class="form-control o_web_studio_mobile_field_name"
+                    t-att-value="this.state.name" t-on-input="(ev) => this.state.name = ev.target.value"/>
+            </div>
+            <div>
+                <label class="form-label" for="o_web_studio_mobile_field_path">Path</label>
+                <input id="o_web_studio_mobile_field_path" class="form-control o_web_studio_mobile_field_path"
+                    placeholder="e.g. partner_id.city"
+                    t-att-value="this.state.path" t-on-input="(ev) => this.state.path = ev.target.value"/>
+                <div class="form-text">Many2one fields followed by the field to show. Text, number, boolean and date fields only.</div>
+            </div>
+            <div>
+                <label class="form-label" for="o_web_studio_mobile_field_sequence">Sequence</label>
+                <input id="o_web_studio_mobile_field_sequence" type="number" class="form-control"
+                    t-att-value="this.state.sequence" t-on-input="(ev) => this.state.sequence = ev.target.value"/>
+            </div>
+            <div class="form-check">
+                <input id="o_web_studio_mobile_field_list" type="checkbox" class="form-check-input"
+                    t-att-checked="this.state.listView" t-on-change="(ev) => this.state.listView = ev.target.checked"/>
+                <label class="form-check-label" for="o_web_studio_mobile_field_list">Show in the mobile list</label>
+            </div>
+            <div class="form-check">
+                <input id="o_web_studio_mobile_field_store" type="checkbox" class="form-check-input"
+                    t-att-checked="this.state.store" t-on-change="(ev) => this.state.store = ev.target.checked"/>
+                <label class="form-check-label" for="o_web_studio_mobile_field_store">Stored (can be sorted and searched)</label>
+            </div>
+        </div>
+        <t t-set-slot="footer">
+            <button type="button" class="btn btn-primary o_web_studio_save_mobile_field" t-att-disabled="!this.canSave" t-on-click="this.save">Save</button>
+            <button type="button" class="btn btn-secondary" t-on-click="() => this.props.close()">Cancel</button>
+        </t>
+    </Dialog>
+</t>
+
+<t t-name="web_builder.MobileNavDialog">
+    <Dialog title="'Add to the Mobile Navigation'">
+        <div class="o_web_studio_mobile_nav_form d-flex flex-column gap-3">
+            <div>
+                <label class="form-label" for="o_web_studio_nav_name">Item name</label>
+                <input id="o_web_studio_nav_name" class="form-control o_web_studio_nav_name"
+                    t-att-value="this.state.name" t-on-input="(ev) => this.state.name = ev.target.value"/>
+            </div>
+            <div>
+                <label class="form-label" for="o_web_studio_nav_page">Page</label>
+                <select id="o_web_studio_nav_page" class="form-select o_web_studio_nav_page" t-on-change="(ev) => this.state.pageId = parseInt(ev.target.value)">
+                    <t t-foreach="this.props.pages" t-as="page" t-key="page.id">
+                        <option t-att-value="page.id" t-att-selected="page.id === this.state.pageId" t-out="page.name"/>
+                    </t>
+                </select>
+            </div>
+            <div>
+                <label class="form-label" for="o_web_studio_nav_icon">Icon</label>
+                <select id="o_web_studio_nav_icon" class="form-select o_web_studio_nav_icon" t-on-change="(ev) => this.state.icon = ev.target.value">
+                    <option value="">No icon</option>
+                    <t t-foreach="this.props.icons" t-as="icon" t-key="icon">
+                        <option t-att-value="icon" t-att-selected="icon === this.state.icon" t-out="icon"/>
+                    </t>
+                </select>
+            </div>
+            <div>
+                <label class="form-label" for="o_web_studio_nav_sequence">Sequence</label>
+                <input id="o_web_studio_nav_sequence" type="number" class="form-control"
+                    t-att-value="this.state.sequence" t-on-input="(ev) => this.state.sequence = ev.target.value"/>
+            </div>
+        </div>
+        <t t-set-slot="footer">
+            <button type="button" class="btn btn-primary o_web_studio_save_nav_item" t-att-disabled="!this.canSave" t-on-click="this.save">Save</button>
+            <button type="button" class="btn btn-secondary" t-on-click="() => this.props.close()">Cancel</button>
+        </t>
+    </Dialog>
+</t>
+
+</templates>

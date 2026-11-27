@@ -11,7 +11,7 @@ import { Store } from "@mail/../tests/mock_server/store";
 import { describe, test } from "@odoo/hoot";
 import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
 
-import { rpc } from "@web/core/network/rpc";
+import { rpc } from "@web/core/services/network/rpc";
 
 describe.current.tags("desktop");
 defineMailModels();

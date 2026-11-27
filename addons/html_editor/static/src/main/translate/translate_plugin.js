@@ -1,10 +1,10 @@
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { Plugin } from "@html_editor/plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { TranslateDialog } from "@html_editor/main/translate/translate_dialog";
 import { LanguageSelector } from "@html_editor/main/translate/language_selector";
 import { withSequence } from "@html_editor/utils/resource";
-import { user } from "@web/core/user";
+import { user } from "@web/core/services/user";
 import { isContentEditable } from "@html_editor/utils/dom_info";
 
 export class TranslatePlugin extends Plugin {

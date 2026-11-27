@@ -1,7 +1,7 @@
 import { Plugin } from "../plugin";
-import { hasTouch } from "@web/core/browser/feature_detection";
+import { hasTouch } from "@web/core/services/browser/feature_detection";
 import { withSequence } from "@html_editor/utils/resource";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 
 /**
  * @typedef { Object } PreviewableOperation

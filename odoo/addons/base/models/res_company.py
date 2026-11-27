@@ -10,7 +10,7 @@ from odoo.api import SUPERUSER_ID, ormcache
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.tools import SQL, BinaryBytes, file_open, html2plaintext, zeep
-from odoo.tools.image import image_process
+from odoo.tools.files.image import image_process
 from odoo.tools.sql import table_columns
 
 _logger = logging.getLogger(__name__)

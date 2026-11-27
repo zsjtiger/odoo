@@ -2,7 +2,7 @@
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 import { getItemId } from "../../helpers/model";
 import { helpers } from "@odoo/o-spreadsheet";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 
 const { UuidGenerator, createEmptyExcelSheet, createEmptySheet, toXC } = helpers;
 

@@ -1,6 +1,6 @@
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { getFirstListFunction, getListFunctions } from "../list_helpers";
-import { Domain } from "@web/core/domain";
+import { Domain } from "@web/core/data/domain";
 import { ListDataSource } from "../list_data_source";
 import { OdooEvaluationPlugin } from "@spreadsheet/plugins";
 import { isDataSourceUrl, parseDataSourceUrl } from "../../data_sources/data_source_link";

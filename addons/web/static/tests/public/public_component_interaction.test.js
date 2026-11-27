@@ -3,7 +3,7 @@ import { queryAllTexts } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { Component, useProps, xml } from "@odoo/owl";
 import { setupInteractionWhiteList, startInteractions } from "./helpers";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 setupInteractionWhiteList("public_components");
 

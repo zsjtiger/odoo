@@ -1,9 +1,9 @@
 import { OdooViewsDataSource } from "@spreadsheet/data_sources/odoo_views_data_source";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { GraphModel as ChartModel } from "@web/views/graph/graph_model";
-import { Domain } from "@web/core/domain";
+import { Domain } from "@web/core/data/domain";
 import { range } from "@web/core/utils/numbers";
-import { getCurrency } from "@web/core/currency";
+import { getCurrency } from "@web/core/data/currency";
 import { computeFormatFromCurrency } from "@spreadsheet/currency/helpers";
 
 export class ChartDataSource extends OdooViewsDataSource {

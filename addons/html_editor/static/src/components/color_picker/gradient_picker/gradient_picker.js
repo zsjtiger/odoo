@@ -6,10 +6,10 @@ import {
     rgbaToHex,
     convertCSSColorToRgba,
 } from "@web/core/utils/colors";
-import { CheckBox } from "@web/core/checkbox/checkbox";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { isMobileOS } from "@web/core/browser/feature_detection";
+import { CheckBox } from "@web/core/components/checkbox/checkbox";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
+import { isMobileOS } from "@web/core/services/browser/feature_detection";
 import { IframeInput } from "@html_editor/components/iframe_input/iframe_input";
 
 export class GradientPicker extends Component {

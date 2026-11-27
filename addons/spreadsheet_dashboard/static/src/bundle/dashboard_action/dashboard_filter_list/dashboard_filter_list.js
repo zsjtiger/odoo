@@ -5,8 +5,8 @@ import {
     getFilterTypeOperators,
     isEmptyFilterValue,
 } from "@spreadsheet/global_filters/helpers";
-import { _t } from "@web/core/l10n/translation";
-import { getOperatorLabel } from "@web/core/tree_editor/tree_editor_operator_editor";
+import { _t } from "@web/core/data/l10n/translation";
+import { getOperatorLabel } from "@web/core/editors/tree_editor/tree_editor_operator_editor";
 import { useService } from "@web/core/utils/hooks";
 
 /**

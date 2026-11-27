@@ -15,6 +15,7 @@
                                 <t t-if="this.display.buttons" t-call-slot="control-panel-buttons"/>
                             </t>
                         </Dropdown>
+                        <t t-if="!this.uiService.isSmall and !this.env.config.noBreadcrumbs" t-call-slot="control-panel-additional-actions"/>
                     </div>
                     <t t-if="this.env.config.noBreadcrumbs">
                         <section class="o_control_panel_breadcrumbs_actions d-contents d-print-none">
@@ -44,9 +45,6 @@
                         <Breadcrumbs breadcrumbs="this.breadcrumbs">
                             <t t-set-slot="breadcrumb-status-indicator">
                                 <t t-call-slot="control-panel-status-indicator" />
-                            </t>
-                            <t t-set-slot="breadcrumb-additional-actions">
-                                <t t-call-slot="control-panel-additional-actions"/>
                             </t>
                         </Breadcrumbs>
                     </t>

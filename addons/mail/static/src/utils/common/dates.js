@@ -1,5 +1,5 @@
-import { _t } from "@web/core/l10n/translation";
-import { localization } from "@web/core/l10n/localization";
+import { _t } from "@web/core/data/l10n/translation";
+import { localization } from "@web/core/data/l10n/localization";
 
 export function resolveTimeZoneName(tz) {
     return tz === "localtime" ? "local" : tz;

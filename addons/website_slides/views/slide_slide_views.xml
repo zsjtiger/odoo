@@ -153,14 +153,6 @@
                             </page>
                             <page name="quiz" string="Quiz">
                                 <group name="quiz_details">
-                                    <group name="quiz_rewards" string="Points Rewards">
-                                        <group>
-                                            <field string="First Try" name="quiz_first_attempt_reward"/>
-                                            <field string="Second Try" name="quiz_second_attempt_reward"/>
-                                            <field string="Third Try" name="quiz_third_attempt_reward"/>
-                                            <field string="Fourth Try &amp; More" name="quiz_fourth_attempt_reward"/>
-                                        </group>
-                                    </group>
                                     <group name="questions" string="Questions">
                                         <field name="question_ids" nolabel="1" colspan="2">
                                             <list>
@@ -319,10 +311,6 @@
                     <field name="channel_id"/>
                     <field name="slide_category"/>
                     <field name="total_views" type="measure"/>
-                    <field name="quiz_first_attempt_reward"/>
-                    <field name="quiz_second_attempt_reward"/>
-                    <field name="quiz_third_attempt_reward"/>
-                    <field name="quiz_fourth_attempt_reward"/>
                     <field name="sequence"/>
                 </graph>
             </field>

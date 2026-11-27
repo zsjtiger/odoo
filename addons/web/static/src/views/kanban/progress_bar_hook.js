@@ -1,7 +1,7 @@
 import { proxy } from "@odoo/owl";
-import { Domain } from "@web/core/domain";
-import { _t } from "@web/core/l10n/translation";
-import { ConnectionLostError } from "@web/core/network/rpc";
+import { Domain } from "@web/core/data/domain";
+import { _t } from "@web/core/data/l10n/translation";
+import { ConnectionLostError } from "@web/core/services/network/rpc";
 import {
     extractInfoFromGroupData,
     getAggregateSpecifications,

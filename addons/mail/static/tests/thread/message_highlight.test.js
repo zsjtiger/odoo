@@ -11,7 +11,7 @@ import { UseForwardRefsToParent } from "@mail/utils/common/hooks";
 import { describe, test } from "@odoo/hoot";
 import { advanceTime, tick, waitFor } from "@odoo/hoot-dom";
 import { disableAnimations } from "@odoo/hoot-mock";
-import { router, routerBus } from "@web/core/browser/router";
+import { router, routerBus } from "@web/core/services/browser/router";
 import { range } from "@web/core/utils/numbers";
 import { mountWebClient, patchWithCleanup } from "@web/../tests/web_test_helpers";
 

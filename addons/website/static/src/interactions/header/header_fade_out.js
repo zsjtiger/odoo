@@ -1,5 +1,5 @@
 import { BaseHeaderSpecial } from "@website/interactions/header/base_header_special";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 export class HeaderFadeOut extends BaseHeaderSpecial {
     static selector = "header.o_header_fade_out:not(.o_header_sidebar)";

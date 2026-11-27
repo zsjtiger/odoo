@@ -1,0 +1,11 @@
+id,name,model_id,group_id/id,operation,domain
+access_ir_data_import_permission_admin,ir.data.import.permission administrators,ir.data.import.permission,base.group_system,crud,
+access_ir_data_import_template_admin,ir.data.import.template administrators,ir.data.import.template,base.group_system,crud,
+access_ir_data_import_template_user,ir.data.import.template users,ir.data.import.template,base.group_user,r,
+access_ir_data_import_template_column_admin,ir.data.import.template.column administrators,ir.data.import.template.column,base.group_system,crud,
+access_ir_data_import_template_column_user,ir.data.import.template.column users,ir.data.import.template.column,base.group_user,r,
+access_ir_data_import_rule_admin,ir.data.import.rule administrators,ir.data.import.rule,base.group_system,crud,
+access_ir_data_import_rule_user,ir.data.import.rule users,ir.data.import.rule,base.group_user,r,
+access_ir_data_import_job_admin,ir.data.import.job administrators,ir.data.import.job,base.group_system,crud,
+access_ir_data_import_job_user,ir.data.import.job users,ir.data.import.job,base.group_user,crud,"[('user_id', '=', user.id)]"
+access_ir_data_import_wizard_user,ir.data.import.wizard users,ir.data.import.wizard,base.group_user,crud,

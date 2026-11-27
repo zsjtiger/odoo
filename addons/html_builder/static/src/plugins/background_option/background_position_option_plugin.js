@@ -1,6 +1,6 @@
 import { getBgImageURLFromEl } from "@html_builder/utils/utils_css";
 import { Plugin } from "@html_editor/plugin";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { ImagePositionOverlay } from "@html_builder/plugins/image/image_position_overlay";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { loadImage } from "@html_editor/utils/image_processing";

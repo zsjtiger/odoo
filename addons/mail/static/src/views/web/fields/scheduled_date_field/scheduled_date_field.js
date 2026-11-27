@@ -1,6 +1,6 @@
 import { ScheduledDateDialog } from "./scheduled_date_dialog";
-import { deserializeDateTime, serializeDateTime } from "@web/core/l10n/dates";
-import { registry } from "@web/core/registry";
+import { deserializeDateTime, serializeDateTime } from "@web/core/data/l10n/dates";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
 import { Record } from "@web/model/relational_model/record";
 

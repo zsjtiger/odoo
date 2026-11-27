@@ -1,6 +1,6 @@
 import { Record, fields } from "@mail/model/export";
 
-import { browser } from "@web/core/browser/browser";
+import { browser } from "@web/core/services/browser/browser";
 
 export class ResUsersSettings extends Record {
     static _name = "res.users.settings";

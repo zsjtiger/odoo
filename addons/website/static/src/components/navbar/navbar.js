@@ -1,11 +1,11 @@
-import { render } from "@web/owl2/utils";
+import { render } from "@web/core/owl/utils";
 import { NavBar } from "@web/webclient/navbar/navbar";
 import { useService, useBus } from "@web/core/utils/hooks";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { patch } from "@web/core/utils/patch";
 import { UserMenu } from "@web/webclient/user_menu/user_menu";
 import { usePlugin } from "@odoo/owl";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
 
 const websiteSystrayRegistry = registry.category("website_systray");
 websiteSystrayRegistry.add("UserMenu", { Component: UserMenu }, { sequence: 14 });

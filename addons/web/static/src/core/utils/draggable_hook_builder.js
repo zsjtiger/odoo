@@ -3,8 +3,8 @@ import { clamp } from "@web/core/utils/numbers";
 import { omit } from "@web/core/utils/objects";
 import { closestScrollableX, closestScrollableY } from "@web/core/utils/scrolling";
 import { setRecurringAnimationFrame } from "@web/core/utils/timing";
-import { browser } from "../browser/browser";
-import { hasTouch, isBrowserFirefox, isIOS } from "../browser/feature_detection";
+import { browser } from "../services/browser/browser";
+import { hasTouch, isBrowserFirefox, isIOS } from "../services/browser/feature_detection";
 
 function translatePoint(point, vector) {
     return {

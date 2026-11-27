@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+    <t t-name="pharaccount.PicklistField">
+        <select class="o_input o_field_pharaccount_picklist"
+                t-att-disabled="this.props.readonly ? 'disabled' : undefined"
+                t-on-change="this.onChange">
+            <option value="">&#160;</option>
+            <t t-foreach="this.choices" t-as="choice" t-key="choice.id">
+                <option t-att-value="choice.id"
+                        t-att-selected="choice.id === this.currentValue"
+                        t-att-disabled="choice.disabled ? 'disabled' : undefined"
+                        t-esc="choice.label"/>
+            </t>
+        </select>
+    </t>
+</templates>

@@ -37,9 +37,9 @@ import {
     webModels,
 } from "@web/../tests/web_test_helpers";
 
-import { location, browser } from "@web/core/browser/browser";
-import { router, routerBus } from "@web/core/browser/router";
-import { registry } from "@web/core/registry";
+import { location, browser } from "@web/core/services/browser/browser";
+import { router, routerBus } from "@web/core/services/browser/router";
+import { registry } from "@web/core/framework/registry";
 import { redirect } from "@web/core/utils/urls";
 import { useSetupAction } from "@web/search/action_hook";
 import { listView } from "@web/views/list/list_view";
@@ -740,7 +740,7 @@ test("A deleted form view can be shown when history back", async () => {
     expect(location.pathname).toBe("/odoo/action-3/1");
 
     // Delete the current record
-    await contains(".o_cp_action_menus [data-icon='more_vert']").click();
+    await contains(".o_cp_action_menus button").click();
     await contains(".o_menu_item:contains(Delete)").click();
     expect(".modal").toHaveCount(1, { message: "a confirm modal should be displayed" });
     await contains(".modal-footer button.btn-danger").click();
@@ -2068,7 +2068,7 @@ test("execute a contextual action from a form view", async () => {
     expect(".o_form_view").toHaveCount(1);
 
     // execute the custom action from the action menu
-    await contains(".o_cp_action_menus [data-icon='more_vert']").click();
+    await contains(".o_cp_action_menus button").click();
     await toggleMenuItem("Favorite Ponies");
     expect(".o_list_view").toHaveCount(1);
 });
@@ -2735,7 +2735,7 @@ test("click on breadcrumb of a deleted record", async () => {
         "First record",
     ]);
     // open action menu and delete
-    await contains(".o_cp_action_menus [data-icon='more_vert']").click();
+    await contains(".o_cp_action_menus button").click();
     await toggleMenuItem("Delete");
     expect(".o_dialog").toHaveCount(1);
 

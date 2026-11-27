@@ -1,16 +1,16 @@
 import { markup, onWillStart, t, useEffect, useProps } from "@odoo/owl";
-import { evalPartialContext, makeContext } from "@web/core/context";
-import { Domain } from "@web/core/domain";
+import { evalPartialContext, makeContext } from "@web/core/data/context";
+import { Domain } from "@web/core/data/domain";
 import {
     deserializeDate,
     deserializeDateTime,
     serializeDate,
     serializeDateTime,
-} from "@web/core/l10n/dates";
-import { _t } from "@web/core/l10n/translation";
-import { x2ManyCommands } from "@web/core/orm_plugin";
-import { evaluateExpr } from "@web/core/py_js/py";
-import { user } from "@web/core/user";
+} from "@web/core/data/l10n/dates";
+import { _t } from "@web/core/data/l10n/translation";
+import { x2ManyCommands } from "@web/core/services/orm_plugin";
+import { evaluateExpr } from "@web/core/data/py_js/py";
+import { user } from "@web/core/services/user";
 import { unique } from "@web/core/utils/arrays";
 import { omit } from "@web/core/utils/objects";
 import { orderByToString } from "@web/search/utils/order_by";
@@ -343,9 +343,16 @@ export function getFieldDomain(record, fieldName, domain) {
     }
     // Fallback to the domain defined in the field definition in python
     domain = record.fields[fieldName].domain;
-    return typeof domain === "string"
-        ? new Domain(evaluateExpr(domain, record.evalContext)).toList()
-        : domain || [];
+    if (typeof domain !== "string") {
+        return domain || [];
+    }
+    try {
+        return new Domain(evaluateExpr(domain, record.evalContext)).toList();
+    } catch {
+        // the domain references a field that is not loaded on the record (e.g. a dependency
+        // field which is not in the view): no filtering can be applied
+        return [];
+    }
 }
 
 export function getBasicEvalContext(config) {

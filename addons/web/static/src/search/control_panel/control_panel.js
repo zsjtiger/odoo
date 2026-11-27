@@ -1,11 +1,11 @@
-import { _t } from "@web/core/l10n/translation";
-import { browser } from "@web/core/browser/browser";
-import { Pager } from "@web/core/pager/pager";
+import { _t } from "@web/core/data/l10n/translation";
+import { browser } from "@web/core/services/browser/browser";
+import { Pager } from "@web/core/components/pager/pager";
 import { useService } from "@web/core/utils/hooks";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { useCommand } from "@web/core/commands/command_hook";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { useCommand } from "@web/core/services/commands/command_hook";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
+import { useHotkey } from "@web/core/services/hotkeys/hotkey_hook";
 import { Breadcrumbs } from "../breadcrumbs/breadcrumbs";
 
 import {
@@ -19,7 +19,7 @@ import {
     t,
     useProps,
 } from "@odoo/owl";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
+import { OfflinePlugin } from "@web/core/services/offline/offline_plugin";
 import { EmbeddedActionsPanel, useEmbeddedActions } from "./embedded_actions";
 
 const STICKY_CLASS = "o_mobile_sticky";

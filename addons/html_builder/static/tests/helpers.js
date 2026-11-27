@@ -23,9 +23,9 @@ import {
     patchWithCleanup,
     waitUntilIdle,
 } from "@web/../tests/web_test_helpers";
-import { loadBundle } from "@web/core/assets";
-import { isBrowserFirefox } from "@web/core/browser/feature_detection";
-import { registry } from "@web/core/registry";
+import { loadBundle } from "@web/core/framework/assets";
+import { isBrowserFirefox } from "@web/core/services/browser/feature_detection";
+import { registry } from "@web/core/framework/registry";
 import { delay } from "@web/core/utils/concurrency";
 import { uniqueId } from "@web/core/utils/functions";
 

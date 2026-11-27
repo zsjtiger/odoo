@@ -1,0 +1,114 @@
+// 移动端的颜色与样式令牌 (design tokens).
+// 这里的值是默认主题. 每个变量都是 !default: 主题模块 (mobile_web_theme) 在本文件之前加载,
+// 它的值会覆盖这里的默认值. 样式文件只使用令牌名, 不写死颜色.
+
+// ---- brand ----
+$theme: #017e84 !default;            // primary: active elements, links, icons
+$theme-btn: #03a09c !default;        // buttons and accents
+$theme-bg: #f4fbfb !default;         // light tint behind content
+$theme-soft: #e6f4f4 !default;       // tags and soft badges
+$theme-tint: #f0fafa !default;       // hover and alternate rows
+$theme-gradient: #effaff !default;   // gradient start and selected background
+$theme-accent: #0f9b8e !default;     // list accent
+$view-color: #377f7f !default;       // view-specific accent
+$info-bg: #2dc7c3 !default;          // information badge
+
+// ---- text ----
+$title-text: #101010 !default;
+$text: #333 !default;
+$text-secondary: #666 !default;
+$muted: #999 !default;
+$text-hint: #aaa !default;
+$text-disabled: #c4c4c4 !default;
+$placeholder: #bebebe !default;
+
+// ---- surfaces ----
+$surface: #fff !default;             // cards, sheets, inputs
+$page: #f5f5f5 !default;             // page background
+$surface-soft: #f2f2f2 !default;
+$surface-gray: #f4f5f7 !default;
+$surface-info: #e9eef2 !default;
+$btn-bg: #eee !default;
+
+// ---- lines and borders ----
+$line: #e8e5e5 !default;             // default border
+$line-strong: #d9d9d9 !default;
+$line-dark: #d0d0d0 !default;
+$border-top: #efefef !default;
+$border-control: #c0c4cc !default;
+$control: #b0b4bb !default;          // gray controls
+$undertint: #ccc !default;
+$box-shadow: #f0f0f0 !default;
+$switch-off: #e0e0e0 !default;
+
+// ---- icons ----
+$icon: #9a9a9a !default;
+$icon-gray: #a0a09e !default;
+
+// ---- status ----
+$danger: #d1101f !default;
+$danger-strong: #e5484d !default;
+$danger-ios: #ff3b30 !default;
+$success: #2da44e !default;
+$info: #007aff !default;
+$info-soft: #8ec8ff !default;
+$warn: #ffc000 !default;
+$warn-strong: #f0a030 !default;
+$warn-dark: #d29922 !default;
+$hint: #e99c42 !default;
+$select: #ffd966 !default;
+$accent-coral: #f4a08a !default;
+$black: #000 !default;
+
+// ---- style (not colors) ----
+$font-family: inherit !default;
+$radius: 8px !default;               // inputs, pickers, cards
+$radius-sm: 6px !default;            // small controls
+
+// ---- palettes used by the scripts (exported as CSS variables below) ----
+$calendar-palette: #017e84, #e5484d, #f5a524, #46a758, #3e63dd, #8e4ec6, #d6409f, #64748b !default;
+$home-palette: #03a09c, #f0a030, #5a7bd8, #e0624f, #8a6fd1, #3aa86b !default;
+
+// ---- names used by older style files: kept as aliases ----
+$theme-color: $theme !default;
+$theme-btn-color: $theme-btn !default;
+$theme-bg-color: $theme-bg !default;
+$theme-gray-color: $icon-gray !default;
+$title-text-color: $title-text !default;
+$subtitle-text-color: $muted !default;
+$content-text-color: $text !default;
+$background-color: $page !default;
+$white-color: $surface !default;
+$border-line-color: $line !default;
+$undertint-color: $undertint !default;
+$box-shadow-color: $box-shadow !default;
+$warn-color: $warn !default;
+$select-data-color: $select !default;
+$error-color: $danger !default;
+$invalid-color: $placeholder !default;
+$border-bottom-color: #eee !default;
+$bg-linear-gradient-color: $theme-gradient !default;
+$information-bg-color: $info-bg !default;
+$default-icon-color: $icon !default;
+$hint-color: $hint !default;
+$btn-bg-color: $btn-bg !default;
+
+// Exported as CSS variables, so that the scripts can read the palettes: getComputedStyle(root).getPropertyValue('--m-calendar-0')
+:root {
+    --m-theme: #{$theme};
+    --m-theme-btn: #{$theme-btn};
+    --m-text: #{$text};
+    --m-muted: #{$muted};
+    --m-line: #{$line};
+    --m-surface: #{$surface};
+    --m-page: #{$page};
+    --m-danger: #{$danger};
+    @each $color in $calendar-palette {
+        $i: index($calendar-palette, $color) - 1;
+        --m-calendar-#{$i}: #{$color};
+    }
+    @each $color in $home-palette {
+        $i: index($home-palette, $color) - 1;
+        --m-home-#{$i}: #{$color};
+    }
+}

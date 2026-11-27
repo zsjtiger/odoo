@@ -3,11 +3,11 @@ import { Avatar } from "@mail/views/web/fields/avatar/avatar";
 
 import { Component, signal, t, useProps } from "@odoo/owl";
 
-import { usePopover } from "@web/core/popover/popover_hook";
+import { usePopover } from "@web/core/components/popover/popover_hook";
 
-import { formatDate } from "@web/core/l10n/dates";
-import { _t } from "@web/core/l10n/translation";
-import { formatList } from "@web/core/l10n/utils";
+import { formatDate } from "@web/core/data/l10n/dates";
+import { _t } from "@web/core/data/l10n/translation";
+import { formatList } from "@web/core/data/l10n/utils/format_list";
 
 export class ActivityCell extends Component {
     static components = {

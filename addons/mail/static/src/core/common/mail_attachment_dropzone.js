@@ -1,5 +1,5 @@
 import { Component, useProps } from "@odoo/owl";
-import { Dropzone, dropzoneProps } from "@web/core/dropzone/dropzone";
+import { Dropzone, dropzoneProps } from "@web/core/components/dropzone/dropzone";
 
 export class MailAttachmentDropzone extends Component {
     static template = "mail.MailAttachmentDropzone";

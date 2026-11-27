@@ -1,11 +1,11 @@
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { MessageSeenIndicator } from "@mail/discuss/core/common/message_seen_indicator";
 import { useHover } from "@mail/utils/common/hooks";
-import { useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/core/owl/utils";
 
 import { Component, signal, t, useProps } from "@odoo/owl";
 
-import { ActionSwiper, onSwipeType } from "@web/core/action_swiper/action_swiper";
+import { ActionSwiper, onSwipeType } from "@web/core/components/action_swiper/action_swiper";
 import { useService } from "@web/core/utils/hooks";
 
 const { DateTime } = luxon;

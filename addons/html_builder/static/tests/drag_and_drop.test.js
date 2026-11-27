@@ -1,6 +1,6 @@
 import { expect, getFixture, test } from "@odoo/hoot";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { localization } from "@web/core/l10n/localization";
+import { localization } from "@web/core/data/l10n/localization";
 import {
     getDragHelper,
     getDragMoveHelper,

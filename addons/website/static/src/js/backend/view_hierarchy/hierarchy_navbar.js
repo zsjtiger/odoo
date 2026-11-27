@@ -1,5 +1,5 @@
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
 import { Component, proxy, signal, useProps, t } from "@odoo/owl";
 
 export class HierarchyNavbar extends Component {

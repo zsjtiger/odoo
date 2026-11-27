@@ -1,5 +1,5 @@
 import { Component, xml } from "@odoo/owl";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 import { DiscussNotificationSettings } from "@mail/discuss/core/common/discuss_notification_settings";
 

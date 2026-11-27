@@ -1,4 +1,4 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/core/owl/utils";
 import { ChatHub } from "@mail/core/common/chat_hub";
 import { patch } from "@web/core/utils/patch";
 

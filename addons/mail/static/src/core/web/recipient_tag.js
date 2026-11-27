@@ -1,6 +1,6 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { usePopover } from "@web/core/popover/popover_hook";
-import { BadgeTag } from "@web/core/tags_list/badge_tag";
+import { useLayoutEffect } from "@web/core/owl/utils";
+import { usePopover } from "@web/core/components/popover/popover_hook";
+import { BadgeTag } from "@web/core/components/tags_list/badge_tag";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { RecipientsInputTagsListPopover } from "./recipients_input_tags_list_popover";
 import { RecipientsPopover } from "./recipients_popover";

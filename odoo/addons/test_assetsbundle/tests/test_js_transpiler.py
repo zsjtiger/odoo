@@ -2,7 +2,7 @@
 
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
-from odoo.tools.js_transpiler import transpile_javascript
+from odoo.tools.js.js_transpiler import transpile_javascript
 
 
 @tagged('post_install', '-at_install')

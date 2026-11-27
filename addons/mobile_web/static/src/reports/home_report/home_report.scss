@@ -1,0 +1,22 @@
+.card.m_home_page_report {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    box-sizing: border-box;
+    margin: 12px 12px 0;
+    padding: 0 10px;
+    background-color: white;
+    border-radius: 12px;
+    flex-shrink: 0;
+    
+    .report_data_value {
+        font-size: 24px;
+        font-weight: bold;
+        color: $title-text-color;
+    }
+
+    .report_data_name {
+        font-size: 14px;
+        color: $subtitle-text-color;
+    }
+}

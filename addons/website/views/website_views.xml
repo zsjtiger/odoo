@@ -8,7 +8,7 @@
             <field name="res_model">ir.module.module</field>
             <field name="view_mode">kanban,list,form</field>
             <field name="domain">['!', ('name', '=like', 'theme_%')]</field>
-            <field name="context" eval="{'search_default_category_id': ref('base.module_category_website_website'), 'searchpanel_default_category_id': ref('base.module_category_website')}"/>
+            <field name="context" eval="{'searchpanel_default_category_id': ref('base.module_category_website')}"/>
         </record>
 
         <record id="action_website_view_hierarchy" model="ir.actions.client">

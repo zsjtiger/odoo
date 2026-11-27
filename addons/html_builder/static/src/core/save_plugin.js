@@ -2,7 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { uniqueId } from "@web/core/utils/functions";
 import { isZWS } from "@html_editor/utils/dom_info";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { EDITOR_MUTATION_TYPES } from "@html_editor/core/dom_observer_plugin";
 
 /** @typedef {import("plugins").CSSSelector} CSSSelector */

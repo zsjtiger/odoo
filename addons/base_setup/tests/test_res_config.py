@@ -9,7 +9,7 @@ def just_raise(*args):
     raise Exception("We should not be here.")
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('post_install', '-at_install')
 class TestResConfig(TransactionCase):
 
     def setUp(self):
@@ -89,7 +89,9 @@ class TestResConfig(TransactionCase):
         """
         config_fields = self.config._get_classified_fields()
         # set the first uninstalled module to install
-        module_to_install = next(m for m in config_fields['module'] if m.state == 'uninstalled')
+        module_to_install = next((m for m in config_fields['module'] if m.state == 'uninstalled'), None)
+        if module_to_install is None:
+            self.skipTest('every module is already installed in this database')
         self.config[f'module_{module_to_install.name}'] = True
 
         with patch('odoo.addons.base.models.ir_module.IrModuleModule.button_immediate_install', new=just_raise):

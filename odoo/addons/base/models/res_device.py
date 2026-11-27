@@ -16,7 +16,7 @@ from odoo.http.session import (
 from odoo.modules import module
 from odoo.tools import SQL
 from odoo.tools._vendor.useragents import UserAgent
-from odoo.tools.translate import _
+from odoo.tools.text.translate import _
 
 from .res_users import check_identity
 

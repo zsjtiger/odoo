@@ -1,6 +1,6 @@
 import { fields, Record } from "@mail/model/export";
 
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 
 /** @type {import("menu_tabs").MenuTabs} */
 export const MENU_TABS = { BOOKMARK: "bookmark", NOTIFICATION: "notification" };

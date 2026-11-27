@@ -8,7 +8,7 @@ import { incrementFn } from "@mail/utils/common/signal";
 
 import { computed, htmlEscape, markup, signal } from "@odoo/owl";
 
-import { deserializeDate, deserializeDateTime } from "@web/core/l10n/dates";
+import { deserializeDate, deserializeDateTime } from "@web/core/data/l10n/dates";
 
 const Markup = markup().constructor;
 

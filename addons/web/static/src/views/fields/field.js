@@ -1,10 +1,10 @@
 import { Component, t, usePlugin, useProps, xml } from "@odoo/owl";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
-import { Domain } from "@web/core/domain";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
-import { evaluateBooleanExpr, evaluateExpr } from "@web/core/py_js/py";
-import { registry } from "@web/core/registry";
-import { utils } from "@web/core/ui/ui_utils";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
+import { Domain } from "@web/core/data/domain";
+import { OfflinePlugin } from "@web/core/services/offline/offline_plugin";
+import { evaluateBooleanExpr, evaluateExpr } from "@web/core/data/py_js/py";
+import { registry } from "@web/core/framework/registry";
+import { utils } from "@web/core/services/ui/ui_utils";
 import { exprToBoolean } from "@web/core/utils/strings";
 import { getFieldContext } from "@web/model/relational_model/utils";
 import { X2M_TYPES, getClassNameFromDecoration } from "@web/views/utils";

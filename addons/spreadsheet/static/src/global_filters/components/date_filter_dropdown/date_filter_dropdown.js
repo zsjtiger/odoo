@@ -7,9 +7,9 @@ import {
     globalFilterDateRegistry,
     getDateGlobalFilterTypes,
 } from "@spreadsheet/global_filters/helpers";
-import { DateTimeInput } from "@web/core/datetime/datetime_input";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { _t } from "@web/core/l10n/translation";
+import { DateTimeInput } from "@web/core/components/datetime/datetime_input";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
+import { _t } from "@web/core/data/l10n/translation";
 const { DateTime } = luxon;
 
 /**

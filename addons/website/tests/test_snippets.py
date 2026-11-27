@@ -62,20 +62,6 @@ class TestSnippets(HttpCase):
     def test_04_countdown_preview(self):
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'snippet_countdown', login='admin')
 
-    def test_05_social_media(self):
-        self.env.ref('base.default_website').company_id.write({
-            'social_facebook': "https://www.facebook.com/Odoo",
-            'social_twitter': 'https://twitter.com/Odoo',
-            'social_linkedin': 'https://www.linkedin.com/company/odoo',
-            'social_youtube': 'https://www.youtube.com/user/OpenERPonline',
-            'social_github': 'https://github.com/odoo',
-            'social_instagram': 'https://www.instagram.com/explore/tags/odoo/',
-            'social_tiktok': 'https://www.tiktok.com/@odoo',
-            'social_discord': 'https://discord.com/servers/discord-town-hall-169256939211980800',
-        })
-        create_image_attachment(self.env, '/web/image/website.landscape_md_1', 'landscape_md_1.jpg')
-        self.start_tour(self.env['website'].get_client_action_url('/', True), 'snippet_social_media', login="admin")
-
     def test_06_snippet_popup_add_remove(self):
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'snippet_popup_add_remove', login='admin')
 

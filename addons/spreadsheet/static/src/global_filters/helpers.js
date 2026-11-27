@@ -1,15 +1,15 @@
 /** @ts-check */
 
-import { _t } from "@web/core/l10n/translation";
-import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
-import { Domain } from "@web/core/domain";
-import { getOperatorLabel as getDomainOperatorLabel } from "@web/core/tree_editor/tree_editor_operator_editor";
+import { _t } from "@web/core/data/l10n/translation";
+import { serializeDate, serializeDateTime } from "@web/core/data/l10n/dates";
+import { Domain } from "@web/core/data/domain";
+import { getOperatorLabel as getDomainOperatorLabel } from "@web/core/editors/tree_editor/tree_editor_operator_editor";
 
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 
 import { Registry } from "@spreadsheet/o_spreadsheet/o_spreadsheet";
 import { deepEqual } from "@web/core/utils/objects";
-import { formatList } from "@web/core/l10n/utils";
+import { formatList } from "@web/core/data/l10n/utils/format_list";
 
 export const globalFieldMatchingRegistry = new Registry();
 export const globalFilterDateRegistry = new Registry();

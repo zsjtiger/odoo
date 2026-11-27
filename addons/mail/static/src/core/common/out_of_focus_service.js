@@ -1,9 +1,9 @@
 import { htmlToTextContentInline } from "@mail/utils/common/format";
 
-import { isAndroid } from "@web/core/browser/feature_detection";
-import { browser } from "@web/core/browser/browser";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { isAndroid } from "@web/core/services/browser/feature_detection";
+import { browser } from "@web/core/services/browser/browser";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 
 const PREVIEW_MSG_MAX_SIZE = 350; // optimal for native English speakers
 
@@ -12,7 +12,7 @@ const PREVIEW_MSG_MAX_SIZE = 350; // optimal for native English speakers
  */
 export class OutOfFocusService {
     /**
-     * @param {import("@web/env").OdooEnv} env
+     * @param {import("@web/boot/env").OdooEnv} env
      * @param {import("services").ServiceFactories} services
      */
     constructor(env, services) {
@@ -196,7 +196,7 @@ export class OutOfFocusService {
 export const outOfFocusService = {
     dependencies: ["multi_tab", "notification", "mail.sound_effects", "mail.store"],
     /**
-     * @param {import("@web/env").OdooEnv} env
+     * @param {import("@web/boot/env").OdooEnv} env
      * @param {import("services").ServiceFactories} services
      */
     start(env, services) {

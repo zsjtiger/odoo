@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ================= Actions: PC ================= -->
+
+    <record id="action_pharaccount_account" model="ir.actions.act_window">
+        <field name="name">药店</field>
+        <field name="res_model">pharaccount.account</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_pharaccount_account_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">新建药店</p>
+        </field>
+    </record>
+
+    <record id="action_pharaccount_picklist" model="ir.actions.act_window">
+        <field name="name">下拉列表</field>
+        <field name="res_model">pharaccount.picklist</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_pharaccount_account_state" model="ir.actions.act_window">
+        <field name="name">账户状态</field>
+        <field name="res_model">pharaccount.account.state</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- ================= Actions: Mobile ================= -->
+
+    <!-- Mobile account: card view first, simplified form (mapped per view type below). -->
+    <record id="action_pharaccount_account_mobile" model="ir.actions.act_window">
+        <field name="name">药店</field>
+        <field name="res_model">pharaccount.account</field>
+        <field name="view_mode">kanban,form</field>
+        <field name="search_view_id" ref="view_pharaccount_account_search"/>
+    </record>
+    <record id="action_pharaccount_account_mobile_kanban" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="view_pharaccount_account_kanban_mobile"/>
+        <field name="act_window_id" ref="action_pharaccount_account_mobile"/>
+    </record>
+    <record id="action_pharaccount_account_mobile_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_pharaccount_account_form_mobile"/>
+        <field name="act_window_id" ref="action_pharaccount_account_mobile"/>
+    </record>
+
+    <record id="action_pharaccount_picklist_mobile" model="ir.actions.act_window">
+        <field name="name">下拉列表</field>
+        <field name="res_model">pharaccount.picklist</field>
+        <field name="view_mode">kanban,form</field>
+        <field name="view_id" ref="view_pharaccount_picklist_kanban_mobile"/>
+    </record>
+
+    <record id="action_pharaccount_account_state_mobile" model="ir.actions.act_window">
+        <field name="name">账户状态</field>
+        <field name="res_model">pharaccount.account.state</field>
+        <field name="view_mode">kanban,form</field>
+        <field name="view_id" ref="view_pharaccount_account_state_kanban_mobile"/>
+    </record>
+
+    <!-- ================= Menus: PC ================= -->
+
+    <menuitem id="menu_pharaccount_pc_root" name="药店（PC）" sequence="10"
+              groups="pharaccount.group_user"/>
+    <!-- master data: dropdown under the pharmacy app; holds the hospital, doctor and pharmacy types -->
+    <menuitem id="menu_pharaccount_master_data" name="主数据管理" parent="menu_pharaccount_pc_root"
+              sequence="5" groups="pharaccount.group_user"/>
+    <menuitem id="menu_pharaccount_pc_account" name="药店" parent="menu_pharaccount_pc_root"
+              action="action_pharaccount_account" sequence="10"
+              groups="pharaccount.group_user"/>
+    <!-- the generic account menu is replaced by one menu per record type (ir_recordtype) -->
+    <record id="menu_pharaccount_pc_account" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+    <menuitem id="menu_pharaccount_pc_config" name="配置" parent="menu_pharaccount_pc_root"
+              sequence="90" groups="pharaccount.group_config"/>
+    <menuitem id="menu_pharaccount_pc_picklist" name="下拉列表" parent="menu_pharaccount_pc_config"
+              action="action_pharaccount_picklist" sequence="20"
+              groups="pharaccount.group_config"/>
+    <menuitem id="menu_pharaccount_pc_account_state" name="账户状态" parent="menu_pharaccount_pc_config"
+              action="action_pharaccount_account_state" sequence="30"
+              groups="pharaccount.group_config"/>
+
+</odoo>

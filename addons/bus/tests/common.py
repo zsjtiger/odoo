@@ -24,8 +24,8 @@ from odoo.tests.common import (
     TEST_CURSOR_COOKIE_NAME,
     BaseCase,
     Like,
-    _registry_test_lock,
 )
+from odoo.tests.common.locks import _registry_test_lock
 
 from odoo.addons.bus.bus_dispatcher import BusDispatcher
 from odoo.addons.bus.models.bus import channel_with_db, json_dump

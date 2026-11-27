@@ -1,5 +1,5 @@
 import { HoverableDropdown } from "@website/interactions/dropdown/hoverable_dropdown";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 const HoverableDropdownEdit = (I) =>
     class extends I {

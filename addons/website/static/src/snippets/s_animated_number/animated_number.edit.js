@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { AnimatedNumber } from "./animated_number";
 
 export const AnimatedNumberEdit = (I) =>

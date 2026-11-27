@@ -1,12 +1,12 @@
 import { onMounted, t, usePlugin, useProps } from "@odoo/owl";
 import { Interaction } from "@web/public/interaction";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
-import { ConfirmationDialog, confirmationDialogProps } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { ConfirmationDialog, confirmationDialogProps } from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
 import { renderToMarkup } from "@web/core/utils/render";
 import { InputConfirmationDialog } from "@portal/js/components/input_confirmation_dialog/input_confirmation_dialog";
-import { _t } from "@web/core/l10n/translation";
-import { user } from "@web/core/user";
+import { _t } from "@web/core/data/l10n/translation";
+import { user } from "@web/core/services/user";
 
 class APIKeyConfirmationDialog extends ConfirmationDialog {
     props = useProps({

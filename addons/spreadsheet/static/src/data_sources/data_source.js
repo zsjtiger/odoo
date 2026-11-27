@@ -1,10 +1,10 @@
 // @ts-check
 
 import { LoadingDataError } from "@spreadsheet/o_spreadsheet/errors";
-import { RPCError } from "@web/core/network/rpc";
+import { RPCError } from "@web/core/services/network/rpc";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { CellErrorType, EvaluationError } from "@odoo/o-spreadsheet";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 
 /**
  * @typedef {import("./odoo_data_provider").OdooDataProvider} OdooDataProvider

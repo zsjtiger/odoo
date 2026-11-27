@@ -1,5 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { withSequence } from "@html_editor/utils/resource";
 import { CSS_SHORTHANDS } from "@html_builder/utils/utils_css";
 

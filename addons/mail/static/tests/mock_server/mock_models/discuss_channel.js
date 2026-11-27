@@ -11,7 +11,7 @@ import {
     models,
     serverState,
 } from "@web/../tests/web_test_helpers";
-import { deserializeDateTime, serializeDateTime, today } from "@web/core/l10n/dates";
+import { deserializeDateTime, serializeDateTime, today } from "@web/core/data/l10n/dates";
 import { ensureArray } from "@web/core/utils/arrays";
 import { uniqueId } from "@web/core/utils/functions";
 

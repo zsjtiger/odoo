@@ -22,7 +22,7 @@ import {
 } from "./misc";
 import { localStorageField } from "@mail/model/local_storage_field";
 import { RecordInternal } from "./record_internal";
-import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
+import { serializeDate, serializeDateTime } from "@web/core/data/l10n/dates";
 
 /** @typedef {import("./misc").FieldDefinition} FieldDefinition */
 /** @typedef {import("./record_list").RecordList} RecordList */
@@ -42,9 +42,9 @@ export class Record {
     /** @type {import("./record_internal").RecordInternal} */
     _;
     static id = "id";
-    /** @type {import("@web/env").OdooEnv} */
+    /** @type {import("@web/boot/env").OdooEnv} */
     static env;
-    /** @type {import("@web/env").OdooEnv} */
+    /** @type {import("@web/boot/env").OdooEnv} */
     env;
     /** @type {Object<string, Record>} */
     static records;

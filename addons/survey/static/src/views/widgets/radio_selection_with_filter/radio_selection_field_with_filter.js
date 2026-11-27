@@ -1,7 +1,7 @@
 import { useProps, t } from "@odoo/owl";
-import { RadioField, radioField, radioFieldProps } from "@web/views/fields/radio/radio_field";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { RadioField, radioField, radioFieldProps } from "@web/views/fields/selection/radio/radio_field";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 
 export class RadioSelectionFieldWithFilter extends RadioField {
     props = useProps({

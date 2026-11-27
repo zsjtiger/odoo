@@ -2,7 +2,7 @@ import { onMounted, useProps, t } from "@odoo/owl";
 import {
     ConfirmationDialog,
     confirmationDialogProps,
-} from "@web/core/confirmation_dialog/confirmation_dialog";
+} from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
 
 export class InputConfirmationDialog extends ConfirmationDialog {
     props = useProps({

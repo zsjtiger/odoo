@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Permissions -->
+    <record id="view_ir_data_import_permission_list" model="ir.ui.view">
+        <field name="name">ir.data.import.permission.list</field>
+        <field name="model">ir.data.import.permission</field>
+        <field name="arch" type="xml">
+            <list string="Import Permissions" editable="bottom">
+                <field name="model_id"/>
+                <field name="group_id"/>
+                <field name="allow_import"/>
+                <field name="perm_template"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_ir_data_import_permission" model="ir.actions.act_window">
+        <field name="name">Import Permissions</field>
+        <field name="res_model">ir.data.import.permission</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <!-- Templates -->
+    <record id="view_ir_data_import_template_list" model="ir.ui.view">
+        <field name="name">ir.data.import.template.list</field>
+        <field name="model">ir.data.import.template</field>
+        <field name="arch" type="xml">
+            <list string="Import Templates">
+                <field name="name"/>
+                <field name="model_id"/>
+                <field name="record_type_id"/>
+                <field name="version"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_ir_data_import_template_form" model="ir.ui.view">
+        <field name="name">ir.data.import.template.form</field>
+        <field name="model">ir.data.import.template</field>
+        <field name="arch" type="xml">
+            <form string="Import Template">
+                <header>
+                    <button type="object" name="action_download_xlsx" string="Download template"/>
+                </header>
+                <sheet>
+                    <div class="oe_title"><h1><field name="name"/></h1></div>
+                    <group>
+                        <group>
+                            <field name="model_id"/>
+                            <field name="record_type_id"/>
+                            <field name="active"/>
+                            <field name="match_by"/>
+                            <field name="include_example"/>
+                        </group>
+                        <group>
+                            <field name="version"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Columns" name="columns">
+                            <field name="column_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="field_id"/>
+                                    <field name="header"/>
+                                    <field name="required_on_create"/>
+                                    <field name="example"/>
+                                    <field name="help"/>
+                                    <field name="column_width"/>
+                                    <field name="number_format"/>
+                                    <field name="align"/>
+                                    <field name="dropdown"/>
+                                    <field name="hidden"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Excel style" name="style">
+                            <group>
+                                <group string="Sheet">
+                                    <field name="sheet_name"/>
+                                    <field name="header_font_color"/>
+                                    <field name="header_fill_color"/>
+                                    <field name="header_bold"/>
+                                    <field name="header_height"/>
+                                    <field name="action_fill_color"/>
+                                    <field name="required_fill_color"/>
+                                </group>
+                                <group string="View">
+                                    <field name="freeze_header"/>
+                                    <field name="show_gridlines"/>
+                                    <field name="show_help_sheet"/>
+                                    <field name="help_sheet_name"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_ir_data_import_template" model="ir.actions.act_window">
+        <field name="name">Import Templates</field>
+        <field name="res_model">ir.data.import.template</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'active_test': False}</field>
+    </record>
+
+    <!-- Rules -->
+    <record id="view_ir_data_import_rule_list" model="ir.ui.view">
+        <field name="name">ir.data.import.rule.list</field>
+        <field name="model">ir.data.import.rule</field>
+        <field name="arch" type="xml">
+            <list string="Import Rules">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="model_id"/>
+                <field name="record_type_id"/>
+                <field name="action"/>
+                <field name="domain"/>
+                <field name="message"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_ir_data_import_rule_form" model="ir.ui.view">
+        <field name="name">ir.data.import.rule.form</field>
+        <field name="model">ir.data.import.rule</field>
+        <field name="arch" type="xml">
+            <form string="Import Rule">
+                <sheet>
+                    <div class="oe_title"><h1><field name="name"/></h1></div>
+                    <group>
+                        <group>
+                            <field name="model_id"/>
+                            <field name="record_type_id"/>
+                            <field name="action"/>
+                            <field name="sequence"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="domain"/>
+                            <field name="message"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_ir_data_import_rule" model="ir.actions.act_window">
+        <field name="name">Import Rules</field>
+        <field name="res_model">ir.data.import.rule</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'active_test': False}</field>
+    </record>
+
+    <!-- Jobs (read only history) -->
+    <record id="view_ir_data_import_job_list" model="ir.ui.view">
+        <field name="name">ir.data.import.job.list</field>
+        <field name="model">ir.data.import.job</field>
+        <field name="arch" type="xml">
+            <list string="Import Jobs" create="false">
+                <field name="create_date"/>
+                <field name="user_id"/>
+                <field name="model_id"/>
+                <field name="state"/>
+                <field name="total_rows"/>
+                <field name="error_rows"/>
+                <field name="created_rows"/>
+                <field name="updated_rows"/>
+                <field name="deleted_rows"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_ir_data_import_job" model="ir.actions.act_window">
+        <field name="name">Import Jobs</field>
+        <field name="res_model">ir.data.import.job</field>
+        <field name="view_mode">list</field>
+    </record>
+</odoo>

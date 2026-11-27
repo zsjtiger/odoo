@@ -1,6 +1,6 @@
 import { Component, t, useProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-import { useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/core/owl/utils";
 import { useSetupAction } from "@web/search/action_hook";
 import { Layout } from "@web/search/layout";
 import { getDefaultConfig } from "@web/views/view";

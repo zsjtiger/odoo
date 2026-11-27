@@ -5,7 +5,8 @@ from math import ceil
 from odoo import api, fields, models
 from odoo.addons.base.models.assetsbundle import ScssStylesheetAsset
 from odoo.addons.base.models.ir_qweb_fields import nl2br_enclose
-from odoo.tools import BinaryBytes, html2plaintext, is_html_empty, image as tools
+from odoo.tools import BinaryBytes, html2plaintext, is_html_empty
+from odoo.tools.files import image as tools
 
 try:
     from PIL.Image import Resampling

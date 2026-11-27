@@ -1,5 +1,5 @@
-import { formatDate, formatDateTime } from "@web/core/l10n/dates";
-import { registry } from "@web/core/registry";
+import { formatDate, formatDateTime } from "@web/core/data/l10n/dates";
+import { registry } from "@web/core/framework/registry";
 import { renderToElement } from "@web/core/utils/render";
 import { Interaction } from "@web/public/interaction";
 import { D3_COLORS } from "@survey/interactions/utils";

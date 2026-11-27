@@ -5,8 +5,8 @@ import { TalkingAudioBars } from "@mail/discuss/call/common/talking_audio_bars";
 import { useHover } from "@mail/utils/common/hooks";
 import { extractAccentColor } from "@mail/utils/common/misc";
 import { isEventHandled } from "@web/core/utils/misc";
-import { browser } from "@web/core/browser/browser";
-import { isMobileOS } from "@web/core/browser/feature_detection";
+import { browser } from "@web/core/services/browser/browser";
+import { isMobileOS } from "@web/core/services/browser/feature_detection";
 
 import {
     Component,
@@ -19,10 +19,10 @@ import {
     useProps,
 } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-import { rpc } from "@web/core/network/rpc";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
+import { rpc } from "@web/core/services/network/rpc";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { useDropdownState } from "@web/core/components/dropdown/dropdown_hooks";
 import { attClassObjectToString } from "@mail/utils/common/format";
 
 const HIDDEN_CONNECTION_STATES = new Set(["connected", "completed"]);

@@ -15,7 +15,7 @@ import {
 import { parseHTML } from "@html_editor/utils/html";
 import { childNodeIndex, nodeSize } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { renderToString } from "@web/core/utils/render";
 import { uuid } from "@web/core/utils/strings";
 

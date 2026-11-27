@@ -2,7 +2,7 @@ import { Component, t, useProps } from "@odoo/owl";
 
 import { propSignal } from "@mail/utils/common/hooks";
 import { useService } from "@web/core/utils/hooks";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 
 export class ActivityMailTemplate extends Component {
     static template = "mail.ActivityMailTemplate";

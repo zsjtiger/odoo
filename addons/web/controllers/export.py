@@ -15,7 +15,8 @@ from odoo.exceptions import UserError
 from odoo.http import Controller, request, route
 from odoo.http.dispatcher import serialize_exception
 from odoo.http.stream import content_disposition
-from odoo.tools import BinaryBytes, BinaryValue, osutil
+from odoo.tools import BinaryBytes, BinaryValue
+from odoo.tools.system import osutil
 from odoo.tools.misc import split_every
 from odoo.tools.constants import IN_MAX
 

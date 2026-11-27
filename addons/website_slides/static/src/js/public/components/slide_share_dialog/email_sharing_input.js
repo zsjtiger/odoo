@@ -1,7 +1,7 @@
-import { rpc } from "@web/core/network/rpc";
-import { session } from "@web/session";
+import { rpc } from "@web/core/services/network/rpc";
+import { session } from "@web/boot/session";
 import { useService } from "@web/core/utils/hooks";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 
 import { Component, proxy, signal, t, useProps } from "@odoo/owl";
 

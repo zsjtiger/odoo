@@ -4,9 +4,9 @@ import { COLOR_COMBINATION_CLASSES } from "@html_editor/main/font/color_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { getHtmlStyle } from "@html_editor/utils/formatting";
 import { withSequence } from "@html_editor/utils/resource";
-import { registry } from "@web/core/registry";
-import { _t } from "@web/core/l10n/translation";
-import { localization } from "@web/core/l10n/localization";
+import { registry } from "@web/core/framework/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { localization } from "@web/core/data/l10n/localization";
 import { convertCSSColorToRgba } from "@web/core/utils/colors";
 
 /**

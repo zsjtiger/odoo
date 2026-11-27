@@ -23,7 +23,6 @@
                                 'followers': 'person',
                                 'remove_followers': 'person_remove',
                                 'next_activity': 'schedule',
-                                'sms': 'smartphone',
                                 'webhook': 'send',
                                 'whatsapp': 'whatsapp',
                             }[action.data.state] || 'radio_button_unchecked'"

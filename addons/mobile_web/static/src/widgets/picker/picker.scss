@@ -1,0 +1,44 @@
+// 选择器按钮: 显示当前值或占位文字, 右侧箭头
+.m_picker_button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    min-height: 44px;
+    box-sizing: border-box;
+    padding: 8px 12px;
+    border: 1px solid $line;
+    border-radius: $radius;
+    background: $surface;
+    font-size: 16px;
+    color: $text;
+    text-align: left;
+    &.m_picker_button_compact {
+        width: auto;
+        min-width: 88px;
+        justify-content: center;
+        color: $theme;
+        margin-top: 8px;
+    }
+}
+
+.m_picker_placeholder {
+    color: $placeholder;
+}
+
+.m_picker_caret {
+    color: $muted;
+    margin-left: 8px;
+}
+
+// 右侧的下箭头图标: 与按钮的 Edit 箭头相同. 不使用 .m_picker_caret, 表单中的该类会被旋转
+.m_picker_chevron {
+    display: inline-flex;
+    align-items: center;
+    flex: 0 0 auto;
+    margin-left: 8px;
+    color: $muted;
+    svg {
+        display: block;
+    }
+}

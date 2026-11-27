@@ -27,6 +27,7 @@ from werkzeug.local import LocalProxy
 
 import odoo
 from odoo import api, modules
+from odoo.orm.database.sql_db import pool as sql_pool
 from odoo.http.requestlib import Request
 from odoo.http.response import Response
 from odoo.http.retrying import retrying
@@ -36,7 +37,7 @@ from odoo.http.session import (
     session_store,
 )
 from odoo.modules.registry import Registry
-from odoo.service.server import CommonServer
+from odoo.service.server.common import CommonServer
 from odoo.tools import config
 
 from .bus_dispatcher import dispatch
@@ -987,7 +988,7 @@ def _kick_all(code=CloseCode.GOING_AWAY):
     try:
         _logger.info("Disconnecting %s websockets", len(_websocket_instances))
         count = 0
-        wait_threshold = max(odoo.sql_db._Pool._maxconn // 8, 8) if odoo.sql_db._Pool else 32
+        wait_threshold = max(sql_pool._Pool._maxconn // 8, 8) if sql_pool._Pool else 32
         for websocket in _websocket_instances:
             if websocket.state is ConnectionState.OPEN:
                 websocket.close(code)

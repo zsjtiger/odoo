@@ -2,8 +2,8 @@ import { patch } from "@web/core/utils/patch";
 import { exprToBoolean } from "@web/core/utils/strings";
 import { useDebounced } from "@web/core/utils/timing";
 import { t, useListener } from "@odoo/owl";
-import { charField, CharField, charFieldProps } from "@web/views/fields/char/char_field";
-import { textField, TextField, textFieldProps } from "@web/views/fields/text/text_field";
+import { charField, CharField, charFieldProps } from "@web/views/fields/text/char/char_field";
+import { textField, TextField, textFieldProps } from "@web/views/fields/text/text/text_field";
 
 /**
  * Support a key-based onchange in text fields.

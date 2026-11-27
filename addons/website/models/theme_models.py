@@ -2,7 +2,7 @@
 
 import logging
 from odoo import api, fields, models, modules
-from odoo.tools.translate import xml_translate
+from odoo.tools import xml_translate
 from odoo.modules.module import get_resource_from_path
 
 from odoo.addons.base.models.ir_asset import AFTER_DIRECTIVE, APPEND_DIRECTIVE, BEFORE_DIRECTIVE, DEFAULT_SEQUENCE, INCLUDE_DIRECTIVE, PREPEND_DIRECTIVE, REMOVE_DIRECTIVE, REPLACE_DIRECTIVE

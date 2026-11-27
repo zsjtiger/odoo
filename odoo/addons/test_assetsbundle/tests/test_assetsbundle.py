@@ -2030,7 +2030,7 @@ class AssetsNodeOrmCacheUsage(TransactionCase):
         check_no_new_cache_entry('ar_SY', is_rtl=True)
 
     def test_assets_node_orm_cache_usage_website(self):
-        if self.env['ir.module.module'].search([('name', '=', 'website'), ('state', '=', 'uninstalled')]):
+        if not self.env['ir.module.module'].search([('name', '=', 'website'), ('state', '=', 'installed')]):
             return  # only makes sence if website is installed
 
         self.env['ir.qweb'].with_context(website_id=None)._get_asset_nodes('test_assetsbundle.manifest1')

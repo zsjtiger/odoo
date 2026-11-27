@@ -1,10 +1,10 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/core/owl/utils";
 import { HierarchyNavbar } from "./hierarchy_navbar";
 import { Layout } from "@web/search/layout";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
 import { Component, onWillStart, proxy, useProps } from "@odoo/owl";
-import { router } from "@web/core/browser/router";
+import { router } from "@web/core/services/browser/router";
 import { standardActionServiceProps } from "@web/webclient/actions/action_plugin";
 
 export class ViewHierarchy extends Component {

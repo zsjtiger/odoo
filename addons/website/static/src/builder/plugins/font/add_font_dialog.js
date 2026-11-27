@@ -1,10 +1,10 @@
-import { rpc } from "@web/core/network/rpc";
+import { rpc } from "@web/core/services/network/rpc";
 import { Component, proxy, signal, useProps, t } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { AutoComplete } from "@web/core/autocomplete/autocomplete";
-import { Dialog } from "@web/core/dialog/dialog";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { AutoComplete } from "@web/core/components/autocomplete/autocomplete";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
+import { ConfirmationDialog } from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
 import { Switch } from "@html_editor/components/switch/switch";
 
 class GoogleFontAutoComplete extends AutoComplete {

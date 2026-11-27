@@ -1,5 +1,5 @@
 import { Component, onMounted, signal, types, useProps, xml } from "@odoo/owl";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 const mainComponents = registry.category("main_components");
 

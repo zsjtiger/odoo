@@ -1,11 +1,11 @@
 import { proxy } from "@odoo/owl";
 
-import { browser } from "@web/core/browser/browser";
-import { registry } from "@web/core/registry";
+import { browser } from "@web/core/services/browser/browser";
+import { registry } from "@web/core/framework/registry";
 
 export class DiscussCorePublicWeb {
     /**
-     * @param {import("@web/env").OdooEnv} env
+     * @param {import("@web/boot/env").OdooEnv} env
      * @param {import("services").ServiceFactories} services
      */
     constructor(env, services) {
@@ -51,7 +51,7 @@ export class DiscussCorePublicWeb {
 export const discussCorePublicWeb = {
     dependencies: ["bus_service", "discuss.rtc", "mail.store"],
     /**
-     * @param {import("@web/env").OdooEnv} env
+     * @param {import("@web/boot/env").OdooEnv} env
      * @param {import("services").ServiceFactories} services
      */
     start(env, services) {

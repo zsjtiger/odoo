@@ -58,10 +58,10 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { waitNotifications } from "@bus/../tests/bus_test_helpers";
-import { isMobileOS } from "@web/core/browser/feature_detection";
+import { isMobileOS } from "@web/core/services/browser/feature_detection";
 import { patch } from "@web/core/utils/patch";
-import { deserializeDateTime } from "@web/core/l10n/dates";
-import { user } from "@web/core/user";
+import { deserializeDateTime } from "@web/core/data/l10n/dates";
+import { user } from "@web/core/services/user";
 
 describe.current.tags("desktop");
 defineMailModels();

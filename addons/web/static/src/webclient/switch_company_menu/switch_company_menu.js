@@ -1,20 +1,21 @@
-import { useSubEnv } from "@web/owl2/utils";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownGroup } from "@web/core/dropdown/dropdown_group";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { registry } from "@web/core/registry";
+import { isSystrayItemVisible } from "@web/webclient/navbar/systray_visibility";
+import { useSubEnv } from "@web/core/owl/utils";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownGroup } from "@web/core/components/dropdown/dropdown_group";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
+import { registry } from "@web/core/framework/registry";
 
 import { Component, proxy, signal } from "@odoo/owl";
-import { useCommand } from "@web/core/commands/command_hook";
-import { _t } from "@web/core/l10n/translation";
+import { useCommand } from "@web/core/services/commands/command_hook";
+import { _t } from "@web/core/data/l10n/translation";
 import { symmetricalDifference } from "@web/core/utils/arrays";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { SwitchCompanyItem } from "@web/webclient/switch_company_menu/switch_company_item";
-import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
-import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
-import { user, userBus } from "@web/core/user";
-import { router } from "@web/core/browser/router";
-import { CheckBox } from "@web/core/checkbox/checkbox";
+import { useHotkey } from "@web/core/services/hotkeys/hotkey_hook";
+import { useDropdownState } from "@web/core/components/dropdown/dropdown_hooks";
+import { user, userBus } from "@web/core/services/user";
+import { router } from "@web/core/services/browser/router";
+import { CheckBox } from "@web/core/components/checkbox/checkbox";
 
 function getCompany(cid) {
     return user.allowedCompaniesWithAncestors.find((c) => c.id === cid);
@@ -351,6 +352,7 @@ export class SwitchCompanyMenu extends Component {
 
 export const systrayItem = {
     Component: SwitchCompanyMenu,
+    isDisplayed: () => isSystrayItemVisible("company"),
 };
 
 registry.category("systray").add("SwitchCompanyMenu", systrayItem, { sequence: 1 });

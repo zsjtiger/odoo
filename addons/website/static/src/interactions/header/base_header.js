@@ -1,7 +1,7 @@
 import { usePlugin } from "@odoo/owl";
 import { Interaction } from "@web/public/interaction";
 
-import { SIZES, utils as uiUtils } from "@web/core/ui/ui_utils";
+import { SIZES, utils as uiUtils } from "@web/core/services/ui/ui_utils";
 import { compensateScrollbar } from "@web/core/utils/scrolling";
 import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 

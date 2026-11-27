@@ -2,9 +2,9 @@ import { AND, fields, Record } from "@mail/model/export";
 import { generateEmojisOnHtml } from "@mail/utils/common/format";
 import { compareDatetime } from "@mail/utils/common/misc";
 
-import { rpc } from "@web/core/network/rpc";
-import { _t } from "@web/core/l10n/translation";
-import { user } from "@web/core/user";
+import { rpc } from "@web/core/services/network/rpc";
+import { _t } from "@web/core/data/l10n/translation";
+import { user } from "@web/core/services/user";
 
 /**
  * @typedef SuggestedRecipient

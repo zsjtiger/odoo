@@ -1,6 +1,6 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { CharField, charField } from "@web/views/fields/char/char_field";
-import { registry } from "@web/core/registry";
+import { useLayoutEffect } from "@web/core/owl/utils";
+import { CharField, charField } from "@web/views/fields/text/char/char_field";
+import { registry } from "@web/core/framework/registry";
 
 class DescriptionPageField extends CharField {
     static template = "survey.DescriptionPageField";

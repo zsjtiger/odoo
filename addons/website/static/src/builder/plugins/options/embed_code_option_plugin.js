@@ -1,7 +1,7 @@
 import { EmbedCodeOptionDialog } from "./embed_code_option_dialog";
 import { Plugin } from "@html_editor/plugin";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { cloneContentEls } from "@website/js/utils";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
@@ -38,13 +38,13 @@ export class EmbedCodeOptionPlugin extends Plugin {
 export class EditCodeAction extends BuilderAction {
     static id = "editCode";
     async load({ editingElement }) {
-        let newContent;
+        let newContent = this.getTemplateEl(editingElement).innerHTML.trim();
         await new Promise((resolve) => {
             this.services.dialog.add(
                 EmbedCodeOptionDialog,
                 {
                     title: _t("Edit embedded code"),
-                    value: this.getTemplateEl(editingElement).innerHTML.trim(),
+                    value: newContent,
                     mode: "xml",
                     confirm: (newValue) => {
                         newContent = newValue;

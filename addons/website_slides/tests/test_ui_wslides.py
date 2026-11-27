@@ -6,9 +6,8 @@ from dateutil.relativedelta import relativedelta
 from unittest.mock import patch
 
 from odoo import tests
-from odoo.addons.base.tests.common import HttpCaseWithUserPortal
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
 from odoo.addons.base.tests.files import JPG_RAW, PDF_RAW
-from odoo.addons.gamification.tests.common import HttpCaseGamification
 from odoo.addons.mail.models.mail_message import MailMessage
 from odoo.fields import Command, Datetime
 from odoo.tools import BinaryBytes, mute_logger
@@ -16,7 +15,7 @@ from odoo.tools import BinaryBytes, mute_logger
 _logger = logging.getLogger(__name__)
 
 
-class TestUICommon(HttpCaseGamification, HttpCaseWithUserPortal):
+class TestUICommon(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
 
     @classmethod
     def setUpClass(cls):
@@ -26,11 +25,6 @@ class TestUICommon(HttpCaseGamification, HttpCaseWithUserPortal):
 
     def setUp(self):
         super().setUp()
-        self.env.ref('gamification.rank_student').description_motivational = """
-            <div class="d-flex align-items-center">
-                <div class="flex-grow-1">Reach the next rank and gain a very nice mug!</div>
-                <img class="ms-3 img img-fluid" style="max-height: 72px;" src="/gamification/static/img/rank_misc_mug.png"/>
-            </div>"""
 
         self.channel = self.env['slide.channel'].create({
             'name': 'Basics of Gardening - Test',
@@ -164,7 +158,6 @@ class TestUi(TestUICommon):
     def test_course_member_employee(self):
         user_demo = self.user_demo
         user_demo.write({
-            'karma': 1,
             'group_ids': [(6, 0, self.env.ref('base.group_user').ids)]
         })
 
@@ -173,7 +166,6 @@ class TestUi(TestUICommon):
     def test_course_member_elearning_officer(self):
         user_demo = self.user_demo
         user_demo.write({
-            'karma': 1,
             'group_ids': [(6, 0, (self.env.ref('base.group_user') | self.env.ref('website_slides.group_website_slides_officer')).ids)]
         })
 
@@ -181,8 +173,6 @@ class TestUi(TestUICommon):
 
     def test_course_member_portal(self):
         user_portal = self.user_portal
-        user_portal.karma = 1
-
         self.start_tour('/slides', 'course_member', login=user_portal.login)
 
     def test_full_screen_edition_website_restricted_editor(self):
@@ -268,7 +258,6 @@ class TestUi(TestUICommon):
         self.start_tour(f"/mail/message/{message.id}", "slides_review_highlight_tour", login="portal")
 
     def test_course_review_modification(self):
-        self.user_portal.karma = 20
         self.start_tour("/slides", "course_review_modification", login=self.user_portal.login)
 
     def test_course_review_modification_by_admin(self):
@@ -324,7 +313,7 @@ class TestUi(TestUICommon):
 
 
 @tests.common.tagged('post_install', '-at_install')
-class TestUiPublisher(HttpCaseGamification):
+class TestUiPublisher(HttpCaseWithUserDemo):
 
     def fetch_proxy(self, url):
         if url.endswith('ThreeTimeAKCGoldWinnerPembrookeWelshCorgi.jpg'):
@@ -389,7 +378,7 @@ class TestUiMemberInvited(TestUICommon):
 
 
 @tests.common.tagged('external', 'post_install', '-standard', '-at_install')
-class TestUiPublisherYoutube(HttpCaseGamification):
+class TestUiPublisherYoutube(tests.HttpCase):
 
     def test_course_member_yt_employee(self):
         # remove membership because we need to be able to join the course during the tour

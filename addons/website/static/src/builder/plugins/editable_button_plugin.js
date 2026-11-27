@@ -1,7 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { unwrapContents } from "@html_editor/utils/dom";
 import { selectElements } from "@html_editor/utils/dom_traversal";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 class EditableButtonPlugin extends Plugin {
     static id = "editableButton";

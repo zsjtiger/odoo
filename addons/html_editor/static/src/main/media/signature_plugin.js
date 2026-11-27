@@ -1,8 +1,8 @@
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { Plugin } from "@html_editor/plugin";
-import { _t } from "@web/core/l10n/translation";
-import { SignatureDialog } from "@web/core/signature/signature_dialog";
-import { user } from "@web/core/user";
+import { _t } from "@web/core/data/l10n/translation";
+import { SignatureDialog } from "@web/core/components/signature/signature_dialog";
+import { user } from "@web/core/services/user";
 
 export class SignaturePlugin extends Plugin {
     static id = "signature";

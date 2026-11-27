@@ -1,0 +1,6 @@
+id,name,model_id,group_id/id,operation,domain
+access_mobile_demo_item_user,mobile demo item user,mobile.demo.item,base.group_user,crud,
+access_mobile_demo_line_user,mobile demo line user,mobile.demo.line,base.group_user,crud,
+access_mobile_demo_tag_user,mobile demo tag user,mobile.demo.tag,base.group_user,crud,
+access_mobile_demo_region_user,mobile demo region user,mobile.demo.region,base.group_user,crud,
+access_mobile_demo_keyinfo_user,mobile demo keyinfo user,mobile.demo.keyinfo,base.group_user,crud,

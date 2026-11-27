@@ -4,7 +4,7 @@ import {
     getBasicData,
 } from "@spreadsheet/../tests/helpers/data";
 import { fields, models, onRpc } from "@web/../tests/web_test_helpers";
-import { RPCError } from "@web/core/network/rpc";
+import { RPCError } from "@web/core/services/network/rpc";
 
 export function getDashboardServerData() {
     return {

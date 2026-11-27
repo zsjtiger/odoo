@@ -19,7 +19,7 @@ import {
     removeStyle,
     TEXT_STYLE_CLASSES,
 } from "@html_editor/utils/formatting";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { READ, withSequence } from "@html_editor/utils/resource";
 import { FontSizeSelector, MAX_FONT_SIZE } from "./font_size_selector";
 import { closestBlock, isBlock } from "@html_editor/utils/blocks";

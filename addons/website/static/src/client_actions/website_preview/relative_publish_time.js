@@ -1,7 +1,7 @@
 import { useProps, t } from "@odoo/owl";
-import { render } from "@web/owl2/utils";
+import { render } from "@web/core/owl/utils";
 import { RelativeTime } from "@mail/core/common/relative_time";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 
 const MINUTE = 60 * 1000;
 const HOUR = 60 * MINUTE;

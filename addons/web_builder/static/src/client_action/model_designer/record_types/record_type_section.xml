@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+<t t-name="web_builder.RecordTypeSection">
+    <section class="o_web_studio_record_types flex-grow-1 p-4 overflow-auto">
+        <div t-if="this.state.loading" class="text-center p-5">
+            <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>
+        </div>
+
+        <t t-elif="!this.info.available">
+            <h3 class="mb-1">Record Types</h3>
+            <p class="text-muted">The record types module (ir_recordtype) is not installed.</p>
+        </t>
+
+        <t t-elif="!this.info.enabled">
+            <h3 class="mb-1">Record Types</h3>
+            <p class="text-muted mb-3">
+                Record types let one model hold several kinds of records, each with its own permissions,
+                default and menu.
+            </p>
+            <div class="card">
+                <div class="card-body">
+                    <p class="mb-2">Record types are off for this model.</p>
+                    <p t-if="!this.info.declared" class="text-danger mb-2">
+                        The model must declare <code>_record_type = True</code> in its code before record types can be enabled.
+                    </p>
+                    <button type="button" class="btn btn-primary o_web_studio_enable_record_types"
+                        t-att-disabled="!this.info.declared" t-on-click="this.enable">Enable Record Types</button>
+                </div>
+            </div>
+        </t>
+
+        <t t-else="">
+            <div class="d-flex flex-wrap align-items-center gap-3 mb-3">
+                <h3 class="m-0 me-auto">Record Types</h3>
+                <button type="button" class="btn btn-primary o_web_studio_new_record_type" t-on-click="() => this.openType()">New Record Type</button>
+                <button type="button" class="btn btn-outline-secondary o_web_studio_disable_record_types" t-on-click="this.disable">Disable Record Types</button>
+            </div>
+
+            <table class="o_web_studio_record_type_table table table-hover bg-view align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Code</th>
+                        <th scope="col">Sequence</th>
+                        <th scope="col">Active</th>
+                        <th t-if="this.info.has_allow_import" scope="col">Import</th>
+                        <th scope="col"/>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="this.info.types" t-as="type" t-key="type.id">
+                        <tr class="o_web_studio_record_type_row">
+                            <td>
+                                <a href="#" class="fw-bold" t-on-click.prevent="() => this.toggleExpanded(type)">
+                                    <t t-out="type.name"/>
+                                </a>
+                            </td>
+                            <td><code t-out="type.code"/></td>
+                            <td t-out="type.sequence"/>
+                            <td>
+                                <span t-if="type.active" class="badge text-bg-success">Active</span>
+                                <span t-else="" class="badge text-bg-secondary">Archived</span>
+                            </td>
+                            <td t-if="this.info.has_allow_import">
+                                <span t-if="type.allow_import" class="badge text-bg-success">Allowed</span>
+                                <span t-else="" class="badge text-bg-danger">Closed</span>
+                            </td>
+                            <td class="text-end text-nowrap">
+                                <button type="button" class="btn btn-sm btn-link o_web_studio_edit_record_type" t-on-click="() => this.openType(type)">Edit</button>
+                                <button type="button" class="btn btn-sm btn-link text-danger o_web_studio_delete_record_type" t-on-click="() => this.deleteType(type)">Delete</button>
+                            </td>
+                        </tr>
+
+                        <tr t-if="this.state.expanded === type.id" class="o_web_studio_record_type_permissions">
+                            <td t-att-colspan="this.info.has_allow_import ? 6 : 5" class="bg-light">
+                                <h5 class="mb-2">Permissions</h5>
+                                <table class="table table-sm bg-view mb-2">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Group</th>
+                                            <th scope="col" class="text-center">Read</th>
+                                            <th scope="col" class="text-center">Write</th>
+                                            <th scope="col" class="text-center">Create</th>
+                                            <th scope="col" class="text-center">Delete</th>
+                                            <th t-if="this.info.has_allow_import" scope="col" class="text-center">Import</th>
+                                            <th scope="col" class="text-center">Default</th>
+                                            <th scope="col"/>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="this.permissionsOf(type)" t-as="perm" t-key="perm.id">
+                                            <tr class="o_web_studio_permission_row">
+                                                <td t-out="perm.group_name"/>
+                                                <td class="text-center"><input type="checkbox" class="form-check-input" t-att-checked="perm.perm_read" t-on-change="(ev) => this.setPermission(perm, 'perm_read', ev.target.checked)"/></td>
+                                                <td class="text-center"><input type="checkbox" class="form-check-input" t-att-checked="perm.perm_write" t-on-change="(ev) => this.setPermission(perm, 'perm_write', ev.target.checked)"/></td>
+                                                <td class="text-center"><input type="checkbox" class="form-check-input" t-att-checked="perm.perm_create" t-on-change="(ev) => this.setPermission(perm, 'perm_create', ev.target.checked)"/></td>
+                                                <td class="text-center"><input type="checkbox" class="form-check-input" t-att-checked="perm.perm_unlink" t-on-change="(ev) => this.setPermission(perm, 'perm_unlink', ev.target.checked)"/></td>
+                                                <td t-if="this.info.has_allow_import" class="text-center"><input type="checkbox" class="form-check-input o_web_studio_permission_import" t-att-checked="perm.allow_import" t-on-change="(ev) => this.setPermission(perm, 'allow_import', ev.target.checked)"/></td>
+                                                <td class="text-center"><input type="checkbox" class="form-check-input o_web_studio_permission_default" t-att-checked="this.isDefault(type, perm.group_id)" t-on-change="(ev) => this.setDefault(type, perm.group_id, ev.target.checked)"/></td>
+                                                <td class="text-end"><button type="button" class="btn btn-sm btn-link text-danger" t-on-click="() => this.removePermission(perm)">Remove</button></td>
+                                            </tr>
+                                        </t>
+                                        <tr t-if="!this.permissionsOf(type).length">
+                                            <td colspan="8" class="text-muted text-center">No group has access to this type yet.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div t-if="this.addableGroups(type).length" class="d-flex align-items-center gap-2">
+                                    <select class="form-select form-select-sm w-auto o_web_studio_add_group" t-on-change="(ev) => this.addPermission(type, parseInt(ev.target.value))">
+                                        <option value="">Add a group…</option>
+                                        <t t-foreach="this.addableGroups(type)" t-as="group" t-key="group[0]">
+                                            <option t-att-value="group[0]" t-out="group[1]"/>
+                                        </t>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                    </t>
+                    <tr t-if="!this.info.types.length">
+                        <td colspan="6" class="text-center text-muted p-4">No record type yet. Create the first one.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </t>
+    </section>
+</t>
+
+<t t-name="web_builder.RecordTypeDialog">
+    <Dialog title="this.title">
+        <div class="o_web_studio_record_type_form d-flex flex-column gap-3">
+            <div>
+                <label class="form-label" for="o_web_studio_record_type_name">Name</label>
+                <input id="o_web_studio_record_type_name" class="form-control o_web_studio_record_type_name"
+                    t-att-value="this.state.name" t-on-input="(ev) => this.state.name = ev.target.value"/>
+            </div>
+            <div>
+                <label class="form-label" for="o_web_studio_record_type_code">Code</label>
+                <input id="o_web_studio_record_type_code" class="form-control o_web_studio_record_type_code"
+                    t-att-value="this.state.code" t-on-input="(ev) => this.state.code = ev.target.value"/>
+                <div class="form-text">Used in files and in the import. Unique for the model.</div>
+            </div>
+            <div>
+                <label class="form-label" for="o_web_studio_record_type_sequence">Sequence</label>
+                <input id="o_web_studio_record_type_sequence" type="number" class="form-control"
+                    t-att-value="this.state.sequence" t-on-input="(ev) => this.state.sequence = ev.target.value"/>
+            </div>
+            <div class="form-check">
+                <input id="o_web_studio_record_type_active" type="checkbox" class="form-check-input"
+                    t-att-checked="this.state.active" t-on-change="(ev) => this.state.active = ev.target.checked"/>
+                <label class="form-check-label" for="o_web_studio_record_type_active">Active</label>
+            </div>
+            <div t-if="this.props.info.has_allow_import" class="form-check">
+                <input id="o_web_studio_record_type_allow_import" type="checkbox" class="form-check-input o_web_studio_record_type_allow_import"
+                    t-att-checked="this.state.allowImport" t-on-change="(ev) => this.state.allowImport = ev.target.checked"/>
+                <label class="form-check-label" for="o_web_studio_record_type_allow_import">Allow import</label>
+            </div>
+        </div>
+        <t t-set-slot="footer">
+            <button type="button" class="btn btn-primary o_web_studio_save_record_type"
+                t-att-disabled="!this.canSave" t-on-click="this.save">Save</button>
+            <button type="button" class="btn btn-secondary" t-on-click="() => this.props.close()">Cancel</button>
+        </t>
+    </Dialog>
+</t>
+
+</templates>

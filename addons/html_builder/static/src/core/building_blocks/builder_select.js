@@ -1,9 +1,9 @@
 import { Component, onMounted, signal, t, useProps, xml } from "@odoo/owl";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
-import { _t } from "@web/core/l10n/translation";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { useDropdownState } from "@web/core/components/dropdown/dropdown_hooks";
+import { _t } from "@web/core/data/l10n/translation";
 import { setElementContent } from "@web/core/utils/html";
-import { useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/core/owl/utils";
 import {
     basicContainerBuilderComponentProps,
     useApplyVisibility,

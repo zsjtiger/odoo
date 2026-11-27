@@ -1,5 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { ImageSize } from "./image_size";
 
 export class ImageSizePlugin extends Plugin {

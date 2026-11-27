@@ -1,7 +1,7 @@
 import { useAssignUserCommand } from "@mail/views/web/fields/assign_user_command_hook";
 
-import { registry } from "@web/core/registry";
-import { usePopover } from "@web/core/popover/popover_hook";
+import { registry } from "@web/core/framework/registry";
+import { usePopover } from "@web/core/components/popover/popover_hook";
 import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
 import {
     Many2ManyTagsAvatarField,
@@ -10,7 +10,7 @@ import {
     listMany2ManyTagsAvatarField,
     CardMany2ManyTagsAvatarField,
     cardMany2ManyTagsAvatarField,
-} from "@web/views/fields/many2many_tags_avatar/many2many_tags_avatar_field";
+} from "@web/views/fields/relational/many2many_tags_avatar/many2many_tags_avatar_field";
 import { Many2XAvatarUserAutocomplete } from "../avatar_autocomplete/avatar_many2x_autocomplete";
 
 const WithUserChatter = (T) =>

@@ -2,7 +2,7 @@ import { SubChannelList } from "@mail/discuss/core/public_web/sub_channel_list";
 
 import { useEffect } from "@odoo/owl";
 
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { range } from "@web/core/utils/numbers";
 import { patch } from "@web/core/utils/patch";
 

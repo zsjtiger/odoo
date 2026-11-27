@@ -5,7 +5,7 @@ import {
     toggleGridMode,
 } from "@html_builder/utils/grid_layout_utils";
 import { Plugin } from "@html_editor/plugin";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
 export class LayoutOptionPlugin extends Plugin {

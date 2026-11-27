@@ -1,12 +1,12 @@
 import { markRaw, proxy } from "@odoo/owl";
 import { Model } from "@odoo/o-spreadsheet";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { OdooDataProvider } from "@spreadsheet/data_sources/odoo_data_provider";
 import { createDefaultCurrency } from "@spreadsheet/currency/helpers";
-import { _t } from "@web/core/l10n/translation";
-import { cookie } from "@web/core/browser/cookie";
+import { _t } from "@web/core/data/l10n/translation";
+import { cookie } from "@web/core/services/browser/cookie";
 import { DashboardSearchModel } from "./dashboard_search_model";
-import { rpcBus } from "@web/core/network/rpc";
+import { rpcBus } from "@web/core/services/network/rpc";
 
 /**
  * @type {{
@@ -42,9 +42,9 @@ export const Status = {
  * @property {string} name
  * @property {Array<Dashboard>} dashboards
  *
- * @typedef {import("@web/env").OdooEnv} OdooEnv
+ * @typedef {import("@web/boot/env").OdooEnv} OdooEnv
  *
- * @typedef {import("@web/core/orm_plugin").ORM} ORM
+ * @typedef {import("@web/core/services/orm_plugin").ORM} ORM
  */
 
 export class DashboardLoader {

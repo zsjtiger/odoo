@@ -58,7 +58,7 @@ class HootCommon(odoo.tests.HttpCase):
         return {
             RE_ASSET_ADDON.match(asset['url'])[1]
             for asset in self._get_bundle_assets(bundle)
-            if asset['filename'].endswith('.test.js')
+            if asset['filename'] and asset['filename'].endswith('.test.js')
         }
 
     def _get_bundle_assets(self, bundle):

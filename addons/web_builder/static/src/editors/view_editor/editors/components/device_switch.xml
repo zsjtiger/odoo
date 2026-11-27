@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+<t t-name="web_builder.ViewEditor.DeviceSwitch">
+    <div t-if="this.available" class="o_web_studio_device_switch px-2 py-2">
+        <div class="small text-muted mb-1">Display</div>
+        <div class="btn-group w-100" role="group" aria-label="Device">
+            <button type="button" class="btn btn-sm o_web_studio_device_pc"
+                t-att-class="this.current === 'pc' ? 'btn-primary' : 'btn-outline-primary'"
+                t-on-click="() => this.switchTo('pc')">PC</button>
+            <button type="button" class="btn btn-sm o_web_studio_device_mobile"
+                t-att-class="this.current === 'mobile' ? 'btn-primary' : 'btn-outline-primary'"
+                t-on-click="() => this.switchTo('mobile')">Mobile</button>
+        </div>
+    </div>
+</t>
+</templates>

@@ -2,7 +2,7 @@ import { useProps, signal, t } from "@odoo/owl";
 import {
     ConfirmationDialog,
     confirmationDialogProps,
-} from "@web/core/confirmation_dialog/confirmation_dialog";
+} from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
 import { useAutofocus } from "@web/core/utils/hooks";
 
 export class CategoryAddDialog extends ConfirmationDialog {

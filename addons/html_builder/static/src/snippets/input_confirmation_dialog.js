@@ -2,7 +2,7 @@ import { useProps, proxy, t } from "@odoo/owl";
 import {
     ConfirmationDialog,
     confirmationDialogProps,
-} from "@web/core/confirmation_dialog/confirmation_dialog";
+} from "@web/core/dialogs/confirmation_dialog/confirmation_dialog";
 
 export class InputConfirmationDialog extends ConfirmationDialog {
     static template = "html_builder.InputConfirmationDialog";

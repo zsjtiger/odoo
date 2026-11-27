@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from odoo.tests.common import TransactionCase, tagged
-from odoo.tools.intervals import Intervals, intervals_overlap, invert_intervals
+from odoo.tools.numeric.intervals import Intervals, intervals_overlap, invert_intervals
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install

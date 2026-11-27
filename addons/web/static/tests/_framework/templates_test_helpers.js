@@ -1,5 +1,5 @@
 import { after } from "@odoo/hoot";
-import { registerTemplate as register } from "@web/core/templates";
+import { registerTemplate as register } from "@web/core/framework/templates";
 
 /**
  * @param {string} name

@@ -4,7 +4,7 @@
 
 from lxml import etree
 from odoo.tests import tagged, common
-from odoo.tools.xml_utils import cleanup_xml_node
+from odoo.tools.xml.xml_utils import cleanup_xml_node
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install

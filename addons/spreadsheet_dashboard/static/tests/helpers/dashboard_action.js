@@ -10,7 +10,7 @@ import {
     mountWithCleanup,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-import { loadBundle } from "@web/core/assets";
+import { loadBundle } from "@web/core/framework/assets";
 import { WebClient } from "@web/webclient/webclient";
 import { getDashboardServerData } from "./data";
 import { DashboardLoader } from "../../src/bundle/dashboard_action/dashboard_loader_service";

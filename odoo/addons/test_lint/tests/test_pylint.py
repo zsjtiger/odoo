@@ -13,7 +13,7 @@ import subprocess
 
 from odoo import tools
 from odoo.modules import Manifest
-from odoo.tools.which import which
+from odoo.tools.system.which import which
 
 from .common import LintCase
 

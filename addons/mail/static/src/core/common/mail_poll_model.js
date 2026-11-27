@@ -3,8 +3,8 @@ import { Record } from "@mail/model/record";
 
 import { markup } from "@odoo/owl";
 
-import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
+import { _t } from "@web/core/data/l10n/translation";
+import { rpc } from "@web/core/services/network/rpc";
 
 export class MailPollModel extends Record {
     static _name = "mail.poll";

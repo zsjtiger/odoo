@@ -1,7 +1,7 @@
 import { useService } from "@web/core/utils/hooks";
 
 import { Component, t, useProps } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { ImStatus } from "./im_status";
 import { attClassObjectToString } from "@mail/utils/common/format";
 

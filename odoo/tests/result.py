@@ -12,7 +12,7 @@ import traceback
 from typing import NamedTuple
 
 from . import case
-from .. import sql_db
+from ..orm.database import sql_db
 
 __unittest = True
 
@@ -119,14 +119,14 @@ class OdooTestResult(object):
         self.testsRun += 1
         self.log(logging.INFO, 'Starting %s ...', self.getDescription(test), test=test)
         self.time_start = real_time()
-        self.queries_start = sql_db.sql_counter
+        self.queries_start = sql_db.cursor.sql_counter
 
     def stopTest(self, test):
         """Called when the given test has been run"""
         if stats_logger.isEnabledFor(logging.INFO):
             self.stats[test.id()] = Stat(
                 time=real_time() - self.time_start,
-                queries=sql_db.sql_counter - self.queries_start,
+                queries=sql_db.cursor.sql_counter - self.queries_start,
             )
 
     def addError(self, test, err):
@@ -290,14 +290,14 @@ class OdooTestResult(object):
 
     @contextlib.contextmanager
     def collectStats(self, test_id):
-        queries_before = sql_db.sql_counter
+        queries_before = sql_db.cursor.sql_counter
         time_start = real_time()
 
         yield
 
         self.stats[test_id] += Stat(
             time=real_time() - time_start,
-            queries=sql_db.sql_counter - queries_before,
+            queries=sql_db.cursor.sql_counter - queries_before,
         )
 
     def logError(self, flavour, test, error):

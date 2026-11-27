@@ -1,8 +1,8 @@
 // This module makes it so that some errors only display a notification instead of an error dialog
 
-import { registry } from "@web/core/registry";
-import { odooExceptionTitleMap } from "@web/core/errors/error_dialogs";
-import { _t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/framework/registry";
+import { odooExceptionTitleMap } from "@web/core/services/errors/error_dialogs";
+import { _t } from "@web/core/data/l10n/translation";
 
 odooExceptionTitleMap.forEach((title, exceptionName) => {
     registry.category("error_notifications").add(exceptionName, {
@@ -26,7 +26,7 @@ const sessionExpired = {
 
 registry
     .category("error_notifications")
-    .add("odoo.http.session.SessionExpiredException", sessionExpired)
+    .add("odoo.http.session.session.SessionExpiredException", sessionExpired)
     .add("werkzeug.exceptions.Forbidden", sessionExpired)
     .add("504", {
         title: _t("Request timeout"),

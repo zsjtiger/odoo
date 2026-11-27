@@ -3,7 +3,7 @@
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools.translate import _
+from odoo.tools import _
 
 from werkzeug import urls
 

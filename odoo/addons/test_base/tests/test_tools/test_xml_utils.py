@@ -3,7 +3,7 @@
 from lxml.etree import XMLSchemaError
 
 from odoo.tests import common, tagged
-from odoo.tools.xml_utils import _check_with_xsd
+from odoo.tools.xml.xml_utils import _check_with_xsd
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install

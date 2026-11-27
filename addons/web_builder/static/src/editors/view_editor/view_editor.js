@@ -1,0 +1,154 @@
+import { render, useSubEnv } from "@web/core/owl/utils";
+import { Component, onWillStart, onWillUpdateProps, markRaw, useProps, proxy, signal, t } from "@odoo/owl";
+
+import { useBus, useService } from "@web/core/utils/hooks";
+import { registry } from "@web/core/framework/registry";
+import { StudioView } from "@web_builder/editors/view_editor/studio_view";
+
+import { InteractiveEditor } from "./interactive_editor/interactive_editor";
+import { useViewEditorModel } from "./view_editor_hook";
+import { standardActionServiceProps } from "@web/webclient/actions/action_plugin";
+import { getDefaultConfig } from "@web/views/view";
+
+import {
+    XmlResourceEditor,
+    xmlResourceEditorProps,
+} from "@web_builder/editors/xml_resource_editor/xml_resource_editor";
+import { useSetupAction } from "@web/search/action_hook";
+import { _t } from "@web/core/data/l10n/translation";
+
+class ViewXmlEditor extends XmlResourceEditor {
+    props = useProps({ ...xmlResourceEditorProps, studioViewArch: t.string() });
+    setup() {
+        super.setup();
+        this.viewEditorModel = this.env.viewEditorModel;
+        useBus(this.viewEditorModel.bus, "error", () => render(this, true));
+        this.studioViewState = proxy({ arch: this.props.studioViewArch });
+
+        onWillUpdateProps((nextProps) => {
+            if (nextProps.studioViewArch !== this.props.studioViewArch) {
+                const studioResource = this.getStudioResource(this.state.resourcesOptions);
+                if (studioResource) {
+                    studioResource.value.arch = nextProps.studioViewArch;
+                }
+            }
+        });
+    }
+
+    getStudioResource(resourcesOptions) {
+        return resourcesOptions.find((opt) => opt.value.id === this.viewEditorModel.studioViewId);
+    }
+}
+
+export class ViewEditor extends Component {
+    static components = { StudioView, InteractiveEditor, ViewXmlEditor };
+    static template = "web_builder.ViewEditor";
+
+    static displayName = _t("View Editor");
+
+    props = useProps(standardActionServiceProps);
+
+    // Useful for drag/drop
+    rootRef = signal.ref();
+    viewRendererRef = signal.ref();
+
+    setup() {
+        /* Services */
+        this.studio = useService("studio");
+        this.orm = useService("orm");
+        this.mobileActionId = false;
+        // a saved record, so that the preview shows the header buttons (the mobile client hides them on a new record)
+        this.previewRecordId = false;
+        // the phone preview reloads after every change of the view
+        this.preview = proxy({ key: 0 });
+        onWillStart(async () => {
+            const info = await this.orm.call("ir.model", "studio_mobile_infos", [this.studio.editedAction.res_model]);
+            this.mobileActionId = info.available ? info.mobile_action_id : false;
+            if (this.mobileActionId) {
+                const [record] = await this.orm.searchRead(this.studio.editedAction.res_model, [], ["id"], { limit: 1 });
+                this.previewRecordId = record ? record.id : false;
+            }
+        });
+        /* MISC */
+        // Avoid pollution from the real actionService's env
+        // Set config compatible with View.js
+        useSubEnv({ config: getDefaultConfig() });
+
+        const initialState = {};
+        const breadcrumbs = this.env.editionFlow.breadcrumbs;
+        if (breadcrumbs.length) {
+            initialState.showInvisible = breadcrumbs[0].initialState.showInvisible;
+            initialState.activeNodeXpath = breadcrumbs.at(-1).initialState.activeNodeXpath;
+        }
+
+        this.viewEditorModel = useViewEditorModel(this.viewRendererRef, { initialState });
+        const model = this.viewEditorModel;
+        const doOperation = model.doOperation.bind(model);
+        model.doOperation = async (...args) => {
+            const result = await doOperation(...args);
+            this.preview.key++;
+            return result;
+        };
+
+        useSetupAction({
+            getLocalState: () => {
+                // Use this as a hook that is triggered when the actionService knows
+                // this component will be unmounted, is still alive and the new action
+                // is being built.
+                // We store the state in the breadcrumbs, because there two ways
+                // to respawn the editor:
+                // - the editor's breadcrumbs
+                // - the standard actionService breadcrumbs
+                const breadcrumbs = this.viewEditorModel.breadcrumbs;
+                breadcrumbs[0].initialState = markRaw({
+                    showInvisible: this.viewEditorModel.showInvisible,
+                });
+                const last = breadcrumbs.at(-1);
+                last.initialState = markRaw({
+                    ...(last.initialState || {}),
+                    activeNodeXpath: this.viewEditorModel.activeNodeXpath,
+                });
+            },
+        });
+    }
+
+    /**
+     * The mobile client as the users of the mobile app see it: the list when the kanban view is edited,
+     * else the form on a saved record (or a new record when there is none).
+     */
+    get previewUrl() {
+        if (this.viewEditorModel.viewType === "kanban") {
+            return `/mobile_web/action-${this.mobileActionId}?preview=${this.preview.key}`;
+        }
+        const resId = this.previewRecordId || "new";
+        return `/mobile_web/action-${this.mobileActionId}/${resId}?preview=${this.preview.key}`;
+    }
+
+    /** The edited form is the mobile one: the canvas is shown as a phone. */
+    get isMobile() {
+        return Boolean(this.mobileActionId) && this.studio.editedAction?.id === this.mobileActionId;
+    }
+
+    get interactiveEditorKey() {
+        const { viewType, breadcrumbs } = this.viewEditorModel;
+        let key = viewType;
+        if (breadcrumbs.length > 1) {
+            key += `_${breadcrumbs.length}`;
+        }
+        return key;
+    }
+
+    onSaveXml({ resourceId, oldCode, newCode }) {
+        this.viewEditorModel.doOperation({
+            type: "replace_arch",
+            viewId: resourceId,
+            oldArch: oldCode,
+            newArch: newCode,
+        });
+    }
+
+    onXmlEditorClose() {
+        this.viewEditorModel.switchMode();
+    }
+}
+registry.category("actions").add("web_builder.view_editor", ViewEditor);

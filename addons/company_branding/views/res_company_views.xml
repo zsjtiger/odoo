@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_company_form_branding" model="ir.ui.view">
+        <field name="name">res.company.form.branding</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Branding" name="branding">
+                    <group string="Web client">
+                        <field name="web_title"/>
+                        <field name="web_icon_url"/>
+                        <field name="web_logo_url"/>
+                    </group>
+                    <group string="Mobile web client">
+                        <field name="mobile_title"/>
+                        <field name="mobile_icon_url"/>
+                        <field name="mobile_logo_url"/>
+                    </group>
+                    <group string="Login pages">
+                        <field name="login_background_url"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

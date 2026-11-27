@@ -169,7 +169,7 @@ First differing element 0:
             if next(call_count) == 0:
                 self.env.cr.execute('select nonsense')
 
-        from odoo.orm.environments import Transaction  # noqa: PLC0415
+        from odoo.orm.models.environments import Transaction  # noqa: PLC0415
         with (
             mock.patch.object(Transaction, 'clear', side_effect=clear),
             TestCase.assertRaises(self, psycopg2.Error),

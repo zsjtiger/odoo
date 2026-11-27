@@ -30,7 +30,7 @@ import {
 } from "@odoo/hoot";
 import { Component, markup, onPatched, onWillStart, signal, t, useProps, xml } from "@odoo/owl";
 import { buildSelector } from "@web/../tests/_framework/view_test_helpers";
-import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
+import { getPickerCell } from "@web/../tests/core/components/datetime/datetime_test_helpers";
 import {
     clickFieldDropdown,
     clickModalButton,
@@ -76,17 +76,17 @@ import {
     validateSearch,
     webModels,
 } from "@web/../tests/web_test_helpers";
-import { currencies } from "@web/core/currency";
-import { Domain } from "@web/core/domain";
-import { localization } from "@web/core/l10n/localization";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
-import { registry } from "@web/core/registry";
-import { user } from "@web/core/user";
+import { currencies } from "@web/core/data/currency";
+import { Domain } from "@web/core/data/domain";
+import { localization } from "@web/core/data/l10n/localization";
+import { OfflinePlugin } from "@web/core/services/offline/offline_plugin";
+import { registry } from "@web/core/framework/registry";
+import { user } from "@web/core/services/user";
 import { useBus } from "@web/core/utils/hooks";
 import { omit } from "@web/core/utils/objects";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
-import { session } from "@web/session";
-import { floatField } from "@web/views/fields/float/float_field";
+import { session } from "@web/boot/session";
+import { floatField } from "@web/views/fields/numeric/float/float_field";
 import { many2XAutocompleteProps } from "@web/views/fields/relational_utils";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { ListController } from "@web/views/list/list_controller";
@@ -218,7 +218,7 @@ defineModels([Foo, Bar, Currency, ResCompany, ResPartner, ResUsers]);
 async function clickControlPanelAction(buttonName) {
     if (isSmall()) {
         await contains(
-            ".o_cp_action_menus [data-icon='more_vert']"
+            ".o_cp_action_menus button"
         ).click();
         await contains(`.o-dropdown-item button[name="${buttonName}"]`).click();
     } else {
@@ -1449,12 +1449,12 @@ test(`list view: action button in controlPanel basic rendering on mobile`, async
     });
     expect(`.o_control_panel_actions > *`).toHaveCount(0);
     await contains(
-        ".o_cp_action_menus [data-icon='more_vert']"
+        ".o_cp_action_menus button"
     ).click();
     expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual(["Export"]);
     await clickRecordSelector();
     await contains(
-        ".o_cp_action_menus [data-icon='more_vert']"
+        ".o_cp_action_menus button"
     ).click();
     expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual([
         "plaf",
@@ -1464,7 +1464,7 @@ test(`list view: action button in controlPanel basic rendering on mobile`, async
     ]);
     await clickRecordSelector();
     await contains(
-        ".o_cp_action_menus [data-icon='more_vert']"
+        ".o_cp_action_menus button"
     ).click();
     expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual(["Export"]);
 });
@@ -1489,29 +1489,28 @@ test(`list view: action button in controlPanel with display='always' on desktop`
             a: true,
         },
     });
+    // the header buttons are in the actions menu (cog dropdown), next to the New button
     expect(
         queryAllTexts(`div.o_control_panel_breadcrumbs button, div.o_control_panel_actions button`)
     ).toEqual([
         "New",
-        "display",
-        "", // magnifying glass btn
         "", // cog dropdown
+        "", // magnifying glass btn
         "", // search btn
     ]);
 
     await contains(`.o_data_row .o_list_record_selector input[type="checkbox"]`).click();
     expect(
         queryAllTexts(`div.o_control_panel_breadcrumbs button, div.o_control_panel_actions button`)
-    ).toEqual(["New", "display", "" /* unselect all btn */, "default-selection"]);
+    ).toEqual(["New", "" /* cog dropdown */, "display", "default-selection"]);
 
     await contains(`.o_data_row .o_list_record_selector input[type="checkbox"]`).click();
     expect(
         queryAllTexts(`div.o_control_panel_breadcrumbs button, div.o_control_panel_actions button`)
     ).toEqual([
         "New",
-        "display",
-        "", // magnifying glass btn
         "", // cog dropdown
+        "", // magnifying glass btn
         "", // search btn
     ]);
 });
@@ -1546,7 +1545,7 @@ test(`list view: action button in controlPanel with display='always' on mobile`,
 
     await clickRecordSelector();
     await contains(
-        ".o_cp_action_menus [data-icon='more_vert']"
+        ".o_cp_action_menus button"
     ).click();
     expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual([
         "",
@@ -22470,4 +22469,104 @@ test("Empty Groups: filter out empty groups", async () => {
     await contains(".modal-footer .btn-primary").click();
 
     expect(".o_group_header").toHaveCount(1);
+});
+
+test("list: layout attributes are applied as table classes", async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list striped="1" bordered="1" no_row_hover="1" headless="1" fixed_layout="1">
+                <field name="foo"/>
+            </list>
+        `,
+    });
+
+    expect(".o_list_table").toHaveClass("o_list_striped");
+    expect(".o_list_table").toHaveClass("o_list_bordered");
+    expect(".o_list_table").toHaveClass("o_list_headless");
+    expect(".o_list_table").toHaveClass("o_list_fixed_layout");
+    expect(".o_list_table").not.toHaveClass("table-hover");
+    expect(".o_data_row").toHaveCount(4);
+});
+
+test("list: rows are hoverable and not striped by default", async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list><field name="foo"/></list>`,
+    });
+
+    expect(".o_list_table").toHaveClass("table-hover");
+    expect(".o_list_table").not.toHaveClass("o_list_striped");
+    expect(".o_list_table thead").toHaveCount(1);
+});
+
+test("list: single_selection selects one row at a time", async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list single_selection="1"><field name="foo"/></list>`,
+    });
+
+    expect(".o_list_record_selector input[type=radio]").toHaveCount(4);
+    expect(".o_list_record_selector input[type=checkbox]").toHaveCount(0);
+
+    await click(queryAll(".o_list_record_selector input[type=radio]")[0]);
+    await animationFrame();
+    expect(".o_data_row.table-info").toHaveCount(1);
+    expect(queryAll(".o_data_row")[0]).toHaveClass("table-info");
+
+    await click(queryAll(".o_list_record_selector input[type=radio]")[2]);
+    await animationFrame();
+    expect(".o_data_row.table-info").toHaveCount(1);
+    expect(queryAll(".o_data_row")[2]).toHaveClass("table-info");
+    expect(queryAll(".o_data_row")[0]).not.toHaveClass("table-info");
+});
+
+test("list: row_menu opens a menu on each row", async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list row_menu="1"><field name="foo"/></list>`,
+    });
+
+    expect(".o_list_row_menu_toggle").toHaveCount(4);
+    expect(".o_list_row_menu .dropdown-item").toHaveCount(0);
+
+    await click(queryAll(".o_list_row_menu_toggle")[0]);
+    await animationFrame();
+    expect(queryAllTexts(".dropdown-item")).toEqual(["Open", "Delete"]);
+});
+
+test("list: row menu Delete asks for confirmation and removes the record", async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list row_menu="1"><field name="foo"/></list>`,
+    });
+
+    await click(queryAll(".o_list_row_menu_toggle")[0]);
+    await animationFrame();
+    await click(queryAll(".dropdown-item")[1]);
+    await animationFrame();
+    expect(".modal .btn-danger").toHaveCount(1);
+
+    await click(".modal .btn-danger");
+    await animationFrame();
+    expect(".o_data_row").toHaveCount(3);
+});
+
+test("list: infinite_scroll loads the next page when the bottom is reached", async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list infinite_scroll="1" limit="2"><field name="foo"/></list>`,
+    });
+
+    expect(".o_data_row").toHaveCount(2);
+    queryOne(".o_list_renderer").dispatchEvent(new Event("scroll"));
+    await animationFrame();
+    await animationFrame();
+    expect(".o_data_row").toHaveCount(4);
 });

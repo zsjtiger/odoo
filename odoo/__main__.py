@@ -1,3 +1,3 @@
-from .cli.command import main
+from odoo.cli import main
 
 main()

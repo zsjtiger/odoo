@@ -9,7 +9,7 @@ import {
     useOnChange,
     useProps,
 } from "@odoo/owl";
-import { browser } from "@web/core/browser/browser";
+import { browser } from "@web/core/services/browser/browser";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
 

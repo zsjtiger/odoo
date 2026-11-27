@@ -1,13 +1,13 @@
 import { Component, proxy, t, useProps } from "@odoo/owl";
 
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
-import { Dialog } from "@web/core/dialog/dialog";
-import { _t } from "@web/core/l10n/translation";
-import { normalize } from "@web/core/l10n/utils";
-import { registry } from "@web/core/registry";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
+import { _t } from "@web/core/data/l10n/translation";
+import { normalize } from "@web/core/data/l10n/utils/normalize";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
 import { highlightText } from "@web/core/utils/html";
-import { useEnv } from "@web/owl2/utils";
+import { useEnv } from "@web/core/owl/utils";
 
 const commandSetupRegistry = registry.category("command_setup");
 const commandProviderRegistry = registry.category("command_provider");
@@ -119,7 +119,7 @@ async function makeNewChannel(name, store, is_readonly = false) {
 
 export class DiscussCommandPalette {
     /**
-     * @param {import("@web/env").OdooEnv} env
+     * @param {import("@web/boot/env").OdooEnv} env
      * @param {import("services").ServiceFactories} env.services
      */
     constructor(env, options) {

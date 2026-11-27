@@ -1,7 +1,7 @@
 import { MessagingMenuCallParticipants } from "@mail/discuss/call/public_web/messaging_menu/call_participants";
 import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
 
-import { usePopover } from "@web/core/popover/popover_hook";
+import { usePopover } from "@web/core/components/popover/popover_hook";
 import { patch } from "@web/core/utils/patch";
 
 patch(MessagingMenuCallParticipants.prototype, {

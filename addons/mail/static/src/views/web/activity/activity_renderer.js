@@ -4,11 +4,11 @@ import { ActivityRecord } from "@mail/views/web/activity/activity_record";
 
 import { Component, proxy, signal, types, useProps } from "@odoo/owl";
 
-import { browser } from "@web/core/browser/browser";
-import { CheckBox } from "@web/core/checkbox/checkbox";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { _t } from "@web/core/l10n/translation";
+import { browser } from "@web/core/services/browser/browser";
+import { CheckBox } from "@web/core/components/checkbox/checkbox";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
+import { _t } from "@web/core/data/l10n/translation";
 import { Record } from "@web/model/relational_model/record";
 
 export class ActivityRenderer extends Component {

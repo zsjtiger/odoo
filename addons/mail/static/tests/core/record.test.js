@@ -12,9 +12,9 @@ import {
 
 import { Record, Store, makeStore } from "@mail/model/export";
 import { AND, fields, makeRecordFieldLocalId, normalizeManyCommands } from "@mail/model/misc";
-import { serializeDateTime } from "@web/core/l10n/dates";
-import { registry } from "@web/core/registry";
-import { browser } from "@web/core/browser/browser";
+import { serializeDateTime } from "@web/core/data/l10n/dates";
+import { registry } from "@web/core/framework/registry";
+import { browser } from "@web/core/services/browser/browser";
 
 const Markup = markup().constructor;
 

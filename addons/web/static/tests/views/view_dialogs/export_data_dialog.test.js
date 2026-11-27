@@ -21,7 +21,7 @@ import {
     serverState,
     toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
-import { download } from "@web/core/network/download";
+import { download } from "@web/core/services/network/download";
 
 async function exportAllAction() {
     await contains(".o_cp_action_menus .dropdown-toggle").click();

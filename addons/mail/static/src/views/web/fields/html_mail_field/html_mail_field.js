@@ -1,9 +1,9 @@
 import { HtmlField, htmlField, htmlFieldProps } from "@html_editor/fields/html_field";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { getCSSRules, toInline } from "./convert_inline";
 import { ColumnPlugin } from "@html_editor/main/column_plugin";
 import { MoveNodePlugin } from "@html_editor/main/movenode_plugin";
-import { user } from "@web/core/user";
+import { user } from "@web/core/services/user";
 import { t, useProps } from "@odoo/owl";
 
 const cssRulesByElement = new WeakMap();

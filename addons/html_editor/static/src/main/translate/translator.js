@@ -1,4 +1,4 @@
-import { rpc } from "@web/core/network/rpc";
+import { rpc } from "@web/core/services/network/rpc";
 
 class Translator {
     constructor(id, name) {

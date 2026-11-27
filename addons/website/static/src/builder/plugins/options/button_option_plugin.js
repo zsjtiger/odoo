@@ -1,5 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 const selector = "a.btn";
 const exclude = ".s_donation_donate_btn, .s_website_form_send";

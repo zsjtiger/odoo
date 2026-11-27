@@ -1,4 +1,4 @@
-import { loadBundle } from "@web/core/assets";
+import { loadBundle } from "@web/core/framework/assets";
 
 /**
  * Execute a callback once an iframe is ready/loaded in the DOM. The iframe must

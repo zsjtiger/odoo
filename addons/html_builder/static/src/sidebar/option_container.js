@@ -1,7 +1,7 @@
 import { getSnippetName, useOptionsSubEnv } from "@html_builder/utils/utils";
 import { asyncComputed, onMounted, onWillStart, useProps, signal, t, useListener } from "@odoo/owl";
-import { browser } from "@web/core/browser/browser";
-import { user } from "@web/core/user";
+import { browser } from "@web/core/services/browser/browser";
+import { user } from "@web/core/services/user";
 import { uniqueId } from "@web/core/utils/functions";
 import { useService } from "@web/core/utils/hooks";
 import { BaseOptionComponent } from "../core/base_option_component";

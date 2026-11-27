@@ -2,7 +2,7 @@ import { advanceFrame, advanceTime, animationFrame } from "@odoo/hoot";
 import { click, drag, edit, hover, queryFirst, queryRect } from "@odoo/hoot-dom";
 import { EventBus } from "@odoo/owl";
 import { contains, isSmall, swipeLeft, swipeRight } from "@web/../tests/web_test_helpers";
-import { hasTouch } from "@web/core/browser/feature_detection";
+import { hasTouch } from "@web/core/services/browser/feature_detection";
 import { createElement } from "@web/core/utils/xml";
 import { CalendarModel } from "@web/views/calendar/calendar_model";
 import { Field } from "@web/views/fields/field";

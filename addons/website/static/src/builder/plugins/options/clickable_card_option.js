@@ -1,5 +1,5 @@
 import { useDomState } from "@html_builder/core/utils";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 
 export class ClickableCardOption extends BaseOptionComponent {

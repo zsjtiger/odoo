@@ -8,9 +8,9 @@ import {
     onRpc,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-import { localization } from "@web/core/l10n/localization";
+import { localization } from "@web/core/data/l10n/localization";
 
-import { ConnectionLostError, rpc } from "@web/core/network/rpc";
+import { ConnectionLostError, rpc } from "@web/core/services/network/rpc";
 
 class Partner extends models.Model {
     _name = "res.partner";

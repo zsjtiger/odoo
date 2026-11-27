@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- pharmacy_level picklist, as in vrux (A/B/C/D) -->
+        <record id="picklist_pharmacy_level" model="pharaccount.picklist">
+            <field name="name">pharmacy_level</field>
+            <field name="label">药店级别</field>
+        </record>
+        <record id="pharmacy_level_a" model="pharaccount.picklist.value">
+            <field name="picklist_id" ref="picklist_pharmacy_level"/>
+            <field name="name">A</field>
+            <field name="label">A级</field>
+            <field name="sequence">1</field>
+        </record>
+        <record id="pharmacy_level_b" model="pharaccount.picklist.value">
+            <field name="picklist_id" ref="picklist_pharmacy_level"/>
+            <field name="name">B</field>
+            <field name="label">B级</field>
+            <field name="sequence">2</field>
+        </record>
+        <record id="pharmacy_level_c" model="pharaccount.picklist.value">
+            <field name="picklist_id" ref="picklist_pharmacy_level"/>
+            <field name="name">C</field>
+            <field name="label">C级</field>
+            <field name="sequence">3</field>
+        </record>
+        <record id="pharmacy_level_d" model="pharaccount.picklist.value">
+            <field name="picklist_id" ref="picklist_pharmacy_level"/>
+            <field name="name">D</field>
+            <field name="label">D级</field>
+            <field name="sequence">4</field>
+        </record>
+
+    </data>
+</odoo>

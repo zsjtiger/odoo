@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+<t t-name="web_builder.PageLayoutRawBlock">
+    <div class="o_web_studio_layout_raw border rounded bg-light p-2 mb-2 small">
+        <div t-if="this.props.editor.state.editingRawId !== this.props.block.id" class="d-flex align-items-center gap-2 text-muted">
+            <span class="flex-grow-1">Advanced block <code t-out="this.props.block.node.tagName"/></span>
+            <button type="button" class="btn btn-sm btn-link p-0 o_web_studio_raw_edit" t-on-click="() => this.props.editor.startRawEdit(this.props.block)">Edit XML</button>
+        </div>
+        <div t-else="" class="o_web_studio_raw_editor">
+            <textarea class="form-control font-monospace o_web_studio_raw_draft" rows="6"
+                t-on-input="(ev) => this.props.editor.onRawDraftInput(ev)"><t t-out="this.props.editor.state.rawDraft"/></textarea>
+            <div class="d-flex gap-2 mt-2">
+                <button type="button" class="btn btn-sm btn-primary o_web_studio_raw_apply" t-on-click="() => this.props.editor.applyRawEdit()">Apply</button>
+                <button type="button" class="btn btn-sm btn-secondary o_web_studio_raw_cancel" t-on-click="() => this.props.editor.cancelRawEdit()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</t>
+
+</templates>

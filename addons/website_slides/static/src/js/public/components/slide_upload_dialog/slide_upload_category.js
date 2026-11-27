@@ -1,10 +1,10 @@
 import { Component, onMounted, onWillStart, proxy, t, useProps } from "@odoo/owl";
 import { getDataURLFromFile } from "@web/core/utils/urls";
-import { rpc } from "@web/core/network/rpc";
+import { rpc } from "@web/core/services/network/rpc";
 import { uniqueId } from "@web/core/utils/functions";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { SelectMenu } from "@web/core/select_menu/select_menu";
-import { _t } from "@web/core/l10n/translation";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
+import { SelectMenu } from "@web/core/components/select_menu/select_menu";
+import { _t } from "@web/core/data/l10n/translation";
 import { SlideUploadSourceTypes } from "./slide_upload_source_types";
 
 export class SlideUploadCategory extends Component {

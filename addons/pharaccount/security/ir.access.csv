@@ -1,0 +1,22 @@
+id,name,model_id,group_id/id,operation,domain
+access_pharaccount_picklist_user,pharaccount.picklist user,pharaccount.picklist,pharaccount.group_user,r,
+access_pharaccount_picklist_config,pharaccount.picklist config,pharaccount.picklist,pharaccount.group_config,crud,
+access_pharaccount_picklist_value_user,pharaccount.picklist.value user,pharaccount.picklist.value,pharaccount.group_user,r,
+access_pharaccount_picklist_value_config,pharaccount.picklist.value config,pharaccount.picklist.value,pharaccount.group_config,crud,
+access_pharaccount_account_state_user,pharaccount.account.state user,pharaccount.account.state,pharaccount.group_user,r,
+access_pharaccount_account_state_config,pharaccount.account.state config,pharaccount.account.state,pharaccount.group_config,crud,
+access_pharaccount_pharmacy_staff_user,pharaccount.pharmacy.staff user,pharaccount.pharmacy.staff,pharaccount.group_user,cru,"['|', ('pharmacy_id', '=', False), ('pharmacy_id.record_type_id.permission_ids.group_id', 'in', user.all_group_ids.ids)]"
+access_pharaccount_pharmacy_staff_manager,pharaccount.pharmacy.staff manager,pharaccount.pharmacy.staff,pharaccount.group_manager,crud,"['|', ('pharmacy_id', '=', False), ('pharmacy_id.record_type_id.permission_ids.group_id', 'in', user.all_group_ids.ids)]"
+access_pharaccount_pharmacy_staff_admin,pharaccount.pharmacy.staff administrators,pharaccount.pharmacy.staff,base.group_system,crud,
+access_pharaccount_hospital_link_user,pharaccount.hospital.link user,pharaccount.hospital.link,pharaccount.group_user,cru,"['|', ('pharmacy_id', '=', False), ('pharmacy_id.record_type_id.permission_ids.group_id', 'in', user.all_group_ids.ids)]"
+access_pharaccount_hospital_link_manager,pharaccount.hospital.link manager,pharaccount.hospital.link,pharaccount.group_manager,crud,"['|', ('pharmacy_id', '=', False), ('pharmacy_id.record_type_id.permission_ids.group_id', 'in', user.all_group_ids.ids)]"
+access_pharaccount_hospital_link_admin,pharaccount.hospital.link administrators,pharaccount.hospital.link,base.group_system,crud,
+access_pharaccount_package_inventory_user,pharaccount.package.inventory user,pharaccount.package.inventory,pharaccount.group_user,cru,"['|', ('pharmacy_id', '=', False), ('pharmacy_id.record_type_id.permission_ids.group_id', 'in', user.all_group_ids.ids)]"
+access_pharaccount_package_inventory_manager,pharaccount.package.inventory manager,pharaccount.package.inventory,pharaccount.group_manager,crud,"['|', ('pharmacy_id', '=', False), ('pharmacy_id.record_type_id.permission_ids.group_id', 'in', user.all_group_ids.ids)]"
+access_pharaccount_package_inventory_admin,pharaccount.package.inventory administrators,pharaccount.package.inventory,base.group_system,crud,
+access_pharaccount_competitive_product_user,pharaccount.competitive.product user,pharaccount.competitive.product,pharaccount.group_user,cru,"['|', ('pharmacy_id', '=', False), ('pharmacy_id.record_type_id.permission_ids.group_id', 'in', user.all_group_ids.ids)]"
+access_pharaccount_competitive_product_manager,pharaccount.competitive.product manager,pharaccount.competitive.product,pharaccount.group_manager,crud,"['|', ('pharmacy_id', '=', False), ('pharmacy_id.record_type_id.permission_ids.group_id', 'in', user.all_group_ids.ids)]"
+access_pharaccount_competitive_product_admin,pharaccount.competitive.product administrators,pharaccount.competitive.product,base.group_system,crud,
+access_pharaccount_dcr_user,pharaccount.dcr user,pharaccount.dcr,pharaccount.group_user,cru,"['|', ('pharmacy_id', '=', False), ('pharmacy_id.record_type_id.permission_ids.group_id', 'in', user.all_group_ids.ids)]"
+access_pharaccount_dcr_manager,pharaccount.dcr manager,pharaccount.dcr,pharaccount.group_manager,crud,"['|', ('pharmacy_id', '=', False), ('pharmacy_id.record_type_id.permission_ids.group_id', 'in', user.all_group_ids.ids)]"
+access_pharaccount_dcr_admin,pharaccount.dcr administrators,pharaccount.dcr,base.group_system,crud,

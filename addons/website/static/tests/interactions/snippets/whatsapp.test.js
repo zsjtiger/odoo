@@ -2,7 +2,7 @@ import { expect, test } from "@odoo/hoot";
 import { click } from "@odoo/hoot-dom";
 import { setupInteractionWhiteList, startInteractions } from "@web/../tests/public/helpers";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { browser } from "@web/core/browser/browser";
+import { browser } from "@web/core/services/browser/browser";
 
 setupInteractionWhiteList("website.whatsapp");
 

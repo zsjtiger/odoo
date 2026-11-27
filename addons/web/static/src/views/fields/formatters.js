@@ -3,10 +3,10 @@ import {
     formatDateTime as _formatDateTime,
     toLocaleDateString,
     toLocaleDateTimeString,
-} from "@web/core/l10n/dates";
-import { localization as l10n } from "@web/core/l10n/localization";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+} from "@web/core/data/l10n/dates";
+import { localization as l10n } from "@web/core/data/l10n/localization";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { humanSize } from "@web/core/utils/binary";
 import {
     formatFloat as formatFloatNumber,
@@ -16,8 +16,8 @@ import {
 import { exprToBoolean } from "@web/core/utils/strings";
 
 import { markup } from "@odoo/owl";
-import { formatCurrency } from "@web/core/currency";
-import { normalizeTimeStr } from "@web/core/l10n/time";
+import { formatCurrency } from "@web/core/data/currency";
+import { normalizeTimeStr } from "@web/core/data/l10n/time";
 
 // -----------------------------------------------------------------------------
 // Exports

@@ -1,7 +1,7 @@
-import { useSubEnv } from "@web/owl2/utils";
-import { registry } from "@web/core/registry";
+import { useSubEnv } from "@web/core/owl/utils";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
-import { X2ManyField, x2ManyField, x2ManyFieldProps } from "@web/views/fields/x2many/x2many_field";
+import { X2ManyField, x2ManyField, x2ManyFieldProps } from "@web/views/fields/relational/x2many/x2many_field";
 import { t, useProps } from "@odoo/owl";
 import { CustomMediaDialog } from "./custom_media_dialog";
 import { getDataURLFromFile } from "@web/core/utils/urls";

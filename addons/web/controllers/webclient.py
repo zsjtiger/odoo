@@ -8,7 +8,7 @@ from odoo import http, release
 from odoo.http import request
 from odoo.http.stream import STATIC_CACHE_LONG
 from odoo.modules import Manifest
-from odoo.tools import translate
+from odoo.tools.text import translate
 from odoo.tools.misc import file_path
 
 

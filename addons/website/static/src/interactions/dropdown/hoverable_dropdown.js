@@ -1,9 +1,9 @@
 import { usePlugin } from "@odoo/owl";
 import { Interaction } from "@web/public/interaction";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 
-import { SIZES, utils as uiUtils } from "@web/core/ui/ui_utils";
+import { SIZES, utils as uiUtils } from "@web/core/services/ui/ui_utils";
 
 export class HoverableDropdown extends Interaction {
     static selector = "header.o_hoverable_dropdown";

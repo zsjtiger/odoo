@@ -1,4 +1,4 @@
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { helpers, registries, EvaluationError } from "@odoo/o-spreadsheet";
 import { addListDependencies } from "./list_helpers";
 

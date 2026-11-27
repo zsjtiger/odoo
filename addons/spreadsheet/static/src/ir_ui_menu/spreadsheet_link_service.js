@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import * as spreadsheet from "@odoo/o-spreadsheet";
 
 import {
@@ -9,7 +9,7 @@ import {
     parseViewLink,
     parseIrMenuIdLink,
 } from "./odoo_menu_link_cell";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { navigateTo } from "../actions/helpers";
 
 const { urlRegistry, errorTypes } = spreadsheet.registries;

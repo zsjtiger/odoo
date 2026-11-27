@@ -10,7 +10,7 @@ import {
 import { DIRECTIONS } from "@html_editor/utils/position";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { withSequence } from "@html_editor/utils/resource";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 
 /** @typedef {((insertedNode: Node) => insertedNode)[]} before_insert_within_pre_processors */
 

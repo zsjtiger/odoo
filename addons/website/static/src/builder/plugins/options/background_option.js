@@ -7,7 +7,7 @@ import {
 import { ParallaxOption } from "./parallax_option";
 import { BgBlurOption } from "./bg_blur_option_plugin";
 import { useBackgroundOption } from "@html_builder/plugins/background_option/background_hook";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { useProps, t } from "@odoo/owl";
 
 export class WebsiteBackgroundOption extends BaseOptionComponent {

@@ -1,9 +1,9 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { Plugin } from "@html_editor/plugin";
-import { rpc } from "@web/core/network/rpc";
+import { rpc } from "@web/core/services/network/rpc";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { FooterTemplateChoice } from "./footer_template_option";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 
 /** @typedef {import("@odoo/owl").Component} Component */
 

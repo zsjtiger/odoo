@@ -18,7 +18,7 @@ function patchSurveyForm() {
  * try and fail twice and will no longer be able to take the certification.
  */
 
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 const patchSteps = [
     {

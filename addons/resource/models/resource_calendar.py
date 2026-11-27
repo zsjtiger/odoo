@@ -14,8 +14,8 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.tools import float_compare
 from odoo.tools.date_utils import float_to_time, localized, to_timezone
-from odoo.tools.float_utils import float_round
-from odoo.tools.intervals import Intervals
+from odoo.tools.numeric.float_utils import float_round
+from odoo.tools.numeric.intervals import Intervals
 
 
 class ResourceCalendar(models.Model):

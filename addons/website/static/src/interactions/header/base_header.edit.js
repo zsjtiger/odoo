@@ -1,5 +1,5 @@
 import { BaseHeader } from "@website/interactions/header/base_header";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 const BaseHeaderEdit = (I) =>
     class extends I {

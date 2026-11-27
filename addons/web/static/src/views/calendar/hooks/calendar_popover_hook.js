@@ -1,4 +1,4 @@
-import { usePopover } from "@web/core/popover/popover_hook";
+import { usePopover } from "@web/core/components/popover/popover_hook";
 import { useListener } from "@odoo/owl";
 
 export function useCalendarPopover(component) {

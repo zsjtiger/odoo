@@ -1,5 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { DEVICE_VISIBILITY_OPTION_SELECTOR } from "./options/visibility_option_plugin";
 
 export class WebsiteVisibilityPlugin extends Plugin {

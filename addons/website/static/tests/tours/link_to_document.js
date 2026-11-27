@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { insertSnippet, openLinkPopup, waitForEditMode } from "@website/js/tours/tour_utils";
 import { patch } from "@web/core/utils/patch";
 
@@ -12,7 +12,7 @@ const patchStep = {
         const uploadService = odoo.__WOWL_DEBUG__.root.env.services.uploadLocalFiles;
         unpatch = patch(uploadService, {
             async upload() {
-                // hardcoded id for test_03_link_to_document
+                // mocked id: the tour only checks the generated link, not a stored record
                 return [{ id: 437296, name: "file.txt", public: true, checksum: "123" }];
             },
         });

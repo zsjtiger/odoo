@@ -1,16 +1,16 @@
-import { browser } from "@web/core/browser/browser";
-import { makeContext } from "@web/core/context";
-import { Domain } from "@web/core/domain";
+import { browser } from "@web/core/services/browser/browser";
+import { makeContext } from "@web/core/data/context";
+import { Domain } from "@web/core/data/domain";
 import {
     deserializeDate,
     deserializeDateTime,
     serializeDate,
     serializeDateTime,
-} from "@web/core/l10n/dates";
-import { localization } from "@web/core/l10n/localization";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
-import { user } from "@web/core/user";
+} from "@web/core/data/l10n/dates";
+import { localization } from "@web/core/data/l10n/localization";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
+import { user } from "@web/core/services/user";
 import { intersection } from "@web/core/utils/arrays";
 import { Cache } from "@web/core/utils/cache";
 import { KeepLast } from "@web/core/utils/concurrency";

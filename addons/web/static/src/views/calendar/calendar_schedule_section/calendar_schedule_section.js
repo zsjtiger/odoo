@@ -1,5 +1,5 @@
 import { Component, onMounted, signal, t, useProps } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 
 export class CalendarScheduleSection extends Component {
     static template = "web.CalendarScheduleSection";

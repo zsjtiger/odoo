@@ -1,6 +1,6 @@
-import { DateTimeInput } from "@web/core/datetime/datetime_input";
-import { Dialog } from "@web/core/dialog/dialog";
-import { today } from "@web/core/l10n/dates";
+import { DateTimeInput } from "@web/core/components/datetime/datetime_input";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
+import { today } from "@web/core/data/l10n/dates";
 
 import { Component, proxy, types, useProps } from "@odoo/owl";
 

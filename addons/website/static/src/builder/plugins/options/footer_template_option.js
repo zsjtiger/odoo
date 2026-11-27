@@ -1,5 +1,5 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { onWillStart, useProps, t } from "@odoo/owl";
 
 export class FooterTemplateOption extends BaseOptionComponent {

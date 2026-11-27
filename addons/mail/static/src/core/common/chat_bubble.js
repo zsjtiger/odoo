@@ -1,4 +1,4 @@
-import { useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/core/owl/utils";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { MessageSeenIndicator } from "@mail/discuss/core/common/message_seen_indicator";
 
@@ -6,10 +6,10 @@ import { Component, computed, signal, types, useEffect, useListener, useProps } 
 
 import { useService } from "@web/core/utils/hooks";
 import { useHover } from "@mail/utils/common/hooks";
-import { usePopover } from "@web/core/popover/popover_hook";
+import { usePopover } from "@web/core/components/popover/popover_hook";
 import { CountryFlag } from "@mail/core/common/country_flag";
-import { isMobileOS } from "@web/core/browser/feature_detection";
-import { _t } from "@web/core/l10n/translation";
+import { isMobileOS } from "@web/core/services/browser/feature_detection";
+import { _t } from "@web/core/data/l10n/translation";
 
 /** Minimum time the bubble keeps bouncing after important messages, in ms. */
 export const BOUNCE_DURATION = 4000;

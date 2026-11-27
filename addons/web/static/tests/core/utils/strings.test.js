@@ -9,7 +9,7 @@ import {
     isNumeric,
     sprintf,
 } from "@web/core/utils/strings";
-import { _t as basic_t } from "@web/core/l10n/translation";
+import { _t as basic_t } from "@web/core/data/l10n/translation";
 
 function _t() {
     odoo.translationContext = "web";

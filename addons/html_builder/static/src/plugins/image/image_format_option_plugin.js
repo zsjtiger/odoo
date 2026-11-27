@@ -5,8 +5,8 @@ import {
 } from "@html_editor/main/media/image_post_process_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { loadImage, loadImageInfo } from "@html_editor/utils/image_processing";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 
 export class ImageFormatOptionPlugin extends Plugin {

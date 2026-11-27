@@ -1,6 +1,6 @@
 import { toRaw } from "@odoo/owl";
-import { Domain } from "@web/core/domain";
-import { _t } from "@web/core/l10n/translation";
+import { Domain } from "@web/core/data/domain";
+import { _t } from "@web/core/data/l10n/translation";
 import { KeepLast, Mutex } from "@web/core/utils/concurrency";
 import { Model } from "@web/model/model";
 import { getFieldsSpec } from "@web/model/relational_model/utils";
@@ -547,7 +547,7 @@ export class HierarchyModel extends Model {
     /**
      * Get default domain to use, when no domain is given in the config
      *
-     * @returns {import("@web/src/core/domain").DomainListRepr} default domain
+     * @returns {import("@web/core/data/domain").DomainListRepr} default domain
      */
     get defaultDomain() {
         return [[this.parentFieldName, "=", false]];
@@ -557,7 +557,7 @@ export class HierarchyModel extends Model {
      * Get the global domain of the view (which is the domain defined on the
      * view without applying filters).
      *
-     * @returns {import("@web/src/core/domain").DomainListRepr} global domain
+     * @returns {import("@web/core/data/domain").DomainListRepr} global domain
      */
     get globalDomain() {
         if (!this.env.searchModel?.globalDomain.length) {

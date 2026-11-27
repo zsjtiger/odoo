@@ -43,8 +43,8 @@ import {
     onRpc,
     serverState,
 } from "@web/../tests/web_test_helpers";
-import { assets } from "@web/core/assets";
-import { location } from "@web/core/browser/browser";
+import { assets } from "@web/core/framework/assets";
+import { location } from "@web/core/services/browser/browser";
 import { delay } from "@web/core/utils/concurrency";
 import { patch } from "@web/core/utils/patch";
 import { FormController } from "@web/views/form/form_controller";

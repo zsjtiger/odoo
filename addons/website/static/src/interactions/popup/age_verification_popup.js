@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { Popup } from "@website/interactions/popup/popup";
 
 const { DateTime } = luxon;

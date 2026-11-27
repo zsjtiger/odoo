@@ -4,8 +4,8 @@ import { propSignal } from "@mail/utils/common/hooks";
 
 import { Component, t, useProps } from "@odoo/owl";
 
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownState } from "@web/core/dropdown/dropdown_hooks";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownState } from "@web/core/components/dropdown/dropdown_hooks";
 import { useService } from "@web/core/utils/hooks";
 
 export class MessagingMenuItemContextMenu extends Component {

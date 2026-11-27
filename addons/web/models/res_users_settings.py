@@ -37,3 +37,5 @@ class ResUsersSettings(models.Model):
                 'action_id': action_id,
                 'res_id': res_id,
             })
+
+    hidden_systray_items = fields.Json(default=list, string="Hidden navigation bar items")

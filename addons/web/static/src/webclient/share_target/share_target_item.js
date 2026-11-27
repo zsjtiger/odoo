@@ -1,5 +1,5 @@
 import { Component, onWillDestroy, proxy, t, useProps } from "@odoo/owl";
-import { user } from "@web/core/user";
+import { user } from "@web/core/services/user";
 import { useService } from "@web/core/utils/hooks";
 import { checkFileSize } from "@web/core/utils/files";
 import { Record } from "@web/model/record";

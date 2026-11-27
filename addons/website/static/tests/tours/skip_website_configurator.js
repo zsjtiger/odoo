@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 registry.category("web_tour.tours").add("skip_website_configurator", {
     steps: () => [
@@ -23,6 +23,7 @@ registry.category("web_tour.tours").add("skip_website_configurator", {
             trigger:
                 ".o_configurator_container .btn.btn-link:contains('Skip and start from scratch')",
             run: "click",
+            expectUnloadPage: true,
         },
         {
             content: "Check that the homepage is loaded",

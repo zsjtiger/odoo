@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_ir_data_import_root" name="Data Import" parent="base.menu_custom" sequence="90"
+              groups="base.group_system"/>
+    <menuitem id="menu_ir_data_import_templates" name="Templates" parent="menu_ir_data_import_root"
+              action="action_ir_data_import_template" sequence="10"/>
+    <menuitem id="menu_ir_data_import_rules" name="Rules" parent="menu_ir_data_import_root"
+              action="action_ir_data_import_rule" sequence="20"/>
+    <menuitem id="menu_ir_data_import_permissions" name="Permissions" parent="menu_ir_data_import_root"
+              action="action_ir_data_import_permission" sequence="30"/>
+    <menuitem id="menu_ir_data_import_jobs" name="Jobs" parent="menu_ir_data_import_root"
+              action="action_ir_data_import_job" sequence="40"/>
+</odoo>

@@ -11,15 +11,15 @@ import {
     t,
     useListener,
 } from "@odoo/owl";
-import { isBrowserFirefox } from "@web/core/browser/feature_detection";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
-import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
-import { SIZES, utils as uiUtils } from "@web/core/ui/ui_utils";
+import { isBrowserFirefox } from "@web/core/services/browser/feature_detection";
+import { getActiveHotkey } from "@web/core/services/hotkeys/hotkey_utils";
+import { _t } from "@web/core/data/l10n/translation";
+import { rpc } from "@web/core/services/network/rpc";
+import { SIZES, utils as uiUtils } from "@web/core/services/ui/ui_utils";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { renderToElement } from "@web/core/utils/render";
 import { useDebounced } from "@web/core/utils/timing";
-import { useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/core/owl/utils";
 import { WebsiteDialog } from "@website/components/dialog/dialog";
 import {
     applyTextHighlight,

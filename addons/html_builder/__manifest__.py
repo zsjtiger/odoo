@@ -22,7 +22,7 @@
             ('include', 'web._assets_helpers'),
 
             'html_editor/static/src/scss/bootstrap_overridden.scss',
-            'web/static/src/scss/pre_variables.scss',
+            'web/static/src/scss/variables/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
             'web/static/lib/bootstrap/scss/_variables-dark.scss',
             'web/static/lib/bootstrap/scss/_maps.scss',
@@ -40,7 +40,7 @@
         'html_builder.assets_inside_builder_iframe': [
             ('include', 'web._assets_helpers'),
 
-            'web/static/src/scss/bootstrap_overridden.scss',
+            'web/static/src/scss/bootstrap/bootstrap_overridden.scss',
             'html_builder/static/src/**/*.edit.*',
             'html_editor/static/src/main/translate/translate_plugin.scss',
             'html_editor/static/src/main/link/link.scss',
@@ -48,7 +48,7 @@
         'html_builder.iframe_add_dialog': [
             ('include', 'web._assets_helpers'),
             ('include', 'web._assets_frontend_helpers'),
-            'web/static/src/scss/pre_variables.scss',
+            'web/static/src/scss/variables/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
             'web/static/lib/bootstrap/scss/_variables-dark.scss',
             'web/static/lib/bootstrap/scss/_maps.scss',

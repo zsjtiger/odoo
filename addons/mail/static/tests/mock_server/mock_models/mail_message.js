@@ -1,10 +1,10 @@
 import { Store } from "@mail/../tests/mock_server/store";
 
 import { fields, getKwArgs, models, serverState } from "@web/../tests/web_test_helpers";
-import { Domain } from "@web/core/domain";
-import { serializeDateTime } from "@web/core/l10n/dates";
+import { Domain } from "@web/core/data/domain";
+import { serializeDateTime } from "@web/core/data/l10n/dates";
 
-/** @typedef {import("@web/core/domain").DomainListRepr} DomainListRepr */
+/** @typedef {import("@web/core/data/domain").DomainListRepr} DomainListRepr */
 
 const { DateTime } = luxon;
 

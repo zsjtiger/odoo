@@ -17,8 +17,8 @@ import { makeRecordFieldLocalId } from "@mail/model/misc";
 import { describe, keyDown, mockDate, test, expect } from "@odoo/hoot";
 import { getService, mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
-import { browser } from "@web/core/browser/browser";
-import { isBrowserChrome } from "@web/core/browser/feature_detection";
+import { browser } from "@web/core/services/browser/browser";
+import { isBrowserChrome } from "@web/core/services/browser/feature_detection";
 
 describe.current.tags("desktop");
 defineMailModels();

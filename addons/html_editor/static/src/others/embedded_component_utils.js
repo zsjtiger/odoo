@@ -10,7 +10,7 @@ import {
     toRaw,
     useProps,
 } from "@odoo/owl";
-import { useEnv } from "@web/owl2/utils";
+import { useEnv } from "@web/core/owl/utils";
 
 /**
  * @typedef {HTMLElement} HostElement host element for an embedded component

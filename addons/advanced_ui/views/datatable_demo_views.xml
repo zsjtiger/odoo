@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_datatable_demo" model="ir.actions.client">
+        <field name="name">Data Table</field>
+        <field name="tag">advanced_ui.datatable_demo</field>
+    </record>
+
+    <record id="action_expression_builder_demo" model="ir.actions.client">
+        <field name="name">Expression Builder</field>
+        <field name="tag">advanced_ui.expression_builder_demo</field>
+    </record>
+
+    <menuitem id="menu_expression_builder_demo"
+        name="Expression Builder"
+        parent="base.menu_custom"
+        action="action_expression_builder_demo"
+        sequence="30"/>
+
+    <menuitem id="menu_datatable_demo"
+        name="Data Table"
+        parent="base.menu_custom"
+        action="action_datatable_demo"
+        sequence="20"/>
+</odoo>

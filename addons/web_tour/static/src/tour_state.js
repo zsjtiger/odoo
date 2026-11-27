@@ -1,4 +1,4 @@
-import { browser } from "@web/core/browser/browser";
+import { browser } from "@web/core/services/browser/browser";
 
 const CURRENT_TOUR_LOCAL_STORAGE = "current_tour";
 const CURRENT_TOUR_CONFIG_LOCAL_STORAGE = "current_tour.config";

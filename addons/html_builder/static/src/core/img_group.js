@@ -1,4 +1,4 @@
-import { useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/core/owl/utils";
 import { Component, xml, useProps, t } from "@odoo/owl";
 import { batched } from "@web/core/utils/timing";
 

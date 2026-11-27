@@ -1,9 +1,9 @@
 import { Interaction } from "@web/public/interaction";
-import { registry } from "@web/core/registry";
-import { _t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/framework/registry";
+import { _t } from "@web/core/data/l10n/translation";
 import { redirect } from "@web/core/utils/urls";
 import { SlidesCourseJoinPopup } from "@website_slides/js/public/components/course_join_popup/course_join_popup";
-import { session } from "@web/session";
+import { session } from "@web/boot/session";
 
 export class WebsiteSlidesCourseJoinLink extends Interaction {
     static selector = ".o_wslides_js_course_join_link";

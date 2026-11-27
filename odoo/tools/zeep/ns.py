@@ -1,1 +1,2 @@
-from zeep.ns import *
+# ruff: noqa: F401
+from zeep.ns import DS, HTTP, MIME, NAMESPACE_TO_PREFIX, SOAP_11, SOAP_12, SOAP_ENV_11, SOAP_ENV_12, WSA, WSDL, WSSE, WSU, XSD, XSI

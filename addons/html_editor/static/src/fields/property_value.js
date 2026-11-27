@@ -1,15 +1,15 @@
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { HtmlViewer } from "@html_editor/components/html_viewer/html_viewer";
 import { EditorVersionPlugin } from "@html_editor/core/editor_version_plugin";
-import { localization } from "@web/core/l10n/localization";
+import { localization } from "@web/core/data/l10n/localization";
 import { patch } from "@web/core/utils/patch";
-import { PropertyValue } from "@web/views/fields/properties/property_value";
+import { PropertyValue } from "@web/views/fields/special/properties/property_value";
 import { HtmlUpgradeManager } from "@html_editor/html_migrations/html_upgrade_manager";
 import { normalizeHTML } from "@html_editor/utils/html";
 import { Wysiwyg } from "@html_editor/wysiwyg";
-import { user } from "@web/core/user";
+import { user } from "@web/core/services/user";
 import { onWillStart, proxy, useEffect, usePlugin } from "@odoo/owl";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
 
 patch(PropertyValue.prototype, {
     setup() {

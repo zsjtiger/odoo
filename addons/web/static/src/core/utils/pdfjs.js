@@ -1,5 +1,5 @@
-import { isMobileOS } from "@web/core/browser/feature_detection";
-import { loadJS } from "@web/core/assets";
+import { isMobileOS } from "@web/core/services/browser/feature_detection";
+import { loadJS } from "@web/core/framework/assets";
 
 /**
  * Until we have our own implementation of the /web/static/lib/pdfjs/web/viewer.{html,js,css}

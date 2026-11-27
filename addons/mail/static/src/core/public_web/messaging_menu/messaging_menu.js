@@ -8,10 +8,10 @@ import { incrementFn } from "@mail/utils/common/signal";
 
 import { Component, computed, signal, types, useEffect, useProps } from "@odoo/owl";
 
-import { hasTouch, isDisplayStandalone, isIOS } from "@web/core/browser/feature_detection";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { _t } from "@web/core/l10n/translation";
-import { normalize } from "@web/core/l10n/utils";
+import { hasTouch, isDisplayStandalone, isIOS } from "@web/core/services/browser/feature_detection";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { _t } from "@web/core/data/l10n/translation";
+import { normalize } from "@web/core/data/l10n/utils/normalize";
 import { useService } from "@web/core/utils/hooks";
 
 /** Never a submenu of an ancestor Dropdown it's embedded in, even visually/positionally. */

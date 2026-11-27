@@ -41,8 +41,8 @@ import {
 } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
 
-import { browser } from "@web/core/browser/browser";
-import { rpc } from "@web/core/network/rpc";
+import { browser } from "@web/core/services/browser/browser";
+import { rpc } from "@web/core/services/network/rpc";
 import {
     Command,
     getService,

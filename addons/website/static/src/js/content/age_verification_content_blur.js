@@ -1,4 +1,4 @@
-import { cookie } from "@web/core/browser/cookie";
+import { cookie } from "@web/core/services/browser/cookie";
 
 // Blur page content immediately if age verification is pending to prevent
 // restricted content from being visible before the popup interaction loads.

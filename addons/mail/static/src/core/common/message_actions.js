@@ -1,6 +1,6 @@
-import { _t } from "@web/core/l10n/translation";
-import { download } from "@web/core/network/download";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { download } from "@web/core/services/network/download";
+import { registry } from "@web/core/framework/registry";
 import {
     Action,
     ACTION_TAGS,
@@ -8,11 +8,11 @@ import {
     useAction,
     UseActions,
 } from "@mail/core/common/action";
-import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
+import { useEmojiPicker } from "@web/core/components/emoji_picker/emoji_picker";
 import { QuickReactionMenu } from "@mail/core/common/quick_reaction_menu";
 import { MessageReactionMenu } from "@mail/core/common/message_reaction_menu";
-import { isMobileOS } from "@web/core/browser/feature_detection";
-import { rpc } from "@web/core/network/rpc";
+import { isMobileOS } from "@web/core/services/browser/feature_detection";
+import { rpc } from "@web/core/services/network/rpc";
 
 const { DateTime } = luxon;
 

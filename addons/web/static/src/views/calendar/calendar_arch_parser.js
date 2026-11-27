@@ -1,4 +1,4 @@
-import { evaluateExpr } from "@web/core/py_js/py";
+import { evaluateExpr } from "@web/core/data/py_js/py";
 import { exprToBoolean } from "@web/core/utils/strings";
 import { visitXML } from "@web/core/utils/xml";
 import { Field } from "@web/views/fields/field";

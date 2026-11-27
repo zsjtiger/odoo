@@ -1,0 +1,47 @@
+
+// Mobile mode: the editable canvas and the phone preview side by side.
+.o_web_studio_mobile_split {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 24px;
+    padding: 16px;
+    .o_form_view, .o_list_view, .o_kanban_view {
+        max-width: 390px;
+        margin: 0;
+    }
+}
+.o_web_studio_phone_preview {
+    width: 390px;
+    flex: 0 0 390px;
+}
+.o_web_studio_phone_frame {
+    width: 390px;
+    height: 760px;
+    border: 10px solid #222;
+    border-radius: 36px;
+    overflow: hidden;
+    background: #fff;
+}
+.o_web_studio_phone_iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+// Mobile mode of the canvas: the look of the mobile client, with no extra elements.
+.o_web_studio_mobile_split {
+    .o_field_statusbar {
+        display: none !important;
+    }
+    // add-button placeholders are editor hooks, not part of the mobile form
+    .o-web-studio-editor--add-button-action,
+    .o_web_studio_button_hook {
+        display: none !important;
+    }
+    .o_field_widget {
+        border-bottom: 1px solid $border-color;
+        min-height: 36px;
+    }
+}

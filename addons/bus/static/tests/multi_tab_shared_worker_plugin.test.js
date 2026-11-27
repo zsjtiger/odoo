@@ -1,8 +1,8 @@
 import { describe, expect, test, afterEach, beforeEach } from "@odoo/hoot";
 import { MultiTabSharedWorkerPlugin } from "@bus/multi_tab_shared_worker_plugin";
 import { getService, makeTestApp, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { browser } from "@web/core/browser/browser";
-import { services } from "@web/core/services";
+import { browser } from "@web/core/services/browser/browser";
+import { services } from "@web/core/framework/services";
 
 describe.current.tags("desktop");
 

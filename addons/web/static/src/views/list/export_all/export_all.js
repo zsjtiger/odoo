@@ -1,6 +1,6 @@
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { registry } from "@web/core/registry";
-import { user } from "@web/core/user";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
+import { registry } from "@web/core/framework/registry";
+import { user } from "@web/core/services/user";
 import { exprToBoolean } from "@web/core/utils/strings";
 import { STATIC_ACTIONS_GROUP_NUMBER } from "@web/search/action_menus/action_menus";
 
@@ -31,7 +31,7 @@ export const exportAllItem = {
     Component: ExportAll,
     groupNumber: STATIC_ACTIONS_GROUP_NUMBER,
     isDisplayed: async (env) =>
-        ["kanban", "list"].includes(env.config.viewType) &&
+        env.config.viewType === "kanban" &&
         !env.model.root.selection.length &&
         (await user.hasGroup("base.group_allow_export")) &&
         exprToBoolean(env.config.viewArch.getAttribute("export_xlsx"), true),

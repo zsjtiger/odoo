@@ -1,29 +1,14 @@
 import { Component, markup, usePlugin, t, useProps } from "@odoo/owl";
-import { isDisplayStandalone, isMacOS } from "@web/core/browser/feature_detection";
-import { _t } from "@web/core/l10n/translation";
-import { user } from "@web/core/user";
-import { session } from "@web/session";
-import { router } from "@web/core/browser/router";
-import { browser } from "../../core/browser/browser";
-import { registry } from "../../core/registry";
-import { post } from "@web/core/network/http_service";
+import { isDisplayStandalone, isMacOS } from "@web/core/services/browser/feature_detection";
+import { _t } from "@web/core/data/l10n/translation";
+import { user } from "@web/core/services/user";
+import { router } from "@web/core/services/browser/router";
+import { browser } from "../../core/services/browser/browser";
+import { registry } from "../../core/framework/registry";
+import { post } from "@web/core/services/network/http_service";
 import { redirect } from "@web/core/utils/urls";
 import { useService } from "@web/core/utils/hooks";
-import { ORM } from "@web/core/orm_plugin";
-
-function supportItem() {
-    const url = session.support_url;
-    return {
-        type: "item",
-        id: "support",
-        description: _t("Help"),
-        href: url,
-        callback: () => {
-            browser.open(url, "_blank");
-        },
-        sequence: 20,
-    };
-}
+import { ORM } from "@web/core/services/orm_plugin";
 
 class ShortcutsFooterComponent extends Component {
     static template = "web.UserMenu.ShortcutsFooterComponent";
@@ -147,7 +132,6 @@ export function shareUrlMenuItem() {
 
 registry
     .category("user_menuitems")
-    .add("support", supportItem)
     .add("shortcuts", shortCutsItem)
     .add("separator", separator)
     .add("preferences", preferencesItem)

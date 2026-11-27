@@ -15,9 +15,9 @@ import {
     useListener,
     useProps,
 } from "@odoo/owl";
-import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
-import { _t } from "@web/core/l10n/translation";
-import { useActiveElement } from "@web/core/ui/ui_plugin";
+import { useHotkey } from "@web/core/services/hotkeys/hotkey_hook";
+import { _t } from "@web/core/data/l10n/translation";
+import { useActiveElement } from "@web/core/services/ui/ui_plugin";
 import { useService } from "@web/core/utils/hooks";
 import { closestScrollableY, scrollTo } from "@web/core/utils/scrolling";
 

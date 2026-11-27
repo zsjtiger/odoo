@@ -1,9 +1,9 @@
 import { Component, onWillDestroy, useProps, proxy, signal, t, useEffect } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { useCachedModel } from "@html_builder/core/cached_model_utils";
-import { _t } from "@web/core/l10n/translation";
-import { SelectMenu } from "@web/core/select_menu/select_menu";
-import { useDropdownCloser } from "@web/core/dropdown/dropdown_hooks";
+import { _t } from "@web/core/data/l10n/translation";
+import { SelectMenu } from "@web/core/components/select_menu/select_menu";
+import { useDropdownCloser } from "@web/core/components/dropdown/dropdown_hooks";
 import { shallowEqual } from "@web/core/utils/arrays";
 
 export function useSelectMenuHandler(

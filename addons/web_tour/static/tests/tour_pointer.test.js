@@ -24,8 +24,8 @@ import {
     onRpc,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-import { Dialog } from "@web/core/dialog/dialog";
-import { registry } from "@web/core/registry";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
+import { registry } from "@web/core/framework/registry";
 import { TourInteractive } from "@web_tour/tour_interactive/tour_interactive";
 import { Tour, TourStep } from "./tour_models";
 

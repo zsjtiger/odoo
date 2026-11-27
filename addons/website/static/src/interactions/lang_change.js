@@ -1,5 +1,5 @@
 import { Interaction } from "@web/public/interaction";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { redirect } from "@web/core/utils/urls";
 
 export class LangChange extends Interaction {

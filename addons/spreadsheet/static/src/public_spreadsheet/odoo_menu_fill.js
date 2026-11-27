@@ -6,7 +6,7 @@ import {
     isMarkdownIrMenuIdUrl,
     isMarkdownViewUrl,
 } from "@spreadsheet/ir_ui_menu/odoo_menu_link_cell";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 
 const { clickableCellRegistry, urlRegistry } = registries;
 

@@ -11,10 +11,11 @@ from markupsafe import Markup
 from psycopg2.extras import Json
 
 from odoo import fields
+from odoo.addons.base.tests.common import patch_code_translations
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests.common import BaseCase, TransactionCase, tagged
 from odoo.tools import sql
-from odoo.tools.translate import (
+from odoo.tools.text.translate import (
     ParsedTranslation,
     StoredTranslations,
     TranslationImporter,
@@ -493,7 +494,7 @@ class TestTranslationExport(TransactionCase):
 
     def test_export_translatable_resources(self):
         """Read files of installed modules and export translatable terms"""
-        with self.assertNoLogs('odoo.tools.translate', "ERROR"):
+        with self.assertNoLogs('odoo.tools.text.translate', "ERROR"):
             TranslationModuleReader(self.env.cr)
 
     def test_push_translation_filters_no_letter_strings(self):
@@ -534,6 +535,12 @@ class TestTranslation(TransactionCase):
             translation_importer = TranslationImporter(cls.env.cr, verbose=True)
             translation_importer.load(f, 'po', 'fr_FR')
             translation_importer.save(overwrite=True)
+
+    def setUp(self):
+        super().setUp()
+        # suffix of duplicated records, translated in base
+        self.enterContext(patch_code_translations('base', 'fr_FR', {'%s (copy)': '%s (copie)'}))
+        self.enterContext(patch_code_translations('base', 'nl_NL', {'%s (copy)': '%s (kopie)'}))
 
     def test_101_translation_read(self):
         """ Check the record env.lang behavior """
@@ -2261,7 +2268,7 @@ class TestStoredTranslations(TransactionCase):
     # illegal data: pin current best-effort behavior (not a contract; may change)
     def test_read_missing_en(self):
         st = StoredTranslations({'fr_FR': 'French'})  # illegal: en_US is missing
-        with self.assertLogs('odoo.tools.translate', level='WARNING') as cm:
+        with self.assertLogs('odoo.tools.text.translate', level='WARNING') as cm:
             result = st['en_US']
         self.assertIsNone(result)
         self.assertTrue(any("no translation for 'en_US'" in m for m in cm.output))

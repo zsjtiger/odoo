@@ -1,5 +1,5 @@
-import { FileInput } from "@web/core/file_input/file_input";
-import { registry } from "@web/core/registry";
+import { FileInput } from "@web/core/components/file_input/file_input";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
 import { checkFileSize } from "@web/core/utils/files";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";

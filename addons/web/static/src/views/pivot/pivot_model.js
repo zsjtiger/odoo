@@ -1,5 +1,5 @@
-import { _t } from "@web/core/l10n/translation";
-import { Domain } from "@web/core/domain";
+import { _t } from "@web/core/data/l10n/translation";
+import { Domain } from "@web/core/data/domain";
 import { cartesian, sections, sortBy, symmetricalDifference } from "@web/core/utils/arrays";
 import { KeepLast, Race } from "@web/core/utils/concurrency";
 import { DEFAULT_INTERVAL } from "@web/search/utils/dates";

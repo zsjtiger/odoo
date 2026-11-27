@@ -3,8 +3,11 @@
 
 import re
 
-from odoo.release import ALPHA, url, version, version_info
+from odoo.release import version, version_info
 from odoo.tests import HttpCase, tagged
+
+ALPHA = 'alpha'
+url = 'https://www.odoo.com'
 
 
 @tagged('-standard', 'external', 'post_install', '-at_install') # nightly is not a real tag

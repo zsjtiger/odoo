@@ -1,7 +1,7 @@
 import { usePlugin } from "@odoo/owl";
 import { scrollTo } from "@html_builder/utils/scrolling";
 import { Interaction } from "@web/public/interaction";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 
 export class AnchorSlide extends Interaction {

@@ -3,7 +3,7 @@ import { queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { Component, useProps, xml } from "@odoo/owl";
 import { defineModels, fields, models, mountView, contains } from "@web/../tests/web_test_helpers";
 
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 class Partner extends models.Model {
     name = fields.Char();

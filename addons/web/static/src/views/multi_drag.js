@@ -1,4 +1,4 @@
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 
 // Hidden and not removed from the DOM, as those elements back live Owl components.
 const HIDDEN_CLASSES = ["o_multi_drag_hidden", "d-none"];

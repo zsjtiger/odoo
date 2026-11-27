@@ -1,10 +1,10 @@
 import { EventBus, Plugin, signal, useListener, usePlugin } from "@odoo/owl";
-import { browser } from "@web/core/browser/browser";
-import { registry } from "@web/core/registry";
-import { user } from "@web/core/user";
-import { session } from "@web/session";
-import { services } from "@web/core/services";
-import { useEnv } from "@web/owl2/utils";
+import { browser } from "@web/core/services/browser/browser";
+import { registry } from "@web/core/framework/registry";
+import { user } from "@web/core/services/user";
+import { session } from "@web/boot/session";
+import { services } from "@web/core/framework/services";
+import { useEnv } from "@web/core/owl/utils";
 import { MultiTabPlugin } from "@bus/multi_tab_plugin";
 import { BusParametersPlugin } from "@bus/bus_parameters_plugin";
 import { WorkerPlugin } from "@bus/services/worker_plugin";

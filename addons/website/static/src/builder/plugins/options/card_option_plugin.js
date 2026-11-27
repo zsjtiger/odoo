@@ -1,6 +1,6 @@
 import { CARD_PARENT_HANDLERS, SPECIAL_CARD_SELECTOR } from "@html_builder/core/utils";
 import { Plugin } from "@html_editor/plugin";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 export const WEBSITE_BG_APPLY_TO = ":scope > .s_carousel_cards_card";
 export const CARD_DISABLE_WIDTH_APPLY_TO = ":scope > .s_card:not(.s_carousel_cards_card)";

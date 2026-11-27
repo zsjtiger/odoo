@@ -1,11 +1,11 @@
 import { Interaction } from "@web/public/interaction";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 import { markup, usePlugin } from "@odoo/owl";
-import { rpc } from "@web/core/network/rpc";
-import { getTemplate } from "@web/core/templates";
+import { rpc } from "@web/core/services/network/rpc";
+import { getTemplate } from "@web/core/framework/templates";
 import { KeepLast } from "@web/core/utils/concurrency";
-import { utils as ui } from "@web/core/ui/ui_utils";
+import { utils as ui } from "@web/core/services/ui/ui_utils";
 import { renderToElement } from "@web/core/utils/render";
 import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 

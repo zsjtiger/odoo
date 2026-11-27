@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 
 const HTTP_ERROR_PAGES = {

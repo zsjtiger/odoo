@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 const testUrl = "/test_client_action_redirect";
 

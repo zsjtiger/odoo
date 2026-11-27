@@ -1,8 +1,8 @@
 import { usePlugin } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
 import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { CarouselItemHeaderMiddleButtons } from "./carousel_item_header_buttons";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { selectElements } from "@html_editor/utils/dom_traversal";

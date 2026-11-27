@@ -2,7 +2,7 @@
 
 from collections import Counter
 
-from odoo.tools.translate import translation_file_reader
+from odoo.tools.text.translate import translation_file_reader
 
 from .common import LintCase
 

@@ -16,12 +16,12 @@ import { assignGetter, isDragSourceExternalFile } from "@mail/utils/common/misc"
 
 import { status, t, untrack, useEffect, useOnChange, useProps } from "@odoo/owl";
 
-import { browser } from "@web/core/browser/browser";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
-import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
-import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
+import { browser } from "@web/core/services/browser/browser";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { useDropdownState } from "@web/core/components/dropdown/dropdown_hooks";
+import { useCustomDropzone } from "@web/core/components/dropzone/dropzone_hook";
+import { _t } from "@web/core/data/l10n/translation";
+import { rpc } from "@web/core/services/network/rpc";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";

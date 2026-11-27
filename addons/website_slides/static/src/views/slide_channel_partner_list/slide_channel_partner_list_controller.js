@@ -1,4 +1,4 @@
-import { render } from "@web/owl2/utils";
+import { render } from "@web/core/owl/utils";
 import { ListController } from '@web/views/list/list_controller';
 import { useService } from '@web/core/utils/hooks';
 

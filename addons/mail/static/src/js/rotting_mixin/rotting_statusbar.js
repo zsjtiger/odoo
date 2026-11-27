@@ -2,7 +2,7 @@ import {
     statusBarDurationField,
     StatusBarDurationField,
 } from "@mail/views/fields/statusbar_duration/statusbar_duration_field";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { getRottingDaysTitle } from "./rotting_widget";
 
 export class RottingStatusBarDurationField extends StatusBarDurationField {

@@ -1,6 +1,6 @@
 import { closeStream } from "@mail/utils/common/misc";
 
-import { browser } from "@web/core/browser/browser";
+import { browser } from "@web/core/services/browser/browser";
 
 const FPS = 30; // Frames per second for the blurred background stream
 

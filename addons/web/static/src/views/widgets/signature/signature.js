@@ -1,5 +1,5 @@
-import { registry } from "@web/core/registry";
-import { SignatureDialog } from "@web/core/signature/signature_dialog";
+import { registry } from "@web/core/framework/registry";
+import { SignatureDialog } from "@web/core/components/signature/signature_dialog";
 import { useService } from "@web/core/utils/hooks";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 

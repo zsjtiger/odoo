@@ -1,7 +1,7 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useGetItemValue } from "@html_builder/core/utils";
 import { onWillStart } from "@odoo/owl";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
 
 export class SearchbarOption extends BaseOptionComponent {

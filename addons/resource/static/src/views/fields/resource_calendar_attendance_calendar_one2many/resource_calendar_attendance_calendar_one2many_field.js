@@ -1,8 +1,8 @@
 import { Component, providePlugins, useProps } from "@odoo/owl";
 import { ResourceCalendarPlugin } from "@resource/plugins/resource_calendar_plugin";
 import "@resource/views/resource_calendar_attendance_calendar/resource_calendar_attendance_calendar_view";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
+import { _t } from "@web/core/data/l10n/translation";
+import { registry } from "@web/core/framework/registry";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { View } from "@web/views/view";
 

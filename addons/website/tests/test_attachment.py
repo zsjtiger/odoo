@@ -41,8 +41,6 @@ class TestWebsiteAttachment(odoo.tests.HttpCase):
 
     def test_03_link_to_document(self):
         Attachment = self.env['ir.attachment']
-        # hardcoded id for JS tour
-        self.env.cr.execute("SELECT setval(pg_get_serial_sequence(%s, 'id'), 437296, false)", (Attachment._table,))
         Attachment.create({
             'name': 'sample.txt',
             'public': True,

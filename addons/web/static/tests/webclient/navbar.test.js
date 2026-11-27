@@ -25,8 +25,8 @@ import {
     serverState,
 } from "@web/../tests/web_test_helpers";
 
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
-import { registry } from "@web/core/registry";
+import { OfflinePlugin } from "@web/core/services/offline/offline_plugin";
+import { registry } from "@web/core/framework/registry";
 import { NavBar } from "@web/webclient/navbar/navbar";
 
 const systrayRegistry = registry.category("systray");

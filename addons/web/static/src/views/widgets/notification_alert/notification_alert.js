@@ -1,8 +1,8 @@
 import { Component, useProps } from "@odoo/owl";
 
-import { browser } from "@web/core/browser/browser";
-import { NotificationAlertDialog } from "@web/core/notification_alert_dialog/notification_alert_dialog";
-import { registry } from "@web/core/registry";
+import { browser } from "@web/core/services/browser/browser";
+import { NotificationAlertDialog } from "@web/core/dialogs/notification_alert_dialog/notification_alert_dialog";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 

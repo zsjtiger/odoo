@@ -2,7 +2,7 @@
 
 from odoo.exceptions import AccessError
 from odoo.http import Controller, route, request
-from odoo.tools.translate import _
+from odoo.tools.text.translate import _
 
 
 class View(Controller):

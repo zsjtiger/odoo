@@ -1,5 +1,5 @@
 import { NoBackdropPopup } from "./no_backdrop_popup";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 export const NoBackdropPopupEdit = (I) =>
     class extends I {

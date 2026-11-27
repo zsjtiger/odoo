@@ -3,7 +3,7 @@ import { ThreadIcon } from "@mail/core/common/thread_icon";
 
 import { Component, Portal, t, useProps } from "@odoo/owl";
 
-import { isBrowserSafari } from "@web/core/browser/feature_detection";
+import { isBrowserSafari } from "@web/core/services/browser/feature_detection";
 import { useService } from "@web/core/utils/hooks";
 
 let nextId = 0;

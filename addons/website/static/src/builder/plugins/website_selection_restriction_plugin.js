@@ -1,5 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 class WebsiteSelectionRestrictionPlugin extends Plugin {
     static id = "websiteSelectionRestriction";

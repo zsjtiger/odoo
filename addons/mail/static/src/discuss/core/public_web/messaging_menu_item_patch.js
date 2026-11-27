@@ -2,9 +2,9 @@ import { CountryFlag } from "@mail/core/common/country_flag";
 import { useThreadActions } from "@mail/core/common/thread_actions";
 import { MessagingMenuItem } from "@mail/core/public_web/messaging_menu/messaging_menu_item";
 
-import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
-import { _t } from "@web/core/l10n/translation";
-import { user } from "@web/core/user";
+import { useDropdownState } from "@web/core/components/dropdown/dropdown_hooks";
+import { _t } from "@web/core/data/l10n/translation";
+import { user } from "@web/core/services/user";
 
 import { types, useProps } from "@odoo/owl";
 import { patch } from "@web/core/utils/patch";

@@ -1,11 +1,10 @@
-import { _t } from "@web/core/l10n/translation";
-import { browser } from "@web/core/browser/browser";
-import { Dialog } from "@web/core/dialog/dialog";
+import { _t } from "@web/core/data/l10n/translation";
+import { browser } from "@web/core/services/browser/browser";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
 import { Component, onMounted, proxy, t, useProps } from "@odoo/owl";
-import { SlideXPProgressBar } from "@website_slides/js/public/components/slide_quiz_finish_dialog/slide_xp_progress_bar";
 
 export class SlideQuizFinishDialog extends Component {
-    static components = { Dialog, SlideXPProgressBar };
+    static components = { Dialog };
     props = useProps({
         close: t.function(),
         hasNext: t.boolean(),
@@ -18,12 +17,9 @@ export class SlideQuizFinishDialog extends Component {
     setup() {
         super.setup();
         this.state = proxy({
-            animateKarmaGain: false,
-            fadeRankMotivational: false,
             hideDismissBtns: true,
-            showRankMotivational: false,
         });
-        this.title = this.props.quiz.rankProgress.level_up ? _t("Level up!") : _t("Amazing!");
+        this.title = _t("Amazing!");
         onMounted(() => this.animateText());
     }
 
@@ -41,23 +37,12 @@ export class SlideQuizFinishDialog extends Component {
     //--------------------------------
 
     /**
-     * Handles the animation of the different text such as the karma gain
-     * and the motivational message when the user levels up.
+     * Shows the dismiss buttons once the success message is displayed.
      * @public
      */
     animateText() {
         browser.setTimeout(() => {
-            this.state.animateKarmaGain = true;
             this.state.hideDismissBtns = false;
         }, 800);
-
-        if (this.props.quiz.rankProgress.level_up) {
-            browser.setTimeout(() => {
-                this.state.fadeRankMotivational = true;
-                browser.setTimeout(() => {
-                    this.state.showRankMotivational = true;
-                }, 800);
-            }, 800);
-        }
     }
 }

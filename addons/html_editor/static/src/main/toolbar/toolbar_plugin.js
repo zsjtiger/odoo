@@ -2,22 +2,22 @@ import { proxy } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
 import { isEmptyTextNode, isZWS } from "@html_editor/utils/dom_info";
 import { composeToolbarButton, Toolbar } from "./toolbar";
-import { hasTouch, isMacOS, isIOS } from "@web/core/browser/feature_detection";
-import { registry } from "@web/core/registry";
+import { hasTouch, isMacOS, isIOS } from "@web/core/services/browser/feature_detection";
+import { registry } from "@web/core/framework/registry";
 import { ToolbarMobile } from "./mobile_toolbar";
 import { debounce } from "@web/core/utils/timing";
 import { omit, pick } from "@web/core/utils/objects";
 import { withSequence } from "@html_editor/utils/resource";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { memoize } from "@web/core/utils/functions";
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { utils } from "@web/core/ui/ui_utils";
+import { utils } from "@web/core/services/ui/ui_utils";
 import { removeStyle } from "@html_editor/utils/dom";
 
 /** @typedef { import("@html_editor/core/selection_plugin").EditorSelection } EditorSelection */
 /** @typedef {import("@html_editor/core/selection_plugin").SelectionData} SelectionData */
 /** @typedef { import("@html_editor/core/user_command_plugin").UserCommand } UserCommand */
-/** @typedef { import("@web/core/l10n/translation.js")._t} _t */
+/** @typedef { import("@web/core/data/l10n/translation")._t} _t */
 /** @typedef { ReturnType<_t> } TranslatedString */
 /** @typedef { (selection: EditorSelection, nodes: Node[]) => TranslatedString } TranslatedStringGetter */
 

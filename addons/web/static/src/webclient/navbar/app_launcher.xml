@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="web.NavBar.AppLauncher">
+    <div class="o_navbar_apps_menu">
+        <Dropdown menuClass="'o_app_launcher'" position="'bottom-start'">
+            <button data-hotkey="h" title="Home Menu" data-available-offline="">
+                <i class="oi" data-icon="apps"/>
+            </button>
+            <t t-set-slot="content">
+                <div class="o_app_launcher_search">
+                    <input type="search" class="form-control" placeholder="Find an app"
+                        t-att-value="this.state.query" t-on-input="this.onInput"/>
+                </div>
+                <div class="o_app_launcher_section" t-if="this.filteredApps.length">
+                    <div class="o_app_launcher_section_title">Apps</div>
+                    <div class="o_app_launcher_tiles">
+                        <DropdownItem
+                            t-foreach="this.filteredApps"
+                            t-as="app"
+                            t-key="app.id"
+                            class="{ 'o_app o_app_launcher_tile': true, 'focus': this.menuService.getCurrentApp() === app, 'o_disabled_offline': !this.props.isAvailable(app) }"
+                            onSelected="() => this.props.onSelect(app)"
+                            attrs="{ href: this.props.getHref(app), 'data-menu-xmlid': app.xmlid, 'data-section': app.id }">
+                            <span t-if="app.webIconData" class="o_app_launcher_tile_icon">
+                                <img t-att-src="app.webIconData" t-att-alt="app.name"/>
+                            </span>
+                            <span t-elif="app.webIcon" class="o_app_launcher_tile_icon" t-att-style="'background-color:' + app.webIcon.backgroundColor">
+                                <i class="oi" t-att-data-icon="this.getIconClass(app)" t-att-style="'color:' + app.webIcon.color"/>
+                            </span>
+                            <span class="o_app_launcher_tile_name" t-out="app.name"/>
+                        </DropdownItem>
+                    </div>
+                </div>
+                <div class="o_app_launcher_section" t-if="this.filteredItems.length">
+                    <div class="o_app_launcher_section_title">All Items</div>
+                    <div class="o_app_launcher_items">
+                        <DropdownItem
+                            t-foreach="this.filteredItems"
+                            t-as="item"
+                            t-key="item.id"
+                            class="'o_app_launcher_item'"
+                            onSelected="() => this.props.onSelect(item)"
+                            attrs="{ href: this.props.getHref(item), 'data-menu-xmlid': item.xmlid, 'data-section': item.id }">
+                            <span t-out="item.label"/>
+                        </DropdownItem>
+                    </div>
+                </div>
+                <div class="o_app_launcher_empty text-muted p-3" t-if="!this.filteredApps.length and !this.filteredItems.length">
+                    No results
+                </div>
+            </t>
+        </Dropdown>
+    </div>
+</t>
+
+</templates>

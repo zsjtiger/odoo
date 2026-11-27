@@ -1,0 +1,17 @@
+// Date picker field: the calendar icon sits inside the right end of the input.
+.o_datepicker {
+    .o_datepicker_input {
+        cursor: text;
+    }
+
+    .o_datepicker_toggle {
+        border: 0;
+        background: transparent;
+        color: var(--text-muted, #6c757d);
+        line-height: 1;
+
+        &:hover {
+            color: var(--primary, #714b67);
+        }
+    }
+}

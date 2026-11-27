@@ -1,8 +1,8 @@
-import { registry } from "../registry";
+import { registry } from "../framework/registry";
 import { useSortable } from "@web/core/utils/sortable";
 import { throttleForAnimation } from "@web/core/utils/timing";
 import { Plugin, proxy, usePlugin } from "@odoo/owl";
-import { services } from "@web/core/services";
+import { services } from "@web/core/framework/services";
 
 /**
  * @typedef SortableServiceHookParams

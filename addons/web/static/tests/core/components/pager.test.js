@@ -1,10 +1,10 @@
 import { test, expect } from "@odoo/hoot";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { click, press } from "@odoo/hoot-dom";
-import { Pager } from "@web/core/pager/pager";
+import { Pager } from "@web/core/components/pager/pager";
 import { Component, proxy, useProps, xml } from "@odoo/owl";
 import { contains, mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { config as transitionConfig } from "@web/core/transition";
+import { config as transitionConfig } from "@web/core/framework/transition";
 
 class PagerController extends Component {
     static template = xml`<Pager t-props="this.state" />`;

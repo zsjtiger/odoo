@@ -1,6 +1,6 @@
 import { proxy } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
-import { _t } from "@web/core/l10n/translation";
+import { _t } from "@web/core/data/l10n/translation";
 import { FontFamilySelector } from "@html_editor/main/font/font_family_selector";
 import { closestElement } from "../../utils/dom_traversal";
 import { removeStyle } from "@html_editor/utils/formatting";

@@ -3,9 +3,9 @@ import { Component, proxy, signal, types, useProps } from "@odoo/owl";
 import { CallPreview } from "@mail/discuss/call/common/call_preview";
 import { AvatarStack } from "@mail/discuss/core/common/avatar_stack";
 
-import { browser } from "@web/core/browser/browser";
+import { browser } from "@web/core/services/browser/browser";
 import { useService } from "@web/core/utils/hooks";
-import { useLayoutEffect, useSubEnv } from "@web/owl2/utils";
+import { useLayoutEffect, useSubEnv } from "@web/core/owl/utils";
 
 export class WelcomePage extends Component {
     static template = "mail.WelcomePage";

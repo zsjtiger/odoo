@@ -1,8 +1,8 @@
 import { Component, markup, signal, useProps, t } from "@odoo/owl";
 import { useMatrixKeyNavigation } from "@html_builder/utils/keyboard_navigation";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
-import { localization } from "@web/core/l10n/localization";
-import { _t } from "@web/core/l10n/translation";
+import { getActiveHotkey } from "@web/core/services/hotkeys/hotkey_utils";
+import { localization } from "@web/core/data/l10n/localization";
+import { _t } from "@web/core/data/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { InputConfirmationDialog } from "./input_confirmation_dialog";
 import { fuzzyLevenshteinLookup, fuzzyLookup } from "@web/core/utils/search";

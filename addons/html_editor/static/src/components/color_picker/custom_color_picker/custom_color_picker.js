@@ -9,8 +9,8 @@ import {
     useEffect,
     useListener,
 } from "@odoo/owl";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
-import { _t } from "@web/core/l10n/translation";
+import { getActiveHotkey } from "@web/core/services/hotkeys/hotkey_utils";
+import { _t } from "@web/core/data/l10n/translation";
 import {
     convertCSSColorToRgba,
     convertHslToRgb,

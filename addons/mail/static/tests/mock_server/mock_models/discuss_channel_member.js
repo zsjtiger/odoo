@@ -1,7 +1,7 @@
 import { Store } from "@mail/../tests/mock_server/store";
 
 import { fields, getKwArgs, models } from "@web/../tests/web_test_helpers";
-import { serializeDateTime, today } from "@web/core/l10n/dates";
+import { serializeDateTime, today } from "@web/core/data/l10n/dates";
 import { ensureArray } from "@web/core/utils/arrays";
 
 const { DateTime } = luxon;

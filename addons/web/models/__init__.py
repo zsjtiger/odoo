@@ -15,3 +15,5 @@ from . import res_users_settings_embedded_action
 from . import res_users_settings
 from . import res_users
 from . import properties_base_definition
+from . import gps
+from . import gps_mixin

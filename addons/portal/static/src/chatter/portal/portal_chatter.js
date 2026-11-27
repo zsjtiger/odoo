@@ -1,9 +1,9 @@
-import { OverlayPlugin } from "@web/core/overlay/overlay_plugin";
-import { useSubEnv } from "@web/owl2/utils";
+import { OverlayPlugin } from "@web/core/components/overlay/overlay_plugin";
+import { useSubEnv } from "@web/core/owl/utils";
 import { PortalChatterPlugin } from "@portal/chatter/portal/portal_chatter_plugin";
 import { Chatter } from "@mail/chatter/web_portal_project/chatter";
 
-import { OverlayContainer } from "@web/core/overlay/overlay_container";
+import { OverlayContainer } from "@web/core/components/overlay/overlay_container";
 import { Component, providePlugins, t, useListener, usePlugin, useProps, xml } from "@odoo/owl";
 
 export class PortalChatter extends Component {

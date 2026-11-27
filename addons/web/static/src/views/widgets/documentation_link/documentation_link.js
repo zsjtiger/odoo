@@ -1,6 +1,6 @@
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { Component, t, useProps } from "@odoo/owl";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { documentationUrl } from "@web/core/utils/urls";
 
 const LINK_REGEX = new RegExp("^https?://");

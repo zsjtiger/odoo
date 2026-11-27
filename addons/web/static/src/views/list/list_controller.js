@@ -8,17 +8,17 @@ import {
     t,
     useProps,
 } from "@odoo/owl";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { _t } from "@web/core/l10n/translation";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
-import { evaluateBooleanExpr, evaluateExpr } from "@web/core/py_js/py";
-import { user } from "@web/core/user";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
+import { _t } from "@web/core/data/l10n/translation";
+import { OfflinePlugin } from "@web/core/services/offline/offline_plugin";
+import { evaluateBooleanExpr, evaluateExpr } from "@web/core/data/py_js/py";
+import { user } from "@web/core/services/user";
 import { useService } from "@web/core/utils/hooks";
 import { omit } from "@web/core/utils/objects";
 import { useModelWithSampleData } from "@web/model/model";
 import { DynamicRecordList } from "@web/model/relational_model/dynamic_record_list";
 import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
-import { onWillRender, render, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
+import { onWillRender, render, useLayoutEffect, useSubEnv } from "@web/core/owl/utils";
 import { useSetupAction } from "@web/search/action_hook";
 import { ActionMenus, STATIC_ACTIONS_GROUP_NUMBER } from "@web/search/action_menus/action_menus";
 import { Layout } from "@web/search/layout";
@@ -26,7 +26,7 @@ import { usePager } from "@web/search/pager_hook";
 import { OfflineSearchBar } from "@web/search/search_bar/offline_search_bar";
 import { SearchBar } from "@web/search/search_bar/search_bar";
 import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
-import { session } from "@web/session";
+import { session } from "@web/boot/session";
 import { OfflineActionHelper } from "@web/views/offline_action_helper";
 import { standardViewProps } from "@web/views/standard_view_props";
 import { MultiRecordViewButton } from "@web/views/view_button/multi_record_view_button";
@@ -332,6 +332,14 @@ export class ListController extends Component {
     }
 
     /**
+     * Deletes one record from the row menu, after confirmation.
+     * @param {Record} record
+     */
+    onRecordDelete(record) {
+        this.deleteRecordsWithConfirmation(this.deleteConfirmationDialogProps, [record]);
+    }
+
+    /**
      * onRecordSaved is a callBack that will be executed after the save
      * if it was done. It will therefore not be executed if the record
      * is invalid or if a server error is thrown.
@@ -514,7 +522,7 @@ export class ListController extends Component {
     }
 
     get hasSelectedRecords() {
-        return this.model.root.selection.length || this.isDomainSelected;
+        return this.model.root.selection.length > 0 || this.isDomainSelected;
     }
 
     get isDomainSelected() {

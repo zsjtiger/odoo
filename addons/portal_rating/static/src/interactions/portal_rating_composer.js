@@ -1,8 +1,8 @@
 import { Interaction } from "@web/public/interaction";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { PortalComposer } from "@portal/interactions/portal_composer";
-import { _t } from "@web/core/l10n/translation";
-import { user } from "@web/core/user";
+import { _t } from "@web/core/data/l10n/translation";
+import { user } from "@web/core/services/user";
 import { useListener } from "@odoo/owl";
 
 /**

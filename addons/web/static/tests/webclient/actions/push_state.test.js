@@ -17,9 +17,9 @@ import {
     validateSearch,
 } from "@web/../tests/web_test_helpers";
 
-import { location, browser } from "@web/core/browser/browser";
-import { router } from "@web/core/browser/router";
-import { registry } from "@web/core/registry";
+import { location, browser } from "@web/core/services/browser/browser";
+import { router } from "@web/core/services/browser/router";
+import { registry } from "@web/core/framework/registry";
 import { redirect } from "@web/core/utils/urls";
 import { WebClient } from "@web/webclient/webclient";
 

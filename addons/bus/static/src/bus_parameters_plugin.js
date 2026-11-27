@@ -1,6 +1,6 @@
 import { Plugin, signal, usePlugin } from "@odoo/owl";
-import { registry } from "@web/core/registry";
-import { services } from "@web/core/services";
+import { registry } from "@web/core/framework/registry";
+import { services } from "@web/core/framework/services";
 
 export class BusParametersPlugin extends Plugin {
     serverURL = signal(window.origin);

@@ -1,8 +1,8 @@
 import { onWillStart } from "@odoo/owl";
-import { Pager } from "@web/core/pager/pager";
-import { registry } from "@web/core/registry";
+import { Pager } from "@web/core/components/pager/pager";
+import { registry } from "@web/core/framework/registry";
 import { useService } from "@web/core/utils/hooks";
-import { referenceField, ReferenceField } from "@web/views/fields/reference/reference_field";
+import { referenceField, ReferenceField } from "@web/views/fields/relational/reference/reference_field";
 
 export class MailPreviewRecordField extends ReferenceField {
     static components = {

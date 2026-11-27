@@ -1,7 +1,7 @@
-import { browser } from "@web/core/browser/browser";
-import { getLocalYearAndWeek } from "@web/core/l10n/dates";
-import { localization } from "@web/core/l10n/localization";
-import { is24HourFormat } from "@web/core/l10n/time";
+import { browser } from "@web/core/services/browser/browser";
+import { getLocalYearAndWeek } from "@web/core/data/l10n/dates";
+import { localization } from "@web/core/data/l10n/localization";
+import { is24HourFormat } from "@web/core/data/l10n/time";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { renderToFragment, renderToString } from "@web/core/utils/render";
 import { useDebounced } from "@web/core/utils/timing";

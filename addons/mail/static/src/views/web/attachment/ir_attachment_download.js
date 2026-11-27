@@ -1,6 +1,6 @@
-import { _t } from "@web/core/l10n/translation";
-import { serializeDate } from "@web/core/l10n/dates";
-import { download } from "@web/core/network/download";
+import { _t } from "@web/core/data/l10n/translation";
+import { serializeDate } from "@web/core/data/l10n/dates";
+import { download } from "@web/core/services/network/download";
 
 const { DateTime } = luxon;
 

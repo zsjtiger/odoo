@@ -1,7 +1,7 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
 import { MediaSizeOption } from "./media_size_option";
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 
 export class VideoSizeOption extends BaseOptionComponent {
     static id = "video_size_option";

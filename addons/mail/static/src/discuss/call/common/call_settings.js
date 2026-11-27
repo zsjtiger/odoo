@@ -1,15 +1,15 @@
 import { Component, onWillStart, t, useListener, usePlugin, useProps, xml } from "@odoo/owl";
 
-import { _t } from "@web/core/l10n/translation";
-import { browser } from "@web/core/browser/browser";
-import { isMobileOS } from "@web/core/browser/feature_detection";
+import { _t } from "@web/core/data/l10n/translation";
+import { browser } from "@web/core/services/browser/browser";
+import { isMobileOS } from "@web/core/services/browser/feature_detection";
 import { useService } from "@web/core/utils/hooks";
 import { Tabs, Tab } from "@mail/core/common/tabs";
 import { useMicrophoneVolume } from "@mail/utils/common/hooks";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { DeviceSelect } from "@mail/discuss/call/common/device_select";
-import { Dialog } from "@web/core/dialog/dialog";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
+import { Dialog } from "@web/core/dialogs/dialog/dialog";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
 
 export class CallSettings extends Component {
     static template = "discuss.CallSettings";

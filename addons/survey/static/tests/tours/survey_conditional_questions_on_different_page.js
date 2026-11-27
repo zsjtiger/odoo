@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { expectHiddenQuestion } from "@survey/../tests/tours/survey_chained_conditional_questions";
 
 registry.category("web_tour.tours").add('test_survey_conditional_question_on_different_page', {

@@ -1,4 +1,4 @@
-import { useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/core/owl/utils";
 import { BlurPerformanceWarning } from "@mail/discuss/call/common/blur_performance_warning";
 import { CALL_GRID_LAYOUT } from "@mail/discuss/call/common/call_layout";
 import { CallActionList } from "@mail/discuss/call/common/call_action_list";
@@ -29,8 +29,8 @@ import {
     useProps,
 } from "@odoo/owl";
 
-import { isMobileOS } from "@web/core/browser/feature_detection";
-import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+import { isMobileOS } from "@web/core/services/browser/feature_detection";
+import { useHotkey } from "@web/core/services/hotkeys/hotkey_hook";
 import { clamp } from "@web/core/utils/numbers";
 import { useService } from "@web/core/utils/hooks";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";

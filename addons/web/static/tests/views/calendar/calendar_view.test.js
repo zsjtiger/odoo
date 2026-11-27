@@ -34,9 +34,9 @@ import {
     serverState,
     validateSearch,
 } from "@web/../tests/web_test_helpers";
-import { hasTouch } from "@web/core/browser/feature_detection";
-import { serializeDateTime } from "@web/core/l10n/dates";
-import { registry } from "@web/core/registry";
+import { hasTouch } from "@web/core/services/browser/feature_detection";
+import { serializeDateTime } from "@web/core/data/l10n/dates";
+import { registry } from "@web/core/framework/registry";
 import { zip } from "@web/core/utils/arrays";
 import { range } from "@web/core/utils/numbers";
 import { CalendarCommonRenderer } from "@web/views/calendar/calendar_common/calendar_common_renderer";

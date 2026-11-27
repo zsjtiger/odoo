@@ -1,4 +1,4 @@
-import { AssetsLoadingError, getBundle } from "@web/core/assets";
+import { AssetsLoadingError, getBundle } from "@web/core/framework/assets";
 import { memoize } from "@web/core/utils/functions";
 
 export function assignDefined(obj, data, keys = Object.keys(data)) {
@@ -84,8 +84,8 @@ export function closeStream(stream) {
 /**
  * Compare two Luxon datetime.
  *
- * @param {import("@web/core/l10n/dates").NullableDateTime} date1
- * @param {import("@web/core/l10n/dates").NullableDateTime} date2
+ * @param {import("@web/core/data/l10n/dates").NullableDateTime} date1
+ * @param {import("@web/core/data/l10n/dates").NullableDateTime} date2
  * @returns {number} Negative if date1 is less than date2, positive if date1 is
  *  greater than date2, and 0 if they are equal.
  */

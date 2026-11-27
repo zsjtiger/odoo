@@ -9,6 +9,8 @@
     padding-top: $o-navbar-padding-v;
     padding-bottom: $o-navbar-padding-v;
     background: $o-navbar-background;
+    // accent line under the navbar, drawn inside the box so the height does not change
+    box-shadow: inset 0 -2px 0 $primary;
     font-size: $o-navbar-font-size;
 
     @include media-breakpoint-up(md) {
@@ -221,6 +223,11 @@
         }
     }
 
+    // Leave room for the app icon, which is absolutely positioned before the name
+    .o_menu_brand_icon + .o_menu_brand {
+        margin-left: calc(var(--o-navbar-height) - #{$o-navbar-padding-v * 2} + #{map-get($spacers, 2)});
+    }
+
     .o_menu_brand, .o_navbar_breadcrumbs, .o_navbar_breadcrumbs .btn {
         color: var(--NavBar-brand-color, #{$o-navbar-brand-color});
     }
@@ -274,4 +281,90 @@ body.o_is_superuser .o_menu_systray {
     color: $dropdown-header-color;
     font-weight: 500;
     @include font-size($font-size-sm);
+}
+
+// = App launcher (apps dropdown of the navbar)
+// ============================================================================
+.o_app_launcher {
+    width: 40rem;
+    max-width: calc(100vw - 2rem);
+    padding: 1rem 1.25rem;
+
+    .o_app_launcher_search input {
+        width: 100%;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        border-radius: 2rem;
+    }
+
+    .o_app_launcher_section {
+        margin-top: 1.25rem;
+    }
+
+    .o_app_launcher_section_title {
+        color: $text-muted;
+        font-size: $font-size-sm;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+
+    .o_app_launcher_tiles {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.5rem;
+    }
+
+    .o_app_launcher_tile {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem;
+        border: $border-width solid $border-color;
+        border-radius: 1rem;
+        background-color: $gray-100;
+        white-space: normal;
+        min-width: 0;
+
+        &.focus {
+            border-color: $primary;
+        }
+    }
+
+    .o_app_launcher_tile_icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 2.5rem;
+        width: 2.5rem;
+        height: 2.5rem;
+        overflow: hidden;
+        border-radius: 0.75rem;
+        color: $white;
+        font-size: 1.5rem;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+    }
+
+    .o_app_launcher_tile_name {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-weight: 500;
+    }
+
+    .o_app_launcher_items {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 0.25rem 0.5rem;
+    }
+
+    .o_app_launcher_item {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: $primary;
+    }
 }

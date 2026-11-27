@@ -1,4 +1,4 @@
-import { registry } from "@web/core/registry";
+import { registry } from "@web/core/framework/registry";
 import { Whatsapp } from "./whatsapp.js";
 
 export const WhatsappEdit = (I) =>

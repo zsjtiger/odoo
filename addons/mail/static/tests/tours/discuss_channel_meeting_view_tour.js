@@ -1,5 +1,5 @@
-import { browser } from "@web/core/browser/browser";
-import { registry } from "@web/core/registry";
+import { browser } from "@web/core/services/browser/browser";
+import { registry } from "@web/core/framework/registry";
 
 /** Pathname of the channel invitation link, which holds the channel secret token. */
 function getInvitationPathname() {

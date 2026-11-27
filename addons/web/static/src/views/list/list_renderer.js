@@ -1,18 +1,18 @@
-import { browser } from "@web/core/browser/browser";
-import { CheckBox } from "@web/core/checkbox/checkbox";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
-import { localization } from "@web/core/l10n/localization";
-import { Pager } from "@web/core/pager/pager";
-import { evaluateBooleanExpr } from "@web/core/py_js/py";
-import { registry } from "@web/core/registry";
+import { browser } from "@web/core/services/browser/browser";
+import { CheckBox } from "@web/core/components/checkbox/checkbox";
+import { Dropdown } from "@web/core/components/dropdown/dropdown";
+import { DropdownItem } from "@web/core/components/dropdown/dropdown_item";
+import { useHotkey } from "@web/core/services/hotkeys/hotkey_hook";
+import { getActiveHotkey } from "@web/core/services/hotkeys/hotkey_utils";
+import { localization } from "@web/core/data/l10n/localization";
+import { Pager } from "@web/core/components/pager/pager";
+import { evaluateBooleanExpr } from "@web/core/data/py_js/py";
+import { registry } from "@web/core/framework/registry";
 import { useAutofocus, useBus, useService } from "@web/core/utils/hooks";
 import { useSortable } from "@web/core/utils/sortable_owl";
 import { getTabableElements } from "@web/core/utils/ui";
 import { AGGREGATABLE_FIELD_TYPES, combineModifiers } from "@web/model/relational_model/utils";
-import { onWillRender, render } from "@web/owl2/utils";
+import { onWillRender, render } from "@web/core/owl/utils";
 import { Field, getPropertyFieldInfo } from "@web/views/fields/field";
 import { getTooltipInfo } from "@web/views/fields/field_tooltip";
 import { getMultiDragRecordIds, startMultiDrag, stopMultiDrag } from "@web/views/multi_drag";
@@ -26,6 +26,7 @@ import { ViewButton } from "@web/views/view_button/view_button";
 import { useBounceButton } from "@web/views/view_hook";
 import { Widget } from "@web/views/widgets/widget";
 import { useMagicColumnWidths } from "./column_width_hook";
+import { uniqueId } from "@web/core/utils/functions";
 
 import {
     Component,
@@ -43,12 +44,12 @@ import {
     usePlugin,
     useProps,
 } from "@odoo/owl";
-import { getCurrencyRates } from "@web/core/currency";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
-import { _t } from "@web/core/l10n/translation";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
-import { usePopover } from "@web/core/popover/popover_hook";
-import { user } from "@web/core/user";
+import { getCurrencyRates } from "@web/core/data/currency";
+import { DebugModePlugin } from "@web/core/services/debug_mode_plugin";
+import { _t } from "@web/core/data/l10n/translation";
+import { OfflinePlugin } from "@web/core/services/offline/offline_plugin";
+import { usePopover } from "@web/core/components/popover/popover_hook";
+import { user } from "@web/core/services/user";
 import { odoomark } from "@web/core/utils/html";
 import { exprToBoolean } from "@web/core/utils/strings";
 import { MOVABLE_RECORD_TYPES } from "@web/model/relational_model/dynamic_group_list";
@@ -129,12 +130,15 @@ function hasOnlyReadonlyFields(cell) {
     return fields.length > 0 && fields.every((el) => el.classList.contains("o_readonly_modifier"));
 }
 
+const INFINITE_SCROLL_PAGE_SIZE = 80;
+
 export const listRendererProps = {
     activeActions: t.any().optional(),
     list: t.any(),
     archInfo: t.any(),
     openRecord: t.any(),
     onAdd: t.any().optional(),
+    onRecordDelete: t.any().optional(),
     cycleOnTab: t.any().optional(true),
     allowSelectors: t.any().optional(false),
     editable: t.any().optional(),
@@ -539,6 +543,89 @@ export class ListRenderer extends Component {
                 this.isRecordReadonly(record) ||
                 (column.widget === "handle" && !this.canResequenceRows),
         };
+    }
+
+    /**
+     * Classes for the table, from the layout attributes of the <list> arch
+     * (striped, bordered, no_row_hover, headless, fixed_layout).
+     */
+    get tableLayoutClasses() {
+        const { archInfo } = this.props;
+        const classes = [];
+        if (archInfo.striped) {
+            classes.push("o_list_striped");
+        }
+        if (archInfo.bordered) {
+            classes.push("o_list_bordered");
+        }
+        if (!archInfo.noRowHover) {
+            classes.push("table-hover");
+        }
+        if (archInfo.headless) {
+            classes.push("o_list_headless");
+        }
+        if (archInfo.fixedLayout) {
+            classes.push("o_list_fixed_layout");
+        }
+        return classes.join(" ");
+    }
+
+    get singleSelectionName() {
+        this.singleSelectionGroup ??= uniqueId("o_list_single_selection_");
+        return this.singleSelectionGroup;
+    }
+
+    /** Whether the row menu can delete a record of a top-level list. */
+    get canDeleteRecord() {
+        return !!(this.activeActions.onDelete || (this.props.onRecordDelete && this.activeActions.delete));
+    }
+
+    /**
+     * Infinite scroll: when the bottom of the list is reached, load the next page
+     * by raising the limit, so the records already shown are kept.
+     */
+    async onScroll(ev) {
+        if (!this.props.archInfo.infiniteScroll || this.loadingMore) {
+            return;
+        }
+        const el = ev.currentTarget;
+        if (el.scrollTop + el.clientHeight < el.scrollHeight - 40) {
+            return;
+        }
+        const list = this.props.list;
+        if (list.isGrouped || list.records.length >= list.count) {
+            return;
+        }
+        this.loadingMore = true;
+        try {
+            await list.load({ offset: 0, limit: list.limit + INFINITE_SCROLL_PAGE_SIZE });
+        } finally {
+            this.loadingMore = false;
+        }
+    }
+
+    get hasRowMenu() {
+        return !!this.props.archInfo.rowMenu;
+    }
+
+    get isSingleSelection() {
+        return !!this.props.archInfo.singleSelection;
+    }
+
+    /**
+     * Selects the given record and deselects the others (single selection mode).
+     * @param {RelationalRecord} record
+     */
+    selectSingleRecord(record) {
+        if (record.selected) {
+            return;
+        }
+        for (const other of this.props.list.records) {
+            if (other !== record && other.selected) {
+                other.toggleSelection(false);
+            }
+        }
+        record.toggleSelection(true);
     }
 
     get activeActions() {
@@ -1611,6 +1698,9 @@ export class ListRenderer extends Component {
         if (this.activeActions.onDelete) {
             return this.activeActions.onDelete(record);
         }
+        if (this.props.onRecordDelete && this.activeActions.delete) {
+            return this.props.onRecordDelete(record);
+        }
     }
 
     /**
@@ -2353,6 +2443,11 @@ export class ListRenderer extends Component {
      */
     toggleRecordSelection(record, _ev) {
         if (!this.canSelectRecord) {
+            return;
+        }
+        if (this.isSingleSelection) {
+            this.selectSingleRecord(record);
+            this.lastCheckedRecord = record;
             return;
         }
         const isRecordPresent = this.props.list.records.includes(this.lastCheckedRecord);
