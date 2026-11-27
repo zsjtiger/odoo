@@ -6,7 +6,7 @@ import re
 import xml.etree.ElementTree as ET
 
 from odoo import api, models, _, Command
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 
 OPTIONS_WL = [
     'use_mail',          # add mail_thread to record
@@ -695,6 +695,111 @@ class IrModel(models.Model):
             'pages': [{'id': page.id, 'name': page.display_name} for page in pages],
             'icons': capabilities['icons'],
         }
+
+    def _studio_slots(self, model):
+        """The places a form of the model can be used: the PC action, the mobile action, the record types."""
+        Action = self.env['ir.actions.act_window']
+        actions = Action.search([('res_model', '=', model.model)])
+        mobile = actions.filtered(lambda a: 'kanban' in a.view_mode.split(',') and 'list' not in a.view_mode.split(','))
+        pc = actions - mobile
+        return pc[:1], mobile[:1]
+
+    @api.model
+    def studio_form_views(self, model_name):
+        """Form views of a model, and where each one is used (PC, mobile, record types)."""
+        model = self._get(model_name)
+        pc_action, mobile_action = self._studio_slots(model)
+        record_types = self.env['ir.record.type'].search([('model_id', '=', model.id)]) \
+            if 'ir.record.type' in self.env.registry else self.env['ir.record.type']
+        views = self.env['ir.ui.view'].search([
+            ('model', '=', model_name), ('type', '=', 'form'), ('mode', '=', 'primary'),
+        ], order='priority, id')
+        used = {view.id: [] for view in views}
+
+        def use(view, label):
+            if view and view.id in used:
+                used[view.id].append(label)
+
+        default_form = views.filtered(lambda v: not v.record_type_id)[:1]
+        for act, label in ((pc_action, 'pc'), (mobile_action, 'mobile')):
+            act_forms = act.view_ids.filtered(lambda v: v.view_mode == 'form')
+            # without a form entry the action uses the default form of the model
+            use(act_forms[:1].view_id if act_forms else default_form, label)
+        for rt in record_types:
+            for view in rt.view_ids.filtered(lambda v: v.type == 'form'):
+                use(view, f'record_type:{rt.id}')
+        return {
+            'views': [{
+                'id': view.id,
+                'name': view.name,
+                'priority': view.priority,
+                'record_type_id': view.record_type_id.id or False,
+                'used_by': used[view.id],
+            } for view in views],
+            'pc_action_id': pc_action.id or False,
+            'mobile_action_id': mobile_action.id or False,
+            'record_types': [{
+                'id': rt.id,
+                'name': rt.display_name,
+                'action_id': rt.action_id.id or False,
+            } for rt in record_types],
+        }
+
+    @api.model
+    def studio_create_form_view(self, model_name, name, slot, record_type_id=False):
+        """Create a form of the model, copied from the form now used in the slot, and put it there.
+
+        slot: 'pc' (the PC action), 'mobile' (the mobile action) or 'record_type' (record_type_id).
+        The form that used the slot before is kept, but no longer used there.
+        """
+        model = self._get(model_name)
+        pc_action, mobile_action = self._studio_slots(model)
+        View = self.env['ir.ui.view']
+        record_type = self.env['ir.record.type'].browse(record_type_id) if record_type_id else None
+        if slot == 'record_type' and not record_type:
+            raise UserError(self.env._('Choose a record type.'))
+        if slot == 'pc' and not pc_action:
+            raise UserError(self.env._('The model has no PC action yet.'))
+        if slot == 'mobile' and not mobile_action:
+            raise UserError(self.env._('The model has no mobile action (kanban and form) yet.'))
+
+        # the copy starts from the form now used in the slot, else the default form of the model
+        if slot == 'record_type':
+            base = record_type.view_ids.filtered(lambda v: v.type == 'form')[:1]
+        elif slot == 'pc':
+            base = pc_action.view_ids.filtered(lambda v: v.view_mode == 'form')[:1].view_id
+        else:
+            base = mobile_action.view_ids.filtered(lambda v: v.view_mode == 'form')[:1].view_id
+        base = base or View.search([('model', '=', model_name), ('type', '=', 'form'),
+                                    ('mode', '=', 'primary'), ('record_type_id', '=', False)],
+                                   order='priority, id', limit=1)
+        if not base:
+            raise UserError(self.env._('The model has no form to copy.'))
+        top = View.search([('model', '=', model_name), ('type', '=', 'form'), ('mode', '=', 'primary')],
+                          order='priority desc', limit=1).priority
+        new = View.create({
+            'name': name,
+            'model': model_name,
+            'type': 'form',
+            'mode': 'primary',
+            'priority': max(top or 0, 16) + 1,
+            'arch': base.arch,
+            'record_type_id': record_type.id if record_type else False,
+        })
+        if slot == 'record_type':
+            for old in record_type.view_ids.filtered(lambda v: v.type == 'form' and v != new):
+                old.record_type_id = False
+            record_type._sync_action_views()
+        else:
+            action = pc_action if slot == 'pc' else mobile_action
+            action.view_ids.filtered(lambda v: v.view_mode == 'form').unlink()
+            self.env['ir.actions.act_window.view'].create({
+                'act_window_id': action.id,
+                'view_mode': 'form',
+                'view_id': new.id,
+                'sequence': 2,
+            })
+        return new.id
 
     @api.model
     def _quick_create_model(self, model_values, parent_field_type=None):

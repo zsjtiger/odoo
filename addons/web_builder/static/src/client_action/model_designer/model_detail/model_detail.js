@@ -11,6 +11,7 @@ import { getFieldTypeLabels } from "./field_types";
 import { PageLayoutEditor } from "../page_layout/page_layout_editor";
 import { ModelButtons } from "./model_buttons";
 import { RecordTypeSection } from "../record_types/record_type_section";
+import { NewFormViewDialog } from "./new_form_view_dialog";
 import { MobileSection } from "../mobile/mobile_section";
 import { NewFieldDialog } from "./new_field_dialog";
 
@@ -64,13 +65,14 @@ export class ModelDetail extends Component {
         this.visibleFields = computed(() => this.filteredFields().slice(0, this.state.limit));
 
         this.state.mobile = null;
-        onWillStart(() => Promise.all([this.loadFields(this.props.model), this.loadMobile(this.props.model)]));
+        this.state.forms = null;
+        onWillStart(() => Promise.all([this.loadFields(this.props.model), this.loadMobile(this.props.model), this.loadForms(this.props.model)]));
         onWillUpdateProps((nextProps) => {
             if (nextProps.model.id !== this.props.model.id) {
                 this.designerState.selectedFieldId = null;
                 this.state.limit = PAGE_SIZE;
                 this.state.loading = true;
-                return Promise.all([this.loadFields(nextProps.model), this.loadMobile(nextProps.model)]);
+                return Promise.all([this.loadFields(nextProps.model), this.loadMobile(nextProps.model), this.loadForms(nextProps.model)]);
             }
         });
     }
@@ -79,6 +81,56 @@ export class ModelDetail extends Component {
     async loadMobile(model) {
         const info = await this.orm.call("ir.model", "studio_mobile_infos", [model.model]);
         this.state.mobile = info.available ? info : null;
+    }
+
+    /** Form views of the model and where each one is used. */
+    async loadForms(model) {
+        this.state.forms = await this.orm.call("ir.model", "studio_form_views", [model.model]);
+    }
+
+    get formRows() {
+        return (this.state.forms?.views || []).map((view) => ({
+            ...view,
+            usage: view.used_by.map((use) => this.usageLabel(use)).join(", ") || "Not used",
+            editable: view.used_by.length > 0,
+        }));
+    }
+
+    usageLabel(use) {
+        if (use === "pc") {
+            return "PC";
+        }
+        if (use === "mobile") {
+            return "Mobile";
+        }
+        const recordType = this.state.forms.record_types.find((rt) => `record_type:${rt.id}` === use);
+        return recordType ? recordType.name : use;
+    }
+
+    openNewForm() {
+        this.dialog.add(NewFormViewDialog, {
+            modelName: this.props.model.model,
+            info: this.state.forms,
+            onSaved: () => this.loadForms(this.props.model),
+        });
+    }
+
+    /** Opens the first place that uses the form in Studio's view editor. */
+    async editForm(view) {
+        const use = view.used_by[0];
+        let actionId = false;
+        if (use === "pc") {
+            actionId = this.state.forms.pc_action_id;
+        } else if (use === "mobile") {
+            actionId = this.state.forms.mobile_action_id;
+        } else if (use) {
+            actionId = this.state.forms.record_types.find((rt) => `record_type:${rt.id}` === use)?.action_id;
+        }
+        if (!actionId) {
+            return;
+        }
+        const action = await this.action.loadAction(actionId);
+        this.studio.setParams({ action, viewType: "form", mode: this.studio.MODES.EDITOR, editorTab: "views" });
     }
 
     get mobileFormInfo() {
