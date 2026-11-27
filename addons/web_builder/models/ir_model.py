@@ -749,7 +749,8 @@ class IrModel(models.Model):
     def studio_create_form_view(self, model_name, name, slot, record_type_id=False):
         """Create a form of the model, copied from the form now used in the slot, and put it there.
 
-        slot: 'pc' (the PC action), 'mobile' (the mobile action) or 'record_type' (record_type_id).
+        slot: 'pc' (the PC action), 'mobile' (the mobile action), 'both' (the PC and the mobile action)
+        or 'record_type' (record_type_id).
         The form that used the slot before is kept, but no longer used there.
         """
         model = self._get(model_name)
@@ -758,15 +759,15 @@ class IrModel(models.Model):
         record_type = self.env['ir.record.type'].browse(record_type_id) if record_type_id else None
         if slot == 'record_type' and not record_type:
             raise UserError(self.env._('Choose a record type.'))
-        if slot == 'pc' and not pc_action:
+        if slot in ('pc', 'both') and not pc_action:
             raise UserError(self.env._('The model has no PC action yet.'))
-        if slot == 'mobile' and not mobile_action:
+        if slot in ('mobile', 'both') and not mobile_action:
             raise UserError(self.env._('The model has no mobile action (kanban and form) yet.'))
 
         # the copy starts from the form now used in the slot, else the default form of the model
         if slot == 'record_type':
             base = record_type.view_ids.filtered(lambda v: v.type == 'form')[:1]
-        elif slot == 'pc':
+        elif slot in ('pc', 'both'):
             base = pc_action.view_ids.filtered(lambda v: v.view_mode == 'form')[:1].view_id
         else:
             base = mobile_action.view_ids.filtered(lambda v: v.view_mode == 'form')[:1].view_id
@@ -791,14 +792,15 @@ class IrModel(models.Model):
                 old.record_type_id = False
             record_type._sync_action_views()
         else:
-            action = pc_action if slot == 'pc' else mobile_action
-            action.view_ids.filtered(lambda v: v.view_mode == 'form').unlink()
-            self.env['ir.actions.act_window.view'].create({
-                'act_window_id': action.id,
-                'view_mode': 'form',
-                'view_id': new.id,
-                'sequence': 2,
-            })
+            actions = {'pc': pc_action, 'mobile': mobile_action, 'both': pc_action | mobile_action}[slot]
+            for action in actions:
+                action.view_ids.filtered(lambda v: v.view_mode == 'form').unlink()
+                self.env['ir.actions.act_window.view'].create({
+                    'act_window_id': action.id,
+                    'view_mode': 'form',
+                    'view_id': new.id,
+                    'sequence': 2,
+                })
         return new.id
 
     @api.model

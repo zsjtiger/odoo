@@ -92,8 +92,24 @@ export class ModelDetail extends Component {
         return (this.state.forms?.views || []).map((view) => ({
             ...view,
             usage: view.used_by.map((use) => this.usageLabel(use)).join(", ") || "Not used",
+            devices: this.deviceIcons(view.used_by),
             editable: view.used_by.length > 0,
         }));
+    }
+
+    /** Icons of the places a form is used in: PC, mobile (both icons when the form is used on both). */
+    deviceIcons(usedBy) {
+        const icons = [];
+        if (usedBy.includes("pc")) {
+            icons.push({ key: "pc", icon: "desktop_windows", title: "PC" });
+        }
+        if (usedBy.includes("mobile")) {
+            icons.push({ key: "mobile", icon: "smartphone", title: "Mobile" });
+        }
+        for (const use of usedBy.filter((u) => u.startsWith("record_type:"))) {
+            icons.push({ key: use, icon: "label", title: this.usageLabel(use) });
+        }
+        return icons;
     }
 
     usageLabel(use) {

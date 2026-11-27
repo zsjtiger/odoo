@@ -125,7 +125,12 @@
                                 <t t-foreach="this.formRows" t-as="row" t-key="row.id">
                                     <tr class="o_web_studio_form_row">
                                         <td t-out="row.name"/>
-                                        <td t-out="row.usage"/>
+                                        <td>
+                                            <span t-foreach="row.devices" t-as="device" t-key="device.key" class="o_web_studio_form_device me-2" t-att-title="device.title">
+                                                <i class="oi" t-att-data-icon="device.icon"/>
+                                            </span>
+                                            <span t-out="row.usage"/>
+                                        </td>
                                         <td class="text-end">
                                             <button t-if="row.editable" type="button" class="btn btn-sm btn-link o_web_studio_edit_form" t-on-click="() => this.editForm(row)">Edit</button>
                                         </td>

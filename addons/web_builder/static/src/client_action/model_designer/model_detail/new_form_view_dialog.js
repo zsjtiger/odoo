@@ -33,6 +33,9 @@ export class NewFormViewDialog extends Component {
         if (this.props.info.mobile_action_id) {
             slots.push({ key: "mobile", label: "Mobile form" });
         }
+        if (this.props.info.pc_action_id && this.props.info.mobile_action_id) {
+            slots.push({ key: "both", label: "PC and mobile" });
+        }
         if (this.props.info.record_types.length) {
             slots.push({ key: "record_type", label: "Record type form" });
         }
