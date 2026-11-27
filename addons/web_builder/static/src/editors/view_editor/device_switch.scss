@@ -1,0 +1,31 @@
+
+// Mobile mode: the editable canvas and the phone preview side by side.
+.o_web_studio_mobile_split {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 24px;
+    padding: 16px;
+    .o_form_view, .o_list_view, .o_kanban_view {
+        max-width: 390px;
+        margin: 0;
+    }
+}
+.o_web_studio_phone_preview {
+    width: 390px;
+    flex: 0 0 390px;
+}
+.o_web_studio_phone_frame {
+    width: 390px;
+    height: 760px;
+    border: 10px solid #222;
+    border-radius: 36px;
+    overflow: hidden;
+    background: #fff;
+}
+.o_web_studio_phone_iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+}

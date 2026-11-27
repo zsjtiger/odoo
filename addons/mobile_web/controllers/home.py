@@ -49,7 +49,7 @@ class Home(WebHome):
             # 这个context里主要是前端需要的session信息, 包括了user、db等
             context = request.env['ir.http'].webclient_rendering_context()
             response = request.render('mobile_web.webclient_bootstrap', qcontext=context)
-            response.headers['X-Frame-Options'] = 'DENY'
+            response.headers['X-Frame-Options'] = 'SAMEORIGIN'  # same-origin only: Studio shows a preview of the mobile form
             return response
         except AccessError:
             return request.redirect('/mobile_web/login?error=access')

@@ -22,7 +22,13 @@
 </t>
 
 <t t-name="web_builder.ViewEditor.View">
-  <div t-attf-class="o_web_studio_view_renderer overflow-auto h-100 pe-auto {{ this.isMobile ? 'o_web_studio_device_mobile' : '' }}" t-ref="this.viewRendererRef">
+  <div t-attf-class="o_web_studio_view_renderer overflow-auto h-100 pe-auto {{ this.isMobile ? 'o_web_studio_device_mobile o_web_studio_mobile_split' : '' }}" t-ref="this.viewRendererRef">
+    <div t-if="this.isMobile" class="o_web_studio_phone_preview">
+      <div class="o_web_studio_phone_frame">
+        <iframe class="o_web_studio_phone_iframe" title="Mobile preview" t-att-src="this.previewUrl" t-key="this.preview.key"/>
+      </div>
+      <div class="small text-muted text-center mt-1">Mobile preview</div>
+    </div>
     <StudioView
       t-props="this.viewEditorModel.studioViewProps"
       t-key="this.viewEditorModel.studioViewKey"

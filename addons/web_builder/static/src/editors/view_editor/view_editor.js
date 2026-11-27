@@ -57,6 +57,8 @@ export class ViewEditor extends Component {
         this.studio = useService("studio");
         this.orm = useService("orm");
         this.mobileActionId = false;
+        // the phone preview reloads after every change of the view
+        this.preview = proxy({ key: 0 });
         onWillStart(async () => {
             const info = await this.orm.call("ir.model", "studio_mobile_infos", [this.studio.editedAction.res_model]);
             this.mobileActionId = info.available ? info.mobile_action_id : false;
@@ -74,6 +76,13 @@ export class ViewEditor extends Component {
         }
 
         this.viewEditorModel = useViewEditorModel(this.viewRendererRef, { initialState });
+        const model = this.viewEditorModel;
+        const doOperation = model.doOperation.bind(model);
+        model.doOperation = async (...args) => {
+            const result = await doOperation(...args);
+            this.preview.key++;
+            return result;
+        };
 
         useSetupAction({
             getLocalState: () => {
@@ -95,6 +104,11 @@ export class ViewEditor extends Component {
                 });
             },
         });
+    }
+
+    /** The mobile client's form for a new record, as the users of the mobile app see it. */
+    get previewUrl() {
+        return `/mobile_web/action-${this.mobileActionId}/new?preview=${this.preview.key}`;
     }
 
     /** The edited form is the mobile one: the canvas is shown as a phone. */
