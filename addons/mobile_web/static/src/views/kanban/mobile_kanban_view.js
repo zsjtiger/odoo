@@ -3,6 +3,7 @@ import { useService } from "@web/core/utils/hooks";
 import { ActionSheet } from "@mobile_web/widgets/action_sheet/action_sheet";
 import { ConfirmSheet, useConfirmSheet } from "@mobile_web/widgets/confirm_sheet/confirm_sheet";
 import { buttonItems, collectButtons, runRecordButton } from "@mobile_web/actions/record_buttons";
+import { Button } from "@mobile_web/widgets/button/button";
 import { mobileViewRegistry } from "@mobile_web/views/registries";
 import { parseArch, collectFieldNames, isHiddenColumn, splitColumns } from "@mobile_web/views/arch";
 import { getFieldWidget } from "@mobile_web/fields/index";
@@ -63,11 +64,14 @@ const TEXTS = {
 
 export class MobileKanbanView extends Component {
     texts = TEXTS;
-    static components = { ActionSheet, ConfirmSheet };
+    static components = { ActionSheet, ConfirmSheet, Button };
     static template = xml`
         <t t-name="mobile_web.MobileKanbanView">
             <div class="m_kanban_view" t-ref="this.pull.container">
                 <div t-if="this.pull.state.distance > 0 or this.pull.state.refreshing" class="m_pull_indicator" t-att-style="'height: ' + this.pull.state.distance + 'px'"><t t-esc="this.pullText"/></div>
+                <div class="m_kanban_header_buttons" t-if="this.headerItems.length">
+                    <Button t-foreach="this.headerItems" t-as="item" t-key="item.key" label="item.label" onClick="item.run"/>
+                </div>
                 <ul class="m_kanban">
                     <li t-foreach="this.collection.state.records" t-as="record" t-key="record.resId"
                         t-attf-class="{{ this.rowButtons.length ? 'has_more' : '' }}">
@@ -112,7 +116,10 @@ export class MobileKanbanView extends Component {
 
     setup() {
         const root = parseArch(this.props.arch);
-        this.rowButtons = collectButtons(root);
+        // <header> 中的按钮是列表级按钮 (没有记录上下文), 其余按钮是每张卡片的操作
+        const header = root.children.find((child) => child.tag === "header");
+        this.headerButtons = header ? collectButtons(header) : [];
+        this.rowButtons = collectButtons({ children: root.children.filter((child) => child !== header) });
         const cardNodes = collectCardFields(findCardNodes(root));
         const columns = cardNodes.map((n) => ({ name: n.attrs.name, attrs: n.attrs, field: this.props.fields[n.attrs.name] }));
         const { primary, secondary } = splitColumns(columns);
@@ -134,6 +141,29 @@ export class MobileKanbanView extends Component {
                 return this.reloadCollection(nextProps).then(() => this.infinite.recheck());
             }
         });
+    }
+
+    /** 列表头部按钮: 不对具体记录执行, 对象方法以空记录集调用, 动作直接打开 */
+    get headerItems() {
+        return buttonItems(this.headerButtons, {}, (node) => () => this.runHeaderButton(node));
+    }
+
+    async runHeaderButton(node) {
+        try {
+            const reload = await runRecordButton({
+                node,
+                resModel: this.props.resModel,
+                resIds: [],
+                context: this.props.context,
+                orm: this.orm,
+                mobileAction: this.mobileAction,
+            });
+            if (reload) {
+                await this.reloadCollection();
+            }
+        } catch (error) {
+            notify(this.notification, error?.data?.message || error?.message || "", { type: "danger", sticky: true });
+        }
     }
 
     hasValue(column, record) {

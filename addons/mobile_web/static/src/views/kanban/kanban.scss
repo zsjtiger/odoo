@@ -41,3 +41,10 @@
     display: inline-flex;
     align-items: center;
 }
+
+.m_kanban_header_buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 8px 16px 0;
+}
